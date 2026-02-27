@@ -1,0 +1,108 @@
+# AI向け NTA Q&A DB Quickstart（jplawdb4）
+
+設計原則: ID判明→1回の直接アクセスで完結。shard検索は最終手段。
+各ファイル 0.5-2Kトークン。10件読んでも20Kトークン以下。
+
+## 直接アクセス（推奨・1回で完結）
+
+パス: `text/{doc_code}/{item_id}.txt`
+根拠HTML: `enhanced/{doc_code}/{item_id}.html#pX`
+
+例:
+- 質疑応答（法人税）第1問 → `text/shitsugi_hojin/01-01.txt`
+- タックスアンサー（法人）No.5265 → `text/taxanswer_hojin/5265.txt`
+- 文書回答（法人税）→ `text/bunshokaito_hojin/{item_id}.txt`
+
+## doc_code命名規則
+
+`{種類}_{税目}` の形式。
+
+| 種類プレフィックス | 内容 |
+|------------------|------|
+| shitsugi_ | 質疑応答事例（NTA職員向け詳細解釈） |
+| taxanswer_ | タックスアンサー（納税者向けQ&A） |
+| bunshokaito_ | 文書回答事例（照会回答） |
+
+## 主要doc_code一覧
+
+| doc_code | 日本語名 | 件数 |
+|---------|---------|------|
+| shitsugi_hojin | 質疑応答事例（法人税） | 307 |
+| shitsugi_shohi | 質疑応答事例（消費税） | 272 |
+| shitsugi_joto | 質疑応答事例（譲渡所得） | 255 |
+| shitsugi_shotoku | 質疑応答事例（所得税） | 261 |
+| shitsugi_inshi | 質疑応答事例（印紙税） | 243 |
+| shitsugi_hyoka | 質疑応答事例（財産の評価） | 172 |
+| shitsugi_gensen | 質疑応答事例（源泉所得税） | 153 |
+| shitsugi_sozoku | 質疑応答事例（相続税・贈与税） | 129 |
+| shitsugi_hotei | 質疑応答事例（法定調書） | 1 |
+| taxanswer_shotoku | タックスアンサー（所得税） | 206 |
+| taxanswer_shohi | タックスアンサー（消費税） | 114 |
+| taxanswer_hojin | タックスアンサー（法人） | 106 |
+| taxanswer_joto | タックスアンサー（譲渡所得） | 71 |
+| taxanswer_gensen | タックスアンサー（源泉所得税） | 66 |
+| taxanswer_sozoku | タックスアンサー（相続税） | 52 |
+| taxanswer_hyoka | タックスアンサー（財産評価） | 29 |
+| taxanswer_zoyo | タックスアンサー（贈与税） | 28 |
+| taxanswer_inshi | タックスアンサー（印紙税） | 30 |
+| taxanswer_saigai | タックスアンサー（災害） | 16 |
+| taxanswer_hotei | タックスアンサー（法定調書） | 14 |
+| taxanswer_osirase | タックスアンサー（お知らせ） | 10 |
+| taxanswer_fufuku | タックスアンサー（不服申立て） | 2 |
+| bunshokaito_hojin | 文書回答事例（法人税） | 188 |
+| bunshokaito_shotoku | 文書回答事例（所得税） | 157 |
+| bunshokaito_shohi | 文書回答事例（消費税） | 67 |
+| bunshokaito_joto-sanrin | 文書回答事例（譲渡所得・山林所得） | 40 |
+| bunshokaito_gensen | 文書回答事例（源泉所得税） | 25 |
+| bunshokaito_sozoku | 文書回答事例（相続税） | 13 |
+| bunshokaito_zoyo | 文書回答事例（贈与税） | 12 |
+| bunshokaito_souzoku | 文書回答事例（相続税） | 10 |
+| bunshokaito_shozei | 文書回答事例（諸税） | 7 |
+| bunshokaito_gensenshotoku | 文書回答事例（源泉所得税） | 7 |
+| bunshokaito_sonota | 文書回答事例（その他の国税） | 5 |
+| bunshokaito_inshi | 文書回答事例（印紙税） | 5 |
+| bunshokaito_hyoka | 文書回答事例（財産評価） | 4 |
+| bunshokaito_zouyo | 文書回答事例（贈与税） | 2 |
+| bunshokaito_inshi-sonota | 文書回答事例（印紙税・その他） | 1 |
+
+## doc_aliases（略称→正式doc_code変換）
+
+略称やキーワードで doc_code が不明な場合の対照表（抜粋）:
+
+| 略称・キーワード | 正式doc_code |
+|----------------|-------------|
+| hojin / 法人 | taxanswer_hojin |
+| 法人税 | bunshokaito_hojin |
+| shitsugi_hojin | shitsugi_hojin |
+| shohi / 消費税 | taxanswer_shohi |
+| shotoku / 所得税 | taxanswer_shotoku |
+| sozoku / 相続税 | taxanswer_sozoku |
+| zoyo / 贈与税 | taxanswer_zoyo |
+| gensen / 源泉所得税 | taxanswer_gensen |
+| hyoka / 財産評価 | taxanswer_hyoka |
+| inshi / 印紙税 | taxanswer_inshi |
+| joto / 譲渡所得 | taxanswer_joto |
+| kakutei / 確定申告 | taxanswer_kakuteishinkoku |
+| nenmatsu / 年末調整 | taxanswer_nemmatsuchosei |
+| hotei / 法定調書 | taxanswer_hotei |
+| saigai / 災害 | taxanswer_saigai |
+| fufuku / 不服申立て | taxanswer_fufuku |
+| 質疑応答事例（法人税） | shitsugi_hojin |
+| 質疑応答事例（消費税） | shitsugi_shohi |
+| 質疑応答事例（相続税・贈与税） | shitsugi_sozoku |
+| 質疑応答事例（印紙税） | shitsugi_inshi |
+| 文書回答事例（法人税） | bunshokaito_hojin |
+| 文書回答事例（消費税） | bunshokaito_shohi |
+| 文書回答事例（所得税） | bunshokaito_shotoku |
+
+完全一覧: `data/doc_aliases.json`
+全doc_code+item_id一覧: `data/resolve_lite/index.json`
+
+## shard検索（キーワードのみ判明・最終手段・3回）
+
+1) `shards/index.json`（shard範囲確認）
+2) `shards/shard-XXX.txt`（TSV: doc_code, item_id, title, snippet → 候補特定）
+3) `text/{doc_code}/{item_id}.txt`（本文取得）
+
+注意: shard検索はトークンコスト大（8-15K/回）。doc_codeが分かれば
+`data/resolve_lite/{doc_code}.json` で全item_id+タイトル一覧を取得する方が効率的。

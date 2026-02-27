@@ -1,0 +1,75 @@
+# law — 条文（法令）DB quickstart
+
+base = https://jplawdb4.github.io/jplawdb4/
+
+## 直接アクセス（推奨・1回で完結）
+
+URL: `{base}law/text/{law_code}/{article}.txt`
+
+表記ルール: 「第66条の7」→ `66-7`（「の」= `-`、漢数字は使わない）
+
+例:
+- 法人税法22条   → `law/text/hojinzei/22.txt`
+- 法人税法施行令4条の2 → `law/text/hojinzei_seirei/4-2.txt`
+- 措置法66条の7  → `law/text/sozei_tokubetsu/66-7.txt`
+- 措置法66条の6  → `law/text/sozei_tokubetsu/66-6.txt`
+- 所得税法33条   → `law/text/shotokuzei/33.txt`
+- 相続税法22条   → `law/text/sozokuzei/22.txt`
+- 消費税法5条    → `law/text/shohizei/5.txt`
+- 国税通則法65条  → `law/text/kokuzei_tsusoku/65.txt`
+
+※法人税法2条（定義条文）は約12Kトークンと大きい。他は大半1-3Kトークン。
+
+## law_code早見表
+
+| 略称 | law_code | 施行令 | 施行規則 |
+|------|----------|--------|---------|
+| 法人税法 | hojinzei | hojinzei_seirei | hojinzei_kisoku |
+| 措置法 | sozei_tokubetsu | sozei_tokubetsu_seirei | sozei_tokubetsu_kisoku |
+| 所得税法 | shotokuzei | shotokuzei_seirei | shotokuzei_kisoku |
+| 消費税法 | shohizei | shohizei_seirei | shohizei_kisoku |
+| 相続税法 | sozokuzei | sozokuzei_seirei | sozokuzei_kisoku |
+| 国税通則法 | kokuzei_tsusoku | kokuzei_tsusoku_seirei | kokuzei_tsusoku_kisoku |
+| 会社法 | kaishahou | kaishahou_seirei | kaishahou_kisoku |
+| 商法 | shouhou | - | shouhou_kisoku |
+
+全24法令。各法令に _seirei（施行令）・_kisoku（施行規則）あり。
+
+## aliases早見表
+
+| 略称・通称 | law_code |
+|-----------|----------|
+| 所得税法、所法 | shotokuzei |
+| 所得税法施行令、所法令 | shotokuzei_seirei |
+| 所得税法施行規則、所法規則 | shotokuzei_kisoku |
+| 法人税法、法法 | hojinzei |
+| 法人税法施行令、法法令 | hojinzei_seirei |
+| 法人税法施行規則、法法規則 | hojinzei_kisoku |
+| 消費税法、消法 | shohizei |
+| 消費税法施行令、消法令 | shohizei_seirei |
+| 消費税法施行規則、消法規則 | shohizei_kisoku |
+| 相続税法、相法 | sozokuzei |
+| 相続税法施行令、相法令 | sozokuzei_seirei |
+| 相続税法施行規則、相法規則 | sozokuzei_kisoku |
+| 国税通則法、国通法、通則法 | kokuzei_tsusoku |
+| 国税通則法施行令、国通法令、通則法令 | kokuzei_tsusoku_seirei |
+| 国税通則法施行規則、国通法規則、通則法規則 | kokuzei_tsusoku_kisoku |
+| 租税特別措置法、租特法、租特、措置法、措法 | sozei_tokubetsu |
+| 租税特別措置法施行令、租特令、措置令 | sozei_tokubetsu_seirei |
+| 租税特別措置法施行規則、租特規則、措置規則 | sozei_tokubetsu_kisoku |
+| 会社法、会法 | kaishahou |
+| 会社法施行令、会社令 | kaishahou_seirei |
+| 会社法施行規則、会社規則 | kaishahou_kisoku |
+| 商法 | shouhou |
+| 商法施行法、商施行法 | shouhou_sekouhou |
+| 商法施行規則、商法規則 | shouhou_kisoku |
+
+法令略称不明 → `law/data/law_aliases.json`
+
+## 条番号の変換ルール
+
+- 「の」→ `-`（例: 66条の6の2 → `66-6-2`）
+- 漢数字は使わない（「第六条」→ `6`）
+- 項・号は条ファイル内に含まれる（別URLではない）
+
+条番号曖昧な場合 → `law/data/resolve_meta_corp/index.json` → `{law_code}/{bucket}.json`

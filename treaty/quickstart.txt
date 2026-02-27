@@ -1,0 +1,104 @@
+# ai-treaty-db クイックスタート — 租税条約DB（日本締結87件）
+# base = https://jplawdb4.github.io/jplawdb4/treaty/
+#
+# 設計原則: 国・doc_idが分かれば直接アクセス。shard検索は最終手段。
+# shards_index（全shard情報）: shards/index.json
+
+## 収録概要
+
+- 対象: 日本が締結した租税条約・租税協定（87ドキュメント）
+- 対象国: 下記「国別doc_id一覧」参照
+- shard数: shard-000〜shard-047（計48ファイル）
+- latin検索: shards/latin-*.tsv
+
+---
+
+## shard検索フロー（3ステップ）
+
+1. `shards/index.json` でkeyword/国に対応するshard番号を確認（または下記の国別一覧から直接推定）
+2. `shards/shard-XXX.txt` を読む（TSV: id/doc_id/page/snippet/core）
+3. doc_id を特定し `text/{doc_id}-pack-XX.txt` を読む
+
+### 本文packファイルへのアクセス
+
+- パス: `text/{doc_id}-pack-XX.txt`（packは00から連番、ファイルが大きい場合 .part-NN.txt が付く）
+- 例: `text/australia--synthesizedtextforjapan-australia-jp-pack-00.txt`
+- 例: `text/austria--20170131at-a-pack-00.part-01.txt`
+
+### shards_index全体
+
+- 全shard情報: `shards/index.json`（どのshardがどの国・doc_idをカバーするか）
+- shard数が多い場合はindex.jsonを先読みして絞り込む
+
+---
+
+## 英字キーワード（latin）検索
+
+特定の英字略語（PE/MAP/MLI/PPT/LOB/EOI等）で段落を探す場合:
+
+1. `shards/latin-{TERM}-00.tsv` を取得
+2. TSV内のdoc_id・packで段落を特定
+3. `text/{doc_id}-pack-XX.txt` を読む
+
+---
+
+## 国別 doc_id 一覧（87件）
+
+国名 | 主なdoc_id（is_synth=True は統合条約テキスト）
+-----|--------------------------------------------------
+Australia    | australia--synthesizedtextforjapan-australia-jp ★
+Austria      | austria--20170131at-a
+Belgium      | belgium--20161012be-a
+Brazil       | brazil--brazil1967-jp-en / brazil--brazil-st-jp ★ / brazil--brazil1976-p-jp-en / brazil--brazil1976-en-jp-en / brazil--brazil1976-am-jp-en
+Canada       | canada--canada1986-jp-en / canada--synthesizedtextforjapan-canada-jp ★ / canada--canada1999-p-jp-en-fr
+China        | china--china1983-jp-en / china--china1983-en1-jp-en / china--china1983-en2-jp-en / china--synthesizedtextforjapan-china-jp ★
+Denmark      | denmark--20171011dk-a / denmark--20211105dk-j
+Finland      | finland--finland1972-jp-en / finland--finland1972-en-jp-en / finland--synthesizedtextforjapan-finland1-jp ★ / finland--synthesizedtextforjapan-finland2-jp ★ / finland--finland1991-p-jp-en
+France       | france--france1995-jp-fr / france--synthesizedtextforjapan-france-jp ★
+Germany      | germany--synthesizedtextforjapan-germany-jp ★
+Hong Kong    | hong-kong--hongkong2012-en-jp-en / hong-kong--synthesizedtextforjapan-hongkong-jp ★
+India        | india--india1989-jp-en / india--india1989-en-jp-en / india--india-text-rev-jpn
+Indonesia    | indonesia--indonesia1982-jp-en / indonesia--indonesia1982-en-jp-en / indonesia--synthesizedtextforjapan-indonesia-jp ★
+Ireland      | ireland--ireland1974-jp-en / ireland--ireland1974-en-jp-en / ireland--synthesizedtextforjapan-ireland-jp ★
+Italy        | italy--italy1969-jp-en / italy--italy1969-en-jp-en / italy--italy-st-jp ★ / italy--italy1980-p-jp-en
+Korea        | korea--korea1998-jp-en / korea--200710kor-j
+Kuwait       | kuwait--sy220217ku-a
+Malaysia     | malaysia--malaysia1999-jp-en / malaysia--synthesizedtextforjapan-malaysia-jp ★
+Mexico       | mexico--mexico1996-jp-en / mexico--synthesizedtextforjapan-mexico-jp ★
+Netherlands  | netherlands--netherland2012-en-jp-en / netherlands--synthesisedtextforjapan-netherlands-jp ★
+New Zealand  | new-zealand--synthesizedtextforjapan-newzealand-jp ★
+Norway       | norway--norway1992-jp-en / norway--norway1992-en-jp-en / norway--190927norway-j
+Philippines  | philippines--philippines1980-jp-en / philippines--philippines1980-en-jp-en / philippines--philippines-st-jp ★
+Qatar        | qatar--200221qat-j
+Russia       | russia--20170907ru-a
+Saudi Arabia | saudi-arabia--saudiarabia2013-en-jp-en / saudi-arabia--synthesizedtextforjapan-saudiarabia-jp ★
+Singapore    | singapore--singapore1994-jp-en / singapore--singapore1994-en-jp-en / singapore--synthesizedtextforjapan-singaporejp ★ / singapore--singapore2010-p-jp
+South Africa | south-africa--southafrica1997-jp-en / south-africa--sourhafrica1997-en-jp-en / south-africa--synthesizedtextforjapan-southafrica-jp ★
+Spain        | spain--20210215spa-j
+Sweden       | sweden--sweden1983-jp-en / sweden--sweden1983-en-jp-en / sweden--synthesizedtextforjapan-swedenjp ★ / sweden--sweden1999-p-jp-en
+Switzerland  | switzerland--switzerland1971-jp-en / switzerland--switzerland-st-jp ★ / switzerland--switzerland2012-en-jp / switzerland--switzerland2012-en-jp-en / switzerland--switzerland2012-en-eoi-jp-en
+Thailand     | thailand--thailand1990-jp-en / thailand--synthesizedtextforjapan-thailand-jp ★
+United Arab Emirates | united-arab-emirates--250502ae-a / united-arab-emirates--20141125ae-c / united-arab-emirates--20190716
+United Kingdom | united-kingdom--synthesizedtextforjapan-unitedkingdom-jp ★
+United States  | united-states--usa-st-jp ★
+Viet Nam     | viet-nam--vietnam1995-jp-en / viet-nam--vietnam2014-en-jp-en / viet-nam--synthesizedtextforjapan-vietnam-jp ★
+
+★ = is_synth（MLI等を反映した統合条約テキスト）。通常はこちらを優先参照。
+
+---
+
+## コスト目安
+
+| 操作 | 読み込み回数 | トークン目安 |
+|------|------------|------------|
+| doc_idが分かる場合→直接pack読み込み | 1回 | ~3-10K |
+| shard検索→本文 | 2-3回 | ~8-15K |
+| latin-*.tsv検索→本文 | 2回 | ~5-10K |
+
+---
+
+## 注意
+
+- packファイルが大きい場合 `.part-01.txt` `.part-02.txt` に分割されている
+- 統合条約テキスト（is_synth=True）は複数の改正議定書を組み込んだ最新版
+- 英語文書は doc_id に `-en-` が含まれる

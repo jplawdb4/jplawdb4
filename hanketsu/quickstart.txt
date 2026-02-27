@@ -1,0 +1,67 @@
+# hanketsu — 判決・裁決DB quickstart
+
+base = https://jplawdb4.github.io/jplawdb4/
+
+収録:
+- houjinzei/: 判決 990件
+- saiketsu/: 裁決 255件
+
+---
+
+## 直接アクセス（case_id判明時・1回）
+
+URL: `{base}hanketsu/text/houjinzei/{id}.txt`
+URL: `{base}hanketsu/text/saiketsu/{id}.txt`
+
+読み方: YAML（メタデータ）→ 判決要約 → 注意書き
+
+---
+
+## shard検索（キーワードから探す場合・3回）
+
+### houjinzei（判決）
+
+shards_index:
+- total: 990件
+- shard_size: 100
+- format: tsv
+- fields: id / date / court / title / topics / keywords / laws
+
+1) `hanketsu/shards/houjinzei/shards_index.json`（4KB）→ shard番号特定
+2) `hanketsu/shards/houjinzei/shard-XX.txt`（~12KB、TSV）→ id特定
+3) `hanketsu/text/houjinzei/{id}.txt` → 本文
+
+shards一覧（キーワードから最初に当たるshardを判断する参考）:
+
+| shard | id範囲 | 代表キーワード |
+|-------|--------|---------------|
+| shard-00 | 10860-11125 | 過少申告加算税,損金算入,重加算税,青色申告,寄附金,役員報酬 |
+| shard-01 | 11127-11381 | 過少申告加算税,重加算税,青色申告,損金算入,役員報酬,交際費 |
+| shard-02 | 11392-11687 | 過少申告加算税,損金算入,重加算税,交際費,役員給与,役員報酬 |
+| shard-03 | 11690-12092 | 過少申告加算税,重加算税,青色申告,損金算入,無申告加算税,益金算入,仕入税額控除 |
+| shard-04 | 12097-12414 | 過少申告加算税,重加算税,青色申告,損金算入,役員報酬,仕入税額控除 |
+| shard-05 | 12416-12751 | 過少申告加算税,重加算税,損金算入,青色申告,寄附金,租税回避,交際費 |
+| shard-06 | 12753-13088 | 過少申告加算税,青色申告,損金算入,重加算税,寄附金,無申告加算税 |
+| shard-07 | 13090-13395 | 過少申告加算税,重加算税,青色申告,損金算入,仕入税額控除,役員報酬,役員給与 |
+| shard-08 | 13397-13658 | 法人税,所得税,過少申告加算税,更正の請求,地方法人税,賦課決定 |
+| shard-09 | 13659-13917 | 法人税,所得税,地方法人税,更正の請求,賦課決定,消費税 |
+
+### saiketsu（裁決）
+
+shards_index:
+- total: 255件
+- shard_size: 100
+- format: tsv
+- fields: id / number / date_iso / tax_types / issue_hint / url
+
+1) `hanketsu/shards/saiketsu/shards_index.json`（小サイズ）→ shard番号特定
+2) `hanketsu/shards/saiketsu/shard-XX.txt`（TSV）→ id特定
+3) `hanketsu/text/saiketsu/{id}.txt` → 本文
+
+shards一覧:
+
+| shard | id範囲 | 件数 |
+|-------|--------|------|
+| shard-00 | 43_43-70_04 | 100 |
+| shard-01 | 70_14-97_09 | 100 |
+| shard-02 | 97_10-139_07 | 55 |

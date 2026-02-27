@@ -1,0 +1,112 @@
+# ai-accounting-db クイックスタート — 会計基準DB
+# base = https://jplawdb4.github.io/jplawdb4/accounting/
+#
+# 設計原則: doc_code + item_id が分かれば1回で取得。shard検索は最終手段。
+# shards_index（全shard情報）: shards/index.json（独立ファイル・大容量）
+
+## 収録 doc_code 一覧
+
+| doc_code | 内容 | 件数 |
+|----------|------|------|
+| asbj_accounting_standards   | ASBJ 企業会計基準（現行）           | 253件  |
+| asbj_implementation_guidance | ASBJ 適用指針（現行）              | 326件  |
+| asbj_practical_solution      | ASBJ 実務対応報告（現行）          | 151件  |
+| asbj_completed_drafts        | ASBJ 公開草案・過年度分（completed）| 45件   |
+| fsa_kigyou_toushin           | 金融庁 企業会計審議会（答申・報告書等）| 514件  |
+| fsa_kigyou_gijiroku          | 金融庁 企業会計審議会（議事録・会議資料）| 1479件 |
+| jicpa_practical_guidelines   | JICPA 実務指針等公表物（実務指針）  | 198件  |
+| jicpa_notification           | JICPA 実務指針等公表物（お知らせ・公表物）| 66件  |
+| jicpa_research_report        | JICPA 実務指針等公表物（研究報告）  | 570件  |
+| jicpa_research_data          | JICPA 実務指針等公表物（研究資料）  | 127件  |
+
+---
+
+## 直接アクセス（推奨・1回で完結）
+
+doc_code と item_id が判明している場合はこちら:
+
+- 本文: `text/{doc_code}/{item_id}.txt`
+- 根拠HTML: `enhanced/{doc_code}/{item_id}.html#pX`（#pX=段落番号）
+
+例:
+- `text/asbj_accounting_standards/s0001.txt`
+- `text/asbj_implementation_guidance/s0001.txt`
+- `text/fsa_kigyou_toushin/s0001-part-01.txt`（大きい文書はpart分割あり）
+- `text/fsa_kigyou_gijiroku/s0001-part-01.txt`
+
+item_id の書式: `s0001`（5桁ゼロ埋め）、大きい文書は `s0001-part-01` 形式
+
+---
+
+## item_id の探し方（不明な場合）
+
+高速フロー（3ステップ）:
+1. `data/resolve_lite/index.json` で doc_code の part 情報を確認
+2. `data/resolve_lite/{doc_code}.json` で part URL を選ぶ
+3. `data/resolve_lite_parts/{doc_code}/part-XXX.json` で item_id とタイトルを確認
+
+---
+
+## shard検索フロー（キーワード検索・3ステップ）
+
+shard情報: `shards/index.json`（全311shardの詳細インデックス・独立ファイル）
+
+1. `shards/index.json` でキーワードに対応するshard番号を確認
+2. `shards/shard-XXX.txt` を読む（TSV: id/doc_code/item_id/snippet等）
+3. `text/{doc_code}/{item_id}.txt` を読む
+
+shard形式: `shards/shard-001.txt`〜`shards/shard-311.txt`（3桁ゼロ埋め）
+
+---
+
+## doc_code エイリアス（別称・自然言語での参照）
+
+以下は同一 doc_code を指すエイリアス:
+
+asbj_accounting_standards:
+  - "ASBJ 企業会計基準", "ASBJ 企業会計基準（現行）", "企業会計基準 ASBJ", "asbj accounting standards"
+
+asbj_implementation_guidance:
+  - "ASBJ 適用指針", "ASBJ 適用指針（現行）", "実務指針 ASBJ", "asbj implementation guidance"
+
+asbj_practical_solution:
+  - "ASBJ 実務対応報告", "ASBJ 実務対応報告（現行）", "実務対応報告", "asbj practical solution"
+
+asbj_completed_drafts:
+  - "ASBJ 公開草案・過年度分（completed）", "ASBJ completed accounting standards", "ASBJ 公開草案", "asbj completed"
+
+fsa_kigyou_toushin:
+  - "金融庁 企業会計審議会（答申・報告書等）", "企業会計審議会 答申", "金融庁 企業会計審議会", "fsa kigyou toushin"
+
+fsa_kigyou_gijiroku:
+  - "金融庁 企業会計審議会（議事録・会議資料）", "企業会計審議会 議事録", "企業会計審議会 会議資料", "fsa kigyou gijiroku"
+
+jicpa_practical_guidelines:
+  - "JICPA 実務指針等公表物（実務指針）", "JICPA 実務指針", "日本公認会計士協会 実務指針", "jicpa practical guidelines"
+
+jicpa_notification:
+  - "JICPA 実務指針等公表物（お知らせ・公表物）", "JICPA 通知", "JICPA 公表物", "jicpa notification"
+
+jicpa_research_report:
+  - "JICPA 実務指針等公表物（研究報告）", "JICPA 研究報告", "研究報告 JICPA", "jicpa research report"
+
+jicpa_research_data:
+  - "JICPA 実務指針等公表物（研究資料）", "JICPA 研究資料", "研究資料 JICPA", "jicpa research data"
+
+---
+
+## コスト目安
+
+| 操作 | 読み込み回数 | トークン目安 |
+|------|------------|------------|
+| 直接アクセス（item_id判明） | 1回 | ~1-5K |
+| resolve_lite経由でitem_id特定→本文 | 2-3回 | ~5-10K |
+| shard検索→本文 | 3回 | ~8-15K |
+
+---
+
+## 注意
+
+- fsa_kigyou_gijiroku は件数が多い（1479件）。resolve_lite で絞り込むこと
+- 大きい文書（fsa_kigyou_toushin, fsa_kigyou_gijiroku 等）は part-01, part-02 形式で分割される
+- shards/index.json は大容量のため、doc_code・item_id が分かる場合は直接アクセスが優先

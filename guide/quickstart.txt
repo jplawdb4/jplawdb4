@@ -1,0 +1,120 @@
+# AI向け NTA手引きDB Quickstart（jplawdb4）
+
+設計原則: ID判明→1回の直接アクセスで完結。shard検索は最終手段。
+各ファイル 1-5Kトークン（大型は part 分割済み）。
+
+注意: **別表の記載要領はまず `../beppyo/` を使う**。構造・全欄解説・転記関係・検算式を網羅し1回で完結。
+本DBは「NTA公式の記載の仕方」原文が必要な場合に使う。
+
+## 直接アクセス（推奨・1回で完結）
+
+パス: `text/{doc_code}/{item_id}.txt`
+
+## 主要doc_code一覧
+
+| doc_code | 内容 | 件数 |
+|---------|------|------|
+| hojin_aramashi_2025 | 法人税申告書の書き方（あらまし）2025年版 | 35+ |
+| gensen_aramashi_2026 | 源泉徴収のあらまし 2026年版 | 62 |
+| gensen_shikata_2026 | 源泉徴収の仕方 2026年版 | 44 |
+| nencho_shikata_2025 | 年末調整の仕方 2025年版 | 135 |
+| hotei_tebiki_2025 | 法定調書の手引き 2025年版 | 27 |
+| inshi_tebiki_2025 | 印紙税の手引き 2025年版 | 11 |
+| hojin_kaisei_gaiyo_2025 | 法人税等改正の概要 2025年版 | 15 |
+| hojin_shinkoku_besshyo | 法人税申告書別表等（書き方） | - |
+| hojin_shohi_kakikata_ippan | 法人用消費税申告書（一般用）の書き方 | - |
+| hojin_shohi_kakikata_kani | 法人用消費税申告書（簡易課税用）の書き方 | - |
+| etax_tetsuzuki6 | e-Tax利用可能手続一覧 | - |
+
+## hojin_aramashi_2025 別表記載要領ダイレクトアクセス表 ★実務最重要
+
+パス: `text/hojin_aramashi_2025/{item_id}.txt`
+
+| 別表 | item_id | 別表 | item_id |
+|------|---------|------|---------|
+| 別表一 | s010 | 別表十一(一) | s021 |
+| 別表二 | s011 | 別表十一(一の二) | s022 |
+| 別表三(一) | s012 | 別表十四(二) | s023 |
+| 別表三(一)付表一 | s013 | 別表十五 | s024 |
+| 別表四 | s014-part-01〜03 | 別表十六(一) | s025-part-01〜02 |
+| 別表五(一) | s015 | 別表十六(二) | s026 |
+| 別表五(一)付表 | s016 | 別表十六(六) | s027 |
+| 別表五(二) | s017 | 別表十六(七) | s028 |
+| 別表六(一) | s018 | 別表十六(八) | s029 |
+| 別表七(一) | s019 | 別表十六(九) | s030 |
+| 別表八(一) | s020 | 別表十九 | s031 |
+| その他誤りの多い項目 | s032 |||
+
+本編（法人税の仕組み・申告方法）: s001-s008
+資料（中小企業者判定フロー等）: s033-s035
+
+例:
+- 別表四の書き方 → `text/hojin_aramashi_2025/s014-part-01.txt`（3分割）
+- 別表十五（交際費）の書き方 → `text/hojin_aramashi_2025/s024.txt`
+- 別表七(一)（欠損金）の書き方 → `text/hojin_aramashi_2025/s019.txt`
+
+## shards_index情報（shard検索用）
+
+shard数: 31、収録件数: 368件
+
+| shard | count | 収録範囲（first → last） |
+|-------|-------|------------------------|
+| shard-001 | 12 | etax_tetsuzuki6/s001 → gensen_aramashi_2026/s005-part-04 |
+| shard-002 | 12 | gensen_aramashi_2026/s005-part-05 → gensen_aramashi_2026/s006-part-02 |
+| shard-003 | 12 | gensen_aramashi_2026/s006-part-03 → gensen_aramashi_2026/s009 |
+| shard-004 | 12 | gensen_aramashi_2026/s010-part-01 → gensen_aramashi_2026/s012-part-02 |
+| shard-005 | 12 | gensen_aramashi_2026/s013-part-01 → gensen_aramashi_2026/s015 |
+| shard-006 | 12 | gensen_aramashi_2026/s016 → gensen_shikata_2026/s006-part-02 |
+| shard-007 | 12 | gensen_shikata_2026/s006-part-03 → gensen_shikata_2026/s015-part-03 |
+| shard-008 | 12 | gensen_shikata_2026/s015-part-04 → gensen_shikata_2026/s016-part-08 |
+| shard-009 | 12 | gensen_shikata_2026/s016-part-09 → gensen_shikata_2026/s016-part-20 |
+| shard-010 | 12 | gensen_shikata_2026/s016-part-21 → hojin_aramashi_2025/s009 |
+| shard-011 | 12 | hojin_aramashi_2025/s010(別表一) → hojin_aramashi_2025/s019(別表七(一)) |
+| shard-012 | 12 | hojin_aramashi_2025/s020(別表八(一)) → hojin_aramashi_2025/s030(別表十六(九)) |
+| shard-013 | 12 | hojin_aramashi_2025/s031(別表十九) → hojin_aramashi_2025/s034-part-05 |
+| shard-014 | 12 | hojin_aramashi_2025/s034-part-06 → hojin_kaisei_gaiyo_2025/s003 |
+| shard-015 | 12 | hojin_kaisei_gaiyo_2025/s004 → hojin_kaisei_gaiyo_2025/s012-part-04 |
+| shard-016 | 12 | hojin_shinkoku_besshyo/s001 → hojin_shohi_kakikata_kani/s001-part-02 |
+| shard-017 | 12 | hojin_shohi_kakikata_kani/s001-part-03 → hotei_tebiki_2025/s008 |
+| shard-018 | 12 | hotei_tebiki_2025/s009 → hotei_tebiki_2025/s018-part-03 |
+| shard-019 | 12 | hotei_tebiki_2025/s018-part-04 → inshi_tebiki_2025/s007 |
+| shard-020 | 12 | inshi_tebiki_2025/s008 → nencho_shikata_2025/s006 |
+| shard-021 | 12 | nencho_shikata_2025/s007-part-01 → nencho_shikata_2025/s014-part-03 |
+| shard-022 | 12 | nencho_shikata_2025/s014-part-04 → nencho_shikata_2025/s016-part-08 |
+| shard-023 | 12 | nencho_shikata_2025/s016-part-09 → nencho_shikata_2025/s025 |
+| shard-024 | 12 | nencho_shikata_2025/s026 → nencho_shikata_2025/s027-part-11 |
+| shard-025 | 12 | nencho_shikata_2025/s027-part-12 → nencho_shikata_2025/s029-part-09 |
+| shard-026 | 12 | nencho_shikata_2025/s029-part-10 → nencho_shikata_2025/s034 |
+| shard-027 | 12 | nencho_shikata_2025/s035 → nencho_shikata_2025/s040-part-07 |
+| shard-028 | 12 | nencho_shikata_2025/s040-part-08 → nencho_shikata_2025/s040-part-19 |
+| shard-029 | 12 | nencho_shikata_2025/s040-part-20 → nencho_shikata_2025/s041-part-03 |
+| shard-030 | 12 | nencho_shikata_2025/s041-part-04 → nencho_shikata_2025/s041-part-15 |
+| shard-031 | 8 | nencho_shikata_2025/s041-part-16 → nencho_shikata_2025/s042-part-05 |
+
+## shohi-guide-db 収録内容（消費税申告書の書き方）
+
+消費税申告書の書き方（法人用）は以下の10件がshard-001に収録:
+
+| doc_code | item_id | タイトル |
+|---------|---------|---------|
+| hojin_shohi_kakikata_ippan | s001-part-01 | 法人用 消費税申告書（一般用）の書き方 (1/5) |
+| hojin_shohi_kakikata_ippan | s001-part-02 | 法人用 消費税申告書（一般用）の書き方 (2/5) |
+| hojin_shohi_kakikata_ippan | s001-part-03 | 法人用 消費税申告書（一般用）の書き方 (3/5) |
+| hojin_shohi_kakikata_ippan | s001-part-04 | 法人用 消費税申告書（一般用）の書き方 (4/5) |
+| hojin_shohi_kakikata_ippan | s001-part-05 | 法人用 消費税申告書（一般用）の書き方 (5/5) |
+| hojin_shohi_kakikata_kani | s001-part-01 | 法人用 消費税申告書（簡易課税用）の書き方 (1/4) |
+| hojin_shohi_kakikata_kani | s001-part-02 | 法人用 消費税申告書（簡易課税用）の書き方 (2/4) |
+| hojin_shohi_kakikata_kani | s001-part-03 | 法人用 消費税申告書（簡易課税用）の書き方 (3/4) |
+| hojin_shohi_kakikata_kani | s001-part-04 | 法人用 消費税申告書（簡易課税用）の書き方 (4/4) |
+| invoice_oshirase_2025 | s001 | インボイス制度に関するお知らせ（令和7年4月） |
+
+直接アクセスパス例: `text/hojin_shohi_kakikata_ippan/s001-part-01.txt`
+
+## shard検索（キーワードのみ・最終手段・3回）
+
+1) `shards/index.json`（shard範囲確認 → 上記テーブルと同内容）
+2) `shards/shard-XXX.txt`（TSV: doc_code, item_id, title, snippet → 候補特定）
+3) `text/{doc_code}/{item_id}.txt`（本文取得）
+
+ヒント: hojin_aramashi_2025の別表はshard-011〜013に集中。
+源泉関係はshard-001〜009、年末調整はshard-020〜031。
