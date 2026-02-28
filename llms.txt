@@ -262,6 +262,59 @@ OECD/NTA文献。pack形式。
 | 法人税別表 | beppyo/quickstart.txt | 直接 |
 | 会計基準 | accounting/quickstart.txt | shard |
 
+## ヘッダー形式（メタデータ）
+
+全ファイルの先頭にヘッダーがある（beppyo除く）。2形式:
+
+**YAML frontmatter**（`---` で囲む）: hanketsu, paper, treaty
+```yaml
+---
+id: '10860'
+date: '2008-01-15'
+court: 大阪高等裁判所
+---
+（本文）
+```
+
+**key-value行**（空行で本文と区切り）: law, tsutatsu, guide, accounting
+```
+doc: 法人税基本通達 (hojinzei_kihon_tsutatsu)
+item: 1−1−1 / title: 法人でない社団の範囲
+source_url: https://www.nta.go.jp/law/tsutatsu/kihon/hojin/01/01_01.htm
+
+（本文）
+```
+
+**qa**: key-value + 末尾 `---` で本文と区切り
+```
+title: タイトル
+doc_code: bunshokaito_hojin
+item_id: 010521-01
+source_url: https://www.nta.go.jp/...
+---
+（本文）
+```
+
+### 共通フィールド名
+
+| フィールド | 意味 | 使用DB |
+|-----------|------|--------|
+| `source_url` | 原典URL | tsutatsu, qa, guide, paper, treaty, accounting, hanketsu/saiketsu |
+| `topics` | 税目リスト | hanketsu（houjinzei + saiketsu共通） |
+
+### hanketsu: houjinzei vs saiketsu のフィールド差異
+
+| フィールド | houjinzei（判決） | saiketsu（裁決） |
+|-----------|-----------------|-----------------|
+| id, date | 共通 | 共通 |
+| court | 裁判所名 | — |
+| tribunal | — | 審判所名（常に「国税不服審判所」） |
+| title | 事件名 | — |
+| number | — | 裁決事例集番号 |
+| topics | 税目リスト | 税目リスト |
+| keywords, laws, result | あり | — |
+| source_url | — | kfs.go.jp URL |
+
 ## 共通URLルール
 
 基本形式: `{base}{db}/text/{code}/{id}.txt`
