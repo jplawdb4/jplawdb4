@@ -209,6 +209,46 @@ def merge_small_chunks(chunks, min_tokens=MIN_CHUNK_TOKENS):
     return merged
 
 
+def rebalance_to_two(body: str, header: str, stem: str, boundary_levels):
+    """3チャンク以上→2チャンクへのリバランス。
+    全境界レベルから最もバランスの良い2分割点を探索。
+    Returns: [part1, part2] or None if impossible."""
+    note1 = f"\n--- split 1/2 → next: {stem}_2.txt ---\n"
+    note2 = f"--- split 2/2 of {stem}.txt ---\n"
+    header_tok = count_tokens(header)
+    note1_tok = count_tokens(note1)
+    note2_tok = count_tokens(note2)
+
+    # 5トークンの安全マージン（トークナイゼーション境界効果）
+    budget1 = MAX_TOKENS - header_tok - note1_tok - 5  # chunk1のbody予算
+    budget2 = MAX_TOKENS - note2_tok - 5               # chunk2のbody予算
+
+    if budget1 < 100 or budget2 < 100:
+        return None
+
+    for level_bounds in boundary_levels:
+        bounds = sorted(b for b in level_bounds if 0 < b < len(body))
+        if not bounds:
+            continue
+
+        best_split = None
+        best_diff = float('inf')
+
+        for b in bounds:
+            p1_tok = count_tokens(body[:b])
+            p2_tok = count_tokens(body[b:])
+            if p1_tok <= budget1 and p2_tok <= budget2:
+                diff = abs(p1_tok - p2_tok)
+                if diff < best_diff:
+                    best_diff = diff
+                    best_split = b
+
+        if best_split is not None:
+            return [body[:best_split], body[best_split:]]
+
+    return None
+
+
 def split_file(fpath: Path, db: str, dry_run=False):
     """1ファイルを分割。Returns: (was_split, num_chunks)"""
     text = fpath.read_text(encoding="utf-8")
@@ -244,6 +284,12 @@ def split_file(fpath: Path, db: str, dry_run=False):
 
     if len(body_chunks) <= 1:
         return False, 1
+
+    # 3チャンク以上で2チャンクに収まる場合はリバランス
+    if len(body_chunks) >= 3:
+        two = rebalance_to_two(body, header, stem, boundary_levels)
+        if two is not None:
+            body_chunks = two
 
     total = len(body_chunks)
 
