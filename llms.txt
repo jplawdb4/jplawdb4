@@ -22,14 +22,15 @@ base = https://jplawdb4.github.io/jplawdb4/
 
 ## 命名規則の鉄則（最重要）
 
-**このDBで使う区切り文字は3種類だけ:**
-- **`-`（半角ハイフン）**: ファイル名内の区切り。「の」「第」の変換。条番号の階層
-- **`_`（半角アンダースコア）**: フォルダ名内の区切り。カテゴリ分類
+**区切り文字は3種類。それぞれ意味が異なる:**
+- **`-`（半角ハイフン）**: 「の」（階層）。条番号・通達番号の変換。ファイル名の主要区切り
+- **`_`（半角アンダースコア）**: 「・」（並列）。フォルダ名の区切り + 通達の共通通達表記
 - **`--`（二重ハイフン）**: treaty DBのみ。国名とドキュメントIDの区切り
 
-**ハイフンとアンダースコアは絶対に混同するな。**
-- フォルダ名: `hojinzei_seirei`（`_`で区切る） → ❌ `hojinzei-seirei` は存在しない
-- ファイル名: `66-6.txt`（`-`で区切る） → ❌ `66_6.txt` は存在しない
+**基本原則:**
+- フォルダ名: `_` で区切る（例: `hojinzei_seirei`） → ❌ `hojinzei-seirei` は存在しない
+- ファイル名: 通常は `-` で区切る（例: `66-6.txt`） → ❌ `66_6.txt` は存在しない
+- **例外: 共通通達のファイル名は `_` を含む**（例: `36_37_common-19.txt`）。詳細は通達セクション参照
 
 ---
 
@@ -79,18 +80,28 @@ base = https://jplawdb4.github.io/jplawdb4/
 
 ### 通達（tsutatsu）
 
-通達番号がそのままitem_id。「の」→ `-`。
+通達番号がそのままitem_id。2種類の区切り文字に注意。
 
-| ユーザーの言い方 | パス | 注意 |
-|----------------|------|------|
-| 法基通9-4-1 | `tsutatsu/text/hojinzei_kihon_tsutatsu/9-4-1.txt` | |
-| 法人税基本通達9-4-1 | 同上 | |
-| 所基通33-1 | `tsutatsu/text/shotokuzei_kihon_tsutatsu/33-1.txt` | |
-| 消基通5-1-1 | `tsutatsu/text/shohizei_kihon_tsutatsu/5-1-1.txt` | |
-| 相基通1-2-1 | `tsutatsu/text/sozokuzei_kihon_tsutatsu/1-2-1.txt` | |
-| 評基通6 | `tsutatsu/text/hyoka_kihon_tsutatsu/6.txt` | 財産評価基本通達 |
-| 措通(法)66の6-1 | `tsutatsu/text/sozei_tokubetsu_tsutatsu_hojinzei/66-6-1.txt` | 「の」→ `-` |
-| 措通66-6-1 | 同上 | 措通 = 措置法通達(法人税編) |
+**区切り文字ルール:**
+- `-`（ハイフン）= 「の」（階層）: 66の6-1 → `66-6-1`
+- `_`（アンダースコア）= 「・」（並列・共通通達）: 36・37共 → `36_37_common`
+- `common` = 「共」
+
+| ユーザーの言い方 | パス |
+|----------------|------|
+| 法基通9-4-1 | `tsutatsu/text/hojinzei_kihon_tsutatsu/9-4-1.txt` |
+| 所基通33-1 | `tsutatsu/text/shotokuzei_kihon_tsutatsu/33-1.txt` |
+| 消基通5-1-1 | `tsutatsu/text/shohizei_kihon_tsutatsu/5-1-1.txt` |
+| 相基通1-2-1 | `tsutatsu/text/sozokuzei_kihon_tsutatsu/1-2-1.txt` |
+| 評基通6 | `tsutatsu/text/hyoka_kihon_tsutatsu/6.txt` |
+| 措通66の6-1 | `tsutatsu/text/sozei_tokubetsu_tsutatsu_hojinzei/66-6-1.txt` |
+| 所基通36・37共-19 | `tsutatsu/text/shotokuzei_kihon_tsutatsu/36_37_common-19.txt` |
+| 所基通194・195-1 | `tsutatsu/text/shotokuzei_kihon_tsutatsu/194_195-1.txt` |
+| 相基通1の3・1の4共-1 | `tsutatsu/text/sozokuzei_kihon_tsutatsu/1-3_1-4_common-1.txt` |
+
+**よくある間違い:**
+- ❌ `36-37-common-19` → ⭕ `36_37_common-19`（「・」は `_` であって `-` ではない）
+- ❌ `1-3-1-4-common-1` → ⭕ `1-3_1-4_common-1`（「1の3」と「1の4」の境界は `_`）
 
 **通達名→doc_code対照:**
 
