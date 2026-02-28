@@ -339,11 +339,13 @@ def scan_and_split(base: Path, target_db=None, dry_run=False):
             for fname in sorted(files):
                 if not fname.endswith(".txt"):
                     continue
-                if re.search(r"_\d+\.txt$", fname):
-                    continue
 
                 fpath = Path(root) / fname
                 text = fpath.read_text(encoding="utf-8")
+
+                # split注記で始まるファイルはチャンク → スキップ
+                if text.startswith("--- split "):
+                    continue
                 tokens = count_tokens(text)
                 stats["scanned"] += 1
 

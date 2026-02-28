@@ -275,11 +275,16 @@ def process_db(base: Path, db: str, rel_dir: str, dry_run: bool):
         for fname in sorted(files):
             if not fname.endswith(".txt"):
                 continue
-            # _N.txt チャンクはスキップ（unsplit時に処理される）
-            if re.search(r"_\d+\.txt$", fname):
-                continue
 
             fpath = Path(root) / fname
+
+            # split注記で始まるファイルはチャンク → スキップ（unsplit時に処理される）
+            try:
+                first_line = fpath.open(encoding="utf-8").readline()
+            except:
+                continue
+            if first_line.startswith("--- split "):
+                continue
             stats["files"] += 1
 
             # Step 1: unsplit
