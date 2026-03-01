@@ -1,0 +1,52 @@
+# その他 — DR成果HTML DB quickstart
+
+## 目的
+ClaudeCodeが生成したディープリサーチ成果物（HTML形式）を格納するフォルダ。
+税法・国際税務の分析レポート、解説記事等を蓄積する。
+
+---
+
+## 収録ファイルの確認方法
+
+### AI向け（推奨）: index.json を読む（1回で完結）
+パス: `その他/index.json`
+フィールド: id / title / date / tags / laws / summary / file
+
+### 人間向け: index.html をブラウザで開く
+パス: `/home/user/jplawdb4/その他/index.html`
+
+---
+
+## HTML本体の場所
+`その他/html/{topic}_{YYYYMMDD}.html`
+
+例:
+- `html/cfc_senpa_assetswap_20260301.html` — CFC合算所得：船舶修繕準備金・圧縮記帳
+- `html/tp_arm_20260302.html` — 移転価格：独立企業間価格
+
+---
+
+## 命名規則
+`{トピック略称}_{YYYYMMDD}.html`
+
+| 要素 | ルール |
+|------|--------|
+| トピック略称 | 英字スネークケース（例: cfc_senpa, tp_arm） |
+| 日付 | YYYYMMDD |
+| 拡張子 | .html 固定 |
+
+---
+
+## HTMLを追加する際のフロー
+1. `html/{topic}_{YYYYMMDD}.html` にHTMLを保存
+2. `index.json` に新エントリを追記（id, title, date, tags, laws, summary, file）
+3. `index.html` を更新（または regenerate_index.py で自動再生成）
+
+---
+
+## タグ一覧（現在使用中）
+CFC税制 / 本邦法令基準 / 特別修繕準備金 / 圧縮記帳 / 損金算入 / 措置法 / 移転価格
+
+---
+
+収録件数: index.json の total フィールドを参照

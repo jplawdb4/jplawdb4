@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CFC合算所得計算（本邦法令基準）：特定船舶修繕準備金・圧縮記帳の損金算入可否</title>
+<style>
+  :root {
+    --c1: #e8f4f8;   /* 淡ブルー（背景・見出し） */
+    --c2: #fef9ec;   /* 淡イエロー（注意・補足） */
+    --c3: #eef7ee;   /* 淡グリーン（結論・OK） */
+    --c1d: #2a7aad;  /* ブルー濃 */
+    --c2d: #b07d00;  /* イエロー濃 */
+    --c3d: #2a7a3a;  /* グリーン濃 */
+    --txt: #1a1a2e;
+    --border: #d0d8e0;
+    --red: #c0392b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+    background: #f5f7fa;
+    color: var(--txt);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+  header {
+    background: var(--c1d);
+    color: #fff;
+    padding: 24px 20px 20px;
+  }
+  header h1 { font-size: 1.2em; font-weight: 700; line-height: 1.4; }
+  header p { font-size: 0.82em; margin-top: 6px; opacity: 0.85; }
+  .container { max-width: 860px; margin: 0 auto; padding: 20px 16px 60px; }
+
+  /* セクション */
+  section { margin-top: 28px; }
+  h2 {
+    font-size: 1em;
+    font-weight: 700;
+    color: var(--c1d);
+    border-left: 4px solid var(--c1d);
+    padding-left: 10px;
+    margin-bottom: 14px;
+  }
+  h3 {
+    font-size: 0.93em;
+    font-weight: 700;
+    color: #333;
+    margin: 16px 0 8px;
+  }
+
+  /* カード */
+  .card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+  }
+  .card-blue  { background: var(--c1); border-color: #b0d0e8; }
+  .card-yellow{ background: var(--c2); border-color: #e0c860; }
+  .card-green { background: var(--c3); border-color: #a0d0a0; }
+
+  /* 結論バッジ */
+  .badge {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 0.82em;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .badge-ok  { background: var(--c3d); color: #fff; }
+  .badge-cond{ background: var(--c2d); color: #fff; }
+  .badge-key { background: var(--c1d); color: #fff; }
+
+  /* テーブル */
+  table { width: 100%; border-collapse: collapse; font-size: 0.88em; }
+  th {
+    background: var(--c1d);
+    color: #fff;
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: 600;
+  }
+  td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: #f8fafb; }
+  .law-ref { font-size: 0.82em; color: #555; }
+
+  /* マーカー */
+  mark { background: #fff176; padding: 1px 3px; border-radius: 2px; }
+  strong { color: var(--c1d); }
+  .red { color: var(--red); font-weight: 700; }
+  .green { color: var(--c3d); font-weight: 700; }
+
+  /* SVG コンテナ */
+  .svg-wrap { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 14px; overflow-x: auto; }
+  svg { display: block; max-width: 100%; margin: 0 auto; }
+
+  /* ステップリスト */
+  ol.steps { padding-left: 0; list-style: none; }
+  ol.steps li {
+    display: flex; gap: 12px; align-items: flex-start;
+    margin-bottom: 10px;
+  }
+  ol.steps li .num {
+    min-width: 26px; height: 26px; background: var(--c1d); color: #fff;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 0.82em; font-weight: 700; flex-shrink: 0; margin-top: 2px;
+  }
+  ol.steps li .body { flex: 1; }
+
+  /* 注意ボックス */
+  .note {
+    background: var(--c2);
+    border-left: 4px solid var(--c2d);
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+    margin-top: 12px;
+    font-size: 0.88em;
+  }
+  .warn {
+    background: #fdecea;
+    border-left: 4px solid var(--red);
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+    margin-top: 12px;
+    font-size: 0.88em;
+  }
+
+  @media (max-width: 600px) {
+    header h1 { font-size: 1.05em; }
+    th, td { padding: 6px 8px; }
+    .container { padding: 14px 10px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>CFC合算所得計算（本邦法令基準）<br>特定船舶特別修繕準備金・圧縮記帳の損金算入可否</h1>
+  <p>根拠条文：措令39条の15第1項 / 措法57条の8 / 措法65条の7①4号　｜　2026-03-01</p>
+</header>
+
+<div class="container">
+
+  <!-- ① 前提：本邦法令基準とは -->
+  <section>
+    <h2>① 前提：本邦法令基準の仕組み</h2>
+    <div class="card card-blue">
+      <p>外国関係会社の合算所得は、原則として<strong>本邦法令基準</strong>（措令39条の15第1項第1号）により、日本税法の規定に準じて計算する。</p>
+    </div>
+
+    <div class="card">
+      <h3>限定列挙14規定（措令39条の15第1項第1号 イ〜ヨ）</h3>
+      <p style="font-size:0.87em; margin-bottom:10px;">本邦法令基準で適用できる租税特別措置法規定は<mark>全14条に限定列挙</mark>されている。それ以外の措置法特例は一切適用不可。</p>
+      <table>
+        <tr><th>号</th><th>措置法条文</th><th>内容</th></tr>
+        <tr><td>イ</td><td>措法55条</td><td>海外投資等損失準備金</td></tr>
+        <tr><td>ロ</td><td>措法55条の2</td><td>金属鉱業等鉱害防止準備金</td></tr>
+        <tr><td>ハ</td><td>措法56条</td><td>原子力保険・地震保険準備金</td></tr>
+        <tr><td>ニ</td><td>措法57条</td><td>特定法人の予見損失準備金</td></tr>
+        <tr><td style="background:#e8f4e8"><strong>ホ</strong></td><td style="background:#e8f4e8"><strong>措法57条の8</strong></td><td style="background:#e8f4e8"><strong>特定船舶に係る特別修繕準備金</strong> ← 本件①</td></tr>
+        <tr><td>ヘ</td><td>措法57条の9</td><td>中小企業等の貸倒引当金</td></tr>
+        <tr><td>ト</td><td>措法58条</td><td>農業経営基盤強化準備金</td></tr>
+        <tr><td>チ</td><td>措法59条</td><td>特定農産物等の農業経営基盤強化準備金</td></tr>
+        <tr><td>リ</td><td>措法61条の2</td><td>探鉱準備金・海外探鉱準備金</td></tr>
+        <tr><td>ヌ</td><td>措法64条</td><td>収用等の場合の課税の特例</td></tr>
+        <tr><td>ル</td><td>措法64条の2</td><td>換地処分等に伴う課税の特例</td></tr>
+        <tr><td>ヲ</td><td>措法65条</td><td>特定土地区画整理事業等の課税特例</td></tr>
+        <tr><td style="background:#e8f4e8"><strong>ワ</strong></td><td style="background:#e8f4e8"><strong>措法65条の7第1項第4号</strong></td><td style="background:#e8f4e8"><strong>特定資産の買換え（船舶）</strong> ← 本件②</td></tr>
+        <tr><td>カ</td><td>措法66条の11の2</td><td>中小企業の設備投資促進税制</td></tr>
+      </table>
+      <div class="note">✅ 本件の<strong>措法57条の8</strong>（ホ）・<strong>措法65条の7①4号</strong>（ワ）はいずれも限定列挙に含まれる。本邦法令基準での適用が前提として認められる。</div>
+    </div>
+  </section>
+
+  <!-- ② フロー図 -->
+  <section>
+    <h2>② 損金算入可否の判定フロー（SVG）</h2>
+    <div class="svg-wrap">
+      <svg viewBox="0 0 700 440" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="13">
+        <!-- 背景 -->
+        <rect width="700" height="440" fill="#f8fafc" rx="8"/>
+
+        <!-- START -->
+        <rect x="250" y="16" width="200" height="40" rx="20" fill="#2a7aad"/>
+        <text x="350" y="41" text-anchor="middle" fill="#fff" font-weight="bold">外国関係会社の費用計上</text>
+
+        <line x1="350" y1="56" x2="350" y2="82" stroke="#999" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Step1 -->
+        <rect x="180" y="82" width="340" height="46" rx="6" fill="#e8f4f8" stroke="#2a7aad" stroke-width="1.5"/>
+        <text x="350" y="101" text-anchor="middle" font-weight="bold" fill="#2a7aad">STEP 1</text>
+        <text x="350" y="119" text-anchor="middle" fill="#1a1a2e">限定列挙14規定に含まれるか？</text>
+        <text x="350" y="133" text-anchor="middle" fill="#555" font-size="11">措令39条の15第1項第1号 イ〜ヨ</text>
+
+        <!-- Step1 分岐 -->
+        <line x1="350" y1="134" x2="350" y2="158" stroke="#999" stroke-width="1.5" marker-end="url(#arr)"/>
+        <text x="360" y="150" fill="#2a7a3a" font-size="11" font-weight="bold">YES（本件両方該当）</text>
+
+        <!-- Step2 -->
+        <rect x="180" y="158" width="340" height="52" rx="6" fill="#e8f4f8" stroke="#2a7aad" stroke-width="1.5"/>
+        <text x="350" y="178" text-anchor="middle" font-weight="bold" fill="#2a7aad">STEP 2</text>
+        <text x="350" y="196" text-anchor="middle" fill="#1a1a2e">業法・規制法要件（船舶安全法等）を</text>
+        <text x="350" y="210" text-anchor="middle" fill="#1a1a2e">外国関係会社が文理通りに充足できるか？</text>
+
+        <!-- Step2 分岐 YES/NO -->
+        <line x1="350" y1="210" x2="350" y2="235" stroke="#999" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- NO → 要件修正へ -->
+        <line x1="180" y1="184" x2="80" y2="184" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="75" y="178" text-anchor="middle" fill="#c0392b" font-size="11" font-weight="bold">NO</text>
+        <rect x="16" y="200" width="128" height="52" rx="6" fill="#fdecea" stroke="#c0392b" stroke-width="1.5"/>
+        <text x="80" y="220" text-anchor="middle" fill="#c0392b" font-weight="bold" font-size="12">外国会社は</text>
+        <text x="80" y="236" text-anchor="middle" fill="#c0392b" font-size="12">船舶安全法等の</text>
+        <text x="80" y="252" text-anchor="middle" fill="#c0392b" font-size="12">適用外</text>
+        <line x1="80" y1="252" x2="80" y2="270" stroke="#c0392b" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- 基本的解釈指針 -->
+        <rect x="16" y="270" width="128" height="52" rx="6" fill="#fef9ec" stroke="#b07d00" stroke-width="1.5"/>
+        <text x="80" y="290" text-anchor="middle" fill="#b07d00" font-weight="bold" font-size="12">基本的解釈指針</text>
+        <text x="80" y="306" text-anchor="middle" fill="#555" font-size="11">本国相当法令への</text>
+        <text x="80" y="320" text-anchor="middle" fill="#555" font-size="11">読替適用</text>
+        <line x1="144" y1="296" x2="258" y2="270" stroke="#b07d00" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+        <!-- Step2 YES結論 -->
+        <text x="360" y="230" fill="#2a7a3a" font-size="11" font-weight="bold">YES or 読替後</text>
+
+        <!-- Step3 -->
+        <rect x="180" y="235" width="340" height="52" rx="6" fill="#e8f4f8" stroke="#2a7aad" stroke-width="1.5"/>
+        <text x="350" y="255" text-anchor="middle" font-weight="bold" fill="#2a7aad">STEP 3</text>
+        <text x="350" y="273" text-anchor="middle" fill="#1a1a2e">申告書への明細書添付（措令39条の15第8項）</text>
+        <text x="350" y="289" text-anchor="middle" fill="#1a1a2e">等の手続要件を充足するか？</text>
+
+        <line x1="350" y1="287" x2="350" y2="312" stroke="#999" stroke-width="1.5" marker-end="url(#arr)"/>
+        <text x="360" y="305" fill="#2a7a3a" font-size="11" font-weight="bold">YES</text>
+
+        <!-- 結論 -->
+        <rect x="180" y="312" width="340" height="46" rx="20" fill="#2a7a3a"/>
+        <text x="350" y="337" text-anchor="middle" fill="#fff" font-weight="bold" font-size="14">損金算入可</text>
+        <text x="350" y="354" text-anchor="middle" fill="#dfffdf" font-size="11">（合算所得の計算上、損金に算入できる）</text>
+
+        <!-- Step3 NO分岐 -->
+        <line x1="520" y1="261" x2="620" y2="261" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="628" y="256" fill="#c0392b" font-size="11" font-weight="bold">NO</text>
+        <rect x="556" y="270" width="128" height="40" rx="6" fill="#fdecea" stroke="#c0392b" stroke-width="1.5"/>
+        <text x="620" y="290" text-anchor="middle" fill="#c0392b" font-weight="bold" font-size="12">損金算入不可</text>
+        <text x="620" y="306" text-anchor="middle" fill="#555" font-size="11">（手続き要件未充足）</text>
+
+        <!-- arrow marker -->
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#999"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ③ 特定船舶の特別修繕準備金 -->
+  <section>
+    <h2>③ 特定船舶の特別修繕準備金（措法57条の8）</h2>
+
+    <div class="card">
+      <h3>条文の要件</h3>
+      <table>
+        <tr><th>要件</th><th>内容</th><th>本件における問題</th></tr>
+        <tr>
+          <td>① 特定船舶</td>
+          <td>船舶安全法の定期検査を受けるべき船舶（法法施行令等で定めるもの）</td>
+          <td class="red">外国法人は船舶安全法の適用外。文理通りの充足は不可</td>
+        </tr>
+        <tr>
+          <td>② 損金経理</td>
+          <td>当期の費用として損金経理すること</td>
+          <td class="green">外国関係会社の決算書に費用計上 → 充足</td>
+        </tr>
+        <tr>
+          <td>③ 限度額</td>
+          <td>次期定期検査費用見込額 × 経過月数/検査間隔月数</td>
+          <td class="green">計算は可能（数値に基づく計算）</td>
+        </tr>
+        <tr>
+          <td>④ 明細書添付</td>
+          <td>確定申告書への別表添付（措令39条の15第8項）</td>
+          <td class="red"><mark>損金算入の法定要件。必須。</mark></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="card card-yellow">
+      <span class="badge badge-cond">業法要件の修正</span>
+      <p>外国法人が文理通りに<strong>船舶安全法の適用を受けることは不可能</strong>。しかし、これを理由に一律に損金算入を否定すると、<mark>本邦法令基準の適用自体が空洞化</mark>する。</p>
+      <p style="margin-top:8px;">→ <strong>基本的解釈指針（石井孝・羽島和宏論文等）</strong>：文字通りの適用が不可能な業法・規制法要件は、<mark>外国関係会社の所在国における相当する法令の要件（本国相当法）に読み替えて適用</mark>する。</p>
+    </div>
+
+    <div class="card card-green">
+      <span class="badge badge-ok">結論</span>
+      <p>外国関係会社の所在国で船舶安全法に相当する検査制度（相当定期検査）の対象船舶であれば、<strong>措法57条の8の適用があり損金算入可</strong>。</p>
+      <p style="margin-top:6px;">ただし、<strong class="red">申告書への明細書添付が必須要件</strong>（措令39条の15第8項）。添付なければ損金算入不可。</p>
+    </div>
+  </section>
+
+  <!-- ④ 特定資産の買換えの圧縮記帳 -->
+  <section>
+    <h2>④ 特定資産の買換えの圧縮記帳（措法65条の7第1項第4号）</h2>
+
+    <div class="card">
+      <h3>条文の要件（現行：第4号、旧法：第10号）</h3>
+      <table>
+        <tr><th>要件</th><th>内容</th><th>本件における問題</th></tr>
+        <tr>
+          <td>① 対象船舶（買換資産）</td>
+          <td>船舶法に規定する<strong>日本船舶</strong>（措法65条の7①4号）</td>
+          <td class="red">外国法人は日本船舶の登録を受けることが原則不可</td>
+        </tr>
+        <tr>
+          <td>② 譲渡資産</td>
+          <td>事業用不動産・機械等</td>
+          <td class="green">外国法人でも充足可能</td>
+        </tr>
+        <tr>
+          <td>③ 圧縮限度額</td>
+          <td>圧縮基礎取得価額 × 差益割合 × <strong>80%</strong></td>
+          <td class="green">計算可能</td>
+        </tr>
+        <tr>
+          <td>④ 圧縮記帳</td>
+          <td>帳簿記載（直接減額 or 積立金方式）</td>
+          <td class="green">外国関係会社の決算書計上 → 充足</td>
+        </tr>
+        <tr>
+          <td>⑤ 明細書添付</td>
+          <td>確定申告書への別表添付（措令39条の15第8項）</td>
+          <td class="red"><mark>損金算入の法定要件。必須。</mark></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="card card-yellow">
+      <span class="badge badge-cond">業法要件の修正</span>
+      <p>「日本船舶」要件（船舶法）は、外国法人が直接充足することは<strong>構造上不可能</strong>。</p>
+      <p style="margin-top:8px;">→ 基本的解釈指針により、<mark>外国関係会社の所在国の船舶登録法令に基づき登録された船舶（本国相当船舶）</mark>を「日本船舶」に相当するものとして読み替え適用する。</p>
+    </div>
+
+    <div class="card card-green">
+      <span class="badge badge-ok">結論</span>
+      <p>本国相当船舶への買換えであれば、<strong>措法65条の7①4号の適用があり圧縮損の損金算入可</strong>（圧縮限度額：差益の80%）。</p>
+      <p style="margin-top:6px;">ただし、<strong class="red">申告書への明細書添付が必須要件</strong>（措令39条の15第8項）。添付なければ損金算入不可。</p>
+    </div>
+
+    <div class="card">
+      <h3>圧縮限度額の計算式</h3>
+      <div style="background:#f0f4f8; border-radius:6px; padding:12px 16px; font-family:monospace; font-size:0.9em;">
+        圧縮限度額 ＝ 圧縮基礎取得価額 × 差益割合 × <strong>80%</strong><br><br>
+        差益割合 ＝（譲渡対価 − 譲渡資産の帳簿価額等） ÷ 譲渡対価
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑤ 共通の手続要件 -->
+  <section>
+    <h2>⑤ 両者に共通する手続要件（最重要）</h2>
+    <div class="warn">
+      <strong>⚠️ 申告書への明細書添付（措令39条の15第8項）</strong><br>
+      損金算入額・圧縮限度額等の計算明細を<mark>確定申告書に添付</mark>することが、<strong>損金算入の法定要件</strong>（創設的要件）。<br>
+      これを欠いた場合は、実体要件を満たしていても<strong class="red">損金算入不可</strong>となる。
+    </div>
+
+    <div class="card" style="margin-top:14px;">
+      <h3>実務上の対応チェックリスト</h3>
+      <ol class="steps">
+        <li>
+          <div class="num">1</div>
+          <div class="body">外国関係会社の決算書に、修繕準備金繰入額・圧縮損として<strong>費用計上（損金経理）</strong>されているか確認</div>
+        </li>
+        <li>
+          <div class="num">2</div>
+          <div class="body">対象船舶が<strong>所在国の定期検査相当制度の対象</strong>（措法57条の8）・<strong>所在国登録船舶</strong>（措法65条の7）であるか確認</div>
+        </li>
+        <li>
+          <div class="num">3</div>
+          <div class="body">措令39条の15第8項に基づく<strong>明細書を作成し、合算申告書に添付</strong>する（日本の親会社の申告段階）</div>
+        </li>
+        <li>
+          <div class="num">4</div>
+          <div class="body">損金算入額が<strong>法定限度額（修繕準備金：見込額按分 / 圧縮記帳：差益の80%）以内</strong>であることを確認</div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ⑥ まとめ -->
+  <section>
+    <h2>⑥ 結論まとめ</h2>
+    <table>
+      <tr>
+        <th>項目</th>
+        <th>措法条文</th>
+        <th>限定列挙</th>
+        <th>業法要件修正</th>
+        <th>手続要件</th>
+        <th>損金算入</th>
+      </tr>
+      <tr>
+        <td><strong>特定船舶特別修繕準備金</strong></td>
+        <td class="law-ref">措法57条の8</td>
+        <td class="green">✅ 含む（ホ）</td>
+        <td class="green">✅ 本国相当法読替</td>
+        <td class="red">⚠️ 明細書添付必須</td>
+        <td class="green"><strong>可</strong>（条件付）</td>
+      </tr>
+      <tr>
+        <td><strong>特定資産買換え圧縮記帳</strong></td>
+        <td class="law-ref">措法65条の7①4号</td>
+        <td class="green">✅ 含む（ワ）</td>
+        <td class="green">✅ 本国相当船舶読替</td>
+        <td class="red">⚠️ 明細書添付必須</td>
+        <td class="green"><strong>可</strong>（条件付、限度額80%）</td>
+      </tr>
+    </table>
+
+    <div class="note" style="margin-top:14px;">
+      <strong>補足：判例・先例の不存在</strong><br>
+      本邦法令基準におけるCFC合算所得計算と圧縮記帳・特別修繕準備金の組み合わせに関する<strong>公表裁判例・裁決例は現時点では存在しない</strong>（2026年3月時点）。上記の結論は条文解釈と学説（石井孝・羽島和宏ほか）に基づくものであり、実務上は税務当局との事前確認が望ましい。
+    </div>
+  </section>
+
+  <div style="margin-top:40px; font-size:0.78em; color:#999; border-top:1px solid #ddd; padding-top:12px;">
+    参照条文：措令39条の15第1項第1号・同第8項 / 措法57条の8 / 措法65条の7第1項第4号 / 措令39条の17<br>
+    参照文献：石井孝「外国子会社合算税制において課税対象金額を本邦法令の規定の例に準じて計算する際の問題点」/ 羽島和宏「外国子会社合算税制の課税上の問題についての一考察」<br>
+    作成：Claude Code　｜　2026-03-01　｜　<a href="../index.html" style="color:#2a7aad">← その他インデックスに戻る</a>
+  </div>
+
+</div>
+</body>
+</html>

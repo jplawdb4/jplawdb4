@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>その他 — DR成果HTML一覧 | jplawdb4</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; background: #f5f7fa; color: #1a1a2e; font-size: 15px; line-height: 1.7; }
+  header { background: #2a7aad; color: #fff; padding: 20px 20px 16px; }
+  header h1 { font-size: 1.15em; font-weight: 700; }
+  header p { font-size: 0.82em; opacity: 0.85; margin-top: 4px; }
+  .container { max-width: 860px; margin: 0 auto; padding: 24px 16px 60px; }
+  .search-bar { display: flex; gap: 8px; margin-bottom: 20px; }
+  .search-bar input { flex: 1; padding: 9px 14px; border: 1px solid #c0ccd8; border-radius: 6px; font-size: 0.93em; }
+  .search-bar input:focus { outline: none; border-color: #2a7aad; box-shadow: 0 0 0 2px #2a7aad33; }
+  .tag-filter { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+  .tag { display: inline-block; padding: 3px 10px; border-radius: 14px; font-size: 0.78em; background: #e8f4f8; color: #2a7aad; cursor: pointer; border: 1px solid #b0d0e8; transition: 0.15s; user-select: none; }
+  .tag:hover, .tag.active { background: #2a7aad; color: #fff; }
+  .card { background: #fff; border: 1px solid #d0d8e0; border-radius: 8px; padding: 16px 18px; margin-bottom: 14px; transition: box-shadow 0.15s; }
+  .card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+  .card-title { font-weight: 700; font-size: 0.97em; margin-bottom: 6px; }
+  .card-title a { color: #2a7aad; text-decoration: none; }
+  .card-title a:hover { text-decoration: underline; }
+  .card-meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; }
+  .card-date { font-size: 0.8em; color: #888; }
+  .card-tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.75em; background: #e8f4f8; color: #2a7aad; }
+  .card-laws { font-size: 0.82em; color: #555; margin-bottom: 6px; }
+  .card-summary { font-size: 0.87em; color: #444; line-height: 1.6; }
+  .empty { text-align: center; padding: 40px; color: #888; }
+  .total { font-size: 0.85em; color: #666; margin-bottom: 14px; }
+  @media (max-width: 600px) { .container { padding: 14px 10px 40px; } }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>その他 — DR成果HTML一覧</h1>
+  <p>jplawdb4 / ClaudeCodeが生成したディープリサーチ成果物</p>
+</header>
+
+<div class="container">
+
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="タイトル・タグ・条文で検索..." oninput="render()">
+  </div>
+
+  <div class="tag-filter" id="tagFilter"></div>
+
+  <div class="total" id="totalText"></div>
+  <div id="list"></div>
+
+</div>
+
+<script>
+const DATA = [
+  {
+    id: "cfc_senpa_assetswap_20260301",
+    title: "CFC合算所得計算（本邦法令基準）：特定船舶特別修繕準備金・圧縮記帳の損金算入可否",
+    date: "2026-03-01",
+    tags: ["CFC税制", "本邦法令基準", "特別修繕準備金", "圧縮記帳", "損金算入", "措置法"],
+    laws: ["措令39条の15", "措法57条の8", "措法65条の7①4号"],
+    summary: "外国関係会社の合算所得計算（本邦法令基準）において、特定船舶の特別修繕準備金（措法57の8）と特定資産の買換えの圧縮記帳（措法65の7①4号）はいずれも限定列挙14規定に含まれ損金算入可。ただし船舶安全法・日本船舶要件は業法要件修正（本国相当法読替）が必要で、かつ申告書明細書添付（措令39条の15第8項）が必須条件。",
+    file: "html/cfc_senpa_assetswap_20260301.html"
+  }
+];
+
+let activeTag = null;
+
+// タグ一覧を生成
+const allTags = [...new Set(DATA.flatMap(d => d.tags))];
+const tagFilter = document.getElementById('tagFilter');
+allTags.forEach(tag => {
+  const el = document.createElement('span');
+  el.className = 'tag';
+  el.textContent = tag;
+  el.onclick = () => {
+    activeTag = (activeTag === tag) ? null : tag;
+    document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
+    if (activeTag) el.classList.add('active');
+    render();
+  };
+  tagFilter.appendChild(el);
+});
+
+function render() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const filtered = DATA.filter(d => {
+    const text = [d.title, ...d.tags, ...d.laws, d.summary].join(' ').toLowerCase();
+    const matchQ = !q || text.includes(q);
+    const matchTag = !activeTag || d.tags.includes(activeTag);
+    return matchQ && matchTag;
+  });
+
+  document.getElementById('totalText').textContent = `${filtered.length} 件`;
+
+  const list = document.getElementById('list');
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="empty">該当なし</div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(d => `
+    <div class="card">
+      <div class="card-title"><a href="${d.file}">${d.title}</a></div>
+      <div class="card-meta">
+        <span class="card-date">${d.date}</span>
+        ${d.tags.map(t => `<span class="card-tag">${t}</span>`).join('')}
+      </div>
+      <div class="card-laws">📋 ${d.laws.join(' / ')}</div>
+      <div class="card-summary">${d.summary}</div>
+    </div>
+  `).join('');
+}
+
+render();
+</script>
+</body>
+</html>
