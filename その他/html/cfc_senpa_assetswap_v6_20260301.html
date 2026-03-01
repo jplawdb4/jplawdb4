@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CFC合算所得計算（本邦法令基準）v6：特別修繕準備金・特定資産買換圧縮記帳の損金算入可否</title>
+<style>
+  /* === Base === */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+    font-size: 14px;
+    line-height: 1.8;
+    color: #1a1a2e;
+    background: #f5f7fa;
+  }
+  /* === Layout === */
+  .page-wrapper { max-width: 960px; margin: 0 auto; padding: 32px 20px 80px; }
+  /* === Header === */
+  .doc-header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+    color: #fff;
+    border-radius: 12px;
+    padding: 40px 48px;
+    margin-bottom: 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .doc-header::before {
+    content: "";
+    position: absolute; top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .doc-tag {
+    display: inline-block;
+    background: rgba(99,179,237,0.3);
+    color: #90cdf4;
+    border: 1px solid rgba(99,179,237,0.4);
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    padding: 3px 12px;
+    margin-bottom: 16px;
+  }
+  .doc-header h1 {
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+  .doc-meta {
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    margin-top: 16px;
+  }
+  /* === Section === */
+  .section {
+    background: #fff;
+    border-radius: 10px;
+    padding: 32px 36px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  }
+  .section-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #0f3460;
+    border-bottom: 3px solid #0f3460;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title .num {
+    background: #0f3460;
+    color: #fff;
+    border-radius: 50%;
+    width: 26px; height: 26px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+  /* === Verdict boxes === */
+  .verdict { border-radius: 8px; padding: 16px 20px; margin: 16px 0; display: flex; align-items: flex-start; gap: 14px; }
+  .verdict-ok  { background: #e6f6ed; border-left: 5px solid #2f9e44; }
+  .verdict-cond{ background: #fff3cd; border-left: 5px solid #e6a817; }
+  .verdict-ng  { background: #ffe5e5; border-left: 5px solid #c92a2a; }
+  .verdict-icon{ font-size: 22px; line-height: 1; margin-top: 2px; }
+  .verdict-body h4{ font-size: 14px; font-weight: 800; margin-bottom: 4px; }
+  .verdict-ok  .verdict-body h4 { color: #2f9e44; }
+  .verdict-cond .verdict-body h4 { color: #996a00; }
+  .verdict-ng  .verdict-body h4 { color: #c92a2a; }
+  .verdict-body p { font-size: 13px; color: #444; }
+  /* === Statute quote === */
+  .statute {
+    background: #f8f9fa;
+    border-left: 4px solid #0f3460;
+    border-radius: 4px;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 12.5px;
+    line-height: 1.9;
+    color: #222;
+  }
+  .statute strong { color: #0f3460; font-weight: 800; }
+  .statute .src {
+    display: block;
+    font-size: 11px;
+    color: #888;
+    margin-top: 8px;
+    font-style: italic;
+  }
+  /* === Analysis flow === */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 20px 0;
+  }
+  .flow-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    position: relative;
+  }
+  .flow-step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    left: 19px; top: 40px;
+    width: 2px;
+    height: calc(100% - 8px);
+    background: #cbd5e0;
+  }
+  .flow-num {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: #0f3460;
+    color: #fff;
+    font-weight: 800;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+  .flow-content {
+    padding: 8px 0 24px;
+    flex: 1;
+  }
+  .flow-content h4 { font-size: 14px; font-weight: 700; color: #0f3460; margin-bottom: 6px; }
+  .flow-content p  { font-size: 13px; color: #444; }
+  /* === Comparison table === */
+  .cmp-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 13px; }
+  .cmp-table th {
+    background: #0f3460;
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 700;
+  }
+  .cmp-table td {
+    border: 1px solid #dee2e6;
+    padding: 10px 14px;
+    vertical-align: top;
+  }
+  .cmp-table tr:nth-child(even) td { background: #f8f9fa; }
+  .tag-ok  { display: inline-block; background: #d3f9d8; color: #2f9e44; border-radius: 4px; padding: 1px 8px; font-size: 11px; font-weight: 700; }
+  .tag-ng  { display: inline-block; background: #ffe0e0; color: #c92a2a; border-radius: 4px; padding: 1px 8px; font-size: 11px; font-weight: 700; }
+  .tag-cond{ display: inline-block; background: #fff3cd; color: #996a00; border-radius: 4px; padding: 1px 8px; font-size: 11px; font-weight: 700; }
+  /* === Detail boxes === */
+  .detail-box {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 16px 0;
+  }
+  .detail-box-head {
+    background: #edf2f7;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #2d3748;
+  }
+  .detail-box-body {
+    padding: 14px 16px;
+    font-size: 13px;
+    color: #444;
+    line-height: 1.9;
+  }
+  /* === Info / warning === */
+  .info-box {
+    background: #ebf8ff;
+    border: 1px solid #90cdf4;
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 13px;
+    color: #2b6cb0;
+  }
+  .warn-box {
+    background: #fff5f5;
+    border: 1px solid #feb2b2;
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 13px;
+    color: #9b2335;
+  }
+  .warn-box strong { font-weight: 800; }
+  /* === Footnote === */
+  .footnote {
+    font-size: 12px;
+    color: #718096;
+    margin-top: 8px;
+    padding-left: 14px;
+    border-left: 3px solid #cbd5e0;
+    line-height: 1.7;
+  }
+  /* === Print === */
+  @media print {
+    body { background: #fff; }
+    .page-wrapper { max-width: 100%; padding: 20px; }
+    .section { box-shadow: none; border: 1px solid #ddd; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+<!-- ===== HEADER ===== -->
+<div class="doc-header">
+  <div class="doc-tag">CFC税制 ／ 本邦法令基準 ／ v6（ゼロベース）</div>
+  <h1>CFC合算所得計算における<br>特別修繕準備金・特定資産買換圧縮記帳の損金算入可否</h1>
+  <div class="doc-meta">
+    根拠条文：措法66条の6②四号 ／ 措令39条の15第1項第1号・第8項<br>
+    措法57条の8（特別修繕準備金） ／ 措法65条の7（特定資産の買換え）<br>
+    作成日：2026-03-01 ／ Version 6
+  </div>
+</div>
+
+<!-- ===== 1. 問題の所在 ===== -->
+<div class="section">
+  <div class="section-title"><span class="num">1</span>問題の所在</div>
+
+  <p>日本親会社が外国関係会社（CFC）の所得を合算課税（措法66条の6第1項）する際、<strong>本邦法令基準</strong>を採用した場合、外国関係会社の決算書上に費用計上されている次の2項目が<strong>基準所得金額の計算上、損金として認められるか</strong>が問題となる。</p>
+
+  <div style="margin: 20px 0;">
+    <div class="detail-box">
+      <div class="detail-box-head">🔍 検討対象の2項目</div>
+      <div class="detail-box-body">
+        <strong>① 特定船舶に係る特別修繕準備金（措法57条の8）</strong><br>
+        　外国関係会社が、船舶安全法上の定期検査を受けるための修繕費用に備えて積み立てた準備金<br><br>
+        <strong>② 特定資産の買換えに係る圧縮記帳（措法65条の7）</strong><br>
+        　外国関係会社が特定の資産を譲渡し、買換資産を取得した際に計上した圧縮損（帳簿価額の減額経理）
+      </div>
+    </div>
+  </div>
+
+  <p>両項目は、日本の租税特別措置法上の恩典的規定（措置法固有の政策的減税規定）である。本邦法令基準の下でこれらが適用されるためには、<strong>措令39条の15第1項第1号の明示的列挙</strong>が必要となる。</p>
+</div>
+
+<!-- ===== 2. 法的フレームワーク ===== -->
+<div class="section">
+  <div class="section-title"><span class="num">2</span>法的フレームワーク：本邦法令基準の構造</div>
+
+  <div class="flow">
+    <div class="flow-step">
+      <div class="flow-num">①</div>
+      <div class="flow-content">
+        <h4>適用対象金額の定義（措法66条の6②四号）</h4>
+        <p>外国関係会社の各事業年度の決算に基づく所得の金額につき、<strong>「法人税法及びこの法律による各事業年度の所得の金額の計算に準ずるものとして政令で定める基準」</strong>（＝本邦法令基準）により計算した金額（基準所得金額）を基礎として計算した金額。</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">②</div>
+      <div class="flow-content">
+        <h4>本邦法令基準の内容（措令39条の15第1項第1号）</h4>
+        <p>基準所得金額を計算する際に適用する法令は<strong>限定列挙</strong>されている。措置法規定については下記の条文のみが「本邦法令の規定」として指定されている。</p>
+        <div class="statute">
+          法第四十三条、第四十五条の二、第五十二条の二、第五十七条の五、第五十七条の六、<strong>第五十七条の八</strong>、第五十七条の九、第六十一条の四、<strong>第六十五条の七から第六十五条の九まで（法第六十五条の七第一項の表の第四号に係る部分に限る。）</strong>、第六十六条の四第三項、第六十七条の十二及び第六十七条の十三の規定
+          <span class="src">措令39条の15第1項第1号（抜粋）</span>
+        </div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">③</div>
+      <div class="flow-content">
+        <h4>計算・申告の条件（措令39条の15第8項）</h4>
+        <p>上記の特別措置法規定（措法57条の8・65条の7等）により損金算入される金額については、<strong>日本親会社の確定申告書に当該金額の損金算入に関する明細書の添付がある場合に限り</strong>、基準所得金額の計算上損金に算入できる。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 3. ①特別修繕準備金の検討 ===== -->
+<div class="section">
+  <div class="section-title"><span class="num">3</span>①特定船舶の特別修繕準備金（措法57条の8）</div>
+
+  <div class="verdict verdict-ok">
+    <div class="verdict-icon">✅</div>
+    <div class="verdict-body">
+      <h4>結論：損金算入可（条件付き）</h4>
+      <p>措令39条の15第1項第1号に「第五十七条の八」が明示的に列挙されているため、要件を満たす限り基準所得金額の計算上、損金算入できる。</p>
+    </div>
+  </div>
+
+  <h4 style="font-size:14px; font-weight:700; color:#0f3460; margin:20px 0 10px;">3-1．措法57条の8の規定内容（抜粋）</h4>
+  <div class="statute">
+    <strong>措法57条の8第1項</strong>：青色申告書を提出する法人が、各事業年度において、その事業の用に供する船舶安全法第5条第1項第1号の規定による定期検査（「定期検査」）を受けなければならない船舶（「特定船舶」）について行う定期検査を受けるための修繕（「特別の修繕」）に要する費用の支出に備えるため、当該特定船舶ごとに、<strong>積立限度額以下の金額を損金経理の方法により特別修繕準備金として積み立てたとき</strong>は、その積み立てた金額は、当該事業年度の所得の金額の計算上、損金の額に算入する。
+  </div>
+
+  <h4 style="font-size:14px; font-weight:700; color:#0f3460; margin:20px 0 10px;">3-2．本邦法令基準への適用方法</h4>
+
+  <div class="detail-box">
+    <div class="detail-box-head">「の例に準じて」計算する場合の解釈</div>
+    <div class="detail-box-body">
+      措令39条の15第1項第1号は、各措置法規定を「<strong>の例に準じて計算</strong>」するものとしている。外国関係会社は日本の青色申告書を提出できないが、「例に準じて」という文言の下では、手続的要件（青色申告）ではなく<strong>実体的要件（積立・損金経理・積立限度額の遵守）</strong>を充足したかどうかが判断基準となる。<br><br>
+      具体的には、<strong>外国関係会社の決算書上で損金経理されており、かつ積立限度額以内</strong>であれば、措法57条の8の例に準じた計算において損金算入できると解される。
+    </div>
+  </div>
+
+  <h4 style="font-size:14px; font-weight:700; color:#0f3460; margin:20px 0 10px;">3-3．要件整理</h4>
+  <table class="cmp-table">
+    <thead>
+      <tr><th>要件</th><th>内容</th><th>判定</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>列挙要件</td>
+        <td>措令39条の15第1項第1号に明示列挙</td>
+        <td><span class="tag-ok">充足</span></td>
+      </tr>
+      <tr>
+        <td>対象船舶</td>
+        <td>船舶安全法上の定期検査対象船舶（特定船舶）</td>
+        <td><span class="tag-cond">確認要</span></td>
+      </tr>
+      <tr>
+        <td>積立方法</td>
+        <td>損金経理（または剰余金処分による積立金方式）</td>
+        <td><span class="tag-cond">確認要</span></td>
+      </tr>
+      <tr>
+        <td>積立限度額</td>
+        <td>措法57条の8第2項に規定する限度額以内</td>
+        <td><span class="tag-cond">確認要</span></td>
+      </tr>
+      <tr>
+        <td>明細書添付</td>
+        <td>親会社の確定申告書への損金算入明細書添付（措令39条の15第8項）</td>
+        <td><span class="tag-ok">必須</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="info-box">
+    <strong>準備金取崩し時の益金算入</strong>：措法57条の8第3〜5項の規定も「の例に準じて」適用されるため、特別の修繕を完了した場合・準備金設定特定船舶を修繕しないこととなった場合等には、当該準備金残額が益金に算入される。
+  </div>
+</div>
+
+<!-- ===== 4. ②圧縮記帳の検討 ===== -->
+<div class="section">
+  <div class="section-title"><span class="num">4</span>②特定資産の買換えに係る圧縮記帳（措法65条の7）</div>
+
+  <p>措令39条の15第1項第1号における文言は以下のとおりである。</p>
+  <div class="statute">
+    <strong>第六十五条の七から第六十五条の九まで（法第六十五条の七第一項の表の<strong>第四号に係る部分に限る。</strong>）</strong>
+    <span class="src">措令39条の15第1項第1号（抜粋）</span>
+  </div>
+
+  <p>この括弧書きの限定が決定的である。措法65条の7第1項の表の構造を整理する。</p>
+
+  <div class="detail-box">
+    <div class="detail-box-head">措法65条の7第1項の表：各号の譲渡資産と買換資産</div>
+    <div class="detail-box-body">
+      <table class="cmp-table" style="margin:0;">
+        <thead>
+          <tr><th>号</th><th>譲渡資産</th><th>買換資産</th><th>CFC適用</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>第1号</strong></td>
+            <td>航空機騒音障害区域内の土地等・建物・構築物</td>
+            <td>同区域外の土地等・建物・構築物・機械装置</td>
+            <td><span class="tag-ng">対象外</span></td>
+          </tr>
+          <tr>
+            <td><strong>第2号</strong></td>
+            <td>既成市街地等内の土地等・建物・構築物</td>
+            <td>既成市街地等内の土地等・建物・構築物・機械装置</td>
+            <td><span class="tag-ng">対象外</span></td>
+          </tr>
+          <tr>
+            <td><strong>第3号</strong></td>
+            <td>国内の土地等・建物・構築物（所有期間10年超）</td>
+            <td>国内の土地等・建物・構築物</td>
+            <td><span class="tag-ng">対象外</span></td>
+          </tr>
+          <tr>
+            <td><strong>第4号</strong></td>
+            <td>船舶（日本船舶、進水から譲渡まで政令期間未満）</td>
+            <td>船舶（政令で定めるもの）</td>
+            <td><span class="tag-ok">対象</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <h4 style="font-size:14px; font-weight:700; color:#0f3460; margin:20px 0 10px;">4-1．第4号（船舶→船舶）に該当する場合</h4>
+
+  <div class="verdict verdict-ok">
+    <div class="verdict-icon">✅</div>
+    <div class="verdict-body">
+      <h4>船舶の買換えの場合：損金算入可（条件付き）</h4>
+      <p>「日本船舶」（船舶法第1条の日本船舶、漁業用を除く）を譲渡し、船舶（政令所定のもの）へ買換えた場合の圧縮記帳は、第4号に該当し損金算入できる。</p>
+    </div>
+  </div>
+
+  <div class="warn-box">
+    <strong>⚠️ 「日本船舶」要件：外国籍船舶の場合は不適用</strong><br>
+    措法65条の7第1項の表第4号は、譲渡資産が「<strong>船舶法第1条に規定する日本船舶</strong>」であることを要件とする。外国関係会社が保有する外国籍の船舶はこの要件を満たさないため、第4号の適用は<strong>原則として受けられない</strong>。本邦法令基準は「の例に準じて」適用するものであり、船舶の国籍要件はそのまま適用される。
+  </div>
+
+  <h4 style="font-size:14px; font-weight:700; color:#0f3460; margin:20px 0 10px;">4-2．第1〜3号（土地・建物等）に該当する場合</h4>
+
+  <div class="verdict verdict-ng">
+    <div class="verdict-icon">❌</div>
+    <div class="verdict-body">
+      <h4>土地・建物等の買換えの場合：損金算入不可</h4>
+      <p>措令39条の15第1項第1号の括弧書きにより、第4号以外の部分（第1〜3号）は本邦法令の規定として指定されていない。したがって、土地・建物・構築物等の買換えに係る圧縮記帳は、基準所得金額の計算上、損金算入できない。</p>
+    </div>
+  </div>
+
+  <h4 style="font-size:14px; font-weight:700; color:#0f3460; margin:20px 0 10px;">4-3．適用要件整理（第4号適用の場合）</h4>
+  <table class="cmp-table">
+    <thead>
+      <tr><th>要件</th><th>内容</th><th>判定</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>列挙要件</td>
+        <td>措令39条の15第1項第1号（第4号限定）</td>
+        <td><span class="tag-ok">充足</span></td>
+      </tr>
+      <tr>
+        <td>譲渡資産の種類</td>
+        <td>日本船舶（船舶法1条）、漁業用を除く</td>
+        <td><span class="tag-cond">確認要</span></td>
+      </tr>
+      <tr>
+        <td>進水からの期間</td>
+        <td>進水の日から譲渡の日まで政令期間未満</td>
+        <td><span class="tag-cond">確認要</span></td>
+      </tr>
+      <tr>
+        <td>経理方法</td>
+        <td>帳簿価額の損金経理減額または積立金方式</td>
+        <td><span class="tag-cond">確認要</span></td>
+      </tr>
+      <tr>
+        <td>圧縮限度額</td>
+        <td>圧縮基礎取得価額×差益割合×80/100以内</td>
+        <td><span class="tag-cond">確認要</span></td>
+      </tr>
+      <tr>
+        <td>明細書添付</td>
+        <td>親会社の確定申告書への損金算入明細書添付（措令39条の15第8項）</td>
+        <td><span class="tag-ok">必須</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ===== 5. 総括 ===== -->
+<div class="section">
+  <div class="section-title"><span class="num">5</span>総括：判定マトリクス</div>
+
+  <table class="cmp-table">
+    <thead>
+      <tr>
+        <th>項目</th>
+        <th>根拠条文</th>
+        <th>CFC損金算入</th>
+        <th>条件・留意点</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>特定船舶の特別修繕準備金</strong><br>（措法57条の8）</td>
+        <td>措令39条の15①一号に明示列挙</td>
+        <td><span class="tag-ok">可</span></td>
+        <td>①損金経理②積立限度額以内③明細書添付。取崩し時は益金算入</td>
+      </tr>
+      <tr>
+        <td><strong>特定資産買換圧縮記帳</strong><br>（措法65条の7）<br>第4号（船舶→船舶）</td>
+        <td>措令39条の15①一号（第4号限定）</td>
+        <td><span class="tag-ok">可</span></td>
+        <td>①日本船舶要件②政令期間未満③圧縮限度額④明細書添付</td>
+      </tr>
+      <tr>
+        <td><strong>特定資産買換圧縮記帳</strong><br>（措法65条の7）<br>第1〜3号（土地・建物等）</td>
+        <td>措令39条の15①一号の括弧書きにより除外</td>
+        <td><span class="tag-ng">不可</span></td>
+        <td>列挙なし。決算書上の圧縮損は基準所得金額計算上で否認（加算調整が必要）</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="warn-box" style="margin-top:20px;">
+    <strong>実務上の重要留意点</strong>：外国関係会社の決算書上に計上されている費用が、本邦法令基準の計算において損金として認められない場合（上記の土地・建物等の圧縮記帳等）は、決算書の費用額を<strong>加算調整</strong>したうえで基準所得金額を計算する必要がある。このような調整の有無が、申告書上の整合性に直結する。
+  </div>
+</div>
+
+<!-- ===== 6. 条文構造図 ===== -->
+<div class="section">
+  <div class="section-title"><span class="num">6</span>条文構造図</div>
+  <svg viewBox="0 0 860 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:860px;display:block;margin:0 auto;">
+    <!-- ルートノード -->
+    <rect x="330" y="10" width="200" height="50" rx="6" fill="#0f3460"/>
+    <text x="430" y="30" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">本邦法令基準</text>
+    <text x="430" y="48" text-anchor="middle" fill="#a0c4ff" font-size="10">措法66条の6②四号</text>
+    <text x="430" y="62" text-anchor="middle" fill="#a0c4ff" font-size="10">措令39条の15①一号</text>
+
+    <!-- 矢印 -->
+    <line x1="430" y1="62" x2="430" y2="90" stroke="#0f3460" stroke-width="2" marker-end="url(#arr)"/>
+    <line x1="430" y1="90" x2="170" y2="90" stroke="#0f3460" stroke-width="2"/>
+    <line x1="430" y1="90" x2="690" y2="90" stroke="#0f3460" stroke-width="2"/>
+    <line x1="170" y1="90" x2="170" y2="120" stroke="#0f3460" stroke-width="2" marker-end="url(#arr)"/>
+    <line x1="690" y1="90" x2="690" y2="120" stroke="#0f3460" stroke-width="2" marker-end="url(#arr)"/>
+
+    <defs>
+      <marker id="arr" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 Z" fill="#0f3460"/>
+      </marker>
+    </defs>
+
+    <!-- 措法57条の8ノード -->
+    <rect x="60" y="120" width="220" height="70" rx="6" fill="#2f9e44"/>
+    <text x="170" y="143" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">措法57条の8</text>
+    <text x="170" y="160" text-anchor="middle" fill="#d3f9d8" font-size="10">特定船舶の特別修繕準備金</text>
+    <text x="170" y="178" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">→ 損金算入 ✅</text>
+
+    <!-- 措法65条の7ノード -->
+    <rect x="580" y="120" width="220" height="70" rx="6" fill="#555"/>
+    <text x="690" y="143" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">措法65条の7</text>
+    <text x="690" y="160" text-anchor="middle" fill="#ccc" font-size="10">特定資産の買換え圧縮記帳</text>
+    <text x="690" y="178" text-anchor="middle" fill="#aaa" font-size="10">第4号に係る部分に限る</text>
+
+    <!-- 65条の7から矢印 -->
+    <line x1="620" y1="190" x2="560" y2="230" stroke="#555" stroke-width="2" marker-end="url(#arr2)"/>
+    <line x1="760" y1="190" x2="820" y2="230" stroke="#555" stroke-width="2" marker-end="url(#arr2)"/>
+
+    <defs>
+      <marker id="arr2" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 Z" fill="#555"/>
+      </marker>
+    </defs>
+
+    <!-- 第4号ノード -->
+    <rect x="460" y="230" width="180" height="70" rx="6" fill="#2f9e44"/>
+    <text x="550" y="255" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">第4号：船舶→船舶</text>
+    <text x="550" y="273" text-anchor="middle" fill="#d3f9d8" font-size="10">日本船舶の買換え</text>
+    <text x="550" y="291" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">→ 損金算入 ✅</text>
+
+    <!-- 第1〜3号ノード -->
+    <rect x="660" y="230" width="180" height="70" rx="6" fill="#c92a2a"/>
+    <text x="750" y="255" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">第1〜3号：土地・建物等</text>
+    <text x="750" y="273" text-anchor="middle" fill="#ffc9c9" font-size="10">括弧書きで除外</text>
+    <text x="750" y="291" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">→ 損金不算入 ❌</text>
+  </svg>
+
+  <div class="footnote" style="margin-top:16px;">
+    ※ 措令39条の15第8項：損金算入には日本親会社の確定申告書への損金算入明細書添付が必要（やむを得ない事情のある場合を除く）
+  </div>
+</div>
+
+<!-- ===== 7. 実務対応 ===== -->
+<div class="section">
+  <div class="section-title"><span class="num">7</span>実務対応チェックリスト</div>
+
+  <table class="cmp-table">
+    <thead>
+      <tr><th>チェック項目</th><th>内容</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>✅ 準備金の積立状況確認</td>
+        <td>外国関係会社の決算書上の特別修繕準備金額が積立限度額（措法57条の8第2項各号）以内かを検証</td>
+      </tr>
+      <tr>
+        <td>✅ 船舶の国籍確認</td>
+        <td>圧縮記帳の対象船舶が「日本船舶」（船舶法1条）か外国籍船舶かを確認。外国籍の場合は第4号適用不可</td>
+      </tr>
+      <tr>
+        <td>✅ 圧縮記帳の種類確認</td>
+        <td>決算書上の圧縮記帳が何の資産の買換えに係るものか（土地・建物・船舶の区別）を特定</td>
+      </tr>
+      <tr>
+        <td>✅ 加算調整の要否</td>
+        <td>第1〜3号に係る圧縮損が計上されている場合、基準所得金額計算上で加算調整が必要</td>
+      </tr>
+      <tr>
+        <td>✅ 明細書の準備</td>
+        <td>措令39条の15第8項に基づく損金算入明細書を作成し、日本親会社の確定申告書に添付</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ===== 根拠条文一覧 ===== -->
+<div class="section" style="background:#f8f9fa;">
+  <div class="section-title"><span class="num">8</span>根拠条文一覧</div>
+  <table class="cmp-table">
+    <thead><tr><th>条文</th><th>内容</th></tr></thead>
+    <tbody>
+      <tr><td>措法66条の6第1項</td><td>CFC合算課税（適用対象金額の益金算入）</td></tr>
+      <tr><td>措法66条の6第2項第4号</td><td>適用対象金額・基準所得金額の定義</td></tr>
+      <tr><td>措令39条の15第1項第1号</td><td>本邦法令基準の計算方法：適用する本邦法令の限定列挙</td></tr>
+      <tr><td>措令39条の15第8項</td><td>損金算入のための明細書添付要件</td></tr>
+      <tr><td>措法57条の8</td><td>特定船舶に係る特別修繕準備金（全15項）</td></tr>
+      <tr><td>措法65条の7</td><td>特定の資産の買換えの場合の課税の特例（圧縮記帳）</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div style="text-align:center; color:#aaa; font-size:12px; margin-top:32px;">
+  jplawdb4 ／ CFC合算課税 ／ 本邦法令基準 v6 ／ 2026-03-01 ／ ゼロベース新規作成
+</div>
+
+</div>
+</body>
+</html>
