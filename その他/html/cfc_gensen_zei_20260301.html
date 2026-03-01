@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CFC合算課税（本邦法令基準）：日本銀行預金の源泉所得税と別表調製</title>
+<style>
+  :root {
+    --blue: #1a5f8a;
+    --blue-light: #e8f2f8;
+    --blue-mid: #2a7aad;
+    --green: #1c6b3a;
+    --green-light: #eaf4ee;
+    --amber: #7a4f00;
+    --amber-light: #fff3cd;
+    --red: #8a1a1a;
+    --red-light: #fceaea;
+    --gray: #f5f7fa;
+    --border: #d0d8e0;
+    --text: #1a1a2e;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif; background: var(--gray); color: var(--text); font-size: 15px; line-height: 1.75; }
+  header { background: var(--blue); color: #fff; padding: 24px 24px 18px; }
+  header h1 { font-size: 1.15em; font-weight: 700; line-height: 1.5; }
+  header .meta { font-size: 0.8em; opacity: 0.8; margin-top: 6px; }
+  nav { background: #fff; border-bottom: 2px solid var(--blue); padding: 10px 24px; display: flex; flex-wrap: wrap; gap: 8px; font-size: 0.82em; }
+  nav a { color: var(--blue-mid); text-decoration: none; padding: 2px 6px; border-radius: 3px; }
+  nav a:hover { background: var(--blue-light); }
+  .container { max-width: 900px; margin: 0 auto; padding: 28px 16px 60px; }
+  h2 { font-size: 1.08em; color: var(--blue); border-left: 4px solid var(--blue); padding-left: 10px; margin: 32px 0 14px; }
+  h3 { font-size: 0.97em; font-weight: 700; color: var(--green); border-left: 3px solid var(--green); padding-left: 8px; margin: 22px 0 10px; }
+  h4 { font-size: 0.93em; font-weight: 700; margin: 16px 0 8px; color: #444; }
+  p { margin-bottom: 10px; }
+  .card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 18px 20px; margin-bottom: 18px; }
+  /* 設例ボックス */
+  .case-box { background: var(--blue-light); border: 1px solid #b0cce0; border-radius: 8px; padding: 16px 20px; margin-bottom: 20px; }
+  .case-box .label { font-size: 0.78em; font-weight: 700; color: var(--blue-mid); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+  /* 条文引用 */
+  .statute { background: #f8f9fa; border-left: 4px solid var(--blue-mid); padding: 12px 16px; margin: 12px 0; font-size: 0.88em; line-height: 1.8; color: #2a2a3e; border-radius: 0 4px 4px 0; }
+  .statute .ref { font-size: 0.82em; font-weight: 700; color: var(--blue-mid); margin-bottom: 6px; }
+  /* 注意・警告 */
+  .note { background: var(--amber-light); border: 1px solid #e0c060; border-radius: 6px; padding: 12px 16px; margin: 12px 0; font-size: 0.88em; }
+  .note .note-title { font-weight: 700; color: var(--amber); margin-bottom: 4px; }
+  .alert { background: var(--red-light); border: 1px solid #e09090; border-radius: 6px; padding: 12px 16px; margin: 12px 0; font-size: 0.88em; }
+  .alert .alert-title { font-weight: 700; color: var(--red); margin-bottom: 4px; }
+  /* 別表（テーブル） */
+  table { width: 100%; border-collapse: collapse; font-size: 0.88em; margin: 14px 0; }
+  th { background: var(--blue); color: #fff; padding: 8px 12px; text-align: left; font-weight: 700; }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:nth-child(even) td { background: var(--gray); }
+  .td-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .td-total { font-weight: 700; background: var(--blue-light) !important; }
+  .td-sub { font-size: 0.85em; color: #666; }
+  .td-add { color: #1a5f8a; font-weight: 700; }
+  .td-minus { color: var(--red); font-weight: 700; }
+  /* 計算フロー */
+  .flow { display: grid; gap: 0; margin: 16px 0; }
+  .flow-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; background: #fff; border: 1px solid var(--border); border-radius: 4px; margin-bottom: 2px; }
+  .flow-num { background: var(--blue); color: #fff; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.8em; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .flow-body { flex: 1; }
+  .flow-title { font-weight: 700; font-size: 0.9em; margin-bottom: 3px; }
+  .flow-calc { font-size: 0.88em; color: #444; }
+  .flow-result { float: right; font-weight: 700; color: var(--blue); font-size: 0.95em; }
+  /* 色別バッジ */
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.76em; font-weight: 700; vertical-align: middle; margin-left: 4px; }
+  .badge-blue { background: var(--blue-mid); color: #fff; }
+  .badge-green { background: var(--green); color: #fff; }
+  .badge-amber { background: var(--amber); color: #fff; }
+  .badge-red { background: var(--red); color: #fff; }
+  /* 比較2列 */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 14px 0; }
+  .col-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+  .col-card .col-header { font-weight: 700; font-size: 0.88em; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 2px solid var(--blue-light); }
+  /* 別表タイトル */
+  .beppyo-title { background: var(--blue-mid); color: #fff; text-align: center; font-weight: 700; font-size: 0.88em; padding: 6px 12px; border-radius: 4px 4px 0 0; margin-top: 18px; }
+  table.beppyo { border-top: none; margin-top: 0; }
+  table.beppyo th { background: var(--blue-light); color: var(--blue); font-weight: 700; font-size: 0.85em; }
+  /* 結論サマリ */
+  .conclusion { background: var(--green-light); border: 2px solid var(--green); border-radius: 8px; padding: 18px 20px; margin-top: 24px; }
+  .conclusion h3 { border-left-color: var(--green); color: var(--green); margin-top: 0; }
+  @media (max-width: 640px) {
+    .two-col { grid-template-columns: 1fr; }
+    header h1 { font-size: 1em; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>CFC合算課税（本邦法令基準）：特定外国関係会社の日本銀行預金に係る<br>源泉所得税の取扱いと別表調製</h1>
+  <div class="meta">jplawdb4 / その他 / 2026-03-01 ｜ 措法66条の6・66条の7・措令39条の15</div>
+</header>
+
+<nav>
+  <a href="#case">設例</a>
+  <a href="#kijun">基準所得金額</a>
+  <a href="#tekiyo">適用対象金額</a>
+  <a href="#kazei">課税対象金額</a>
+  <a href="#gaikoku">外国税額控除の適用関係</a>
+  <a href="#beppyo">別表調製</a>
+  <a href="#keisan">法人税計算</a>
+  <a href="#ryuiten">実務留意点</a>
+</nav>
+
+<div class="container">
+
+<!-- ==================== 設例 ==================== -->
+<h2 id="case">１ 設例の整理</h2>
+
+<div class="case-box">
+  <div class="label">設例</div>
+  <p>日本法人甲社は、パナマに100%出資の外国関係会社A社（<strong>特定外国関係会社</strong>）を有する。甲社はA社につき会社単位で合算課税（措法66条の6第1項）を受けており、所得計算には<strong>本邦法令基準</strong>（措令39条の15第1項）を採用している。</p>
+  <p>当事業年度（12か月）において、A社（パナマ法人）は日本の銀行に預金を保有しており、当該預金に係る利息として次の金額が生じた。</p>
+  <table style="margin-top:10px;">
+    <tr><th>項目</th><th style="text-align:right;">金額</th></tr>
+    <tr><td>預金利息（税引前）</td><td class="td-num">500</td></tr>
+    <tr><td>所得税法212条による源泉徴収（税率20%）</td><td class="td-num">△100</td></tr>
+    <tr><td>A社の受取額（A社の収益計上額）</td><td class="td-num">400</td></tr>
+  </table>
+  <p style="margin-top:10px;">A社はパナマの会計・税務上、源泉税100を費用計上（損金算入）しており、当期利益は<strong>400</strong>である。パナマは属地主義課税であり、日本の銀行預金から生じる利息（外国所得）にはパナマの法人税は課されない。甲社の持分割合は100%（直接保有）。</p>
+  <p style="margin-top:6px;"><strong>問題：</strong>①基準所得金額・適用対象金額・課税対象金額の計算。②外国税額控除の適用関係。</p>
+</div>
+
+<div class="note">
+  <div class="note-title">⚑ 設例の前提条件</div>
+  繰越欠損金なし。パナマ法人税0（外国所得に課税されない）。甲社の親会社法人税率23.2%（計算例）。
+</div>
+
+<!-- ==================== 問題① 基準所得金額 ==================== -->
+<h2 id="kijun">２ 基準所得金額の計算（問題①）</h2>
+
+<h3>2-1 本邦法令基準の計算構造（措令39条の15第1項）</h3>
+
+<div class="statute">
+  <div class="ref">措令39条の15第1項（本邦法令基準 / 抜粋）</div>
+  「（基準所得金額は、）外国関係会社の各事業年度の決算に基づく所得の金額に係る<strong>第一号及び第二号に掲げる金額の合計額</strong>から当該所得の金額に係る<strong>第三号から第五号までに掲げる金額の合計額</strong>を控除した残額とする。」
+  <br>
+  一 当該各事業年度の決算に基づく所得の金額につき、<strong>法人税法第二編第一章第一節第二款から第九款まで</strong>（同法第二十三条……<strong>第三十八条から第四十一条の二まで</strong>……を除く。）……及び第十二款の規定並びに法第四十三条、……第五十七条の八、……第六十五条の七から第六十五条の九まで（法第六十五条の七第一項の表の第四号に係る部分に限る。）……の規定（以下「本邦法令の規定」という。）<strong>の例に準じて計算した場合に算出される所得の金額</strong>
+  <br>
+  二 当該各事業年度において納付する<strong>法人所得税</strong>（本店所在地国若しくは本店所在地国以外の国若しくは地域……により法人の所得を課税標準として課される税……法人税法施行令第百四十一条第二項各号に掲げる税を含む。以下この条において同じ。）<strong>の額</strong>
+  <br>
+  三 当該各事業年度において還付を受ける法人所得税の額
+  <br>
+  四 当該各事業年度において子会社から受ける配当等の額（子会社配当益金不算入相当）
+</div>
+
+<div class="note">
+  <div class="note-title">⚑ キーポイント：法人税法38条〜41条の2が「除外」される意味</div>
+  本邦法令基準の<strong>第1号計算</strong>では、法人税法38条（法人税の損金不算入）・40条（法人税割の損金不算入）・<strong>41条（外国法人税の損金不算入）</strong>が適用除外される。これはパナマの法人税（本来は外国法人税として損金不算入とされうる）を損金算入のまま扱う趣旨である。日本の源泉所得税については、法人税法<strong>68条（所得税額控除）に準じた処理</strong>を行い、費用計上した源泉税を損金不算入（税額控除処理相当）として加算する。
+</div>
+
+<h3>2-2 第1号計算（本邦法令基準による所得計算）</h3>
+
+<div class="card">
+  <p>A社の決算上の当期利益は<strong>400</strong>（収入500 − 源泉税費用100）。</p>
+  <p>本邦法令基準では、日本の法人（内国法人）が同様の利息収入を受ける場合の計算に準じる。日本法人が国内の銀行預金から利息を受ける場合、源泉所得税100は<strong>費用処理せず、法人税法68条の所得税額控除として処理</strong>するのが通常の実務であり、申告所得計算上は損金算入されない。</p>
+  <p>したがって、A社が費用計上した源泉税100は<strong>損金不算入として加算</strong>する。</p>
+  <table>
+    <tr><th>計算項目</th><th style="text-align:right;">金額</th></tr>
+    <tr><td>A社の決算当期利益</td><td class="td-num">400</td></tr>
+    <tr><td class="td-add">加算：源泉所得税の損金不算入（法人税法68条準拠処理）</td><td class="td-num td-add">+ 100</td></tr>
+    <tr class="td-total"><td><strong>第1号（本邦法令基準計算所得）</strong></td><td class="td-num"><strong>500</strong></td></tr>
+  </table>
+</div>
+
+<h3>2-3 第2号計算（法人所得税の加算）</h3>
+
+<div class="card">
+  <p>第2号は「当該各事業年度において納付する<strong>法人所得税の額</strong>」を加算する規定。ここでの「法人所得税」とは、本店所在地国（パナマ）またはその他の国（日本を含む）の法令に基づき法人の所得を課税標準として課される税をいう（措令39条の15第1項第2号括弧書）。</p>
+  <p>本件では、パナマ法人税は外国所得（日本の預金利息）に課税されない（0）。したがって第2号 = <strong>0</strong>。</p>
+  <p>（注）源泉所得税100は第1号の加算で処理済みであり、第2号での二重加算は行わない。）</p>
+  <table>
+    <tr><th>計算項目</th><th style="text-align:right;">金額</th></tr>
+    <tr><td>パナマ法人税（外国所得に対して非課税）</td><td class="td-num">0</td></tr>
+    <tr class="td-total"><td><strong>第2号（法人所得税加算）</strong></td><td class="td-num"><strong>0</strong></td></tr>
+  </table>
+</div>
+
+<h3>2-4 基準所得金額の計算</h3>
+
+<div class="card" style="border-color: var(--blue-mid);">
+  <table>
+    <tr><th>計算式</th><th style="text-align:right;">金額</th></tr>
+    <tr><td>第1号（本邦法令基準計算所得）</td><td class="td-num">500</td></tr>
+    <tr><td>第2号（法人所得税加算）</td><td class="td-num">0</td></tr>
+    <tr><td class="td-minus">控除：第3号（還付法人所得税）</td><td class="td-num">0</td></tr>
+    <tr><td class="td-minus">控除：第4号（子会社配当等）</td><td class="td-num">0</td></tr>
+    <tr class="td-total"><td><strong>基準所得金額（措令39条の15第1項）</strong></td><td class="td-num"><strong>500</strong></td></tr>
+  </table>
+</div>
+
+<!-- ==================== 問題① 適用対象金額 ==================== -->
+<h2 id="tekiyo">３ 適用対象金額の計算（問題①）</h2>
+
+<div class="statute">
+  <div class="ref">措法66条の6第2項第4号（適用対象金額の定義）</div>
+  「適用対象金額」とは、特定外国関係会社又は対象外国関係会社の各事業年度の決算に基づく所得の金額につき……政令で定める基準により計算した金額（「<strong>基準所得金額</strong>」という。）を基礎として、政令で定めるところにより、当該各事業年度開始の日前七年以内に開始した各事業年度において生じた<strong>欠損の金額</strong>及び当該基準所得金額に係る<strong>税額に関する調整</strong>を加えた金額をいう。
+</div>
+
+<div class="statute">
+  <div class="ref">措令39条の15第5項（適用対象金額の計算 / 抜粋）</div>
+  「法第六十六条の六第二項第四号に規定する欠損の金額及び基準所得金額に係る税額に関する調整を加えた金額は、外国関係会社の各事業年度の同号に規定する<strong>基準所得金額から次に掲げる金額の合計額を控除した残額</strong>とする。<br>
+  一　当該外国関係会社の当該各事業年度開始の日前<strong>七年以内</strong>に開始した事業年度において生じた<strong>欠損金額</strong>（当該各事業年度前の事業年度において控除されたものを除く。）の合計額に相当する金額<br>
+  二　当該外国関係会社が当該各事業年度において納付をすることとなる<strong>法人所得税の額</strong>」
+</div>
+
+<div class="card">
+  <table>
+    <tr><th>計算式</th><th style="text-align:right;">金額</th></tr>
+    <tr><td>基準所得金額（上記2-4）</td><td class="td-num">500</td></tr>
+    <tr><td class="td-minus">控除：第5項第1号（欠損金相当）</td><td class="td-num td-minus">△0</td></tr>
+    <tr><td class="td-minus">控除：第5項第2号（法人所得税 = パナマ税）</td><td class="td-num td-minus">△0</td></tr>
+    <tr class="td-total"><td><strong>適用対象金額（措令39条の15第5項）</strong></td><td class="td-num"><strong>500</strong></td></tr>
+  </table>
+  <p style="margin-top:10px; font-size:0.88em; color:#666;">※第5項第2号の「法人所得税」は本店所在地国（パナマ）等が課するもの。パナマ税が0のため控除額なし。</p>
+</div>
+
+<!-- ==================== 問題① 課税対象金額 ==================== -->
+<h2 id="kazei">４ 課税対象金額の計算（問題①）</h2>
+
+<div class="statute">
+  <div class="ref">措法66条の6第1項（課税対象金額の益金算入）</div>
+  「……特定外国関係会社……が……適用対象金額を有する場合には、その適用対象金額のうちその内国法人が直接及び間接に有する……株式等の数又は金額につきその請求権の内容を勘案した数又は金額……を勘案して政令で定めるところにより計算した金額（「<strong>課税対象金額</strong>」という。）に相当する金額は、その内国法人の収益の額とみなして……<strong>益金の額に算入する</strong>。」
+</div>
+
+<div class="card" style="border-color: var(--green);">
+  <table>
+    <tr><th>計算式</th><th style="text-align:right;">金額</th></tr>
+    <tr><td>適用対象金額（上記3）</td><td class="td-num">500</td></tr>
+    <tr><td>甲社の持分割合（直接保有）</td><td class="td-num">100%</td></tr>
+    <tr><td>事業年度月数調整（12か月 / 12）</td><td class="td-num">1.0</td></tr>
+    <tr class="td-total" style="background:var(--green-light) !important;"><td><strong>課税対象金額（措法66条の6第1項）</strong></td><td class="td-num" style="color:var(--green);"><strong>500</strong></td></tr>
+  </table>
+  <p style="margin-top:10px; font-size:0.88em;">この<strong>500</strong>が甲社の「収益の額とみなされ」、当該各事業年度終了の日の翌日から4か月を経過する日を含む事業年度（いわゆるみなし益金算入事業年度）において益金算入される。</p>
+</div>
+
+<!-- ==================== 問題② 外国税額控除 ==================== -->
+<h2 id="gaikoku">５ 外国税額控除の適用関係（問題②）</h2>
+
+<h3>5-1 制度の概要</h3>
+
+<p>措法66条の7は、CFC合算課税を受けた内国法人に対し、二重課税を排除する2つのルートを設けている。</p>
+
+<div class="two-col">
+  <div class="col-card">
+    <div class="col-header">第1項　外国法人税の外国税額控除（みなし）<span class="badge badge-red">本件：不適用</span></div>
+    <p style="font-size:0.88em;">外国関係会社の所得に対して課される<strong>外国法人税</strong>（法人税法69条1項に規定するもの）のうち、課税対象金額に対応する部分を、甲社が納付する「控除対象外国法人税の額」とみなして、法人税法69条の外国税額控除を適用する。</p>
+    <p style="font-size:0.88em; color:var(--red);">⇒ 本件では<strong>パナマの法人税 = 0</strong>（属地主義のため外国所得に非課税）。適用なし。</p>
+  </div>
+  <div class="col-card" style="border-color:var(--green);">
+    <div class="col-header">第4項　所得税額等の法人税額からの控除<span class="badge badge-green">本件：適用</span></div>
+    <p style="font-size:0.88em;">外国関係会社に対して課される<strong>所得税の額</strong>（日本の所得税法等による税額）のうち、課税対象金額に対応するものを<strong>控除対象所得税額等相当額</strong>として、甲社の法人税額から控除する。</p>
+    <p style="font-size:0.88em; color:var(--green);">⇒ 本件では<strong>日本の源泉所得税 100</strong> が対象。適用あり。</p>
+  </div>
+</div>
+
+<h3>5-2 第1項（外国法人税の外国税額控除みなし）の適用の可否</h3>
+
+<div class="statute">
+  <div class="ref">措法66条の7第1項（外国法人税の外国税額控除 / 要旨）</div>
+  「……内国法人が、……（CFC課税）の規定の適用を受ける場合には、当該内国法人に係る外国関係会社の所得に対して課される<strong>外国法人税</strong>（同法第六十九条第一項に規定する外国法人税をいう。）の額……のうち、当該外国関係会社の<strong>課税対象金額に対応するもの</strong>として政令で定めるところにより計算した金額……は、政令で定めるところにより、当該内国法人が納付する<strong>控除対象外国法人税の額</strong>とみなして、同法第六十九条……の規定を適用する。」
+</div>
+
+<p>「外国法人税」（法人税法69条1項・法令141条）とは、<strong>外国（日本以外）の法令に基づき外国が課する法人税に相当するもの</strong>をいう。</p>
+<p>本件においてA社（パナマ法人）が日本で源泉徴収された所得税100は、日本の所得税法212条に基づく<strong>日本の税</strong>であり、「外国法人税」には該当しない。また、パナマには外国所得に対する法人税が課されない。</p>
+
+<div class="alert">
+  <div class="alert-title">✕ 措法66条の7第1項の適用なし</div>
+  外国法人税（パナマ法人税）= 0 のため、第1項に基づく外国税額控除は<strong>適用されない</strong>。
+</div>
+
+<h3>5-3 第4項（所得税額等の法人税額からの控除）の適用</h3>
+
+<div class="statute">
+  <div class="ref">措法66条の7第4項（所得税額等の控除 / 要旨）</div>
+  「前条第一項各号に掲げる内国法人が、同項…の規定の適用を受ける場合には、次に掲げる金額の合計額（<strong>所得税等の額</strong>）のうち、当該内国法人に係る外国関係会社の<strong>課税対象金額に対応するもの</strong>として政令で定めるところにより計算した金額に相当する金額（<strong>控除対象所得税額等相当額</strong>）は、当該内国法人の政令で定める事業年度の所得に対する<strong>法人税の額から控除する</strong>。<br>
+  一　当該外国関係会社に対して課される<strong>所得税の額</strong>（附帯税の額を除く。）、法人税（退職年金等積立金に対する法人税を除く。）の額及び地方法人税の額<br>
+  二　当該外国関係会社に対して課される地方税法…に掲げる法人税割の額」
+</div>
+
+<p>第4項第1号の「当該外国関係会社に対して課される<strong>所得税の額</strong>」とは、外国関係会社（A社）が日本において源泉徴収される所得税（所得税法212条等）をいう。本件のA社の源泉徴収税<strong>100</strong>がこれに該当する。</p>
+
+<h4>控除対象所得税額等相当額の計算</h4>
+
+<div class="card" style="border-color:var(--green);">
+  <p>「課税対象金額に対応するものとして政令で定めるところにより計算した金額」（措法66条の7第4項）は、おおむね以下の計算による。</p>
+  <table>
+    <tr><th>計算式</th><th style="text-align:right;">金額</th></tr>
+    <tr><td>所得税等の額（第4項第1号：日本の源泉所得税）</td><td class="td-num">100</td></tr>
+    <tr><td>× 課税対象金額 / 適用対象金額</td><td class="td-num">500 / 500 = 1.0</td></tr>
+    <tr><td>× 持分割合</td><td class="td-num">100%</td></tr>
+    <tr class="td-total" style="background:var(--green-light) !important;"><td><strong>控除対象所得税額等相当額</strong></td><td class="td-num" style="color:var(--green);"><strong>100</strong></td></tr>
+  </table>
+  <p style="margin-top:10px; font-size:0.88em;">本件は持分割合100%・課税対象金額 = 適用対象金額（500）のため、所得税100が<strong>全額</strong>が控除対象となる。</p>
+</div>
+
+<h3>5-4 第6項：グロスアップ（益金算入）</h3>
+
+<div class="statute">
+  <div class="ref">措法66条の7第6項（控除対象所得税額等相当額の益金算入）</div>
+  「……第四項の規定の適用を受けるときは、当該内国法人に係る外国関係会社に係る<strong>控除対象所得税額等相当額</strong>は、当該内国法人の政令で定める事業年度の所得の金額の計算上、<strong>益金の額に算入する</strong>。」
+</div>
+
+<div class="note">
+  <div class="note-title">⚑ グロスアップの意義</div>
+  控除対象所得税額等相当額（100）を法人税額から控除するとともに、同額を益金に算入することで、<strong>外国関係会社の税引前所得</strong>（500）に相当する水準を課税ベースとして確保する。これにより、源泉税100を単純に税額控除した場合との課税ベースの逆転を防止している。
+</div>
+
+<h3>5-5 第5項：手続要件（申告書添付）</h3>
+
+<div class="statute">
+  <div class="ref">措法66条の7第5項（手続要件）</div>
+  「前項の規定は、確定申告書等、修正申告書又は更正請求書に同項の規定による<strong>控除の対象となる所得税等の額、控除を受ける金額及び当該金額の計算に関する明細を記載した書類の添付</strong>がある場合に限り、適用する。この場合において、同項の規定により控除される金額の計算の基礎となる所得税等の額は、当該書類に当該所得税等の額として記載された金額を限度とする。」
+</div>
+
+<div class="alert">
+  <div class="alert-title">✕ 申告書未添付の場合は控除不適用</div>
+  控除対象所得税額等相当額（100）の控除を受けるためには、確定申告書等に計算明細書（別表6(5の2)相当）の<strong>添付が創設的要件</strong>。未添付の場合は控除を受けられない（ただし税務署長のやむを得ない事情認定がある場合は後提出を認める）。
+</div>
+
+<!-- ==================== 別表調製 ==================== -->
+<h2 id="beppyo">６ 別表調製シミュレーション</h2>
+
+<h3>6-1 別表17(3)：特定外国関係会社等の所得の金額の計算に関する明細書</h3>
+<p style="font-size:0.88em; margin-bottom:8px;">（措法66条の6第11項、措令39条の15第8項に基づく確定申告書添付書類。本邦法令基準計算の根拠明細。）</p>
+
+<div class="beppyo-title">別表17(3)（主要部分・シミュレーション）A社（事業年度：当年度 12か月）</div>
+<table class="beppyo">
+  <tr><th style="width:55%;">区分</th><th style="text-align:right; width:15%;">計算式・根拠</th><th style="text-align:right; width:15%;">金額</th></tr>
+  <tr>
+    <td colspan="3" style="font-weight:700; background:#eaf4ee; font-size:0.85em;">【基準所得金額の計算（措令39の15①）】</td>
+  </tr>
+  <tr>
+    <td>Ⅰ　決算に基づく当期利益（損失）</td>
+    <td class="td-num td-sub">A社申告</td>
+    <td class="td-num">400</td>
+  </tr>
+  <tr>
+    <td>Ⅱ　第1号計算：加算（損金不算入）<br>
+      <span class="td-sub">源泉所得税の損金不算入額<br>（法人税法68条準拠：税額控除処理相当）</span></td>
+    <td class="td-num td-sub">+ 100</td>
+    <td class="td-num td-add">+ 100</td>
+  </tr>
+  <tr>
+    <td>Ⅲ　第1号計算：減算（益金不算入等）</td>
+    <td class="td-num td-sub">—</td>
+    <td class="td-num">0</td>
+  </tr>
+  <tr>
+    <td>Ⅳ　第1号　小計（本邦法令基準計算所得）</td>
+    <td class="td-num td-sub">Ⅰ + Ⅱ − Ⅲ</td>
+    <td class="td-num"><strong>500</strong></td>
+  </tr>
+  <tr>
+    <td>Ⅴ　第2号　法人所得税加算（パナマ法人税）</td>
+    <td class="td-num td-sub">+ 0</td>
+    <td class="td-num">0</td>
+  </tr>
+  <tr>
+    <td>Ⅵ　第3号　還付法人所得税控除</td>
+    <td class="td-num td-sub">— 0</td>
+    <td class="td-num">0</td>
+  </tr>
+  <tr>
+    <td>Ⅶ　第4号　子会社配当控除</td>
+    <td class="td-num td-sub">— 0</td>
+    <td class="td-num">0</td>
+  </tr>
+  <tr class="td-total">
+    <td><strong>【基準所得金額】（Ⅳ + Ⅴ − Ⅵ − Ⅶ）</strong></td>
+    <td class="td-num"></td>
+    <td class="td-num"><strong>500</strong></td>
+  </tr>
+  <tr>
+    <td colspan="3" style="font-weight:700; background:#eaf4ee; font-size:0.85em;">【適用対象金額の計算（措令39の15⑤）】</td>
+  </tr>
+  <tr>
+    <td>Ⅷ　第5項第1号　繰越欠損金（7年以内分）</td>
+    <td class="td-num td-sub">—</td>
+    <td class="td-num">0</td>
+  </tr>
+  <tr>
+    <td>Ⅸ　第5項第2号　法人所得税（パナマ税）</td>
+    <td class="td-num td-sub">— 0</td>
+    <td class="td-num">0</td>
+  </tr>
+  <tr class="td-total">
+    <td><strong>【適用対象金額】（基準所得金額 − Ⅷ − Ⅸ）</strong></td>
+    <td class="td-num"></td>
+    <td class="td-num"><strong>500</strong></td>
+  </tr>
+  <tr>
+    <td colspan="3" style="font-weight:700; background:#eaf4ee; font-size:0.85em;">【課税対象金額の計算（措法66の6①）】</td>
+  </tr>
+  <tr>
+    <td>持分割合（甲社直接保有）</td>
+    <td class="td-num td-sub">100%</td>
+    <td class="td-num">—</td>
+  </tr>
+  <tr>
+    <td>月数調整（事業年度12か月 / 12）</td>
+    <td class="td-num td-sub">12 / 12</td>
+    <td class="td-num">—</td>
+  </tr>
+  <tr class="td-total" style="background:var(--green-light) !important;">
+    <td><strong>【課税対象金額】（適用対象金額 × 100% × 12/12）</strong></td>
+    <td class="td-num"></td>
+    <td class="td-num" style="color:var(--green);"><strong>500</strong></td>
+  </tr>
+</table>
+
+<h3>6-2 別表6(5の2)：外国関係会社の所得に対して課された所得税額等の控除に関する明細書</h3>
+<p style="font-size:0.88em; margin-bottom:8px;">（措法66条の7第4項・第5項に基づく確定申告書添付書類。）</p>
+
+<div class="beppyo-title">別表6(5の2)（主要部分・シミュレーション）甲社</div>
+<table class="beppyo">
+  <tr><th style="width:55%;">区分</th><th style="text-align:right; width:15%;">計算式</th><th style="text-align:right; width:15%;">金額</th></tr>
+  <tr>
+    <td colspan="3" style="font-weight:700; background:#eaf4ee; font-size:0.85em;">【所得税等の額（措法66の7④第1号）】</td>
+  </tr>
+  <tr>
+    <td>外国関係会社A社に対して課された所得税の額<br>
+      <span class="td-sub">（所得税法212条による源泉徴収税・附帯税除く）</span></td>
+    <td class="td-num td-sub">申告・証明</td>
+    <td class="td-num">100</td>
+  </tr>
+  <tr>
+    <td>外国関係会社に対して課された法人税の額</td>
+    <td class="td-num td-sub">—</td>
+    <td class="td-num">0</td>
+  </tr>
+  <tr>
+    <td>外国関係会社に対して課された地方法人税の額</td>
+    <td class="td-num td-sub">—</td>
+    <td class="td-num">0</td>
+  </tr>
+  <tr class="td-total">
+    <td><strong>所得税等の額合計</strong></td>
+    <td class="td-num"></td>
+    <td class="td-num"><strong>100</strong></td>
+  </tr>
+  <tr>
+    <td colspan="3" style="font-weight:700; background:#eaf4ee; font-size:0.85em;">【控除対象所得税額等相当額の計算】</td>
+  </tr>
+  <tr>
+    <td>課税対象金額</td>
+    <td class="td-num td-sub">別表17(3)より</td>
+    <td class="td-num">500</td>
+  </tr>
+  <tr>
+    <td>適用対象金額</td>
+    <td class="td-num td-sub">別表17(3)より</td>
+    <td class="td-num">500</td>
+  </tr>
+  <tr>
+    <td>課税対象金額 / 適用対象金額</td>
+    <td class="td-num td-sub">500 / 500</td>
+    <td class="td-num">1.000</td>
+  </tr>
+  <tr>
+    <td>持分割合</td>
+    <td class="td-num td-sub">100%</td>
+    <td class="td-num">1.000</td>
+  </tr>
+  <tr class="td-total" style="background:var(--green-light) !important;">
+    <td><strong>控除対象所得税額等相当額</strong>（法人税額から控除）</td>
+    <td class="td-num">100 × 1.000</td>
+    <td class="td-num" style="color:var(--green);"><strong>100</strong></td>
+  </tr>
+  <tr>
+    <td colspan="3" style="font-weight:700; background:#eaf4ee; font-size:0.85em;">【グロスアップ（措法66の7⑥）】</td>
+  </tr>
+  <tr>
+    <td>控除対象所得税額等相当額の益金算入</td>
+    <td class="td-num td-sub">66の7⑥</td>
+    <td class="td-num td-add">+ 100</td>
+  </tr>
+</table>
+
+<!-- ==================== 法人税計算 ==================== -->
+<h2 id="keisan">７ 法人税計算（参考）</h2>
+
+<div class="card">
+  <p>以下は、本設例に係るCFC合算部分の法人税計算の参考例（税率23.2%仮定）。</p>
+  <table>
+    <tr><th>区分</th><th style="text-align:right;">金額</th></tr>
+    <tr><td>課税対象金額（益金算入 / 措法66の6①）</td><td class="td-num">500</td></tr>
+    <tr><td class="td-add">グロスアップ益金算入（措法66の7⑥）</td><td class="td-num td-add">+ 100</td></tr>
+    <tr class="td-total"><td><strong>合算所得（課税ベース）</strong></td><td class="td-num"><strong>600</strong></td></tr>
+    <tr><td>法人税率（23.2%）</td><td class="td-num td-sub">× 23.2%</td></tr>
+    <tr><td>法人税額（CFC合算部分）</td><td class="td-num">139.2</td></tr>
+    <tr><td class="td-minus">控除：控除対象所得税額等相当額（措法66の7④）</td><td class="td-num td-minus">△100</td></tr>
+    <tr class="td-total" style="background:var(--blue-light) !important;"><td><strong>差引法人税額（CFC合算部分）</strong></td><td class="td-num"><strong>39.2</strong></td></tr>
+  </table>
+  <p style="font-size:0.88em; margin-top:10px; color:#666;">※ この39.2は、税引前合算所得500に対して23.2%の税率を適用した場合の単純税額（116）から、源泉税控除後の実質純税率（≒7.84%相当）での課税に近い水準となる。日本の課税水準（23.2%）と源泉税（20%）の差に相当する部分のみが実質追加負担となる構造。</p>
+</div>
+
+<!-- ==================== 実務留意点 ==================== -->
+<h2 id="ryuiten">８ 実務上の留意点</h2>
+
+<div class="card">
+  <h4>① 源泉税の処理方法と基準所得金額計算の関係</h4>
+  <p>A社がパナマの申告で源泉税を費用計上していても、本邦法令基準（措令39条の15第1項第1号）では日本の法人税法に準じて計算するため、法人税法68条（所得税額控除）に準じた処理として源泉税<strong>100を損金不算入（加算戻し）</strong>して基準所得金額に算入する。A社の処理方法（費用計上の有無）によって本邦法令基準の計算結果は変動しない点に留意が必要。</p>
+
+  <h4>② 外国税額控除（措法66の7第1項）と所得税額等控除（措法66の7第4項）の峻別</h4>
+  <p>両者は法人税法69条の「外国税額控除」とは異なる仕組みである。第1項は「外国法人税」（外国の税）を対象とし、第4項は外国関係会社に対して課される<strong>日本の所得税・法人税・地方法人税・地方税（法人税割）</strong>を対象とする。パナマ法人が日本で源泉徴収される場合は、「外国税額控除」（第1項）の対象外であり、<strong>第4項の「所得税額等の控除」</strong>として処理する点を誤らないこと。</p>
+
+  <h4>③ 申告書添付書類の徹底（措法66の7第5項）</h4>
+  <p>別表6(5の2)（または同内容の書類）を確定申告書等に添付しなければ、控除対象所得税額等相当額（100）の控除は受けられない（創設的要件）。添付漏れは実務上の重大なリスクとなる。</p>
+
+  <h4>④ 別表17(3)の添付（措令39条の15第8項）</h4>
+  <p>本邦法令基準で減価償却・引当金・圧縮記帳等の特例規定（限定列挙14規定）を適用して損金算入する場合は、別表17(3)（基準所得金額の計算明細）の添付が<strong>その損金算入の創設的要件</strong>（措令39条の15第8項）。本設例では特例規定の適用がないが、一般論として常に確認が必要。</p>
+
+  <h4>⑤ 租税条約による源泉税率の軽減</h4>
+  <p>日本には多くの租税条約があるが、パナマとの間には租税条約（DTA）が未締結（2026年3月現在）のため、国内法の源泉税率（20%）が適用される。租税条約がある場合、条約上の限度税率（通常10%等）まで軽減される可能性があり、控除対象所得税額等相当額も変動する。</p>
+
+  <h4>⑥ パナマ法人税の今後の変動</h4>
+  <p>パナマは2023年以降、OECD/G20の第2の柱（グローバルミニマム課税）への対応として法人税制を変更しつつある。今後パナマで外国所得への課税が導入された場合は、第2号（法人所得税加算）・第5項第2号（法人所得税控除）・第1項（外国税額控除みなし）の各計算に影響が生じる。</p>
+</div>
+
+<!-- ==================== 結論サマリ ==================== -->
+<div class="conclusion">
+  <h3>結論サマリ</h3>
+  <table>
+    <tr><th>論点</th><th style="text-align:right;">計算結果</th></tr>
+    <tr><td>基準所得金額（措令39条の15第1項）</td><td class="td-num" style="font-weight:700;">500</td></tr>
+    <tr><td>適用対象金額（措令39条の15第5項）</td><td class="td-num" style="font-weight:700;">500</td></tr>
+    <tr><td>課税対象金額（措法66条の6第1項）</td><td class="td-num" style="font-weight:700;">500</td></tr>
+    <tr><td>措法66条の7第1項（外国法人税みなし外国税額控除）</td><td class="td-num" style="color:var(--red); font-weight:700;">適用なし（パナマ税 = 0）</td></tr>
+    <tr><td>措法66条の7第4項（控除対象所得税額等相当額）</td><td class="td-num" style="color:var(--green); font-weight:700;">100（全額控除対象）</td></tr>
+    <tr><td>措法66条の7第6項（グロスアップ益金算入）</td><td class="td-num" style="font-weight:700;">100</td></tr>
+    <tr><td>差引法人税（CFC合算部分 / 23.2%仮定）</td><td class="td-num" style="font-weight:700;">39.2</td></tr>
+  </table>
+  <p style="margin-top:12px; font-size:0.9em;">なお、別表17(3)（基準所得金額・課税対象金額の計算明細）および別表6(5の2)（控除対象所得税額等相当額の計算明細）を確定申告書等に添付することが<strong>法定要件</strong>（措令39条の15第8項・措法66条の7第5項）であり、この遵守が前提条件となる。</p>
+</div>
+
+</div><!-- /container -->
+</body>
+</html>
