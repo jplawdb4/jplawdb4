@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CFC税制：日本の銀行預金利息に係る源泉所得税の別表調製</title>
+<style>
+  body { font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; background:#f5f5f5; padding:20px; margin:0; line-height:1.6; color:#1a202c; }
+  .page { background:white; width:297mm; min-height:210mm; margin:0 auto 30px; padding:15mm; box-shadow:0 4px 20px rgba(0,0,0,.15); page-break-after:always; box-sizing:border-box; position:relative; }
+  h1 { font-size:22px; color:#1a365d; border-bottom:3px solid #2b6cb0; padding-bottom:6px; margin:0 0 10px 0; }
+  .caption { font-size:12px; color:#4a5568; margin-top:6px; line-height:1.5; }
+  .note { font-size:11px; color:#718096; margin-top:4px; }
+  .page-num { position:absolute; bottom:10mm; right:15mm; font-size:11px; color:#a0aec0; }
+  @media print { body{background:white;padding:0} .page{box-shadow:none;margin:0} }
+</style>
+</head>
+<body>
+
+<!-- ============ Page 1 ============ -->
+<div class="page">
+  <h1>1／5　設例の全体構造と本質的論点</h1>
+  <svg viewBox="0 0 960 520" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:78%;">
+    <!-- Background areas -->
+    <rect x="0" y="0" width="480" height="520" rx="8" fill="#ebf8ff" opacity="0.3"/>
+    <rect x="480" y="0" width="480" height="520" rx="8" fill="#fff5f5" opacity="0.3"/>
+    <text x="240" y="24" text-anchor="middle" font-size="13" fill="#2b6cb0" font-weight="bold">《 当事者関係と資金フロー 》</text>
+    <text x="720" y="24" text-anchor="middle" font-size="13" fill="#e53e3e" font-weight="bold">《 CFC課税と二重課税排除の構造 》</text>
+
+    <!-- Japan Parent Company -->
+    <rect x="30" y="60" width="180" height="70" rx="10" fill="#2b6cb0" stroke="#1a365d" stroke-width="2"/>
+    <text x="120" y="90" text-anchor="middle" font-size="15" fill="white" font-weight="bold">当社（日本法人）</text>
+    <text x="120" y="110" text-anchor="middle" font-size="11" fill="#bee3f8">内国法人・CFC税制適用</text>
+
+    <!-- Arrow: Parent -> A Company -->
+    <line x1="120" y1="130" x2="120" y2="190" stroke="#2b6cb0" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+    <text x="135" y="167" font-size="11" fill="#2b6cb0" font-weight="bold">100%出資</text>
+
+    <!-- A Company (Panama) -->
+    <rect x="30" y="190" width="180" height="90" rx="10" fill="#e53e3e" stroke="#c53030" stroke-width="2"/>
+    <text x="120" y="218" text-anchor="middle" font-size="14" fill="white" font-weight="bold">A社（パナマ法人）</text>
+    <text x="120" y="238" text-anchor="middle" font-size="10" fill="#fed7d7">特定外国関係会社</text>
+    <text x="120" y="254" text-anchor="middle" font-size="10" fill="#fed7d7">（ペーパーCo.該当）</text>
+    <text x="120" y="270" text-anchor="middle" font-size="10" fill="#fed7d7">本邦法令基準を採用</text>
+
+    <!-- Japanese Bank -->
+    <rect x="280" y="200" width="160" height="70" rx="10" fill="#38a169" stroke="#276749" stroke-width="2"/>
+    <text x="360" y="230" text-anchor="middle" font-size="14" fill="white" font-weight="bold">日本の銀行</text>
+    <text x="360" y="250" text-anchor="middle" font-size="10" fill="#c6f6d5">預金口座</text>
+
+    <!-- Arrow: A -> Bank (deposit) -->
+    <line x1="210" y1="225" x2="278" y2="225" stroke="#38a169" stroke-width="2" marker-end="url(#arrowGreen)"/>
+    <text x="244" y="218" font-size="10" fill="#38a169">預金</text>
+
+    <!-- Arrow: Bank -> A (interest) -->
+    <path d="M278,245 L210,245" stroke="#dd6b20" stroke-width="2.5" marker-end="url(#arrowOrange)"/>
+    <text x="244" y="262" font-size="10" fill="#dd6b20" font-weight="bold">利息 500</text>
+
+    <!-- Japanese Government (Tax) -->
+    <rect x="280" y="330" width="160" height="60" rx="10" fill="#dd6b20" stroke="#c05621" stroke-width="2"/>
+    <text x="360" y="355" text-anchor="middle" font-size="13" fill="white" font-weight="bold">日本国（国税庁）</text>
+    <text x="360" y="375" text-anchor="middle" font-size="10" fill="#feebc8">源泉徴収義務者＝銀行</text>
+
+    <!-- Arrow: Bank -> Tax (withholding) -->
+    <line x1="360" y1="270" x2="360" y2="328" stroke="#e53e3e" stroke-width="2.5" marker-end="url(#arrowRed)"/>
+    <text x="375" y="305" font-size="11" fill="#e53e3e" font-weight="bold">源泉税 100</text>
+
+    <!-- A Company P&L -->
+    <rect x="30" y="330" width="180" height="110" rx="6" fill="#fffaf0" stroke="#dd6b20" stroke-width="1.5"/>
+    <text x="120" y="352" text-anchor="middle" font-size="12" fill="#dd6b20" font-weight="bold">A社の損益</text>
+    <text x="45" y="375" font-size="11" fill="#4a5568">利息収入</text>
+    <text x="195" y="375" text-anchor="end" font-size="12" fill="#2b6cb0" font-weight="bold">500</text>
+    <line x1="45" y1="382" x2="195" y2="382" stroke="#cbd5e0" stroke-width="0.5"/>
+    <text x="45" y="400" font-size="11" fill="#4a5568">源泉税（費用処理）</text>
+    <text x="195" y="400" text-anchor="end" font-size="12" fill="#e53e3e" font-weight="bold">△100</text>
+    <line x1="45" y1="407" x2="195" y2="407" stroke="#1a202c" stroke-width="1.5"/>
+    <text x="45" y="425" font-size="12" fill="#4a5568" font-weight="bold">決算利益</text>
+    <text x="195" y="425" text-anchor="end" font-size="14" fill="#1a365d" font-weight="bold">400</text>
+
+    <!-- ===== Right Panel: CFC Structure ===== -->
+    <!-- CFC Tax Flow -->
+    <rect x="500" y="45" width="200" height="55" rx="8" fill="#fff5f5" stroke="#e53e3e" stroke-width="1.5"/>
+    <text x="600" y="67" text-anchor="middle" font-size="12" fill="#e53e3e" font-weight="bold">措法66条の6第1項</text>
+    <text x="600" y="85" text-anchor="middle" font-size="11" fill="#4a5568">会社単位合算（全額合算）</text>
+
+    <line x1="600" y1="100" x2="600" y2="125" stroke="#e53e3e" stroke-width="2" marker-end="url(#arrowRed)"/>
+
+    <!-- Key Issue Box -->
+    <rect x="500" y="125" width="430" height="130" rx="8" fill="#faf5ff" stroke="#9f7aea" stroke-width="2"/>
+    <text x="515" y="148" font-size="13" fill="#9f7aea" font-weight="bold">★ 本質的論点：源泉所得税100の取扱い</text>
+
+    <text x="515" y="172" font-size="11" fill="#4a5568">① 基準所得金額の計算（措令39条の15第1項）</text>
+    <text x="530" y="190" font-size="10" fill="#718096">→ 法法38条〜41条の2は除外 → 法法40条（損金不算入）は適用しない</text>
+    <text x="530" y="206" font-size="10" fill="#718096">→ A社の費用処理した源泉税100は損金のまま → 決算利益400ベース</text>
+
+    <text x="515" y="228" font-size="11" fill="#4a5568">② 二重課税排除（措法66条の7第4項）</text>
+    <text x="530" y="244" font-size="10" fill="#718096">→ 「外国関係会社に課される所得税の額」として法人税額から控除</text>
+
+    <!-- Three-way split -->
+    <rect x="500" y="270" width="135" height="70" rx="6" fill="#ebf8ff" stroke="#2b6cb0" stroke-width="1.5"/>
+    <text x="567" y="292" text-anchor="middle" font-size="11" fill="#2b6cb0" font-weight="bold">B17(3の2)</text>
+    <text x="567" y="310" text-anchor="middle" font-size="10" fill="#4a5568">適用対象金額</text>
+    <text x="567" y="326" text-anchor="middle" font-size="13" fill="#1a365d" font-weight="bold">400</text>
+
+    <rect x="647" y="270" width="135" height="70" rx="6" fill="#fffaf0" stroke="#dd6b20" stroke-width="1.5"/>
+    <text x="714" y="292" text-anchor="middle" font-size="11" fill="#dd6b20" font-weight="bold">B17(3の6)</text>
+    <text x="714" y="310" text-anchor="middle" font-size="10" fill="#4a5568">所得税等控除</text>
+    <text x="714" y="326" text-anchor="middle" font-size="13" fill="#c05621" font-weight="bold">100</text>
+
+    <rect x="795" y="270" width="135" height="70" rx="6" fill="#f0fff4" stroke="#38a169" stroke-width="1.5"/>
+    <text x="862" y="292" text-anchor="middle" font-size="11" fill="#38a169" font-weight="bold">措法66条の7⑥</text>
+    <text x="862" y="310" text-anchor="middle" font-size="10" fill="#4a5568">益金算入</text>
+    <text x="862" y="326" text-anchor="middle" font-size="13" fill="#276749" font-weight="bold">100</text>
+
+    <line x1="635" y1="305" x2="647" y2="305" stroke="#718096" stroke-width="1.5"/>
+    <line x1="782" y1="305" x2="795" y2="305" stroke="#718096" stroke-width="1.5"/>
+
+    <!-- B04 Result -->
+    <rect x="500" y="360" width="430" height="65" rx="8" fill="#f0fff4" stroke="#38a169" stroke-width="2"/>
+    <text x="515" y="382" font-size="12" fill="#38a169" font-weight="bold">別表四（B04）への反映</text>
+    <text x="515" y="402" font-size="11" fill="#4a5568">加算：課税対象金額 400（留保②） ＋ 益金算入 100（社外流出③）</text>
+    <text x="515" y="418" font-size="11" fill="#1a365d" font-weight="bold">→ 合計 500 が内国法人の所得に加算 → 法人税額から源泉税100を控除</text>
+
+    <line x1="600" y1="340" x2="600" y2="358" stroke="#38a169" stroke-width="2" marker-end="url(#arrowGreen)"/>
+    <line x1="714" y1="340" x2="714" y2="358" stroke="#38a169" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+    <line x1="862" y1="340" x2="862" y2="358" stroke="#38a169" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+
+    <!-- Final equation -->
+    <rect x="500" y="440" width="430" height="65" rx="8" fill="#1a365d"/>
+    <text x="715" y="466" text-anchor="middle" font-size="14" fill="white" font-weight="bold">最終結果：所得 500 に課税 ＝ 利息収入 500 と一致</text>
+    <text x="715" y="490" text-anchor="middle" font-size="12" fill="#bee3f8">源泉税 100 は法人税額から控除 → 二重課税完全排除</text>
+
+    <line x1="715" y1="425" x2="715" y2="438" stroke="white" stroke-width="2" marker-end="url(#arrowWhite)"/>
+
+    <!-- Markers -->
+    <defs>
+      <marker id="arrowBlue" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#2b6cb0"/></marker>
+      <marker id="arrowGreen" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#38a169"/></marker>
+      <marker id="arrowOrange" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#dd6b20"/></marker>
+      <marker id="arrowRed" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#e53e3e"/></marker>
+      <marker id="arrowWhite" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="white"/></marker>
+      <marker id="arrowGray" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#718096"/></marker>
+      <marker id="arrowPurple" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#9f7aea"/></marker>
+    </defs>
+  </svg>
+  <div class="caption">
+    パナマA社は特定外国関係会社（措法66条の6第2項2号イ）に該当し、会社単位で合算。日本の銀行預金利息に係る源泉所得税は「外国法人税」（措法66条の7①）ではなく、「所得税等」（同条④）として別表17(3の6)で処理する。
+  </div>
+  <div class="page-num">1 / 5</div>
+</div>
+
+<!-- ============ Page 2 ============ -->
+<div class="page">
+  <h1>2／5　基準所得金額と適用対象金額の計算 ── 別表17(3の2)</h1>
+  <svg viewBox="0 0 960 530" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:78%;">
+
+    <!-- Title bar -->
+    <rect x="20" y="10" width="920" height="35" rx="6" fill="#1a365d"/>
+    <text x="480" y="33" text-anchor="middle" font-size="14" fill="white" font-weight="bold">別表十七(三の二)　特定外国関係会社の適用対象金額等の計算（措令39条の15）</text>
+
+    <!-- Left: Beppyo table -->
+    <rect x="20" y="55" width="520" height="460" rx="6" fill="white" stroke="#2b6cb0" stroke-width="2"/>
+    <rect x="20" y="55" width="520" height="30" rx="6" fill="#2b6cb0"/>
+    <text x="280" y="75" text-anchor="middle" font-size="13" fill="white" font-weight="bold">B17(3の2)　数値記載例</text>
+
+    <!-- Table rows -->
+    <!-- Row: Applicable Law -->
+    <rect x="30" y="92" width="500" height="28" fill="#ebf8ff"/>
+    <text x="40" y="111" font-size="11" fill="#2b6cb0" font-weight="bold">欄3</text>
+    <text x="80" y="111" font-size="11" fill="#4a5568">所得計算上の適用法令</text>
+    <text x="440" y="111" text-anchor="end" font-size="12" fill="#1a365d" font-weight="bold">◯ 本邦法令</text>
+
+    <!-- Row 4 -->
+    <rect x="30" y="124" width="500" height="32" fill="white"/>
+    <text x="40" y="145" font-size="11" fill="#2b6cb0" font-weight="bold">欄4</text>
+    <text x="80" y="140" font-size="11" fill="#4a5568">決算に基づく所得金額</text>
+    <text x="80" y="153" font-size="9" fill="#718096">（本邦法令基準。法法40条除外→源泉税は損金のまま）</text>
+    <text x="500" y="145" text-anchor="end" font-size="14" fill="#1a365d" font-weight="bold">400</text>
+
+    <!-- Separator: 加算 -->
+    <rect x="30" y="160" width="500" height="22" fill="#fffaf0"/>
+    <text x="40" y="177" font-size="11" fill="#dd6b20" font-weight="bold">【加算】</text>
+
+    <!-- Row 5 -->
+    <rect x="30" y="185" width="500" height="38" fill="white"/>
+    <text x="40" y="202" font-size="11" fill="#dd6b20" font-weight="bold">欄5</text>
+    <text x="80" y="198" font-size="11" fill="#4a5568">損金の額に算入した法人所得税の額</text>
+    <text x="80" y="214" font-size="9" fill="#718096">（措令39条の15①二。日本の源泉所得税を加算）※注</text>
+    <text x="500" y="206" text-anchor="end" font-size="14" fill="#dd6b20" font-weight="bold">100</text>
+    <rect x="470" y="192" width="55" height="22" rx="3" fill="none" stroke="#dd6b20" stroke-width="1.5" stroke-dasharray="3,2"/>
+
+    <!-- Row 11 -->
+    <rect x="30" y="227" width="500" height="28" fill="#fffaf0"/>
+    <text x="40" y="246" font-size="11" fill="#dd6b20" font-weight="bold">欄11</text>
+    <text x="80" y="246" font-size="11" fill="#4a5568">加算 小計</text>
+    <text x="500" y="246" text-anchor="end" font-size="13" fill="#dd6b20" font-weight="bold">100</text>
+
+    <!-- Separator: 減算 -->
+    <rect x="30" y="259" width="500" height="22" fill="#ebf8ff"/>
+    <text x="40" y="276" font-size="11" fill="#2b6cb0" font-weight="bold">【減算】  小計＝0（該当なし）</text>
+
+    <!-- Row 22 -->
+    <rect x="30" y="285" width="500" height="35" fill="#faf5ff" stroke="#9f7aea" stroke-width="1"/>
+    <text x="40" y="304" font-size="11" fill="#9f7aea" font-weight="bold">欄22</text>
+    <text x="80" y="300" font-size="12" fill="#4a5568" font-weight="bold">基準所得金額 ＝ (4)+(11)-(21)</text>
+    <text x="80" y="315" font-size="10" fill="#718096">＝ 400 ＋ 100 ＝ 税前所得ベース</text>
+    <text x="500" y="308" text-anchor="end" font-size="16" fill="#553c9a" font-weight="bold">500</text>
+
+    <!-- Row 23 -->
+    <rect x="30" y="324" width="500" height="26" fill="white"/>
+    <text x="40" y="342" font-size="11" fill="#2b6cb0" font-weight="bold">欄23</text>
+    <text x="80" y="342" font-size="11" fill="#4a5568">繰越欠損金の当期控除額</text>
+    <text x="500" y="342" text-anchor="end" font-size="13" fill="#718096">0</text>
+
+    <!-- Row 24 -->
+    <rect x="30" y="354" width="500" height="35" fill="#fff5f5"/>
+    <text x="40" y="374" font-size="11" fill="#e53e3e" font-weight="bold">欄24</text>
+    <text x="80" y="370" font-size="11" fill="#4a5568">当期中に納付することとなる法人所得税の額</text>
+    <text x="80" y="384" font-size="9" fill="#718096">（措令39条の15⑤二。税額調整として控除）※注</text>
+    <text x="500" y="377" text-anchor="end" font-size="14" fill="#e53e3e" font-weight="bold">△100</text>
+    <rect x="462" y="364" width="62" height="22" rx="3" fill="none" stroke="#e53e3e" stroke-width="1.5" stroke-dasharray="3,2"/>
+
+    <!-- Row 26 -->
+    <rect x="30" y="395" width="500" height="35" fill="#f0fff4" stroke="#38a169" stroke-width="1.5"/>
+    <text x="40" y="416" font-size="11" fill="#38a169" font-weight="bold">欄26</text>
+    <text x="80" y="412" font-size="13" fill="#276749" font-weight="bold">適用対象金額 ＝ (22)-(23)-(24)</text>
+    <text x="80" y="426" font-size="10" fill="#718096">＝ 500 − 0 − 100</text>
+    <text x="500" y="418" text-anchor="end" font-size="18" fill="#276749" font-weight="bold">400</text>
+
+    <!-- Row 27 -->
+    <rect x="30" y="434" width="500" height="26" fill="white"/>
+    <text x="40" y="452" font-size="11" fill="#2b6cb0" font-weight="bold">欄27</text>
+    <text x="80" y="452" font-size="11" fill="#4a5568">請求権等勘案合算割合</text>
+    <text x="500" y="452" text-anchor="end" font-size="13" fill="#1a365d" font-weight="bold">100%</text>
+
+    <!-- Row 28 -->
+    <rect x="30" y="464" width="500" height="38" fill="#1a365d"/>
+    <text x="40" y="488" font-size="11" fill="#bee3f8" font-weight="bold">欄28</text>
+    <text x="80" y="484" font-size="13" fill="white" font-weight="bold">課税対象金額 ＝ (26)×(27)</text>
+    <text x="80" y="498" font-size="10" fill="#bee3f8">＝ 400 × 100%　→ B04加算（留保②）</text>
+    <text x="500" y="490" text-anchor="end" font-size="20" fill="#fbd38d" font-weight="bold">400</text>
+
+    <!-- Right: Flow diagram -->
+    <rect x="560" y="55" width="380" height="200" rx="8" fill="#faf5ff" stroke="#9f7aea" stroke-width="1.5"/>
+    <text x="750" y="78" text-anchor="middle" font-size="12" fill="#9f7aea" font-weight="bold">法令根拠と計算ロジック</text>
+
+    <!-- Flow boxes -->
+    <rect x="580" y="90" width="160" height="40" rx="5" fill="white" stroke="#2b6cb0" stroke-width="1"/>
+    <text x="660" y="108" text-anchor="middle" font-size="10" fill="#2b6cb0" font-weight="bold">措令39条の15①一</text>
+    <text x="660" y="122" text-anchor="middle" font-size="9" fill="#4a5568">本邦法令基準で所得計算</text>
+
+    <line x1="660" y1="130" x2="660" y2="145" stroke="#9f7aea" stroke-width="1.5" marker-end="url(#arrowPurple)"/>
+
+    <rect x="580" y="145" width="340" height="45" rx="5" fill="white" stroke="#dd6b20" stroke-width="1"/>
+    <text x="600" y="163" font-size="10" fill="#dd6b20" font-weight="bold">法法38条〜41条の2は「除く」</text>
+    <text x="600" y="178" font-size="9" fill="#718096">→ 法法40条（所得税額の損金不算入）を適用しない</text>
+    <text x="600" y="190" font-size="9" fill="#718096">→ 法法68条（税額控除）は準用範囲外（第十款）</text>
+
+    <line x1="660" y1="192" x2="660" y2="207" stroke="#9f7aea" stroke-width="1.5" marker-end="url(#arrowPurple)"/>
+
+    <rect x="580" y="207" width="340" height="35" rx="5" fill="#9f7aea" stroke="#6b46c1" stroke-width="1"/>
+    <text x="750" y="227" text-anchor="middle" font-size="11" fill="white" font-weight="bold">結果：源泉税100は損金のまま → 欄4 ＝ 400</text>
+
+    <!-- Note box -->
+    <rect x="560" y="270" width="380" height="100" rx="8" fill="#fffaf0" stroke="#dd6b20" stroke-width="1.5"/>
+    <text x="575" y="292" font-size="12" fill="#dd6b20" font-weight="bold">※ 法人所得税の定義（措令39条の15①二）</text>
+    <text x="575" y="312" font-size="10" fill="#4a5568">「本店所在地国若しくは本店所在地国以外の国…</text>
+    <text x="575" y="326" font-size="10" fill="#4a5568">により法人の所得を課税標準として課される税</text>
+    <text x="575" y="340" font-size="10" fill="#4a5568">（法法施行令141条②各号に掲げる税を含む。）」</text>
+    <text x="575" y="358" font-size="9" fill="#e53e3e">→ 日本の源泉所得税の包含は解釈の余地あり。</text>
+
+    <!-- Key insight -->
+    <rect x="560" y="385" width="380" height="80" rx="8" fill="#f0fff4" stroke="#38a169" stroke-width="2"/>
+    <text x="575" y="407" font-size="12" fill="#38a169" font-weight="bold">★ いずれの解釈でも適用対象金額は同一</text>
+    <text x="575" y="427" font-size="10" fill="#4a5568">含む場合：500 − 100 ＝ 400</text>
+    <text x="575" y="443" font-size="10" fill="#4a5568">含まない場合：400 − 0 ＝ 400</text>
+    <text x="575" y="459" font-size="10" fill="#276749" font-weight="bold">→ 加算と控除が相殺され、結論は不変</text>
+
+    <!-- Transfer arrows at bottom -->
+    <rect x="560" y="480" width="380" height="32" rx="5" fill="#1a365d"/>
+    <text x="750" y="501" text-anchor="middle" font-size="11" fill="white" font-weight="bold">欄28 → B17(3) 欄18 → B04 加算（留保②）400</text>
+  </svg>
+  <div class="caption">
+    措令39条の15第1項1号は法法38条〜41条の2を「除く」。法法40条が除外される結果、A社が費用処理した源泉税100は損金のまま。第2号の「法人所得税」で加算し、第5項2号で控除する構造。
+  </div>
+  <div class="page-num">2 / 5</div>
+</div>
+
+<!-- ============ Page 3 ============ -->
+<div class="page">
+  <h1>3／5　二重課税排除 ── 別表17(3の6)と措法66条の7④⑥</h1>
+  <svg viewBox="0 0 960 530" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:78%;">
+
+    <!-- Left: B17-3-6 Appendix -->
+    <rect x="20" y="10" width="460" height="310" rx="6" fill="white" stroke="#dd6b20" stroke-width="2"/>
+    <rect x="20" y="10" width="460" height="32" rx="6" fill="#dd6b20"/>
+    <text x="250" y="31" text-anchor="middle" font-size="13" fill="white" font-weight="bold">B17(3の6)付表　控除対象所得税額等相当額の計算</text>
+
+    <rect x="30" y="50" width="440" height="26" fill="#fffaf0"/>
+    <text x="40" y="68" font-size="11" fill="#dd6b20" font-weight="bold">付表欄5</text>
+    <text x="130" y="68" font-size="11" fill="#4a5568">所得税等の額（措法66条の7④一）</text>
+    <text x="445" y="68" text-anchor="end" font-size="14" fill="#c05621" font-weight="bold">100</text>
+
+    <rect x="30" y="80" width="440" height="26" fill="white"/>
+    <text x="40" y="98" font-size="11" fill="#2b6cb0" font-weight="bold">付表欄6</text>
+    <text x="130" y="98" font-size="11" fill="#4a5568">適用対象金額 ← B17(3の2)欄26</text>
+    <text x="445" y="98" text-anchor="end" font-size="13" fill="#1a365d" font-weight="bold">400</text>
+
+    <rect x="30" y="110" width="440" height="26" fill="#ebf8ff"/>
+    <text x="40" y="128" font-size="11" fill="#2b6cb0" font-weight="bold">付表欄9</text>
+    <text x="130" y="128" font-size="11" fill="#4a5568">調整適用対象金額 ＝ (6)+(7)+(8)</text>
+    <text x="445" y="128" text-anchor="end" font-size="13" fill="#1a365d" font-weight="bold">400</text>
+
+    <rect x="30" y="140" width="440" height="26" fill="white"/>
+    <text x="40" y="158" font-size="11" fill="#2b6cb0" font-weight="bold">付表欄10</text>
+    <text x="130" y="158" font-size="11" fill="#4a5568">課税対象金額 ← B17(3の2)欄28</text>
+    <text x="445" y="158" text-anchor="end" font-size="13" fill="#1a365d" font-weight="bold">400</text>
+
+    <rect x="30" y="170" width="440" height="30" fill="#faf5ff"/>
+    <text x="40" y="190" font-size="11" fill="#9f7aea" font-weight="bold">付表欄11</text>
+    <text x="130" y="186" font-size="11" fill="#4a5568">按分割合 ＝ (10) ÷ (9)</text>
+    <text x="130" y="198" font-size="9" fill="#718096">（措令39条の18㉓）</text>
+    <text x="445" y="190" text-anchor="end" font-size="14" fill="#553c9a" font-weight="bold">100%</text>
+
+    <rect x="30" y="204" width="440" height="38" fill="#f0fff4" stroke="#38a169" stroke-width="1.5"/>
+    <text x="40" y="224" font-size="11" fill="#38a169" font-weight="bold">付表欄12</text>
+    <text x="130" y="220" font-size="12" fill="#276749" font-weight="bold">控除対象所得税額等相当額 ＝ (5)×(11)</text>
+    <text x="130" y="236" font-size="10" fill="#718096">＝ 100 × 100%</text>
+    <text x="445" y="228" text-anchor="end" font-size="18" fill="#276749" font-weight="bold">100</text>
+
+    <rect x="30" y="250" width="440" height="28" fill="#1a365d"/>
+    <text x="40" y="269" font-size="11" fill="#bee3f8" font-weight="bold">付表欄31</text>
+    <text x="130" y="269" font-size="11" fill="white">→ 本表欄1に転記</text>
+    <text x="445" y="269" text-anchor="end" font-size="14" fill="#fbd38d" font-weight="bold">100</text>
+
+    <!-- Note: What is 所得税等 -->
+    <rect x="30" y="286" width="440" height="28" rx="4" fill="#fff5f5"/>
+    <text x="40" y="305" font-size="10" fill="#e53e3e">「所得税等の額」＝ A社に課される日本の所得税100（措法66条の7④一）</text>
+
+    <!-- Right top: B17-3-6 Main -->
+    <rect x="500" y="10" width="440" height="180" rx="6" fill="white" stroke="#e53e3e" stroke-width="2"/>
+    <rect x="500" y="10" width="440" height="32" rx="6" fill="#e53e3e"/>
+    <text x="720" y="31" text-anchor="middle" font-size="13" fill="white" font-weight="bold">B17(3の6)本表　法人税額からの控除</text>
+
+    <rect x="510" y="50" width="420" height="28" fill="#fff5f5"/>
+    <text x="520" y="69" font-size="11" fill="#e53e3e" font-weight="bold">欄1</text>
+    <text x="570" y="69" font-size="11" fill="#4a5568">控除対象所得税額等相当額 ← 付表欄31</text>
+    <text x="910" y="69" text-anchor="end" font-size="14" fill="#c53030" font-weight="bold">100</text>
+
+    <rect x="510" y="82" width="420" height="28" fill="white"/>
+    <text x="520" y="101" font-size="11" fill="#2b6cb0" font-weight="bold">欄2</text>
+    <text x="570" y="101" font-size="11" fill="#4a5568">法人税の額 ← B01欄9等</text>
+    <text x="910" y="101" text-anchor="end" font-size="13" fill="#1a365d">（Y と仮定）</text>
+
+    <rect x="510" y="114" width="420" height="32" fill="#f0fff4" stroke="#38a169" stroke-width="1"/>
+    <text x="520" y="134" font-size="11" fill="#38a169" font-weight="bold">欄3</text>
+    <text x="570" y="130" font-size="12" fill="#276749" font-weight="bold">法人税額から控除する金額 ＝ min(1, 2)</text>
+    <text x="910" y="134" text-anchor="end" font-size="16" fill="#276749" font-weight="bold">100</text>
+
+    <rect x="510" y="150" width="420" height="28" fill="#fffaf0"/>
+    <text x="520" y="169" font-size="11" fill="#dd6b20" font-weight="bold">欄4</text>
+    <text x="570" y="169" font-size="11" fill="#4a5568">超過額 ＝ (1) − (2)（控除しきれない場合）</text>
+    <text x="910" y="169" text-anchor="end" font-size="13" fill="#718096">0</text>
+
+    <!-- Right bottom: Mechanism diagram -->
+    <rect x="500" y="205" width="440" height="310" rx="8" fill="#faf5ff" stroke="#9f7aea" stroke-width="1.5"/>
+    <text x="720" y="228" text-anchor="middle" font-size="13" fill="#9f7aea" font-weight="bold">措法66条の7④⑥の二重課税排除メカニズム</text>
+
+    <!-- Flow diagram -->
+    <rect x="530" y="245" width="180" height="45" rx="6" fill="#e53e3e"/>
+    <text x="620" y="265" text-anchor="middle" font-size="11" fill="white" font-weight="bold">A社に課される源泉税</text>
+    <text x="620" y="282" text-anchor="middle" font-size="13" fill="#fbd38d" font-weight="bold">100</text>
+
+    <!-- Split into two paths -->
+    <line x1="620" y1="290" x2="620" y2="310" stroke="#9f7aea" stroke-width="2"/>
+    <line x1="620" y1="310" x2="540" y2="310" stroke="#9f7aea" stroke-width="2"/>
+    <line x1="620" y1="310" x2="830" y2="310" stroke="#9f7aea" stroke-width="2"/>
+    <line x1="540" y1="310" x2="540" y2="325" stroke="#9f7aea" stroke-width="2" marker-end="url(#arrowPurple)"/>
+    <line x1="830" y1="310" x2="830" y2="325" stroke="#9f7aea" stroke-width="2" marker-end="url(#arrowPurple)"/>
+
+    <!-- Path 1: Tax credit -->
+    <rect x="515" y="328" width="185" height="55" rx="6" fill="#2b6cb0"/>
+    <text x="607" y="350" text-anchor="middle" font-size="11" fill="white" font-weight="bold">措法66条の7④</text>
+    <text x="607" y="367" text-anchor="middle" font-size="10" fill="#bee3f8">法人税額から 100 控除</text>
+    <text x="607" y="380" text-anchor="middle" font-size="9" fill="#bee3f8">（法法69の2の後に適用）</text>
+
+    <!-- Path 2: Income inclusion -->
+    <rect x="740" y="328" width="185" height="55" rx="6" fill="#38a169"/>
+    <text x="832" y="350" text-anchor="middle" font-size="11" fill="white" font-weight="bold">措法66条の7⑥</text>
+    <text x="832" y="367" text-anchor="middle" font-size="10" fill="#c6f6d5">益金算入 100</text>
+    <text x="832" y="380" text-anchor="middle" font-size="9" fill="#c6f6d5">（B04加算・社外流出③）</text>
+
+    <!-- Converge -->
+    <line x1="607" y1="383" x2="607" y2="405" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrowBlue)"/>
+    <line x1="832" y1="383" x2="832" y2="405" stroke="#38a169" stroke-width="2" marker-end="url(#arrowGreen)"/>
+
+    <rect x="515" y="408" width="185" height="35" rx="5" fill="#ebf8ff" stroke="#2b6cb0" stroke-width="1"/>
+    <text x="607" y="430" text-anchor="middle" font-size="11" fill="#1a365d" font-weight="bold">B01 税額控除 △100</text>
+
+    <rect x="740" y="408" width="185" height="35" rx="5" fill="#f0fff4" stroke="#38a169" stroke-width="1"/>
+    <text x="832" y="430" text-anchor="middle" font-size="11" fill="#276749" font-weight="bold">B04 加算 +100</text>
+
+    <!-- Result box -->
+    <rect x="560" y="460" width="310" height="45" rx="6" fill="#1a365d"/>
+    <text x="715" y="480" text-anchor="middle" font-size="12" fill="white" font-weight="bold">実質課税所得 ＝ 課税対象金額400 ＋ 益金算入100 ＝ 500</text>
+    <text x="715" y="498" text-anchor="middle" font-size="11" fill="#fbd38d">法人税額から源泉税100を控除 → 二重課税排除完了</text>
+
+    <line x1="607" y1="443" x2="607" y2="458" stroke="#1a365d" stroke-width="1.5" marker-end="url(#arrowGray)"/>
+    <line x1="832" y1="443" x2="832" y2="458" stroke="#1a365d" stroke-width="1.5" marker-end="url(#arrowGray)"/>
+
+    <!-- Distinction note -->
+    <rect x="20" y="335" width="460" height="180" rx="6" fill="#fff5f5" stroke="#e53e3e" stroke-width="1"/>
+    <text x="35" y="358" font-size="12" fill="#e53e3e" font-weight="bold">B17(3の5)とB17(3の6)の区別（重要）</text>
+
+    <rect x="35" y="370" width="200" height="55" rx="4" fill="white" stroke="#2b6cb0" stroke-width="1"/>
+    <text x="135" y="388" text-anchor="middle" font-size="10" fill="#2b6cb0" font-weight="bold">B17(3の5)：外国法人税</text>
+    <text x="135" y="403" text-anchor="middle" font-size="9" fill="#4a5568">措法66条の7① → 法法69条</text>
+    <text x="135" y="416" text-anchor="middle" font-size="9" fill="#718096">日本以外の国が課す税</text>
+
+    <rect x="250" y="370" width="215" height="55" rx="4" fill="white" stroke="#dd6b20" stroke-width="1.5"/>
+    <text x="357" y="388" text-anchor="middle" font-size="10" fill="#dd6b20" font-weight="bold">B17(3の6)：所得税等 ← 本件</text>
+    <text x="357" y="403" text-anchor="middle" font-size="9" fill="#4a5568">措法66条の7④ → 日本の税</text>
+    <text x="357" y="416" text-anchor="middle" font-size="9" fill="#e53e3e" font-weight="bold">源泉所得税100はこちら</text>
+
+    <text x="35" y="445" font-size="10" fill="#4a5568">本件ではA社に外国法人税なし（パナマは属地主義、</text>
+    <text x="35" y="459" font-size="10" fill="#4a5568">国外所得非課税）→ B17(3の5)は使用しない。</text>
+    <text x="35" y="475" font-size="10" fill="#4a5568">日本の源泉所得税100は B17(3の6)のみで処理。</text>
+    <text x="35" y="495" font-size="9" fill="#e53e3e">復興特別所得税がある場合は、特措法33条①の読替えにより含めて計算。</text>
+  </svg>
+  <div class="caption">
+    措法66条の7④一の「所得税等の額」は外国関係会社に課される日本の所得税・法人税・地方法人税・住民税法人税割。按分は措令39条の18㉓により調整適用対象金額ベースで計算。
+  </div>
+  <div class="page-num">3 / 5</div>
+</div>
+
+<!-- ============ Page 4 ============ -->
+<div class="page">
+  <h1>4／5　別表四・別表一への転記と所得計算</h1>
+  <svg viewBox="0 0 960 530" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:78%;">
+
+    <!-- B04 Table -->
+    <rect x="20" y="10" width="520" height="370" rx="6" fill="white" stroke="#2b6cb0" stroke-width="2"/>
+    <rect x="20" y="10" width="520" height="32" rx="6" fill="#2b6cb0"/>
+    <text x="280" y="31" text-anchor="middle" font-size="13" fill="white" font-weight="bold">別表四（B04）所得の金額の計算に関する明細書（CFC関連部分抜粋）</text>
+
+    <!-- Header row -->
+    <rect x="30" y="50" width="500" height="25" fill="#ebf8ff"/>
+    <text x="40" y="67" font-size="10" fill="#2b6cb0" font-weight="bold">区分</text>
+    <text x="310" y="67" text-anchor="middle" font-size="10" fill="#2b6cb0" font-weight="bold">総額①</text>
+    <text x="390" y="67" text-anchor="middle" font-size="10" fill="#2b6cb0" font-weight="bold">留保②</text>
+    <text x="480" y="67" text-anchor="middle" font-size="10" fill="#2b6cb0" font-weight="bold">社外③</text>
+
+    <line x1="270" y1="50" x2="270" y2="370" stroke="#cbd5e0" stroke-width="0.5"/>
+    <line x1="350" y1="50" x2="350" y2="370" stroke="#cbd5e0" stroke-width="0.5"/>
+    <line x1="430" y1="50" x2="430" y2="370" stroke="#cbd5e0" stroke-width="0.5"/>
+
+    <!-- Row: 当期利益 -->
+    <rect x="30" y="78" width="500" height="28" fill="#f7fafc"/>
+    <text x="40" y="97" font-size="11" fill="#4a5568">欄1 当期利益又は当期欠損の額</text>
+    <text x="310" y="97" text-anchor="middle" font-size="12" fill="#718096">X</text>
+    <text x="390" y="97" text-anchor="middle" font-size="10" fill="#718096">…</text>
+    <text x="480" y="97" text-anchor="middle" font-size="10" fill="#718096">…</text>
+
+    <!-- Separator: 加算 -->
+    <rect x="30" y="110" width="500" height="22" fill="#fffaf0"/>
+    <text x="40" y="127" font-size="11" fill="#dd6b20" font-weight="bold">【加算】</text>
+
+    <!-- CFC 課税対象金額 -->
+    <rect x="30" y="136" width="500" height="38" fill="white" stroke="#38a169" stroke-width="1"/>
+    <text x="40" y="155" font-size="11" fill="#38a169" font-weight="bold">CFC課税対象金額</text>
+    <text x="40" y="170" font-size="9" fill="#718096">← B17(3の2)欄28（措法66条の6①）</text>
+    <rect x="275" y="142" width="70" height="26" rx="3" fill="#f0fff4" stroke="#38a169" stroke-width="1.5"/>
+    <text x="310" y="160" text-anchor="middle" font-size="14" fill="#276749" font-weight="bold">400</text>
+    <rect x="355" y="142" width="70" height="26" rx="3" fill="#38a169"/>
+    <text x="390" y="160" text-anchor="middle" font-size="14" fill="white" font-weight="bold">400</text>
+    <text x="480" y="160" text-anchor="middle" font-size="12" fill="#718096">—</text>
+
+    <!-- 控除対象所得税額等の益金算入 -->
+    <rect x="30" y="178" width="500" height="38" fill="white" stroke="#dd6b20" stroke-width="1"/>
+    <text x="40" y="197" font-size="11" fill="#dd6b20" font-weight="bold">控除対象所得税額等相当額 益金算入</text>
+    <text x="40" y="212" font-size="9" fill="#718096">← B17(3の6)の控除額（措法66条の7⑥）</text>
+    <rect x="275" y="184" width="70" height="26" rx="3" fill="#fffaf0" stroke="#dd6b20" stroke-width="1.5"/>
+    <text x="310" y="202" text-anchor="middle" font-size="14" fill="#c05621" font-weight="bold">100</text>
+    <text x="390" y="202" text-anchor="middle" font-size="12" fill="#718096">—</text>
+    <rect x="445" y="184" width="70" height="26" rx="3" fill="#dd6b20"/>
+    <text x="480" y="202" text-anchor="middle" font-size="14" fill="white" font-weight="bold">100</text>
+
+    <!-- Other items -->
+    <rect x="30" y="220" width="500" height="24" fill="#f7fafc"/>
+    <text x="40" y="237" font-size="10" fill="#718096">（内国法人固有の加算項目は省略）</text>
+
+    <!-- Separator: 減算 -->
+    <rect x="30" y="248" width="500" height="22" fill="#ebf8ff"/>
+    <text x="40" y="265" font-size="11" fill="#2b6cb0" font-weight="bold">【減算】</text>
+
+    <rect x="30" y="274" width="500" height="24" fill="#f7fafc"/>
+    <text x="40" y="291" font-size="10" fill="#718096">（内国法人固有の減算項目は省略）</text>
+
+    <!-- 仮計・所得金額 -->
+    <rect x="30" y="302" width="500" height="30" fill="#faf5ff"/>
+    <text x="40" y="322" font-size="11" fill="#9f7aea" font-weight="bold">欄27① 所得金額</text>
+    <text x="310" y="322" text-anchor="middle" font-size="13" fill="#553c9a" font-weight="bold">X+500</text>
+    <text x="390" y="322" text-anchor="middle" font-size="11" fill="#553c9a">X+400</text>
+    <text x="480" y="322" text-anchor="middle" font-size="11" fill="#553c9a">+100</text>
+
+    <!-- Summary -->
+    <rect x="30" y="338" width="500" height="28" fill="#1a365d"/>
+    <text x="280" y="358" text-anchor="middle" font-size="12" fill="white" font-weight="bold">CFC関連でB04に計上される金額合計 ＝ 400（留保） ＋ 100（社外） ＝ 500</text>
+
+    <!-- B01 -->
+    <rect x="560" y="10" width="380" height="230" rx="6" fill="white" stroke="#e53e3e" stroke-width="2"/>
+    <rect x="560" y="10" width="380" height="32" rx="6" fill="#e53e3e"/>
+    <text x="750" y="31" text-anchor="middle" font-size="13" fill="white" font-weight="bold">別表一（B01）確定申告書（CFC関連抜粋）</text>
+
+    <rect x="570" y="50" width="360" height="26" fill="white"/>
+    <text x="580" y="69" font-size="11" fill="#2b6cb0" font-weight="bold">欄1</text>
+    <text x="620" y="69" font-size="11" fill="#4a5568">所得金額 ← B04欄27①</text>
+    <text x="910" y="69" text-anchor="end" font-size="13" fill="#1a365d" font-weight="bold">X+500</text>
+
+    <rect x="570" y="80" width="360" height="26" fill="#f7fafc"/>
+    <text x="580" y="99" font-size="11" fill="#2b6cb0" font-weight="bold">欄2</text>
+    <text x="620" y="99" font-size="11" fill="#4a5568">法人税額 ＝ 所得 × 税率</text>
+    <text x="910" y="99" text-anchor="end" font-size="12" fill="#718096">Y</text>
+
+    <rect x="570" y="110" width="360" height="30" fill="white"/>
+    <text x="580" y="130" font-size="11" fill="#e53e3e" font-weight="bold">控除</text>
+    <text x="620" y="126" font-size="11" fill="#4a5568">控除対象所得税額等相当額</text>
+    <text x="620" y="138" font-size="9" fill="#718096">（措法66条の7④。法法69の2の後に適用）</text>
+    <text x="910" y="130" text-anchor="end" font-size="14" fill="#e53e3e" font-weight="bold">△100</text>
+
+    <rect x="570" y="144" width="360" height="26" fill="#f7fafc"/>
+    <text x="580" y="163" font-size="11" fill="#2b6cb0" font-weight="bold">欄9</text>
+    <text x="620" y="163" font-size="11" fill="#4a5568">法人税額計</text>
+    <text x="910" y="163" text-anchor="end" font-size="13" fill="#1a365d" font-weight="bold">Y − 100</text>
+
+    <rect x="570" y="174" width="360" height="28" fill="#1a365d"/>
+    <text x="580" y="194" font-size="11" fill="#bee3f8" font-weight="bold">欄11</text>
+    <text x="630" y="194" font-size="12" fill="white" font-weight="bold">差引確定法人税額</text>
+    <text x="910" y="194" text-anchor="end" font-size="13" fill="#fbd38d" font-weight="bold">Y−100−中間</text>
+
+    <text x="580" y="222" font-size="10" fill="#718096">※ 控除の順序（措法66条の7⑦）：</text>
+    <text x="585" y="236" font-size="9" fill="#718096">法法69条（外国税額控除） → 法法69条の2 → 措法66条の7④ → 法法70条</text>
+
+    <!-- B05-1 -->
+    <rect x="560" y="260" width="380" height="130" rx="6" fill="white" stroke="#38a169" stroke-width="2"/>
+    <rect x="560" y="260" width="380" height="32" rx="6" fill="#38a169"/>
+    <text x="750" y="281" text-anchor="middle" font-size="13" fill="white" font-weight="bold">別表五(一)（B05-1）利益積立金額</text>
+
+    <rect x="570" y="300" width="360" height="26" fill="#f0fff4"/>
+    <text x="580" y="318" font-size="11" fill="#276749" font-weight="bold">CFC課税対象金額</text>
+    <text x="750" y="318" text-anchor="middle" font-size="10" fill="#4a5568">増③</text>
+    <text x="910" y="318" text-anchor="end" font-size="14" fill="#276749" font-weight="bold">400</text>
+
+    <rect x="570" y="330" width="360" height="26" fill="white"/>
+    <text x="580" y="348" font-size="10" fill="#718096">※ 益金算入100は社外流出③ → B05-1に転記しない</text>
+
+    <rect x="570" y="360" width="360" height="24" fill="#ebf8ff"/>
+    <text x="580" y="378" font-size="10" fill="#2b6cb0">検算：31④ ＝ 31① ＋ B04欄27② − (28③+29③+30③)</text>
+
+    <!-- Transfer flow -->
+    <rect x="560" y="410" width="380" height="110" rx="8" fill="#faf5ff" stroke="#9f7aea" stroke-width="1.5"/>
+    <text x="750" y="432" text-anchor="middle" font-size="12" fill="#9f7aea" font-weight="bold">留保②と社外流出③の判定根拠</text>
+
+    <rect x="575" y="445" width="170" height="60" rx="4" fill="white" stroke="#38a169" stroke-width="1"/>
+    <text x="660" y="462" text-anchor="middle" font-size="11" fill="#38a169" font-weight="bold">課税対象金額 400</text>
+    <text x="660" y="478" text-anchor="middle" font-size="10" fill="#4a5568">→ 留保②</text>
+    <text x="660" y="494" text-anchor="middle" font-size="9" fill="#718096">A社の留保利益に対応</text>
+
+    <rect x="755" y="445" width="170" height="60" rx="4" fill="white" stroke="#dd6b20" stroke-width="1"/>
+    <text x="840" y="462" text-anchor="middle" font-size="11" fill="#dd6b20" font-weight="bold">益金算入 100</text>
+    <text x="840" y="478" text-anchor="middle" font-size="10" fill="#4a5568">→ 社外流出③</text>
+    <text x="840" y="494" text-anchor="middle" font-size="9" fill="#718096">源泉税は国に納付済み</text>
+
+    <!-- Left bottom: verification -->
+    <rect x="20" y="395" width="520" height="120" rx="6" fill="#f0fff4" stroke="#38a169" stroke-width="1.5"/>
+    <text x="35" y="418" font-size="12" fill="#38a169" font-weight="bold">数値検算</text>
+
+    <text x="35" y="440" font-size="11" fill="#4a5568">A社の利息収入（税前）</text>
+    <text x="260" y="440" font-size="14" fill="#1a365d" font-weight="bold">500</text>
+
+    <text x="35" y="462" font-size="11" fill="#4a5568">内国法人のB04加算合計（CFC分）</text>
+    <text x="260" y="462" font-size="11" fill="#4a5568">＝ 400 ＋ 100 ＝</text>
+    <text x="370" y="462" font-size="14" fill="#276749" font-weight="bold">500 ✓</text>
+
+    <text x="35" y="484" font-size="11" fill="#4a5568">法人税額からの控除</text>
+    <text x="260" y="484" font-size="14" fill="#e53e3e" font-weight="bold">△100</text>
+    <text x="310" y="484" font-size="11" fill="#4a5568">（源泉税100を回収）✓</text>
+
+    <text x="35" y="506" font-size="11" fill="#276749" font-weight="bold">→ 利息収入500に対して法人税が課され、源泉税100は法人税額から控除される。二重課税なし。</text>
+  </svg>
+  <div class="caption">
+    CFC課税対象金額400は留保②（B05-1連動）、控除対象所得税額等相当額の益金算入100は社外流出③（B05-1に転記しない）。法法68条の所得税額控除と同一構造。
+  </div>
+  <div class="page-num">4 / 5</div>
+</div>
+
+<!-- ============ Page 5 ============ -->
+<div class="page">
+  <h1>5／5　別表間の転記フローと全体ネットワーク</h1>
+  <svg viewBox="0 0 960 530" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:78%;">
+
+    <!-- Background label -->
+    <text x="480" y="20" text-anchor="middle" font-size="11" fill="#a0aec0">作成順序：STEP①→②→③→④→⑤→⑥の順で作成</text>
+
+    <!-- STEP 1: B17(3) -->
+    <rect x="20" y="35" width="180" height="80" rx="8" fill="#ebf8ff" stroke="#2b6cb0" stroke-width="2"/>
+    <circle cx="35" cy="50" r="12" fill="#2b6cb0"/><text x="35" y="55" text-anchor="middle" font-size="10" fill="white" font-weight="bold">①</text>
+    <text x="110" y="58" text-anchor="middle" font-size="12" fill="#1a365d" font-weight="bold">B17(3)</text>
+    <text x="110" y="75" text-anchor="middle" font-size="10" fill="#4a5568">外国関係会社一覧</text>
+    <text x="110" y="90" text-anchor="middle" font-size="9" fill="#718096">区分判定・租税負担割合</text>
+    <text x="110" y="105" text-anchor="middle" font-size="9" fill="#718096">パナマ・特定外国関係会社</text>
+
+    <!-- Arrow: B17(3) -> B17(3-2) -->
+    <line x1="200" y1="75" x2="230" y2="75" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+    <!-- STEP 2: B17(3-2) -->
+    <rect x="235" y="35" width="220" height="80" rx="8" fill="#faf5ff" stroke="#9f7aea" stroke-width="2"/>
+    <circle cx="250" cy="50" r="12" fill="#9f7aea"/><text x="250" y="55" text-anchor="middle" font-size="10" fill="white" font-weight="bold">②</text>
+    <text x="345" y="58" text-anchor="middle" font-size="12" fill="#553c9a" font-weight="bold">B17(3の2)</text>
+    <text x="345" y="75" text-anchor="middle" font-size="10" fill="#4a5568">適用対象金額の計算</text>
+    <text x="345" y="90" text-anchor="middle" font-size="10" fill="#9f7aea" font-weight="bold">基準所得金額 500</text>
+    <text x="345" y="105" text-anchor="middle" font-size="10" fill="#276749" font-weight="bold">適用対象金額 400</text>
+
+    <!-- Arrow: B17(3-2) -> B17(3-6) -->
+    <line x1="455" y1="75" x2="490" y2="75" stroke="#9f7aea" stroke-width="2" marker-end="url(#arrowPurple)"/>
+
+    <!-- STEP 3: B17(3-6) -->
+    <rect x="495" y="35" width="220" height="80" rx="8" fill="#fffaf0" stroke="#dd6b20" stroke-width="2"/>
+    <circle cx="510" cy="50" r="12" fill="#dd6b20"/><text x="510" y="55" text-anchor="middle" font-size="10" fill="white" font-weight="bold">③</text>
+    <text x="605" y="58" text-anchor="middle" font-size="12" fill="#c05621" font-weight="bold">B17(3の6)+付表</text>
+    <text x="605" y="75" text-anchor="middle" font-size="10" fill="#4a5568">控除対象所得税額等</text>
+    <text x="605" y="90" text-anchor="middle" font-size="10" fill="#dd6b20" font-weight="bold">所得税等の額 100</text>
+    <text x="605" y="105" text-anchor="middle" font-size="10" fill="#e53e3e" font-weight="bold">控除額 100</text>
+
+    <!-- STEP 4: B04 -->
+    <rect x="240" y="180" width="280" height="120" rx="8" fill="white" stroke="#38a169" stroke-width="2.5"/>
+    <circle cx="255" cy="195" r="12" fill="#38a169"/><text x="255" y="200" text-anchor="middle" font-size="10" fill="white" font-weight="bold">④</text>
+    <text x="380" y="200" text-anchor="middle" font-size="14" fill="#276749" font-weight="bold">別表四（B04）</text>
+    <text x="380" y="218" text-anchor="middle" font-size="10" fill="#4a5568">所得の金額の計算</text>
+
+    <rect x="255" y="228" width="115" height="32" rx="4" fill="#38a169"/>
+    <text x="312" y="243" text-anchor="middle" font-size="10" fill="white" font-weight="bold">加算 400</text>
+    <text x="312" y="256" text-anchor="middle" font-size="9" fill="#c6f6d5">留保②</text>
+
+    <rect x="380" y="228" width="125" height="32" rx="4" fill="#dd6b20"/>
+    <text x="442" y="243" text-anchor="middle" font-size="10" fill="white" font-weight="bold">加算 100</text>
+    <text x="442" y="256" text-anchor="middle" font-size="9" fill="#feebc8">社外流出③</text>
+
+    <rect x="255" y="268" width="250" height="24" rx="3" fill="#1a365d"/>
+    <text x="380" y="285" text-anchor="middle" font-size="11" fill="#fbd38d" font-weight="bold">所得 ＋500　→ B01欄1</text>
+
+    <!-- Arrows to B04 -->
+    <path d="M345,115 L345,145 Q345,160 345,178" stroke="#9f7aea" stroke-width="2" fill="none" marker-end="url(#arrowPurple)"/>
+    <text x="350" y="148" font-size="9" fill="#9f7aea">欄28: 400</text>
+
+    <path d="M605,115 L605,155 Q605,168 520,178" stroke="#dd6b20" stroke-width="2" fill="none" marker-end="url(#arrowOrange)"/>
+    <text x="570" y="150" font-size="9" fill="#dd6b20">益金算入: 100</text>
+
+    <!-- STEP 5: B01 -->
+    <rect x="600" y="180" width="220" height="120" rx="8" fill="white" stroke="#e53e3e" stroke-width="2.5"/>
+    <circle cx="615" cy="195" r="12" fill="#e53e3e"/><text x="615" y="200" text-anchor="middle" font-size="10" fill="white" font-weight="bold">⑤</text>
+    <text x="710" y="200" text-anchor="middle" font-size="14" fill="#c53030" font-weight="bold">別表一（B01）</text>
+    <text x="710" y="218" text-anchor="middle" font-size="10" fill="#4a5568">確定申告書</text>
+
+    <rect x="615" y="228" width="190" height="28" rx="4" fill="#ebf8ff"/>
+    <text x="710" y="247" text-anchor="middle" font-size="10" fill="#1a365d">所得金額 ← B04（X+500）</text>
+
+    <rect x="615" y="260" width="190" height="28" rx="4" fill="#fff5f5"/>
+    <text x="710" y="279" text-anchor="middle" font-size="10" fill="#e53e3e" font-weight="bold">税額控除 △100 ← B17(3の6)</text>
+
+    <!-- Arrow: B04 -> B01 -->
+    <line x1="520" y1="240" x2="598" y2="240" stroke="#38a169" stroke-width="2" marker-end="url(#arrowGreen)"/>
+
+    <!-- Arrow: B17(3-6) -> B01 -->
+    <path d="M715,75 Q770,75 770,155 Q770,195 820,195 L820,240 Q820,240 810,240" stroke="#e53e3e" stroke-width="2" fill="none" marker-end="url(#arrowRed)"/>
+
+    <!-- STEP 6: B05-1 -->
+    <rect x="240" y="360" width="280" height="100" rx="8" fill="white" stroke="#2b6cb0" stroke-width="2"/>
+    <circle cx="255" cy="375" r="12" fill="#2b6cb0"/><text x="255" y="380" text-anchor="middle" font-size="10" fill="white" font-weight="bold">⑥</text>
+    <text x="380" y="380" text-anchor="middle" font-size="13" fill="#1a365d" font-weight="bold">別表五(一)（B05-1）</text>
+    <text x="380" y="398" text-anchor="middle" font-size="10" fill="#4a5568">利益積立金額の計算</text>
+
+    <rect x="265" y="410" width="240" height="38" rx="4" fill="#f0fff4" stroke="#38a169" stroke-width="1"/>
+    <text x="385" y="428" text-anchor="middle" font-size="10" fill="#276749" font-weight="bold">CFC課税対象金額 → 増③ 400</text>
+    <text x="385" y="443" text-anchor="middle" font-size="9" fill="#718096">（留保②のみ。社外流出③の100は転記しない）</text>
+
+    <!-- Arrow: B04 留保 -> B05-1 -->
+    <line x1="380" y1="300" x2="380" y2="355" stroke="#38a169" stroke-width="2" marker-end="url(#arrowGreen)"/>
+    <text x="395" y="330" font-size="9" fill="#38a169">留保② 400</text>
+
+    <!-- X mark for social outflow -->
+    <text x="490" y="330" font-size="14" fill="#e53e3e" font-weight="bold">✕</text>
+    <text x="510" y="335" font-size="9" fill="#e53e3e">社外100は</text>
+    <text x="510" y="347" font-size="9" fill="#e53e3e">転記しない</text>
+
+    <!-- B05-2 -->
+    <rect x="600" y="360" width="220" height="100" rx="8" fill="white" stroke="#718096" stroke-width="1.5"/>
+    <text x="710" y="382" text-anchor="middle" font-size="12" fill="#4a5568" font-weight="bold">B05-2</text>
+    <text x="710" y="400" text-anchor="middle" font-size="10" fill="#718096">租税公課の納付状況</text>
+    <text x="710" y="420" text-anchor="middle" font-size="9" fill="#718096">B01確定税額 → ②欄</text>
+    <text x="710" y="438" text-anchor="middle" font-size="9" fill="#718096">期末未納 → B05-1(28-30行)</text>
+
+    <line x1="710" y1="300" x2="710" y2="355" stroke="#718096" stroke-width="1.5" marker-end="url(#arrowGray)"/>
+
+    <!-- B17(3-5) - not used -->
+    <rect x="770" y="35" width="170" height="80" rx="8" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1.5" stroke-dasharray="4,3"/>
+    <text x="855" y="60" text-anchor="middle" font-size="11" fill="#a0aec0" font-weight="bold">B17(3の5)</text>
+    <text x="855" y="78" text-anchor="middle" font-size="10" fill="#cbd5e0">外国法人税の控除</text>
+    <text x="855" y="95" text-anchor="middle" font-size="10" fill="#e53e3e" font-weight="bold">本件は不使用</text>
+    <text x="855" y="108" text-anchor="middle" font-size="9" fill="#a0aec0">（外国法人税なし）</text>
+
+    <!-- Summary box at bottom -->
+    <rect x="20" y="475" width="920" height="50" rx="8" fill="#1a365d"/>
+    <text x="480" y="495" text-anchor="middle" font-size="13" fill="white" font-weight="bold">転記の要約：B17(3) → B17(3の2)[欄28=400] → B04加算[留保400＋社外100] → B01[所得+500, 控除△100] → B05-1[増400]</text>
+    <text x="480" y="515" text-anchor="middle" font-size="11" fill="#bee3f8">
+      別途 B17(3の6)[控除100] → B01[法人税額から△100]　／　益金算入100は B04 社外流出③
+    </text>
+  </svg>
+  <div class="caption">
+    作成順序は ①B17(3)基礎情報 → ②B17(3の2)適用対象金額 → ③B17(3の6)所得税等控除 → ④B04所得計算 → ⑤B01確定申告 → ⑥B05-1利益積立金。B17(3の5)は外国法人税がないため不使用。
+  </div>
+  <div class="page-num">5 / 5</div>
+</div>
+
+</body>
+</html>
