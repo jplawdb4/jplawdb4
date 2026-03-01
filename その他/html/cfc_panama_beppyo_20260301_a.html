@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CFC税制 別表調製解説 ― パナマ特定外国関係会社の日本預金利息と源泉所得税</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #F4F3EE;
+    color: #2D2D2D;
+    font-family: "Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic",sans-serif;
+    line-height: 1.78;
+    padding: 16px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  h1 { font-size: 1.35rem; color: #3A5A40; border-bottom: 3px solid #8FB996; padding-bottom: 8px; margin: 24px 0 14px; }
+  h2 { font-size: 1.15rem; color: #3A5A40; border-left: 5px solid #8FB996; padding-left: 10px; margin: 22px 0 10px; }
+  h3 { font-size: 1.02rem; color: #5A7D5A; margin: 16px 0 8px; }
+  p { margin: 8px 0; text-align: justify; }
+  .card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin: 14px 0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  }
+  .highlight-blue { background: #D6E8F0; padding: 2px 6px; border-radius: 3px; }
+  .highlight-green { background: #D4E8CB; padding: 2px 6px; border-radius: 3px; }
+  .highlight-orange { background: #F5DFC5; padding: 2px 6px; border-radius: 3px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    font-size: 0.92rem;
+  }
+  th, td {
+    border: 1px solid #C5C5B8;
+    padding: 7px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th { background: #8FB996; color: #fff; font-weight: 600; }
+  .th-sub { background: #B8D4E3; color: #2D2D2D; }
+  .th-accent { background: #E8C6A0; color: #2D2D2D; }
+  .right { text-align: right; }
+  .center { text-align: center; }
+  .bold { font-weight: 700; }
+  .note { font-size: 0.85rem; color: #6B6B6B; margin-top: 4px; }
+  .marker-green { background: linear-gradient(transparent 60%, #D4E8CB 60%); }
+  .marker-blue { background: linear-gradient(transparent 60%, #C6DAE8 60%); }
+  .marker-orange { background: linear-gradient(transparent 60%, #F5DFC5 60%); }
+  .svg-container { overflow-x: auto; margin: 14px 0; }
+  .svg-container svg { max-width: 100%; height: auto; }
+  .law-ref { color: #5A6F8A; font-size: 0.88rem; }
+  code { background: #ECEAE2; padding: 1px 5px; border-radius: 3px; font-size: 0.9rem; }
+  .step-num { display: inline-block; background: #3A5A40; color: #fff; width: 28px; height: 28px; text-align: center; line-height: 28px; border-radius: 50%; font-size: 0.85rem; margin-right: 6px; }
+  @media (max-width: 600px) {
+    body { padding: 10px; font-size: 0.93rem; }
+    table { font-size: 0.82rem; }
+    th, td { padding: 5px 6px; }
+  }
+</style>
+</head>
+<body>
+
+<h1>CFC税制（外国子会社合算税制）における<br>日本源泉所得税の別表調製 ― 数値例と改正沿革</h1>
+
+<!-- ===== 設例 ===== -->
+<div class="card">
+<h2>設例の整理</h2>
+<p><b>当社</b>（日本の内国法人）は、<b>パナマ</b>に100%出資の<b>A社</b>（特定外国関係会社：ペーパーカンパニー該当）を有する。A社は<span class="marker-green">会社単位の合算課税</span>の対象であり、適用対象金額の計算には<span class="marker-blue">本邦法令基準</span>（措令39条の15第1項）を採用。</p>
+<table>
+<tr><th colspan="2">A社の当期損益（決算書ベース）</th></tr>
+<tr><td>日本の銀行への預金利息収入</td><td class="right bold">500</td></tr>
+<tr><td>日本の源泉所得税（費用処理）</td><td class="right" style="color:#C0392B;">△100</td></tr>
+<tr><td class="bold">当期利益</td><td class="right bold">400</td></tr>
+</table>
+<p class="note">※ 源泉所得税100は、所得税法212条に基づき日本の銀行がA社（外国法人）への利息支払時に源泉徴収したもの。A社はこれを費用処理している。パナマはテリトリアル課税（国外源泉所得非課税）のため、この利息にパナマの法人所得税は課されていない。</p>
+</div>
+
+<!-- ===== SVG全体構造図 ===== -->
+<h2>全体構造図：CFC合算課税と二重課税排除メカニズム</h2>
+<div class="svg-container">
+<svg viewBox="0 0 880 820" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="12">
+  <!-- 背景 -->
+  <rect width="880" height="820" fill="#F4F3EE" rx="12"/>
+
+  <!-- タイトル -->
+  <text x="440" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#3A5A40">CFC税制 別表調製の全体フロー（設例の数値入り）</text>
+
+  <!-- パナマ A社 ゾーン -->
+  <rect x="30" y="50" width="260" height="210" rx="10" fill="#D4E8CB" stroke="#8FB996" stroke-width="1.5"/>
+  <text x="160" y="72" text-anchor="middle" font-weight="bold" fill="#3A5A40" font-size="13">🇵🇦 A社（パナマ・特定外国関係会社）</text>
+  <text x="50" y="98" font-size="11">預金利息収入 …………… 500</text>
+  <text x="50" y="118" font-size="11" fill="#C0392B">源泉所得税（費用処理）… △100</text>
+  <text x="50" y="138" font-size="11" font-weight="bold">当期利益 ………………… 400</text>
+  <line x1="50" y1="150" x2="270" y2="150" stroke="#8FB996" stroke-dasharray="3"/>
+  <text x="50" y="170" font-size="11" fill="#5A6F8A">パナマ法人所得税 ……… 0</text>
+  <text x="50" y="190" font-size="11" fill="#5A6F8A">日本の源泉所得税 ……… 100</text>
+  <text x="50" y="210" font-size="11" fill="#5A6F8A">→「外国法人税」に非該当</text>
+  <text x="50" y="230" font-size="11" fill="#5A6F8A">→ 措法66条の7④の「所得税等の額」に該当</text>
+  <text x="50" y="248" font-size="10" fill="#999">租税負担割合 = 0/500 = 0% &lt; 27%</text>
+
+  <!-- 日本の銀行 -->
+  <rect x="340" y="60" width="160" height="50" rx="8" fill="#C6DAE8" stroke="#7EAEC8" stroke-width="1"/>
+  <text x="420" y="82" text-anchor="middle" font-size="11" font-weight="bold">🇯🇵 日本の銀行</text>
+  <text x="420" y="97" text-anchor="middle" font-size="10">利息500支払／源泉税100天引き</text>
+  <!-- 矢印: 銀行→A社 -->
+  <line x1="340" y1="85" x2="293" y2="120" stroke="#7EAEC8" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+  <defs><marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7EAEC8"/></marker></defs>
+
+  <!-- 内国法人 ゾーン -->
+  <rect x="30" y="290" width="820" height="500" rx="10" fill="#fff" stroke="#C5C5B8" stroke-width="1"/>
+  <text x="440" y="312" text-anchor="middle" font-weight="bold" fill="#3A5A40" font-size="13">🇯🇵 当社（内国法人）の別表調製</text>
+
+  <!-- STEP1: B17(3の2) -->
+  <rect x="50" y="330" width="230" height="160" rx="8" fill="#D4E8CB" stroke="#8FB996" stroke-width="1"/>
+  <text x="165" y="350" text-anchor="middle" font-weight="bold" font-size="11" fill="#3A5A40">B17(三の二) 適用対象金額</text>
+  <text x="60" y="370" font-size="10">④当期利益(第1号) ……… 400</text>
+  <text x="60" y="388" font-size="10">⑤加算:法人所得税 ……… 100</text>
+  <text x="60" y="406" font-size="10" font-weight="bold">㉒基準所得金額 ………… 500</text>
+  <text x="60" y="424" font-size="10" fill="#C0392B">㉔法人所得税控除 ……… △100</text>
+  <text x="60" y="442" font-size="10" font-weight="bold" fill="#3A5A40">㉖適用対象金額 ………… 400</text>
+  <text x="60" y="460" font-size="10">㉗合算割合 ……………… 100%</text>
+  <text x="60" y="478" font-size="10" font-weight="bold" fill="#3A5A40">㉘課税対象金額 ………… 400</text>
+
+  <!-- STEP2: B17(3の6)付表 -->
+  <rect x="310" y="330" width="240" height="130" rx="8" fill="#F5DFC5" stroke="#D4A76A" stroke-width="1"/>
+  <text x="430" y="350" text-anchor="middle" font-weight="bold" font-size="11" fill="#8B5E3C">B17(三の六)付表 所得税等控除</text>
+  <text x="320" y="372" font-size="10">⑤所得税等の額 ………… 100</text>
+  <text x="320" y="390" font-size="10">⑥適用対象金額 ………… 400</text>
+  <text x="320" y="408" font-size="10">⑨調整適用対象金額 …… 400</text>
+  <text x="320" y="426" font-size="10">⑩課税対象金額 ………… 400</text>
+  <text x="320" y="444" font-size="10" font-weight="bold" fill="#8B5E3C">㉛控除対象所得税額等 … 100</text>
+
+  <!-- STEP3: B04 -->
+  <rect x="580" y="330" width="250" height="130" rx="8" fill="#C6DAE8" stroke="#7EAEC8" stroke-width="1"/>
+  <text x="705" y="350" text-anchor="middle" font-weight="bold" font-size="11" fill="#3A5A78">B04 所得の金額の計算</text>
+  <text x="590" y="372" font-size="10">加算: 課税対象金額 400 [留保②]</text>
+  <text x="590" y="392" font-size="10">加算: 所得税等益金算入 100 [社外③]</text>
+  <text x="590" y="415" font-size="10" font-weight="bold" fill="#3A5A78">→ CFC関連加算合計 ……… 500</text>
+  <text x="590" y="440" font-size="10" fill="#5A6F8A">※他の所得・調整がある場合は合算</text>
+
+  <!-- 矢印たち -->
+  <defs><marker id="arrow-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8FB996"/></marker></defs>
+  <defs><marker id="arrow-o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#D4A76A"/></marker></defs>
+  <defs><marker id="arrow-bk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs>
+
+  <!-- B17(3の2)→B04 -->
+  <path d="M280,400 Q430,400 580,380" fill="none" stroke="#8FB996" stroke-width="1.5" marker-end="url(#arrow-g)"/>
+  <text x="420" y="395" font-size="9" fill="#3A5A40">㉘=400</text>
+
+  <!-- B17(3の6)→B04 -->
+  <path d="M550,430 L580,415" fill="none" stroke="#D4A76A" stroke-width="1.5" marker-end="url(#arrow-o)"/>
+  <text x="555" y="415" font-size="9" fill="#8B5E3C">100益金</text>
+
+  <!-- STEP4: B01 -->
+  <rect x="200" y="500" width="480" height="100" rx="8" fill="#ECEAE2" stroke="#B5B3A8" stroke-width="1"/>
+  <text x="440" y="520" text-anchor="middle" font-weight="bold" font-size="12" fill="#2D2D2D">B01 確定申告書（法人税額の計算）</text>
+  <text x="220" y="542" font-size="10">所得金額 = 当社の他の所得 + 500（CFC分）</text>
+  <text x="220" y="560" font-size="10">法人税額 = 所得金額 × 23.2%</text>
+  <text x="220" y="578" font-size="10" font-weight="bold" fill="#C0392B">CFC所得税等控除 △100 ←B17(三の六)③</text>
+  <text x="220" y="593" font-size="9" fill="#5A6F8A">措法66条の7④: 法法69条の2控除の後・法法70条の前に控除</text>
+
+  <!-- B04→B01 -->
+  <path d="M705,460 L705,490 Q705,500 650,500 L680,500" fill="none" stroke="#7EAEC8" stroke-width="1.5"/>
+  <line x1="680" y1="500" x2="680" y2="500" stroke="#7EAEC8"/>
+  <path d="M705,460 Q705,496 530,500" fill="none" stroke="#7EAEC8" stroke-width="1.5" marker-end="url(#arrow-bk)"/>
+
+  <!-- B17(3の6)→B01 -->
+  <path d="M430,460 L440,500" fill="none" stroke="#D4A76A" stroke-width="1.5" marker-end="url(#arrow-o)"/>
+  <text x="445" y="480" font-size="9" fill="#8B5E3C">△100控除</text>
+
+  <!-- STEP5: B05(一) -->
+  <rect x="50" y="640" width="270" height="90" rx="8" fill="#D4E8CB" stroke="#8FB996" stroke-width="1"/>
+  <text x="185" y="660" text-anchor="middle" font-weight="bold" font-size="11" fill="#3A5A40">B05(一) 利益積立金額</text>
+  <text x="60" y="682" font-size="10">CFC課税対象金額 400 → 増③[留保]</text>
+  <text x="60" y="700" font-size="10" fill="#5A6F8A">→将来A社からの配当時にB17(三の七)で調整</text>
+  <text x="60" y="718" font-size="10" fill="#5A6F8A">（措法66条の8 課税済配当の益金不算入）</text>
+
+  <!-- STEP6: B17(3の5)不使用 -->
+  <rect x="580" y="640" width="250" height="55" rx="8" fill="#F4F3EE" stroke="#C5C5B8" stroke-width="1" stroke-dasharray="5"/>
+  <text x="705" y="662" text-anchor="middle" font-size="11" fill="#999">B17(三の五) → 使用しない</text>
+  <text x="705" y="680" text-anchor="middle" font-size="9" fill="#999">（外国法人税なし＝パナマ非課税）</text>
+
+  <!-- 凡例 -->
+  <rect x="50" y="750" width="780" height="55" rx="6" fill="#ECEAE2"/>
+  <text x="70" y="770" font-size="10" font-weight="bold">凡例:</text>
+  <rect x="120" y="758" width="14" height="14" fill="#D4E8CB" rx="2"/>
+  <text x="140" y="770" font-size="10">適用対象金額・利益積立金</text>
+  <rect x="300" y="758" width="14" height="14" fill="#F5DFC5" rx="2"/>
+  <text x="320" y="770" font-size="10">所得税等控除（措法66条の7④）</text>
+  <rect x="520" y="758" width="14" height="14" fill="#C6DAE8" rx="2"/>
+  <text x="540" y="770" font-size="10">所得金額・別表4</text>
+  <text x="70" y="793" font-size="10" fill="#5A6F8A">※パナマは法人所得税あり（テリトリアル課税）のため「外国法人税が存在しない国」ではないが、日本源泉の利息は課税対象外。租税負担割合0%。</text>
+</svg>
+</div>
+
+<!-- ===== 沿革 ===== -->
+<h1>Ⅰ 沿革・改正経緯に基づく分析</h1>
+<div class="card">
+<h2>1. CFC税制の創設と二重課税排除措置の変遷</h2>
+
+<h3>（1）昭和53年（1978年）― CFC税制の創設</h3>
+<p>いわゆる「タックスヘイブン対策税制」として措法66条の6～66条の9が創設された。当初は「特定外国子会社等」（租税負担割合が基準税率未満の外国子会社）の留保所得を、内国法人の所得に合算する仕組みであった。二重課税排除措置としては、<span class="marker-green">外国関係会社の所得に課された外国法人税の額</span>を内国法人の法人税から控除する制度（措法66条の7第1項）が設けられた。しかし、<span class="marker-orange">日本で課された源泉所得税</span>については控除手段が存在しなかった。</p>
+
+<h3>（2）平成21年（2009年）― 措法66条の7第4項の新設【本設例の核心】</h3>
+<p>この改正は<b>外国子会社配当益金不算入制度</b>（法法23条の2）の導入に伴うCFC税制の見直しの一環として行われた。改正前は、CFC合算対象となった外国関係会社が日本国内に源泉を有する所得（預金利息・不動産賃貸料等）を稼得し、日本で源泉所得税を課された場合、CFC合算との間で二重課税が生じていた。これを解消するため、<span class="marker-orange">外国関係会社に対して課される日本の所得税・法人税・地方法人税・住民税法人税割</span>の額を、内国法人の法人税額から控除する規定が新設された（措法66条の7第4項各号）。同時に、控除を受けた金額は益金算入される（同条第6項）。この構造は、法法68条（所得税額控除）のメカニズムと同一であり、CFC税制を通じて合算される所得に対しても、内国法人が直接稼得した場合と同様の課税結果を実現するものである。</p>
+
+<h3>（3）平成29年（2017年）― CFC税制の抜本改正</h3>
+<p>BEPS（税源浸食と利益移転）プロジェクト行動3の勧告を踏まえ、外国関係会社を3類型に区分する制度が導入された。すなわち、<span class="highlight-green">特定外国関係会社</span>（ペーパーカンパニー・キャッシュボックス・ブラックリスト国所在法人。租税負担割合27%未満で全所得合算）、<span class="highlight-blue">対象外国関係会社</span>（経済活動基準を満たさない法人。20%未満で全所得合算）、部分対象外国関係会社（経済活動基準充足。20%未満で受動的所得のみ部分合算）の3分類である。本設例のA社は、パナマに実体のないペーパーカンパニーとして「特定外国関係会社」に該当し、租税負担割合0%（27%未満）のため、会社単位で全所得が合算される。この改正後も措法66条の7第4項の所得税等控除は維持・拡充されており、3類型すべての合算課税に対応する。</p>
+
+<h3>（4）令和元年（2019年）以降の改正</h3>
+<p>ペーパーカンパニーの除外規定の拡充（持株会社・不動産保有会社等の一定要件充足による除外）、キャッシュボックスの要件整備（措法66条の6第2項2号ロ）等が行われたが、措法66条の7第4項の所得税等控除の基本構造は維持されている。</p>
+</div>
+
+<!-- ===== 条文構造 ===== -->
+<h1>Ⅱ 条文構造の解説</h1>
+<div class="card">
+<h2>2. 源泉所得税100の法的性質と適用条文</h2>
+
+<p>A社（パナマ法人＝外国法人）が日本の銀行から受ける預金利息に対しては、所得税法161条1項8号（国内源泉所得としての利子）および同法212条（源泉徴収義務）に基づき、銀行が所得税を源泉徴収する。この源泉所得税100は以下のように位置付けられる。</p>
+
+<table>
+<tr><th>概念</th><th>該当性</th><th>根拠</th></tr>
+<tr><td><b>外国法人税</b>（法法令141条）</td><td class="center" style="color:#C0392B;font-weight:bold;">非該当</td><td>日本の税は「<b>外国の法令</b>に基づき外国...により課される」ものではない</td></tr>
+<tr><td><b>法人所得税</b>（措令39条の15①二）</td><td class="center" style="color:#27AE60;font-weight:bold;">該当</td><td>「本店所在地国以外の国（＝日本）...により法人の所得を課税標準として課される税（法法令141条2項各号に掲げる税を含む）」<br>→ 同4号「法人の特定の所得につき、所得を課税標準とする税に代え、法人の収入金額...を課税標準として課される税」に該当</td></tr>
+<tr><td><b>所得税等の額</b>（措法66条の7④一）</td><td class="center" style="color:#27AE60;font-weight:bold;">該当</td><td>「当該外国関係会社に対して課される<b>所得税の額</b>（附帯税の額を除く。）」に直接該当</td></tr>
+</table>
+
+<p>「法人所得税」該当性は<b>適用対象金額の計算</b>（基準所得金額への加算・控除）に関係し、「所得税等の額」該当性は<b>内国法人の法人税額からの控除</b>に関係する。両者は異なる次元の調整であり、二重控除ではない。</p>
+</div>
+
+<!-- ===== 計算 ===== -->
+<h1>Ⅲ 数値計算の詳細</h1>
+
+<div class="card">
+<h2>3. 租税負担割合の計算（B17(三)付表二）</h2>
+<p class="law-ref">措法66条の6⑤一、措令39条の17の2</p>
+
+<p>パナマには法人所得税（Impuesto sobre la Renta）が存在するため、措令39条の17の2第2項第1号イが適用される。パナマの法令に基づき計算した所得はテリトリアル課税により日本源泉の利息が非課税とされるため0となるが、同号イ(1)の「課税標準に含まれないこととされる所得の金額」として500が加算される。</p>
+
+<table>
+<tr><th class="th-sub">付表二 項目</th><th class="th-sub">金額</th><th class="th-sub">説明</th></tr>
+<tr><td>パナマ法令により計算した所得</td><td class="right">0</td><td>テリトリアル課税で日本源泉利息は非課税</td></tr>
+<tr><td>加算(1)：非課税所得の金額</td><td class="right">500</td><td>課税標準に含まれないとされる利息所得</td></tr>
+<tr><td class="bold">欄33：所得の金額</td><td class="right bold">500</td><td>0 + 500</td></tr>
+<tr><td>欄34：本店所在地国の外国法人税</td><td class="right">0</td><td>パナマで非課税</td></tr>
+<tr><td>欄37：国外の外国法人税</td><td class="right">0</td><td>日本の源泉所得税は外国法人税に非該当</td></tr>
+<tr><td class="bold">欄38：租税の額</td><td class="right bold">0</td><td></td></tr>
+<tr><td class="bold" style="color:#C0392B;">欄39：租税負担割合</td><td class="right bold" style="color:#C0392B;">0%</td><td>0 ÷ 500 = 0% &lt; 27% → 合算対象</td></tr>
+</table>
+</div>
+
+<div class="card">
+<h2>4. 適用対象金額・課税対象金額の計算（B17(三の二)）</h2>
+<p class="law-ref">措法66条の6②四、措令39条の15①②⑤</p>
+
+<p>本邦法令基準（措令39条の15第1項）を採用。同項第1号は法法の規定の例に準じて計算するが、<span class="marker-blue">法法38条～41条の2は明示的に除外</span>されている。このため、A社が費用処理した源泉所得税100は、第1号の計算上は損金のまま維持され、所得金額は400となる。これに第2号で「法人所得税」100が加算され、基準所得金額は500となる。さらに第5項第2号で「納付をすることとなる法人所得税の額」100が控除され、適用対象金額は400となる。</p>
+
+<table>
+<tr><th>B17(三の二) 欄</th><th class="right">金額</th><th>算式・説明</th></tr>
+<tr><td>③ 適用法令</td><td class="center">本邦法令</td><td>措令39条の15第1項を選択</td></tr>
+<tr><td>④ 当期の利益又は所得金額<br><span class="note">（第1号の計算結果）</span></td><td class="right">400</td><td>決算利益400。法法38条除外のため源泉税は費用のまま</td></tr>
+<tr class="th-accent"><td>⑤ 加算：損金算入した法人所得税の額</td><td class="right bold">100</td><td>措令39条の15①二。費用処理した源泉所得税</td></tr>
+<tr><td>⑪ 加算小計</td><td class="right">100</td><td></td></tr>
+<tr><td>⑫〜⑳ 減算項目</td><td class="right">0</td><td>子会社配当等なし</td></tr>
+<tr><td>㉑ 減算小計</td><td class="right">0</td><td></td></tr>
+<tr><td class="bold highlight-green">㉒ 基準所得金額</td><td class="right bold">500</td><td>400 + 100 − 0</td></tr>
+<tr><td>㉓ 繰越欠損金の当期控除額</td><td class="right">0</td><td></td></tr>
+<tr class="th-accent"><td>㉔ 当期中に納付することとなる法人所得税の額</td><td class="right bold" style="color:#C0392B;">100</td><td>措令39条の15⑤二。源泉徴収による納付額</td></tr>
+<tr><td>㉕ 還付を受けることとなる法人所得税の額</td><td class="right">0</td><td></td></tr>
+<tr><td class="bold highlight-green">㉖ 適用対象金額</td><td class="right bold">400</td><td>500 − 0 − 100 + 0</td></tr>
+<tr><td>㉗ 請求権等勘案合算割合</td><td class="right">100%</td><td>100%出資、請求権に特殊性なし</td></tr>
+<tr><td class="bold highlight-green">㉘ 課税対象金額</td><td class="right bold">400</td><td>400 × 100% → B04へ</td></tr>
+</table>
+<p class="note"><b>構造的意味</b>：基準所得金額500は利息の総額（税引前）に相当し、そこから法人所得税100を控除した適用対象金額400は「税引後」の金額に相当する。この法人所得税100は、別途、措法66条の7第4項で内国法人の法人税から控除される。</p>
+</div>
+
+<div class="card">
+<h2>5. 控除対象所得税額等相当額の計算（B17(三の六)付表・本表）</h2>
+<p class="law-ref">措法66条の7④一、措令39条の18㉓</p>
+
+<h3>B17(三の六)付表（外国関係会社ごとに作成）</h3>
+<table>
+<tr><th>付表 欄</th><th class="right">金額</th><th>算式・説明</th></tr>
+<tr><td>⑤ 所得税等の額</td><td class="right bold">100</td><td>A社に課された日本の源泉所得税（措法66条の7④一）</td></tr>
+<tr><td>⑥ 適用対象金額</td><td class="right">400</td><td>← B17(三の二)㉖</td></tr>
+<tr><td>⑦ 子会社配当</td><td class="right">0</td><td></td></tr>
+<tr><td>⑧ 控除対象配当等</td><td class="right">0</td><td></td></tr>
+<tr><td>⑨ 調整適用対象金額</td><td class="right">400</td><td>400 + 0 + 0</td></tr>
+<tr><td>⑩ 課税対象金額</td><td class="right">400</td><td>← B17(三の二)㉘</td></tr>
+<tr><td>⑪ 割合</td><td class="right">100%</td><td>400 ÷ 400</td></tr>
+<tr><td class="bold highlight-orange">⑫ 控除対象所得税額等相当額</td><td class="right bold">100</td><td>100 × 100% = 100</td></tr>
+<tr><td class="bold highlight-orange">㉛ → 本表欄1へ</td><td class="right bold">100</td><td></td></tr>
+</table>
+
+<h3>B17(三の六)本表</h3>
+<table>
+<tr><th>本表 欄</th><th class="right">金額</th><th>算式・説明</th></tr>
+<tr><td>① 控除対象所得税額等相当額</td><td class="right bold">100</td><td>← 付表㉛</td></tr>
+<tr><td>② 法人税の額</td><td class="right">X</td><td>(B01②−B01③)−B06(五の二)⑤③ − 本表①相当<br><span class="note">（他の所得から生ずる法人税額がXとする）</span></td></tr>
+<tr><td class="bold highlight-orange">③ 控除する金額</td><td class="right bold">100</td><td>min(100, X) ※ X ≧ 100 と仮定</td></tr>
+<tr><td>④ 超過額</td><td class="right">0</td><td>繰越なし（当期限り）</td></tr>
+</table>
+<p class="note"><b>留意点</b>：欄④の超過額は翌期以降への繰越控除の規定がない（当期限りの控除）。法人税額が不足する場合は、措法66条の7第10項により<b>地方法人税額</b>から控除可能。</p>
+</div>
+
+<!-- ===== 別表4 ===== -->
+<div class="card">
+<h2>6. 別表四（所得の金額の計算）の記載</h2>
+<p class="law-ref">措法66条の6①（益金算入）、措法66条の7⑥（所得税等の益金算入）</p>
+
+<p>CFC合算に関連して、別表4には以下の2つの加算が必要となる。</p>
+
+<table>
+<tr><th>B04 記載</th><th>総額①</th><th>留保②</th><th>社外流出③</th><th>根拠</th></tr>
+<tr>
+  <td class="bold">特定外国関係会社の<br>課税対象金額</td>
+  <td class="right">400</td>
+  <td class="right bold highlight-green">400</td>
+  <td class="right">—</td>
+  <td>措法66条の6①<br>B17(三の二)㉘から</td>
+</tr>
+<tr>
+  <td class="bold">控除対象所得税額等<br>相当額の益金算入額</td>
+  <td class="right">100</td>
+  <td class="right">—</td>
+  <td class="right bold highlight-orange">100</td>
+  <td>措法66条の7⑥<br>B17(三の六)③から</td>
+</tr>
+<tr style="background:#ECEAE2;">
+  <td class="bold">CFC関連 合計</td>
+  <td class="right bold">500</td>
+  <td class="right bold">400</td>
+  <td class="right bold">100</td>
+  <td></td>
+</tr>
+</table>
+
+<p><b>留保②と社外流出③の区分理由</b>：課税対象金額400は、A社の内部に留保されている利益（将来配当で回収される可能性）に対応するため<b>留保②</b>とし、B05(一)の利益積立金額の増加として管理する。これにより、将来A社から配当を受ける際、措法66条の8（課税済配当の益金不算入）の適用を受けることができる。一方、控除対象所得税額等相当額100は、A社が日本で既に納付済みの税額であり法人の外部に流出しているため<b>社外流出③</b>とする。法法68条の所得税額控除（B04欄22）と同一の処理構造である。</p>
+</div>
+
+<!-- ===== B01 ===== -->
+<div class="card">
+<h2>7. 別表一（確定申告書）の記載</h2>
+<p class="law-ref">措法66条の7④⑦⑧</p>
+
+<p>CFC関連の所得500（= 400 + 100）が加算された後の最終所得金額に対して法人税率（23.2%）を適用し、算出された法人税額から措法66条の7第4項に基づきCFC所得税等控除100を行う。控除順序は措法66条の7第7項により、法法69条の2（分配時調整外国税相当額控除）の後、法法70条（仮装経理法人税控除）の前とされている。当該控除額100は、<span class="marker-orange">B06(二)欄2</span>の法人税額（外国税額控除限度額の計算基礎）からも差し引かれる点に注意が必要である。</p>
+</div>
+
+<!-- ===== B05(一) ===== -->
+<div class="card">
+<h2>8. 別表五(一)（利益積立金額の計算）の記載</h2>
+
+<table>
+<tr><th>B05(一) 項目</th><th>期首①</th><th>減②</th><th>増③</th><th>翌期首④</th></tr>
+<tr><td>CFC課税対象金額</td><td class="right">—</td><td class="right">—</td><td class="right bold highlight-green">400</td><td class="right bold">400</td></tr>
+</table>
+<p>B04の留保②で加算された課税対象金額400はB05(一)の利益積立金額として蓄積される。社外流出③の所得税等益金算入額100はB05(一)には反映されない。この利益積立金額400は、将来A社から配当を受領した際に措法66条の8第4項の「特定課税対象金額」として益金不算入（B17(三の七)で管理）のベースとなる。</p>
+</div>
+
+<!-- ===== まとめ ===== -->
+<h1>Ⅳ 別表調製の全体まとめ</h1>
+
+<div class="card">
+<h2>9. 作成順序と転記フロー</h2>
+
+<table>
+<tr><th>順序</th><th>別表</th><th>主要数値</th><th>転記先</th></tr>
+<tr><td class="center"><span class="step-num">1</span></td><td>B17(三)付表二</td><td>租税負担割合 0%</td><td>B17(三)欄13</td></tr>
+<tr><td class="center"><span class="step-num">2</span></td><td>B17(三の二)</td><td>基準所得金額500<br>適用対象金額400<br>課税対象金額400</td><td>B17(三)欄16～18<br>B17(三の六)付表⑥⑩<br>B04（加算・留保）</td></tr>
+<tr><td class="center"><span class="step-num">3</span></td><td>B17(三の六)付表</td><td>所得税等の額100<br>控除対象所得税額等100</td><td>B17(三の六)本表①</td></tr>
+<tr><td class="center"><span class="step-num">4</span></td><td>B17(三の六)本表</td><td>控除する金額100</td><td>B01（法人税額控除）<br>B06(二)欄2（法人税額調整）<br>B04（益金算入100・社外③）</td></tr>
+<tr><td class="center"><span class="step-num">5</span></td><td>B17(三)</td><td>A社の概要一覧</td><td>確定申告書添付</td></tr>
+<tr><td class="center"><span class="step-num">6</span></td><td>B04</td><td>加算 留保400 社外100</td><td>B01欄1（所得金額）<br>B05(一)（留保400のみ）</td></tr>
+<tr><td class="center"><span class="step-num">7</span></td><td>B01</td><td>CFC所得税等控除100</td><td>B05(二)（確定税額）</td></tr>
+<tr><td class="center"><span class="step-num">8</span></td><td>B05(一)</td><td>CFC課税対象金額400増</td><td>翌期に繰越</td></tr>
+</table>
+<p class="note">※ B17(三の五)（外国法人税額控除）は、A社に外国法人税が課されていないため作成不要。B06(二)への転記（欄1）も0となる。</p>
+</div>
+
+<div class="card">
+<h2>10. 実質的効果の検証</h2>
+
+<p>本設例における内国法人のCFC関連の税負担を確認する。</p>
+
+<table>
+<tr><th colspan="2">CFC関連の所得と税額</th></tr>
+<tr><td>B04加算（CFC関連合計）</td><td class="right bold">500</td></tr>
+<tr><td>うち 課税対象金額（留保）</td><td class="right">400</td></tr>
+<tr><td>うち 所得税等益金算入（社外）</td><td class="right">100</td></tr>
+<tr><td>法人税額（500 × 23.2%）</td><td class="right">116</td></tr>
+<tr><td style="color:#C0392B;">CFC所得税等控除</td><td class="right" style="color:#C0392B;">△100</td></tr>
+<tr><td class="bold">実質法人税負担</td><td class="right bold">16</td></tr>
+</table>
+
+<p>これは、<b>仮に内国法人が直接預金利息500を受け取った場合</b>（法法68条の所得税額控除を適用）とまったく同じ結果となる。すなわち、利息500に対する法人税116から源泉所得税100を控除して実質負担16。CFC税制は、外国関係会社を介しても最終的に内国法人が直接所得を稼得した場合と同等の課税を実現する制度であり、措法66条の7第4項はその二重課税排除を完全に機能させるために不可欠な規定である。</p>
+</div>
+
+<div class="card">
+<h2>11. 実務上の留意点</h2>
+
+<p><b>（1）「法人所得税」の範囲の確認</b>：措令39条の15第1項第2号の「法人所得税」は、法法令141条2項各号を引用しており、同条4号の「法人の特定の所得につき、所得を課税標準とする税に代え、法人の収入金額その他これに準ずるものを課税標準として課される税」を含む。外国法人に対する日本の利子の源泉所得税はこれに該当するため、基準所得金額の計算上、加算対象となる。一方、措令39条の17の2（租税負担割合の計算）では、分子の「租税の額」は「外国法人税の額」に限定されており、日本の税は含まれない。両者の「法人所得税」と「外国法人税」の概念の相違に注意が必要である。</p>
+
+<p><b>（2）控除しきれない場合の取扱い</b>：措法66条の7第4項の控除額が法人税額を超える場合、同条第10項により地方法人税額から控除できる。ただし、法法68条・69条の所得税額控除・外国税額控除と異なり、翌期以降への繰越は認められていない。</p>
+
+<p><b>（3）復興特別所得税の取扱い</b>：東日本大震災復興特別措置法33条1項の読替え規定により、復興特別所得税も「所得税等の額」に含まれる。源泉所得税が15.315%（所得税15% + 復興特別所得税0.315%）の場合、復興特別所得税相当額も控除対象となる。</p>
+
+<p><b>（4）本邦法令基準と外国法令基準の選択</b>：措令39条の15第1項（本邦法令基準）と第2項（外国法令基準）は事業年度ごとに選択可能であるが、一度選択した基準を変更する場合は、あらかじめ所轄税務署長の承認が必要である（同条第10項）。外国法令基準を選択した場合の法人所得税の加算項目は第2項第8号に規定されており、本邦法令基準の第1項第2号とは異なる算式となる点に留意する。</p>
+
+<p><b>（5）将来の配当受領時の調整</b>：B05(一)に計上された利益積立金額400は、将来A社からの配当受領時に措法66条の8（課税済配当の益金不算入）の適用を受けるための管理対象となる。B17(三の七)で課税済金額として管理し、配当額が課税済金額に達するまでの金額は益金不算入とされる。</p>
+</div>
+
+<div class="card" style="background:#ECEAE2;">
+<h2>参照条文一覧</h2>
+<table>
+<tr><th>条文</th><th>内容</th></tr>
+<tr><td>措法66条の6①②四</td><td>CFC合算課税の本体規定。適用対象金額の定義</td></tr>
+<tr><td>措法66条の7①</td><td>外国法人税の控除（外国税額控除型の二重課税排除）</td></tr>
+<tr><td class="bold highlight-orange">措法66条の7④一・二</td><td class="bold">所得税等の額の控除（日本で課された所得税・住民税等の控除）</td></tr>
+<tr><td>措法66条の7⑥</td><td>控除対象所得税額等相当額の益金算入</td></tr>
+<tr><td>措法66条の7⑦</td><td>控除順序（法法69条の2の後、法法70条の前）</td></tr>
+<tr><td>措法66条の7⑩</td><td>控除しきれない場合の地方法人税額からの控除</td></tr>
+<tr><td>措法66条の8</td><td>課税済配当の益金不算入（将来の配当受領時の二重課税排除）</td></tr>
+<tr><td>措令39条の15①一〜五</td><td>基準所得金額の計算（本邦法令基準）</td></tr>
+<tr><td>措令39条の15⑤二</td><td>適用対象金額から法人所得税を控除</td></tr>
+<tr><td>措令39条の17の2</td><td>租税負担割合の計算</td></tr>
+<tr><td>措令39条の18㉓</td><td>課税対象金額に対応する所得税等の額の按分計算</td></tr>
+<tr><td>法法令141条②四</td><td>外国法人税に含まれる税（法人所得税の定義に引用）</td></tr>
+<tr><td>所得税法161条①八・212条</td><td>外国法人の国内源泉所得（利子）に対する源泉徴収義務</td></tr>
+</table>
+</div>
+
+</body>
+</html>
