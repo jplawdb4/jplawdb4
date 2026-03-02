@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>移転価格税制の本質的問題点 — 構造分析</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; background:#f5f5f5; padding:20px; line-height:1.6; }
+.page { background:white; width:297mm; min-height:210mm; margin:0 auto 30px; padding:15mm; box-shadow:0 4px 20px rgba(0,0,0,.15); page-break-after:always; }
+h1 { font-size:22px; color:#1a365d; border-bottom:3px solid #2b6cb0; padding-bottom:10px; margin-bottom:20px; }
+h2 { font-size:16px; color:#2c5282; margin:20px 0 10px; padding-left:10px; border-left:4px solid #4299e1; }
+.fig-container { display:flex; justify-content:center; margin:20px 0; }
+svg { max-width:100%; height:auto; }
+.meta-box { background:#faf5ff; border:1px solid #9f7aea; border-radius:8px; padding:15px; margin:15px 0; }
+.meta-box h3 { color:#553c9a; font-size:14px; margin-bottom:10px; }
+.warning-box { background:#fff5f5; border:2px solid #e53e3e; border-radius:8px; padding:15px; margin:15px 0; }
+.warning-box h3 { color:#c53030; font-size:14px; }
+.insight-box { background:#f0fff4; border:1px solid #38a169; border-radius:8px; padding:15px; margin:15px 0; }
+.insight-box h3 { color:#276749; font-size:14px; }
+table { width:100%; border-collapse:collapse; margin:15px 0; font-size:11px; }
+th,td { border:1px solid #cbd5e0; padding:8px 10px; text-align:left; }
+th { background:#edf2f7; color:#2d3748; font-weight:bold; }
+@media print { body{background:white;padding:0} .page{box-shadow:none;margin:0} }
+.subtitle { font-size:13px; color:#4a5568; margin-bottom:15px; }
+.note { font-size:11px; color:#718096; margin-top:10px; }
+.layer-label { font-size:12px; font-weight:bold; }
+</style>
+</head>
+<body>
+Copy
+あー、これはかなり大変な作業だ。SVGのコードをすべて手書きで丁寧に書いていく必要がある。
+まず各ページの全体像を確認して、一気に書いていこう。
+ページ1のSVG：同心円（楕円）レイヤー図
+
+4つの同心楕円
+各環帯にテキスト
+レイヤーラベル
+内側から外側への放射状の矢印（因果関係）
+
+ページ2のSVG：当事者関係図
+
+企業グループ、税務当局、OECD、MAP
+各種の接続線
+
+ページ3のSVG：対立軸図
+
+8本の水平軸
+マーカー、トレンド矢印
+
+ページ4のSVG：問いの階層
+
+4層の台形ピラミッド
+各層に問いのテキスト
+
+ページ5のSVG：メタ分析図
+
+フレーム内外の構造
+
+がんばって書いていく。
+ページ1 SVGから。
+同心楕円で4層を描く。各楕円は外から描いて内側を上に重ねる（SVGのz-order）。
+中心 (475, 340)
+Copy<svg viewBox="0 0 950 680" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#718096"/>
+    </marker>
+  </defs>
+  
+  <!-- Layer 4: 国際政治・経済構造 -->
+  <ellipse cx="475" cy="340" rx="440" ry="298" fill="#ebf8ff" stroke="#2b6cb0" stroke-width="2" opacity="0.5"/>
+  
+  <!-- Layer 3: 制度設計上の問題 -->
+  <ellipse cx="475" cy="340" rx="330" ry="222" fill="#fffaf0" stroke="#dd6b20" stroke-width="2" opacity="0.6"/>
+  
+  <!-- Layer 2: 概念的問題 -->
+  <ellipse cx="475" cy="340" rx="220" ry="148" fill="#fff5f5" stroke="#e53e3e" stroke-width="2" opacity="0.7"/>
+  
+  <!-- Layer 1: 核心のアポリア -->
+  <ellipse cx="475" cy="340" rx="110" ry="72" fill="#faf5ff" stroke="#9f7aea" stroke-width="3" opacity="0.9"/>
+  
+  <!-- 核心テキスト -->
+  <text x="475" y="332" text-anchor="middle" font-size="15" font-weight="bold" fill="#553c9a">「正しい移転価格」</text>
+  <text x="475" y="354" text-anchor="middle" font-size="15" font-weight="bold" fill="#553c9a">は存在しない</text>
+  
+  <!-- 概念的問題テキスト (Layer 2 環帯) -->
+  <text x="475" y="218" text-anchor="middle" font-size="12" fill="#c53030">反事実的条件の虚構性</text>
+  <text x="290" y="335" text-anchor="middle" font-size="12" fill="#c53030">価値帰属の</text>
+  <text x="290" y="351" text-anchor="middle" font-size="12" fill="#c53030">不可能性</text>
+  <text x="660" y="340" text-anchor="middle" font-size="12" fill="#c53030">共同生産問題</text>
+  <text x="475" y="462" text-anchor="middle" font-size="12" fill="#c53030">ALPのパラドックス</text>
+  
+  ...
+</svg>
+Copy
+実際にはもっと多くの要素が必要。テキスト量が多いので重なりに注意。
+ここで全体のHTMLを一気に書く方が効率的。SVGの座標は概算で書いて、理論的な正しさを優先する。
+最終的なコードを一気に書いていこう。長くなるが構わない。
+
+最終HTML。結構長いが、5ページ分のSVGを丁寧に作る。
+一つずつ丁寧に作っていく。
+制度設計層と国際政治層のテキスト配置を再計算。
+Layer 3 環帯（制度設計層）：
+楕円3の範囲: cx±330, cy±222 → (145, 118) to (805, 562)
+楕円2の範囲: cx±220, cy±148 → (255, 192) to (695, 488)
+環帯の有効範囲を考えて配置。
+上の環帯（y方向）: 118-192の間。中央y = 155
+下の環帯: 488-562の間。中央y = 525
+左の環帯（x方向）: 145-255の間。中央x = 200
+右の環帯: 695-805の間。中央x = 750
+斜め方向はもう少しスペースがある。
+テキスト配置：
+
+上: (475, 155) "情報の非対称性"
+上左: (310, 160) "ALP vs 定式配分"
+上右: (640, 160) "比較可能性の限界"
+左: (195, 340) "事前 vs 事後" — ただし環帯が狭い
+右: (755, 340) "レンジの不一致"
+下: (475, 528) "二重課税の構造的発生"
+
+Layer 4 環帯（国際政治層）：
+楕円4: (35, 42) to (915, 638)
+楕円3: (145, 118) to (805, 562)
+上: 42-118の間。中央y = 80
+下: 562-638の間。中央y = 600
+左: 35-145の間。中央x = 90
+右: 805-915の間。中央x = 860
+テキスト配置：
+
+上: (475, 78) "国家主権 vs グローバル最適"
+左上: (120, 170) "先進国 vs 途上国"
+右上: (830, 170) "デジタル経済の挑戦"
+左: (80, 340) "税の競争 vs 協調" — 環帯が狭い、テキストは外に出るかも
+右: (870, 340) — 同上
+左下: (120, 510) "企業の租税戦略"
+右下: (830, 510) "BEPS/Pillar One・Two"
+下: (475, 602) "グローバル・サウスの台頭"
+
+環帯が狭い箇所（左右の中央部）はテキストが収まりにくいので、斜め位置に配置する方がよい。
+左右の中央部の環帯幅:
+Layer 4のcx±440 at cy=340: x=35 to x=145 (幅110) と x=805 to x=915 (幅110)
+→ テキスト「税の競争 vs 協調」はfont-size=11で15文字×11=165pxほど必要。110pxでは足りない。
+テキストを2行にするか、別の位置に移すか。2行にしよう。
+OK、これ以上の微調整は実装時に行う。コード全体を書き出す。
+さて、本格的にHTMLコードを書いていく。
+
+あ、レイヤーラベルも入れたい。各楕円にラベルを付ける。
+Layer 4の上端あたりに「第4層：国際政治・経済構造」
+Layer 3の上端あたりに「第3層：制度設計上の問題」
+Layer 2の上端あたりに「第2層：概念的問題」
+Layer 1の上端あたりに「第1層：核心のアポリア」
+ラベル位置：
+Layer 4: (475, 55) or near top of ellipse
+Layer 3: (475, 128)
+Layer 2: (475, 200)
+Layer 1: (475, 278)
+ただしLayer 4のテキストとかぶるかも。ラベルを左端に寄せるか。
+Layer 4ラベル: (60, 55) text-anchor=start
+Layer 3ラベル: (160, 128) text-anchor=start
+Layer 2ラベル: (270, 200) text-anchor=start
+Layer 1ラベル: (385, 278) text-anchor=start
+これなら他のテキストと被りにくい。
+
+OK、もう書き始めよう。完璧を目指しすぎると終わらない。全体のコードを一気に出力する。
+ページ2のSVGの設計をもう少し具体的に。
+viewBox="0 0 900 520"
+構成要素：
+
+上部中央: OECD rect
+中央: 多国籍企業グループ（点線枠）
+
+内部に: 親会社(A国), 子会社X(B国), 子会社Y(C国)
+取引を示す矢印
+
+
+下部: 3つの税務当局 rect
+下部中央: MAP/仲裁 rect
+右側: 会計事務所/アドバイザー rect
+各種接続線
+
+具体的座標：
+OECD: rect(370, 10, 160, 40) - fill #ebf8ff
+企業グループ枠: rect(100, 80, 530, 180) - stroke-dasharray, fill none
+親会社(A国): rect(130, 110, 150, 55) - fill #e2e8f0
+子会社X(B国): rect(340, 95, 150, 55) - fill #e2e8f0
+子会社Y(C国): rect(340, 185, 150, 55) - fill #e2e8f0
+取引矢印:
+親会社→子会社X: (280, 135) → (340, 120) - "知財ライセンス"
+親会社→子会社Y: (280, 155) → (340, 210) - "製品販売"
+子会社X↔子会社Y: (415, 150) → (415, 185) - "サービス"
+A国税務当局: rect(70, 350, 170, 45) - fill #feebc8
+B国税務当局: rect(310, 350, 170, 45) - fill #feebc8
+C国税務当局: rect(560, 350, 170, 45) - fill #feebc8
+MAP/仲裁: rect(330, 440, 200, 40) - fill #c6f6d5
+会計事務所: rect(700, 140, 150, 50) - fill #e9d8fd
+接続線：
+企業→税務当局: 破線矢印（申告・納税）
+親会社→A国: (205, 260) → (155, 350)
+子会社X→B国: (415, 260) → (395, 350)
+子会社Y→C国: (415, 260) → (645, 350)
+税務当局間: 赤い太線（二重課税紛争）
+A国⇔B国: (240, 373) → (310, 373) - "二重課税"
+B国⇔C国: (480, 373) → (560, 373)
+OECD→税務当局: 細い破線矢印（ガイドライン）
+OECD→A国: (370, 40) → (155, 350)
+OECD→B国: (450, 50) → (395, 350)
+OECD→C国: (530, 40) → (645, 350)
+税務当局→MAP:
+A国→MAP: (155, 395) → (330, 460)
+B国→MAP: (395, 395) → (430, 440)
+C国→MAP: (645, 395) → (530, 460)
+会計事務所→企業:
+(700, 165) → (630, 165) - "助言"
+このSVGも結構複雑になる。
+
+ページ4の問いの階層SVG：
+viewBox="0 0 900 580"
+4つの層を上から下へ。各層は角丸rect。幅は上が広く下が狭い（ただし下の層ほど根本的）。
+...いや逆にしよう。下が広い方が「土台」「根底」のイメージに合う。
+でも通常のピラミッドは上が広い。うーん、「氷山モデル」のように上が小さく下が大きいのもいい。
+「水面」を基準に、上が見えている部分（表層）、下が隠れている部分（深層）。水面ラインを引く。
+これは面白いビジュアルになる。
+氷山モデル：
+
+水面ライン: y=200
+水上: 表層の問い（小さい三角形の上部）
+水中: 中層→深層→根底（だんだん大きく）
+
+viewBox="0 0 900 600"
+水面: y=180, 横線
+水上部分（y=30-180）：
+表層rect: (250, 40, 400, 120) - fill #ebf8ff
+ラベル: "表層：実務レベルの問い"
+内部テキスト3つ
+水面ライン: 波打つ線（path）
+水中部分（y=180-580）：背景を薄い青に
+中層rect: (180, 210, 540, 100) - fill #fffaf0
+深層rect: (120, 340, 660, 100) - fill #fff5f5
+根底rect: (60, 470, 780, 100) - fill #faf5ff
+各層間を矢印で接続、ラベル「なぜ？」
+これは視覚的にインパクトがあって良い。
+
+ページ5のメタ分析SVG：
+viewBox="0 0 900 500"
+中央に大きな「フレーム」（枠線）を描き、その中に「この分析の射程」
+フレーム外に「盲点」「前提」「限界」を配置
+もう一つの可能性として、鏡のメタファー：「見えているもの」と「鏡の裏側」
+シンプルに、中央に四角いフレーム、その周囲にボックスを配置する形で。
+フレーム: rect(200, 80, 500, 340) - stroke #9f7aea, stroke-dasharray
+内部（分析のフレーム）:
+
+"主権国家体制を前提" (box)
+"法人を課税単位とする前提" (box)
+"ALPを出発点とする前提" (box)
+"OECD中心の視点" (box)
+
+外部（フレームの外）:
+左側: "別の構造化の可能性"
+- "通貨主権の観点"
+- "人権の観点"
+右側: "分析の限界"
+- "実務者の暗黙知"
+- "政治力学の不可視部分"
+上側: "より大きな問い"
+- "課税とは何か"
+- "国家とは何か"
+下側: "実践的帰結"
+- "完全な解決は不可能"
+- "次善の制度設計"
+
+OK、ここで全コードを書いていく。相当長くなるが一気に書く。
+最終的なHTMLコードを完成させよう。
+各SVGの中でmarker定義が必要。SVG間で共有できないので、必要なSVGそれぞれにdefs内でmarkerを定義する。
+コード量が膨大になるが書ききる。
+あー、もう一つ考慮点。各ページにはテキスト説明も入れるが「テキストは図の補足程度」なので短く。
+では最終コードを書く。
+ちょっと待って、ページ2には表形式のコンテンツも含めるべき（指示に「要素と関係性（表形式）+ 関係性SVG」とある）。
+表の内容：
+
+当事者一覧と役割
+概念一覧と定義
+関係性の類型
+
+テーブルは簡潔に。
+ページ3にも各軸の深い掘り下げテキストが必要（「各軸を深く掘り下げ」）。ただしテキストは図の補足程度。insight-boxなどを使って簡潔に。
+
+よし、本当に書き始める。
+全コードは約800-1200行程度になると予想。
+書いていく。
+さて最終的なHTMLを作る。非常に長いが、品質を重視して書く。
+ページ構成を最終確認：
+ページ1: 問題空間の全体構造
+
+タイトル + 簡潔な導入
+大きな同心円SVG
+insight-box で核心的洞察を1-2文
+
+ページ2: 当事者と関係性のマップ
+
+関係性SVG
+簡潔な表
+warning-box で注意点
+
+ページ3: 8つの隠れた対立軸
+
+対立軸SVG
+各軸の簡潔な説明（meta-boxやinsight-box）
+
+ページ4: 問いの階層構造
+
+氷山モデルSVG
+各層の問いの説明
+
+ページ5: メタ考察
+
+メタ分析SVG
+前提、限界、別の見方
+
+
+以下、最終コードを出力する。
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>移転価格税制の本質的問題点 — 構造分析</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;background:#f5f5f5;padding:20px;line-height:1.6}
+.page{background:white;width:297mm;min-height:210mm;margin:0 auto 30px;padding:15mm;box-shadow:0 4px 20px rgba(0,0,0,.15);page-break-after:always;overflow:hidden}
+h1{font-size:22px;color:#1a365d;border-bottom:3px solid #2b6cb0;padding-bottom:10px;margin-bottom:16px}
+h2{font-size:16px;color:#2c5282;margin:18px 0 8px;padding-left:10px;border-left:4px solid #4299e1}
+.fig-container{display:flex;justify-content:center;margin:16px 0}
+svg{max-width:100%;height:auto}
+.meta-box{background:#faf5ff;border:1px solid #9f7aea;border-radius:8px;padding:13px;margin:12px 0}
+.meta-box h3{color:#553c9a;font-size:14px;margin-bottom:8px}
+.warning-box{background:#fff5f5;border:2px solid #e53e3e;border-radius:8px;padding:13px;margin:12px 0}
+.warning-box h3{color:#c53030;font-size:14px;margin-bottom:6px}
+.insight-box{background:#f0fff4;border:1px solid #38a169;border-radius:8px;padding:13px;margin:12px 0}
+.insight-box h3{color:#276749;font-size:14px;margin-bottom:6px}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:11px}
+th,td{border:1px solid #cbd5e0;padding:7px 9px;text-align:left}
+th{background:#edf2f7;color:#2d3748;font-weight:bold}
+.subtitle{font-size:13px;color:#4a5568;margin-bottom:12px}
+.note{font-size:11px;color:#718096;margin-top:8px;line-height:1.5}
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cols3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+@media print{body{background:white;padding:0}.page{box-shadow:none;margin:0}}
+</style>
+</head>
+<body>
+
+<!-- ===== PAGE 1: 問題空間の全体構造 ===== -->
+<div class="page">
+<h1>1 ／ 移転価格税制の問題空間 — 同心円構造</h1>
+<p class="subtitle">問題は4層の入れ子構造を成す。核心のアポリアが外層すべてを構造的に規定している。</p>
+
+<div class="fig-container">
+<svg viewBox="0 0 950 660" xmlns="http://www.w3.org/2000/svg" font-family="'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif">
+<defs>
+  <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#718096"/></marker>
+  <marker id="a1r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#e53e3e"/></marker>
+</defs>
+
+<!-- Layer 4: 国際政治・経済構造 -->
+<ellipse cx="475" cy="335" rx="445" ry="300" fill="#ebf8ff" stroke="#2b6cb0" stroke-width="2.5" opacity="0.45"/>
+<!-- Layer 3: 制度設計上の問題 -->
+<ellipse cx="475" cy="335" rx="332" ry="224" fill="#fffaf0" stroke="#dd6b20" stroke-width="2" opacity="0.55"/>
+<!-- Layer 2: 概念的問題 -->
+<ellipse cx="475" cy="335" rx="222" ry="148" fill="#fff5f5" stroke="#e53e3e" stroke-width="2" opacity="0.65"/>
+<!-- Layer 1: 核心のアポリア -->
+<ellipse cx="475" cy="335" rx="112" ry="72" fill="#faf5ff" stroke="#9f7aea" stroke-width="3" opacity="0.9"/>
+
+<!-- レイヤーラベル -->
+<text x="52" y="52" font-size="11" font-weight="bold" fill="#2b6cb0">第4層：国際政治・経済構造</text>
+<text x="158" y="122" font-size="11" font-weight="bold" fill="#dd6b20">第3層：制度設計上の問題</text>
+<text x="268" y="198" font-size="11" font-weight="bold" fill="#e53e3e">第2層：概念的問題</text>
+<text x="395" y="276" font-size="10" font-weight="bold" fill="#9f7aea">第1層：核心のアポリア</text>
+
+<!-- ===== 核心テキスト ===== -->
+<text x="475" y="328" text-anchor="middle" font-size="16" font-weight="bold" fill="#553c9a">「正しい移転価格」</text>
+<text x="475" y="350" text-anchor="middle" font-size="16" font-weight="bold" fill="#553c9a">は存在しない</text>
+
+<!-- ===== 概念的問題（Layer 2 環帯） ===== -->
+<text x="475" y="212" text-anchor="middle" font-size="12" font-weight="bold" fill="#c53030">反事実的条件の虚構性</text>
+<text x="475" y="226" text-anchor="middle" font-size="9.5" fill="#c53030">「独立企業だったら」という仮定自体が矛盾</text>
+
+<text x="296" y="328" text-anchor="middle" font-size="12" font-weight="bold" fill="#c53030">価値帰属の</text>
+<text x="296" y="343" text-anchor="middle" font-size="12" font-weight="bold" fill="#c53030">不可能性</text>
+
+<text x="654" y="328" text-anchor="middle" font-size="12" font-weight="bold" fill="#c53030">共同生産</text>
+<text x="654" y="343" text-anchor="middle" font-size="12" font-weight="bold" fill="#c53030">問題</text>
+
+<text x="475" y="456" text-anchor="middle" font-size="12" font-weight="bold" fill="#c53030">独立企業間原則(ALP)のパラドックス</text>
+<text x="475" y="470" text-anchor="middle" font-size="9.5" fill="#c53030">グループ化の目的はALP不在の効率性獲得にある</text>
+
+<!-- ===== 制度設計上の問題（Layer 3 環帯） ===== -->
+<text x="340" y="142" text-anchor="middle" font-size="11" font-weight="bold" fill="#c05621">ALP vs 定式配分</text>
+<text x="340" y="155" text-anchor="middle" font-size="9" fill="#c05621">パラダイムの未決定</text>
+
+<text x="610" y="142" text-anchor="middle" font-size="11" font-weight="bold" fill="#c05621">情報の非対称性</text>
+<text x="610" y="155" text-anchor="middle" font-size="9" fill="#c05621">企業 ≫ 当局の情報量</text>
+
+<text x="188" y="328" text-anchor="middle" font-size="11" font-weight="bold" fill="#c05621">事前 vs</text>
+<text x="188" y="343" text-anchor="middle" font-size="11" font-weight="bold" fill="#c05621">事後</text>
+
+<text x="762" y="328" text-anchor="middle" font-size="11" font-weight="bold" fill="#c05621">比較可能性</text>
+<text x="762" y="343" text-anchor="middle" font-size="11" font-weight="bold" fill="#c05621">の限界</text>
+
+<text x="340" y="530" text-anchor="middle" font-size="11" font-weight="bold" fill="#c05621">二重課税の構造的発生</text>
+<text x="610" y="530" text-anchor="middle" font-size="11" font-weight="bold" fill="#c05621">レンジの不一致</text>
+
+<!-- ===== 国際政治・経済構造（Layer 4 環帯） ===== -->
+<text x="475" y="68" text-anchor="middle" font-size="13" font-weight="bold" fill="#2b6cb0">国家主権 vs グローバル最適</text>
+
+<text x="108" y="155" text-anchor="middle" font-size="11" font-weight="bold" fill="#2b6cb0">先進国 vs</text>
+<text x="108" y="169" text-anchor="middle" font-size="11" font-weight="bold" fill="#2b6cb0">途上国</text>
+
+<text x="842" y="155" text-anchor="middle" font-size="11" font-weight="bold" fill="#2b6cb0">デジタル経済</text>
+<text x="842" y="169" text-anchor="middle" font-size="11" font-weight="bold" fill="#2b6cb0">の挑戦</text>
+
+<text x="72" y="410" text-anchor="middle" font-size="11" font-weight="bold" fill="#2b6cb0">税の競争</text>
+<text x="72" y="424" text-anchor="middle" font-size="11" font-weight="bold" fill="#2b6cb0">vs 協調</text>
+
+<text x="878" y="410" text-anchor="middle" font-size="11" font-weight="bold" fill="#2b6cb0">BEPS /</text>
+<text x="878" y="424" text-anchor="middle" font-size="11" font-weight="bold" fill="#2b6cb0">Pillar One・Two</text>
+
+<text x="475" y="610" text-anchor="middle" font-size="11" font-weight="bold" fill="#2b6cb0">企業の租税戦略とアドバイザリー産業</text>
+
+<text x="108" y="264" text-anchor="middle" font-size="10" fill="#2b6cb0">グローバル・</text>
+<text x="108" y="277" text-anchor="middle" font-size="10" fill="#2b6cb0">サウスの台頭</text>
+
+<text x="842" y="264" text-anchor="middle" font-size="10" fill="#2b6cb0">無形資産の</text>
+<text x="842" y="277" text-anchor="middle" font-size="10" fill="#2b6cb0">評価困難性</text>
+
+<!-- 因果矢印（内→外） -->
+<line x1="475" y1="263" x2="475" y2="230" stroke="#718096" stroke-width="1.2" marker-end="url(#a1)" stroke-dasharray="4,3"/>
+<line x1="475" y1="407" x2="475" y2="450" stroke="#718096" stroke-width="1.2" marker-end="url(#a1)" stroke-dasharray="4,3"/>
+<line x1="360" y1="335" x2="310" y2="335" stroke="#718096" stroke-width="1.2" marker-end="url(#a1)" stroke-dasharray="4,3"/>
+<line x1="590" y1="335" x2="640" y2="335" stroke="#718096" stroke-width="1.2" marker-end="url(#a1)" stroke-dasharray="4,3"/>
+
+<!-- 外への因果矢印 -->
+<line x1="475" y1="187" x2="475" y2="165" stroke="#718096" stroke-width="1" marker-end="url(#a1)" stroke-dasharray="3,3" opacity="0.6"/>
+<line x1="475" y1="485" x2="475" y2="515" stroke="#718096" stroke-width="1" marker-end="url(#a1)" stroke-dasharray="3,3" opacity="0.6"/>
+<line x1="252" y1="335" x2="205" y2="335" stroke="#718096" stroke-width="1" marker-end="url(#a1)" stroke-dasharray="3,3" opacity="0.6"/>
+<line x1="698" y1="335" x2="745" y2="335" stroke="#718096" stroke-width="1" marker-end="url(#a1)" stroke-dasharray="3,3" opacity="0.6"/>
+
+<line x1="475" y1="111" x2="475" y2="82" stroke="#718096" stroke-width="1" marker-end="url(#a1)" stroke-dasharray="3,3" opacity="0.4"/>
+<line x1="475" y1="559" x2="475" y2="595" stroke="#718096" stroke-width="1" marker-end="url(#a1)" stroke-dasharray="3,3" opacity="0.4"/>
+
+<!-- 凡例 -->
+<rect x="10" y="620" width="280" height="32" rx="4" fill="#f7fafc" stroke="#cbd5e0" stroke-width="0.8"/>
+<line x1="22" y1="638" x2="52" y2="638" stroke="#718096" stroke-width="1.2" marker-end="url(#a1)" stroke-dasharray="4,3"/>
+<text x="60" y="642" font-size="9" fill="#718096">内層の問題が外層の問題を構造的に規定</text>
+</svg>
+</div>
+
+<div class="insight-box">
+<h3>核心的洞察</h3>
+<p style="font-size:12px;">多国籍企業がグループを形成する経済的理由そのもの（取引費用の節約、シナジー）が、独立企業間原則の適用を論理的に不可能にする。「独立だったら」という反事実的条件は、グループの存在理由を否定する世界を仮定している。この核心のアポリアが、制度設計・国際政治のすべての困難を下支えしている。</p>
+</div>
+</div>
+
+<!-- ===== PAGE 2: 当事者と関係性 ===== -->
+<div class="page">
+<h1>2 ／ 当事者・概念・関係性のマップ</h1>
+<p class="subtitle">多層的な利害関係と情報の非対称性が、構造的な紛争を生む。</p>
+
+<div class="fig-container">
+<svg viewBox="0 0 920 530" xmlns="http://www.w3.org/2000/svg" font-family="'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif">
+<defs>
+  <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#4a5568"/></marker>
+  <marker id="a2b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2b6cb0"/></marker>
+  <marker id="a2r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#e53e3e"/></marker>
+  <marker id="a2g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#38a169"/></marker>
+  <marker id="a2o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#dd6b20"/></marker>
+</defs>
+
+<!-- OECD -->
+<rect x="350" y="8" width="180" height="42" rx="6" fill="#ebf8ff" stroke="#2b6cb0" stroke-width="2"/>
+<text x="440" y="27" text-anchor="middle" font-size="11" font-weight="bold" fill="#2b6cb0">OECD / 包摂的枠組み</text>
+<text x="440" y="41" text-anchor="middle" font-size="9" fill="#4a5568">ガイドライン策定・国際合意形成</text>
+
+<!-- 多国籍企業グループ枠 -->
+<rect x="90" y="80" width="560" height="190" rx="10" fill="none" stroke="#4a5568" stroke-width="2" stroke-dasharray="8,4"/>
+<text x="100" y="96" font-size="10" font-weight="bold" fill="#4a5568">多国籍企業グループ（統合的経済実体）</text>
+
+<!-- 親会社 -->
+<rect x="115" y="112" width="165" height="65" rx="6" fill="#e2e8f0" stroke="#4a5568" stroke-width="1.5"/>
+<text x="197" y="135" text-anchor="middle" font-size="12" font-weight="bold" fill="#2d3748">親会社 P</text>
+<text x="197" y="150" text-anchor="middle" font-size="10" fill="#4a5568">A国（本社所在地）</text>
+<text x="197" y="164" text-anchor="middle" font-size="9" fill="#718096">知財保有・意思決定</text>
+
+<!-- 子会社X -->
+<rect x="350" y="105" width="165" height="58" rx="6" fill="#e2e8f0" stroke="#4a5568" stroke-width="1.5"/>
+<text x="432" y="127" text-anchor="middle" font-size="12" font-weight="bold" fill="#2d3748">子会社 X</text>
+<text x="432" y="142" text-anchor="middle" font-size="10" fill="#4a5568">B国（製造拠点）</text>
+<text x="432" y="155" text-anchor="middle" font-size="9" fill="#718096">受託製造</text>
+
+<!-- 子会社Y -->
+<rect x="350" y="192" width="165" height="58" rx="6" fill="#e2e8f0" stroke="#4a5568" stroke-width="1.5"/>
+<text x="432" y="214" text-anchor="middle" font-size="12" font-weight="bold" fill="#2d3748">子会社 Y</text>
+<text x="432" y="229" text-anchor="middle" font-size="10" fill="#4a5568">C国（販売拠点）</text>
+<text x="432" y="242" text-anchor="middle" font-size="9" fill="#718096">販売・マーケティング</text>
+
+<!-- 取引矢印 -->
+<line x1="280" y1="130" x2="347" y2="125" stroke="#4a5568" stroke-width="1.8" marker-end="url(#a2)"/>
+<text x="310" y="120" font-size="8.5" fill="#4a5568" transform="rotate(-3,310,120)">知財ライセンス・部品</text>
+
+<line x1="280" y1="162" x2="347" y2="208" stroke="#4a5568" stroke-width="1.8" marker-end="url(#a2)"/>
+<text x="295" y="195" font-size="8.5" fill="#4a5568" transform="rotate(28,295,195)">完成品・ブランド使用権</text>
+
+<line x1="432" y1="163" x2="432" y2="189" stroke="#4a5568" stroke-width="1.8" marker-end="url(#a2)"/>
+<text x="445" y="180" font-size="8.5" fill="#4a5568">製品供給</text>
+
+<!-- 利益の流れ（破線で逆方向） -->
+<line x1="345" y1="137" x2="283" y2="142" stroke="#38a169" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#a2g)"/>
+<text x="322" y="148" font-size="7.5" fill="#38a169">ロイヤルティ</text>
+
+<!-- アドバイザー -->
+<rect x="700" y="130" width="165" height="55" rx="6" fill="#e9d8fd" stroke="#9f7aea" stroke-width="1.5"/>
+<text x="782" y="152" text-anchor="middle" font-size="11" font-weight="bold" fill="#553c9a">アドバイザー</text>
+<text x="782" y="167" text-anchor="middle" font-size="9" fill="#718096">Big4 / 法律事務所</text>
+<line x1="700" y1="157" x2="653" y2="157" stroke="#9f7aea" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#a2)"/>
+<text x="670" y="150" font-size="7.5" fill="#9f7aea">TP戦略助言</text>
+
+<!-- === 税務当局 === -->
+<rect x="55" y="360" width="190" height="52" rx="6" fill="#feebc8" stroke="#dd6b20" stroke-width="1.8"/>
+<text x="150" y="382" text-anchor="middle" font-size="12" font-weight="bold" fill="#c05621">A国 税務当局</text>
+<text x="150" y="398" text-anchor="middle" font-size="9" fill="#718096">親会社の所得に課税</text>
+
+<rect x="320" y="360" width="190" height="52" rx="6" fill="#feebc8" stroke="#dd6b20" stroke-width="1.8"/>
+<text x="415" y="382" text-anchor="middle" font-size="12" font-weight="bold" fill="#c05621">B国 税務当局</text>
+<text x="415" y="398" text-anchor="middle" font-size="9" fill="#718096">子会社Xの所得に課税</text>
+
+<rect x="590" y="360" width="190" height="52" rx="6" fill="#feebc8" stroke="#dd6b20" stroke-width="1.8"/>
+<text x="685" y="382" text-anchor="middle" font-size="12" font-weight="bold" fill="#c05621">C国 税務当局</text>
+<text x="685" y="398" text-anchor="middle" font-size="9" fill="#718096">子会社Yの所得に課税</text>
+
+<!-- 企業→税務当局（申告線） -->
+<line x1="197" y1="270" x2="150" y2="357" stroke="#4a5568" stroke-width="1" stroke-dasharray="5,3" marker-end="url(#a2)"/>
+<line x1="432" y1="250" x2="415" y2="357" stroke="#4a5568" stroke-width="1" stroke-dasharray="5,3" marker-end="url(#a2)"/>
+<line x1="510" y1="250" x2="685" y2="357" stroke="#4a5568" stroke-width="1" stroke-dasharray="5,3" marker-end="url(#a2)"/>
+<text x="160" y="310" font-size="8" fill="#718096">申告</text>
+<text x="425" y="310" font-size="8" fill="#718096">申告</text>
+<text x="610" y="300" font-size="8" fill="#718096">申告</text>
+
+<!-- OECD→税務当局 ガイドライン -->
+<line x1="390" y1="50" x2="155" y2="357" stroke="#2b6cb0" stroke-width="0.8" stroke-dasharray="3,4" opacity="0.5" marker-end="url(#a2b)"/>
+<line x1="440" y1="50" x2="415" y2="357" stroke="#2b6cb0" stroke-width="0.8" stroke-dasharray="3,4" opacity="0.5" marker-end="url(#a2b)"/>
+<line x1="490" y1="50" x2="680" y2="357" stroke="#2b6cb0" stroke-width="0.8" stroke-dasharray="3,4" opacity="0.5" marker-end="url(#a2b)"/>
+<text x="260" y="210" font-size="7.5" fill="#2b6cb0" opacity="0.7" transform="rotate(-55,260,210)">ガイドライン</text>
+
+<!-- ★ 二重課税紛争（赤） -->
+<line x1="248" y1="386" x2="317" y2="386" stroke="#e53e3e" stroke-width="3" marker-end="url(#a2r)"/>
+<line x1="317" y1="378" x2="248" y2="378" stroke="#e53e3e" stroke-width="3" marker-end="url(#a2r)"/>
+<text x="283" y="370" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#e53e3e">二重課税紛争</text>
+
+<line x1="513" y1="386" x2="587" y2="386" stroke="#e53e3e" stroke-width="3" marker-end="url(#a2r)"/>
+<line x1="587" y1="378" x2="513" y2="378" stroke="#e53e3e" stroke-width="3" marker-end="url(#a2r)"/>
+<text x="550" y="370" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#e53e3e">二重課税紛争</text>
+
+<!-- MAP / 仲裁 -->
+<rect x="300" y="455" width="230" height="42" rx="6" fill="#c6f6d5" stroke="#38a169" stroke-width="1.5"/>
+<text x="415" y="475" text-anchor="middle" font-size="11" font-weight="bold" fill="#276749">相互協議(MAP) / 仲裁</text>
+<text x="415" y="489" text-anchor="middle" font-size="9" fill="#718096">二国間の紛争解決（不完全）</text>
+
+<line x1="150" y1="412" x2="310" y2="458" stroke="#38a169" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#a2g)"/>
+<line x1="415" y1="412" x2="415" y2="452" stroke="#38a169" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#a2g)"/>
+<line x1="685" y1="412" x2="520" y2="458" stroke="#38a169" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#a2g)"/>
+
+<!-- 構造的問題ラベル -->
+<rect x="680" y="445" width="210" height="65" rx="6" fill="#fff5f5" stroke="#e53e3e" stroke-width="1.5" stroke-dasharray="5,3"/>
+<text x="785" y="462" text-anchor="middle" font-size="10" font-weight="bold" fill="#c53030">構造的矛盾</text>
+<text x="785" y="478" text-anchor="middle" font-size="9" fill="#c53030">• 各国が独立に「正しい価格」を主張</text>
+<text x="785" y="492" text-anchor="middle" font-size="9" fill="#c53030">• 調整メカニズムは二国間のみ</text>
+<text x="785" y="506" text-anchor="middle" font-size="9" fill="#c53030">• 三角取引の解決が構造的に困難</text>
+
+<!-- 凡例 -->
+<rect x="10" y="505" width="250" height="22" rx="3" fill="#f7fafc" stroke="#cbd5e0" stroke-width="0.6"/>
+<line x1="18" y1="517" x2="40" y2="517" stroke="#4a5568" stroke-width="1.5"/><text x="45" y="520" font-size="8" fill="#4a5568">取引</text>
+<line x1="75" y1="517" x2="97" y2="517" stroke="#4a5568" stroke-width="1" stroke-dasharray="4,3"/><text x="102" y="520" font-size="8" fill="#4a5568">申告</text>
+<line x1="128" y1="517" x2="150" y2="517" stroke="#e53e3e" stroke-width="2.5"/><text x="155" y="520" font-size="8" fill="#e53e3e">紛争</text>
+<line x1="180" y1="517" x2="202" y2="517" stroke="#38a169" stroke-width="1" stroke-dasharray="4,3"/><text x="207" y="520" font-size="8" fill="#38a169">解決</text>
+</svg>
+</div>
+
+<div class="cols2">
+<div>
+<table>
+<tr><th>当事者</th><th>役割</th><th>利害</th></tr>
+<tr><td>多国籍企業</td><td>関連者間取引の当事者</td><td>グループ全体の税負担最小化</td></tr>
+<tr><td>各国税務当局</td><td>課税権の行使</td><td>自国への利益帰属の最大化</td></tr>
+<tr><td>OECD</td><td>ルール策定</td><td>国際的一貫性・二重課税排除</td></tr>
+<tr><td>MAP / 仲裁</td><td>紛争解決</td><td>合意形成（拘束力に限界）</td></tr>
+<tr><td>アドバイザー</td><td>TP戦略の設計</td><td>複雑さ＝ビジネス機会</td></tr>
+</table>
+</div>
+<div>
+<div class="warning-box">
+<h3>構造的な利害の非対称</h3>
+<p style="font-size:11px;">企業は情報優位に立ち、税務当局は事後的かつ断片的な情報で検証する。さらに各国税務当局は相互に「競争者」でもあり、協調のインセンティブが構造的に不足している。アドバイザリー産業は制度の複雑さから利益を得るため、簡素化への抵抗力として機能する。</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ===== PAGE 3: 8つの隠れた対立軸 ===== -->
+<div class="page">
+<h1>3 ／ 8つの隠れた対立軸 — 誰も言語化しない構造的テンション</h1>
+<p class="subtitle">移転価格税制の問題は、複数の対立軸上の「決定不能な位置取り」として理解できる。現状と動向を可視化する。</p>
+
+<div class="fig-container">
+<svg viewBox="0 0 920 700" xmlns="http://www.w3.org/2000/svg" font-family="'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif">
+<defs>
+  <marker id="a3t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#dd6b20"/></marker>
+</defs>
+
+<!-- 軸1 -->
+<text x="22" y="42" font-size="11.5" font-weight="bold" fill="#2d3748">❶ 法的形式 vs 経済的実質</text>
+<rect x="200" y="33" width="500" height="10" rx="5" fill="#e2e8f0"/>
+<text x="192" y="42" text-anchor="end" font-size="10" fill="#2b6cb0">法的形式</text>
+<text x="708" y="42" font-size="10" fill="#2b6cb0">経済的実質</text>
+<circle cx="380" cy="38" r="9" fill="#e53e3e" stroke="white" stroke-width="2"/>
+<text x="380" y="62" text-anchor="middle" font-size="8" fill="#e53e3e">現在</text>
+<line x1="389" y1="38" x2="430" y2="38" stroke="#dd6b20" stroke-width="2" marker-end="url(#a3t)"/>
+<text x="420" y="28" font-size="7.5" fill="#dd6b20">BEPS後の潮流</text>
+<text x="22" y="58" font-size="8.5" fill="#718096">法人格の独立性（法的フィクション）と統合的経済実体としての実質の間に、解消不能な緊張がある</text>
+
+<!-- 軸2 -->
+<text x="22" y="112" font-size="11.5" font-weight="bold" fill="#2d3748">❷ 国家主権 vs グローバル最適</text>
+<rect x="200" y="103" width="500" height="10" rx="5" fill="#e2e8f0"/>
+<text x="192" y="112" text-anchor="end" font-size="10" fill="#2b6cb0">国家主権</text>
+<text x="708" y="112" font-size="10" fill="#2b6cb0">グローバル最適</text>
+<circle cx="330" cy="108" r="9" fill="#e53e3e" stroke="white" stroke-width="2"/>
+<text x="330" y="132" text-anchor="middle" font-size="8" fill="#e53e3e">現在</text>
+<line x1="339" y1="108" x2="375" y2="108" stroke="#dd6b20" stroke-width="2" marker-end="url(#a3t)"/>
+<text x="370" y="98" font-size="7.5" fill="#dd6b20">Pillar One・Two</text>
+<text x="22" y="128" font-size="8.5" fill="#718096">課税主権は国家の根幹だが、経済はグローバル。多国間合意は常に最小公倍数にとどまる</text>
+
+<!-- 軸3 -->
+<text x="22" y="182" font-size="11.5" font-weight="bold" fill="#2d3748">❸ 確実性 vs 正確性</text>
+<rect x="200" y="173" width="500" height="10" rx="5" fill="#e2e8f0"/>
+<text x="192" y="182" text-anchor="end" font-size="10" fill="#2b6cb0">確実性（簡素）</text>
+<text x="708" y="182" font-size="10" fill="#2b6cb0">正確性（精緻）</text>
+<circle cx="480" cy="178" r="9" fill="#e53e3e" stroke="white" stroke-width="2"/>
+<text x="480" y="202" text-anchor="middle" font-size="8" fill="#e53e3e">ALP（現在）</text>
+<circle cx="310" cy="178" r="7" fill="#38a169" stroke="white" stroke-width="2"/>
+<text x="310" y="202" text-anchor="middle" font-size="8" fill="#38a169">Amount A</text>
+<text x="22" y="198" font-size="8.5" fill="#718096">セーフハーバーは確実性を高めるが正確性を犠牲にし、厳密分析は正確性を追求して紛争を増やす</text>
+
+<!-- 軸4 -->
+<text x="22" y="252" font-size="11.5" font-weight="bold" fill="#2d3748">❹ 事前判断 vs 事後検証</text>
+<rect x="200" y="243" width="500" height="10" rx="5" fill="#e2e8f0"/>
+<text x="192" y="252" text-anchor="end" font-size="10" fill="#2b6cb0">事前（ex ante）</text>
+<text x="708" y="252" font-size="10" fill="#2b6cb0">事後（ex post）</text>
+<circle cx="520" cy="248" r="9" fill="#e53e3e" stroke="white" stroke-width="2"/>
+<text x="520" y="272" text-anchor="middle" font-size="8" fill="#e53e3e">税務調査</text>
+<line x1="511" y1="248" x2="460" y2="248" stroke="#dd6b20" stroke-width="2" marker-end="url(#a3t)"/>
+<text x="475" y="238" font-size="7.5" fill="#dd6b20">APA拡大</text>
+<text x="22" y="268" font-size="8.5" fill="#718096">企業は事前に価格設定するが、当局は数年後に結果を見て検証する。時間のズレが不確実性を生む</text>
+
+<!-- 軸5 -->
+<text x="22" y="322" font-size="11.5" font-weight="bold" fill="#2d3748">❺ 個別取引分析 vs 統合的アプローチ</text>
+<rect x="200" y="313" width="500" height="10" rx="5" fill="#e2e8f0"/>
+<text x="192" y="322" text-anchor="end" font-size="10" fill="#2b6cb0">個別取引</text>
+<text x="708" y="322" font-size="10" fill="#2b6cb0">統合的</text>
+<circle cx="370" cy="318" r="9" fill="#e53e3e" stroke="white" stroke-width="2"/>
+<text x="370" y="342" text-anchor="middle" font-size="8" fill="#e53e3e">現在</text>
+<line x1="379" y1="318" x2="430" y2="318" stroke="#dd6b20" stroke-width="2" marker-end="url(#a3t)"/>
+<text x="415" y="308" font-size="7.5" fill="#dd6b20">TNMM/利益分割法</text>
+<text x="22" y="338" font-size="8.5" fill="#718096">取引ごとの分析は精密に見えて、統合されたバリューチェーンの実態を見失う</text>
+
+<!-- 軸6 -->
+<text x="22" y="392" font-size="11.5" font-weight="bold" fill="#2d3748">❻ 独立企業間原則(ALP) vs 定式配分方式</text>
+<rect x="200" y="383" width="500" height="10" rx="5" fill="#e2e8f0"/>
+<text x="192" y="392" text-anchor="end" font-size="10" fill="#2b6cb0">ALP</text>
+<text x="708" y="392" font-size="10" fill="#2b6cb0">定式配分</text>
+<circle cx="290" cy="388" r="9" fill="#e53e3e" stroke="white" stroke-width="2"/>
+<text x="290" y="412" text-anchor="middle" font-size="8" fill="#e53e3e">OECD正統</text>
+<line x1="299" y1="388" x2="370" y2="388" stroke="#dd6b20" stroke-width="2" marker-end="url(#a3t)"/>
+<text x="340" y="378" font-size="7.5" fill="#dd6b20">Pillar One Amount A</text>
+<rect x="360" y="382" width="8" height="12" rx="1" fill="#9f7aea" opacity="0.6"/>
+<text x="372" y="412" font-size="7.5" fill="#9f7aea">パラダイム転換点？</text>
+<text x="22" y="408" font-size="8.5" fill="#718096">OECDは半世紀ALPを堅持してきたが、Pillar OneはALPからの部分的離脱を意味する歴史的転換点</text>
+
+<!-- 軸7 -->
+<text x="22" y="462" font-size="11.5" font-weight="bold" fill="#2d3748">❼ 先進国（資本・知財）vs 途上国（市場・労働）</text>
+<rect x="200" y="453" width="500" height="10" rx="5" fill="#e2e8f0"/>
+<text x="192" y="462" text-anchor="end" font-size="10" fill="#2b6cb0">先進国利益</text>
+<text x="708" y="462" font-size="10" fill="#2b6cb0">途上国利益</text>
+<circle cx="340" cy="458" r="9" fill="#e53e3e" stroke="white" stroke-width="2"/>
+<text x="340" y="482" text-anchor="middle" font-size="8" fill="#e53e3e">OECD体制</text>
+<line x1="349" y1="458" x2="400" y2="458" stroke="#dd6b20" stroke-width="2" marker-end="url(#a3t)"/>
+<text x="395" y="448" font-size="7.5" fill="#dd6b20">国連TP規範の台頭</text>
+<text x="22" y="478" font-size="8.5" fill="#718096">ALPは知財と資本に帰属を寄せる構造を持ち、先進国に有利な分配ルールを内包している</text>
+
+<!-- 軸8 -->
+<text x="22" y="532" font-size="11.5" font-weight="bold" fill="#2d3748">❽ 技術的問題 vs 政治的問題</text>
+<rect x="200" y="523" width="500" height="10" rx="5" fill="#e2e8f0"/>
+<text x="192" y="532" text-anchor="end" font-size="10" fill="#2b6cb0">技術的</text>
+<text x="708" y="532" font-size="10" fill="#2b6cb0">政治的</text>
+<circle cx="370" cy="528" r="9" fill="#e53e3e" stroke="white" stroke-width="2"/>
+<text x="370" y="552" text-anchor="middle" font-size="8" fill="#e53e3e">表面的な議論</text>
+<circle cx="560" cy="528" r="9" fill="#9f7aea" stroke="white" stroke-width="2"/>
+<text x="560" y="552" text-anchor="middle" font-size="8" fill="#9f7aea">本質</text>
+<text x="22" y="548" font-size="8.5" fill="#718096">「どの算定方法を使うか」は技術的だが、「誰がどれだけ課税するか」は富の国際配分という政治問題</text>
+
+<!-- 統合的注釈 -->
+<rect x="50" y="580" width="820" height="105" rx="8" fill="#faf5ff" stroke="#9f7aea" stroke-width="1.5"/>
+<text x="65" y="600" font-size="11" font-weight="bold" fill="#553c9a">★ 隠れた構造的パターン</text>
+<text x="65" y="620" font-size="9.5" fill="#4a5568">8軸すべてにおいて、移転価格税制は「左側（現行パラダイム）」に寄った位置にある。BEPS以降の動向は</text>
+<text x="65" y="636" font-size="9.5" fill="#4a5568">すべて「右方向」への圧力を示している。しかし、各軸の右端に到達することは各軸の左端の価値（法的安定性、</text>
+<text x="65" y="652" font-size="9.5" fill="#4a5568">主権、確実性…）を犠牲にすることを意味する。ここに、移転価格税制が「問題を解けない」根本理由がある。</text>
+<text x="65" y="672" font-size="10" font-weight="bold" fill="#553c9a">⇒ 各軸はトレードオフであり、ゼロサムである。「最適解」は存在しない。あるのは「選択」だけである。</text>
+</svg>
+</div>
+</div>
+
+<!-- ===== PAGE 4: 問いの階層構造（氷山モデル） ===== -->
+<div class="page">
+<h1>4 ／ 問いの階層構造 — 氷山モデル</h1>
+<p class="subtitle">表層で議論される実務的問いの下に、より根本的な問いが沈んでいる。</p>
+
+<div class="fig-container">
+<svg viewBox="0 0 920 620" xmlns="http://www.w3.org/2000/svg" font-family="'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif">
+<defs>
+  <marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#718096"/></marker>
+  <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#ebf8ff" stop-opacity="0.3"/>
+    <stop offset="100%" stop-color="#2b6cb0" stop-opacity="0.12"/>
+  </linearGradient>
+</defs>
+
+<!-- 水面上の背景 -->
+<rect x="0" y="0" width="920" height="160" fill="#fffff8" opacity="0.5"/>
+<!-- 水面下の背景 -->
+<rect x="0" y="160" width="920" height="460" fill="url(#water)"/>
+
+<!-- 水面ライン -->
+<path d="M0 160 Q40 150 80 160 Q120 170 160 160 Q200 150 240 160 Q280 170 320 160 Q360 150 400 160 Q440 170 480 160 Q520 150 560 160 Q600 170 640 160 Q680 150 720 160 Q760 170 800 160 Q840 150 880 160 Q900 165 920 160" fill="none" stroke="#4299e1" stroke-width="2.5" opacity="0.7"/>
+<text x="910" y="155" text-anchor="end" font-size="10" fill="#4299e1" font-weight="bold">水面（可視の境界）</text>
+
+<!-- ===== 表層：実務レベル ===== -->
+<rect x="260" y="18" width="400" height="120" rx="10" fill="#ebf8ff" stroke="#2b6cb0" stroke-width="2" opacity="0.9"/>
+<text x="460" y="40" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a365d">表層：実務レベルの問い</text>
+<line x1="300" y1="48" x2="620" y2="48" stroke="#2b6cb0" stroke-width="0.5" opacity="0.4"/>
+
+<text x="280" y="68" font-size="10.5" fill="#2d3748">• どの算定方法（CUP/RP/CP/TNMM/PS）を選択すべきか？</text>
+<text x="280" y="86" font-size="10.5" fill="#2d3748">• 比較対象取引はどれか？調整はどう行うか？</text>
+<text x="280" y="104" font-size="10.5" fill="#2d3748">• ローカルファイル・マスターファイル・CbCRの要件は？</text>
+<text x="280" y="122" font-size="10.5" fill="#2d3748">• セーフハーバーは利用可能か？</text>
+
+<text x="248" y="70" text-anchor="middle" font-size="16" fill="#2b6cb0" opacity="0.3">☀</text>
+<text x="672" y="70" font-size="9" fill="#718096" font-style="italic">← 多くの実務者は</text>
+<text x="672" y="83" font-size="9" fill="#718096" font-style="italic">   ここで議論する</text>
+
+<!-- なぜ？矢印 -->
+<text x="460" y="153" text-anchor="middle" font-size="11" font-weight="bold" fill="#4a5568">↓ なぜこれらが「問題」になるのか？ ↓</text>
+
+<!-- ===== 中層：制度設計レベル ===== -->
+<rect x="190" y="178" width="540" height="120" rx="10" fill="#fffaf0" stroke="#dd6b20" stroke-width="2" opacity="0.9"/>
+<text x="460" y="200" text-anchor="middle" font-size="13" font-weight="bold" fill="#7b341e">中層：制度設計レベルの問い</text>
+<line x1="230" y1="208" x2="690" y2="208" stroke="#dd6b20" stroke-width="0.5" opacity="0.4"/>
+
+<text x="210" y="228" font-size="10.5" fill="#2d3748">• ALPは実際に機能しているか？ 比較可能性は確保できるか？</text>
+<text x="210" y="246" font-size="10.5" fill="#2d3748">• 二重課税を実効的に排除するメカニズムは存在するか？</text>
+<text x="210" y="264" font-size="10.5" fill="#2d3748">• デジタル経済・無形資産に現行制度はどこまで対応可能か？</text>
+<text x="210" y="282" font-size="10.5" fill="#2d3748">• Pillar One / Two は現行制度の矛盾を解消するか？</text>
+
+<!-- なぜ？矢印 -->
+<text x="460" y="314" text-anchor="middle" font-size="11" font-weight="bold" fill="#4a5568">↓ なぜ制度が「機能しない」のか？ ↓</text>
+
+<!-- ===== 深層：理論レベル ===== -->
+<rect x="120" y="332" width="680" height="110" rx="10" fill="#fff5f5" stroke="#e53e3e" stroke-width="2" opacity="0.9"/>
+<text x="460" y="354" text-anchor="middle" font-size="13" font-weight="bold" fill="#9b2c2c">深層：理論レベルの問い</text>
+<line x1="160" y1="362" x2="760" y2="362" stroke="#e53e3e" stroke-width="0.5" opacity="0.4"/>
+
+<text x="140" y="382" font-size="10.5" fill="#2d3748">• 統合されたバリューチェーンから生まれる価値を、各法人に帰属させることは原理的に可能か？</text>
+<text x="140" y="400" font-size="10.5" fill="#2d3748">• 「独立企業だったら」という反事実的条件は、認識論的に有効な基準たりうるか？</text>
+<text x="140" y="418" font-size="10.5" fill="#2d3748">• 国際的な利益配分の「公正さ」を定義する客観的基準は存在するか？</text>
+<text x="140" y="434" font-size="10.5" fill="#2d3748">• 共同生産問題（joint production problem）に解はあるか？</text>
+
+<!-- なぜ？矢印 -->
+<text x="460" y="460" text-anchor="middle" font-size="11" font-weight="bold" fill="#4a5568">↓ これらの問いの「前提」は何か？ ↓</text>
+
+<!-- ===== 根底：哲学/存在論レベル ===== -->
+<rect x="50" y="478" width="820" height="118" rx="10" fill="#faf5ff" stroke="#9f7aea" stroke-width="2.5" opacity="0.95"/>
+<text x="460" y="500" text-anchor="middle" font-size="13" font-weight="bold" fill="#44337a">根底：存在論的な問い</text>
+<line x1="90" y1="508" x2="830" y2="508" stroke="#9f7aea" stroke-width="0.5" opacity="0.4"/>
+
+<text x="70" y="528" font-size="11" fill="#44337a" font-weight="bold">① 「正しい移転価格」は存在するか？</text>
+<text x="420" y="528" font-size="9.5" fill="#4a5568">— 価格は社会的構成物であり、客観的「正解」はない</text>
+<text x="70" y="548" font-size="11" fill="#44337a" font-weight="bold">② 法人を独立の課税単位とすることは適切か？</text>
+<text x="420" y="548" font-size="9.5" fill="#4a5568">— 法人格の独立性は法的フィクションにすぎない</text>
+<text x="70" y="568" font-size="11" fill="#44337a" font-weight="bold">③ 国際課税は主権国家体制と両立するか？</text>
+<text x="420" y="568" font-size="9.5" fill="#4a5568">— 経済のグローバル化と政治の国民国家制は構造的に矛盾</text>
+<text x="70" y="588" font-size="11" fill="#44337a" font-weight="bold">④ 「課税」とは何の対価か？</text>
+<text x="420" y="588" font-size="9.5" fill="#4a5568">— 価値創造の場所・市場・労働力・インフラのどれに基づくか未決定</text>
+
+<!-- 深さの指標 -->
+<text x="15" y="82" font-size="10" fill="#718096" writing-mode="tb" letter-spacing="3">実務で議論</text>
+<text x="15" y="260" font-size="10" fill="#718096" writing-mode="tb" letter-spacing="3">専門家が認識</text>
+<text x="15" y="410" font-size="10" fill="#718096" writing-mode="tb" letter-spacing="3">学者が指摘</text>
+<text x="15" y="540" font-size="10" fill="#9f7aea" font-weight="bold" writing-mode="tb" letter-spacing="3">誰も解けない</text>
+
+<!-- 右側注釈 -->
+<line x1="875" y1="30" x2="875" y2="590" stroke="#cbd5e0" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="887" y="90" font-size="8.5" fill="#718096" writing-mode="tb">具体性 高 ←</text>
+<text x="887" y="350" font-size="8.5" fill="#718096" writing-mode="tb">→ 根本性 高</text>
+</svg>
+</div>
+</body>
+</html>
