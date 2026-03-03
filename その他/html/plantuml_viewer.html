@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PlantUML Viewer</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #0f172a; color: #e2e8f0;
+    height: 100vh; display: flex; flex-direction: column;
+  }
+  header {
+    padding: 12px 20px; background: #1e293b;
+    border-bottom: 1px solid #334155;
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  header h1 { font-size: 18px; font-weight: 600; color: #38bdf8; }
+  .toolbar { display: flex; gap: 8px; margin-left: auto; }
+  button {
+    padding: 6px 14px; border: 1px solid #475569; border-radius: 6px;
+    background: #1e293b; color: #e2e8f0; cursor: pointer;
+    font-size: 13px; transition: all 0.15s;
+  }
+  button:hover { background: #334155; border-color: #64748b; }
+  button.primary { background: #2563eb; border-color: #3b82f6; }
+  button.primary:hover { background: #1d4ed8; }
+  .format-select {
+    padding: 6px 10px; border: 1px solid #475569; border-radius: 6px;
+    background: #1e293b; color: #e2e8f0; font-size: 13px;
+  }
+  .main {
+    flex: 1; display: flex; min-height: 0;
+  }
+  .editor-pane {
+    width: 45%; display: flex; flex-direction: column;
+    border-right: 1px solid #334155;
+  }
+  .preview-pane {
+    flex: 1; display: flex; flex-direction: column;
+  }
+  .pane-header {
+    padding: 8px 16px; background: #1e293b;
+    border-bottom: 1px solid #334155;
+    font-size: 12px; color: #94a3b8; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  textarea {
+    flex: 1; width: 100%; padding: 16px; border: none;
+    background: #0f172a; color: #e2e8f0;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 14px; line-height: 1.6; resize: none; outline: none;
+    tab-size: 2;
+  }
+  textarea::placeholder { color: #475569; }
+  .preview-area {
+    flex: 1; overflow: auto; display: flex;
+    align-items: center; justify-content: center;
+    padding: 20px; background: #fff;
+  }
+  .preview-area img {
+    max-width: 100%; max-height: 100%; object-fit: contain;
+  }
+  .preview-area.dark { background: #0f172a; }
+  .status {
+    padding: 6px 16px; background: #1e293b;
+    border-top: 1px solid #334155;
+    font-size: 12px; color: #64748b;
+    display: flex; justify-content: space-between;
+  }
+  .error { color: #f87171; }
+  .loading {
+    color: #94a3b8; font-size: 14px;
+  }
+  .loading::after {
+    content: ''; animation: dots 1.5s infinite;
+  }
+  @keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+  }
+  .samples { display: flex; gap: 6px; }
+  .samples button { font-size: 11px; padding: 4px 8px; }
+  @media (max-width: 768px) {
+    .main { flex-direction: column; }
+    .editor-pane { width: 100%; height: 40%; border-right: none; border-bottom: 1px solid #334155; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>PlantUML Viewer</h1>
+  <div class="samples">
+    <button onclick="loadSample('sequence')">Sequence</button>
+    <button onclick="loadSample('class')">Class</button>
+    <button onclick="loadSample('activity')">Activity</button>
+    <button onclick="loadSample('mindmap')">MindMap</button>
+    <button onclick="loadSample('gantt')">Gantt</button>
+  </div>
+  <div class="toolbar">
+    <select class="format-select" id="formatSelect" onchange="render()">
+      <option value="svg">SVG</option>
+      <option value="png">PNG</option>
+      <option value="txt">ASCII</option>
+    </select>
+    <button onclick="toggleBg()">背景切替</button>
+    <button onclick="downloadImg()">保存</button>
+    <button class="primary" onclick="render()">描画</button>
+  </div>
+</header>
+<div class="main">
+  <div class="editor-pane">
+    <div class="pane-header">
+      <span>Editor</span>
+      <span id="charCount">0 chars</span>
+    </div>
+    <textarea id="editor" placeholder="PlantUMLコードをここに貼り付け..." spellcheck="false">@startuml
+Alice -> Bob: リクエスト
+Bob --> Alice: レスポンス
+@enduml</textarea>
+  </div>
+  <div class="preview-pane">
+    <div class="pane-header">
+      <span>Preview</span>
+      <span id="renderTime"></span>
+    </div>
+    <div class="preview-area" id="preview">
+      <span class="loading">描画中</span>
+    </div>
+  </div>
+</div>
+<div class="status">
+  <span id="statusText">Ready</span>
+  <span>PlantUML Public Server</span>
+</div>
+
+<script>
+const SERVER = 'https://www.plantuml.com/plantuml';
+const editor = document.getElementById('editor');
+const preview = document.getElementById('preview');
+let debounceTimer = null;
+
+// PlantUML deflate encoder
+function encode64(data) {
+  let r = '';
+  for (let i = 0; i < data.length; i += 3) {
+    if (i + 2 === data.length) {
+      r += append3bytes(data[i], data[i + 1], 0);
+    } else if (i + 1 === data.length) {
+      r += append3bytes(data[i], 0, 0);
+    } else {
+      r += append3bytes(data[i], data[i + 1], data[i + 2]);
+    }
+  }
+  return r;
+}
+
+function append3bytes(b1, b2, b3) {
+  const c1 = b1 >> 2;
+  const c2 = ((b1 & 0x3) << 4) | (b2 >> 4);
+  const c3 = ((b2 & 0xF) << 2) | (b3 >> 6);
+  const c4 = b3 & 0x3F;
+  return encode6bit(c1 & 0x3F) + encode6bit(c2 & 0x3F) +
+         encode6bit(c3 & 0x3F) + encode6bit(c4 & 0x3F);
+}
+
+function encode6bit(b) {
+  if (b < 10) return String.fromCharCode(48 + b);
+  b -= 10;
+  if (b < 26) return String.fromCharCode(65 + b);
+  b -= 26;
+  if (b < 26) return String.fromCharCode(97 + b);
+  b -= 26;
+  if (b === 0) return '-';
+  if (b === 1) return '_';
+  return '?';
+}
+
+function compress(s) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(s);
+  // Use deflate via raw deflate
+  const cs = new CompressionStream('deflate');
+  const writer = cs.writable.getWriter();
+  const reader = cs.readable.getReader();
+  const chunks = [];
+
+  return new Promise((resolve, reject) => {
+    reader.read().then(function process({ done, value }) {
+      if (value) chunks.push(value);
+      if (done) {
+        // Strip zlib header (2 bytes) and checksum (4 bytes)
+        const all = new Uint8Array(chunks.reduce((a, c) => a + c.length, 0));
+        let offset = 0;
+        for (const chunk of chunks) { all.set(chunk, offset); offset += chunk.length; }
+        // deflate stream includes zlib wrapper, strip it
+        const raw = all.slice(2, all.length - 4);
+        resolve(encode64(raw));
+      } else {
+        reader.read().then(process);
+      }
+    }).catch(reject);
+    writer.write(data);
+    writer.close();
+  });
+}
+
+// Hex encode fallback (use PlantUML ~h hex encoding)
+function hexEncode(s) {
+  const encoder = new TextEncoder();
+  const bytes = encoder.encode(s);
+  return '~h' + Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function render() {
+  const code = editor.value.trim();
+  if (!code) { preview.innerHTML = '<span style="color:#64748b">コードを入力してください</span>'; return; }
+
+  const format = document.getElementById('formatSelect').value;
+  const start = performance.now();
+  preview.innerHTML = '<span class="loading">描画中</span>';
+  document.getElementById('statusText').textContent = 'Rendering...';
+
+  try {
+    let encoded;
+    try {
+      encoded = await compress(code);
+    } catch(e) {
+      encoded = hexEncode(code);
+    }
+    const url = `${SERVER}/${format}/${encoded}`;
+
+    if (format === 'txt') {
+      const resp = await fetch(url);
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const text = await resp.text();
+      preview.innerHTML = `<pre style="color:#0f172a;font-family:monospace;font-size:13px;text-align:left;white-space:pre;">${escapeHtml(text)}</pre>`;
+    } else {
+      const img = new Image();
+      img.onload = () => {
+        preview.innerHTML = '';
+        preview.appendChild(img);
+        const elapsed = (performance.now() - start).toFixed(0);
+        document.getElementById('renderTime').textContent = `${elapsed}ms`;
+        document.getElementById('statusText').textContent = `Rendered (${format.toUpperCase()})`;
+      };
+      img.onerror = () => {
+        preview.innerHTML = '<span class="error">描画エラー: コードを確認してください</span>';
+        document.getElementById('statusText').textContent = 'Error';
+      };
+      img.src = url;
+    }
+  } catch (e) {
+    preview.innerHTML = `<span class="error">エラー: ${escapeHtml(e.message)}</span>`;
+    document.getElementById('statusText').textContent = 'Error';
+  }
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function toggleBg() {
+  preview.classList.toggle('dark');
+}
+
+function downloadImg() {
+  const img = preview.querySelector('img');
+  if (!img) return;
+  const a = document.createElement('a');
+  a.href = img.src;
+  const fmt = document.getElementById('formatSelect').value;
+  a.download = `plantuml.${fmt}`;
+  a.click();
+}
+
+const SAMPLES = {
+  sequence: `@startuml
+actor ユーザー
+participant "Webサーバー" as Web
+participant "APIサーバー" as API
+database "データベース" as DB
+
+ユーザー -> Web: HTTPリクエスト
+activate Web
+Web -> API: REST API呼び出し
+activate API
+API -> DB: クエリ実行
+activate DB
+DB --> API: 結果返却
+deactivate DB
+API --> Web: JSONレスポンス
+deactivate API
+Web --> ユーザー: HTML表示
+deactivate Web
+@enduml`,
+  class: `@startuml
+skinparam classAttributeIconSize 0
+
+abstract class 納税義務者 {
+  + 氏名: String
+  + 納税地: String
+  + 確定申告()
+}
+
+class 個人 extends 納税義務者 {
+  + 所得金額: Long
+  + 所得控除()
+}
+
+class 法人 extends 納税義務者 {
+  + 事業年度: Period
+  + 益金算入()
+  + 損金算入()
+}
+
+class 外国法人 extends 法人 {
+  + 本店所在地: String
+  + 国内源泉所得()
+}
+
+納税義務者 "1" -- "*" 申告書: 提出
+@enduml`,
+  activity: `@startuml
+start
+:確定申告書作成;
+if (青色申告?) then (yes)
+  :青色申告特別控除適用;
+  if (e-Tax提出?) then (yes)
+    :65万円控除;
+  else (no)
+    :55万円控除;
+  endif
+else (no)
+  :白色申告;
+endif
+:税額計算;
+if (還付?) then (yes)
+  :還付請求;
+else (no)
+  :納税;
+endif
+stop
+@enduml`,
+  mindmap: `@startmindmap
+* 日本の税制
+** 国税
+*** 所得税
+*** 法人税
+*** 消費税
+*** 相続税
+*** 贈与税
+** 地方税
+*** 住民税
+*** 事業税
+*** 固定資産税
+*** 地方消費税
+** 国際課税
+*** CFC税制
+*** 移転価格税制
+*** 外国税額控除
+*** 過少資本税制
+@endmindmap`,
+  gantt: `@startgantt
+title 確定申告スケジュール
+project starts 2026-01-01
+
+[資料収集] lasts 30 days
+[帳簿整理] lasts 20 days and starts 2026-01-15
+[決算書作成] lasts 10 days and starts at [帳簿整理]'s end
+[申告書作成] lasts 7 days and starts at [決算書作成]'s end
+[電子申告] lasts 3 days and starts at [申告書作成]'s end
+
+-- 申告期限 --
+[確定申告期限 3/15] happens 2026-03-15
+@endgantt`
+};
+
+function loadSample(name) {
+  editor.value = SAMPLES[name];
+  updateCharCount();
+  render();
+}
+
+function updateCharCount() {
+  document.getElementById('charCount').textContent = `${editor.value.length} chars`;
+}
+
+editor.addEventListener('input', () => {
+  updateCharCount();
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(render, 800);
+});
+
+editor.addEventListener('keydown', (e) => {
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    const start = editor.selectionStart;
+    editor.value = editor.value.substring(0, start) + '  ' + editor.value.substring(editor.selectionEnd);
+    editor.selectionStart = editor.selectionEnd = start + 2;
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    e.preventDefault();
+    render();
+  }
+});
+
+updateCharCount();
+render();
+</script>
+</body>
+</html>
