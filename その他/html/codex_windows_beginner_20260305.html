@@ -1,0 +1,1893 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenAI Codex Windows版 完全ガイド — 2026年3月版</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ========== CSS VARIABLES & RESET ========== */
+:root {
+  --bg: #0A0A0A;
+  --card: #16161A;
+  --card-hover: #1C1C22;
+  --border: rgba(255,255,255,0.06);
+  --border-strong: rgba(255,255,255,0.12);
+  --accent: #5E6AD2;
+  --accent-light: #7B85E8;
+  --accent-dim: rgba(94,106,210,0.15);
+  --accent-gradient: linear-gradient(135deg, #5E6AD2, #8B5CF6);
+  --accent-gradient-text: linear-gradient(135deg, #7B85E8, #A78BFA);
+  --text-primary: #FAFAFA;
+  --text-secondary: #8A8A9A;
+  --text-tertiary: #55556A;
+  --text-dim: #3A3A4A;
+  --code-bg: #111113;
+  --success: #34D399;
+  --warning: #FBBF24;
+  --danger: #F87171;
+  --info: #60A5FA;
+  --shadow-card: 0 0 0 1px rgba(255,255,255,0.06), 0 4px 24px rgba(0,0,0,0.4);
+  --shadow-card-hover: 0 0 0 1px rgba(255,255,255,0.1), 0 8px 40px rgba(0,0,0,0.5);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-xs: 6px;
+  --font-main: 'Outfit', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'SF Mono', 'Cascadia Code', 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  --max-width: 900px;
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Light theme */
+.light-theme {
+  --bg: #F5F5F7;
+  --card: #FFFFFF;
+  --card-hover: #FAFAFA;
+  --border: rgba(0,0,0,0.08);
+  --border-strong: rgba(0,0,0,0.14);
+  --accent: #4F5ABF;
+  --accent-light: #5E6AD2;
+  --accent-dim: rgba(79,90,191,0.1);
+  --accent-gradient: linear-gradient(135deg, #4F5ABF, #7C3AED);
+  --accent-gradient-text: linear-gradient(135deg, #4F5ABF, #7C3AED);
+  --text-primary: #1A1A2E;
+  --text-secondary: #5A5A6E;
+  --text-tertiary: #8A8A9A;
+  --text-dim: #B0B0C0;
+  --code-bg: #F0F0F3;
+  --shadow-card: 0 0 0 1px rgba(0,0,0,0.06), 0 4px 24px rgba(0,0,0,0.08);
+  --shadow-card-hover: 0 0 0 1px rgba(0,0,0,0.1), 0 8px 40px rgba(0,0,0,0.12);
+}
+
+*, *::before, *::after {
+  margin: 0; padding: 0; box-sizing: border-box;
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: var(--font-main);
+  background: var(--bg);
+  color: var(--text-primary);
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background var(--transition), color var(--transition);
+}
+
+/* ========== THEME TOGGLE ========== */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  background: var(--card);
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  box-shadow: var(--shadow-card);
+  transition: all var(--transition);
+  backdrop-filter: blur(12px);
+}
+.theme-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* ========== SCROLL TO TOP ========== */
+.scroll-top {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 4px 20px rgba(94,106,210,0.4);
+  transition: all var(--transition);
+}
+.scroll-top:hover { transform: translateY(-2px); }
+.scroll-top.visible { display: flex; }
+
+/* ========== LAYOUT ========== */
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ========== HERO ========== */
+.hero {
+  padding: 80px 0 60px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(94,106,210,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: var(--accent-dim);
+  border: 1px solid rgba(94,106,210,0.25);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--accent-light);
+  margin-bottom: 24px;
+  letter-spacing: 0.02em;
+}
+.hero-badge .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--success);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  background: var(--accent-gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 16px;
+}
+.hero .subtitle {
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  color: var(--text-secondary);
+  max-width: 640px;
+  margin: 0 auto 28px;
+  line-height: 1.7;
+}
+.hero-meta {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  font-size: 0.82rem;
+  color: var(--text-tertiary);
+}
+.hero-meta span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ========== TABLE OF CONTENTS ========== */
+.toc-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  padding: 32px;
+  margin-bottom: 48px;
+  transition: background var(--transition), border var(--transition);
+}
+.toc-card h2 {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 20px;
+}
+.toc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 6px;
+}
+.toc-item {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: var(--radius-xs);
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  transition: all var(--transition);
+  line-height: 1.5;
+}
+.toc-item:hover {
+  background: var(--accent-dim);
+  color: var(--text-primary);
+}
+.toc-num {
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 0.78rem;
+  min-width: 24px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ========== SECTIONS ========== */
+.section {
+  margin-bottom: 56px;
+}
+.section-header {
+  margin-bottom: 28px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.section-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+.section-title {
+  font-size: clamp(1.3rem, 3vw, 1.7rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+
+/* ========== CARDS ========== */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  padding: 28px;
+  margin-bottom: 20px;
+  transition: all var(--transition);
+}
+.card:hover {
+  border-color: var(--border-strong);
+}
+.card-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+.card-text {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  line-height: 1.8;
+}
+
+/* ========== PROSE ========== */
+.prose {
+  color: var(--text-secondary);
+  font-size: 0.93rem;
+  line-height: 1.85;
+}
+.prose p { margin-bottom: 16px; }
+.prose strong { color: var(--text-primary); font-weight: 600; }
+.prose a {
+  color: var(--accent-light);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose a:hover { color: var(--accent); }
+
+/* ========== CODE BLOCKS ========== */
+.code-block {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 20px 24px;
+  margin: 16px 0;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.7;
+  color: var(--text-primary);
+  position: relative;
+}
+.code-block .code-label {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  font-family: var(--font-main);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.code-block code { white-space: pre; }
+.code-comment { color: var(--text-tertiary); }
+.code-keyword { color: #C084FC; }
+.code-string { color: #34D399; }
+.code-flag { color: #60A5FA; }
+
+/* ========== TABLES ========== */
+.table-wrap {
+  overflow-x: auto;
+  margin: 20px 0;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+thead {
+  background: var(--accent-dim);
+}
+th {
+  text-align: left;
+  padding: 14px 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+td {
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: top;
+  line-height: 1.6;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(94,106,210,0.04); }
+
+/* ========== BADGES / TAGS ========== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.badge-green { background: rgba(52,211,153,0.15); color: #34D399; }
+.badge-blue { background: rgba(96,165,250,0.15); color: #60A5FA; }
+.badge-purple { background: rgba(168,139,250,0.15); color: #A78BFA; }
+.badge-yellow { background: rgba(251,191,36,0.15); color: #FBBF24; }
+.badge-red { background: rgba(248,113,113,0.15); color: #F87171; }
+
+/* ========== INFO / TIP / WARNING BOXES ========== */
+.info-box {
+  border-radius: var(--radius-sm);
+  padding: 20px 24px;
+  margin: 20px 0;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  border-left: 3px solid;
+  color: var(--text-secondary);
+}
+.info-box.tip {
+  background: rgba(52,211,153,0.06);
+  border-color: var(--success);
+}
+.info-box.warning {
+  background: rgba(251,191,36,0.06);
+  border-color: var(--warning);
+}
+.info-box.danger {
+  background: rgba(248,113,113,0.06);
+  border-color: var(--danger);
+}
+.info-box.info {
+  background: rgba(96,165,250,0.06);
+  border-color: var(--info);
+}
+.info-box-title {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+}
+
+/* ========== GRID LAYOUTS ========== */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+/* ========== FEATURE LIST ITEMS ========== */
+.feature-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  transition: all var(--transition);
+}
+.feature-item:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-card-hover);
+}
+.feature-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin-bottom: 14px;
+}
+.feature-item h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.feature-item p {
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* ========== STEP INDICATOR ========== */
+.steps { counter-reset: step; }
+.step {
+  position: relative;
+  padding-left: 56px;
+  padding-bottom: 28px;
+  margin-bottom: 8px;
+}
+.step::before {
+  counter-increment: step;
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent-dim);
+  border: 2px solid var(--accent);
+  color: var(--accent-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+.step::after {
+  content: '';
+  position: absolute;
+  left: 17px;
+  top: 40px;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+.step:last-child::after { display: none; }
+.step h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.step p, .step .code-block {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+
+/* ========== COMPARISON HIGHLIGHT ========== */
+.compare-highlight {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+.cmp-yes { background: rgba(52,211,153,0.12); color: var(--success); }
+.cmp-no { background: rgba(248,113,113,0.12); color: var(--danger); }
+.cmp-partial { background: rgba(251,191,36,0.12); color: var(--warning); }
+.cmp-new { background: rgba(96,165,250,0.12); color: var(--info); }
+
+/* ========== FOOTER ========== */
+.footer {
+  text-align: center;
+  padding: 48px 0;
+  border-top: 1px solid var(--border);
+  margin-top: 64px;
+}
+.footer p {
+  color: var(--text-tertiary);
+  font-size: 0.82rem;
+  line-height: 1.7;
+}
+.footer a { color: var(--accent-light); text-decoration: none; }
+.footer a:hover { text-decoration: underline; }
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .container { padding: 0 16px; }
+  .hero { padding: 56px 0 40px; }
+  .card { padding: 20px; }
+  .toc-grid { grid-template-columns: 1fr; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr; }
+  .hero-meta { flex-direction: column; align-items: center; gap: 8px; }
+  table { font-size: 0.78rem; }
+  th, td { padding: 10px 12px; }
+  .theme-toggle { top: 12px; right: 12px; width: 40px; height: 40px; font-size: 16px; }
+}
+@media (max-width: 480px) {
+  .step { padding-left: 44px; }
+  .code-block { padding: 14px 16px; font-size: 0.76rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- Theme Toggle Button -->
+<button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" aria-label="テーマ切り替え">🌙</button>
+
+<!-- Scroll to Top -->
+<button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- ============================================================ -->
+<!-- HERO SECTION -->
+<!-- ============================================================ -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      2026年3月5日 正式リリース
+    </div>
+    <h1>OpenAI Codex<br>Windows版 完全ガイド</h1>
+    <p class="subtitle">
+      Windows向けネイティブデスクトップアプリとして登場した Codex の全機能を、初心者にもわかりやすく徹底解説。インストールから実践活用、セキュリティ設計まで網羅します。
+    </p>
+    <div class="hero-meta">
+      <span>📅 最終更新: 2026年3月4日</span>
+      <span>📖 全14章・約30,000字</span>
+      <span>🏷️ Codex App 26.304</span>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+<!-- ============================================================ -->
+<!-- TABLE OF CONTENTS -->
+<!-- ============================================================ -->
+<nav class="toc-card">
+  <h2>Table of Contents — 目次</h2>
+  <div class="toc-grid">
+    <a href="#sec1" class="toc-item"><span class="toc-num">01</span>Codex Windows版とは何か</a>
+    <a href="#sec2" class="toc-item"><span class="toc-num">02</span>システム要件・対応OS</a>
+    <a href="#sec3" class="toc-item"><span class="toc-num">03</span>インストール方法</a>
+    <a href="#sec4" class="toc-item"><span class="toc-num">04</span>主な機能と特徴</a>
+    <a href="#sec5" class="toc-item"><span class="toc-num">05</span>使い方ガイド</a>
+    <a href="#sec6" class="toc-item"><span class="toc-num">06</span>対応モデル</a>
+    <a href="#sec7" class="toc-item"><span class="toc-num">07</span>料金・利用条件</a>
+    <a href="#sec8" class="toc-item"><span class="toc-num">08</span>セキュリティ・プライバシー</a>
+    <a href="#sec9" class="toc-item"><span class="toc-num">09</span>Windows固有の機能・注意点</a>
+    <a href="#sec10" class="toc-item"><span class="toc-num">10</span>ユースケース集</a>
+    <a href="#sec11" class="toc-item"><span class="toc-num">11</span>制限事項・既知の問題</a>
+    <a href="#sec12" class="toc-item"><span class="toc-num">12</span>4形態の徹底比較</a>
+    <a href="#sec13" class="toc-item"><span class="toc-num">13</span>Tips・ベストプラクティス</a>
+    <a href="#sec14" class="toc-item"><span class="toc-num">14</span>参考リンク・公式ドキュメント</a>
+  </div>
+</nav>
+
+<!-- ============================================================ -->
+<!-- SECTION 1: 概要 -->
+<!-- ============================================================ -->
+<section class="section" id="sec1">
+  <div class="section-header">
+    <div class="section-label">Section 01 — Overview</div>
+    <h2 class="section-title">Codex Windows版とは何か</h2>
+  </div>
+
+  <div class="card">
+    <div class="card-text prose">
+      <p>
+        <strong>OpenAI Codex（コーデックス）</strong>は、OpenAI が提供する AI コーディングエージェントです。自然言語の指示をもとにコードの読み書き・実行・レビュー・デバッグまで一貫して行い、開発者の生産性を大幅に引き上げることを目的としています。2025年4月に CLI ツールとして初登場し、2025年5月にはChatGPT 内のクラウド版（旧称 Codex）が、そして2026年2月にはmacOS デスクトップアプリがリリースされました。
+      </p>
+      <p>
+        そして <strong>2026年3月4日（日本時間3月5日）</strong>、ついに <strong>Windows 版ネイティブデスクトップアプリ</strong> が正式リリースされました。Microsoft Store からダウンロードでき、PowerShell 上でネイティブに動作する Windows サンドボックスを備えた、Windows 開発者待望の公式アプリケーションです。
+      </p>
+      <p>
+        Codex の中心にある思想は「<strong>すべてはコードで制御される</strong>」という前提です。コードの推論能力が高いモデルであればあるほど、技術的な作業だけでなく、ドキュメント作成、データ分析、テスト自動化といった幅広い知的作業を代行できるようになります。Codex アプリは、そうした AI エージェントへの指示・監督・協働を効率的に行うための「<strong>コマンドセンター</strong>」として設計されました。
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">CLI版・クラウド版・Mac版との違い</div>
+    <div class="card-text prose">
+      <p>
+        Codex には現在 4 つの利用形態があります。<strong>CLI版</strong>はターミナル上で動作する軽量なコーディングエージェントで、npm でインストールしてコマンドラインから直接操作します。<strong>クラウド版</strong>は ChatGPT のウェブインターフェース内で動作し、OpenAI が管理するクラウドコンテナ上でコードを実行します。ローカルにリポジトリがなくても GitHub 連携でコードを扱えるのが特徴です。<strong>Mac版デスクトップアプリ</strong>は 2026年2月2日にリリースされた macOS 専用のネイティブアプリで、Apple Silicon に最適化されています。
+      </p>
+      <p>
+        今回の <strong>Windows版デスクトップアプリ</strong>は、Mac版と同等のコア機能（マルチスレッド並列実行、ワークツリー、Skills、Automations、Git 統合、内蔵ターミナル）を備えつつ、Windows 固有の環境に最適化されています。PowerShell をデフォルトシェルとし、WSL（Windows Subsystem for Linux）を使わずにネイティブ Windows サンドボックスで安全に動作します。もちろん、WSL 環境を好むユーザーはエージェントを WSL モードに切り替えることも可能です。
+      </p>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>項目</th>
+          <th>CLI版</th>
+          <th>クラウド版</th>
+          <th>Mac版アプリ</th>
+          <th>Windows版アプリ</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>動作環境</strong></td>
+          <td>ターミナル</td>
+          <td>ブラウザ (ChatGPT)</td>
+          <td>macOS デスクトップ</td>
+          <td>Windows デスクトップ</td>
+        </tr>
+        <tr>
+          <td><strong>実行場所</strong></td>
+          <td>ローカルマシン</td>
+          <td>OpenAI クラウド</td>
+          <td>ローカルマシン</td>
+          <td>ローカルマシン</td>
+        </tr>
+        <tr>
+          <td><strong>GUI</strong></td>
+          <td>TUI（テキストUI）</td>
+          <td>ChatGPT Web UI</td>
+          <td>ネイティブ GUI</td>
+          <td>ネイティブ GUI</td>
+        </tr>
+        <tr>
+          <td><strong>並列エージェント</strong></td>
+          <td>制限あり</td>
+          <td>複数タスク対応</td>
+          <td><span class="badge badge-green">完全対応</span></td>
+          <td><span class="badge badge-green">完全対応</span></td>
+        </tr>
+        <tr>
+          <td><strong>リリース日</strong></td>
+          <td>2025年4月</td>
+          <td>2025年5月</td>
+          <td>2026年2月2日</td>
+          <td>2026年3月4日</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 2: システム要件 -->
+<!-- ============================================================ -->
+<section class="section" id="sec2">
+  <div class="section-header">
+    <div class="section-label">Section 02 — System Requirements</div>
+    <h2 class="section-title">システム要件・対応Windowsバージョン</h2>
+  </div>
+
+  <div class="card">
+    <div class="card-text prose">
+      <p>
+        Codex Windows版は Microsoft Store 経由で配布されるため、Microsoft Store に対応した Windows 10 以降のバージョンが必要です。推奨環境は Windows 11（最新アップデート適用済み）です。Codex はローカルで AI モデルを実行するわけではなく、OpenAI のクラウド API にリクエストを送信して結果を受け取る設計であるため、GPU は不要です。ただし、エージェントが生成したコードのビルドや実行にはそれなりのCPU・メモリリソースが望ましいです。
+      </p>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>要件</th>
+          <th>最低</th>
+          <th>推奨</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>OS</strong></td>
+          <td>Windows 10 (64bit)</td>
+          <td>Windows 11 (最新)</td>
+        </tr>
+        <tr>
+          <td><strong>CPU</strong></td>
+          <td>x64 プロセッサ</td>
+          <td>Intel Core i5 / AMD Ryzen 5 以上</td>
+        </tr>
+        <tr>
+          <td><strong>メモリ</strong></td>
+          <td>4 GB RAM</td>
+          <td>8 GB RAM 以上</td>
+        </tr>
+        <tr>
+          <td><strong>ストレージ</strong></td>
+          <td>500 MB 以上の空き</td>
+          <td>プロジェクトに応じて</td>
+        </tr>
+        <tr>
+          <td><strong>ネットワーク</strong></td>
+          <td>インターネット接続必須</td>
+          <td>高速・安定した回線</td>
+        </tr>
+        <tr>
+          <td><strong>GPU</strong></td>
+          <td>不要</td>
+          <td>不要（UI描画のみ）</td>
+        </tr>
+        <tr>
+          <td><strong>Git</strong></td>
+          <td>必須（ワークツリー・diff 機能）</td>
+          <td><code>winget install Git.Git</code></td>
+        </tr>
+        <tr>
+          <td><strong>Node.js</strong></td>
+          <td>推奨（タスク実行効率化）</td>
+          <td>LTS v22 以上</td>
+        </tr>
+        <tr>
+          <td><strong>WSL</strong></td>
+          <td>オプション</td>
+          <td>WSL2 + Ubuntu（Linux環境利用時）</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="info-box info">
+    <div class="info-box-title">ポイント</div>
+    Codex はコード生成・実行をローカルで行いますが、AI の推論自体は OpenAI のクラウドで処理されます。そのため、ローカルに強力な GPU は不要で、安定したインターネット接続が最も重要な要件です。
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 3: インストール方法 -->
+<!-- ============================================================ -->
+<section class="section" id="sec3">
+  <div class="section-header">
+    <div class="section-label">Section 03 — Installation</div>
+    <h2 class="section-title">インストール方法</h2>
+  </div>
+
+  <div class="card">
+    <div class="card-text prose">
+      <p>
+        Windows版 Codex アプリは <strong>Microsoft Store</strong> から無料でダウンロードできます。エンタープライズ環境では、管理者が Microsoft Store のアプリ配布機能を通じて組織内に一括展開することも可能です。以下の手順で、数分でセットアップが完了します。
+      </p>
+    </div>
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <h4>Microsoft Store からダウンロード</h4>
+      <p>
+        Microsoft Store を開き、「<strong>Codex</strong>」で検索するか、直接リンク（<code>https://apps.microsoft.com/detail/9plm9xgg6vks</code>）にアクセスします。「入手」ボタンをクリックすると自動でダウンロード・インストールされます。
+      </p>
+    </div>
+    <div class="step">
+      <h4>Codex を起動してサインイン</h4>
+      <p>
+        インストール後、スタートメニューから「Codex」を起動します。初回起動時にサインイン画面が表示されるので、<strong>ChatGPT アカウント</strong>または<strong>OpenAI API キー</strong>でログインします。ChatGPT アカウントでログインすると、クラウドスレッドやGitHub連携などのフル機能が利用できます。API キーでのログインは一部機能が制限されます。
+      </p>
+    </div>
+    <div class="step">
+      <h4>プロジェクトフォルダを選択</h4>
+      <p>
+        ログイン後、「Let's build」画面でプロジェクトフォルダを選択します。既存のGitリポジトリを開いても、新しいフォルダを指定しても構いません。WSL ファイルシステム上のフォルダを開く場合は、ファイルダイアログで <code>\\wsl$\</code> と入力して Linux ディストリビューション内のフォルダを参照できます。
+      </p>
+    </div>
+    <div class="step">
+      <h4>開発ツールをインストール（推奨）</h4>
+      <p>
+        Codex を最大限に活用するために、いくつかの開発ツールを事前にインストールしておくと便利です。内蔵ターミナルまたは PowerShell から以下を実行します。
+      </p>
+      <div class="code-block">
+        <span class="code-label">PowerShell</span>
+        <code><span class="code-comment"># Git — レビュー・diff・ワークツリーに必須</span>
+winget install --id Git.Git
+
+<span class="code-comment"># Node.js — エージェントのタスク実行効率化</span>
+winget install --id OpenJS.NodeJS.LTS
+
+<span class="code-comment"># Python — 各種スクリプト実行</span>
+winget install --id Python.Python.3.14
+
+<span class="code-comment"># .NET SDK — Windows ネイティブアプリ開発時</span>
+winget install --id Microsoft.DotNet.SDK.10
+
+<span class="code-comment"># GitHub CLI — PR作成等のGitHub連携</span>
+winget install --id GitHub.cli</code>
+      </div>
+    </div>
+    <div class="step">
+      <h4>最初のメッセージを送信</h4>
+      <p>
+        プロジェクトを選択したら、スレッドモードを「<strong>Local</strong>」に設定し、テキスト入力欄に日本語または英語で指示を入力します。たとえば「このプロジェクトの構造を説明して」「READMEを日本語で作成して」「テストが失敗している原因を調べて」など、自然言語でなんでも聞けます。
+      </p>
+    </div>
+  </div>
+
+  <div class="info-box tip">
+    <div class="info-box-title">アップデート方法</div>
+    Microsoft Store を開き、「ダウンロード」セクションで「更新プログラムの確認」をクリックすると最新版に自動アップデートされます。Codex は頻繁にアップデートされるため（2026年2〜3月は日次レベル）、こまめな更新を推奨します。
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 4: 主な機能と特徴 -->
+<!-- ============================================================ -->
+<section class="section" id="sec4">
+  <div class="section-header">
+    <div class="section-label">Section 04 — Features</div>
+    <h2 class="section-title">主な機能と特徴</h2>
+  </div>
+
+  <div class="card">
+    <div class="card-text prose">
+      <p>
+        Codex デスクトップアプリは、単なる「チャットでコード生成」ツールではありません。複数のAIエージェントを並行して管理し、長時間にわたるタスクを監督・協働するための「<strong>エージェントのコマンドセンター</strong>」です。ここでは Windows 版に搭載された主要機能を解説します。
+      </p>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="feature-item">
+      <div class="feature-icon">🧵</div>
+      <h4>マルチスレッド並列実行</h4>
+      <p>複数のエージェントスレッドをプロジェクト単位で管理し、タスク間をシームレスに切り替えられます。コンテキストを失わずに複数の作業を同時進行できます。</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">🌳</div>
+      <h4>Git ワークツリー</h4>
+      <p>各エージェントが独立した Git ワークツリーで作業するため、同じリポジトリでの並行作業が競合なく行えます。メインブランチに影響を与えずに実験できます。</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">🔧</div>
+      <h4>Skills（スキル）</h4>
+      <p>指示・リソース・スクリプトをバンドルしたスキルで Codex の能力を拡張。Figma デザイン実装、画像生成、クラウドデプロイ、ドキュメント作成など多数のスキルが用意されています。</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">⚡</div>
+      <h4>Automations（自動化）</h4>
+      <p>定期スケジュールで Codex をバックグラウンド実行。CI障害の要約、イシュートリアージ、日次レポート生成など反復タスクを自動化できます。</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">📝</div>
+      <h4>Git 統合 & Diff レビュー</h4>
+      <p>変更差分をアプリ内でレビュー、インラインコメント、チャンクの stage / revert、コミット、プッシュ、PR 作成までアプリを離れずに完結。</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">💻</div>
+      <h4>内蔵ターミナル</h4>
+      <p>各スレッドごとに専用ターミナルを内蔵。テスト実行、dev サーバー起動、Git 操作などをアプリ内で直接行えます。PowerShell、CMD、Git Bash、WSL から選択可能。</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">🔌</div>
+      <h4>MCP サポート</h4>
+      <p>Model Context Protocol（MCP）で外部サービスと接続。CLI や IDE 拡張と MCP 設定を共有し、設定済みのサーバーをそのまま利用できます。</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">🖥️</div>
+      <h4>Windows ネイティブ実行</h4>
+      <p>PowerShell + ネイティブ Windows サンドボックスでWSL不要で動作。WSL/VM なしでもセキュアなコード実行が可能です。</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">🔗</div>
+      <h4>IDE 連携同期</h4>
+      <p>VS Code の Codex IDE 拡張と自動同期。エディタで開いているファイルのコンテキストをアプリ側が追跡し、双方向でスレッドを共有します。</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">🎤</div>
+      <h4>音声入力</h4>
+      <p>Ctrl+M を押しながら話すと音声がテキストに変換されます。手がふさがっているときもプロンプトを入力可能。</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">🪟</div>
+      <h4>ポップアウトウィンドウ</h4>
+      <p>会話スレッドを別ウィンドウに切り離し可能。Always-on-Top にも対応し、ブラウザやエディタと並べて使えます。</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">🖼️</div>
+      <h4>画像入力 & 生成</h4>
+      <p>画像のドラッグ＆ドロップでコンテキスト追加。スクリーンショット連携や GPT Image を使った画像生成スキルにも対応。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 5: 使い方ガイド -->
+<!-- ============================================================ -->
+<section class="section" id="sec5">
+  <div class="section-header">
+    <div class="section-label">Section 05 — Usage Guide</div>
+    <h2 class="section-title">使い方ガイド</h2>
+  </div>
+
+  <div class="card">
+    <div class="card-title">基本的なワークフロー</div>
+    <div class="card-text prose">
+      <p>
+        Codex アプリを起動すると、左サイドバーにプロジェクト一覧、中央にスレッドエリア、右側に diff パネルとターミナルが配置されたインターフェースが表示されます。CLI や IDE 拡張の利用履歴がある場合は、過去のプロジェクトやセッションも自動的に引き継がれます。
+      </p>
+    </div>
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <h4>プロジェクトを開く</h4>
+      <p>
+        サイドバーの「＋」ボタンまたは <code>Ctrl+O</code> でプロジェクトフォルダを選択します。Git リポジトリを開くと、ワークツリーやブランチ管理機能がフルに使えます。複数プロジェクトを同時に登録して切り替えることも可能です。
+      </p>
+    </div>
+    <div class="step">
+      <h4>スレッドモードを選択</h4>
+      <p>
+        新しいスレッドを開始する際、3つのモードから選択します。<strong>Local</strong> は現在のプロジェクトディレクトリで直接作業します。<strong>Worktree</strong> は Git ワークツリーを自動作成し、変更を本体から隔離して作業します。<strong>Cloud</strong> は OpenAI のクラウド環境でリモート実行します。通常は Local または Worktree を使用します。
+      </p>
+    </div>
+    <div class="step">
+      <h4>自然言語で指示する</h4>
+      <p>
+        入力欄に日本語で指示を入力し、送信します。Codex はプロジェクトのコードを読み、必要に応じてファイルの編集やコマンド実行を行います。
+      </p>
+      <div class="code-block">
+        <span class="code-label">プロンプト例</span>
+        <code><span class="code-comment"># バグ修正</span>
+<span class="code-string">"src/api/auth.ts の認証ロジックで、トークン期限切れ時に500エラーが返る問題を修正して"</span>
+
+<span class="code-comment"># 機能追加</span>
+<span class="code-string">"ユーザーダッシュボードにCSVエクスポート機能を追加して。ボタンのデザインは既存のUIに合わせて"</span>
+
+<span class="code-comment"># コードベースの理解</span>
+<span class="code-string">"このプロジェクトのアーキテクチャを図で説明して。主要なモジュール間の依存関係を示して"</span>
+
+<span class="code-comment"># テスト作成</span>
+<span class="code-string">"src/utils/ ディレクトリのすべての関数に対するユニットテストを作成して"</span></code>
+      </div>
+    </div>
+    <div class="step">
+      <h4>承認 (Approval) を管理する</h4>
+      <p>
+        Codex がファイル書き込みやコマンド実行を行う際、サンドボックスの設定に応じて承認を求めるダイアログが表示されます。「Approve once（今回だけ許可）」や「Approve for this session（このセッション中許可）」を選んで、安全性と利便性のバランスを取ります。
+      </p>
+    </div>
+    <div class="step">
+      <h4>変更をレビューする</h4>
+      <p>
+        エージェントが作業を完了すると、diff パネルに変更差分が表示されます。インラインでコメントを追加したり、特定のチャンク（変更塊）を stage / revert したりできます。修正が必要な場合はコメントで指示すると、Codex が修正を加えます。
+      </p>
+    </div>
+    <div class="step">
+      <h4>コミット・プッシュ・PR作成</h4>
+      <p>
+        レビュー完了後、アプリ内から直接 Git コミット、プッシュ、プルリクエスト作成まで行えます。GitHub CLI (<code>gh</code>) がインストールされていれば、PR の作成もワンクリックです。
+      </p>
+    </div>
+  </div>
+
+  <div class="info-box tip">
+    <div class="info-box-title">便利なキーボードショートカット</div>
+    <code>Ctrl+J</code> — ターミナルの表示/非表示。<code>Ctrl+K</code> — コマンドパレットを開く。<code>Ctrl+M</code>(長押し) — 音声入力。<code>Ctrl+O</code> — プロジェクトを開く。
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 6: 対応モデル -->
+<!-- ============================================================ -->
+<section class="section" id="sec6">
+  <div class="section-header">
+    <div class="section-label">Section 06 — Models</div>
+    <h2 class="section-title">対応モデル</h2>
+  </div>
+
+  <div class="card">
+    <div class="card-text prose">
+      <p>
+        Codex は OpenAI の最先端モデルを活用してコーディングタスクを実行します。デフォルトでは最新の推奨モデルが自動選択されますが、タスクの性質やコスト・速度の好みに応じてモデルを切り替えることができます。アプリの設定画面やスレッド内の <code>/model</code> コマンドで変更可能です。
+      </p>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>モデル名</th>
+          <th>特徴</th>
+          <th>アプリ対応</th>
+          <th>利用プラン</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>GPT-5.3-Codex</strong></td>
+          <td>最も高性能なコーディングモデル。フロンティア推論＋専門知識を両立</td>
+          <td><span class="badge badge-green">対応</span></td>
+          <td>Plus / Pro / Business / Enterprise</td>
+        </tr>
+        <tr>
+          <td><strong>GPT-5.3-Codex-Spark</strong></td>
+          <td>超高速リアルタイムモデル（~1000 tokens/s）。日常的な編集作業に最適</td>
+          <td><span class="badge badge-green">対応</span></td>
+          <td>Pro のみ（研究プレビュー）</td>
+        </tr>
+        <tr>
+          <td><strong>GPT-5.2-Codex</strong></td>
+          <td>実務的なコーディングモデル。GPT-5.3 の前世代</td>
+          <td><span class="badge badge-green">対応</span></td>
+          <td>全有料プラン</td>
+        </tr>
+        <tr>
+          <td><strong>GPT-5.1-Codex-Mini</strong></td>
+          <td>軽量・コスト効率重視モデル。使用量制限を約4倍に延長可能</td>
+          <td><span class="badge badge-green">対応</span></td>
+          <td>全有料プラン</td>
+        </tr>
+        <tr>
+          <td><strong>GPT-5.2 / GPT-5.1</strong></td>
+          <td>汎用エージェントモデル。コーディング以外のタスクにも対応</td>
+          <td><span class="badge badge-green">対応</span></td>
+          <td>全有料プラン</td>
+        </tr>
+        <tr>
+          <td><strong>サードパーティモデル</strong></td>
+          <td>Chat Completions / Responses API 対応の任意モデルを指定可能</td>
+          <td><span class="badge badge-blue">設定で対応</span></td>
+          <td>API キー認証時</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">モデル設定方法</div>
+    <div class="card-text prose">
+      <p>
+        デフォルトモデルは <code>config.toml</code> ファイルで設定できます。CLI・IDE 拡張・デスクトップアプリでこの設定ファイルを共有するため、一度設定すればすべての Codex 環境に反映されます。
+      </p>
+    </div>
+    <div class="code-block">
+      <span class="code-label">config.toml</span>
+      <code><span class="code-comment"># デフォルトモデルを指定</span>
+<span class="code-keyword">model</span> = <span class="code-string">"gpt-5.3-codex"</span>
+
+<span class="code-comment"># コスト効率を重視する場合</span>
+<span class="code-comment"># model = "gpt-5.1-codex-mini"</span></code>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 7: 料金・利用条件 -->
+<!-- ============================================================ -->
+<section class="section" id="sec7">
+  <div class="section-header">
+    <div class="section-label">Section 07 — Pricing</div>
+    <h2 class="section-title">料金・利用条件</h2>
+  </div>
+
+  <div class="card">
+    <div class="card-text prose">
+      <p>
+        Codex の利用料金は ChatGPT のサブスクリプションに含まれています。アプリ自体は無料でダウンロード可能ですが、使用するには ChatGPT の有料プラン（Plus 以上）のアカウント、または OpenAI API キーが必要です。なお、<strong>期間限定</strong>で ChatGPT Free / Go ユーザーにも Codex が開放されており、有料プランユーザーの使用量制限は通常の2倍に引き上げられています。
+      </p>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>プラン</th>
+          <th>ローカル / 5h</th>
+          <th>クラウド / 5h</th>
+          <th>コードレビュー / 週</th>
+          <th>月額</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Free / Go</strong></td>
+          <td colspan="3" style="text-align:center"><span class="badge badge-yellow">期間限定で利用可能</span></td>
+          <td>$0 / $15</td>
+        </tr>
+        <tr>
+          <td><strong>Plus</strong></td>
+          <td>45〜225 メッセージ</td>
+          <td>10〜60 タスク</td>
+          <td>10〜25 PR</td>
+          <td>$20</td>
+        </tr>
+        <tr>
+          <td><strong>Pro</strong></td>
+          <td>300〜1,500 メッセージ</td>
+          <td>50〜400 タスク</td>
+          <td>100〜250 PR</td>
+          <td>$200</td>
+        </tr>
+        <tr>
+          <td><strong>Business</strong></td>
+          <td>45〜225 メッセージ</td>
+          <td>10〜60 タスク</td>
+          <td>10〜25 PR</td>
+          <td>$25/ユーザー</td>
+        </tr>
+        <tr>
+          <td><strong>Enterprise / Edu</strong></td>
+          <td colspan="3" style="text-align:center">クレジットに応じてスケール（固定上限なし）</td>
+          <td>要問合せ</td>
+        </tr>
+        <tr>
+          <td><strong>API キー</strong></td>
+          <td colspan="3" style="text-align:center">トークン従量課金（クラウド機能なし）</td>
+          <td>従量制</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">クレジットシステム</div>
+    <div class="card-text prose">
+      <p>
+        使用量制限に達した場合、追加のクレジットを購入して作業を継続できます。クレジットのコストはタスクのサイズや使用モデルにより変動しますが、目安として GPT-5.3-Codex のローカルタスクが約5クレジット/メッセージ、クラウドタスクが約25クレジット/メッセージです。GPT-5.1-Codex-Mini を使うとローカルタスクが約1クレジット/メッセージまで抑えられます。1,000 クレジットのパックが $40 で購入可能です。
+      </p>
+      <p>
+        現在の使用状況は <code>chatgpt.com/codex/settings/usage</code> のダッシュボードで確認でき、CLI セッション中は <code>/status</code> コマンドで残量を確認できます。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 8: セキュリティ・プライバシー -->
+<!-- ============================================================ -->
+<section class="section" id="sec8">
+  <div class="section-header">
+    <div class="section-label">Section 08 — Security & Privacy</div>
+    <h2 class="section-title">セキュリティ・プライバシー</h2>
+  </div>
+
+  <div class="card">
+    <div class="card-text prose">
+      <p>
+        Codex は「<strong>セキュリティ・バイ・デザイン</strong>」の理念で設計されており、ローカル実行時のセキュリティは 2 つのレイヤーで構成されています。<strong>サンドボックス</strong>は OS レベルでエージェントがアクセスできるファイルシステムとネットワークを制限し、<strong>承認ポリシー</strong>はエージェントがアクションを実行する前にユーザーの許可を求めるタイミングを制御します。
+      </p>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="feature-item">
+      <div class="feature-icon">🔒</div>
+      <h4>Windows ネイティブ サンドボックス</h4>
+      <p>Windows 版では、Restricted Token アプローチとファイルシステム ACL を使用して書き込み可能なディレクトリを制限します。専用の Sandbox User としてコマンドを実行し、Windows Firewall ルールでネットワークアクセスも制限します。unelevated / elevated の 2 モードから選択可能です。</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">🌐</div>
+      <h4>ネットワーク制御</h4>
+      <p>デフォルトでネットワークアクセスはオフ。Web 検索はキャッシュ経由で提供され、プロンプトインジェクションのリスクを低減します。ライブ検索やネットワークアクセスは明示的に有効化する必要があります。</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">📂</div>
+      <h4>保護パス</h4>
+      <p><code>.git</code>、<code>.agents</code>、<code>.codex</code> ディレクトリは書き込み可能なルートであっても自動的に読み取り専用として保護されます。<code>~/.ssh</code> などの機密ディレクトリへのサンドボックスからの読み取りアクセスもブロックされます。</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">📊</div>
+      <h4>監査ログ (OTel)</h4>
+      <p>OpenTelemetry によるオプトイン監査ログに対応。API リクエスト、ツール承認判断、コマンド実行結果などを構造化ログとして自社のコレクターに送信可能です。デフォルトではオフです。</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">サンドボックス設定の組み合わせ</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>用途</th>
+            <th>サンドボックスモード</th>
+            <th>動作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Auto（デフォルト）</strong></td>
+            <td>workspace-write + on-request</td>
+            <td>ワークスペース内の読み書き・コマンド実行は自動。外部アクセスは承認が必要</td>
+          </tr>
+          <tr>
+            <td><strong>読み取り専用</strong></td>
+            <td>read-only + on-request</td>
+            <td>ファイル読み取りと質問応答のみ。編集・実行・ネットワークは承認が必要</td>
+          </tr>
+          <tr>
+            <td><strong>CI向け</strong></td>
+            <td>read-only + never</td>
+            <td>読み取りのみ、承認プロンプトなし</td>
+          </tr>
+          <tr>
+            <td><strong>フルアクセス</strong></td>
+            <td>danger-full-access</td>
+            <td>サンドボックスも承認もなし（<span class="badge badge-red">非推奨</span>）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-text prose">
+      <p>
+        <strong>プライバシーについて</strong> — OpenAI API に送信されたデータは、ユーザーが明示的にオプトインしない限り、OpenAI モデルのトレーニングに使用されません（2023年3月1日以降のポリシー）。Business / Enterprise プランでは、デフォルトでビジネスデータがトレーニングに使用されない設定になっています。ローカル実行時のコードはユーザーのマシン上で処理され、プロンプトと応答のみがOpenAI のサーバーと通信します。
+      </p>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <span class="code-label">config.toml — Windows サンドボックス設定</span>
+    <code><span class="code-comment"># Windows ネイティブ サンドボックスモード</span>
+<span class="code-keyword">[windows]</span>
+<span class="code-keyword">sandbox</span> = <span class="code-string">"elevated"</span>  <span class="code-comment"># "unelevated" または "elevated"</span>
+
+<span class="code-comment"># ワークスペース書き込みモードでのネットワークアクセス（デフォルト: false）</span>
+<span class="code-keyword">[sandbox_workspace_write]</span>
+<span class="code-keyword">network_access</span> = <span class="code-keyword">false</span>
+
+<span class="code-comment"># Web検索設定（"cached" | "live" | "disabled"）</span>
+<span class="code-keyword">web_search</span> = <span class="code-string">"cached"</span>
+
+<span class="code-comment"># OTel 監査ログ（オプション）</span>
+<span class="code-keyword">[otel]</span>
+<span class="code-keyword">environment</span> = <span class="code-string">"prod"</span>
+<span class="code-keyword">exporter</span> = <span class="code-string">"none"</span>
+<span class="code-keyword">log_user_prompt</span> = <span class="code-keyword">false</span></code>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 9: Windows固有の機能・注意点 -->
+<!-- ============================================================ -->
+<section class="section" id="sec9">
+  <div class="section-header">
+    <div class="section-label">Section 09 — Windows-Specific</div>
+    <h2 class="section-title">Windows固有の機能・注意点</h2>
+  </div>
+
+  <div class="card">
+    <div class="card-text prose">
+      <p>
+        Windows 版 Codex アプリには、Windows 環境ならではの設定項目や注意点がいくつかあります。ここでは PowerShell 実行ポリシー、WSL 連携、パス問題、エディタ設定などの Windows 固有のトピックを解説します。
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">PowerShell 実行ポリシーの問題</div>
+    <div class="card-text prose">
+      <p>
+        PowerShell のデフォルト実行ポリシーが <code>Restricted</code> の場合、Codex エージェントや内蔵ターミナルで <code>npm.ps1 cannot be loaded because running scripts is disabled on this system.</code> のようなエラーが発生することがあります。これは Codex がスクリプトを生成して実行する際にもブロックされる原因となります。
+      </p>
+    </div>
+    <div class="code-block">
+      <span class="code-label">PowerShell — 実行ポリシーの変更</span>
+      <code><span class="code-comment"># 現在のポリシーを確認</span>
+Get-ExecutionPolicy
+
+<span class="code-comment"># RemoteSigned に変更（ローカルスクリプトは許可、リモートは署名が必要）</span>
+Set-ExecutionPolicy <span class="code-flag">-ExecutionPolicy</span> RemoteSigned</code>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">WSL との連携</div>
+    <div class="card-text prose">
+      <p>
+        Codex アプリはデフォルトで Windows ネイティブエージェント（PowerShell ベース）で動作しますが、設定画面からエージェントを WSL モードに切り替えることもできます。WSL モードでは Linux のサンドボックス実装（Landlock + seccomp）が使用されます。切り替え後はアプリの再起動が必要です。
+      </p>
+      <p>
+        WSL プロジェクトを Windows ネイティブエージェントで開く場合は、ファイルダイアログで <code>\\wsl$\</code> を入力して WSL 内のフォルダを参照できます。ただし、パフォーマンスの観点から、Windows ネイティブエージェント使用時はプロジェクトを Windows ファイルシステム上に置き、WSL からは <code>/mnt/c/...</code> 経由でアクセスする構成が推奨されます。
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">内蔵ターミナルの選択</div>
+    <div class="card-text prose">
+      <p>
+        アプリ設定で内蔵ターミナルのデフォルトシェルを選択できます。PowerShell、Command Prompt、Git Bash、WSL の 4 つのオプションがあり、インストールされているものが表示されます。エージェントモードとターミナル設定は独立しているため、エージェントを WSL で動かしつつターミナルは PowerShell を使う、といった組み合わせも可能です。変更は新しいターミナルセッションから反映されます。
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">管理者権限での実行</div>
+    <div class="card-text prose">
+      <p>
+        Codex が昇格された権限（管理者権限）でコマンドを実行する必要がある場合は、Codex アプリ自体を管理者として起動する必要があります。スタートメニューで「Codex」を右クリックし、「管理者として実行」を選択します。エージェントはアプリのパーミッションレベルを継承します。
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Windows ローカル環境スクリプト</div>
+    <div class="card-text prose">
+      <p>
+        Codex アプリの「ローカル環境」機能では、プロジェクトごとにセットアップスクリプトやアクション（ワンクリックで実行できるコマンド）を定義できます。<code>npm run dev</code> のようなクロスプラットフォームコマンドなら共有スクリプト1つで済みますが、Windows 固有の処理が必要な場合は Windows 専用のセットアップスクリプトやアクションを作成します。アクションは内蔵ターミナルの環境で実行され、セットアップスクリプトはエージェント環境（WSL またはPowerShell）で実行されます。
+      </p>
+    </div>
+  </div>
+
+  <div class="info-box warning">
+    <div class="info-box-title">パスの注意点</div>
+    WSL ファイルシステム上のプロジェクトを直接 Windows ネイティブエージェントで扱うと、<code>/mnt/c/</code> 経由のパスは I/O が遅く、シンボリックリンクやパーミッションの問題が発生しやすくなります。WSL を使う場合はリポジトリを <code>~/code/</code> 以下の Linux ネイティブパスに置き、エージェントも WSL モードにするか、Windows ネイティブで使うなら C: ドライブ上にプロジェクトを配置しましょう。
+  </div>
+
+  <div class="info-box danger">
+    <div class="info-box-title">Git 未インストール時の制限</div>
+    Windows にネイティブの Git がインストールされていない場合、レビューパネル、diff 表示、ワークツリーなどの Git 関連機能が使用できません。<code>winget install Git.Git</code> で必ず事前にインストールしてください。
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 10: ユースケース集 -->
+<!-- ============================================================ -->
+<section class="section" id="sec10">
+  <div class="section-header">
+    <div class="section-label">Section 10 — Use Cases</div>
+    <h2 class="section-title">ユースケース集</h2>
+  </div>
+
+  <div class="card">
+    <div class="card-text prose">
+      <p>
+        Codex Windows版は、日常の開発作業からエンタープライズレベルの自動化まで幅広いシーンで活用できます。以下に Windows 開発者向けの具体的な活用シーンを紹介します。
+      </p>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="feature-item">
+      <div class="feature-icon">🐛</div>
+      <h4>バグ修正・デバッグ</h4>
+      <p>エラーログやスタックトレースを貼り付けて「この問題を修正して」と指示するだけ。Codex がコードベースを探索し、原因を特定してパッチを提案します。C#/.NET プロジェクトの例外処理修正にも対応。</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">🏗️</div>
+      <h4>.NET / C# 開発</h4>
+      <p>ASP.NET Core の API エンドポイント追加、Entity Framework のマイグレーション作成、WPF / WinUI のUIコンポーネント生成など、Windows ネイティブ開発に活躍。.NET SDK との連携で MSBuild プロジェクトもスムーズに操作。</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">🧪</div>
+      <h4>テスト自動生成</h4>
+      <p>「このディレクトリのすべての関数にユニットテストを作成して」と指示すると、xUnit / NUnit / Jest 等のテストコードを自動生成。既存テストのパターンに合わせて書くことも可能。</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">📄</div>
+      <h4>ドキュメント生成</h4>
+      <p>コードベースから README、API ドキュメント、アーキテクチャ図を自動作成。PDF / DOCX / スプレッドシート生成のスキルも用意されています。</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">🔄</div>
+      <h4>レガシーコード移行</h4>
+      <p>古い VB.NET コードの C# への変換、.NET Framework から .NET 8/9 への移行、JavaScript から TypeScript への段階的変換など、大規模なリファクタリングを並列で進行。</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">🎨</div>
+      <h4>Figma → UI 実装</h4>
+      <p>Figma スキルを使ってデザインファイルからコンテキストとアセットを取得し、React / Vue / HTML のプロダクション品質UIコードを生成。デザイナーと開発者の橋渡しに。</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">🚀</div>
+      <h4>クラウドデプロイ</h4>
+      <p>Vercel / Netlify / Cloudflare / Render へのデプロイスキルで、ローカルで開発したアプリを数クリックでクラウドに公開。CI/CD パイプラインの構築も自然言語で指示可能。</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">📋</div>
+      <h4>日次自動レポート</h4>
+      <p>Automations で毎朝 CI 障害の要約、Sentry エラーのトリアージ、コードベースの変更サマリーを自動生成。レビューキューに結果が届くので確認するだけ。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 11: 制限事項・既知の問題 -->
+<!-- ============================================================ -->
+<section class="section" id="sec11">
+  <div class="section-header">
+    <div class="section-label">Section 11 — Limitations</div>
+    <h2 class="section-title">制限事項・既知の問題</h2>
+  </div>
+
+  <div class="card">
+    <div class="card-text prose">
+      <p>
+        Windows 版 Codex アプリは 2026年3月4日にリリースされたばかりであり、今後のアップデートで改善される見込みのある制限事項や既知の問題がいくつか存在します。
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Windows版の制限事項</div>
+    <div class="card-text prose">
+      <p>
+        <strong>リリース直後のバージョン問題</strong> — 初期に Microsoft Store からダウンロードした一部のユーザーから「This version of the app is no longer supported. Download the latest version here.」というメッセージが報告されています。Microsoft Store の「更新プログラムの確認」から最新版へ更新することで解決します。Codex は非常に頻繁にアップデートされるため、インストール直後に更新確認を行うことを推奨します。
+      </p>
+      <p>
+        <strong>Automations のローカル実行制限</strong> — Automations は現在、ラップトップの電源がオンの状態でのみ実行されます。クラウドベースのトリガーによるバックグラウンド実行は今後のアップデートで予定されています。
+      </p>
+      <p>
+        <strong>C++ ビルドツールの不足</strong> — 一部のネイティブ依存関係（Node.js のネイティブアドオン等）のビルドに Visual Studio Build Tools（C++ workload）や Microsoft Visual C++ Redistributable (x64) が必要な場合があります。<code>winget install --id Microsoft.VisualStudio.2022.BuildTools -e</code> でインストール後、VS Code を完全に再起動してください。
+      </p>
+      <p>
+        <strong>クラウドタスクのモデル変更不可</strong> — クラウドスレッドのデフォルトモデルは現在変更できません。ローカルスレッドではモデルの切り替えが可能です。
+      </p>
+      <p>
+        <strong>GPT-5.3-Codex-Spark の制限</strong> — Spark モデルは Pro プラン限定の研究プレビューであり、API からの利用やクレジット購入による利用はできません。専用の低レイテンシハードウェア上で動作するため、使用量は需要に応じて調整されます。
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Mac版との差異</div>
+    <div class="card-text prose">
+      <p>
+        コア機能（マルチスレッド、ワークツリー、Skills、Automations、Git 統合、MCP、IDE 同期）は Mac 版と同等です。主な差異はサンドボックスの実装方式にあります。Mac版は macOS の Seatbelt ポリシー（<code>sandbox-exec</code>）を使用するのに対し、Windows 版は Restricted Token + ファイルシステムACL + Windows Firewall による独自のサンドボックスを使用します。
+      </p>
+      <p>
+        Mac 版は Apple Silicon (M1/M2/M3/M4) に最適化されていますが、Windows 版は x64 プロセッサ上で動作します。内蔵ターミナルのデフォルトシェルも Mac は zsh/bash であるのに対し、Windows は PowerShell です。また、Windows 版では WSL を介した Linux エージェントモードの選択肢がある一方、Mac 版にはこの切り替えはありません（Mac は常にネイティブ Unix 環境）。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 12: 4形態の徹底比較 -->
+<!-- ============================================================ -->
+<section class="section" id="sec12">
+  <div class="section-header">
+    <div class="section-label">Section 12 — Comprehensive Comparison</div>
+    <h2 class="section-title">CLI版・クラウド版・Mac版・Windows版の徹底比較</h2>
+  </div>
+
+  <div class="card">
+    <div class="card-text prose">
+      <p>
+        Codex の4つの利用形態を全面的に比較します。自分の開発環境や利用シーンに最適な選択肢を見つけるための参考にしてください。
+      </p>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="min-width:180px">比較項目</th>
+          <th>CLI版</th>
+          <th>クラウド版（ChatGPT）</th>
+          <th>Mac版アプリ</th>
+          <th>Windows版アプリ</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>リリース日</strong></td>
+          <td>2025年4月</td>
+          <td>2025年5月</td>
+          <td>2026年2月2日</td>
+          <td>2026年3月4日</td>
+        </tr>
+        <tr>
+          <td><strong>インストール方法</strong></td>
+          <td>npm install -g @openai/codex</td>
+          <td>不要（ブラウザ）</td>
+          <td>公式サイトからDMG</td>
+          <td>Microsoft Store</td>
+        </tr>
+        <tr>
+          <td><strong>GUI</strong></td>
+          <td><span class="compare-highlight cmp-no">TUI のみ</span></td>
+          <td><span class="compare-highlight cmp-yes">Web UI</span></td>
+          <td><span class="compare-highlight cmp-yes">ネイティブ GUI</span></td>
+          <td><span class="compare-highlight cmp-yes">ネイティブ GUI</span></td>
+        </tr>
+        <tr>
+          <td><strong>コード実行場所</strong></td>
+          <td>ローカル</td>
+          <td>OpenAI クラウド</td>
+          <td>ローカル</td>
+          <td>ローカル</td>
+        </tr>
+        <tr>
+          <td><strong>マルチスレッド並列</strong></td>
+          <td><span class="compare-highlight cmp-partial">限定的</span></td>
+          <td><span class="compare-highlight cmp-yes">対応</span></td>
+          <td><span class="compare-highlight cmp-yes">完全対応</span></td>
+          <td><span class="compare-highlight cmp-yes">完全対応</span></td>
+        </tr>
+        <tr>
+          <td><strong>ワークツリー</strong></td>
+          <td><span class="compare-highlight cmp-no">非対応</span></td>
+          <td><span class="compare-highlight cmp-no">非対応</span></td>
+          <td><span class="compare-highlight cmp-yes">対応</span></td>
+          <td><span class="compare-highlight cmp-yes">対応</span></td>
+        </tr>
+        <tr>
+          <td><strong>Skills</strong></td>
+          <td><span class="compare-highlight cmp-yes">対応</span></td>
+          <td><span class="compare-highlight cmp-partial">一部</span></td>
+          <td><span class="compare-highlight cmp-yes">完全対応</span></td>
+          <td><span class="compare-highlight cmp-yes">完全対応</span></td>
+        </tr>
+        <tr>
+          <td><strong>Automations</strong></td>
+          <td><span class="compare-highlight cmp-no">非対応</span></td>
+          <td><span class="compare-highlight cmp-partial">クラウド版あり</span></td>
+          <td><span class="compare-highlight cmp-yes">対応</span></td>
+          <td><span class="compare-highlight cmp-yes">対応</span></td>
+        </tr>
+        <tr>
+          <td><strong>Git統合 (Diff/PR)</strong></td>
+          <td><span class="compare-highlight cmp-partial">CLI操作</span></td>
+          <td><span class="compare-highlight cmp-yes">GitHub連携</span></td>
+          <td><span class="compare-highlight cmp-yes">GUI統合</span></td>
+          <td><span class="compare-highlight cmp-yes">GUI統合</span></td>
+        </tr>
+        <tr>
+          <td><strong>内蔵ターミナル</strong></td>
+          <td>ターミナル自体</td>
+          <td><span class="compare-highlight cmp-no">なし</span></td>
+          <td><span class="compare-highlight cmp-yes">対応</span></td>
+          <td><span class="compare-highlight cmp-yes">対応</span></td>
+        </tr>
+        <tr>
+          <td><strong>IDE連携同期</strong></td>
+          <td><span class="compare-highlight cmp-partial">設定共有のみ</span></td>
+          <td><span class="compare-highlight cmp-no">なし</span></td>
+          <td><span class="compare-highlight cmp-yes">自動同期</span></td>
+          <td><span class="compare-highlight cmp-yes">自動同期</span></td>
+        </tr>
+        <tr>
+          <td><strong>MCP</strong></td>
+          <td><span class="compare-highlight cmp-yes">対応</span></td>
+          <td><span class="compare-highlight cmp-partial">限定</span></td>
+          <td><span class="compare-highlight cmp-yes">対応</span></td>
+          <td><span class="compare-highlight cmp-yes">対応</span></td>
+        </tr>
+        <tr>
+          <td><strong>音声入力</strong></td>
+          <td><span class="compare-highlight cmp-partial">実験的</span></td>
+          <td><span class="compare-highlight cmp-no">なし</span></td>
+          <td><span class="compare-highlight cmp-yes">対応</span></td>
+          <td><span class="compare-highlight cmp-yes">対応</span></td>
+        </tr>
+        <tr>
+          <td><strong>画像入力</strong></td>
+          <td><span class="compare-highlight cmp-partial">限定</span></td>
+          <td><span class="compare-highlight cmp-yes">対応</span></td>
+          <td><span class="compare-highlight cmp-yes">対応</span></td>
+          <td><span class="compare-highlight cmp-yes">対応</span></td>
+        </tr>
+        <tr>
+          <td><strong>ポップアウトウィンドウ</strong></td>
+          <td><span class="compare-highlight cmp-no">非対応</span></td>
+          <td><span class="compare-highlight cmp-no">非対応</span></td>
+          <td><span class="compare-highlight cmp-yes">対応</span></td>
+          <td><span class="compare-highlight cmp-yes">対応</span></td>
+        </tr>
+        <tr>
+          <td><strong>サンドボックス</strong></td>
+          <td>OS依存（Seatbelt/Landlock）</td>
+          <td>OpenAI コンテナ</td>
+          <td>macOS Seatbelt</td>
+          <td>Windows Restricted Token + ACL + Firewall</td>
+        </tr>
+        <tr>
+          <td><strong>オフライン利用</strong></td>
+          <td><span class="compare-highlight cmp-no">不可</span></td>
+          <td><span class="compare-highlight cmp-no">不可</span></td>
+          <td><span class="compare-highlight cmp-no">不可</span></td>
+          <td><span class="compare-highlight cmp-no">不可</span></td>
+        </tr>
+        <tr>
+          <td><strong>GitHub コードレビュー</strong></td>
+          <td><span class="compare-highlight cmp-no">非対応</span></td>
+          <td><span class="compare-highlight cmp-yes">対応</span></td>
+          <td><span class="compare-highlight cmp-yes">対応</span></td>
+          <td><span class="compare-highlight cmp-yes">対応</span></td>
+        </tr>
+        <tr>
+          <td><strong>エンタープライズ管理</strong></td>
+          <td><span class="compare-highlight cmp-partial">設定ファイル</span></td>
+          <td><span class="compare-highlight cmp-yes">管理コンソール</span></td>
+          <td><span class="compare-highlight cmp-yes">MDM対応</span></td>
+          <td><span class="compare-highlight cmp-yes">MS Store配布</span></td>
+        </tr>
+        <tr>
+          <td><strong>パーソナリティ切替</strong></td>
+          <td><span class="compare-highlight cmp-yes">/personality</span></td>
+          <td><span class="compare-highlight cmp-no">非対応</span></td>
+          <td><span class="compare-highlight cmp-yes">/personality</span></td>
+          <td><span class="compare-highlight cmp-yes">/personality</span></td>
+        </tr>
+        <tr>
+          <td><strong>最適な用途</strong></td>
+          <td>ターミナル中心の開発、CI/CD統合、スクリプティング</td>
+          <td>ローカル環境なしでの開発、GitHub PR レビュー</td>
+          <td>macOS での本格的な並列エージェント活用</td>
+          <td>Windows での本格的な並列エージェント活用</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 13: Tips・ベストプラクティス -->
+<!-- ============================================================ -->
+<section class="section" id="sec13">
+  <div class="section-header">
+    <div class="section-label">Section 13 — Tips & Best Practices</div>
+    <h2 class="section-title">Tips・ベストプラクティス</h2>
+  </div>
+
+  <div class="card">
+    <div class="card-title">AGENTS.md で指示を効率化する</div>
+    <div class="card-text prose">
+      <p>
+        プロジェクトのルートに <code>AGENTS.md</code> ファイルを配置すると、Codex はこのファイルをプロジェクト固有のガイダンスとして自動的に読み込みます。コーディング規約、ディレクトリ構造の説明、使用技術のバージョン情報、テスト方針などを記載しておくと、毎回のプロンプトで繰り返し指示する手間が省けます。サブディレクトリごとに <code>AGENTS.md</code> をネストすることも可能で、大規模プロジェクトではコンテキスト量を制御するのに役立ちます。
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">使用量を最適化するテクニック</div>
+    <div class="card-text prose">
+      <p>
+        <strong>プロンプトを簡潔かつ正確に</strong> — 必要十分な情報を与えつつ、不要なコンテキストは削除しましょう。<code>AGENTS.md</code> が巨大になりすぎると毎回大量のコンテキストが消費されるため、サブディレクトリ分割で管理するのが効果的です。
+      </p>
+      <p>
+        <strong>MCP サーバーを必要時のみ有効に</strong> — 接続する MCP サーバーが増えるほどコンテキストも増加します。使わないサーバーは無効にしておくと使用量を節約できます。
+      </p>
+      <p>
+        <strong>ルーチンタスクには Mini モデルを</strong> — GPT-5.1-Codex-Mini に切り替えると、使用量制限が約4倍に延長されます。テスト生成やボイラープレートコードの作成など、比較的単純なタスクに最適です。
+      </p>
+      <p>
+        <strong>ワークツリーを活用する</strong> — 実験的な変更はワークツリーモードで行い、メインブランチを汚さないようにします。失敗してもワークツリーを削除するだけで済みます。
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">バージョン管理のベストプラクティス</div>
+    <div class="card-text prose">
+      <p>
+        フィーチャーブランチ上で作業し、Codex に委任する前に <code>git status</code> がクリーンであることを確認します。こまめにコミットすることで、Codex の提案を小さな単位で検証・ロールバックできます。Codex の変更は他の PR と同様にレビューし、コミットメッセージに意思決定の記録を残すことが監査の観点からも重要です。
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Skills の活用</div>
+    <div class="card-text prose">
+      <p>
+        OpenAI が提供するキュレーション済みスキルのほか、チーム独自のスキルを作成してリポジトリにチェックインすると、チーム全体で共有できます。1つのスキルには1つの責務を持たせ、スクリプトは決定論的な動作やツール連携が必要な場合にのみ使用し、そうでなければ指示（instructions）で十分です。アプリ内の Skills セクションからスキルの発見・管理・テストができます。
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Automations の実践例</div>
+    <div class="card-text prose">
+      <p>
+        OpenAI 社内では、日次のイシュートリアージ、CI 障害の検出・要約、リリースブリーフの自動生成、バグの定期チェック、スキルの自動改善といったタスクに Automations を活用しています。スキルと組み合わせることで、たとえば「毎朝9時に Sentry のエラーをチェックし、P1レベルの問題があれば修正PRを自動作成する」といったワークフローが構築できます。結果はインボックスに届き、報告すべきものがなければ自動アーカイブされます。
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">パーソナリティの使い分け</div>
+    <div class="card-text prose">
+      <p>
+        Codex には2つのパーソナリティスタイルがあります。<strong>terse（簡潔）</strong>スタイルは実行重視で無駄なく結果を返し、<strong>conversational（会話的）</strong>スタイルはより対話的で説明が丁寧です。スレッド内で <code>/personality</code> コマンドを使って切り替えられます。デバッグやリファクタリングなど結果重視のタスクには terse、コードの学習や設計相談には conversational が向いています。
+      </p>
+    </div>
+  </div>
+
+  <div class="info-box tip">
+    <div class="info-box-title">プロ向けTips</div>
+    config.toml でプロファイルを定義しておくと、<code>codex --profile &lt;name&gt;</code> で瞬時にサンドボックス設定を切り替えられます。たとえば安全重視の readonly_quiet プロファイルと生産性重視の full_auto プロファイルを使い分けると効率的です。
+  </div>
+
+  <div class="code-block">
+    <span class="code-label">config.toml — プロファイル定義例</span>
+    <code><span class="code-keyword">[profiles.full_auto]</span>
+<span class="code-keyword">approval_policy</span> = <span class="code-string">"on-request"</span>
+<span class="code-keyword">sandbox_mode</span>    = <span class="code-string">"workspace-write"</span>
+
+<span class="code-keyword">[profiles.readonly_quiet]</span>
+<span class="code-keyword">approval_policy</span> = <span class="code-string">"never"</span>
+<span class="code-keyword">sandbox_mode</span>    = <span class="code-string">"read-only"</span>
+
+<span class="code-keyword">[profiles.trusted_dev]</span>
+<span class="code-keyword">approval_policy</span> = <span class="code-string">"untrusted"</span>
+<span class="code-keyword">sandbox_mode</span>    = <span class="code-string">"workspace-write"</span>
+<span class="code-keyword">[profiles.trusted_dev.sandbox_workspace_write]</span>
+<span class="code-keyword">network_access</span> = <span class="code-keyword">true</span></code>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 14: 参考リンク -->
+<!-- ============================================================ -->
+<section class="section" id="sec14">
+  <div class="section-header">
+    <div class="section-label">Section 14 — References</div>
+    <h2 class="section-title">参考リンク・公式ドキュメント</h2>
+  </div>
+
+  <div class="card">
+    <div class="card-title">公式リソース</div>
+    <div class="card-text prose">
+      <p>
+        <strong>Codex アプリ概要ページ</strong> — <a href="https://openai.com/codex/" target="_blank" rel="noopener">https://openai.com/codex/</a> — Codex の公式プロダクトページ。最新情報やデモ動画を確認できます。
+      </p>
+      <p>
+        <strong>Codex アプリ紹介ブログ</strong> — <a href="https://openai.com/index/introducing-the-codex-app/" target="_blank" rel="noopener">https://openai.com/index/introducing-the-codex-app/</a> — Windows 対応の3月4日アップデートを含む公式アナウンス記事。
+      </p>
+      <p>
+        <strong>Windows版ダウンロード（Microsoft Store）</strong> — <a href="https://apps.microsoft.com/detail/9plm9xgg6vks" target="_blank" rel="noopener">https://apps.microsoft.com/detail/9plm9xgg6vks</a> — Windows 版の直接ダウンロードリンク。
+      </p>
+      <p>
+        <strong>開発者ドキュメント — アプリ</strong> — <a href="https://developers.openai.com/codex/app/" target="_blank" rel="noopener">https://developers.openai.com/codex/app/</a> — デスクトップアプリの包括的なドキュメント。
+      </p>
+      <p>
+        <strong>開発者ドキュメント — Windows</strong> — <a href="https://developers.openai.com/codex/windows/" target="_blank" rel="noopener">https://developers.openai.com/codex/windows/</a> — Windows サンドボックス、WSL 設定、トラブルシューティングの詳細。
+      </p>
+      <p>
+        <strong>開発者ドキュメント — Windows版アプリ</strong> — <a href="https://developers.openai.com/codex/app/windows/" target="_blank" rel="noopener">https://developers.openai.com/codex/app/windows/</a> — Windows版アプリ固有のセットアップとカスタマイズ。
+      </p>
+      <p>
+        <strong>料金ページ</strong> — <a href="https://developers.openai.com/codex/pricing/" target="_blank" rel="noopener">https://developers.openai.com/codex/pricing/</a> — プラン別の使用量制限、クレジットシステムの詳細。
+      </p>
+      <p>
+        <strong>モデル一覧</strong> — <a href="https://developers.openai.com/codex/models/" target="_blank" rel="noopener">https://developers.openai.com/codex/models/</a> — 対応モデルの比較とモデル設定方法。
+      </p>
+      <p>
+        <strong>セキュリティドキュメント</strong> — <a href="https://developers.openai.com/codex/security/" target="_blank" rel="noopener">https://developers.openai.com/codex/security/</a> — サンドボックス、承認ポリシー、OTel 監査ログの全詳細。
+      </p>
+      <p>
+        <strong>変更履歴</strong> — <a href="https://developers.openai.com/codex/changelog/" target="_blank" rel="noopener">https://developers.openai.com/codex/changelog/</a> — 日次レベルのアプリ・CLI アップデート履歴。
+      </p>
+      <p>
+        <strong>GitHub リポジトリ（CLI / オープンソース）</strong> — <a href="https://github.com/openai/codex" target="_blank" rel="noopener">https://github.com/openai/codex</a> — Codex CLI のソースコード、Issue トラッカー。
+      </p>
+      <p>
+        <strong>Skills リポジトリ</strong> — <a href="https://github.com/openai/skills" target="_blank" rel="noopener">https://github.com/openai/skills</a> — 公式・コミュニティスキルのコレクション。
+      </p>
+      <p>
+        <strong>AGENTS.md ガイド</strong> — <a href="https://developers.openai.com/codex/guides/agents-md/" target="_blank" rel="noopener">https://developers.openai.com/codex/guides/agents-md/</a> — プロジェクト固有のカスタム指示設定。
+      </p>
+      <p>
+        <strong>プロンプティングガイド</strong> — <a href="https://developers.openai.com/cookbook/examples/gpt-5/codex_prompting_guide/" target="_blank" rel="noopener">https://developers.openai.com/cookbook/examples/gpt-5/codex_prompting_guide/</a> — Codex モデルの最適なプロンプティング手法。
+      </p>
+      <p>
+        <strong>VS Code 拡張</strong> — <a href="https://marketplace.visualstudio.com/items?itemName=openai.chatgpt" target="_blank" rel="noopener">Visual Studio Marketplace — Codex</a> — IDE 拡張のインストールページ。
+      </p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================================================ -->
+<!-- FOOTER -->
+<!-- ============================================================ -->
+<footer class="footer">
+  <div class="container">
+    <p>
+      このページは OpenAI の公式ドキュメント・ブログ記事・開発者リソースをもとに作成した非公式の日本語ガイドです。<br>
+      最新の情報は <a href="https://developers.openai.com/codex/" target="_blank" rel="noopener">OpenAI Codex 開発者ドキュメント</a> を参照してください。<br>
+      最終更新: 2026年3月4日 — Codex App 26.304 / CLI 0.107.0 時点
+    </p>
+  </div>
+</footer>
+
+<!-- ============================================================ -->
+<!-- SCRIPTS -->
+<!-- ============================================================ -->
+<script>
+// Theme Toggle
+function toggleTheme() {
+  const body = document.body;
+  const btn = document.getElementById('themeBtn');
+  body.classList.toggle('light-theme');
+  if (body.classList.contains('light-theme')) {
+    btn.textContent = '☀️';
+    localStorage.setItem('codex-theme', 'light');
+  } else {
+    btn.textContent = '🌙';
+    localStorage.setItem('codex-theme', 'dark');
+  }
+}
+
+// Load saved theme
+(function() {
+  const saved = localStorage.getItem('codex-theme');
+  if (saved === 'light') {
+    document.body.classList.add('light-theme');
+    document.getElementById('themeBtn').textContent = '☀️';
+  }
+})();
+
+// Scroll to top button
+(function() {
+  const btn = document.getElementById('scrollTopBtn');
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 600) {
+      btn.classList.add('visible');
+    } else {
+      btn.classList.remove('visible');
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
