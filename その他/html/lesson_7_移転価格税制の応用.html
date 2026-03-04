@@ -906,5 +906,25 @@ tbody tr:nth-child(even){background:var(--table-stripe)}
 }
 </style>
 
+<script>
+// Reveal animation
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Theme toggle
+const btn = document.getElementById('themeBtn');
+const html = document.documentElement;
+const saved = localStorage.getItem('theme') || 'dark';
+html.dataset.theme = saved;
+if (btn) {
+  btn.addEventListener('click', () => {
+    const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+    html.dataset.theme = next;
+    localStorage.setItem('theme', next);
+  });
+}
+</script>
 </body>
 </html>
