@@ -1,0 +1,2321 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenAI Codex 完全ガイド 2026 — AIコーディングエージェントの決定版</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   CSS Custom Properties (Dark Theme Default)
+   ============================================ */
+:root {
+  --bg-primary: #0A0A0A;
+  --bg-card: #16161A;
+  --bg-card-hover: #1A1A1F;
+  --bg-code: #111113;
+  --bg-code-header: #1A1A1F;
+  --bg-table-header: #1A1A20;
+  --bg-table-row-alt: #121215;
+  --bg-badge: rgba(94, 106, 210, 0.12);
+  --bg-tip: rgba(94, 106, 210, 0.06);
+  --bg-warning: rgba(255, 180, 50, 0.06);
+  --bg-hero: linear-gradient(135deg, #0A0A0A 0%, #12121A 50%, #0A0A0A 100%);
+  --border-primary: rgba(255,255,255,0.06);
+  --border-accent: rgba(94, 106, 210, 0.3);
+  --border-warning: rgba(255, 180, 50, 0.3);
+  --text-primary: #FAFAFA;
+  --text-secondary: #8A8A9A;
+  --text-tertiary: #55556A;
+  --text-code: #E0E0E8;
+  --text-link: #7B8AF0;
+  --accent: #5E6AD2;
+  --accent-light: #7B8AF0;
+  --accent-glow: rgba(94, 106, 210, 0.15);
+  --gradient-accent: linear-gradient(135deg, #5E6AD2, #8B5CF6);
+  --gradient-text: linear-gradient(135deg, #7B8AF0, #A78BFA);
+  --shadow-card: 0 0 0 1px rgba(255,255,255,0.06), 0 4px 24px rgba(0,0,0,0.4);
+  --shadow-card-hover: 0 0 0 1px rgba(94, 106, 210, 0.2), 0 8px 32px rgba(0,0,0,0.5);
+  --shadow-glow: 0 0 40px rgba(94, 106, 210, 0.08);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 16px;
+  --font-sans: 'Outfit', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --scrollbar-thumb: #2A2A35;
+  --scrollbar-track: #111113;
+  --icon-filter: none;
+}
+
+/* Light Theme */
+[data-theme="light"] {
+  --bg-primary: #F8F8FA;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F4F4F8;
+  --bg-code: #F0F0F4;
+  --bg-code-header: #E8E8EE;
+  --bg-table-header: #EEEEF2;
+  --bg-table-row-alt: #F6F6FA;
+  --bg-badge: rgba(94, 106, 210, 0.1);
+  --bg-tip: rgba(94, 106, 210, 0.05);
+  --bg-warning: rgba(255, 150, 0, 0.06);
+  --bg-hero: linear-gradient(135deg, #F8F8FA 0%, #EEF0FF 50%, #F8F8FA 100%);
+  --border-primary: rgba(0,0,0,0.08);
+  --border-accent: rgba(94, 106, 210, 0.25);
+  --border-warning: rgba(200, 140, 0, 0.3);
+  --text-primary: #1A1A2E;
+  --text-secondary: #5A5A6E;
+  --text-tertiary: #8A8A9A;
+  --text-code: #2E2E3A;
+  --text-link: #4A56B8;
+  --accent: #4A56B8;
+  --accent-light: #5E6AD2;
+  --accent-glow: rgba(94, 106, 210, 0.08);
+  --gradient-accent: linear-gradient(135deg, #4A56B8, #7C3AED);
+  --gradient-text: linear-gradient(135deg, #4A56B8, #7C3AED);
+  --shadow-card: 0 0 0 1px rgba(0,0,0,0.06), 0 4px 24px rgba(0,0,0,0.06);
+  --shadow-card-hover: 0 0 0 1px rgba(94, 106, 210, 0.2), 0 8px 32px rgba(0,0,0,0.08);
+  --shadow-glow: 0 0 40px rgba(94, 106, 210, 0.05);
+  --scrollbar-thumb: #C0C0CC;
+  --scrollbar-track: #EEEEF2;
+  --icon-filter: invert(1);
+}
+
+/* ============================================
+   Global Reset & Base
+   ============================================ */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.8;
+  transition: background 0.4s ease, color 0.4s ease;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+}
+
+::selection {
+  background: rgba(94, 106, 210, 0.3);
+  color: var(--text-primary);
+}
+
+a {
+  color: var(--text-link);
+  text-decoration: none;
+  transition: var(--transition);
+}
+a:hover {
+  color: var(--accent-light);
+  text-decoration: underline;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ============================================
+   Layout
+   ============================================ */
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.container-wide {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ============================================
+   Theme Toggle
+   ============================================ */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--border-primary);
+  background: var(--bg-card);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-card);
+  transition: var(--transition);
+  font-size: 20px;
+}
+.theme-toggle:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: scale(1.05);
+}
+.theme-toggle .icon-sun,
+.theme-toggle .icon-moon {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  position: absolute;
+}
+.theme-toggle .icon-sun { opacity: 0; transform: rotate(-90deg) scale(0); }
+.theme-toggle .icon-moon { opacity: 1; transform: rotate(0) scale(1); }
+[data-theme="light"] .theme-toggle .icon-sun { opacity: 1; transform: rotate(0) scale(1); }
+[data-theme="light"] .theme-toggle .icon-moon { opacity: 0; transform: rotate(90deg) scale(0); }
+
+/* ============================================
+   Hero Section
+   ============================================ */
+.hero {
+  background: var(--bg-hero);
+  padding: 100px 0 80px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(94,106,210,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 100px;
+  background: var(--bg-badge);
+  border: 1px solid var(--border-accent);
+  color: var(--accent-light);
+  font-size: 0.82rem;
+  font-weight: 500;
+  margin-bottom: 24px;
+  letter-spacing: 0.02em;
+}
+.hero-badge .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4ADE80;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.hero h1 {
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 16px;
+  letter-spacing: -0.03em;
+}
+.hero h1 .gradient-text {
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero .subtitle {
+  color: var(--text-secondary);
+  font-size: 1.15rem;
+  max-width: 640px;
+  margin: 0 auto 32px;
+  line-height: 1.7;
+  font-weight: 400;
+}
+.hero-meta {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  color: var(--text-tertiary);
+  font-size: 0.85rem;
+}
+.hero-meta span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ============================================
+   Table of Contents
+   ============================================ */
+.toc {
+  padding: 48px 0;
+}
+.toc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+.toc-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  color: var(--text-primary);
+  font-size: 0.92rem;
+  font-weight: 500;
+  transition: var(--transition);
+  text-decoration: none;
+  cursor: pointer;
+}
+.toc-item:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-accent);
+  text-decoration: none;
+  color: var(--text-primary);
+  transform: translateY(-1px);
+}
+.toc-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--bg-badge);
+  color: var(--accent-light);
+  font-size: 0.78rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ============================================
+   Sections
+   ============================================ */
+.section {
+  padding: 64px 0;
+  border-top: 1px solid var(--border-primary);
+}
+
+.section-label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-light);
+  margin-bottom: 6px;
+}
+
+.section-title {
+  font-size: clamp(1.6rem, 3vw, 2rem);
+  font-weight: 700;
+  margin-bottom: 32px;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+
+.section-title .gradient-text {
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================
+   Cards
+   ============================================ */
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  padding: 28px;
+  margin-bottom: 20px;
+  transition: var(--transition);
+}
+.card:hover {
+  box-shadow: var(--shadow-card-hover);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--gradient-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.card p, .section p {
+  color: var(--text-secondary);
+  line-height: 1.85;
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.card-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+/* ============================================
+   Code Blocks
+   ============================================ */
+.code-block {
+  background: var(--bg-code);
+  border-radius: var(--radius);
+  border: 1px solid var(--border-primary);
+  margin: 16px 0 20px;
+  overflow: hidden;
+}
+.code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: var(--bg-code-header);
+  border-bottom: 1px solid var(--border-primary);
+  font-size: 0.78rem;
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+}
+.code-header .lang {
+  font-weight: 600;
+  color: var(--accent-light);
+}
+.code-body {
+  padding: 16px 20px;
+  overflow-x: auto;
+}
+.code-body pre {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: var(--text-code);
+  white-space: pre;
+}
+.code-body .comment { color: #55556A; }
+.code-body .keyword { color: #C792EA; }
+.code-body .string { color: #C3E88D; }
+.code-body .function { color: #82AAFF; }
+.code-body .variable { color: #F78C6C; }
+.code-body .prompt { color: #4ADE80; }
+.code-body .flag { color: #FFCB6B; }
+.code-body .output { color: #8A8A9A; }
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--bg-code);
+  padding: 2px 7px;
+  border-radius: 4px;
+  border: 1px solid var(--border-primary);
+  color: var(--accent-light);
+}
+
+/* ============================================
+   Tables
+   ============================================ */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 20px 0;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-primary);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+thead {
+  background: var(--bg-table-header);
+}
+th {
+  padding: 14px 16px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-primary);
+  white-space: nowrap;
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+}
+td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-primary);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+tr:last-child td {
+  border-bottom: none;
+}
+tbody tr:nth-child(even) {
+  background: var(--bg-table-row-alt);
+}
+tbody tr:hover {
+  background: var(--bg-card-hover);
+}
+td.highlight {
+  color: var(--accent-light);
+  font-weight: 600;
+}
+
+/* ============================================
+   Badges, Tags, Tips
+   ============================================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.badge-accent {
+  background: var(--bg-badge);
+  color: var(--accent-light);
+  border: 1px solid var(--border-accent);
+}
+.badge-green {
+  background: rgba(74, 222, 128, 0.1);
+  color: #4ADE80;
+  border: 1px solid rgba(74, 222, 128, 0.2);
+}
+.badge-yellow {
+  background: rgba(255, 203, 107, 0.1);
+  color: #FFCB6B;
+  border: 1px solid rgba(255, 203, 107, 0.2);
+}
+.badge-red {
+  background: rgba(255, 107, 107, 0.1);
+  color: #FF6B6B;
+  border: 1px solid rgba(255, 107, 107, 0.2);
+}
+
+.tip-box {
+  padding: 20px 24px;
+  border-radius: var(--radius);
+  margin: 20px 0;
+  border: 1px solid var(--border-accent);
+  background: var(--bg-tip);
+}
+.tip-box.warning {
+  border-color: var(--border-warning);
+  background: var(--bg-warning);
+}
+.tip-box .tip-title {
+  font-weight: 700;
+  font-size: 0.88rem;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tip-box p {
+  font-size: 0.88rem;
+  margin-bottom: 0;
+}
+
+/* ============================================
+   Timeline
+   ============================================ */
+.timeline {
+  position: relative;
+  padding-left: 32px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border-primary);
+}
+.timeline-item {
+  position: relative;
+  margin-bottom: 28px;
+  padding-left: 16px;
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -29px;
+  top: 8px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg-primary);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.timeline-date {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent-light);
+  margin-bottom: 4px;
+}
+.timeline-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.timeline-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ============================================
+   Steps
+   ============================================ */
+.steps {
+  counter-reset: step-counter;
+}
+.step {
+  counter-increment: step-counter;
+  position: relative;
+  padding-left: 56px;
+  margin-bottom: 32px;
+  min-height: 48px;
+}
+.step::before {
+  content: counter(step-counter);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--gradient-accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+.step-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.step p {
+  font-size: 0.92rem;
+}
+
+/* ============================================
+   Feature Comparison Bars
+   ============================================ */
+.compare-bar-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+  color: var(--text-secondary);
+}
+.compare-bar {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--bg-code);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.compare-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--gradient-accent);
+  transition: width 0.6s ease;
+}
+
+/* ============================================
+   Links List
+   ============================================ */
+.link-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  margin-bottom: 10px;
+  transition: var(--transition);
+  text-decoration: none;
+  color: var(--text-primary);
+}
+.link-card:hover {
+  border-color: var(--border-accent);
+  background: var(--bg-card-hover);
+  text-decoration: none;
+  color: var(--text-primary);
+  transform: translateX(4px);
+}
+.link-card .link-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--bg-badge);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 16px;
+}
+.link-card .link-info .link-title {
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+.link-card .link-info .link-url {
+  font-size: 0.78rem;
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+}
+
+/* ============================================
+   Footer
+   ============================================ */
+footer {
+  padding: 48px 0;
+  border-top: 1px solid var(--border-primary);
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: 0.82rem;
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+@media (max-width: 768px) {
+  .hero { padding: 72px 0 56px; }
+  .hero h1 { font-size: 2rem; }
+  .hero-meta { flex-direction: column; gap: 8px; align-items: center; }
+  .section { padding: 48px 0; }
+  .card { padding: 20px; }
+  .card-grid, .card-grid-3 { grid-template-columns: 1fr; }
+  .toc-grid { grid-template-columns: 1fr; }
+  .step { padding-left: 48px; }
+  table { font-size: 0.8rem; }
+  th, td { padding: 10px 12px; }
+  .theme-toggle { top: 12px; right: 12px; width: 42px; height: 42px; }
+}
+
+@media (max-width: 480px) {
+  .container, .container-wide { padding: 0 16px; }
+  .hero h1 { font-size: 1.7rem; }
+  .hero .subtitle { font-size: 1rem; }
+  .code-body pre { font-size: 0.78rem; }
+}
+
+/* Utility */
+.mt-0 { margin-top: 0; }
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mt-32 { margin-top: 32px; }
+.mb-0 { margin-bottom: 0; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-24 { margin-bottom: 24px; }
+.mb-32 { margin-bottom: 32px; }
+.text-center { text-align: center; }
+.text-accent { color: var(--accent-light); }
+.font-mono { font-family: var(--font-mono); }
+.flex-gap { display: flex; flex-wrap: wrap; gap: 8px; }
+</style>
+</head>
+<body data-theme="dark">
+
+<!-- Theme Toggle -->
+<button class="theme-toggle" onclick="toggleTheme()" aria-label="テーマ切り替え">
+  <span class="icon-sun">&#9728;</span>
+  <span class="icon-moon">&#9790;</span>
+</button>
+
+<!-- ============================================
+     HERO
+     ============================================ -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      最終更新: 2026年3月
+    </div>
+    <h1>OpenAI <span class="gradient-text">Codex</span> 完全ガイド</h1>
+    <p class="subtitle">
+      AIコーディングエージェントの全貌を、初心者にもわかりやすく解説。
+      概要・使い方・料金・比較・ベストプラクティスまで、これ一本で完全理解。
+    </p>
+    <div class="hero-meta">
+      <span>&#128218; 包括的リファレンス</span>
+      <span>&#9889; 2026年3月時点の最新情報</span>
+      <span>&#128736; 全10章構成</span>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================
+     TABLE OF CONTENTS
+     ============================================ -->
+<nav class="toc">
+  <div class="container">
+    <div class="toc-grid">
+      <a class="toc-item" href="#s1"><span class="toc-num">01</span>Codexとは何か</a>
+      <a class="toc-item" href="#s2"><span class="toc-num">02</span>Codex CLIの基本的な使い方</a>
+      <a class="toc-item" href="#s3"><span class="toc-num">03</span>主な機能と特徴</a>
+      <a class="toc-item" href="#s4"><span class="toc-num">04</span>GPT-4o / GPT-5.3との関係</a>
+      <a class="toc-item" href="#s5"><span class="toc-num">05</span>料金体系・利用条件</a>
+      <a class="toc-item" href="#s6"><span class="toc-num">06</span>ユースケース</a>
+      <a class="toc-item" href="#s7"><span class="toc-num">07</span>他ツールとの比較</a>
+      <a class="toc-item" href="#s8"><span class="toc-num">08</span>始め方ガイド</a>
+      <a class="toc-item" href="#s9"><span class="toc-num">09</span>Tips・注意点</a>
+      <a class="toc-item" href="#s10"><span class="toc-num">10</span>参考リンク集</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================================
+     SECTION 1: What is Codex
+     ============================================ -->
+<section class="section" id="s1">
+  <div class="container">
+    <span class="section-label">Section 01 — Overview</span>
+    <h2 class="section-title"><span class="gradient-text">Codexとは何か</span></h2>
+
+    <p>OpenAI Codex は、OpenAIが開発した<strong>クラウドベースのAIソフトウェアエンジニアリングエージェント</strong>です。2025年5月に初めてリサーチプレビューとして公開され、その後急速に進化を遂げました。従来の「コード補完ツール」とは根本的に異なり、Codexは自律的にコードを読み、書き、実行し、テストまで行える完全なエージェントシステムです。</p>
+
+    <p>人間の開発者のように、リポジトリ全体を理解し、バグ修正・新機能実装・コードレビュー・テスト作成・プルリクエスト提出までを一貫して処理できます。しかも、複数のタスクを並行して処理できるため、開発者は朝にタスクを割り当て、完了を待つ間に別の作業に集中できます。</p>
+
+    <div class="card-grid mt-24">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">&#128187;</div>
+          <div class="card-title">Codex Web（クラウド）</div>
+        </div>
+        <p>ChatGPTのサイドバーからアクセスできるクラウド版。各タスクが独立したサンドボックス環境で実行され、リポジトリを自動的に読み込みます。タスク完了後にGitHub PRを作成したり、ローカルに変更を取り込むことができます。</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">&#9000;</div>
+          <div class="card-title">Codex CLI（ターミナル）</div>
+        </div>
+        <p>ターミナルで動作するオープンソース（Apache-2.0）のコーディングエージェント。Rustで構築されており高速かつ軽量。ローカルのリポジトリを直接読み書きし、コマンドを実行できます。</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">&#128421;</div>
+          <div class="card-title">Codex App（デスクトップ）</div>
+        </div>
+        <p>2026年2月にリリースされたmacOS/Windows対応のデスクトップアプリ。複数のエージェントをプロジェクト単位で管理し、マルチエージェントワークフロー、オートメーション、スキル管理などの高度な機能を提供します。</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">&#128295;</div>
+          <div class="card-title">IDE拡張機能</div>
+        </div>
+        <p>VS Code、Cursor、Windsurfなどの主要IDEで利用可能な拡張機能。エディタ内でCodexとペアプログラミングでき、インラインのdiff表示やプロンプト入力が可能です。JetBrains、Xcodeにも対応。</p>
+      </div>
+    </div>
+
+    <div class="tip-box mt-24">
+      <div class="tip-title">&#128161; 重要な位置づけ</div>
+      <p>Codexは「GitHub Copilotの上位互換」ではなく、異なるカテゴリのツールです。Copilotが「スペルチェッカー」だとすれば、Codexは「自律的に論文を書ける研究アシスタント」のような存在です。Copilotはリアルタイムのコード補完に特化していますが、Codexは数分〜数時間かかる複雑なタスクを独立して遂行できます。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     SECTION 2: CLI Basic Usage
+     ============================================ -->
+<section class="section" id="s2">
+  <div class="container">
+    <span class="section-label">Section 02 — CLI Basics</span>
+    <h2 class="section-title">Codex CLIの<span class="gradient-text">基本的な使い方</span></h2>
+
+    <p>Codex CLIは、ターミナルから直接AIコーディングエージェントを操作できるオープンソースツールです。macOSとLinuxで正式サポートされており、Windowsは WSL（Windows Subsystem for Linux）経由で利用できます。</p>
+
+    <h3 class="mt-32 mb-16" style="font-size:1.15rem; font-weight:600;">インストール方法</h3>
+
+    <p>3つのインストール方法から選べます。</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="lang">npm</span>
+        <span>推奨</span>
+      </div>
+      <div class="code-body">
+<pre><span class="comment"># npmでグローバルインストール</span>
+<span class="prompt">$</span> npm install -g @openai/codex</pre>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="lang">Homebrew</span>
+        <span>macOS / Linux</span>
+      </div>
+      <div class="code-body">
+<pre><span class="comment"># Homebrewでインストール</span>
+<span class="prompt">$</span> brew install --cask codex</pre>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="lang">Binary</span>
+        <span>手動ダウンロード</span>
+      </div>
+      <div class="code-body">
+<pre><span class="comment"># GitHubリリースページからバイナリをダウンロード</span>
+<span class="comment"># macOS (Apple Silicon): codex-aarch64-apple-darwin.tar.gz</span>
+<span class="comment"># macOS (Intel):         codex-x86_64-apple-darwin.tar.gz</span>
+<span class="comment"># Linux (x86_64):        codex-x86_64-unknown-linux-musl.tar.gz</span>
+<span class="comment"># Linux (arm64):         codex-aarch64-unknown-linux-musl.tar.gz</span>
+<span class="prompt">$</span> tar xzf codex-*.tar.gz
+<span class="prompt">$</span> mv codex-* /usr/local/bin/codex</pre>
+      </div>
+    </div>
+
+    <h3 class="mt-32 mb-16" style="font-size:1.15rem; font-weight:600;">認証とログイン</h3>
+
+    <p>インストール後、<code>codex</code> コマンドを実行すると、初回起動時に認証を求められます。ChatGPTアカウントでサインインする方法が推奨されています。</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="lang">Shell</span>
+        <span>初回起動</span>
+      </div>
+      <div class="code-body">
+<pre><span class="comment"># Codexを起動（初回は認証プロンプトが表示される）</span>
+<span class="prompt">$</span> codex
+
+<span class="comment"># 「Sign in with ChatGPT」を選択</span>
+<span class="comment"># → ブラウザが開き、ChatGPTアカウントでログイン</span>
+<span class="comment"># → APIキーが自動設定される</span></pre>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="lang">Shell</span>
+        <span>APIキーで認証する場合</span>
+      </div>
+      <div class="code-body">
+<pre><span class="comment"># 環境変数でAPIキーを設定</span>
+<span class="prompt">$</span> <span class="keyword">export</span> OPENAI_API_KEY=<span class="string">"sk-your-api-key-here"</span>
+
+<span class="comment"># または config.toml に設定</span>
+<span class="comment"># ~/.codex/config.toml</span></pre>
+      </div>
+    </div>
+
+    <h3 class="mt-32 mb-16" style="font-size:1.15rem; font-weight:600;">基本コマンド一覧</h3>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>コマンド</th>
+            <th>説明</th>
+            <th>使用例</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="highlight font-mono">codex</td>
+            <td>対話型TUIセッションを起動</td>
+            <td class="font-mono">codex</td>
+          </tr>
+          <tr>
+            <td class="highlight font-mono">codex "プロンプト"</td>
+            <td>プロンプト付きで起動</td>
+            <td class="font-mono">codex "このプロジェクトにテストを追加して"</td>
+          </tr>
+          <tr>
+            <td class="highlight font-mono">codex exec</td>
+            <td>非対話型で実行（スクリプト向け）</td>
+            <td class="font-mono">codex exec "READMEを日本語に翻訳"</td>
+          </tr>
+          <tr>
+            <td class="highlight font-mono">codex app</td>
+            <td>デスクトップアプリを起動</td>
+            <td class="font-mono">codex app</td>
+          </tr>
+          <tr>
+            <td class="highlight font-mono">/model</td>
+            <td>使用モデルを切り替え</td>
+            <td class="font-mono">/model gpt-5.3-codex</td>
+          </tr>
+          <tr>
+            <td class="highlight font-mono">/status</td>
+            <td>現在の利用状況・残り制限を確認</td>
+            <td class="font-mono">/status</td>
+          </tr>
+          <tr>
+            <td class="highlight font-mono">/agent</td>
+            <td>アクティブなエージェントスレッドを切替</td>
+            <td class="font-mono">/agent</td>
+          </tr>
+          <tr>
+            <td class="highlight font-mono">/experimental</td>
+            <td>実験的機能の有効化/無効化</td>
+            <td class="font-mono">/experimental</td>
+          </tr>
+          <tr>
+            <td class="highlight font-mono">/personality</td>
+            <td>対話スタイルを切替（簡潔/会話的）</td>
+            <td class="font-mono">/personality</td>
+          </tr>
+          <tr>
+            <td class="highlight font-mono">/approvals</td>
+            <td>承認モードを変更</td>
+            <td class="font-mono">/approvals</td>
+          </tr>
+          <tr>
+            <td class="highlight font-mono">/feedback</td>
+            <td>OpenAIにフィードバックを送信</td>
+            <td class="font-mono">/feedback</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="mt-32 mb-16" style="font-size:1.15rem; font-weight:600;">承認モード（Approval Modes）</h3>
+
+    <p>Codex CLIには3つの承認モードがあり、セキュリティと利便性のバランスを調整できます。</p>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>モード</th>
+            <th>ファイル編集</th>
+            <th>コマンド実行</th>
+            <th>推奨シーン</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="highlight">Suggest（提案）</td>
+            <td>&#9989; 承認が必要</td>
+            <td>&#9989; 承認が必要</td>
+            <td>初めて使う場合、セキュリティ重視のプロジェクト</td>
+          </tr>
+          <tr>
+            <td class="highlight">Auto-edit（自動編集）</td>
+            <td>&#10004; 自動承認</td>
+            <td>&#9989; 承認が必要</td>
+            <td>日常的な開発作業、バランス重視</td>
+          </tr>
+          <tr>
+            <td class="highlight">Full-auto（完全自動）</td>
+            <td>&#10004; 自動承認</td>
+            <td>&#10004; 自動承認</td>
+            <td>信頼できるプロジェクト、スクリプト自動化</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="lang">Shell</span>
+        <span>承認モードの指定</span>
+      </div>
+      <div class="code-body">
+<pre><span class="comment"># 完全自動モードで起動</span>
+<span class="prompt">$</span> codex <span class="flag">--ask-for-approval</span> never <span class="string">"テストを全て実行して結果を報告して"</span>
+
+<span class="comment"># YOLOモード（サンドボックス内で完全自動）</span>
+<span class="prompt">$</span> codex <span class="flag">--yolo</span></pre>
+      </div>
+    </div>
+
+    <h3 class="mt-32 mb-16" style="font-size:1.15rem; font-weight:600;">アップグレード</h3>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="lang">Shell</span>
+        <span>最新版にアップグレード</span>
+      </div>
+      <div class="code-body">
+<pre><span class="comment"># npmの場合</span>
+<span class="prompt">$</span> npm i -g @openai/codex@latest
+
+<span class="comment"># Homebrewの場合</span>
+<span class="prompt">$</span> brew upgrade --cask codex</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     SECTION 3: Features
+     ============================================ -->
+<section class="section" id="s3">
+  <div class="container">
+    <span class="section-label">Section 03 — Features</span>
+    <h2 class="section-title">主な<span class="gradient-text">機能と特徴</span></h2>
+
+    <div class="card-grid-3">
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">&#128279;</div>
+          <div class="card-title">GitHub連携</div>
+        </div>
+        <p>リポジトリを自動でクローン・解析し、PRの作成・コードレビューの実行まで対応。@Codex でPR上のレビューを直接依頼できます。</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">&#128302;</div>
+          <div class="card-title">マルチエージェント</div>
+        </div>
+        <p>複数の専門エージェントを並列に生成し、探索・レビュー・実装などを分担。CSV一括処理（spawn_agents_on_csv）にも対応しています。</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">&#128220;</div>
+          <div class="card-title">AGENTS.md</div>
+        </div>
+        <p>リポジトリにAGENTS.mdファイルを配置することで、Codexにプロジェクト固有の指示（テストコマンド、コーディング規約等）を伝達できます。</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">&#128274;</div>
+          <div class="card-title">セキュアサンドボックス</div>
+        </div>
+        <p>各タスクは隔離されたコンテナ環境で実行。クラウド版ではデフォルトでネットワークアクセスが無効化され、安全にコードを実行できます。</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">&#127912;</div>
+          <div class="card-title">Skills（スキル）</div>
+        </div>
+        <p>Figmaデザイン実装、Linear管理、Cloudflare/Vercelデプロイ、画像生成、ドキュメント作成など、拡張可能なスキルシステムでCodexの能力を拡張。</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">&#128260;</div>
+          <div class="card-title">Automations</div>
+        </div>
+        <p>スケジュールベースで自動的にタスクを実行。日次のイシュートリアージ、CI失敗の要約、リリースブリーフ生成などを自動化できます。</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">&#128172;</div>
+          <div class="card-title">Slack連携</div>
+        </div>
+        <p>Slackチャンネルから @Codex でタスクを投げると、クラウドタスクを作成してスレッドに結果を返します。チームのワークフローにシームレスに統合可能。</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">&#127760;</div>
+          <div class="card-title">Web検索</div>
+        </div>
+        <p>Codex CLIからWebを検索して最新の情報を取得可能。ライブラリのドキュメントやAPIリファレンスを参照しながらコーディングできます。</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">&#128444;</div>
+          <div class="card-title">画像入力</div>
+        </div>
+        <p>スクリーンショットやデザインスペックを添付して、UIの実装を指示できます。Figmaスキルと組み合わせることで高精度なUI再現が可能。</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">&#128268;</div>
+          <div class="card-title">MCP対応</div>
+        </div>
+        <p>Model Context Protocol (MCP) によりサードパーティツールと連携。Chrome DevTools、ドキュメントサーバー、カスタムツールを統合できます。</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">&#128101;</div>
+          <div class="card-title">エージェントロール</div>
+        </div>
+        <p>explorer（探索）、worker（実装）、reviewer（レビュー）、monitor（監視）など、用途別のエージェントロールを定義・カスタマイズ可能。</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">&#128101;</div>
+          <div class="card-title">インタラクティブ操作</div>
+        </div>
+        <p>GPT-5.3-Codexでは、作業中のエージェントにリアルタイムでフィードバックや方向修正が可能。進捗の定期報告も受けられます。</p>
+      </div>
+    </div>
+
+    <h3 class="mt-32 mb-16" style="font-size:1.15rem; font-weight:600;">AGENTS.md の仕組み</h3>
+
+    <p>AGENTS.md は、Codexにプロジェクト固有のルールを伝えるためのMarkdownファイルです。Codexは起動時（セッション開始時）にこのファイルを読み込み、指示に従って動作します。グローバル設定（<code>~/.codex/AGENTS.md</code>）からプロジェクトルート、さらにサブディレクトリへと階層的に読み込まれ、より近い位置のファイルが優先されます。</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="lang">Markdown</span>
+        <span>AGENTS.md の例</span>
+      </div>
+      <div class="code-body">
+<pre><span class="comment"># AGENTS.md</span>
+
+<span class="keyword">## プロジェクトルール</span>
+
+- テスト実行コマンド: `npm test`
+- Linter: `npm run lint` をPR前に必ず実行
+- TypeScriptを使用、any型は禁止
+- コミットメッセージは Conventional Commits 形式で
+- 新しい依存関係の追加前に確認を求めること
+
+<span class="keyword">## ディレクトリ構成</span>
+
+- `src/` - メインソースコード
+- `tests/` - テストファイル
+- `docs/` - ドキュメント
+
+<span class="keyword">## コーディング規約</span>
+
+- 関数には JSDoc コメントを付ける
+- エラーハンドリングは必ず行う
+- マジックナンバーは定数に切り出す</pre>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="lang">TOML</span>
+        <span>~/.codex/config.toml — マルチエージェント設定例</span>
+      </div>
+      <div class="code-body">
+<pre><span class="comment"># マルチエージェントを有効化</span>
+[features]
+multi_agent = <span class="keyword">true</span>
+
+<span class="comment"># エージェント設定</span>
+[agents]
+max_threads = <span class="variable">6</span>
+max_depth = <span class="variable">1</span>
+
+[agents.explorer]
+description = <span class="string">"コードベース探索用の読み取り専用エージェント"</span>
+config_file = <span class="string">"agents/explorer.toml"</span>
+
+[agents.reviewer]
+description = <span class="string">"正確性・セキュリティ・テストに焦点を当てたPRレビュアー"</span>
+config_file = <span class="string">"agents/reviewer.toml"</span></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     SECTION 4: Model Relationship
+     ============================================ -->
+<section class="section" id="s4">
+  <div class="container">
+    <span class="section-label">Section 04 — Models</span>
+    <h2 class="section-title">GPT-4o / <span class="gradient-text">GPT-5.3との関係</span></h2>
+
+    <p>OpenAI Codexの内部で使用されるモデルは、リリース以来急速に進化しています。Codex専用にファインチューニングされた「Codex系モデル」が存在し、汎用のGPTモデルとは区別されます。以下にその進化の歴史を示します。</p>
+
+    <h3 class="mt-32 mb-16" style="font-size:1.15rem; font-weight:600;">モデル進化タイムライン</h3>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-date">2021年8月</div>
+        <div class="timeline-title">初代 Codex（GPT-3ベース）</div>
+        <div class="timeline-desc">GitHub Copilotのバックエンドとして使われた、最初の「Codex」ブランド。自然言語からコードを生成する能力でAIコーディング革命の先駆けとなりました。現在は非推奨。</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">2025年4月</div>
+        <div class="timeline-title">Codex CLI リリース（オープンソース）</div>
+        <div class="timeline-desc">ターミナルで動作する軽量コーディングエージェント。o3やo4-miniモデルを使用して、ローカル環境でのペアプログラミングを実現。</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">2025年5月</div>
+        <div class="timeline-title">codex-1 + codex-mini（o3ベース）</div>
+        <div class="timeline-desc">Codex Web（クラウド版）の初回リリース。codex-1はo3をソフトウェアエンジニアリング向けに最適化したモデル。codex-miniはo4-miniベースの高速版。強化学習により人間のコーディングスタイルに近い出力を実現。</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">2025年9月</div>
+        <div class="timeline-title">GPT-5-Codex</div>
+        <div class="timeline-desc">GPT-5をコーディングタスク向けに最適化。SWE-Bench Verifiedで51.3%を達成し、ベースモデル（33.9%）を大幅に上回る。Responses APIで利用可能に。</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">2025年11月</div>
+        <div class="timeline-title">GPT-5.1-Codex / GPT-5.1-Codex-Mini / GPT-5.1-Codex-Max</div>
+        <div class="timeline-desc">長時間エージェントタスクに最適化。Maxバージョンは特に大規模プロジェクト向け。Miniは4倍の利用効率を提供。</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">2025年12月</div>
+        <div class="timeline-title">GPT-5.2-Codex</div>
+        <div class="timeline-desc">実世界のエンジニアリング向けに高度化。このリリース以降、Codexの利用者数が倍増。</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">2026年2月5日</div>
+        <div class="timeline-title">GPT-5.3-Codex &#128293;</div>
+        <div class="timeline-desc">現時点で最も強力なCodexモデル。SWE-Bench Proで56.8%、Terminal-Bench 2.0で77.3%を達成。自身のトレーニングとデプロイに使用された初のモデル。25%高速化。OSWorldで64.7%（人間は約72%）。</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">2026年2月12日</div>
+        <div class="timeline-title">GPT-5.3-Codex-Spark（リサーチプレビュー）</div>
+        <div class="timeline-desc">リアルタイムコーディング向けの超高速モデル。Cerebras WSE-3で1,000+ トークン/秒の生成速度。128Kコンテキスト。Pro限定。</div>
+      </div>
+    </div>
+
+    <h3 class="mt-32 mb-16" style="font-size:1.15rem; font-weight:600;">現在利用可能なモデル一覧</h3>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>モデル名</th>
+            <th>特徴</th>
+            <th>CLI</th>
+            <th>Cloud</th>
+            <th>API</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="highlight">GPT-5.3-Codex</td>
+            <td>最高性能。フロンティアコーディング+推論+プロ知識</td>
+            <td>&#10004;</td>
+            <td>&#10004;</td>
+            <td>準備中</td>
+          </tr>
+          <tr>
+            <td class="highlight">GPT-5.3-Codex-Spark</td>
+            <td>超高速リアルタイム。Pro限定リサーチプレビュー</td>
+            <td>&#10004;</td>
+            <td>&#10004;</td>
+            <td>&#10060;</td>
+          </tr>
+          <tr>
+            <td class="highlight">GPT-5.2-Codex</td>
+            <td>前世代のフラッグシップ。安定性重視</td>
+            <td>&#10004;</td>
+            <td>&#10004;</td>
+            <td>&#10004;</td>
+          </tr>
+          <tr>
+            <td class="highlight">GPT-5.2</td>
+            <td>汎用最強モデル。コーディング以外のタスクにも</td>
+            <td>&#10004;</td>
+            <td>&#10004;</td>
+            <td>&#10004;</td>
+          </tr>
+          <tr>
+            <td class="highlight">GPT-5.1-Codex-Mini</td>
+            <td>コスト効率重視。利用制限を4倍に延長可能</td>
+            <td>&#10004;</td>
+            <td>&#10060;</td>
+            <td>&#10004;</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tip-box mt-24">
+      <div class="tip-title">&#128161; GPT-4oとの関係</div>
+      <p>GPT-4oは2024年にリリースされた汎用モデルで、現在のCodexでは使用されていません。Codexは当初o3ベースのcodex-1から始まり、GPT-5系列へ移行しました。GPT-4o時代のCodexは存在しないため、混同しないよう注意してください。「Codex」というブランド名は2021年のGPT-3ベース時代から使われていますが、現在のCodexエージェントとは全く別のシステムです。</p>
+    </div>
+
+    <h3 class="mt-32 mb-16" style="font-size:1.15rem; font-weight:600;">ベンチマーク比較</h3>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>ベンチマーク</th>
+            <th>GPT-5.3-Codex</th>
+            <th>GPT-5.2-Codex</th>
+            <th>GPT-5.2</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>SWE-Bench Pro</td>
+            <td class="highlight">56.8%</td>
+            <td>56.4%</td>
+            <td>55.6%</td>
+          </tr>
+          <tr>
+            <td>Terminal-Bench 2.0</td>
+            <td class="highlight">77.3%</td>
+            <td>64.0%</td>
+            <td>62.2%</td>
+          </tr>
+          <tr>
+            <td>OSWorld-Verified</td>
+            <td class="highlight">64.7%</td>
+            <td>38.2%</td>
+            <td>37.9%</td>
+          </tr>
+          <tr>
+            <td>GDPval</td>
+            <td class="highlight">70.9%</td>
+            <td>—</td>
+            <td>70.9%</td>
+          </tr>
+          <tr>
+            <td>SWE-Lancer IC Diamond</td>
+            <td class="highlight">81.4%</td>
+            <td>76.0%</td>
+            <td>74.6%</td>
+          </tr>
+          <tr>
+            <td>Cyber CTF Challenges</td>
+            <td class="highlight">77.6%</td>
+            <td>67.4%</td>
+            <td>67.7%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     SECTION 5: Pricing
+     ============================================ -->
+<section class="section" id="s5">
+  <div class="container">
+    <span class="section-label">Section 05 — Pricing</span>
+    <h2 class="section-title"><span class="gradient-text">料金体系</span>・利用条件</h2>
+
+    <p>Codexは ChatGPT のサブスクリプションに含まれており、追加料金なしで利用を開始できます。2026年3月現在、期間限定で Free および Go プランにも Codex が開放されており、有料プランでは2倍のレート制限が適用されています。</p>
+
+    <h3 class="mt-32 mb-16" style="font-size:1.15rem; font-weight:600;">プラン別機能・制限</h3>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>プラン</th>
+            <th>月額</th>
+            <th>ローカルメッセージ / 5h</th>
+            <th>クラウドタスク / 5h</th>
+            <th>コードレビュー / 週</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="highlight">Free / Go</td>
+            <td>$0 / $8</td>
+            <td>期間限定で利用可能</td>
+            <td>期間限定で利用可能</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td class="highlight">Plus</td>
+            <td>$20</td>
+            <td>45〜225</td>
+            <td>10〜60</td>
+            <td>10〜25</td>
+          </tr>
+          <tr>
+            <td class="highlight">Pro</td>
+            <td>$200</td>
+            <td>300〜1,500</td>
+            <td>50〜400</td>
+            <td>100〜250</td>
+          </tr>
+          <tr>
+            <td class="highlight">Business</td>
+            <td>$25/ユーザー</td>
+            <td>45〜225</td>
+            <td>10〜60</td>
+            <td>10〜25</td>
+          </tr>
+          <tr>
+            <td class="highlight">Enterprise / Edu</td>
+            <td>要問合せ</td>
+            <td>クレジット制（上限なし）</td>
+            <td>クレジット制</td>
+            <td>クレジット制</td>
+          </tr>
+          <tr>
+            <td class="highlight">APIキー</td>
+            <td>従量制</td>
+            <td>従量制</td>
+            <td>利用不可</td>
+            <td>利用不可</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="mt-16">メッセージ数の幅は、タスクの規模・複雑さによって変動します。小さなスクリプトは少量で済みますが、大規模なコードベースの長時間タスクはより多くの制限を消費します。</p>
+
+    <h3 class="mt-32 mb-16" style="font-size:1.15rem; font-weight:600;">クレジットシステム</h3>
+
+    <p>利用制限に達した後も、追加クレジットを購入して作業を継続できます。クレジット消費量はモデルと機能によって異なります。</p>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>タスク種別</th>
+            <th>単位</th>
+            <th>GPT-5.3-Codex</th>
+            <th>GPT-5.1-Codex-Mini</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>ローカルタスク</td>
+            <td>1メッセージ</td>
+            <td>〜5クレジット</td>
+            <td>〜1クレジット</td>
+          </tr>
+          <tr>
+            <td>クラウドタスク</td>
+            <td>1メッセージ</td>
+            <td>〜25クレジット</td>
+            <td>利用不可</td>
+          </tr>
+          <tr>
+            <td>コードレビュー</td>
+            <td>1 PR</td>
+            <td>〜25クレジット</td>
+            <td>利用不可</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tip-box mt-24">
+      <div class="tip-title">&#128176; Pro限定特典</div>
+      <p>Proプラン（$200/月）では、GPT-5.3-Codex-Spark（超高速モデル）へのアクセス、6倍のローカル/クラウド制限、10倍のコードレビュー数、優先リクエスト処理が含まれます。本格的な日常開発に Codex を使う場合に最適です。</p>
+    </div>
+
+    <div class="tip-box warning mt-16">
+      <div class="tip-title">&#9888; 利用制限を長持ちさせるコツ</div>
+      <p>プロンプトを簡潔にする、AGENTS.md のサイズを最適化する、不要な MCP サーバーを無効化する、日常的なタスクには GPT-5.1-Codex-Mini を使用する（約4倍の効率）— これらの工夫で同じ予算でより多くの作業が可能になります。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     SECTION 6: Use Cases
+     ============================================ -->
+<section class="section" id="s6">
+  <div class="container">
+    <span class="section-label">Section 06 — Use Cases</span>
+    <h2 class="section-title"><span class="gradient-text">ユースケース</span>（何に使えるか）</h2>
+
+    <p>Codexは単なるコード生成ツールではなく、ソフトウェア開発ライフサイクル全体をカバーするエージェントです。GPT-5.3-Codexにより、コーディング以外のナレッジワークにもその能力が拡張されています。</p>
+
+    <div class="card-grid mt-24">
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">&#128736;</div>
+          <div class="card-title">新機能の実装</div>
+        </div>
+        <p>「ユーザー認証機能をOAuth2で実装して」のようなプロンプトで、ファイル作成からテスト記述、PRの作成まで一貫して実行。複数のエージェントを並列に走らせて異なる機能を同時に開発することも可能です。</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">&#128027;</div>
+          <div class="card-title">バグの修正</div>
+        </div>
+        <p>エラーログやスタックトレースを渡すと、原因を特定し修正パッチを生成。テストを実行して修正が正しいことを検証してからコミットします。オンコール対応の効率化にも活用されています。</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">&#128269;</div>
+          <div class="card-title">コードレビュー</div>
+        </div>
+        <p>GitHub PRで @Codex をメンションすると、セキュリティ問題、バグ、コード品質、テスト不足などを自動でレビュー。手動レビューの前のファーストパスとして非常に有効です。</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">&#128257;</div>
+          <div class="card-title">リファクタリング</div>
+        </div>
+        <p>大規模なコードベースのリネーム、構造変更、デザインパターンの適用を安全に実行。テストを走らせながら破壊的変更がないことを確認します。</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">&#128221;</div>
+          <div class="card-title">テスト作成</div>
+        </div>
+        <p>既存コードのテストカバレッジを向上。ユニットテスト、統合テスト、E2Eテストの作成と実行を自動化し、カバレッジ率を報告します。</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">&#128196;</div>
+          <div class="card-title">ドキュメント生成</div>
+        </div>
+        <p>コードからAPIドキュメント、README、技術仕様書を自動生成。コードの変更に合わせてドキュメントを更新する自動化ワークフローも構築可能です。</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">&#127912;</div>
+          <div class="card-title">UIデザインの実装</div>
+        </div>
+        <p>Figmaデザインのスクリーンショットを渡して「これを実装して」と指示するだけでプロダクションレディなUIコードを生成。画像生成スキルと組み合わせてアセットも自動作成。</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">&#128640;</div>
+          <div class="card-title">デプロイ・CI/CD</div>
+        </div>
+        <p>Cloudflare、Vercel、Netlify、Renderへのデプロイをスキルで自動化。CI障害の診断・修正も実行可能。GPUクラスターの動的スケーリングにも使用されています。</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">&#128202;</div>
+          <div class="card-title">データ分析・レポート</div>
+        </div>
+        <p>CSV/スプレッドシートの分析、可視化、レポート生成。PDF・PowerPoint・Wordドキュメントの作成。GDPvalベンチマークで70.9%を達成し、知識労働タスク全般に対応。</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">&#127918;</div>
+          <div class="card-title">ゲーム・アプリ開発</div>
+        </div>
+        <p>OpenAIのデモでは、1つのプロンプトからレーシングゲームやダイビングゲームを自律的に開発。7百万トークン以上を使って、デザイン・開発・QAテストまで一人で遂行。</p>
+      </div>
+
+    </div>
+
+    <div class="tip-box mt-24">
+      <div class="tip-title">&#127919; 実績のある企業での活用</div>
+      <p>Cisco（プロダクトポートフォリオ全体での評価）、Temporal（機能開発・デバッグ・リファクタリング）、Superhuman（テストカバレッジ・統合テスト・PMによるライトなコード変更）、Kodiak（自動運転技術のデバッグツール・テストカバレッジ向上）など、多くの企業で実運用されています。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     SECTION 7: Comparison
+     ============================================ -->
+<section class="section" id="s7">
+  <div class="container-wide">
+    <span class="section-label">Section 07 — Comparison</span>
+    <h2 class="section-title">他のAIコーディングツールとの<span class="gradient-text">比較</span></h2>
+
+    <p>2026年のAIコーディングツール市場は急速に進化しています。主要なツールを多角的に比較します。</p>
+
+    <h3 class="mt-32 mb-16" style="font-size:1.15rem; font-weight:600;">総合比較表</h3>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>項目</th>
+            <th>OpenAI Codex</th>
+            <th>Claude Code</th>
+            <th>GitHub Copilot</th>
+            <th>Cursor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>カテゴリ</strong></td>
+            <td>自律型エージェント</td>
+            <td>自律型エージェント</td>
+            <td>コード補完+エージェント</td>
+            <td>AI搭載IDE</td>
+          </tr>
+          <tr>
+            <td><strong>実行環境</strong></td>
+            <td>クラウド + ローカル + デスクトップアプリ</td>
+            <td>ローカル（ターミナル） + デスクトップ</td>
+            <td>IDE内（VS Code等）</td>
+            <td>IDE（Cursorエディタ）</td>
+          </tr>
+          <tr>
+            <td><strong>主要モデル</strong></td>
+            <td>GPT-5.3-Codex</td>
+            <td>Claude Opus 4.6</td>
+            <td>複数モデル選択可</td>
+            <td>複数モデル選択可</td>
+          </tr>
+          <tr>
+            <td><strong>マルチエージェント</strong></td>
+            <td>&#10004; 独立スレッド方式</td>
+            <td>&#10004; Agent Teams（協調型）</td>
+            <td>&#10060;</td>
+            <td>&#10060;</td>
+          </tr>
+          <tr>
+            <td><strong>コンテキスト窓</strong></td>
+            <td>400K トークン</td>
+            <td>1M トークン（ベータ）</td>
+            <td>モデル依存</td>
+            <td>モデル依存</td>
+          </tr>
+          <tr>
+            <td><strong>サンドボックス</strong></td>
+            <td>クラウドコンテナ（ネット無効）</td>
+            <td>Git worktree（ローカル）</td>
+            <td>IDE内</td>
+            <td>IDE内</td>
+          </tr>
+          <tr>
+            <td><strong>GitHub連携</strong></td>
+            <td>PR作成・自動レビュー</td>
+            <td>PR操作対応</td>
+            <td>深い統合</td>
+            <td>基本的</td>
+          </tr>
+          <tr>
+            <td><strong>コードレビュー</strong></td>
+            <td>&#10004; 自動レビュー（GitHub上）</td>
+            <td>&#10004;</td>
+            <td>&#10004;</td>
+            <td>制限的</td>
+          </tr>
+          <tr>
+            <td><strong>オープンソース</strong></td>
+            <td>&#10004; CLI（Apache-2.0）</td>
+            <td>&#10060; プロプライエタリ</td>
+            <td>&#10060;</td>
+            <td>&#10060;</td>
+          </tr>
+          <tr>
+            <td><strong>Slack連携</strong></td>
+            <td>&#10004;</td>
+            <td>&#10060;</td>
+            <td>&#10060;</td>
+            <td>&#10060;</td>
+          </tr>
+          <tr>
+            <td><strong>画像入力</strong></td>
+            <td>&#10004;</td>
+            <td>&#10004;</td>
+            <td>制限的</td>
+            <td>&#10004;</td>
+          </tr>
+          <tr>
+            <td><strong>自動化・スケジュール</strong></td>
+            <td>&#10004; Automations</td>
+            <td>&#10060;</td>
+            <td>&#10060;</td>
+            <td>&#10060;</td>
+          </tr>
+          <tr>
+            <td><strong>最低料金</strong></td>
+            <td>$20/月（Plus）</td>
+            <td>$20/月（Pro）</td>
+            <td>$10/月（Individual）</td>
+            <td>$20/月（Pro）</td>
+          </tr>
+          <tr>
+            <td><strong>VS Code評価</strong></td>
+            <td>3.4 / 5（4.9M DL）</td>
+            <td>4.0 / 5（5.2M DL）</td>
+            <td>4.3 / 5（高DL数）</td>
+            <td>専用IDE</td>
+          </tr>
+          <tr>
+            <td><strong>GitHub Stars</strong></td>
+            <td>62,365</td>
+            <td>71,500</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="mt-32 mb-16" style="font-size:1.15rem; font-weight:600;">強みと弱みの対比</h3>
+
+    <div class="card-grid mt-16">
+      <div class="card">
+        <div class="card-title mb-16" style="color: var(--accent-light);">OpenAI Codex の強み</div>
+        <p>&#10004; クラウドサンドボックスによる安全な並列実行<br>
+        &#10004; Terminal-Bench 2.0で業界最高（77.3%）<br>
+        &#10004; デスクトップアプリによるマルチタスク管理<br>
+        &#10004; Automationsによるスケジュール自動化<br>
+        &#10004; Skills/MCPによる豊富な拡張性<br>
+        &#10004; Slack連携でチームワークフローに統合<br>
+        &#10004; CLIがオープンソース（Apache-2.0）<br>
+        &#10004; GPT-5.3-Codex-Sparkの超高速生成<br>
+        &#10004; $20/月で比較的寛大な利用制限</p>
+      </div>
+      <div class="card">
+        <div class="card-title mb-16" style="color: var(--accent-light);">OpenAI Codex の弱み</div>
+        <p>&#10060; 出力の一貫性にばらつきがある<br>
+        &#10060; 詳細な計画からの逸脱（off-plan drift）<br>
+        &#10060; 過剰な防御的エラーハンドリング<br>
+        &#10060; コードベースのスタイルへの適応が弱い<br>
+        &#10060; VS Code拡張の評価がやや低め（3.4/5）<br>
+        &#10060; クラウドタスクはローカル編集より遅延が大きい<br>
+        &#10060; エージェント間の直接通信機能なし<br>
+        &#10060; GPT-5.3-CodexのAPI提供がまだ</p>
+      </div>
+    </div>
+
+    <div class="card-grid mt-16">
+      <div class="card">
+        <div class="card-title mb-16" style="color: #4ADE80;">Claude Code の強み</div>
+        <p>&#10004; Agent Teamsによる協調型マルチエージェント<br>
+        &#10004; 1Mトークンのコンテキスト窓（ベータ）<br>
+        &#10004; 決定的な出力（同じプロンプト → 同じ結果）<br>
+        &#10004; SWE-bench Verified 80.8%（Opus 4.6）<br>
+        &#10004; エージェント間メッセージング機能<br>
+        &#10004; 会話で軌道修正しやすい<br>
+        &#10004; 自動メモリ（セッション間のコンテキスト保存）<br>
+        &#10004; Hooksシステムでカスタム自動化</p>
+      </div>
+      <div class="card">
+        <div class="card-title mb-16" style="color: #FF6B6B;">Claude Code の弱み</div>
+        <p>&#10060; トークン消費が3〜4倍多い<br>
+        &#10060; 5〜6プロンプト後にコンパクション発生<br>
+        &#10060; 利用制限にヒットしやすい<br>
+        &#10060; 承認リクエストが頻繁すぎる場合がある<br>
+        &#10060; 仮定を立てる際にフラグを立てない<br>
+        &#10060; プロプライエタリ（非オープンソース）<br>
+        &#10060; Slack連携なし<br>
+        &#10060; $100/月の中間プランが必要になりがち</p>
+      </div>
+    </div>
+
+    <h3 class="mt-32 mb-16" style="font-size:1.15rem; font-weight:600;">ベンチマーク性能比較</h3>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>ベンチマーク</th>
+            <th>GPT-5.3-Codex</th>
+            <th>Claude Opus 4.6</th>
+            <th>備考</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>SWE-Bench Pro</td>
+            <td>56.8%</td>
+            <td class="highlight">57.5%（+WarpGrep）</td>
+            <td>ツール補助ありでClaudeがわずかにリード</td>
+          </tr>
+          <tr>
+            <td>SWE-Bench Verified</td>
+            <td>—</td>
+            <td class="highlight">80.8%</td>
+            <td>Claudeが強い</td>
+          </tr>
+          <tr>
+            <td>Terminal-Bench 2.0</td>
+            <td class="highlight">77.3%</td>
+            <td>65.4%</td>
+            <td>Codexが大幅にリード</td>
+          </tr>
+          <tr>
+            <td>OSWorld-Verified</td>
+            <td class="highlight">64.7%</td>
+            <td>—</td>
+            <td>コンピュータ操作能力</td>
+          </tr>
+          <tr>
+            <td>トークン効率</td>
+            <td class="highlight">〜90%少ない</td>
+            <td>3〜4倍多い</td>
+            <td>同一タスクでの比較</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="mt-32 mb-16" style="font-size:1.15rem; font-weight:600;">シーン別おすすめツール</h3>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>シーン</th>
+            <th>おすすめ</th>
+            <th>理由</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>新規プロジェクトの高速プロトタイプ</td>
+            <td class="highlight">Codex</td>
+            <td>クラウドサンドボックスでの高速スキャフォールディング</td>
+          </tr>
+          <tr>
+            <td>大規模リファクタリング</td>
+            <td class="highlight">Claude Code</td>
+            <td>Agent Teamsによる依存関係付き分割統治</td>
+          </tr>
+          <tr>
+            <td>ターミナル中心のワークフロー</td>
+            <td class="highlight">Codex</td>
+            <td>Terminal-Bench 77.3%の実力</td>
+          </tr>
+          <tr>
+            <td>決定的な出力が必要</td>
+            <td class="highlight">Claude Code</td>
+            <td>同一プロンプトで再現性のある結果</td>
+          </tr>
+          <tr>
+            <td>予算 $20/月</td>
+            <td class="highlight">Codex</td>
+            <td>Plus プランで十分な利用量</td>
+          </tr>
+          <tr>
+            <td>日常のコード補完</td>
+            <td class="highlight">GitHub Copilot</td>
+            <td>IDEとの深い統合、リアルタイム提案</td>
+          </tr>
+          <tr>
+            <td>IDEに統合されたAI開発</td>
+            <td class="highlight">Cursor</td>
+            <td>エディタ自体にAIが組み込まれた体験</td>
+          </tr>
+          <tr>
+            <td>チームでの非同期開発</td>
+            <td class="highlight">Codex</td>
+            <td>Slack連携 + Automations + マルチエージェント</td>
+          </tr>
+          <tr>
+            <td>セキュリティ監査</td>
+            <td class="highlight">両方併用</td>
+            <td>Codexでスキャン、Claudeで詳細レビュー</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     SECTION 8: Getting Started
+     ============================================ -->
+<section class="section" id="s8">
+  <div class="container">
+    <span class="section-label">Section 08 — Getting Started</span>
+    <h2 class="section-title"><span class="gradient-text">始め方ガイド</span>（ステップバイステップ）</h2>
+
+    <p>Codexを使い始めるための具体的な手順を、最もシンプルなパスで解説します。</p>
+
+    <div class="steps mt-32">
+
+      <div class="step">
+        <div class="step-title">ChatGPTアカウントを準備する</div>
+        <p><a href="https://chatgpt.com" target="_blank">chatgpt.com</a> でアカウントを作成します。Codexの全機能を利用するには Plus プラン（$20/月）以上が推奨ですが、現在は Free プランでも期間限定で利用可能です。クレジットカードを登録し、希望のプランにアップグレードしてください。</p>
+      </div>
+
+      <div class="step">
+        <div class="step-title">Node.js をインストールする（CLI利用の場合）</div>
+        <p>Codex CLI を npm でインストールするには Node.js 18以上が必要です。<a href="https://nodejs.org" target="_blank">nodejs.org</a> から LTS バージョンをダウンロードするか、nvm を使ってインストールしてください。</p>
+        <div class="code-block">
+          <div class="code-header"><span class="lang">Shell</span><span>nvm推奨</span></div>
+          <div class="code-body">
+<pre><span class="comment"># nvmでNode.js 22をインストール</span>
+<span class="prompt">$</span> curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
+<span class="prompt">$</span> nvm install 22
+<span class="prompt">$</span> nvm use 22
+<span class="prompt">$</span> node --version  <span class="comment"># v22.x.x</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-title">Codex CLI をインストールする</div>
+        <div class="code-block">
+          <div class="code-header"><span class="lang">Shell</span><span></span></div>
+          <div class="code-body">
+<pre><span class="prompt">$</span> npm install -g @openai/codex
+<span class="prompt">$</span> codex --version  <span class="comment"># インストール確認</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-title">認証する</div>
+        <p><code>codex</code> を実行し、「Sign in with ChatGPT」を選択してブラウザで認証します。APIキーが自動的に設定され、プランに応じた利用制限が適用されます。</p>
+        <div class="code-block">
+          <div class="code-header"><span class="lang">Shell</span><span></span></div>
+          <div class="code-body">
+<pre><span class="prompt">$</span> codex
+<span class="output"># → ブラウザが開く → ChatGPTでログイン → 認証完了</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-title">プロジェクトディレクトリに移動する</div>
+        <p>Codexはカレントディレクトリのファイルを読み取ります。作業したいプロジェクトのルートに <code>cd</code> してから起動してください。</p>
+        <div class="code-block">
+          <div class="code-header"><span class="lang">Shell</span><span></span></div>
+          <div class="code-body">
+<pre><span class="prompt">$</span> cd ~/projects/my-app
+<span class="prompt">$</span> codex</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-title">最初のタスクを実行する</div>
+        <p>簡単なタスクから始めましょう。以下のようなプロンプトを試してみてください。</p>
+        <div class="code-block">
+          <div class="code-header"><span class="lang">Shell</span><span>初めてのプロンプト例</span></div>
+          <div class="code-body">
+<pre><span class="comment"># コードベースの概要を質問</span>
+<span class="prompt">$</span> codex <span class="string">"このプロジェクトの構造を説明して"</span>
+
+<span class="comment"># READMEの生成</span>
+<span class="prompt">$</span> codex <span class="string">"このプロジェクトのREADME.mdを作成して"</span>
+
+<span class="comment"># テストの追加</span>
+<span class="prompt">$</span> codex <span class="string">"src/utils.ts にユニットテストを追加して"</span>
+
+<span class="comment"># バグ修正</span>
+<span class="prompt">$</span> codex <span class="string">"ログイン時にエラーが出る問題を調査して修正して"</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-title">AGENTS.md を作成する（推奨）</div>
+        <p>プロジェクトルートに <code>AGENTS.md</code> を作成し、プロジェクトのルールや構成を記述します。これによりCodexの出力品質が大幅に向上します。</p>
+        <div class="code-block">
+          <div class="code-header"><span class="lang">Shell</span><span></span></div>
+          <div class="code-body">
+<pre><span class="prompt">$</span> codex <span class="string">"このプロジェクトに最適なAGENTS.mdを作成して"</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-title">Web版・アプリ版も試す</div>
+        <p>CLI以外にも、<a href="https://chatgpt.com/codex" target="_blank">chatgpt.com/codex</a>（Web版）やデスクトップアプリ（<code>codex app</code>）でも利用できます。クラウドタスクはGitHubリポジトリを接続して並列実行でき、結果をPRとして直接作成できます。</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     SECTION 9: Tips
+     ============================================ -->
+<section class="section" id="s9">
+  <div class="container">
+    <span class="section-label">Section 09 — Tips & Caveats</span>
+    <h2 class="section-title"><span class="gradient-text">Tips</span>・注意点</h2>
+
+    <h3 class="mt-16 mb-16" style="font-size:1.15rem; font-weight:600;">効果的に使うためのTips</h3>
+
+    <div class="card">
+      <div class="card-title mb-16">&#127919; プロンプトの書き方</div>
+      <p>Codexは明確で具体的な指示に対して最高のパフォーマンスを発揮します。「良いコードを書いて」ではなく「src/auth/login.tsにJWTベースの認証ミドルウェアを追加して。エラーハンドリングを含め、テストも書いて」のように、対象ファイル・技術スタック・期待する結果を明記してください。</p>
+      <p>複数の独立したタスクは別々のプロンプトとして送信し、並列に処理させましょう。1つの巨大なプロンプトより、スコープが明確な小さなタスクの方が成功率が高くなります。</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title mb-16">&#128200; モデルの使い分け</div>
+      <p>日常的な小さなタスク（リネーム、フォーマット、簡単な修正）には <code>GPT-5.1-Codex-Mini</code> を使い、利用制限を節約しましょう。複雑なアーキテクチャ変更や長時間タスクには <code>GPT-5.3-Codex</code> を使用し、Proプランなら <code>GPT-5.3-Codex-Spark</code> でリアルタイムの高速イテレーションが可能です。<code>/model</code> コマンドでセッション中にモデルを切り替えられます。</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title mb-16">&#128736; AGENTS.md を活用する</div>
+      <p>AGENTS.md が適切に設定されているプロジェクトでは、Codexの出力品質が格段に向上します。テストコマンド、Linterの使い方、コーディング規約、ディレクトリ構成を記載しましょう。グローバル設定（<code>~/.codex/AGENTS.md</code>）に個人的な好みを書き、プロジェクトごとの設定で上書きする構成が効果的です。ファイルサイズはデフォルト32KBまで（config.tomlで変更可能）。</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title mb-16">&#128101; マルチエージェントの活用</div>
+      <p>PRレビューでは、explorerでコードパスをマッピング → reviewerでバグ・セキュリティチェック → docs_researcherでAPI確認、というように役割を分けると効果的です。CSV一括処理（<code>spawn_agents_on_csv</code>）で大量の繰り返しタスクを並列化することも可能です。各エージェントのモデルやサンドボックス設定をロールごとにカスタマイズできます。</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title mb-16">&#128260; 自動化ワークフロー</div>
+      <p><code>codex exec</code> コマンドを CI/CD パイプラインやシェルスクリプトに組み込むことで、反復的なタスクを自動化できます。Codexアプリの Automations 機能では、スケジュールベースで定期的にタスクを実行し、結果をレビューキューに送れます。</p>
+    </div>
+
+    <h3 class="mt-32 mb-16" style="font-size:1.15rem; font-weight:600;">注意点・よくあるトラブル</h3>
+
+    <div class="tip-box warning">
+      <div class="tip-title">&#9888; 必ずコードレビューを行う</div>
+      <p>Codexが生成したコードは必ず人間がレビューしてから本番環境にデプロイしてください。ハルシネーション（存在しないAPIの使用、誤ったロジック）が発生する可能性があります。特にセキュリティに関わる部分は慎重に確認してください。</p>
+    </div>
+
+    <div class="tip-box warning mt-16">
+      <div class="tip-title">&#9888; サンドボックスの信頼性</div>
+      <p>Codex CLIのサンドボックスは基本的に安全ですが、過去にzshバイパスの脆弱性が報告されたことがあります（v0.106.0で修正済み）。<code>--dangerously-bypass-approvals-and-sandbox</code> フラグは信頼できる環境でのみ使用してください。本番サーバーでの使用は避けましょう。</p>
+    </div>
+
+    <div class="tip-box warning mt-16">
+      <div class="tip-title">&#9888; 出力のばらつき</div>
+      <p>Codexは同一プロンプトでも異なる結果を返すことがあります。決定的な出力が必要な場合は、具体的なファイル名、関数名、期待する振る舞いを明記してください。対照的に、Claude Codeは同じプロンプトに対してより一貫した結果を返す傾向があります。</p>
+    </div>
+
+    <div class="tip-box warning mt-16">
+      <div class="tip-title">&#9888; Windows環境での注意</div>
+      <p>Codex CLIのWindows対応は実験的です。最も安定した体験を得るには、WSL（Windows Subsystem for Linux）環境で使用してください。デスクトップアプリは2026年3月にWindows版がリリースされました。</p>
+    </div>
+
+    <div class="tip-box mt-16">
+      <div class="tip-title">&#128161; トークンと制限の管理</div>
+      <p><code>/status</code> コマンドで残りの利用制限をリアルタイムに確認できます。利用状況ダッシュボード（<a href="https://chatgpt.com/codex/settings/usage" target="_blank">chatgpt.com/codex/settings/usage</a>）でも詳細を確認可能。MCP サーバーの数を減らすとコンテキストサイズが小さくなり、利用制限が長持ちします。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     SECTION 10: Reference Links
+     ============================================ -->
+<section class="section" id="s10">
+  <div class="container">
+    <span class="section-label">Section 10 — References</span>
+    <h2 class="section-title"><span class="gradient-text">参考リンク集</span></h2>
+
+    <h3 class="mt-16 mb-16" style="font-size:1.05rem; font-weight:600;">公式ドキュメント</h3>
+
+    <a class="link-card" href="https://developers.openai.com/codex/" target="_blank">
+      <div class="link-icon">&#128214;</div>
+      <div class="link-info">
+        <div class="link-title">Codex 公式ドキュメント</div>
+        <div class="link-url">developers.openai.com/codex</div>
+      </div>
+    </a>
+
+    <a class="link-card" href="https://developers.openai.com/codex/cli/" target="_blank">
+      <div class="link-icon">&#9000;</div>
+      <div class="link-info">
+        <div class="link-title">Codex CLI ドキュメント</div>
+        <div class="link-url">developers.openai.com/codex/cli</div>
+      </div>
+    </a>
+
+    <a class="link-card" href="https://developers.openai.com/codex/pricing/" target="_blank">
+      <div class="link-icon">&#128176;</div>
+      <div class="link-info">
+        <div class="link-title">Codex 料金ページ</div>
+        <div class="link-url">developers.openai.com/codex/pricing</div>
+      </div>
+    </a>
+
+    <a class="link-card" href="https://developers.openai.com/codex/models/" target="_blank">
+      <div class="link-icon">&#129302;</div>
+      <div class="link-info">
+        <div class="link-title">Codex モデル一覧</div>
+        <div class="link-url">developers.openai.com/codex/models</div>
+      </div>
+    </a>
+
+    <a class="link-card" href="https://developers.openai.com/codex/guides/agents-md/" target="_blank">
+      <div class="link-icon">&#128220;</div>
+      <div class="link-info">
+        <div class="link-title">AGENTS.md ガイド</div>
+        <div class="link-url">developers.openai.com/codex/guides/agents-md</div>
+      </div>
+    </a>
+
+    <a class="link-card" href="https://developers.openai.com/codex/multi-agent/" target="_blank">
+      <div class="link-icon">&#128101;</div>
+      <div class="link-info">
+        <div class="link-title">マルチエージェント ドキュメント</div>
+        <div class="link-url">developers.openai.com/codex/multi-agent</div>
+      </div>
+    </a>
+
+    <a class="link-card" href="https://developers.openai.com/codex/quickstart/" target="_blank">
+      <div class="link-icon">&#128640;</div>
+      <div class="link-info">
+        <div class="link-title">クイックスタートガイド</div>
+        <div class="link-url">developers.openai.com/codex/quickstart</div>
+      </div>
+    </a>
+
+    <a class="link-card" href="https://developers.openai.com/codex/security/" target="_blank">
+      <div class="link-icon">&#128274;</div>
+      <div class="link-info">
+        <div class="link-title">セキュリティ ドキュメント</div>
+        <div class="link-url">developers.openai.com/codex/security</div>
+      </div>
+    </a>
+
+    <h3 class="mt-32 mb-16" style="font-size:1.05rem; font-weight:600;">ソースコード・GitHub</h3>
+
+    <a class="link-card" href="https://github.com/openai/codex" target="_blank">
+      <div class="link-icon">&#128187;</div>
+      <div class="link-info">
+        <div class="link-title">openai/codex — GitHub リポジトリ（CLI）</div>
+        <div class="link-url">github.com/openai/codex</div>
+      </div>
+    </a>
+
+    <a class="link-card" href="https://github.com/openai/skills" target="_blank">
+      <div class="link-icon">&#127912;</div>
+      <div class="link-info">
+        <div class="link-title">openai/skills — Codex スキル集</div>
+        <div class="link-url">github.com/openai/skills</div>
+      </div>
+    </a>
+
+    <h3 class="mt-32 mb-16" style="font-size:1.05rem; font-weight:600;">公式ブログ・アナウンス</h3>
+
+    <a class="link-card" href="https://openai.com/index/introducing-codex/" target="_blank">
+      <div class="link-icon">&#128240;</div>
+      <div class="link-info">
+        <div class="link-title">Introducing Codex（2025年5月16日）</div>
+        <div class="link-url">openai.com/index/introducing-codex</div>
+      </div>
+    </a>
+
+    <a class="link-card" href="https://openai.com/index/introducing-the-codex-app/" target="_blank">
+      <div class="link-icon">&#128240;</div>
+      <div class="link-info">
+        <div class="link-title">Introducing the Codex App（2026年2月2日）</div>
+        <div class="link-url">openai.com/index/introducing-the-codex-app</div>
+      </div>
+    </a>
+
+    <a class="link-card" href="https://openai.com/index/introducing-gpt-5-3-codex/" target="_blank">
+      <div class="link-icon">&#128240;</div>
+      <div class="link-info">
+        <div class="link-title">Introducing GPT-5.3-Codex（2026年2月5日）</div>
+        <div class="link-url">openai.com/index/introducing-gpt-5-3-codex</div>
+      </div>
+    </a>
+
+    <h3 class="mt-32 mb-16" style="font-size:1.05rem; font-weight:600;">製品リンク</h3>
+
+    <a class="link-card" href="https://chatgpt.com/codex" target="_blank">
+      <div class="link-icon">&#127760;</div>
+      <div class="link-info">
+        <div class="link-title">Codex Web（ChatGPT内）</div>
+        <div class="link-url">chatgpt.com/codex</div>
+      </div>
+    </a>
+
+    <a class="link-card" href="https://marketplace.visualstudio.com/items?itemName=openai.chatgpt" target="_blank">
+      <div class="link-icon">&#128295;</div>
+      <div class="link-info">
+        <div class="link-title">Codex VS Code 拡張機能</div>
+        <div class="link-url">marketplace.visualstudio.com</div>
+      </div>
+    </a>
+
+    <a class="link-card" href="https://agents.md/" target="_blank">
+      <div class="link-icon">&#128220;</div>
+      <div class="link-info">
+        <div class="link-title">AGENTS.md 公式サイト</div>
+        <div class="link-url">agents.md</div>
+      </div>
+    </a>
+
+    <a class="link-card" href="https://agentskills.io/home" target="_blank">
+      <div class="link-icon">&#127912;</div>
+      <div class="link-info">
+        <div class="link-title">Agent Skills 公式サイト</div>
+        <div class="link-url">agentskills.io</div>
+      </div>
+    </a>
+
+    <h3 class="mt-32 mb-16" style="font-size:1.05rem; font-weight:600;">比較・分析記事</h3>
+
+    <a class="link-card" href="https://www.morphllm.com/comparisons/codex-vs-claude-code" target="_blank">
+      <div class="link-icon">&#128200;</div>
+      <div class="link-info">
+        <div class="link-title">Codex vs Claude Code — 詳細比較（Morphllm）</div>
+        <div class="link-url">morphllm.com/comparisons/codex-vs-claude-code</div>
+      </div>
+    </a>
+
+    <a class="link-card" href="https://www.builder.io/blog/codex-vs-claude-code" target="_blank">
+      <div class="link-icon">&#128200;</div>
+      <div class="link-info">
+        <div class="link-title">Codex vs Claude Code — Builder.io</div>
+        <div class="link-url">builder.io/blog/codex-vs-claude-code</div>
+      </div>
+    </a>
+
+    <a class="link-card" href="https://sidsaladi.substack.com/p/openai-codex-101-the-complete-guide" target="_blank">
+      <div class="link-icon">&#128218;</div>
+      <div class="link-info">
+        <div class="link-title">OpenAI Codex 101 — 完全ガイド</div>
+        <div class="link-url">sidsaladi.substack.com</div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- ============================================
+     FOOTER
+     ============================================ -->
+<footer>
+  <div class="container">
+    <p>本ガイドは2026年3月4日時点の公開情報に基づいて作成されています。<br>
+    AI分野は急速に変化するため、最新情報は公式ドキュメントを参照してください。</p>
+    <p class="mt-8" style="color: var(--text-tertiary);">Generated with research assistance &mdash; Not affiliated with OpenAI</p>
+  </div>
+</body>
+</html>
