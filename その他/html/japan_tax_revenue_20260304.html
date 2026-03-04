@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日本の税収推移 — 構造分析スライド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+  background: #f5f5f5; padding: 20px; line-height: 1.6;
+}
+.page {
+  background: white; width: 297mm; min-height: 210mm;
+  margin: 0 auto 30px; padding: 15mm;
+  box-shadow: 0 4px 20px rgba(0,0,0,.15);
+  page-break-after: always; position: relative;
+}
+.page-number {
+  position: absolute; bottom: 8mm; right: 12mm;
+  font-size: 10px; color: #a0aec0;
+}
+h1 { font-size: 21px; color: #1a365d; border-bottom: 3px solid #2b6cb0; padding-bottom: 10px; margin-bottom: 16px; }
+h2 { font-size: 15px; color: #2c5282; margin: 14px 0 8px; padding-left: 10px; border-left: 4px solid #4299e1; }
+p { font-size: 11.5px; color: #4a5568; margin: 4px 0; }
+.subtitle { font-size: 13px; color: #718096; margin-top: -12px; margin-bottom: 14px; }
+.fig-container { display: flex; justify-content: center; margin: 10px 0; }
+svg { max-width: 100%; height: auto; }
+.meta-box { background: #faf5ff; border: 1px solid #9f7aea; border-radius: 8px; padding: 12px; margin: 10px 0; }
+.meta-box h3 { color: #553c9a; font-size: 13px; margin-bottom: 6px; }
+.warning-box { background: #fff5f5; border: 2px solid #e53e3e; border-radius: 8px; padding: 12px; margin: 10px 0; }
+.warning-box h3 { color: #c53030; font-size: 13px; margin-bottom: 6px; }
+.insight-box { background: #f0fff4; border: 1px solid #38a169; border-radius: 8px; padding: 12px; margin: 10px 0; }
+.insight-box h3 { color: #276749; font-size: 13px; margin-bottom: 6px; }
+.note-box { background: #ebf8ff; border: 1px solid #4299e1; border-radius: 8px; padding: 12px; margin: 10px 0; }
+.note-box h3 { color: #2b6cb0; font-size: 13px; margin-bottom: 6px; }
+.orange-box { background: #fffaf0; border: 1px solid #dd6b20; border-radius: 8px; padding: 12px; margin: 10px 0; }
+.orange-box h3 { color: #c05621; font-size: 13px; margin-bottom: 6px; }
+table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 10.5px; }
+th, td { border: 1px solid #cbd5e0; padding: 4px 7px; text-align: right; }
+th { background: #edf2f7; color: #2d3748; font-weight: bold; text-align: center; }
+td:first-child { text-align: center; font-weight: bold; }
+.two-col { display: flex; gap: 14px; }
+.two-col > div { flex: 1; }
+.three-col { display: flex; gap: 12px; }
+.three-col > div { flex: 1; }
+ul { font-size: 11px; color: #4a5568; margin-left: 16px; }
+li { margin: 2px 0; }
+.tag { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: bold; }
+.tag-blue { background: #ebf8ff; color: #2b6cb0; }
+.tag-green { background: #f0fff4; color: #276749; }
+.tag-orange { background: #fffaf0; color: #c05621; }
+.tag-red { background: #fff5f5; color: #c53030; }
+.highlight { background: #fffff0; }
+@media print { body { background: white; padding: 0; } .page { box-shadow: none; margin: 0; } }
+</style>
+</head>
+<body>
+
+<!-- ==================== PAGE 1: 総税収の推移 ==================== -->
+<div class="page">
+  <h1>日本の税収推移 — 総税収50年の軌跡</h1>
+  <p class="subtitle">一般会計税収: 1975年 13.7兆円 → 2024年 75.2兆円（5.5倍）</p>
+
+  <div class="fig-container">
+    <svg width="740" height="340" viewBox="0 0 740 340">
+      <rect x="0" y="0" width="740" height="340" fill="#fafafa" rx="8"/>
+
+      <!-- グリッド・軸 -->
+      <line x1="70" y1="30" x2="70" y2="280" stroke="#a0aec0" stroke-width="1"/>
+      <line x1="70" y1="280" x2="710" y2="280" stroke="#a0aec0" stroke-width="1"/>
+
+      <!-- Y軸ラベル -->
+      <text x="60" y="280" text-anchor="end" font-size="9" fill="#a0aec0">0</text>
+      <text x="60" y="230" text-anchor="end" font-size="9" fill="#a0aec0">20</text>
+      <text x="60" y="180" text-anchor="end" font-size="9" fill="#a0aec0">40</text>
+      <text x="60" y="130" text-anchor="end" font-size="9" fill="#a0aec0">60</text>
+      <text x="60" y="80" text-anchor="end" font-size="9" fill="#a0aec0">80</text>
+      <text x="15" y="155" text-anchor="middle" font-size="10" fill="#718096" transform="rotate(-90,15,155)">兆円</text>
+
+      <line x1="70" y1="230" x2="710" y2="230" stroke="#e2e8f0" stroke-dasharray="2,4"/>
+      <line x1="70" y1="180" x2="710" y2="180" stroke="#e2e8f0" stroke-dasharray="2,4"/>
+      <line x1="70" y1="130" x2="710" y2="130" stroke="#e2e8f0" stroke-dasharray="2,4"/>
+      <line x1="70" y1="80" x2="710" y2="80" stroke="#e2e8f0" stroke-dasharray="2,4"/>
+
+      <!-- スケール: 0=280, 80兆=30 → 1兆=3.125px -->
+      <!-- データ: 1975=13.7, 1980=26.9, 1985=38.2, 1990=60.1, 1995=51.9, 2000=50.7,
+           2005=49.1, 2009=38.7, 2010=41.5, 2015=56.3, 2020=60.8, 2024=75.2 -->
+
+      <!-- 面グラフ（総税収） -->
+      <polygon points="90,237 155,196 220,161 285,92 350,118 415,121
+                        480,127 512,159 545,150 610,104 655,90 700,45
+                        700,280 90,280"
+               fill="#2b6cb0" fill-opacity="0.15"/>
+      <polyline points="90,237 155,196 220,161 285,92 350,118 415,121
+                         480,127 512,159 545,150 610,104 655,90 700,45"
+               fill="none" stroke="#2b6cb0" stroke-width="3"/>
+
+      <!-- データポイント -->
+      <circle cx="90" cy="237" r="4" fill="#2b6cb0"/>
+      <text x="90" y="252" text-anchor="middle" font-size="8" fill="#718096">1975</text>
+      <text x="90" y="232" text-anchor="middle" font-size="8" fill="#2b6cb0" font-weight="bold">13.7</text>
+
+      <circle cx="155" cy="196" r="4" fill="#2b6cb0"/>
+      <text x="155" y="252" text-anchor="middle" font-size="8" fill="#718096">1980</text>
+      <text x="155" y="191" text-anchor="middle" font-size="8" fill="#2b6cb0">26.9</text>
+
+      <circle cx="220" cy="161" r="4" fill="#2b6cb0"/>
+      <text x="220" y="252" text-anchor="middle" font-size="8" fill="#718096">1985</text>
+      <text x="220" y="156" text-anchor="middle" font-size="8" fill="#2b6cb0">38.2</text>
+
+      <circle cx="285" cy="92" r="6" fill="#e53e3e"/>
+      <text x="285" y="252" text-anchor="middle" font-size="8" fill="#718096">1990</text>
+      <text x="285" y="82" text-anchor="middle" font-size="9" fill="#e53e3e" font-weight="bold">60.1</text>
+      <text x="285" y="72" text-anchor="middle" font-size="7" fill="#c53030">バブルピーク</text>
+
+      <circle cx="350" cy="118" r="4" fill="#2b6cb0"/>
+      <text x="350" y="252" text-anchor="middle" font-size="8" fill="#718096">1995</text>
+      <text x="350" y="113" text-anchor="middle" font-size="8" fill="#2b6cb0">51.9</text>
+
+      <circle cx="415" cy="121" r="4" fill="#2b6cb0"/>
+      <text x="415" y="252" text-anchor="middle" font-size="8" fill="#718096">2000</text>
+      <text x="415" y="116" text-anchor="middle" font-size="8" fill="#2b6cb0">50.7</text>
+
+      <circle cx="480" cy="127" r="4" fill="#2b6cb0"/>
+      <text x="480" y="252" text-anchor="middle" font-size="8" fill="#718096">2005</text>
+      <text x="480" y="140" text-anchor="middle" font-size="8" fill="#2b6cb0">49.1</text>
+
+      <circle cx="512" cy="159" r="5" fill="#dd6b20"/>
+      <text x="512" y="252" text-anchor="middle" font-size="8" fill="#718096">2009</text>
+      <text x="525" y="168" text-anchor="middle" font-size="8" fill="#dd6b20" font-weight="bold">38.7</text>
+      <text x="525" y="178" text-anchor="middle" font-size="7" fill="#c05621">リーマン</text>
+
+      <circle cx="610" cy="104" r="4" fill="#2b6cb0"/>
+      <text x="610" y="252" text-anchor="middle" font-size="8" fill="#718096">2015</text>
+      <text x="610" y="99" text-anchor="middle" font-size="8" fill="#2b6cb0">56.3</text>
+
+      <circle cx="655" cy="90" r="4" fill="#2b6cb0"/>
+      <text x="655" y="252" text-anchor="middle" font-size="8" fill="#718096">2020</text>
+      <text x="655" y="85" text-anchor="middle" font-size="8" fill="#2b6cb0">60.8</text>
+
+      <circle cx="700" cy="45" r="6" fill="#38a169"/>
+      <text x="700" y="252" text-anchor="middle" font-size="8" fill="#718096">2024</text>
+      <text x="700" y="38" text-anchor="middle" font-size="9" fill="#38a169" font-weight="bold">75.2</text>
+      <text x="700" y="58" text-anchor="middle" font-size="7" fill="#276749">過去最高</text>
+
+      <!-- イベント注記 -->
+      <line x1="285" y1="92" x2="285" y2="268" stroke="#e53e3e" stroke-width="0.5" stroke-dasharray="3,3"/>
+      <line x1="512" y1="159" x2="512" y2="268" stroke="#dd6b20" stroke-width="0.5" stroke-dasharray="3,3"/>
+
+      <!-- 消費税導入ライン -->
+      <line x1="265" y1="30" x2="265" y2="270" stroke="#dd6b20" stroke-width="1" stroke-dasharray="5,3"/>
+      <text x="268" y="44" font-size="7" fill="#c05621">消費税導入(1989)</text>
+
+      <!-- 消費税10%ライン -->
+      <line x1="645" y1="30" x2="645" y2="270" stroke="#dd6b20" stroke-width="1" stroke-dasharray="5,3"/>
+      <text x="630" y="44" font-size="7" fill="#c05621">10%(2019)</text>
+
+      <!-- 凡例 -->
+      <text x="90" y="300" font-size="9" fill="#718096">
+        出典: 財務省「一般会計税収の推移」/ 決算ベース。2024年度は決算概要。
+      </text>
+
+      <!-- 失われた30年のゾーン -->
+      <rect x="285" y="264" width="370" height="14" rx="3" fill="#fff5f5" fill-opacity="0.8"/>
+      <text x="470" y="274" text-anchor="middle" font-size="8" fill="#c53030">
+        ← 「失われた30年」: バブルピーク(1990)の60兆円を超えるのに2020年までかかった →
+      </text>
+    </svg>
+  </div>
+
+  <div class="note-box">
+    <h3>税収の4つの局面</h3>
+    <p><strong>(1) 高度成長期</strong>（1975-90）: 15年で4.4倍。経済成長が直接税収に直結した時代。
+    <strong>(2) 失われた30年</strong>（1990-2020）: バブル崩壊→リーマンで60兆→38兆に激減し、30年かけてやっと回復。
+    <strong>(3) コロナ後の急回復</strong>（2020-24）: 60兆→75兆。消費税増税+企業業績回復+インフレの三重効果。
+    <strong>(4) 構造変化</strong>: 税収トップが所得税→消費税へ逆転。税収の質が変わった。</p>
+  </div>
+  <span class="page-number">1 / 7</span>
+</div>
+
+<!-- ==================== PAGE 2: 三大税目の比較 ==================== -->
+<div class="page">
+  <h1>三大税目の推移 — 所得税・法人税・消費税</h1>
+  <p class="subtitle">50年間の主役交代劇: 所得税の時代 → 消費税の時代</p>
+
+  <div class="fig-container">
+    <svg width="740" height="310" viewBox="0 0 740 310">
+      <rect x="0" y="0" width="740" height="310" fill="#fafafa" rx="8"/>
+
+      <!-- 軸 -->
+      <line x1="70" y1="25" x2="70" y2="260" stroke="#a0aec0" stroke-width="1"/>
+      <line x1="70" y1="260" x2="710" y2="260" stroke="#a0aec0" stroke-width="1"/>
+
+      <!-- Y軸 (0-30兆円 → 0=260, 30=25 → 1兆=7.83px) -->
+      <text x="60" y="260" text-anchor="end" font-size="9" fill="#a0aec0">0</text>
+      <text x="60" y="221" text-anchor="end" font-size="9" fill="#a0aec0">5</text>
+      <text x="60" y="182" text-anchor="end" font-size="9" fill="#a0aec0">10</text>
+      <text x="60" y="143" text-anchor="end" font-size="9" fill="#a0aec0">15</text>
+      <text x="60" y="104" text-anchor="end" font-size="9" fill="#a0aec0">20</text>
+      <text x="60" y="65" text-anchor="end" font-size="9" fill="#a0aec0">25</text>
+      <text x="60" y="30" text-anchor="end" font-size="9" fill="#a0aec0">30</text>
+      <text x="15" y="142" text-anchor="middle" font-size="10" fill="#718096" transform="rotate(-90,15,142)">兆円</text>
+
+      <line x1="70" y1="221" x2="710" y2="221" stroke="#e2e8f0" stroke-dasharray="2,4"/>
+      <line x1="70" y1="182" x2="710" y2="182" stroke="#e2e8f0" stroke-dasharray="2,4"/>
+      <line x1="70" y1="143" x2="710" y2="143" stroke="#e2e8f0" stroke-dasharray="2,4"/>
+      <line x1="70" y1="104" x2="710" y2="104" stroke="#e2e8f0" stroke-dasharray="2,4"/>
+
+      <!-- X軸 -->
+      <!-- 1975=90, 1980=155, 1985=220, 1990=285, 1995=350, 2000=415, 2005=480, 2010=545, 2015=600, 2020=650, 2024=700 -->
+
+      <text x="90" y="275" text-anchor="middle" font-size="8" fill="#718096">1975</text>
+      <text x="155" y="275" text-anchor="middle" font-size="8" fill="#718096">1980</text>
+      <text x="220" y="275" text-anchor="middle" font-size="8" fill="#718096">1985</text>
+      <text x="285" y="275" text-anchor="middle" font-size="8" fill="#718096">1990</text>
+      <text x="350" y="275" text-anchor="middle" font-size="8" fill="#718096">1995</text>
+      <text x="415" y="275" text-anchor="middle" font-size="8" fill="#718096">2000</text>
+      <text x="480" y="275" text-anchor="middle" font-size="8" fill="#718096">2005</text>
+      <text x="545" y="275" text-anchor="middle" font-size="8" fill="#718096">2010</text>
+      <text x="600" y="275" text-anchor="middle" font-size="8" fill="#718096">2015</text>
+      <text x="650" y="275" text-anchor="middle" font-size="8" fill="#718096">2020</text>
+      <text x="700" y="275" text-anchor="middle" font-size="8" fill="#718096">2024</text>
+
+      <!-- 所得税 (赤) -->
+      <!-- 5.5, 10.4, 14.6, 26.0, 19.5, 18.8, 15.6, 12.7, 17.8, 19.2, 21.2 -->
+      <polyline points="90,217 155,179 220,146 285,57 350,108 415,113 480,138 545,161 600,121 650,110 700,94"
+                fill="none" stroke="#e53e3e" stroke-width="2.5"/>
+      <circle cx="285" cy="57" r="5" fill="#e53e3e"/>
+      <text x="285" y="48" text-anchor="middle" font-size="8" fill="#c53030" font-weight="bold">26.0</text>
+      <circle cx="700" cy="94" r="4" fill="#e53e3e"/>
+      <text x="710" y="88" text-anchor="start" font-size="8" fill="#c53030" font-weight="bold">21.2</text>
+
+      <!-- 法人税 (青) -->
+      <!-- 4.5, 8.9, 12.0, 18.4, 13.7, 11.7, 13.3, 8.7, 11.0, 11.2, 17.9 -->
+      <polyline points="90,225 155,191 220,166 285,116 350,153 415,169 480,156 545,192 600,174 650,172 700,120"
+                fill="none" stroke="#2b6cb0" stroke-width="2.5"/>
+      <circle cx="285" cy="116" r="5" fill="#2b6cb0"/>
+      <text x="271" y="112" text-anchor="end" font-size="8" fill="#2b6cb0" font-weight="bold">18.4</text>
+      <circle cx="700" cy="120" r="4" fill="#2b6cb0"/>
+      <text x="710" y="128" text-anchor="start" font-size="8" fill="#2b6cb0" font-weight="bold">17.9</text>
+
+      <!-- 消費税 (橙) - 1989から -->
+      <!-- 1989≒1990=4.6, 1995=5.8, 1997=9.3→2000=9.8, 2005=10.5, 2010=10.0, 2015=17.1, 2020=21.0, 2024=25.0 -->
+      <polyline points="285,224 350,215 415,183 480,178 545,182 600,127 650,96 700,64"
+                fill="none" stroke="#dd6b20" stroke-width="2.5"/>
+      <circle cx="285" cy="224" r="4" fill="#dd6b20"/>
+      <text x="295" y="234" text-anchor="start" font-size="8" fill="#c05621">4.6</text>
+      <circle cx="700" cy="64" r="6" fill="#dd6b20"/>
+      <text x="710" y="60" text-anchor="start" font-size="9" fill="#c05621" font-weight="bold">25.0</text>
+
+      <!-- 交差ポイント強調 -->
+      <circle cx="640" cy="102" r="10" fill="none" stroke="#e53e3e" stroke-width="1" stroke-dasharray="3,2"/>
+      <text x="622" y="72" font-size="8" fill="#c53030" font-weight="bold">↑逆転!</text>
+      <text x="615" y="82" font-size="7" fill="#c53030">消費税が所得税を上回る</text>
+
+      <!-- 凡例 -->
+      <line x1="90" y1="295" x2="115" y2="295" stroke="#e53e3e" stroke-width="2.5"/>
+      <text x="120" y="298" font-size="10" fill="#c53030" font-weight="bold">所得税</text>
+      <line x1="200" y1="295" x2="225" y2="295" stroke="#2b6cb0" stroke-width="2.5"/>
+      <text x="230" y="298" font-size="10" fill="#2b6cb0" font-weight="bold">法人税</text>
+      <line x1="310" y1="295" x2="335" y2="295" stroke="#dd6b20" stroke-width="2.5"/>
+      <text x="340" y="298" font-size="10" fill="#c05621" font-weight="bold">消費税</text>
+      <text x="430" y="298" font-size="9" fill="#718096">（出典: 財務省・決算ベース）</text>
+    </svg>
+  </div>
+
+  <div class="two-col">
+    <div class="warning-box">
+      <h3>2020年代: 消費税がトップに</h3>
+      <p>2020年代に入り消費税収が所得税収を抜き、<strong>税収の柱が交代</strong>した。
+      シャウプ勧告（1950年）以来70年にわたる「直接税中心主義」が数字の上でも終焉。
+      消費税は景気変動に左右されにくく「安定財源」と評される一方、逆進性の批判が常につきまとう。</p>
+    </div>
+    <div class="insight-box">
+      <h3>法人税のV字回復</h3>
+      <p>法人税は税率を42%→23.2%に引き下げながら、税収はバブル期水準（18兆円）に近づいている。
+      「税率引下げ × 課税ベース拡大 × 企業業績回復」の三位一体効果。ただし円安によるかさ上げや
+      一部大企業への集中という構造的偏りもある。</p>
+    </div>
+  </div>
+  <span class="page-number">2 / 7</span>
+</div>
+
+<!-- ==================== PAGE 3: 所得税 ==================== -->
+<div class="page">
+  <h1>所得税 — かつての王者、税率と税収の乖離</h1>
+  <p class="subtitle">最高税率: 75%（1986以前）→ 45%（現在）　税収ピーク: 26.7兆円（1991年）</p>
+
+  <div class="fig-container">
+    <svg width="720" height="220" viewBox="0 0 720 220">
+      <rect x="0" y="0" width="720" height="220" fill="#fafafa" rx="8"/>
+
+      <text x="360" y="18" text-anchor="middle" font-size="12" fill="#1a365d" font-weight="bold">最高税率の推移と税収の関係</text>
+
+      <!-- 二軸グラフ -->
+      <line x1="70" y1="30" x2="70" y2="190" stroke="#a0aec0" stroke-width="1"/>
+      <line x1="680" y1="30" x2="680" y2="190" stroke="#a0aec0" stroke-width="1"/>
+      <line x1="70" y1="190" x2="680" y2="190" stroke="#a0aec0" stroke-width="1"/>
+
+      <!-- 左Y軸（税率%） -->
+      <text x="20" y="40" text-anchor="end" font-size="8" fill="#9f7aea">75%</text>
+      <text x="20" y="80" text-anchor="end" font-size="8" fill="#9f7aea">55%</text>
+      <text x="20" y="120" text-anchor="end" font-size="8" fill="#9f7aea">40%</text>
+      <text x="20" y="160" text-anchor="end" font-size="8" fill="#9f7aea">25%</text>
+
+      <!-- 右Y軸（兆円） -->
+      <text x="710" y="40" text-anchor="start" font-size="8" fill="#e53e3e">27兆</text>
+      <text x="710" y="100" text-anchor="start" font-size="8" fill="#e53e3e">18兆</text>
+      <text x="710" y="160" text-anchor="start" font-size="8" fill="#e53e3e">9兆</text>
+
+      <!-- X軸 -->
+      <text x="100" y="205" text-anchor="middle" font-size="8" fill="#718096">1984</text>
+      <text x="185" y="205" text-anchor="middle" font-size="8" fill="#718096">1987</text>
+      <text x="270" y="205" text-anchor="middle" font-size="8" fill="#718096">1989</text>
+      <text x="355" y="205" text-anchor="middle" font-size="8" fill="#718096">1995</text>
+      <text x="440" y="205" text-anchor="middle" font-size="8" fill="#718096">1999</text>
+      <text x="525" y="205" text-anchor="middle" font-size="8" fill="#718096">2007</text>
+      <text x="610" y="205" text-anchor="middle" font-size="8" fill="#718096">2015</text>
+      <text x="660" y="205" text-anchor="middle" font-size="8" fill="#718096">2024</text>
+
+      <!-- 最高税率（紫の棒グラフ） -->
+      <!-- 75% 60% 50% 50% 37% 40% 45% 45% -->
+      <rect x="85" y="37" width="30" height="153" rx="2" fill="#9f7aea" fill-opacity="0.3"/>
+      <text x="100" y="33" text-anchor="middle" font-size="8" fill="#553c9a" font-weight="bold">75%</text>
+
+      <rect x="170" y="65" width="30" height="125" rx="2" fill="#9f7aea" fill-opacity="0.3"/>
+      <text x="185" y="61" text-anchor="middle" font-size="8" fill="#553c9a">60%</text>
+
+      <rect x="255" y="85" width="30" height="105" rx="2" fill="#9f7aea" fill-opacity="0.3"/>
+      <text x="270" y="81" text-anchor="middle" font-size="8" fill="#553c9a">50%</text>
+
+      <rect x="340" y="85" width="30" height="105" rx="2" fill="#9f7aea" fill-opacity="0.3"/>
+      <text x="355" y="81" text-anchor="middle" font-size="8" fill="#553c9a">50%</text>
+
+      <rect x="425" y="111" width="30" height="79" rx="2" fill="#9f7aea" fill-opacity="0.3"/>
+      <text x="440" y="107" text-anchor="middle" font-size="8" fill="#553c9a">37%</text>
+
+      <rect x="510" y="101" width="30" height="89" rx="2" fill="#9f7aea" fill-opacity="0.3"/>
+      <text x="525" y="97" text-anchor="middle" font-size="8" fill="#553c9a">40%</text>
+
+      <rect x="595" y="91" width="30" height="99" rx="2" fill="#9f7aea" fill-opacity="0.3"/>
+      <text x="610" y="87" text-anchor="middle" font-size="8" fill="#553c9a">45%</text>
+
+      <rect x="645" y="91" width="30" height="99" rx="2" fill="#9f7aea" fill-opacity="0.3"/>
+      <text x="660" y="87" text-anchor="middle" font-size="8" fill="#553c9a">45%</text>
+
+      <!-- 税収線（赤） -->
+      <!-- 14.9, 17.9, 21.4, 19.5, 15.4, 16.1, 17.8, 21.2 -->
+      <polyline points="100,100 185,82 270,58 355,75 440,98 525,93 610,82 660,67"
+                fill="none" stroke="#e53e3e" stroke-width="2.5"/>
+      <circle cx="270" cy="58" r="5" fill="#e53e3e"/>
+      <text x="280" y="52" font-size="8" fill="#c53030" font-weight="bold">21.4兆</text>
+      <circle cx="660" cy="67" r="4" fill="#e53e3e"/>
+      <text x="670" y="62" font-size="8" fill="#c53030" font-weight="bold">21.2兆</text>
+    </svg>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <h2>所得税の構造データ</h2>
+      <table>
+        <tr><th>項目</th><th>数値</th></tr>
+        <tr><td>2024年度税収</td><td>約21.2兆円</td></tr>
+        <tr><td>過去最高</td><td>26.7兆円（1991年度）</td></tr>
+        <tr><td>過去最低（近年）</td><td>12.9兆円（2009年度）</td></tr>
+        <tr><td>最高税率</td><td>45%（所得4,000万超）+ 住民税10%</td></tr>
+        <tr><td>税率ブラケット</td><td>7段階（5%〜45%）</td></tr>
+        <tr><td>源泉徴収比率</td><td>約85%（給与所得者分）</td></tr>
+      </table>
+    </div>
+    <div class="meta-box">
+      <h3>パラドックス: 税率を下げても税収は戻った</h3>
+      <p>最高税率は75%→45%に引き下げられたが、2024年の税収（21.2兆円）はバブル期前の水準に復帰。
+      <strong>「税率」と「税収」は必ずしも比例しない</strong>。課税ベースの拡大（各種控除の縮小、
+      分離課税の整理）と名目所得の増加が寄与。ただしピーク（26.7兆円）にはまだ5.5兆円届かない。</p>
+    </div>
+  </div>
+  <span class="page-number">3 / 7</span>
+</div>
+
+<!-- ==================== PAGE 4: 法人税 ==================== -->
+<div class="page">
+  <h1>法人税 — 税率引下げ競争と税収回復のジレンマ</h1>
+  <p class="subtitle">税率: 42%（1981）→ 23.2%（2018）　税収: 6.4兆（2009最低）→ 17.9兆（2024）</p>
+
+  <div class="fig-container">
+    <svg width="720" height="200" viewBox="0 0 720 200">
+      <rect x="0" y="0" width="720" height="200" fill="#fafafa" rx="8"/>
+
+      <text x="360" y="18" text-anchor="middle" font-size="12" fill="#1a365d" font-weight="bold">法人税率の引下げと税収の推移</text>
+
+      <!-- 二軸 -->
+      <line x1="70" y1="30" x2="70" y2="175" stroke="#a0aec0"/>
+      <line x1="70" y1="175" x2="690" y2="175" stroke="#a0aec0"/>
+
+      <!-- Y軸 -->
+      <text x="60" y="37" text-anchor="end" font-size="8" fill="#a0aec0">20兆</text>
+      <text x="60" y="73" text-anchor="end" font-size="8" fill="#a0aec0">15兆</text>
+      <text x="60" y="109" text-anchor="end" font-size="8" fill="#a0aec0">10兆</text>
+      <text x="60" y="145" text-anchor="end" font-size="8" fill="#a0aec0">5兆</text>
+
+      <line x1="70" y1="73" x2="690" y2="73" stroke="#e2e8f0" stroke-dasharray="2,4"/>
+      <line x1="70" y1="109" x2="690" y2="109" stroke="#e2e8f0" stroke-dasharray="2,4"/>
+      <line x1="70" y1="145" x2="690" y2="145" stroke="#e2e8f0" stroke-dasharray="2,4"/>
+
+      <!-- X軸 -->
+      <text x="100" y="190" text-anchor="middle" font-size="8" fill="#718096">1980</text>
+      <text x="180" y="190" text-anchor="middle" font-size="8" fill="#718096">1985</text>
+      <text x="260" y="190" text-anchor="middle" font-size="8" fill="#718096">1989</text>
+      <text x="340" y="190" text-anchor="middle" font-size="8" fill="#718096">1995</text>
+      <text x="410" y="190" text-anchor="middle" font-size="8" fill="#718096">2000</text>
+      <text x="470" y="190" text-anchor="middle" font-size="8" fill="#718096">2005</text>
+      <text x="530" y="190" text-anchor="middle" font-size="8" fill="#718096">2009</text>
+      <text x="580" y="190" text-anchor="middle" font-size="8" fill="#718096">2015</text>
+      <text x="640" y="190" text-anchor="middle" font-size="8" fill="#718096">2020</text>
+      <text x="690" y="190" text-anchor="middle" font-size="8" fill="#718096">2024</text>
+
+      <!-- 税率（下降する棒） -->
+      <rect x="88" y="28" width="24" height="8" rx="2" fill="#2b6cb0" fill-opacity="0.6"/>
+      <text x="100" y="26" text-anchor="middle" font-size="7" fill="#2b6cb0">42%</text>
+      <rect x="168" y="28" width="24" height="8" rx="2" fill="#2b6cb0" fill-opacity="0.5"/>
+      <text x="180" y="26" text-anchor="middle" font-size="7" fill="#2b6cb0">40%</text>
+      <rect x="248" y="28" width="24" height="8" rx="2" fill="#2b6cb0" fill-opacity="0.4"/>
+      <text x="260" y="26" text-anchor="middle" font-size="7" fill="#2b6cb0">37.5%</text>
+      <rect x="398" y="28" width="24" height="8" rx="2" fill="#2b6cb0" fill-opacity="0.3"/>
+      <text x="410" y="26" text-anchor="middle" font-size="7" fill="#2b6cb0">30%</text>
+      <rect x="568" y="28" width="24" height="8" rx="2" fill="#2b6cb0" fill-opacity="0.2"/>
+      <text x="580" y="26" text-anchor="middle" font-size="7" fill="#2b6cb0">25.5%</text>
+      <rect x="628" y="28" width="24" height="8" rx="2" fill="#2b6cb0" fill-opacity="0.15"/>
+      <text x="640" y="26" text-anchor="middle" font-size="7" fill="#2b6cb0">23.2%</text>
+
+      <!-- 税収線 -->
+      <!-- 8.9, 12.0, 19.0, 13.7, 11.7, 13.3, 6.4, 11.0, 11.2, 17.9 -->
+      <polygon points="100,110 180,88 260,37 340,76 410,90 470,78 530,128 580,95 640,94 690,45 690,175 100,175"
+               fill="#2b6cb0" fill-opacity="0.1"/>
+      <polyline points="100,110 180,88 260,37 340,76 410,90 470,78 530,128 580,95 640,94 690,45"
+                fill="none" stroke="#2b6cb0" stroke-width="2.5"/>
+
+      <circle cx="260" cy="37" r="5" fill="#e53e3e"/>
+      <text x="260" y="50" text-anchor="middle" font-size="8" fill="#c53030" font-weight="bold">19.0兆 ピーク</text>
+
+      <circle cx="530" cy="128" r="5" fill="#dd6b20"/>
+      <text x="530" y="140" text-anchor="middle" font-size="8" fill="#c05621" font-weight="bold">6.4兆 最低</text>
+
+      <circle cx="690" cy="45" r="5" fill="#38a169"/>
+      <text x="690" y="58" text-anchor="middle" font-size="8" fill="#276749" font-weight="bold">17.9兆</text>
+    </svg>
+  </div>
+
+  <div class="two-col">
+    <div class="insight-box">
+      <h3>「課税ベース拡大 × 税率引下げ」戦略</h3>
+      <p>法人税率は20年で42%→23.2%にほぼ半減したが、同時に租税特別措置の整理、
+      繰越欠損金の制限、外形標準課税の導入等で課税ベースを拡大。
+      結果として実効税率は29.74%に収まり、税収はリーマンショックの底（6.4兆）からV字回復。
+      OECD平均（21.5%）より高いが、「高すぎず低すぎず」の位置取り。</p>
+    </div>
+    <div class="orange-box">
+      <h3>グローバル最低税率15%の影響</h3>
+      <p>2024年からのPillar 2（グローバル最低税率15%）は、法人税率引下げ競争に歯止めをかける。
+      日本の23.2%は最低税率を大きく上回るため直接的影響は限定的だが、
+      <strong>「日本企業の海外利益に対する課税権」</strong>の確保という意味では重大。
+      CFC税制（1978年導入）との連携が課題。</p>
+    </div>
+  </div>
+  <span class="page-number">4 / 7</span>
+</div>
+
+<!-- ==================== PAGE 5: 消費税 ==================== -->
+<div class="page">
+  <h1>消費税 — 35年で税収7.6倍、新たな王者</h1>
+  <p class="subtitle">1989年 3.3兆円 → 2024年 25.0兆円　税率: 3% → 5% → 8% → 10%</p>
+
+  <div class="fig-container">
+    <svg width="720" height="220" viewBox="0 0 720 220">
+      <rect x="0" y="0" width="720" height="220" fill="#fafafa" rx="8"/>
+
+      <text x="360" y="18" text-anchor="middle" font-size="12" fill="#1a365d" font-weight="bold">消費税率と税収の階段状成長</text>
+
+      <!-- 軸 -->
+      <line x1="70" y1="30" x2="70" y2="185" stroke="#a0aec0"/>
+      <line x1="70" y1="185" x2="690" y2="185" stroke="#a0aec0"/>
+
+      <text x="60" y="38" text-anchor="end" font-size="8" fill="#a0aec0">25兆</text>
+      <text x="60" y="69" text-anchor="end" font-size="8" fill="#a0aec0">20兆</text>
+      <text x="60" y="100" text-anchor="end" font-size="8" fill="#a0aec0">15兆</text>
+      <text x="60" y="131" text-anchor="end" font-size="8" fill="#a0aec0">10兆</text>
+      <text x="60" y="162" text-anchor="end" font-size="8" fill="#a0aec0">5兆</text>
+
+      <line x1="70" y1="69" x2="690" y2="69" stroke="#e2e8f0" stroke-dasharray="2,4"/>
+      <line x1="70" y1="100" x2="690" y2="100" stroke="#e2e8f0" stroke-dasharray="2,4"/>
+      <line x1="70" y1="131" x2="690" y2="131" stroke="#e2e8f0" stroke-dasharray="2,4"/>
+
+      <!-- 階段状の面グラフ -->
+      <!-- 3% zone: 1989(3.3)→1996(6.1) -->
+      <rect x="90" y="160" width="145" height="25" rx="0" fill="#dd6b20" fill-opacity="0.15"/>
+      <text x="162" y="178" text-anchor="middle" font-size="11" fill="#c05621" font-weight="bold">3%</text>
+      <polyline points="90,164 120,164 150,157 180,155 210,152 235,148"
+                fill="none" stroke="#dd6b20" stroke-width="2"/>
+      <circle cx="90" cy="164" r="4" fill="#dd6b20"/>
+      <text x="90" y="158" text-anchor="middle" font-size="8" fill="#c05621">3.3兆</text>
+
+      <!-- 5% zone: 1997(9.3)→2013(10.8) -->
+      <rect x="235" y="120" width="180" height="65" rx="0" fill="#dd6b20" fill-opacity="0.2"/>
+      <text x="325" y="170" text-anchor="middle" font-size="11" fill="#c05621" font-weight="bold">5%</text>
+      <polyline points="235,121 280,120 325,118 370,120 415,119"
+                fill="none" stroke="#dd6b20" stroke-width="2"/>
+      <circle cx="240" cy="121" r="4" fill="#dd6b20"/>
+      <text x="250" y="115" text-anchor="start" font-size="8" fill="#c05621">9.3兆</text>
+
+      <!-- 8% zone: 2014(16.0)→2019(19.4) -->
+      <rect x="415" y="93" width="120" height="92" rx="0" fill="#dd6b20" fill-opacity="0.25"/>
+      <text x="475" y="160" text-anchor="middle" font-size="11" fill="#c05621" font-weight="bold">8%</text>
+      <polyline points="415,97 450,93 490,88 535,82"
+                fill="none" stroke="#dd6b20" stroke-width="2"/>
+      <circle cx="420" cy="97" r="4" fill="#dd6b20"/>
+      <text x="430" y="91" text-anchor="start" font-size="8" fill="#c05621">16.0兆</text>
+
+      <!-- 10% zone: 2019(19.4)→2024(25.0) -->
+      <rect x="535" y="38" width="155" height="147" rx="0" fill="#dd6b20" fill-opacity="0.3"/>
+      <text x="612" y="150" text-anchor="middle" font-size="13" fill="#c05621" font-weight="bold">10%</text>
+      <text x="612" y="165" text-anchor="middle" font-size="9" fill="#c05621">(軽減8%)</text>
+      <polyline points="535,75 575,68 620,55 660,48 690,38"
+                fill="none" stroke="#dd6b20" stroke-width="2.5"/>
+      <circle cx="690" cy="38" r="6" fill="#dd6b20"/>
+      <text x="690" y="31" text-anchor="middle" font-size="9" fill="#c05621" font-weight="bold">25.0兆</text>
+
+      <!-- ジャンプ矢印 -->
+      <path d="M235,148 Q245,135 248,121" fill="none" stroke="#e53e3e" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <path d="M415,119 Q420,108 420,97" fill="none" stroke="#e53e3e" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <path d="M535,82 Q538,78 538,75" fill="none" stroke="#e53e3e" stroke-width="1.5" stroke-dasharray="3,2"/>
+
+      <text x="240" y="140" font-size="7" fill="#c53030">+61%</text>
+      <text x="418" y="110" font-size="7" fill="#c53030">+60%</text>
+      <text x="537" y="79" font-size="7" fill="#c53030">+29%</text>
+
+      <text x="400" y="210" text-anchor="middle" font-size="9" fill="#718096">
+        ※税率引上げ直後に税収がジャンプし、その後は経済成長に伴い緩やかに増加する階段状パターン
+      </text>
+    </svg>
+  </div>
+
+  <div class="two-col">
+    <div class="note-box">
+      <h3>消費税の特性</h3>
+      <ul>
+        <li><strong>安定性</strong>: 景気変動に強い。リーマン時も10兆円を維持</li>
+        <li><strong>逆進性</strong>: 低所得者ほど負担率が高い→軽減税率(8%)で部分緩和</li>
+        <li><strong>税率1%≒2.5兆円</strong>: 税率引上げの財政インパクトが大きい</li>
+        <li><strong>社会保障財源</strong>: 法律上、全額が年金・医療・介護・少子化対策に充当</li>
+      </ul>
+    </div>
+    <div class="warning-box">
+      <h3>インボイス制度（2023年）の構造的影響</h3>
+      <p>インボイス制度は「免税事業者の益税」を解消し、消費税の論理的完成形をもたらした。
+      しかし約500万のフリーランス・小規模事業者に新たな事務負担を強いた。
+      <strong>税収面</strong>ではまだ増収効果は限定的だが、「全事業者が消費税に関与する」
+      という構造変化は不可逆的。</p>
+    </div>
+  </div>
+  <span class="page-number">5 / 7</span>
+</div>
+
+<!-- ==================== PAGE 6: その他の税目 ==================== -->
+<div class="page">
+  <h1>その他の税目 — 相続税・酒税・たばこ税・揮発油税</h1>
+  <p class="subtitle">主要3税以外の税収動向と構造変化</p>
+
+  <div class="fig-container">
+    <svg width="720" height="210" viewBox="0 0 720 210">
+      <rect x="0" y="0" width="720" height="210" fill="#fafafa" rx="8"/>
+
+      <text x="360" y="18" text-anchor="middle" font-size="12" fill="#1a365d" font-weight="bold">その他税目の構成比と推移（2024年度 概数）</text>
+
+      <!-- 横棒グラフ -->
+      <!-- 全体税収75.2兆円のうち: 所得税21.2 + 法人税17.9 + 消費税25.0 = 64.1 → その他11.1 -->
+
+      <text x="70" y="42" font-size="10" fill="#2d3748" font-weight="bold">2024年度 一般会計税収 75.2兆円の内訳</text>
+
+      <!-- スタックドバー -->
+      <rect x="70" y="50" width="178" height="28" rx="0" fill="#e53e3e"/>
+      <text x="159" y="68" text-anchor="middle" font-size="10" fill="white" font-weight="bold">所得税 21.2兆 (28%)</text>
+
+      <rect x="248" y="50" width="149" height="28" rx="0" fill="#2b6cb0"/>
+      <text x="322" y="68" text-anchor="middle" font-size="10" fill="white" font-weight="bold">法人税 17.9兆 (24%)</text>
+
+      <rect x="397" y="50" width="210" height="28" rx="0" fill="#dd6b20"/>
+      <text x="502" y="68" text-anchor="middle" font-size="10" fill="white" font-weight="bold">消費税 25.0兆 (33%)</text>
+
+      <rect x="607" y="50" width="93" height="28" rx="0" fill="#38a169"/>
+      <text x="653" y="68" text-anchor="middle" font-size="9" fill="white" font-weight="bold">その他 11.1兆</text>
+
+      <!-- その他の内訳（拡大） -->
+      <line x1="653" y1="78" x2="653" y2="95" stroke="#38a169" stroke-width="1.5"/>
+
+      <!-- 相続税 -->
+      <rect x="40" y="100" width="120" height="45" rx="6" fill="#faf5ff" stroke="#9f7aea" stroke-width="1.5"/>
+      <text x="100" y="118" text-anchor="middle" font-size="11" fill="#553c9a" font-weight="bold">相続税</text>
+      <text x="100" y="133" text-anchor="middle" font-size="10" fill="#4a5568">約3.2兆円</text>
+      <text x="100" y="143" text-anchor="middle" font-size="7" fill="#38a169">↑増加傾向</text>
+
+      <!-- 酒税 -->
+      <rect x="180" y="100" width="120" height="45" rx="6" fill="#fffff0" stroke="#d69e2e" stroke-width="1.5"/>
+      <text x="240" y="118" text-anchor="middle" font-size="11" fill="#744210" font-weight="bold">酒税</text>
+      <text x="240" y="133" text-anchor="middle" font-size="10" fill="#4a5568">約1.1兆円</text>
+      <text x="240" y="143" text-anchor="middle" font-size="7" fill="#e53e3e">↓減少傾向</text>
+
+      <!-- 揮発油税 -->
+      <rect x="320" y="100" width="120" height="45" rx="6" fill="#ebf8ff" stroke="#4299e1" stroke-width="1.5"/>
+      <text x="380" y="118" text-anchor="middle" font-size="11" fill="#2b6cb0" font-weight="bold">揮発油税</text>
+      <text x="380" y="133" text-anchor="middle" font-size="10" fill="#4a5568">約2.0兆円</text>
+      <text x="380" y="143" text-anchor="middle" font-size="7" fill="#718096">→横ばい</text>
+
+      <!-- たばこ税 -->
+      <rect x="460" y="100" width="120" height="45" rx="6" fill="#fff5f5" stroke="#e53e3e" stroke-width="1.5"/>
+      <text x="520" y="118" text-anchor="middle" font-size="11" fill="#c53030" font-weight="bold">たばこ税</text>
+      <text x="520" y="133" text-anchor="middle" font-size="10" fill="#4a5568">約0.9兆円</text>
+      <text x="520" y="143" text-anchor="middle" font-size="7" fill="#e53e3e">↓減少傾向</text>
+
+      <!-- その他 -->
+      <rect x="600" y="100" width="100" height="45" rx="6" fill="#edf2f7" stroke="#a0aec0" stroke-width="1.5"/>
+      <text x="650" y="118" text-anchor="middle" font-size="11" fill="#4a5568" font-weight="bold">その他</text>
+      <text x="650" y="133" text-anchor="middle" font-size="10" fill="#4a5568">約3.9兆円</text>
+      <text x="650" y="143" text-anchor="middle" font-size="7" fill="#718096">印紙・関税等</text>
+
+      <!-- トレンド矢印 -->
+      <text x="360" y="170" text-anchor="middle" font-size="11" fill="#1a365d" font-weight="bold">長期トレンド:</text>
+      <text x="360" y="188" text-anchor="middle" font-size="10" fill="#4a5568">
+        酒税（2→1.1兆↓）たばこ税（1→0.9兆↓）= 嗜好品離れ　｜　相続税（1→3.2兆↑）= 高齢化・資産集中　｜　揮発油税 = EV普及で将来縮小
+      </text>
+      <text x="360" y="205" text-anchor="middle" font-size="8" fill="#718096">※概数。出典: 財務省決算概要・各種報道ベース</text>
+    </svg>
+  </div>
+
+  <div class="three-col">
+    <div class="insight-box">
+      <h3>相続税: 急拡大する「第4の税」</h3>
+      <p>2015年の基礎控除引下げ（5,000万+1,000万×法定相続人 → 3,000万+600万×法定相続人）以降、
+      課税対象者が約2倍に増加。高齢化と資産価格上昇で<strong>3兆円超え</strong>。
+      「国民の10人に1人が相続税を払う」時代に突入。</p>
+    </div>
+    <div class="orange-box">
+      <h3>酒税・たばこ税の構造的縮小</h3>
+      <p>健康志向と人口減少で課税ベースが縮小。酒税はピーク（2兆超）の半分以下に。
+      たばこ税は税率引上げで単価を上げるも本数減で相殺。
+      <strong>「課税ベースが消える税」</strong>の典型例。</p>
+    </div>
+    <div class="meta-box">
+      <h3>揮発油税の将来</h3>
+      <p>EV（電気自動車）の普及は揮発油税の存続を脅かす。
+      走行距離課税への転換が議論されるが、プライバシー問題がハードル。
+      「技術変化が税制を陳腐化させる」構造的課題。</p>
+    </div>
+  </div>
+  <span class="page-number">6 / 7</span>
+</div>
+
+<!-- ==================== PAGE 7: 構造分析・隠れた軸 ==================== -->
+<div class="page">
+  <h1>隠れた軸 — 税収構造が語る日本の姿</h1>
+  <p class="subtitle">数字の裏にある構造的パターンと、見えてくる問い</p>
+
+  <div class="fig-container">
+    <svg width="720" height="180" viewBox="0 0 720 180">
+      <rect x="0" y="0" width="720" height="180" fill="#fafafa" rx="8"/>
+
+      <text x="360" y="20" text-anchor="middle" font-size="13" fill="#1a365d" font-weight="bold">税収構成比の推移 — 「誰が税を負担しているか」の変化</text>
+
+      <!-- 3つのスナップショット -->
+      <!-- 1990年 -->
+      <text x="130" y="42" text-anchor="middle" font-size="11" fill="#1a365d" font-weight="bold">1990年（バブル期）</text>
+      <text x="130" y="54" text-anchor="middle" font-size="9" fill="#718096">税収60.1兆円</text>
+      <!-- 円グラフ的なスタックドバー -->
+      <rect x="40" y="60" width="78" height="20" rx="0" fill="#e53e3e"/>
+      <text x="79" y="74" text-anchor="middle" font-size="7" fill="white">所得税 43%</text>
+      <rect x="118" y="60" width="54" height="20" rx="0" fill="#2b6cb0"/>
+      <text x="145" y="74" text-anchor="middle" font-size="7" fill="white">法人税 31%</text>
+      <rect x="172" y="60" width="14" height="20" rx="0" fill="#dd6b20"/>
+      <text x="200" y="74" font-size="7" fill="#c05621">消費8%</text>
+      <rect x="186" y="60" width="34" height="20" rx="0" fill="#38a169"/>
+      <text x="203" y="86" text-anchor="middle" font-size="7" fill="#276749">他18%</text>
+
+      <!-- 矢印 -->
+      <text x="260" y="75" text-anchor="middle" font-size="20" fill="#a0aec0">→</text>
+
+      <!-- 2010年 -->
+      <text x="370" y="42" text-anchor="middle" font-size="11" fill="#1a365d" font-weight="bold">2010年（リーマン後）</text>
+      <text x="370" y="54" text-anchor="middle" font-size="9" fill="#718096">税収41.5兆円</text>
+      <rect x="280" y="60" width="50" height="20" rx="0" fill="#e53e3e"/>
+      <text x="305" y="74" text-anchor="middle" font-size="7" fill="white">所得税 31%</text>
+      <rect x="330" y="60" width="35" height="20" rx="0" fill="#2b6cb0"/>
+      <text x="347" y="74" text-anchor="middle" font-size="7" fill="white">法人21%</text>
+      <rect x="365" y="60" width="40" height="20" rx="0" fill="#dd6b20"/>
+      <text x="385" y="74" text-anchor="middle" font-size="7" fill="white">消費24%</text>
+      <rect x="405" y="60" width="40" height="20" rx="0" fill="#38a169"/>
+      <text x="425" y="74" text-anchor="middle" font-size="7" fill="white">他24%</text>
+
+      <!-- 矢印 -->
+      <text x="490" y="75" text-anchor="middle" font-size="20" fill="#a0aec0">→</text>
+
+      <!-- 2024年 -->
+      <text x="610" y="42" text-anchor="middle" font-size="11" fill="#1a365d" font-weight="bold">2024年（現在）</text>
+      <text x="610" y="54" text-anchor="middle" font-size="9" fill="#718096">税収75.2兆円</text>
+      <rect x="520" y="60" width="41" height="20" rx="0" fill="#e53e3e"/>
+      <text x="540" y="74" text-anchor="middle" font-size="7" fill="white">所得28%</text>
+      <rect x="561" y="60" width="35" height="20" rx="0" fill="#2b6cb0"/>
+      <text x="578" y="74" text-anchor="middle" font-size="7" fill="white">法人24%</text>
+      <rect x="596" y="60" width="49" height="20" rx="0" fill="#dd6b20"/>
+      <text x="620" y="74" text-anchor="middle" font-size="7" fill="white">消費税 33%</text>
+      <rect x="645" y="60" width="22" height="20" rx="0" fill="#38a169"/>
+      <text x="656" y="74" text-anchor="middle" font-size="7" fill="white">他15%</text>
+
+      <!-- 下段: 対立軸 -->
+      <text x="360" y="108" text-anchor="middle" font-size="12" fill="#1a365d" font-weight="bold">3つの構造的転換</text>
+
+      <rect x="30" y="115" width="210" height="50" rx="6" fill="white" stroke="#e53e3e" stroke-width="1.5"/>
+      <text x="135" y="132" text-anchor="middle" font-size="10" fill="#c53030" font-weight="bold">① 所得税43% → 28%</text>
+      <text x="135" y="148" text-anchor="middle" font-size="9" fill="#4a5568">「稼ぐ人から取る」→ 比率低下</text>
+      <text x="135" y="162" text-anchor="middle" font-size="8" fill="#718096">税率引下げ+分離課税拡大</text>
+
+      <rect x="255" y="115" width="210" height="50" rx="6" fill="white" stroke="#dd6b20" stroke-width="1.5"/>
+      <text x="360" y="132" text-anchor="middle" font-size="10" fill="#c05621" font-weight="bold">② 消費税8% → 33%</text>
+      <text x="360" y="148" text-anchor="middle" font-size="9" fill="#4a5568">「使う人から取る」→ 主役に</text>
+      <text x="360" y="162" text-anchor="middle" font-size="8" fill="#718096">税率引上げの累積効果</text>
+
+      <rect x="480" y="115" width="210" height="50" rx="6" fill="white" stroke="#2b6cb0" stroke-width="1.5"/>
+      <text x="585" y="132" text-anchor="middle" font-size="10" fill="#2b6cb0" font-weight="bold">③ 法人税31% → 24%</text>
+      <text x="585" y="148" text-anchor="middle" font-size="9" fill="#4a5568">国際競争で税率引下げ圧力</text>
+      <text x="585" y="162" text-anchor="middle" font-size="8" fill="#718096">課税ベース拡大で金額は維持</text>
+    </svg>
+  </div>
+
+  <div class="two-col">
+    <div class="meta-box">
+      <h3>見えてくる問い: 「誰が」負担しているか</h3>
+      <ul>
+        <li><strong>1990年</strong>: 高所得者と大企業が主たる負担者（所得税43%+法人税31%=74%）</li>
+        <li><strong>2024年</strong>: 全消費者が最大の負担者（消費税33%がトップ）。「広く薄く」への転換</li>
+        <li>この変化は<strong>「応能負担から応益負担へ」</strong>の静かな革命。シャウプが描いた累進所得税中心の
+        世界観は数字の上でも終わりつつある</li>
+      </ul>
+    </div>
+    <div class="warning-box">
+      <h3>未解決の構造問題</h3>
+      <ul>
+        <li><strong>金融所得課税</strong>: 分離課税20%で高所得者ほど実効税率が低下する「1億円の壁」問題</li>
+        <li><strong>デジタル課税</strong>: プラットフォーム経済の拡大に税制が追いついていない</li>
+        <li><strong>少子高齢化</strong>: 労働人口減→所得税収減 × 高齢者増→社会保障費増 の構造的ギャップ。
+        消費税15%〜20%への引上げ議論は不可避か</li>
+      </ul>
+    </div>
+  </div>
+  <span class="page-number">7 / 7</span>
+</div>
+
+</body>
+</html>
