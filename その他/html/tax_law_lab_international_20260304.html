@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>国際課税 — 税法ラボ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --font-display: 'Outfit', 'Noto Sans JP', sans-serif;
+  --font-body: 'Noto Sans JP', 'Outfit', sans-serif;
+  --accent: #5E6AD2;
+  --accent-light: #7B85E0;
+  --accent-glow: rgba(94, 106, 210, 0.35);
+  --radius: 12px;
+  --radius-lg: 20px;
+  --transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-theme="dark"] {
+  --bg-primary: #0A0A0A;
+  --bg-secondary: #111113;
+  --bg-card: #16161A;
+  --bg-card-hover: #1C1C21;
+  --border: rgba(255, 255, 255, 0.06);
+  --border-hover: rgba(255, 255, 255, 0.12);
+  --text-primary: #FAFAFA;
+  --text-secondary: #8A8A9A;
+  --text-tertiary: #55556A;
+  --noise-opacity: 0.03;
+  --shadow-card: 0 0 0 1px var(--border), 0 4px 24px rgba(0,0,0,0.4);
+  --shadow-card-hover: 0 0 0 1px var(--border-hover), 0 8px 40px rgba(0,0,0,0.5);
+  --checkbox-bg: rgba(255,255,255,0.06);
+  --lesson-hover: rgba(255,255,255,0.03);
+  --roadmap-card-bg: rgba(255,255,255,0.04);
+  --roadmap-text: rgba(250,250,250,0.7);
+  --svg-line: rgba(255,255,255,0.15);
+}
+[data-theme="light"] {
+  --bg-primary: #FAFAF7;
+  --bg-secondary: #F0F0ED;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #FFFFFF;
+  --border: rgba(0, 0, 0, 0.06);
+  --border-hover: rgba(0, 0, 0, 0.12);
+  --text-primary: #1A1A1A;
+  --text-secondary: #6B6B7B;
+  --text-tertiary: #9999AA;
+  --noise-opacity: 0.015;
+  --shadow-card: 0 0 0 1px var(--border), 0 2px 12px rgba(0,0,0,0.04);
+  --shadow-card-hover: 0 0 0 1px var(--border-hover), 0 4px 24px rgba(0,0,0,0.08);
+  --checkbox-bg: rgba(0,0,0,0.05);
+  --lesson-hover: rgba(0,0,0,0.02);
+  --roadmap-card-bg: rgba(0,0,0,0.03);
+  --roadmap-text: rgba(26,26,26,0.65);
+  --svg-line: rgba(0,0,0,0.12);
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.7;
+  transition: background var(--transition), color var(--transition);
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: var(--noise-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 200px;
+}
+a { color: inherit; text-decoration: none; }
+.container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+/* Reveal */
+.reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* Header */
+header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  padding: 0 24px;
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border-bottom: 1px solid var(--border);
+  transition: background var(--transition), border-color var(--transition);
+}
+[data-theme="dark"] header { background: rgba(10,10,10,0.8); }
+[data-theme="light"] header { background: rgba(250,250,247,0.85); }
+header .inner {
+  max-width: 1120px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; height: 64px;
+}
+.logo {
+  font-family: var(--font-display); font-weight: 800; font-size: 1.2rem;
+  letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px;
+}
+.logo-mark {
+  width: 28px; height: 28px; background: var(--accent); border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; font-weight: 900; color: #fff; letter-spacing: 0;
+}
+nav { display: flex; align-items: center; gap: 8px; }
+nav a {
+  font-size: 0.875rem; font-weight: 400; color: var(--text-secondary);
+  padding: 6px 14px; border-radius: 8px; transition: color var(--transition), background var(--transition);
+}
+nav a:hover { color: var(--text-primary); background: var(--border); }
+nav a.active { color: var(--text-primary); background: var(--border); }
+.theme-toggle {
+  width: 36px; height: 36px; border: 1px solid var(--border); border-radius: 10px;
+  background: transparent; color: var(--text-secondary); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition); margin-left: 8px;
+}
+.theme-toggle:hover { border-color: var(--border-hover); color: var(--text-primary); background: var(--border); }
+.theme-toggle svg { width: 18px; height: 18px; transition: transform 0.5s cubic-bezier(0.16,1,0.3,1); }
+.theme-toggle:hover svg { transform: rotate(30deg); }
+
+/* Hero */
+.hero {
+  padding: 120px 24px 60px; text-align: center;
+  position: relative;
+  background: radial-gradient(ellipse 80% 60% at 50% -20%, rgba(94,106,210,0.12), transparent);
+  transition: background var(--transition);
+}
+.hero-label {
+  font-family: var(--font-display); font-size: 0.75rem; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px;
+}
+.hero h1 {
+  font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 900;
+  line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 16px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.hero p { font-size: 1.05rem; color: var(--text-secondary); max-width: 620px; margin: 0 auto; line-height: 1.8; }
+.hero .back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 24px; font-size: 0.85rem; color: var(--text-tertiary);
+  transition: color var(--transition);
+}
+.hero .back-link:hover { color: var(--accent); }
+.hero .back-link svg { width: 16px; height: 16px; }
+
+/* Section */
+section.content-section { padding: 60px 24px 80px; }
+section.alt-bg { background: var(--bg-secondary); transition: background var(--transition); }
+.section-label {
+  font-family: var(--font-display); font-size: 0.75rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 12px;
+}
+.section-title {
+  font-family: var(--font-display); font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 800; letter-spacing: -0.03em; line-height: 1.2; margin-bottom: 32px;
+}
+
+/* Roadmap */
+.roadmap-wrapper {
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  border: 1px solid var(--border); box-shadow: var(--shadow-card);
+  padding: 48px 24px; display: flex; justify-content: center; overflow-x: auto;
+  transition: all var(--transition);
+}
+.roadmap-wrapper svg { max-width: 100%; height: auto; }
+
+/* Theme Cards */
+.themes-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px;
+}
+.theme-card {
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  border: 1px solid var(--border); box-shadow: var(--shadow-card);
+  padding: 36px 32px 32px;
+  transition: transform 0.35s cubic-bezier(.22,.68,0,1), box-shadow 0.35s ease;
+}
+.theme-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card-hover); }
+.card-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+.card-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; color: #fff; flex-shrink: 0;
+}
+.card-header h3 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; line-height: 1.3; }
+.card-header h3 small {
+  display: block; font-size: 0.78rem; font-weight: 400; color: var(--text-secondary); margin-top: 2px;
+}
+.card-block { margin-bottom: 20px; }
+.card-block:last-child { margin-bottom: 0; }
+.card-block-title {
+  font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
+}
+.card-block p { font-size: 0.92rem; color: var(--text-secondary); line-height: 1.75; }
+.concepts { display: flex; flex-wrap: wrap; gap: 8px; }
+.concept-pill {
+  font-size: 0.8rem; font-weight: 500; padding: 6px 14px; border-radius: 100px;
+  background: linear-gradient(135deg, rgba(94,106,210,0.12), rgba(123,133,224,0.08));
+  color: var(--accent-light); border: 1px solid rgba(94,106,210,0.18); white-space: nowrap;
+}
+.importance-box {
+  background: linear-gradient(135deg, rgba(94,106,210,0.06), rgba(123,133,224,0.03));
+  border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; padding: 14px 18px;
+}
+.importance-box p { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.75; }
+.card-divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+/* Lessons */
+.lessons-list { list-style: none; counter-reset: lesson; }
+.lessons-list li {
+  counter-increment: lesson; display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px; border-radius: 10px; transition: background 0.2s ease; font-size: 0.9rem;
+}
+.lessons-list li:hover { background: var(--lesson-hover); }
+.checkbox-deco {
+  width: 20px; height: 20px; border-radius: 6px;
+  border: 1.5px solid rgba(94,106,210,0.4); background: var(--checkbox-bg);
+  flex-shrink: 0; position: relative; cursor: pointer; transition: all 0.25s ease;
+}
+.checkbox-deco:hover { border-color: var(--accent); background: rgba(94,106,210,0.12); }
+.checkbox-deco.checked {
+  background: linear-gradient(135deg, var(--accent), var(--accent-light)); border-color: transparent;
+}
+.checkbox-deco.checked::after {
+  content: ''; position: absolute; top: 4px; left: 7px; width: 5px; height: 9px;
+  border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg);
+}
+.lesson-number { font-size: 0.7rem; font-weight: 700; color: var(--accent); min-width: 22px; }
+.lesson-text { color: var(--text-primary); font-weight: 400; }
+.lesson-text.completed { text-decoration: line-through; color: var(--text-secondary); }
+
+/* Footer */
+footer {
+  padding: 48px 24px; border-top: 1px solid var(--border); transition: border-color var(--transition);
+}
+footer .inner {
+  max-width: 1120px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+}
+footer .copy { font-size: 0.8rem; color: var(--text-tertiary); }
+footer .links { display: flex; gap: 24px; }
+footer .links a { font-size: 0.8rem; color: var(--text-tertiary); transition: color var(--transition); }
+footer .links a:hover { color: var(--text-primary); }
+
+/* Responsive */
+@media (max-width: 900px) { .themes-grid { grid-template-columns: 1fr; } }
+@media (max-width: 640px) {
+  nav a { display: none; }
+  section.content-section { padding: 40px 20px 60px; }
+  .hero { padding: 100px 20px 40px; }
+  footer .inner { flex-direction: column; gap: 20px; text-align: center; }
+  footer .links { flex-wrap: wrap; justify-content: center; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(94,106,210,0.3); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="inner">
+    <a href="tax_law_lab_20260304.html" class="logo">
+      <span class="logo-mark">税</span>
+      <span>税法ラボ</span>
+    </a>
+    <nav>
+      <a href="tax_law_lab_20260304.html#courses">コース</a>
+      <a href="tax_law_lab_20260304.html#features">機能</a>
+      <a href="tax_law_lab_20260304.html#stats">判例</a>
+      <a href="#">ブログ</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+          <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-label reveal">International Tax Curriculum</div>
+  <h1 class="reveal reveal-delay-1">国際課税 学習コンテンツ</h1>
+  <p class="reveal reveal-delay-2">移転価格税制・CFC税制・租税条約・PE課税の4大テーマを体系的に学ぶための包括的カリキュラム。基礎から実務まで段階的に習得できます。</p>
+  <a href="tax_law_lab_20260304.html" class="back-link reveal reveal-delay-3">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    トップに戻る
+  </a>
+</section>
+
+<!-- ROADMAP -->
+<section class="content-section alt-bg">
+  <div class="container">
+    <div class="section-label reveal">Learning Roadmap</div>
+    <div class="section-title reveal reveal-delay-1">学習ロードマップ</div>
+    <div class="roadmap-wrapper reveal reveal-delay-2">
+      <svg viewBox="0 0 960 370" xmlns="http://www.w3.org/2000/svg" font-family="Outfit, Noto Sans JP, sans-serif" width="960" height="370">
+        <defs>
+          <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#5E6AD2"/><stop offset="100%" stop-color="#7B85E0"/>
+          </linearGradient>
+          <filter id="glow"><feGaussianBlur stdDeviation="6" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#5E6AD2" opacity="0.7"/>
+          </marker>
+        </defs>
+        <line x1="235" y1="170" x2="280" y2="170" stroke="#5E6AD2" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrow)" opacity="0.5"/>
+        <line x1="465" y1="170" x2="510" y2="170" stroke="#5E6AD2" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrow)" opacity="0.5"/>
+        <line x1="695" y1="170" x2="740" y2="170" stroke="#5E6AD2" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrow)" opacity="0.5"/>
+        <!-- Step 1 -->
+        <rect x="20" y="70" width="210" height="200" rx="16" fill="var(--roadmap-card-bg)" stroke="var(--svg-line)" stroke-width="1"/>
+        <circle cx="125" cy="110" r="22" fill="url(#grad)" filter="url(#glow)"/>
+        <text x="125" y="116" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">1</text>
+        <text x="125" y="155" text-anchor="middle" fill="var(--text-primary)" font-size="14" font-weight="700">租税条約</text>
+        <text x="125" y="175" text-anchor="middle" fill="var(--roadmap-text)" font-size="11">Tax Treaties</text>
+        <line x1="65" y1="192" x2="185" y2="192" stroke="var(--svg-line)" stroke-width="1"/>
+        <text x="125" y="215" text-anchor="middle" fill="var(--roadmap-text)" font-size="10.5">二重課税排除の基礎と</text>
+        <text x="125" y="232" text-anchor="middle" fill="var(--roadmap-text)" font-size="10.5">条約ネットワークの理解</text>
+        <rect x="60" y="245" width="130" height="14" rx="7" fill="url(#grad)" opacity="0.15"/>
+        <text x="125" y="255" text-anchor="middle" fill="#5E6AD2" font-size="8.5" font-weight="600">FOUNDATION</text>
+        <!-- Step 2 -->
+        <rect x="280" y="70" width="210" height="200" rx="16" fill="var(--roadmap-card-bg)" stroke="var(--svg-line)" stroke-width="1"/>
+        <circle cx="385" cy="110" r="22" fill="url(#grad)" filter="url(#glow)"/>
+        <text x="385" y="116" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">2</text>
+        <text x="385" y="155" text-anchor="middle" fill="var(--text-primary)" font-size="14" font-weight="700">PE課税</text>
+        <text x="385" y="175" text-anchor="middle" fill="var(--roadmap-text)" font-size="11">Permanent Establishment</text>
+        <line x1="325" y1="192" x2="445" y2="192" stroke="var(--svg-line)" stroke-width="1"/>
+        <text x="385" y="215" text-anchor="middle" fill="var(--roadmap-text)" font-size="10.5">恒久的施設の定義と</text>
+        <text x="385" y="232" text-anchor="middle" fill="var(--roadmap-text)" font-size="10.5">帰属所得の計算方法</text>
+        <rect x="320" y="245" width="130" height="14" rx="7" fill="url(#grad)" opacity="0.15"/>
+        <text x="385" y="255" text-anchor="middle" fill="#5E6AD2" font-size="8.5" font-weight="600">INTERMEDIATE</text>
+        <!-- Step 3 -->
+        <rect x="510" y="70" width="210" height="200" rx="16" fill="var(--roadmap-card-bg)" stroke="var(--svg-line)" stroke-width="1"/>
+        <circle cx="615" cy="110" r="22" fill="url(#grad)" filter="url(#glow)"/>
+        <text x="615" y="116" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">3</text>
+        <text x="615" y="155" text-anchor="middle" fill="var(--text-primary)" font-size="14" font-weight="700">移転価格税制</text>
+        <text x="615" y="175" text-anchor="middle" fill="var(--roadmap-text)" font-size="11">Transfer Pricing</text>
+        <line x1="555" y1="192" x2="675" y2="192" stroke="var(--svg-line)" stroke-width="1"/>
+        <text x="615" y="215" text-anchor="middle" fill="var(--roadmap-text)" font-size="10.5">独立企業原則に基づく</text>
+        <text x="615" y="232" text-anchor="middle" fill="var(--roadmap-text)" font-size="10.5">適正価格の算定と文書化</text>
+        <rect x="550" y="245" width="130" height="14" rx="7" fill="url(#grad)" opacity="0.15"/>
+        <text x="615" y="255" text-anchor="middle" fill="#5E6AD2" font-size="8.5" font-weight="600">ADVANCED</text>
+        <!-- Step 4 -->
+        <rect x="740" y="70" width="210" height="200" rx="16" fill="var(--roadmap-card-bg)" stroke="var(--svg-line)" stroke-width="1"/>
+        <circle cx="845" cy="110" r="22" fill="url(#grad)" filter="url(#glow)"/>
+        <text x="845" y="116" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">4</text>
+        <text x="845" y="155" text-anchor="middle" fill="var(--text-primary)" font-size="14" font-weight="700">CFC税制</text>
+        <text x="845" y="175" text-anchor="middle" fill="var(--roadmap-text)" font-size="11">CFC Rules</text>
+        <line x1="785" y1="192" x2="905" y2="192" stroke="var(--svg-line)" stroke-width="1"/>
+        <text x="845" y="215" text-anchor="middle" fill="var(--roadmap-text)" font-size="10.5">外国子会社合算税制の</text>
+        <text x="845" y="232" text-anchor="middle" fill="var(--roadmap-text)" font-size="10.5">適用判定と所得計算</text>
+        <rect x="780" y="245" width="130" height="14" rx="7" fill="url(#grad)" opacity="0.15"/>
+        <text x="845" y="255" text-anchor="middle" fill="#5E6AD2" font-size="8.5" font-weight="600">EXPERT</text>
+        <!-- Note -->
+        <text x="480" y="320" text-anchor="middle" fill="var(--roadmap-text)" font-size="11" font-style="italic">※ 租税条約の基礎理解を土台に、PE課税 → 移転価格 → CFC税制の順で学習することを推奨</text>
+        <text x="480" y="350" text-anchor="middle" fill="var(--roadmap-text)" font-size="10" opacity="0.6">各テーマは相互に関連するため、横断的な復習も重要です</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- THEME CARDS -->
+<section class="content-section">
+  <div class="container">
+    <div class="section-label reveal">Curriculum Themes</div>
+    <div class="section-title reveal reveal-delay-1">学習テーマ一覧</div>
+    <div class="themes-grid">
+
+      <!-- 移転価格税制 -->
+      <div class="theme-card reveal reveal-delay-1">
+        <div class="card-header">
+          <div class="card-icon">⇄</div>
+          <h3>移転価格税制<small>Transfer Pricing</small></h3>
+        </div>
+        <div class="card-block">
+          <div class="card-block-title">Overview</div>
+          <p>移転価格税制は、関連企業間の国際取引が独立企業間価格（Arm's Length Price）で行われていない場合に、課税所得を適正な水準に調整する制度です。OECDの移転価格ガイドラインを国際標準として、各国が国内法で独自の規定を設けています。</p>
+        </div>
+        <div class="card-block">
+          <div class="card-block-title">Key Concepts</div>
+          <div class="concepts">
+            <span class="concept-pill">独立企業原則</span>
+            <span class="concept-pill">OECD移転価格ガイドライン</span>
+            <span class="concept-pill">移転価格算定方法</span>
+            <span class="concept-pill">文書化義務（三層構造）</span>
+          </div>
+        </div>
+        <div class="card-block">
+          <div class="card-block-title">Why It Matters</div>
+          <div class="importance-box">
+            <p>多国籍企業のグループ内取引額は世界貿易の約60%を占めます。不適切な移転価格設定は各国の税収を侵食し、BEPS（税源浸食と利益移転）の主要因とされます。適切な移転価格ポリシーの構築と文書化は、税務リスクの最小化に直結します。</p>
+          </div>
+        </div>
+        <div class="card-divider"></div>
+        <div class="card-block">
+          <div class="card-block-title">Lessons</div>
+          <ol class="lessons-list">
+            <li><span class="checkbox-deco" onclick="this.classList.toggle('checked');this.closest('li').querySelector('.lesson-text').classList.toggle('completed')"></span><span class="lesson-number">01</span><span class="lesson-text">独立企業原則（ALP）の基本概念と歴史的背景</span></li>
+            <li><span class="checkbox-deco" onclick="this.classList.toggle('checked');this.closest('li').querySelector('.lesson-text').classList.toggle('completed')"></span><span class="lesson-number">02</span><span class="lesson-text">OECD移転価格ガイドラインの構成と主要原則</span></li>
+            <li><span class="checkbox-deco" onclick="this.classList.toggle('checked');this.closest('li').querySelector('.lesson-text').classList.toggle('completed')"></span><span class="lesson-number">03</span><span class="lesson-text">基本三法（CUP法・再販売価格基準法・原価基準法）</span></li>
+            <li><span class="checkbox-deco" onclick="this.classList.toggle('checked');this.closest('li').querySelector('.lesson-text').classList.toggle('completed')"></span><span class="lesson-number">04</span><span class="lesson-text">利益分割法・TNMM（取引単位営業利益法）の実務適用</span></li>
+            <li><span class="checkbox-deco" onclick="this.classList.toggle('checked');this.closest('li').querySelector('.lesson-text').classList.toggle('completed')"></span><span class="lesson-number">05</span><span class="lesson-text">三層構造文書化（マスターファイル・ローカルファイル・CbCR）</span></li>
+            <li><span class="checkbox-deco" onclick="this.classList.toggle('checked');this.closest('li').querySelector('.lesson-text').classList.toggle('completed')"></span><span class="lesson-number">06</span><span class="lesson-text">無形資産取引と移転価格（DEMPE分析）</span></li>
+            <li><span class="checkbox-deco" onclick="this.classList.toggle('checked');this.closest('li').querySelector('.lesson-text').classList.toggle('completed')"></span><span class="lesson-number">07</span><span class="lesson-text">相互協議（MAP）と事前確認制度（APA）の活用</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- CFC税制 -->
+      <div class="theme-card reveal reveal-delay-2">
+        <div class="card-header">
+          <div class="card-icon">🌐</div>
+          <h3>CFC税制<small>Controlled Foreign Company Rules</small></h3>
+        </div>
+        <div class="card-block">
+          <div class="card-block-title">Overview</div>
+          <p>CFC税制（外国子会社合算税制）は、内国法人が軽課税国に設立した外国子会社の所得を、一定の要件のもと親会社の所得に合算して課税する制度です。タックスヘイブンを利用した租税回避を防止することを主な目的とします。</p>
+        </div>
+        <div class="card-block">
+          <div class="card-block-title">Key Concepts</div>
+          <div class="concepts">
+            <span class="concept-pill">制度趣旨・租税回避防止</span>
+            <span class="concept-pill">適用対象の判定基準</span>
+            <span class="concept-pill">適用除外（経済活動基準）</span>
+            <span class="concept-pill">合算所得の計算方法</span>
+          </div>
+        </div>
+        <div class="card-block">
+          <div class="card-block-title">Why It Matters</div>
+          <div class="importance-box">
+            <p>CFC税制はBEPS行動計画3の中核テーマです。軽課税国への利益移転を実効的に防止する「最後の砦」として機能し、グローバル・ミニマム課税（Pillar 2）との関連も深く、国際税務の実務において不可欠な知識です。</p>
+          </div>
+        </div>
+        <div class="card-divider"></div>
+        <div class="card-block">
+          <div class="card-block-title">Lessons</div>
+          <ol class="lessons-list">
+            <li><span class="checkbox-deco" onclick="this.classList.toggle('checked');this.closest('li').querySelector('.lesson-text').classList.toggle('completed')"></span><span class="lesson-number">01</span><span class="lesson-text">CFC税制の制度趣旨とタックスヘイブン対策の歴史</span></li>
+            <li><span class="checkbox-deco" onclick="this.classList.toggle('checked');this.closest('li').querySelector('.lesson-text').classList.toggle('completed')"></span><span class="lesson-number">02</span><span class="lesson-text">特定外国関係会社・対象外国関係会社の判定フロー</span></li>
+            <li><span class="checkbox-deco" onclick="this.classList.toggle('checked');this.closest('li').querySelector('.lesson-text').classList.toggle('completed')"></span><span class="lesson-number">03</span><span class="lesson-text">ペーパーカンパニー・事実上のキャッシュボックスの認定</span></li>
+            <li><span class="checkbox-deco" onclick="this.classList.toggle('checked');this.closest('li').querySelector('.lesson-text').classList.toggle('completed')"></span><span class="lesson-number">04</span><span class="lesson-text">経済活動基準（事業・実体・管理支配・所在地国/非関連者）</span></li>
+            <li><span class="checkbox-deco" onclick="this.classList.toggle('checked');this.closest('li').querySelector('.lesson-text').classList.toggle('completed')"></span><span class="lesson-number">05</span><span class="lesson-text">会社単位の合算課税と受動的所得の部分合算課税</span></li>
+            <li><span class="checkbox-deco" onclick="this.classList.toggle('checked');this.closest('li').querySelector('.lesson-text').classList.toggle('completed')"></span><span class="lesson-number">06</span><span class="lesson-text">二重課税調整と外国税額控除の適用関係</span></li>
+            <li><span class="checkbox-deco" onclick="this.classList.toggle('checked');this.closest('li').querySelector('.lesson-text').classList.toggle('completed')"></span><span class="lesson-number">07</span><span class="lesson-text">グローバル・ミニマム課税（GloBEルール）とCFC税制の交錯</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- 租税条約 -->
+      <div class="theme-card reveal reveal-delay-1">
+        <div class="card-header">
+          <div class="card-icon">📜</div>
+          <h3>租税条約<small>Tax Treaties</small></h3>
+        </div>
+        <div class="card-block">
+          <div class="card-block-title">Overview</div>
+          <p>租税条約は、二国間（または多国間）で締結される国際協定であり、国際的な二重課税の排除、脱税・租税回避の防止、投資交流の促進を主な目的とします。OECDモデル租税条約が国際標準のひな形となっています。</p>
+        </div>
+        <div class="card-block">
+          <div class="card-block-title">Key Concepts</div>
+          <div class="concepts">
+            <span class="concept-pill">二重課税排除</span>
+            <span class="concept-pill">PE認定・源泉税率</span>
+            <span class="concept-pill">情報交換制度</span>
+            <span class="concept-pill">BEPS防止措置実施条約</span>
+          </div>
+        </div>
+        <div class="card-block">
+          <div class="card-block-title">Why It Matters</div>
+          <div class="importance-box">
+            <p>租税条約は国際課税の基盤インフラです。条約ネットワークの理解なくして、源泉税の軽減・PE認定の判断・二重課税の排除は不可能です。日本は80以上の租税条約を締結しています。</p>
+          </div>
+        </div>
+        <div class="card-divider"></div>
+        <div class="card-block">
+          <div class="card-block-title">Lessons</div>
+          <ol class="lessons-list">
+            <li><span class="checkbox-deco" onclick="this.classList.toggle('checked');this.closest('li').querySelector('.lesson-text').classList.toggle('completed')"></span><span class="lesson-number">01</span><span class="lesson-text">租税条約の目的・構造とOECD/国連モデル条約の比較</span></li>
+            <li><span class="checkbox-deco" onclick="this.classList.toggle('checked');this.closest('li').querySelector('.lesson-text').classList.toggle('completed')"></span><span class="lesson-number">02</span><span class="lesson-text">二重課税排除の方法（外国税額控除方式と国外所得免除方式）</span></li>
+            <li><span class="checkbox-deco" onclick="this.classList.toggle('checked');this.closest('li').querySelector('.lesson-text').classList.toggle('completed')"></span><span class="lesson-number">03</span><span class="lesson-text">恒久的施設（PE）の条約上の定義と最新動向</span></li>
+            <li><span class="checkbox-deco" onclick="this.classList.toggle('checked');this.closest('li').querySelector('.lesson-text').classList.toggle('completed')"></span><span class="lesson-number">04</span><span class="lesson-text">配当・利子・使用料に対する源泉税率の条約別比較</span></li>
+            <li><span class="checkbox-deco" onclick="this.classList.toggle('checked');this.closest('li').querySelector('.lesson-text').classList.toggle('completed')"></span><span class="lesson-number">05</span><span class="lesson-text">情報交換（EOI）・自動的情報交換（CRS/AEOI）の仕組み</span></li>
+            <li><span class="checkbox-deco" onclick="this.classList.toggle('checked');this.closest('li').querySelector('.lesson-text').classList.toggle('completed')"></span><span class="lesson-number">06</span><span class="lesson-text">BEPS防止措置実施条約（MLI）と条約濫用防止規定（LOB・PPT）</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- PE課税 -->
+      <div class="theme-card reveal reveal-delay-2">
+        <div class="card-header">
+          <div class="card-icon">🏢</div>
+          <h3>PE課税<small>Permanent Establishment Taxation</small></h3>
+        </div>
+        <div class="card-block">
+          <div class="card-block-title">Overview</div>
+          <p>PE（恒久的施設）課税は、外国企業が他国に一定の事業拠点を有する場合に、その国で課税権が生じる仕組みです。PEの有無とその範囲の判定は、国際課税において最も争訟が多いテーマの一つです。</p>
+        </div>
+        <div class="card-block">
+          <div class="card-block-title">Key Concepts</div>
+          <div class="concepts">
+            <span class="concept-pill">恒久的施設の定義</span>
+            <span class="concept-pill">帰属主義（AOA）</span>
+            <span class="concept-pill">代理人PE</span>
+            <span class="concept-pill">建設PE・サービスPE</span>
+          </div>
+        </div>
+        <div class="card-block">
+          <div class="card-block-title">Why It Matters</div>
+          <div class="importance-box">
+            <p>デジタル経済の進展により、物理的拠点なき経済活動が増加し、PE認定の在り方は国際的に大きな議論を呼んでいます。Pillar 1における新たな課税権配分ルールなど、PE課税は今まさに変革の渦中にあります。</p>
+          </div>
+        </div>
+        <div class="card-divider"></div>
+        <div class="card-block">
+          <div class="card-block-title">Lessons</div>
+          <ol class="lessons-list">
+            <li><span class="checkbox-deco" onclick="this.classList.toggle('checked');this.closest('li').querySelector('.lesson-text').classList.toggle('completed')"></span><span class="lesson-number">01</span><span class="lesson-text">PE（恒久的施設）の基本定義と類型（支店PE・建設PE・サービスPE）</span></li>
+            <li><span class="checkbox-deco" onclick="this.classList.toggle('checked');this.closest('li').querySelector('.lesson-text').classList.toggle('completed')"></span><span class="lesson-number">02</span><span class="lesson-text">代理人PE（従属代理人・独立代理人）の判定基準</span></li>
+            <li><span class="checkbox-deco" onclick="this.classList.toggle('checked');this.closest('li').querySelector('.lesson-text').classList.toggle('completed')"></span><span class="lesson-number">03</span><span class="lesson-text">OECD承認アプローチ（AOA）と帰属主義の概要</span></li>
+            <li><span class="checkbox-deco" onclick="this.classList.toggle('checked');this.closest('li').querySelector('.lesson-text').classList.toggle('completed')"></span><span class="lesson-number">04</span><span class="lesson-text">PE帰属所得の計算（機能・資産・リスク分析と内部取引の認識）</span></li>
+            <li><span class="checkbox-deco" onclick="this.classList.toggle('checked');this.closest('li').querySelector('.lesson-text').classList.toggle('completed')"></span><span class="lesson-number">05</span><span class="lesson-text">BEPS行動7 ─ PE認定の人為的回避防止と改正の影響</span></li>
+            <li><span class="checkbox-deco" onclick="this.classList.toggle('checked');this.closest('li').querySelector('.lesson-text').classList.toggle('completed')"></span><span class="lesson-number">06</span><span class="lesson-text">デジタル経済とPE課税の限界 ─ Pillar 1の新ネクサスルール</span></li>
+          </ol>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="inner">
+    <div class="copy">&copy; 2026 税法ラボ. All rights reserved.</div>
+    <div class="links">
+      <a href="tax_law_lab_20260304.html">トップ</a>
+      <a href="#">利用規約</a>
+      <a href="#">プライバシー</a>
+      <a href="#">お問い合わせ</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Theme toggle
+const toggle = document.getElementById('themeToggle');
+const html = document.documentElement;
+const moonIcon = toggle.querySelector('.icon-moon');
+const sunIcon = toggle.querySelector('.icon-sun');
+function setTheme(t) {
+  html.setAttribute('data-theme', t);
+  moonIcon.style.display = t === 'dark' ? 'block' : 'none';
+  sunIcon.style.display = t === 'light' ? 'block' : 'none';
+  localStorage.setItem('theme', t);
+}
+toggle.addEventListener('click', () => setTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
+const saved = localStorage.getItem('theme');
+if (saved) setTheme(saved);
+
+// Scroll reveal
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
