@@ -1,0 +1,1270 @@
+<!DOCTYPE html><html lang="ja" data-theme="dark">
+- Google Fonts: Outfit + Noto Sans JP
+- CSS変数でダーク/ライト切替対応:
+  ダーク: 背景#0A0A0A, テキスト#FAFAFA, カード#16161A, ボーダーrgba(255,255,255,0.06)
+  ライト: 背景#FAFAF7, テキスト#1A1A1A, カード#FFFFFF, ボーダーrgba(0,0,0,0.06)
+  アクセント: #5E6AD2→#7B85E0
+- fixedヘッダー: ロゴ「税法ラボ」(紫正方形+テキスト) + ナビ(コース/条文DB/判例/ブログ) + テーマ切替(月/太陽SVG)、backdrop-filter:blur(20px)半透明
+- フッター: © 2026 税法ラボ + リンク
+- max-width:1120px, padding:0 24px, margin:0 auto
+- カード: border-radius:20px, box-shadow, ホバーtranslateY(-4px)
+- セクションラベル: 英語大文字0.75rem letter-spacing:0.12em アクセント色
+- IntersectionObserverスクロールアニメーション(.reveal→.visible)
+- ノイズテクスチャオーバーレイ, localStorage保存テーマ, レスポンシブ
+- 目次(ページ内リンク)冒頭配置, 各セクション末に「ポイント整理」ボックス
+- 表・コードブロック・SVG図解を適宜使用
+
+**コードブロックでHTMLコードを出力してください。** 1回の回答で完結。必ず最後まで出力。
+
+【コンテンツ】第2回：租税条約の基礎─モデル条約と二重課税排除。(1)租税条約の歴史(1920年代〜)(2)OECDモデル条約の構造(全30条)(3)国連モデルとの相違(4)日本の条約ネットワーク(5)適用範囲(6)居住者の定義とタイブレーカー(7)事業所得条項(8)配当条項(9)利子条項(10)使用料条項(11)譲渡収益条項(12)二重課税排除条項(13)無差別・相互協議条項。3万字程度Based on the detailed specifications, I'll create a comprehensive educational HTML file about tax treaties. Let me first check some current information to ensure accuracy.
+Using Tool|SearchOECD model tax convention 2024 2025 updatesViewUsing Tool|Search日本 租税条約 ネットワーク 締結国数 最新ViewUsing Tool|SearchOECD model tax convention 2025 update remote work PE article 5ViewUsing Tool|Search日本 租税条約 155か国 2024 2025 財務省ViewNow I have the latest information. Let me build the comprehensive HTML file.
+<!DOCTYPE html>
+<html lang="ja" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第2回：租税条約の基礎─モデル条約と二重課税排除 | 税法ラボ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ===== CSS Custom Properties ===== */
+:root {
+  --font-en: 'Outfit', sans-serif;
+  --font-jp: 'Noto Sans JP', sans-serif;
+  --accent: #5E6AD2;
+  --accent-hover: #7B85E0;
+  --accent-glow: rgba(94,106,210,0.25);
+  --radius: 20px;
+  --radius-sm: 12px;
+  --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+  --header-h: 64px;
+}
+
+[data-theme="dark"] {
+  --bg: #0A0A0A;
+  --bg-secondary: #111114;
+  --text: #FAFAFA;
+  --text-secondary: #A0A0A8;
+  --card: #16161A;
+  --card-hover: #1C1C22;
+  --border: rgba(255,255,255,0.06);
+  --border-strong: rgba(255,255,255,0.12);
+  --code-bg: #1E1E24;
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
+  --shadow-card-hover: 0 12px 40px rgba(0,0,0,0.5);
+  --header-bg: rgba(10,10,10,0.78);
+  --point-bg: #1A1A2E;
+  --point-border: rgba(94,106,210,0.3);
+  --table-header: #1E1E28;
+  --table-row-alt: rgba(255,255,255,0.02);
+  --noise-opacity: 0.03;
+}
+
+[data-theme="light"] {
+  --bg: #FAFAF7;
+  --bg-secondary: #F0F0ED;
+  --text: #1A1A1A;
+  --text-secondary: #6B6B73;
+  --card: #FFFFFF;
+  --card-hover: #FAFAFA;
+  --border: rgba(0,0,0,0.06);
+  --border-strong: rgba(0,0,0,0.12);
+  --code-bg: #F4F4F0;
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.06);
+  --shadow-card-hover: 0 12px 40px rgba(0,0,0,0.1);
+  --header-bg: rgba(250,250,247,0.78);
+  --point-bg: #EEEEF8;
+  --point-border: rgba(94,106,210,0.25);
+  --table-header: #F0F0F4;
+  --table-row-alt: rgba(0,0,0,0.02);
+  --noise-opacity: 0.02;
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--header-h) + 24px); }
+body {
+  font-family: var(--font-jp);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.85;
+  font-size: 16px;
+  transition: background var(--transition), color var(--transition);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Noise Overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: var(--noise-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+a { color: var(--accent); text-decoration: none; transition: color var(--transition); }
+a:hover { color: var(--accent-hover); }
+img { max-width: 100%; display: block; }
+::selection { background: var(--accent); color: #fff; }
+
+/* ===== Layout ===== */
+.container { max-width: 1120px; padding: 0 24px; margin: 0 auto; }
+
+/* ===== Header ===== */
+.header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--header-h);
+  background: var(--header-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  z-index: 1000;
+  transition: background var(--transition);
+}
+.header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-en);
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--text);
+}
+.logo-icon {
+  width: 32px; height: 32px;
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.nav { display: flex; align-items: center; gap: 8px; }
+.nav a {
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all var(--transition);
+}
+.nav a:hover, .nav a.active {
+  color: var(--text);
+  background: var(--border);
+}
+.theme-toggle {
+  width: 40px; height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-secondary);
+  transition: all var(--transition);
+  margin-left: 8px;
+}
+.theme-toggle:hover { color: var(--text); border-color: var(--border-strong); background: var(--border); }
+.theme-toggle svg { width: 18px; height: 18px; }
+.theme-toggle .sun { display: none; }
+[data-theme="light"] .theme-toggle .moon { display: none; }
+[data-theme="light"] .theme-toggle .sun { display: block; }
+
+/* ===== Mobile Menu ===== */
+.menu-btn {
+  display: none;
+  width: 40px; height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  color: var(--text-secondary);
+  align-items: center; justify-content: center;
+  transition: all var(--transition);
+}
+.menu-btn:hover { color: var(--text); border-color: var(--border-strong); }
+.menu-btn svg { width: 18px; height: 18px; }
+
+@media(max-width:768px) {
+  .nav { display: none; }
+  .nav.open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: var(--header-h);
+    left: 0; right: 0;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    gap: 4px;
+  }
+  .nav.open a { padding: 12px 16px; border-radius: 10px; }
+  .menu-btn { display: flex; }
+}
+
+/* ===== Hero ===== */
+.hero {
+  padding: calc(var(--header-h) + 80px) 0 60px;
+  text-align: center;
+}
+.hero-label {
+  display: inline-block;
+  font-family: var(--font-en);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.3;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+.hero .subtitle {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  max-width: 680px;
+  margin: 0 auto 32px;
+  line-height: 1.8;
+}
+.hero-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+}
+.hero-meta span { display: flex; align-items: center; gap: 6px; }
+.hero-meta svg { width: 16px; height: 16px; opacity: 0.6; }
+
+/* ===== TOC ===== */
+.toc-section { padding: 0 0 60px; }
+.toc-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px;
+  box-shadow: var(--shadow-card);
+  transition: all var(--transition);
+}
+.toc-card h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.toc-card h2 svg { width: 20px; height: 20px; color: var(--accent); }
+.toc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 8px;
+}
+.toc-grid a {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  transition: all var(--transition);
+  line-height: 1.5;
+}
+.toc-grid a:hover { background: var(--border); color: var(--text); }
+.toc-grid a .num {
+  font-family: var(--font-en);
+  font-weight: 600;
+  color: var(--accent);
+  font-size: 0.8rem;
+  min-width: 28px;
+}
+
+/* ===== Section ===== */
+.section { padding: 48px 0; }
+.section-label {
+  font-family: var(--font-en);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+  display: block;
+}
+.section h2 {
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+  font-weight: 800;
+  line-height: 1.35;
+  margin-bottom: 24px;
+  letter-spacing: -0.01em;
+}
+.section h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 32px 0 16px;
+  line-height: 1.4;
+}
+.section h4 {
+  font-size: 1.02rem;
+  font-weight: 700;
+  margin: 24px 0 12px;
+  color: var(--text);
+}
+.section p {
+  margin-bottom: 18px;
+  color: var(--text-secondary);
+  line-height: 1.9;
+  font-size: 0.95rem;
+}
+.section p strong { color: var(--text); font-weight: 600; }
+
+/* ===== Content Card ===== */
+.content-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 48px;
+  box-shadow: var(--shadow-card);
+  transition: all var(--transition);
+  margin-bottom: 32px;
+}
+.content-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+@media(max-width:768px) {
+  .content-card { padding: 28px 20px; }
+  .toc-card { padding: 28px 20px; }
+}
+
+/* ===== Point Box ===== */
+.point-box {
+  background: var(--point-bg);
+  border: 1px solid var(--point-border);
+  border-radius: var(--radius-sm);
+  padding: 28px 32px;
+  margin: 32px 0 8px;
+}
+.point-box h4 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 0 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.point-box h4 svg { width: 18px; height: 18px; }
+.point-box ul {
+  list-style: none;
+  padding: 0;
+}
+.point-box ul li {
+  position: relative;
+  padding: 5px 0 5px 20px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.point-box ul li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 13px;
+  width: 6px; height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+/* ===== Table ===== */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 24px 0;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+thead { background: var(--table-header); }
+th {
+  padding: 14px 18px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+td {
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+tr:nth-child(even) { background: var(--table-row-alt); }
+tr:last-child td { border-bottom: none; }
+
+/* ===== Code Block ===== */
+.code-block {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 24px 28px;
+  margin: 20px 0;
+  overflow-x: auto;
+  font-family: 'Outfit', 'Courier New', monospace;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+.code-block .keyword { color: var(--accent); font-weight: 600; }
+.code-block .comment { color: var(--text-secondary); opacity: 0.5; }
+
+/* ===== SVG Diagram ===== */
+.diagram-wrapper {
+  margin: 28px 0;
+  text-align: center;
+}
+.diagram-wrapper svg {
+  max-width: 100%;
+  height: auto;
+}
+.diagram-caption {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 12px;
+  text-align: center;
+}
+
+/* ===== Reveal Animation ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1), transform 0.7s cubic-bezier(0.4,0,0.2,1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== Separator ===== */
+.sep {
+  height: 1px;
+  background: var(--border);
+  margin: 20px 0;
+  border: none;
+}
+
+/* ===== Footer ===== */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 0;
+  margin-top: 60px;
+}
+.footer .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.footer-copy {
+  font-size: 0.825rem;
+  color: var(--text-secondary);
+}
+.footer-links {
+  display: flex; gap: 20px;
+}
+.footer-links a {
+  font-size: 0.825rem;
+  color: var(--text-secondary);
+}
+.footer-links a:hover { color: var(--text); }
+
+/* ===== Inline Highlight ===== */
+.hl {
+  background: var(--accent-glow);
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-weight: 600;
+  color: var(--accent-hover);
+}
+
+/* ===== Note Box ===== */
+.note-box {
+  border-left: 3px solid var(--accent);
+  padding: 16px 20px;
+  margin: 20px 0;
+  background: var(--code-bg);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+.note-box strong { color: var(--text); }
+
+/* ===== Back to Top ===== */
+.back-to-top {
+  position: fixed;
+  bottom: 32px; right: 32px;
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: all var(--transition);
+  z-index: 999;
+  box-shadow: 0 4px 16px rgba(94,106,210,0.3);
+}
+.back-to-top.show { opacity: 1; transform: translateY(0); }
+.back-to-top:hover { background: var(--accent-hover); }
+.back-to-top svg { width: 18px; height: 18px; }
+
+/* ===== Print ===== */
+@media print {
+  .header, .theme-toggle, .menu-btn, .back-to-top { display: none !important; }
+  .content-card { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
+  body { background: #fff; color: #000; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== Header ===== -->
+<header class="header">
+  <div class="container">
+    <a href="#" class="logo">
+      <div class="logo-icon">税</div>
+      税法ラボ
+    </a>
+    <nav class="nav" id="mainNav">
+      <a href="#" class="active">コース</a>
+      <a href="#">条文DB</a>
+      <a href="#">判例</a>
+      <a href="#">ブログ</a>
+    </nav>
+    <div style="display:flex;align-items:center;gap:4px;">
+      <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <button class="menu-btn" id="menuBtn" aria-label="メニュー">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== Hero ===== -->
+<section class="hero">
+  <div class="container">
+    <span class="hero-label">Course 02 — Tax Treaty Fundamentals</span>
+    <h1>租税条約の基礎<br>─モデル条約と二重課税排除</h1>
+    <p class="subtitle">国際課税の要である租税条約を、OECDモデル条約の全体構造から個別条項まで体系的に解説。二重課税排除の仕組み、条約適用の実務ポイントを徹底的に学びます。</p>
+    <div class="hero-meta">
+      <span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        2026年3月4日
+      </span>
+      <span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        読了目安 90分
+      </span>
+      <span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        約30,000字
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TOC ===== -->
+<section class="toc-section">
+  <div class="container reveal">
+    <div class="toc-card">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        目次
+      </h2>
+      <div class="toc-grid">
+        <a href="#sec1"><span class="num">01</span>租税条約の歴史──1920年代から現在まで</a>
+        <a href="#sec2"><span class="num">02</span>OECDモデル条約の構造（全30条）</a>
+        <a href="#sec3"><span class="num">03</span>国連モデルとの相違</a>
+        <a href="#sec4"><span class="num">04</span>日本の条約ネットワーク</a>
+        <a href="#sec5"><span class="num">05</span>適用範囲──人的範囲と租税の範囲</a>
+        <a href="#sec6"><span class="num">06</span>居住者の定義とタイブレーカー</a>
+        <a href="#sec7"><span class="num">07</span>事業所得条項（第7条）</a>
+        <a href="#sec8"><span class="num">08</span>配当条項（第10条）</a>
+        <a href="#sec9"><span class="num">09</span>利子条項（第11条）</a>
+        <a href="#sec10"><span class="num">10</span>使用料条項（第12条）</a>
+        <a href="#sec11"><span class="num">11</span>譲渡収益条項（第13条）</a>
+        <a href="#sec12"><span class="num">12</span>二重課税排除条項（第23条）</a>
+        <a href="#sec13"><span class="num">13</span>無差別・相互協議条項（第24〜25条）</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================= -->
+<!-- SECTION 1 : 租税条約の歴史 -->
+<!-- ========================================= -->
+<section class="section" id="sec1">
+  <div class="container">
+    <div class="content-card reveal">
+      <span class="section-label">Section 01</span>
+      <h2>租税条約の歴史──1920年代から現在まで</h2>
+
+      <h3>国際連盟の先駆的取組み</h3>
+      <p>租税条約の歴史は、第一次世界大戦後の国際秩序再編にまで遡ります。1920年代、各国が戦費調達のために所得税を大幅に引き上げたことにより、複数国にまたがる経済活動に対する二重課税の問題が深刻化しました。<strong>国際連盟（League of Nations）</strong>はこの問題に取り組むため、1921年にイタリアの経済学者ルイジ・エイナウディらを含む4人の経済学者に委嘱し、二重課税問題の調査報告書を作成させました。この報告書は「経済的忠誠（economic allegiance）」の概念を用いて課税権の配分を論じたもので、居住地国・源泉地国・市民権国・課税対象の所在地国という4つの結びつきに着目しました。</p>
+
+      <p>この学術的基盤の上に、国際連盟は<strong>1923年から1927年にかけて</strong>、技術専門家委員会を設けて具体的な条約草案の策定を進めました。1928年にはジュネーブにおいて、二重課税回避に関する4つのモデル条約草案が採択されます。これらの草案は、所得税に関する二重課税の回避、相続税の二重課税の回避、徴収共助、そして財政上の問題に関する司法共助を扱うものでした。この1928年モデルは、その後のすべての租税条約の原型（prototype）として位置づけられます。</p>
+
+      <h3>メキシコ・モデルとロンドン・モデル</h3>
+      <p>1940年代に入ると、国際連盟は財政委員会の下にさらに検討を進め、<strong>1943年にメキシコ・モデル</strong>、<strong>1946年にロンドン・モデル</strong>を公表しました。メキシコ・モデルは源泉地国課税を重視する傾向が強く、当時の中南米諸国の立場を反映していました。一方、ロンドン・モデルは居住地国課税をより重視するものであり、先進国の利益に沿った内容でした。この2つのモデルの対立は、現在のOECDモデルと国連モデルの基本的な対立構図の淵源といえます。</p>
+
+      <h3>OECDモデル条約の誕生</h3>
+      <p>第二次世界大戦後、国際連盟に代わって<strong>経済協力開発機構（OECD）</strong>が国際租税分野の主導的役割を担うことになります。その前身であるOEEC（欧州経済協力機構）は、1956年に財政委員会を設置し、モデル租税条約の策定作業を開始しました。約6年間の作業を経て、<strong>1963年に「OECD所得及び資本に対する二重課税回避に関するモデル租税条約草案」</strong>が公表されました。これが現在のOECDモデル条約の直接の祖先です。</p>
+
+      <p>1963年草案はさらに改訂作業が進められ、<strong>1977年に正式なOECDモデル租税条約</strong>が採択されました。1977年モデルは、条約本体と詳細なコメンタリー（commentary＝解説）から構成され、以後のすべての二国間条約交渉の基準として広く参照されることとなります。この構成方法──条文本体とコメンタリーの二層構造──は、条約の柔軟な解釈適用を可能にするものとして画期的でした。</p>
+
+      <h3>リビング・インストゥルメントとしての進化</h3>
+      <p>OECDモデル条約の大きな特徴は、固定的な国際条約草案ではなく、<strong>「生きた文書（living instrument）」</strong>として継続的にアップデートされる点にあります。1992年以降、OECDは不定期の全面改訂ではなく、必要に応じて随時更新を行う方式に転換しました。主要な改訂は、1992年、1994年、1995年、1997年、2000年、2003年、2005年、2008年、2010年、2014年、2017年と行われ、2025年11月には最新の2025年アップデートが公表されています。</p>
+
+      <p>2025年アップデートでは、特に<strong>クロスボーダー・リモートワークの文脈における恒久的施設（PE）の認定</strong>に関するコメンタリーの大幅な拡充が行われました。COVID-19パンデミック以降に急速に普及した在宅勤務やデジタルノマドといった新しい働き方が、従来のPE概念にどのような影響を及ぼすかについて、詳細なガイダンスと具体例が追加されました。また、天然資源の課税に関する第6条コメンタリーの改訂や、第25条（相互協議手続）と世界貿易機関（WTO）との関係に関する新たな規定も盛り込まれています。</p>
+
+      <h3>BEPSプロジェクトと条約の多角化</h3>
+      <p>2013年に開始された<strong>BEPS（Base Erosion and Profit Shifting＝税源浸食と利益移転）プロジェクト</strong>は、租税条約の歴史における最大の転換点の一つです。OECDとG20の協働により策定された15の行動計画は、多国籍企業が租税条約の隙間を利用して税負担を回避する「条約漫遊（treaty shopping）」の防止を主要テーマの一つとしました。</p>
+
+      <p>BEPSプロジェクトの行動計画15に基づき、<strong>2017年6月に「BEPS防止措置実施条約（MLI＝Multilateral Instrument）」</strong>が署名に開放されました。MLIは、既存の二国間租税条約を個別に改正するのではなく、多数国間条約を通じて一括して修正する革新的な手法を採用しています。日本は2017年6月にMLIに署名し、2019年1月1日に発効しました。MLIを通じて、特にPPT（Principal Purposes Test＝主要目的テスト）による条約濫用防止規定が、日本の既存条約にも適用されることとなりました。</p>
+
+      <h3>デジタル経済への対応──二つの柱</h3>
+      <p>現在進行中の最大の課題は、<strong>デジタル経済の課税</strong>です。OECD/G20の「包摂的枠組み（Inclusive Framework）」は、約140か国・地域の参加のもと、第1の柱（Pillar One）として物理的拠点がなくても市場国に新たな課税権を認める仕組みと、第2の柱（Pillar Two）として最低税率15%のグローバル・ミニマム課税を提案しています。第2の柱については、日本でも2024年度税制改正で「所得合算ルール（IIR）」が法制化されるなど、実装段階に入っています。第1の柱については、多数国間条約（MLC＝Multilateral Convention）の最終化に向けた交渉が継続中です。</p>
+
+      <div class="point-box">
+        <h4>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          ポイント整理
+        </h4>
+        <ul>
+          <li>租税条約の起源は1920年代の国際連盟。経済的忠誠の理論に基づく課税権配分の議論が出発点である。</li>
+          <li>1928年ジュネーブ草案→1943年メキシコ・モデル→1946年ロンドン・モデル→1963年OECD草案→1977年OECDモデルと発展した。</li>
+          <li>OECDモデルは「生きた文書」として随時更新され、2025年11月の最新アップデートではリモートワークPEに関する重要な改訂がなされた。</li>
+          <li>BEPSプロジェクト（2013年〜）とMLI（2017年署名）により、条約濫用防止が大幅に強化された。</li>
+          <li>デジタル経済への対応として第1の柱・第2の柱が進行中であり、租税条約の枠組み自体が変容しつつある。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================= -->
+<!-- SECTION 2 : OECDモデル条約の構造 -->
+<!-- ========================================= -->
+<section class="section" id="sec2">
+  <div class="container">
+    <div class="content-card reveal">
+      <span class="section-label">Section 02</span>
+      <h2>OECDモデル条約の構造（全30条）</h2>
+
+      <h3>モデル条約の全体像</h3>
+      <p>OECDモデル租税条約は全30条から構成されており、大きく7つのグループに分類できます。条約の構造は論理的に組み立てられており、まず「誰に」「何に」適用されるかを定め（適用範囲）、次に用語を定義し（定義規定）、続いて所得の種類ごとに課税権の配分ルールを規定し（所得課税条項）、二重課税の排除方法を定め（排除条項）、最後に運用上の手続規定と雑則を置くという体系です。</p>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>グループ</th>
+              <th>条項</th>
+              <th>内容</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Ⅰ 適用範囲</strong></td><td>第1条〜第2条</td><td>人的範囲・租税の範囲</td></tr>
+            <tr><td><strong>Ⅱ 定義</strong></td><td>第3条〜第5条</td><td>一般的定義・居住者・恒久的施設（PE）</td></tr>
+            <tr><td><strong>Ⅲ 所得課税</strong></td><td>第6条〜第21条</td><td>不動産所得・事業所得・海運空運・関連企業・配当・利子・使用料・譲渡収益・給与所得・役員報酬・芸能人スポーツ選手・退職年金・政府職員・学生・その他所得</td></tr>
+            <tr><td><strong>Ⅳ 資本課税</strong></td><td>第22条</td><td>資本に対する課税</td></tr>
+            <tr><td><strong>Ⅴ 排除方法</strong></td><td>第23条A・23条B</td><td>免除法・税額控除法</td></tr>
+            <tr><td><strong>Ⅵ 特別規定</strong></td><td>第24条〜第29条</td><td>無差別取扱い・相互協議・情報交換・徴収共助・外交官・条約の適用拡張・特典制限</td></tr>
+            <tr><td><strong>Ⅶ 最終規定</strong></td><td>第30条〜第31条</td><td>発効・終了</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>コメンタリーの法的位置づけ</h3>
+      <p>OECDモデル条約を理解する上で不可欠なのが、各条文に付された<strong>コメンタリー（commentary）</strong>です。コメンタリーは条約本文ではないため、厳密には法的拘束力を持ちません。しかし、実務上は極めて重要な解釈指針として機能しています。ウィーン条約法条約第31条及び第32条に基づく条約解釈において、コメンタリーは「条約の趣旨及び目的」「文脈」あるいは「補足的解釈手段」として参照されると解されています。</p>
+
+      <p>日本の裁判例においても、コメンタリーは租税条約の解釈に際して参照されています。例えば、日中租税条約に関するガイダント事件（東京高裁平成19年6月28日判決）においては、OECDモデル条約のコメンタリーが「受益的所有者（beneficial owner）」の解釈に際して参照されました。コメンタリーは、各国の税務当局が条約を適用する際の共通理解を形成する基盤として、いわば「ソフトロー（soft law）」としての機能を果たしています。</p>
+
+      <h3>所得課税条項の体系──帰属主義と源泉地課税の制限</h3>
+      <p>OECDモデルの所得課税条項（第6条〜第21条）は、所得の種類ごとに<strong>源泉地国の課税権の範囲を制限する</strong>という基本構造を持っています。これは「分配的規則（distributive rules）」と呼ばれます。各条項は、ある種類の所得について源泉地国が課税できる範囲を定め、残余の課税権は居住地国に帰属します。</p>
+
+      <p>条項間の関係については、<strong>特別規定優先の原則</strong>が適用されます。例えば、ある所得が不動産所得（第6条）にも事業所得（第7条）にも該当し得る場合、第6条が優先適用されます。同様に、配当（第10条）・利子（第11条）・使用料（第12条）は事業所得（第7条）に対する特別規定として位置づけられています。ただし、これらの所得がPEに帰属する場合には、第7条が再び適用される構造（いわゆる「PEフォースオブアトラクション」の問題）となっており、この関係を正確に理解することが条約解釈の要となります。</p>
+
+      <h3>2017年改訂の重要性──BEPS対応</h3>
+      <p>2017年のOECDモデル改訂は、BEPSプロジェクトの成果を反映した包括的なものでした。特に重要な変更点として、第1条への<strong>条約濫用防止に関する新規定</strong>（特典制限条項＝LOBとPPT）の導入、第5条のPE定義の強化（コミッショネアアレンジメントの濫用防止等）、第7条の帰属主義の明確化、そして第25条の仲裁規定の拡充が挙げられます。これらの改訂により、条約は単なる「二重課税排除」のツールから、「二重課税排除と租税回避防止」の両面を同時に追求するツールへと進化しました。</p>
+
+      <!-- SVG Diagram: OECDモデル条約の構造 -->
+      <div class="diagram-wrapper">
+        <svg viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP',sans-serif;">
+          <defs>
+            <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#5E6AD2"/><stop offset="100%" stop-color="#7B85E0"/></linearGradient>
+          </defs>
+          <!-- Title -->
+          <text x="400" y="30" text-anchor="middle" font-size="16" font-weight="700" fill="currentColor">OECDモデル租税条約の構造</text>
+          <!-- Boxes -->
+          <rect x="20" y="55" width="150" height="70" rx="12" fill="url(#g1)" opacity="0.9"/><text x="95" y="85" text-anchor="middle" font-size="11" fill="#fff" font-weight="600">Ⅰ 適用範囲</text><text x="95" y="105" text-anchor="middle" font-size="10" fill="#fff" opacity="0.8">第1条〜第2条</text>
+          <rect x="190" y="55" width="150" height="70" rx="12" fill="url(#g1)" opacity="0.85"/><text x="265" y="85" text-anchor="middle" font-size="11" fill="#fff" font-weight="600">Ⅱ 定義規定</text><text x="265" y="105" text-anchor="middle" font-size="10" fill="#fff" opacity="0.8">第3条〜第5条</text>
+          <rect x="360" y="55" width="150" height="70" rx="12" fill="url(#g1)" opacity="0.8"/><text x="435" y="85" text-anchor="middle" font-size="11" fill="#fff" font-weight="600">Ⅴ 排除方法</text><text x="435" y="105" text-anchor="middle" font-size="10" fill="#fff" opacity="0.8">第23条A・B</text>
+          <rect x="530" y="55" width="130" height="70" rx="12" fill="url(#g1)" opacity="0.75"/><text x="595" y="85" text-anchor="middle" font-size="11" fill="#fff" font-weight="600">Ⅵ 特別規定</text><text x="595" y="105" text-anchor="middle" font-size="10" fill="#fff" opacity="0.8">第24条〜第29条</text>
+          <rect x="680" y="55" width="100" height="70" rx="12" fill="url(#g1)" opacity="0.7"/><text x="730" y="85" text-anchor="middle" font-size="11" fill="#fff" font-weight="600">Ⅶ 最終</text><text x="730" y="105" text-anchor="middle" font-size="10" fill="#fff" opacity="0.8">第30条〜</text>
+          <!-- Main block: 所得課税 -->
+          <rect x="20" y="150" width="760" height="250" rx="16" fill="none" stroke="url(#g1)" stroke-width="2" stroke-dasharray="6 3"/>
+          <text x="400" y="178" text-anchor="middle" font-size="14" font-weight="700" fill="currentColor">Ⅲ 所得課税条項（第6条〜第21条）── 分配的規則</text>
+          <!-- Sub boxes -->
+          <rect x="40" y="200" width="130" height="54" rx="8" fill="var(--card)" stroke="var(--border-strong)" stroke-width="1"/><text x="105" y="222" text-anchor="middle" font-size="10" fill="currentColor" font-weight="600">第6条</text><text x="105" y="240" text-anchor="middle" font-size="9" fill="var(--text-secondary)">不動産所得</text>
+          <rect x="185" y="200" width="130" height="54" rx="8" fill="var(--card)" stroke="var(--border-strong)" stroke-width="1"/><text x="250" y="222" text-anchor="middle" font-size="10" fill="currentColor" font-weight="600">第7条</text><text x="250" y="240" text-anchor="middle" font-size="9" fill="var(--text-secondary)">事業所得</text>
+          <rect x="330" y="200" width="130" height="54" rx="8" fill="var(--card)" stroke="var(--border-strong)" stroke-width="1"/><text x="395" y="222" text-anchor="middle" font-size="10" fill="currentColor" font-weight="600">第8条</text><text x="395" y="240" text-anchor="middle" font-size="9" fill="var(--text-secondary)">海運・空運</text>
+          <rect x="475" y="200" width="130" height="54" rx="8" fill="var(--card)" stroke="var(--border-strong)" stroke-width="1"/><text x="540" y="222" text-anchor="middle" font-size="10" fill="currentColor" font-weight="600">第9条</text><text x="540" y="240" text-anchor="middle" font-size="9" fill="var(--text-secondary)">関連企業</text>
+          <rect x="620" y="200" width="140" height="54" rx="8" fill="var(--card)" stroke="var(--border-strong)" stroke-width="1"/><text x="690" y="222" text-anchor="middle" font-size="10" fill="currentColor" font-weight="600">第10条</text><text x="690" y="240" text-anchor="middle" font-size="9" fill="var(--text-secondary)">配当</text>
+          <rect x="40" y="270" width="130" height="54" rx="8" fill="var(--card)" stroke="var(--border-strong)" stroke-width="1"/><text x="105" y="292" text-anchor="middle" font-size="10" fill="currentColor" font-weight="600">第11条</text><text x="105" y="310" text-anchor="middle" font-size="9" fill="var(--text-secondary)">利子</text>
+          <rect x="185" y="270" width="130" height="54" rx="8" fill="var(--card)" stroke="var(--border-strong)" stroke-width="1"/><text x="250" y="292" text-anchor="middle" font-size="10" fill="currentColor" font-weight="600">第12条</text><text x="250" y="310" text-anchor="middle" font-size="9" fill="var(--text-secondary)">使用料</text>
+          <rect x="330" y="270" width="130" height="54" rx="8" fill="var(--card)" stroke="var(--border-strong)" stroke-width="1"/><text x="395" y="292" text-anchor="middle" font-size="10" fill="currentColor" font-weight="600">第13条</text><text x="395" y="310" text-anchor="middle" font-size="9" fill="var(--text-secondary)">譲渡収益</text>
+          <rect x="475" y="270" width="130" height="54" rx="8" fill="var(--card)" stroke="var(--border-strong)" stroke-width="1"/><text x="540" y="292" text-anchor="middle" font-size="10" fill="currentColor" font-weight="600">第14-16条</text><text x="540" y="310" text-anchor="middle" font-size="9" fill="var(--text-secondary)">人的役務</text>
+          <rect x="620" y="270" width="140" height="54" rx="8" fill="var(--card)" stroke="var(--border-strong)" stroke-width="1"/><text x="690" y="292" text-anchor="middle" font-size="10" fill="currentColor" font-weight="600">第17-21条</text><text x="690" y="310" text-anchor="middle" font-size="9" fill="var(--text-secondary)">その他所得</text>
+          <!-- Arrow labels -->
+          <text x="400" y="365" text-anchor="middle" font-size="10" fill="var(--text-secondary)">各条項が源泉地国の課税権の範囲を設定 → 残余は居住地国へ</text>
+          <!-- Legend -->
+          <rect x="40" y="385" width="12" height="12" rx="3" fill="url(#g1)"/><text x="58" y="396" font-size="9" fill="var(--text-secondary)">枠組条項</text>
+          <rect x="160" y="385" width="12" height="12" rx="3" fill="var(--card)" stroke="var(--border-strong)" stroke-width="1"/><text x="178" y="396" font-size="9" fill="var(--text-secondary)">分配的規則</text>
+        </svg>
+      </div>
+      <p class="diagram-caption">図1：OECDモデル租税条約の条文構成と所得課税条項の関係</p>
+
+      <div class="point-box">
+        <h4>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          ポイント整理
+        </h4>
+        <ul>
+          <li>OECDモデル条約は全30条で構成され、7つのグループ（適用範囲・定義・所得課税・資本課税・排除方法・特別規定・最終規定）に体系化されている。</li>
+          <li>コメンタリーは法的拘束力を持たないが、「ソフトロー」として条約解釈の基盤を形成する。</li>
+          <li>所得課税条項は「分配的規則」として、所得類型ごとに源泉地国の課税権を制限する構造をとる。</li>
+          <li>特別規定優先の原則により条項間の適用関係が決まるが、PE帰属所得の扱いに注意が必要である。</li>
+          <li>2017年改訂でBEPS対応が図られ、条約濫用防止が制度的に組み込まれた。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================= -->
+<!-- SECTION 3 : 国連モデルとの相違 -->
+<!-- ========================================= -->
+<section class="section" id="sec3">
+  <div class="container">
+    <div class="content-card reveal">
+      <span class="section-label">Section 03</span>
+      <h2>国連モデルとの相違</h2>
+
+      <h3>国連モデル条約の成立背景</h3>
+      <p>OECDモデルが先進国間の条約交渉の基準として発展した一方で、先進国と途上国との間の条約には別のモデルが必要とされました。<strong>国連モデル租税条約</strong>は、1968年に設置された国連の専門家委員会（現在の「国際租税協力に関する専門家委員会」）の作業に基づき、<strong>1980年に初版が公表</strong>されました。以後、2001年、2011年、2017年、2021年に改訂版が公表されています。</p>
+
+      <p>国連モデルの基本的な設計思想は、<strong>源泉地国の課税権をOECDモデルよりも広く認める</strong>ことにあります。途上国は資本輸入国であることが多く、投資資金は先進国（居住地国）から途上国（源泉地国）へと流れます。このため、源泉地国課税が制限されると途上国の税収が減少するという構造的な問題があります。国連モデルは、この点に配慮して源泉地国の課税権をより幅広く保持する条項設計を採用しています。</p>
+
+      <h3>主要な相違点</h3>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>論点</th>
+              <th>OECDモデル</th>
+              <th>国連モデル</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>PE（第5条）</strong></td>
+              <td>建設PE：12か月超</td>
+              <td>建設PE：6か月超（より低い閾値）</td>
+            </tr>
+            <tr>
+              <td><strong>サービスPE</strong></td>
+              <td>規定なし（コメンタリーで言及）</td>
+              <td>第5条3項(b)でサービスPEを規定（183日以上のサービス提供でPE認定）</td>
+            </tr>
+            <tr>
+              <td><strong>事業所得（第7条）</strong></td>
+              <td>帰属主義（AOA）を採用</td>
+              <td>フォースオブアトラクション条項を含む選択肢あり</td>
+            </tr>
+            <tr>
+              <td><strong>配当（第10条）</strong></td>
+              <td>親子間5%・その他15%</td>
+              <td>税率上限を特定しない（交渉に委ねる）</td>
+            </tr>
+            <tr>
+              <td><strong>利子（第11条）</strong></td>
+              <td>10%上限</td>
+              <td>税率上限を特定しない（交渉に委ねる）</td>
+            </tr>
+            <tr>
+              <td><strong>使用料（第12条）</strong></td>
+              <td>居住地国のみ課税（源泉地国免税）</td>
+              <td>源泉地国にも課税権あり</td>
+            </tr>
+            <tr>
+              <td><strong>技術役務（第12A条）</strong></td>
+              <td>規定なし</td>
+              <td>2017年版で技術サービス料条項を導入</td>
+            </tr>
+            <tr>
+              <td><strong>株式譲渡（第13条）</strong></td>
+              <td>居住地国課税が原則</td>
+              <td>不動産化体株式に加え、一般の株式譲渡にも源泉地国課税の余地</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>使用料条項の決定的相違</h3>
+      <p>OECDモデルと国連モデルの最も顕著な違いは、<strong>使用料（ロイヤルティ）に対する課税</strong>です。OECDモデル第12条は、使用料に対する課税権を居住地国のみに帰属させ、源泉地国は課税できないとしています。これは、先進国が技術・知的財産の輸出国であり、使用料の受取側（居住地国）として課税権を確保したいという利益を反映しています。一方、国連モデルは源泉地国にも限度税率の範囲内で源泉課税を認めます。日本が締結する二国間条約では、多くの場合に源泉地国課税を認めつつ限度税率を設定しており、この点では国連モデルに近い立場をとっているといえます。</p>
+
+      <h3>技術サービス料条項（第12A条）</h3>
+      <p>2017年の国連モデル改訂で導入された<strong>第12A条「技術サービス料（fees for technical services）」</strong>条項は、コンサルティング・エンジニアリングなどの技術的サービスの対価について、PEの有無にかかわらず源泉地国に課税権を認めるものです。この条項はOECDモデルには存在せず、途上国の要望を強く反映した規定です。インドのように国内法で技術サービス料に源泉課税を行う国が実際に多く存在し、条約交渉においてもこの条項が参照される場面が増えています。</p>
+
+      <h3>実務上の意味──条約交渉における位置づけ</h3>
+      <p>実際の二国間租税条約の交渉では、両モデルは「出発点」として機能します。先進国間の交渉ではOECDモデルが基準となり、先進国と途上国の間の交渉では国連モデルが参照されることが多いですが、最終的には個々の条約ごとに妥協が図られます。日本の租税条約は、基本的にOECDモデルに準拠しつつ、相手国の経済発展の度合いや交渉力に応じて国連モデルの要素を部分的に取り入れるというアプローチを採っています。</p>
+
+      <div class="point-box">
+        <h4>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          ポイント整理
+        </h4>
+        <ul>
+          <li>国連モデルは1980年初版公表。途上国（源泉地国）の課税権をOECDモデルより広く認める設計思想に基づく。</li>
+          <li>最も顕著な違いは使用料条項──OECDモデルは居住地国のみ課税、国連モデルは源泉地国にも課税権を付与。</li>
+          <li>サービスPE、技術サービス料条項（第12A条）、フォースオブアトラクションなど、国連モデル固有の規定がある。</li>
+          <li>日本の条約はOECDモデル基準だが、使用料源泉課税を認めるなど国連モデル的要素も含む。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================= -->
+<!-- SECTION 4 : 日本の条約ネットワーク -->
+<!-- ========================================= -->
+<section class="section" id="sec4">
+  <div class="container">
+    <div class="content-card reveal">
+      <span class="section-label">Section 04</span>
+      <h2>日本の条約ネットワーク</h2>
+
+      <h3>現状の概観</h3>
+      <p>日本は世界有数の租税条約ネットワークを構築しています。2025年3月時点で、日本は<strong>87件の租税条約等を155か国・地域に適用</strong>しています。この数字には、二国間租税条約のほか、情報交換協定（Tax Information Exchange Agreements＝TIEAs）、税務行政執行共助条約（Convention on Mutual Administrative Assistance in Tax Matters）、および日台民間租税取決めが含まれます。税務行政執行共助条約は多数国間条約であるため、また旧ソ連・旧チェコスロバキアとの条約が複数国に承継されているため、条約等の件数と適用国・地域数は一致しません。</p>
+
+      <h3>条約ネットワークの拡大の歴史</h3>
+      <p>日本の租税条約締結の歴史は、<strong>1954年の日米租税条約</strong>に始まります。戦後復興期においては、欧米先進国との条約締結が優先され、1960年代から70年代にかけて主要な西側先進国との間で条約網が整備されました。1980年代以降はアジア諸国との条約が増加し、1990年代には旧ソ連崩壊に伴う新独立国との条約の承継・新規締結が進みました。</p>
+
+      <p>2000年代に入ると、<strong>情報交換条項の強化</strong>が日本の条約政策の重要な柱となりました。OECDの有害税制フォーラムの活動やG20の要請を受け、ケイマン諸島、バミューダ、英領バージン諸島などのタックスヘイブンとの情報交換協定の締結が進められました。また、2013年にはBEPSプロジェクトの開始と歩調を合わせ、既存条約の改訂（特に情報交換条項や特典制限条項の追加）も積極的に行われるようになりました。</p>
+
+      <h3>主要な二国間条約の特徴</h3>
+      <p>日本の租税条約ネットワークの中で、特に重要なものをいくつか概観します。<strong>日米租税条約</strong>（2003年新条約、2013年改定議定書）は、日本の条約の中で最も包括的かつ先進的な内容を持ち、配当・利子の免税規定、仲裁条項、特典制限条項（LOB条項）を含んでいます。日米条約のLOB条項は、条約漫遊（treaty shopping）防止の観点から非常に詳細な適格要件を定めており、日本の他の条約にはみられない厳格さを有しています。</p>
+
+      <p><strong>日英租税条約</strong>（2006年発効）も、配当・利子の免税規定を含む先進的な条約です。<strong>日独租税条約</strong>（2016年発効）は、ドイツとの長い経済関係を反映した包括的な条約であり、BEPS行動計画の成果を一部先取りした規定を含んでいます。アジア地域では、<strong>日中租税条約</strong>（1983年発効、2019年改正議定書署名）や<strong>日印租税条約</strong>（1989年発効、2006年改正議定書）が投資・貿易の基盤として重要な役割を果たしています。</p>
+
+      <h3>MLI（多数国間条約）による既存条約の修正</h3>
+      <p>日本はMLIへの加入により、既存の多くの二国間条約に<strong>PPT（Principal Purposes Test）</strong>を導入しました。PPTは、条約の特典を得ることが取引の主要な目的の一つであると合理的に認められる場合、当該特典を否認することができるという一般的な濫用防止規定です。日本はMLIにおいて、LOB条項の追加についてはオプションとして留保し、PPTのみを最低基準として採用しています。ただし、日米条約のように既にLOB条項を含む条約については、MLIの対象とせず個別の条約内の規定を維持しています。</p>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>条約相手国</th>
+              <th>署名年</th>
+              <th>配当限度税率</th>
+              <th>利子限度税率</th>
+              <th>使用料限度税率</th>
+              <th>特記事項</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>米国</td><td>2003</td><td>0% / 10%</td><td>0% / 10%</td><td>0%</td><td>LOB条項・仲裁条項あり</td></tr>
+            <tr><td>英国</td><td>2006</td><td>0% / 10%</td><td>0% / 10%</td><td>0%</td><td>配当免税規定あり</td></tr>
+            <tr><td>ドイツ</td><td>2015</td><td>5% / 15%</td><td>0%</td><td>0%</td><td>BEPS対応規定</td></tr>
+            <tr><td>フランス</td><td>2007</td><td>0% / 10%</td><td>0% / 10%</td><td>0%</td><td>2007年改正</td></tr>
+            <tr><td>中国</td><td>1983</td><td>10%</td><td>10%</td><td>10%</td><td>2019年改正議定書あり</td></tr>
+            <tr><td>インド</td><td>1989</td><td>10%</td><td>10%</td><td>10%</td><td>技術サービスの扱いに注意</td></tr>
+            <tr><td>シンガポール</td><td>1994</td><td>5% / 15%</td><td>10%</td><td>10%</td><td>投資ハブ</td></tr>
+            <tr><td>オーストラリア</td><td>2008</td><td>0% / 10%</td><td>0% / 10%</td><td>5%</td><td>資源関連の規定に特色</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="diagram-caption">表：日本の主要租税条約における限度税率（概要。適用要件の詳細は各条約を参照）</p>
+
+      <div class="point-box">
+        <h4>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          ポイント整理
+        </h4>
+        <ul>
+          <li>日本は87件の租税条約等を155か国・地域に適用（2025年3月時点）。1954年の日米条約が出発点。</li>
+          <li>日米条約はLOB条項・仲裁規定を含む最も先進的な条約。配当・利子・使用料の免税規定がある。</li>
+          <li>MLIを通じてPPTが多くの既存条約に導入され、条約濫用防止が包括的に強化されている。</li>
+          <li>相手国の経済発展段階に応じて限度税率や条約構造が異なる点に、条約適用時は常に注意すべきである。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================= -->
+<!-- SECTION 5 : 適用範囲 -->
+<!-- ========================================= -->
+<section class="section" id="sec5">
+  <div class="container">
+    <div class="content-card reveal">
+      <span class="section-label">Section 05</span>
+      <h2>適用範囲──人的範囲と租税の範囲</h2>
+
+      <h3>第1条：人的範囲</h3>
+      <p>OECDモデル第1条は、条約が<strong>「一方又は双方の締約国の居住者である者」</strong>に適用されると定めています。この「居住者」の概念は第4条で定義されますが（後述）、第1条の機能は、条約の恩典（benefits）を受けられる者の範囲を画定することにあります。すなわち、いずれの締約国の居住者でもない者（第三国居住者）は、原則として条約の恩典を享受できません。</p>
+
+      <p>2017年改訂により、第1条には<strong>条約濫用防止に関する重要な規定</strong>が追加されました。具体的には、条約が二重非課税（double non-taxation）を促進するためのものではないことを明示するプリアンブル文言（前文規定）の変更と、条約の特典を第三者が濫用すること（treaty shopping）を防止するための規定が盛り込まれました。これらの規定はBEPS行動計画6の成果を反映しており、MLIを通じて既存条約にも導入されています。</p>
+
+      <p>条約の「人」（persons）には、<strong>個人（individuals）と法人（companies）のほか、法人以外の団体（body of persons）</strong>も含まれます（第3条1項(a)）。パートナーシップやトラストなどのエンティティが条約上どのように扱われるかは、各国の国内法における法的性質の評価に依存するため、ハイブリッド事業体（hybrid entities）の問題として複雑な論点を生じます。OECDは、2017年改訂のコメンタリーにおいて、パートナーシップの取扱いに関する詳細なガイダンスを提供しています。</p>
+
+      <h3>第2条：租税の範囲</h3>
+      <p>OECDモデル第2条は、条約が適用される租税の範囲を定めています。条約は、<strong>所得に対する租税</strong>（taxes on income）と、モデル条約では<strong>資本に対する租税</strong>（taxes on capital）に適用されます。ここでいう「所得に対する租税」には、総所得、所得の構成要素、財産の譲渡から生ずる収益に対するすべての租税が含まれます。</p>
+
+      <p>第2条は特定の税目名ではなく、<strong>租税の性質（nature）に基づく広い定義</strong>を採用しています。したがって、条約締結後に新設された税目であっても、その性質が所得課税又は資本課税に該当すれば、自動的に条約の適用対象となります。日本の場合、所得税・法人税・住民税（道府県民税・市町村民税）が対象租税として明記されるのが通例です。復興特別所得税や地方法人税についても、その性質上、条約の対象に含まれると解されています。</p>
+
+      <p>注意すべき点として、<strong>消費税や関税は所得課税ではないため、租税条約の適用対象外</strong>です。また、社会保険料についても、租税ではないため原則として条約の適用範囲外ですが、日本はいくつかの国との間で社会保障協定を別途締結しています。</p>
+
+      <h3>条約の時間的範囲</h3>
+      <p>条約はその発効日以後の課税年度について適用されるのが通常ですが、具体的な適用開始時期は各条約の最終規定（第30条相当）に定められます。日本の条約では、源泉徴収税については発効年の翌年1月1日以後に支払われる所得、その他の租税については発効年の翌年1月1日以後に開始する課税年度から適用されるのが一般的です。</p>
+
+      <div class="point-box">
+        <h4>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          ポイント整理
+        </h4>
+        <ul>
+          <li>第1条は「一方又は双方の締約国の居住者」に条約を限定。第三国居住者は原則として恩典対象外。</li>
+          <li>2017年改訂で条約濫用防止規定が追加され、二重非課税防止の目的が明示された。</li>
+          <li>第2条は租税の性質に基づく広い定義を採用。条約締結後の新税も性質該当なら自動適用。</li>
+          <li>消費税・関税・社会保険料は条約の対象外。所得税・法人税・住民税が主な対象租税。</li>
+          <li>パートナーシップ等のハイブリッド事業体の条約上の扱いは複雑であり、各国の国内法との整合性に注意が必要。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================= -->
+<!-- SECTION 6 : 居住者の定義とタイブレーカー -->
+<!-- ========================================= -->
+<section class="section" id="sec6">
+  <div class="container">
+    <div class="content-card reveal">
+      <span class="section-label">Section 06</span>
+      <h2>居住者の定義とタイブレーカー</h2>
+
+      <h3>第4条1項──居住者の定義</h3>
+      <p>OECDモデル第4条1項は、条約上の「居住者」を<strong>「住所、居所、本店所在地、管理の場所又はこれに類する基準により、一方の締約国において租税を課されるべき者」</strong>と定義しています。この定義は、各国の国内法における居住者概念を前提として（referring to）おり、条約独自の居住者概念を創設するものではありません。したがって、ある者が条約上の居住者に該当するか否かは、まず関係する締約国の国内法に照らして判断されます。</p>
+
+      <p>日本の国内法では、<strong>所得税法上の「居住者」</strong>は国内に住所を有し又は現在まで引き続き1年以上居所を有する個人（所得税法2条1項3号）、<strong>法人税法上の「内国法人」</strong>は国内に本店又は主たる事務所を有する法人（法人税法2条3号）とされています。これらの国内法上の概念が条約第4条1項の「居住者」の基礎となります。</p>
+
+      <p>重要な限定として、第4条1項は<strong>「国内源泉所得のみについて課される者」</strong>を除外しています。これは、限定的な課税関係（いわゆるリミテッド・タックス・ライアビリティ）しか有しない者は条約上の居住者に該当しないことを意味します。例えば、日本の所得税法における非永住者のうち、一定の要件を満たすものがこの問題に関連し得ます。</p>
+
+      <h3>第4条2項──個人のタイブレーカー・ルール</h3>
+      <p>両締約国の国内法上、いずれの国の居住者にも該当する場合（いわゆる<strong>双方居住者＝dual resident</strong>）には、第4条2項のタイブレーカー・ルールによりいずれか一方の国の居住者として取り扱いを決定します。個人については、以下の順序で判定が行われます。</p>
+
+      <div class="code-block">
+<span class="keyword">【タイブレーカー判定の順序──個人】</span>
+
+<span class="comment">// Step 1</span>
+恒久的住居 (permanent home) → 恒久的住居を有する国の居住者
+
+<span class="comment">// Step 2（両国に恒久的住居がある場合）</span>
+重要な利害関係の中心 (centre of vital interests)
+  → 人的・経済的関係がより密接な国の居住者
+
+<span class="comment">// Step 3（中心が判定できない場合）</span>
+常用の住居 (habitual abode) → 常用の住居がある国の居住者
+
+<span class="comment">// Step 4（両国に常用の住居がある、又はいずれにもない場合）</span>
+国籍 (nationality) → 国籍国の居住者
+
+<span class="comment">// Step 5（両国の国籍を有する、又はいずれの国籍も有しない場合）</span>
+相互協議 (mutual agreement procedure)
+  → 両国の権限ある当局が合意により決定
+      </div>
+
+      <p>タイブレーカー・ルールの判定において最も頻繁に問題となるのが、<strong>「恒久的住居」と「重要な利害関係の中心」</strong>の解釈です。「恒久的住居」は、一時的な滞在のための宿泊場所ではなく、継続的に利用可能な住居を意味します。賃貸物件であっても、常に利用可能な状態に維持されていれば「恒久的住居」に該当し得ます。「重要な利害関係の中心」は、家族関係、社会関係、職業活動、政治・文化活動、事業の所在地、財産の管理場所など、多面的な要素を総合的に勘案して判断されます。</p>
+
+      <h3>第4条3項──法人のタイブレーカー</h3>
+      <p>法人の双方居住者の問題については、OECDモデルは<strong>2017年改訂で重要な変更</strong>を行いました。従前は「実質的管理の場所（place of effective management）」の所在国をもって居住者とするルールでしたが、2017年改訂後は、<strong>両国の権限ある当局による相互協議で決定する</strong>こととされました。このケースバイケースのアプローチは、法人の実質的管理の場所の判定が困難であるという実務上の問題に対処するものです。</p>
+
+      <p>もっとも、日本の実際の条約実務では、相手国との条約が2017年改訂前に締結されたものであれば、依然として「実質的管理の場所」基準が適用される場合があります。条約適用に際しては、対象となる具体的な条約の条文を確認することが不可欠です。</p>
+
+      <div class="note-box">
+        <strong>実務上の注意：</strong>日本企業の海外子会社が当該外国に設立されているが、実質的な経営判断が日本の本社で行われている場合、当該子会社が日本の「居住者」とみなされるリスク（管理支配地基準）に留意が必要です。このようなケースでは、タイブレーカー・ルールの適用の前提として、まず各国の国内法上の居住者該当性の判断が問題となります。
+      </div>
+
+      <div class="point-box">
+        <h4>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          ポイント整理
+        </h4>
+        <ul>
+          <li>第4条1項は各国の国内法上の居住者概念を前提としたうえで、条約上の「居住者」を定義する。</li>
+          <li>個人のタイブレーカーは恒久的住居→重要な利害関係の中心→常用の住居→国籍→相互協議の5段階。</li>
+          <li>法人のタイブレーカーは2017年改訂で「実質的管理の場所」基準から「相互協議」方式に変更された。</li>
+          <li>「恒久的住居」「重要な利害関係の中心」の解釈が実務上最も重要な論点となる。</li>
+          <li>具体的な条約適用に際しては、対象条約の条文（改訂前後）を必ず確認すべきである。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================= -->
+<!-- SECTION 7 : 事業所得条項 -->
+<!-- ========================================= -->
+<section class="section" id="sec7">
+  <div class="container">
+    <div class="content-card reveal">
+      <span class="section-label">Section 07</span>
+      <h2>事業所得条項（第7条）</h2>
+
+      <h3>基本原則──PE なければ課税なし</h3>
+      <p>OECDモデル第7条1項は、<strong>「一方の締約国の企業の利得に対しては、その企業が他方の締約国内にある恒久的施設を通じて当該他方の国内において事業を行わない限り、当該一方の国においてのみ租税を課すことができる」</strong>と規定しています。これが有名な<strong>「PEなければ課税なし（no PE, no tax）」</strong>の原則です。</p>
+
+      <p>この原則は、国際課税における最も基本的なルールの一つです。源泉地国が事業所得に課税するためには、企業が当該国内にPE（Permanent Establishment＝恒久的施設）を有することが必要条件とされます。PEの概念は第5条で定義されており、事業所得条項はPE条項と一体として機能します。</p>
+
+      <h3>第5条──恒久的施設（PE）の定義</h3>
+      <p>PEの定義は第5条に置かれています。PEの類型は大きく3つに分類できます。</p>
+
+      <p><strong>第一に、固定的事業拠点PE（Fixed Place of Business PE）</strong>です。第5条1項は「事業を行う一定の場所であって、企業がその事業の全部又は一部を行っているもの」をPEと定義しています。同条2項は、事業の管理の場所、支店、事務所、工場、作業場、鉱山・油井・採石場その他の天然資源採取場所をPEの例示として挙げています。</p>
+
+      <p><strong>第二に、建設PE（Construction PE）</strong>です。第5条3項は、建築工事現場又は建設若しくは据付の工事について、12か月を超える期間存続する場合にPEを構成すると定めています。12か月の基準は暦年ではなく実際の工事期間で判定され、同一プロジェクトが複数の契約に分割された場合でも、実質的に一体のプロジェクトであれば期間を通算して判断されます。</p>
+
+      <p><strong>第三に、代理人PE（Agency PE）</strong>です。第5条5項は、一方の締約国内で企業に代わって活動する者が、企業の名前で契約を締結する権限を有し、かつこれを常習的に行使する場合に、当該企業はPEを有するものとされると規定しています。2017年のBEPS対応改訂により、この規定は大幅に拡充されました。従前は「契約を締結する権限」を形式的に回避するコミッショネア・アレンジメントが横行していましたが、改訂後は<strong>「契約の締結に至る主要な役割を常習的に果たす」</strong>場合にもPEを認定できることとなりました。</p>
+
+      <h3>2025年アップデート──リモートワークPE</h3>
+      <p>2025年11月のOECDモデル・アップデートでは、<strong>クロスボーダー・リモートワークの文脈における固定的事業拠点PE</strong>に関するコメンタリーが大幅に拡充されました。2025年アップデートは第5条の条文自体を変更するものではありませんが、コメンタリーにおいて、従業員が外国のホームオフィスで恒常的に業務を行う場合にPEが認定され得る状況について、従来の約2ページの記述に代えて約5ページの詳細なガイダンスと具体例が追加されました。</p>
+
+      <p>コメンタリーの新たなガイダンスによれば、以下の要素が総合的に考慮されます。企業がホームオフィスでの勤務を要求又は奨励しているか、当該場所が企業の「処分の下にある（at the disposal of）」といえるか、業務の性質上その場所での恒常的な活動が必要か、そして雇用契約や企業方針がどのようにホームオフィスの使用を位置づけているか、といった点です。</p>
+
+      <h3>帰属利得の算定──AOA（Authorised OECD Approach）</h3>
+      <p>企業がPEを有する場合、源泉地国はPEに帰属する利得に対してのみ課税できます（第7条2項）。PEへの利得帰属の方法として、OECDは<strong>AOA（Authorised OECD Approach＝承認されたOECDアプローチ）</strong>を採用しています。AOAは2010年の「利得帰属報告書（Report on the Attribution of Profits to Permanent Establishments）」で詳細に定められました。</p>
+
+      <p>AOAの基本的な考え方は、PEを<strong>本店から独立した別個の企業（separate and independent enterprise）</strong>と擬制し、独立企業間原則（arm's length principle）に基づいてPEに帰属する利得を算定するというものです。具体的には、まずPEが遂行する機能、使用する資産、引き受けるリスクを分析し（「重要な人的機能（significant people functions）」の特定）、次にこれらの機能・資産・リスクに対応する利得をPEに配分します。</p>
+
+      <div class="code-block">
+<span class="keyword">【AOAによるPE利得帰属の2ステップ】</span>
+
+<span class="comment">// Step 1: 機能・事実分析</span>
+PEが遂行する「重要な人的機能」を特定
+→ 資産の経済的所有・リスクの引受けをPEに帰属させる
+→ PEの「自由資本（free capital）」を算定
+
+<span class="comment">// Step 2: 独立企業間原則の適用</span>
+PEを独立の企業と擬制
+→ 本店との「内部取引（dealings）」を認識
+→ 移転価格ガイドラインを準用して利得を算定
+      </div>
+
+      <p>日本の国内法では、2014年度税制改正（平成26年度）により、AOAに準拠した<strong>帰属主義（Authorised OECD Approach に基づく帰属主義）</strong>が導入されました。これにより、PEに帰属すべき所得の算定方法が国際的な基準と整合的なものとなりました。ただし、日本の既存条約の中にはAOAに対応していない旧い条約もあり、その場合は条約上の文言に従った解釈が必要です。</p>
+
+      <div class="point-box">
+        <h4>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          ポイント整理
+        </h4>
+        <ul>
+          <li>「PEなければ課税なし」が事業所得課税の大原則。PEの有無が源泉地国の課税権を左右する。</li>
+          <li>PEには固定的事業拠点PE、建設PE（12か月超）、代理人PEの3類型がある。</li>
+          <li>2017年改訂で代理人PEの範囲が拡大。コミッショネア・アレンジメントの濫用防止が図られた。</li>
+          <li>2025年アップデートでリモートワークPEに関するコメンタリーが大幅拡充。</li>
+          <li>PE帰属利得の算定にはAOA（帰属主義）が適用され、PEを独立企業と擬制して利得を配分する。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================= -->
+<!-- SECTION 8 : 配当条項 -->
+<!-- ========================================= -->
+<section class="section" id="sec8">
+  <div class="container">
+    <div class="content-card reveal">
+      <span class="section-label">Section 08</span>
+      <h2>配当条項（第10条）</h2>
+
+      <h3>配当に対する課税権の配分</h3>
+      <p>OECDモデル第10条は、配当に対する課税権の配分を定めています。配当は、法人が株主に対して利益を分配する行為であり、源泉地国（配当支払法人の居住地国）と居住地国（株主の居住地国）の双方が課税権を主張し得る所得類型です。第10条は、<strong>両国が課税できることを認めつつ、源泉地国の課税権に限度税率を設定する</strong>という構造を採用しています。</p>
+
+      <p>第10条1項は、配当について受益者の居住地国が課税できることを確認します。同条2項は、配当が生じた締約国（源泉地国）も課税できることを認めたうえで、以下の限度税率を設定しています。</p>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>持株比率</th>
+              <th>OECDモデル限度税率</th>
+              <th>趣旨</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>25%以上の資本を直接保有する法人</td>
+              <td><strong>5%</strong></td>
+              <td>親子会社間の利益送金を促進（経済的二重課税の軽減）</td>
+            </tr>
+            <tr>
+              <td>その他のすべての場合</td>
+              <td><strong>15%</strong></td>
+              <td>ポートフォリオ投資に対する一般的限度</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>配当の定義</h3>
+      <p>第10条3項は、「配当」の定義を置いています。配当とは、<strong>株式又は出資から生じる所得であって、利得の分配に係るもの</strong>とされ、具体的には株式、鉱業株、発起人株、その他利得の分配を受ける権利（債権を除く）から生じる所得が含まれます。さらに、配当を支払う法人の居住地国の法令上「配当」として取り扱われる所得も含まれるとする包括条項が置かれています。</p>
+
+      <p>この包括条項は重要です。例えば、日本の税法上「みなし配当」として扱われるもの（法人税法24条：合併・分割による移転資産の時価と払戻等対応部分の差額など）も、条約上の「配当」に該当し得ることになります。また、各国の国内法が独自に「配当」として取り扱う所得（例えば、債務超過の関係会社に対する免除益を配当とみなすような規定）も条約上の配当に含まれるため、条約適用の際には源泉地国の国内法における配当の定義にも注意を払う必要があります。</p>
+
+      <h3>受益的所有者（Beneficial Owner）の要件</h3>
+      <p>第10条2項の限度税率の適用を受けるためには、配当の<strong>受益的所有者（beneficial owner）</strong>が他方の締約国の居住者であることが必要です。受益的所有者の概念は、導管会社（conduit company）を利用した条約濫用を防止するために設けられたものです。すなわち、形式上は条約締約国の居住者である法人が配当を受領していても、当該法人が単なるペーパーカンパニーであり、真の経済的利益を享受する者が第三国に存在する場合には、限度税率の恩典は否認され得ます。</p>
+
+      <p>「受益的所有者」の概念は条約上定義されておらず、その解釈は議論が分かれています。OECDコメンタリーは、<strong>受益的所有者とは形式的な所有者（名目上の受取人）ではなく、受領した所得を使用し享受する権利を有する者</strong>であるとしています。単なる代理人（agent）、名義人（nominee）、又は他者のために所得を受領する義務を負う導管会社（conduit）は、受益的所有者に該当しません。日本でも、ガイダント事件などの裁判例において、受益的所有者の認定が争点となった事例があります。</p>
+
+      <h3>PE帰属配当の特則</h3>
+      <p>第10条4項は、配当の受益的所有者がPEを通じて事業を行っている場合で、当該配当の支払いの基因となった株式保有がPEと実質的に関連するときは、第10条ではなく<strong>第7条（事業所得条項）</strong>が適用されると規定しています。これは、PE帰属の投資所得については事業所得として扱い、源泉地国に完全な課税権を認めるものです。</p>
+
+      <h3>日本の条約実務──配当免税と軽減税率</h3>
+      <p>日本が近年締結・改訂した条約の多くは、OECDモデルの5%/15%よりも有利な限度税率を設定しています。特に、日米・日英・日仏・日豪条約では、一定の持株比率要件を満たす親子間配当について<strong>免税（0%）</strong>が規定されています。これは、国際的な直接投資を促進し、配当に対する経済的二重課税（法人段階と株主段階の両方での課税）を排除するという政策目標を反映したものです。</p>
+
+      <div class="point-box">
+        <h4>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          ポイント整理
+        </h4>
+        <ul>
+          <li>OECDモデルは配当について源泉地国課税を認めつつ、親子間5%・その他15%の限度税率を設定。</li>
+          <li>限度税率の適用には「受益的所有者」要件の充足が必要。導管会社は恩典を享受できない。</li>
+          <li>配当の定義は広く、源泉地国の国内法上「配当」とされるものも含む包括条項がある。</li>
+          <li>PE帰属配当は第7条（事業所得）として扱われ、源泉地国に完全な課税権が認められる。</li>
+          <li>日本の近年の条約では親子間配当の免税規定を含むものが多い。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================= -->
+<!-- SECTION 9 : 利子条項 -->
+<!-- ========================================= -->
+<section class="section" id="sec9">
+  <div class="container">
+    <div class="content-card reveal">
+      <span class="section-label">Section 09</span>
+      <h2>利子条項（第11条）</h2>
+
+      <h3>利子に対する課税権の配分</h3>
+      <p>OECDモデル第11条は、利子に対する課税権の配分を定めています。配当条項と同様に、居住地国の課税権を確認するとともに（1項）、源泉地国にも限度税率内での課税を認める（2項）という構造です。OECDモデルの限度税率は<strong>10%</strong>です。ただし、日本が締結している条約では、相手国との経済関係や交渉の結果に応じて、10%より低い税率（0%を含む）が設定されている場合が多く見られます。</p>
+
+      <h3>利子の定義</h3>
+      <p>第11条3項は、「利子」を<strong>「すべての種類の信用に係る債権（担保の有無及び債務者の利得の分配を受ける権利の有無を問わない）から生じた所得、特に公債、債券又は社債から生じた所得（これらの公債等の割増金及び賞金を含む）」</strong>と定義しています。</p>
+
+      <p>この定義は広範であり、通常の貸付利子のほか、社債利息、預金利息、割引債の償還差益、転換社債のクーポン利息なども含まれます。一方で、延滞利息（penalty charges for late payment）は一般に条約上の「利子」には該当しないとされています。また、リース料は通常「利子」には含まれませんが、ファイナンスリースの場合にはその金融的要素が利子として認定される可能性があります。</p>
+
+      <h3>利子の源泉地──第11条5項</h3>
+      <p>利子の「発生地」（源泉地）の決定は重要な論点です。第11条5項は、利子は<strong>支払者の居住地国で生じたもの</strong>とするのが原則ですが、支払者がPEを有し、当該PEが債務を負担し、当該PEが利子を支払う場合には、<strong>PEの所在地国で利子が生じたもの</strong>とするという特則を設けています。</p>
+
+      <p>この源泉地ルールは実務上極めて重要です。例えば、A国に居住する法人XがB国にPEを有し、当該PEの事業資金としてC国の法人Yから借入れを行った場合、利子の源泉地はB国（PEの所在地国）となります。したがって、B国が源泉地国として利子に対する課税権を有することになりますが、この場合に適用される条約は、B国とC国（又はYの居住地国）との間の条約です（いわゆる「三角関係」の問題）。</p>
+
+      <h3>受益的所有者要件と利子免除</h3>
+      <p>配当条項と同様に、利子についても<strong>受益的所有者（beneficial owner）</strong>要件が適用されます（第11条2項）。利子を名目上受領する者が、単なる代理人や導管にすぎない場合には、限度税率の恩典は適用されません。</p>
+
+      <p>日本の条約実務において特に重要なのが、<strong>利子の免税規定</strong>です。日米条約をはじめとするいくつかの条約では、一定の要件の下で利子について源泉地国での課税を完全に免除しています。特に、金融機関が受領する利子や、政府間の貸付に係る利子については、多くの条約で免税が規定されています。これは、資本移動を円滑にし、国際金融取引のコストを低減するという政策目的に基づくものです。</p>
+
+      <h3>過少資本税制との関係</h3>
+      <p>利子条項に関連する重要な国内法上の規定として、<strong>過少資本税制（thin capitalisation rules）</strong>があります。これは、関連企業間で過大な借入れ（資本に比して借入金が過大）を行うことにより、利子の損金算入を通じて税負担を軽減する租税回避行為を防止するための規定です。日本では租税特別措置法66条の5に規定があり、関連者間の負債が自己資本の3倍を超える場合、超過分に対応する利子の損金算入を制限します。</p>
+
+      <p>過少資本税制は国内法上の規定ですが、租税条約との関係では、<strong>条約上の無差別条項（第24条）との整合性</strong>が問題となり得ます。OECDコメンタリーは、過少資本税制が関連企業間の取引に適用される場合、第9条（関連企業条項）及び第24条の枠内で正当化され得るとの立場を採っています。さらに近年は、BEPSの行動計画4に基づく<strong>利子控除制限規定（earnings stripping rules）</strong>が各国で導入されており、日本でも租税特別措置法66条の5の2に所得基準の利子控除制限規定が設けられています。</p>
+
+      <div class="point-box">
+        <h4>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          ポイント整理
+        </h4>
+        <ul>
+          <li>OECDモデルは利子について源泉地国課税を認めつつ10%の限度税率を設定。日本の条約では0%の場合もある。</li>
+          <li>利子の源泉地は支払者の居住地国が原則だが、PE帰属の債務に係る利子はPE所在地国が源泉地となる。</li>
+          <li>受益的所有者要件は利子にも適用される。導管会社を利用した条約濫用に注意。</li>
+          <li>過少資本税制・利子控除制限規定（BEPS行動計画4）は条約と交錯する重要な国内法上の措置である。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================= -->
+<!-- SECTION 10 : 使用料条項 -->
+<!-- ========================================= -->
+<section class="section" id="sec10">
+  <div class="container">
+    <div class="content-card reveal">
+      <span class="section-label">Section 10</span>
+      <h2>使用料条項（第12条）</h2>
+
+      <h3>OECDモデルの基本ルール──居住地国のみ課税</h3>
+      <p>OECDモデル第12条は、使用料について<strong>受益的所有者の居住地国においてのみ課税できる</strong>と定めています。すなわち、源泉地国（使用料の支払者の居住地国）には課税権がないとするのがOECDモデルの基本的立場です。これは、前述のとおり先進国が技術・知的財産の輸出国として使用料の受取側に立つことが多いという事情を反映した規定であり、OECDモデルと国連モデルの最も顕著な相違点です。</p>
+
+      <p>しかし、日本が実際に締結している二国間条約の多くは、OECDモデルの居住地国専属課税原則に従っておらず、<strong>源泉地国にも限度税率の範囲内での課税を認めています</strong>。これは、日本が条約交渉において、相手国（特に途上国）の要望を受け入れた結果であると同時に、日本自身も技術の輸入国としての側面を有する場合があることを反映しています。</p>
+
+      <h3>使用料の定義</h3>
+      <p>第12条2項は、「使用料」を<strong>「文学上、美術上若しくは学術上の著作物（ソフトウェアを含む）の著作権、特許権、商標権、意匠若しくは模型、図面、秘密方式若しくは秘密工程の使用若しくは使用の権利の対価として、又は産業上、商業上若しくは学術上の経験に関する情報（ノウハウ）の対価として受領するすべての種類の支払金」</strong>と定義しています。</p>
+
+      <p>この定義に関して、実務上特に問題となるのが<strong>ソフトウェア取引の性質決定</strong>です。ソフトウェアの利用許諾（ライセンス）に基づく支払いが「使用料」に該当するか、それとも「事業所得」に該当するかは、取引の実質に応じて判断されます。OECDコメンタリーは、ソフトウェアの著作権の使用又は使用の権利に対する支払いは使用料であるが、ソフトウェアの複製物（コピー）の取得に対する支払いは使用料ではないと区別しています。例えば、ソフトウェアのライセンス契約であっても、実質的にはパッケージソフトの購入にすぎない場合には、使用料ではなく事業所得として扱われます。</p>
+
+      <h3>使用料とサービス料の区別</h3>
+      <p>もう一つの重要な区別は、<strong>使用料と技術サービス料の区別</strong>です。知的財産の「使用」の対価（使用料）と、知的財産を用いたサービスの「提供」の対価（サービス料）は、理論的に異なるカテゴリーです。例えば、特許技術のライセンス料は使用料ですが、当該技術を用いたコンサルティング・サービスの対価はサービス料（事業所得）です。しかし、実際の取引では両者が混在しており、対価の性質決定は困難を伴います。</p>
+
+
+</body>
+</html>

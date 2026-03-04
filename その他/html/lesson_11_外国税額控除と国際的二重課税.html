@@ -1,0 +1,1185 @@
+<!DOCTYPE html><html lang="ja" data-theme="dark">
+- Google Fonts: Outfit + Noto Sans JP
+- CSS変数でダーク/ライト切替対応:
+  ダーク: 背景#0A0A0A, テキスト#FAFAFA, カード#16161A, ボーダーrgba(255,255,255,0.06)
+  ライト: 背景#FAFAF7, テキスト#1A1A1A, カード#FFFFFF, ボーダーrgba(0,0,0,0.06)
+  アクセント: #5E6AD2→#7B85E0
+- fixedヘッダー: ロゴ「税法ラボ」(紫正方形+テキスト) + ナビ(コース/条文DB/判例/ブログ) + テーマ切替(月/太陽SVG)、backdrop-filter:blur(20px)半透明
+- フッター: © 2026 税法ラボ + リンク
+- max-width:1120px, padding:0 24px, margin:0 auto
+- カード: border-radius:20px, box-shadow, ホバーtranslateY(-4px)
+- セクションラベル: 英語大文字0.75rem letter-spacing:0.12em アクセント色
+- IntersectionObserverスクロールアニメーション(.reveal→.visible)
+- ノイズテクスチャオーバーレイ, localStorage保存テーマ, レスポンシブ
+- 目次(ページ内リンク)冒頭配置, 各セクション末に「ポイント整理」ボックス
+- 表・コードブロック・SVG図解を適宜使用
+
+**コードブロックでHTMLコードを出力してください。** 1回の回答で完結。必ず最後まで出力。
+
+【コンテンツ】第11回：外国税額控除と国際的二重課税排除。(1)二重課税の類型(法的・経済的)(2)排除方法比較(3)日本の外国税額控除(法人税法69条)(4)控除対象外国法人税(5)控除限度額計算(6)国外所得金額と共通費用配賦(7)繰越制度(8)地方税(9)みなし外国税額控除(10)外国子会社配当益金不算入(11)間接外国税額控除廃止(12)ハイブリッドミスマッチ(BEPS行動2)(13)計算演習3事例。3万字程度<!DOCTYPE html>
+<html lang="ja" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第11回：外国税額控除と国際的二重課税排除 | 税法ラボ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ===== CSS VARIABLES ===== */
+:root {
+  --font-en: 'Outfit', sans-serif;
+  --font-jp: 'Noto Sans JP', sans-serif;
+  --accent: #5E6AD2;
+  --accent-hover: #7B85E0;
+  --radius: 20px;
+  --radius-sm: 12px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --header-h: 64px;
+}
+
+[data-theme="dark"] {
+  --bg: #0A0A0A;
+  --text: #FAFAFA;
+  --text-sub: #A0A0A0;
+  --card: #16161A;
+  --card-hover: #1C1C22;
+  --border: rgba(255,255,255,0.06);
+  --border-strong: rgba(255,255,255,0.12);
+  --code-bg: #1E1E24;
+  --point-bg: rgba(94,106,210,0.08);
+  --point-border: rgba(94,106,210,0.3);
+  --toc-bg: #111114;
+  --table-stripe: rgba(255,255,255,0.02);
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  --shadow-hover: 0 12px 40px rgba(0,0,0,0.5);
+  --noise-opacity: 0.03;
+}
+
+[data-theme="light"] {
+  --bg: #FAFAF7;
+  --text: #1A1A1A;
+  --text-sub: #6B6B6B;
+  --card: #FFFFFF;
+  --card-hover: #F5F5F2;
+  --border: rgba(0,0,0,0.06);
+  --border-strong: rgba(0,0,0,0.12);
+  --code-bg: #F0F0ED;
+  --point-bg: rgba(94,106,210,0.05);
+  --point-border: rgba(94,106,210,0.25);
+  --toc-bg: #F0F0ED;
+  --table-stripe: rgba(0,0,0,0.02);
+  --shadow: 0 4px 24px rgba(0,0,0,0.06);
+  --shadow-hover: 0 12px 40px rgba(0,0,0,0.1);
+  --noise-opacity: 0.02;
+}
+
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--header-h) + 24px); }
+
+body {
+  font-family: var(--font-jp);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.9;
+  font-size: 16px;
+  transition: background var(--transition), color var(--transition);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Noise overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: var(--noise-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+.container { max-width: 1120px; padding: 0 24px; margin: 0 auto; }
+
+a { color: var(--accent); text-decoration: none; transition: color var(--transition); }
+a:hover { color: var(--accent-hover); }
+
+img { max-width: 100%; display: block; }
+
+/* ===== HEADER ===== */
+.header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  height: var(--header-h);
+  background: color-mix(in srgb, var(--bg) 70%, transparent);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: background var(--transition), border-color var(--transition);
+}
+.header .container {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 100%;
+}
+.logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.1rem; cursor: pointer; }
+.logo-icon {
+  width: 32px; height: 32px; background: var(--accent); border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-family: var(--font-en); font-weight: 800; font-size: 0.85rem;
+}
+.nav { display: flex; align-items: center; gap: 28px; }
+.nav a { color: var(--text-sub); font-size: 0.9rem; font-weight: 500; }
+.nav a:hover { color: var(--text); }
+.theme-toggle {
+  width: 40px; height: 40px; border: 1px solid var(--border); border-radius: 10px;
+  background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: border-color var(--transition), background var(--transition);
+  color: var(--text-sub);
+}
+.theme-toggle:hover { border-color: var(--border-strong); background: var(--card); }
+.theme-toggle svg { width: 18px; height: 18px; }
+.theme-toggle .sun { display: none; }
+[data-theme="light"] .theme-toggle .moon { display: none; }
+[data-theme="light"] .theme-toggle .sun { display: block; }
+
+.mobile-toggle { display: none; background: none; border: none; color: var(--text); cursor: pointer; }
+
+/* ===== HERO ===== */
+.hero {
+  padding: calc(var(--header-h) + 80px) 0 60px;
+  text-align: center;
+}
+.hero-label {
+  font-family: var(--font-en);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.3;
+  margin-bottom: 20px;
+  letter-spacing: -0.02em;
+}
+.hero p { color: var(--text-sub); font-size: 1.1rem; max-width: 680px; margin: 0 auto; }
+
+/* ===== TABLE OF CONTENTS ===== */
+.toc-card {
+  background: var(--toc-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 36px 40px;
+  margin: 40px auto 60px;
+  max-width: 820px;
+  transition: background var(--transition), border-color var(--transition);
+}
+.toc-card h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.toc-card h2::before {
+  content: '';
+  display: inline-block;
+  width: 4px; height: 20px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+.toc-list { list-style: none; columns: 1; }
+.toc-list li { margin-bottom: 6px; }
+.toc-list a {
+  color: var(--text-sub);
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 4px 0;
+  transition: color var(--transition);
+}
+.toc-list a:hover { color: var(--accent); }
+.toc-list .toc-num {
+  font-family: var(--font-en);
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--accent);
+  min-width: 28px;
+}
+
+/* ===== SECTION ===== */
+.section { padding: 60px 0; }
+.section-label {
+  font-family: var(--font-en);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.section h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 800;
+  line-height: 1.35;
+  margin-bottom: 32px;
+  letter-spacing: -0.01em;
+}
+.section h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 40px 0 16px;
+}
+.section h4 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 28px 0 12px;
+  color: var(--accent);
+}
+.section p {
+  margin-bottom: 18px;
+  color: var(--text);
+  line-height: 2;
+}
+
+/* ===== CARD ===== */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 36px;
+  margin: 28px 0;
+  box-shadow: var(--shadow);
+  transition: transform var(--transition), box-shadow var(--transition), background var(--transition), border-color var(--transition);
+}
+.card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+
+/* ===== POINT BOX ===== */
+.point-box {
+  background: var(--point-bg);
+  border: 1px solid var(--point-border);
+  border-radius: var(--radius-sm);
+  padding: 28px 32px;
+  margin: 36px 0;
+}
+.point-box h4 {
+  color: var(--accent);
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0 0 14px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.point-box ul { list-style: none; padding: 0; }
+.point-box ul li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  line-height: 1.8;
+}
+.point-box ul li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* ===== TABLES ===== */
+.table-wrap { overflow-x: auto; margin: 24px 0; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+thead { background: var(--accent); color: #fff; }
+th { padding: 14px 18px; text-align: left; font-weight: 600; white-space: nowrap; }
+td { padding: 12px 18px; border-bottom: 1px solid var(--border); }
+tbody tr:nth-child(even) { background: var(--table-stripe); }
+tbody tr { transition: background var(--transition); }
+tbody tr:hover { background: var(--point-bg); }
+
+/* ===== CODE ===== */
+.code-block {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 24px 28px;
+  margin: 24px 0;
+  overflow-x: auto;
+  font-family: 'Courier New', monospace;
+  font-size: 0.88rem;
+  line-height: 1.8;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+.code-block .comment { color: var(--text-sub); }
+.code-block .highlight { color: var(--accent); font-weight: 600; }
+.code-block .result { color: #4ADE80; font-weight: 600; }
+
+/* ===== SVG DIAGRAM ===== */
+.diagram {
+  margin: 32px auto;
+  text-align: center;
+  max-width: 800px;
+}
+.diagram svg { max-width: 100%; height: auto; }
+
+/* ===== REVEAL ANIMATION ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 0;
+  margin-top: 80px;
+  text-align: center;
+  color: var(--text-sub);
+  font-size: 0.85rem;
+}
+.footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 16px; }
+.footer-links a { color: var(--text-sub); font-size: 0.85rem; }
+.footer-links a:hover { color: var(--accent); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .nav a { display: none; }
+  .mobile-toggle { display: flex; }
+  .hero { padding: calc(var(--header-h) + 48px) 0 40px; }
+  .toc-card { padding: 24px 20px; }
+  .card { padding: 24px 20px; }
+  .section { padding: 40px 0; }
+  .point-box { padding: 20px; }
+  .code-block { padding: 16px 18px; font-size: 0.82rem; }
+  th, td { padding: 10px 12px; }
+  .toc-list { columns: 1; }
+}
+@media (max-width: 480px) {
+  body { font-size: 15px; }
+  .hero h1 { font-size: 1.6rem; }
+  .section h2 { font-size: 1.35rem; }
+}
+
+/* Utility */
+.mt-0 { margin-top: 0; }
+.mb-0 { margin-bottom: 0; }
+.text-accent { color: var(--accent); }
+.text-sub { color: var(--text-sub); }
+.fw-700 { font-weight: 700; }
+.font-en { font-family: var(--font-en); }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="header">
+  <div class="container">
+    <div class="logo">
+      <div class="logo-icon">TL</div>
+      <span>税法ラボ</span>
+    </div>
+    <nav class="nav">
+      <a href="#">コース</a>
+      <a href="#">条文DB</a>
+      <a href="#">判例</a>
+      <a href="#">ブログ</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <button class="mobile-toggle" id="mobileToggle" aria-label="メニュー">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main>
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-label reveal">COURSE — LESSON 11</div>
+    <h1 class="reveal">外国税額控除と<br>国際的二重課税排除</h1>
+    <p class="reveal">グローバルに事業展開する法人が避けて通れない国際的二重課税。その排除メカニズムである外国税額控除制度を、法人税法69条の条文構造から控除限度額計算、繰越制度、BEPS対応まで体系的に学習します。</p>
+  </div>
+</div>
+
+<!-- ===== TOC ===== -->
+<div class="container">
+  <div class="toc-card reveal">
+    <h2>目次</h2>
+    <ol class="toc-list">
+      <li><a href="#s1"><span class="toc-num">01</span>二重課税の類型 ― 法的二重課税と経済的二重課税</a></li>
+      <li><a href="#s2"><span class="toc-num">02</span>二重課税排除方法の比較</a></li>
+      <li><a href="#s3"><span class="toc-num">03</span>日本の外国税額控除 ― 法人税法69条の全体構造</a></li>
+      <li><a href="#s4"><span class="toc-num">04</span>控除対象外国法人税の範囲</a></li>
+      <li><a href="#s5"><span class="toc-num">05</span>控除限度額の計算方法</a></li>
+      <li><a href="#s6"><span class="toc-num">06</span>国外所得金額と共通費用の配賦</a></li>
+      <li><a href="#s7"><span class="toc-num">07</span>繰越控除制度（控除余裕額・控除限度超過額）</a></li>
+      <li><a href="#s8"><span class="toc-num">08</span>地方税における外国税額控除</a></li>
+      <li><a href="#s9"><span class="toc-num">09</span>みなし外国税額控除（タックス・スペアリング）</a></li>
+      <li><a href="#s10"><span class="toc-num">10</span>外国子会社配当益金不算入制度</a></li>
+      <li><a href="#s11"><span class="toc-num">11</span>間接外国税額控除の廃止と制度転換</a></li>
+      <li><a href="#s12"><span class="toc-num">12</span>ハイブリッド・ミスマッチ取決め（BEPS行動2）</a></li>
+      <li><a href="#s13"><span class="toc-num">13</span>計算演習 ― 3つの総合事例</a></li>
+    </ol>
+  </div>
+</div>
+
+<!-- ===== SECTION 1 ===== -->
+<section class="section" id="s1">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Section 01</div>
+      <h2>二重課税の類型 ― 法的二重課税と経済的二重課税</h2>
+    </div>
+
+    <div class="reveal">
+      <h3>1-1. 国際的二重課税とは何か</h3>
+      <p>国際的二重課税（international double taxation）とは、同一の所得または同一の経済的事象に対して、2以上の国が課税権を行使する結果、納税者に過重な租税負担が生じる現象をいいます。国際取引が日常化した現代において、この問題の解決は租税政策の最重要課題の一つです。</p>
+      <p>二重課税が放置されると、国境を越えた経済活動のコストが著しく増大し、資本・労働の自由な移動を阻害します。OECDモデル租税条約の前文においても「所得に対する二重課税の排除が国際的な財・サービス・資本・人の交流を促進する」ことが明記されており、二重課税排除は国際租税法の根幹をなす理念です。</p>
+      <p>二重課税が生じる根本原因は、各国が異なる課税管轄権（tax jurisdiction）の根拠に基づいて課税を行うことにあります。すなわち、居住地国（residence country）は全世界所得課税主義に基づき居住者の全世界所得に課税し、源泉地国（source country）は自国を源泉とする所得に対して非居住者にも課税します。この居住地管轄権と源泉地管轄権が競合する場面で二重課税が発生するのです。</p>
+
+      <h3>1-2. 法的二重課税（juridical double taxation）</h3>
+      <p>法的二重課税とは、同一の納税者（同一人）が、同一の所得について、同一の課税期間に、2以上の国から課税を受ける場合をいいます。OECDモデル租税条約の注釈（コメンタリー）においても、法的二重課税が二重課税の最も典型的な形態として位置づけられています。</p>
+      <p>最も分かりやすい例は、日本法人が外国支店を通じて事業を行い、支店所在地国で事業所得に課税されると同時に、日本でも全世界所得の一部として当該事業所得に課税される場合です。この場合、「日本法人」という同一の法的主体が、「支店の事業所得」という同一の所得について、日本と支店所在地国の2か国から課税を受けることになります。</p>
+      <p>法的二重課税のもう一つの典型例は、源泉徴収税です。例えば日本法人が外国法人からロイヤルティを受け取る場合、支払国では源泉徴収税が課され、日本では全世界所得に含めて法人税が課されます。このケースでも、「日本法人」が「ロイヤルティ所得」について二重に課税を受けます。</p>
+      <p>法的二重課税はさらに、居住地と源泉地の競合（R-S conflict）のほか、双方居住者の競合（R-R conflict：2か国とも居住者と認定する場合）や、双方源泉地の競合（S-S conflict：2か国とも自国を源泉地と認定する場合）に分類できます。最も頻度が高いのはR-S conflictであり、外国税額控除制度はまさにこの類型を主たる対象として設計されています。</p>
+
+      <h3>1-3. 経済的二重課税（economic double taxation）</h3>
+      <p>経済的二重課税とは、異なる納税者が、経済的に同一の所得について、2以上の国から課税を受ける場合をいいます。法的二重課税との決定的な違いは、課税を受ける主体が法的に異なるという点です。</p>
+      <p>典型例は、親会社・子会社間の配当です。日本の親会社が外国子会社から配当を受け取る場合を考えましょう。外国子会社は源泉地国で法人税を課された後の税引後利益から配当を支払います。日本の親会社はその配当を益金に算入して法人税を課されます。この場合、「外国子会社が稼得した利益」という経済的に同一の所得が、まず外国子会社の段階で外国法人税を課され、次に親会社の段階で日本の法人税を課されるという二重課税が生じます。しかし、外国法人税の納税者は外国子会社であり、日本の法人税の納税者は日本の親会社ですから、法的主体は異なります。これが経済的二重課税です。</p>
+      <p>経済的二重課税の排除方法は法的二重課税のそれとは異なるアプローチが必要です。後述するように、日本は2009年度税制改正で外国子会社配当益金不算入制度を導入し、間接外国税額控除制度を廃止するという大転換を行いました。これは経済的二重課税への対処方法として、税額控除方式から国外所得免除方式へと舵を切ったことを意味します。</p>
+
+      <h3>1-4. 二重非課税の問題</h3>
+      <p>二重課税の反対概念として、二重非課税（double non-taxation）の問題があります。これは各国の税制の隙間を利用して、いずれの国でも課税されない結果を生み出す現象です。各国が二重課税排除措置を講じることで意図せず生じる場合と、納税者が積極的に制度の不整合を利用してタックス・プランニングを行う場合があります。後者はBEPS（税源浸食と利益移転）問題として国際的に大きな関心を集めており、後述するハイブリッド・ミスマッチ取決め（BEPS行動2）はまさにこの問題への対応策です。</p>
+    </div>
+
+    <!-- SVG DIAGRAM -->
+    <div class="diagram reveal">
+      <svg viewBox="0 0 760 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="760" height="340" rx="16" fill="var(--card)"/>
+        <text x="380" y="32" text-anchor="middle" font-family="Outfit,sans-serif" font-weight="700" font-size="15" fill="var(--accent)">DOUBLE TAXATION — TYPOLOGY</text>
+        <!-- Legal -->
+        <rect x="40" y="60" width="320" height="240" rx="12" fill="var(--point-bg)" stroke="var(--accent)" stroke-width="1.5"/>
+        <text x="200" y="92" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-weight="700" font-size="14" fill="var(--text)">法的二重課税</text>
+        <text x="200" y="116" text-anchor="middle" font-family="Outfit,sans-serif" font-weight="500" font-size="11" fill="var(--text-sub)">Juridical Double Taxation</text>
+        <text x="200" y="148" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="12" fill="var(--text)">同一の納税者 × 同一の所得</text>
+        <rect x="70" y="168" width="260" height="48" rx="8" fill="var(--code-bg)" stroke="var(--border)" stroke-width="1"/>
+        <text x="200" y="190" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="11" fill="var(--text-sub)">例: 日本法人の外国支店所得</text>
+        <text x="200" y="206" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="11" fill="var(--text-sub)">→ 源泉地国課税 + 日本全世界所得課税</text>
+        <rect x="70" y="226" width="260" height="32" rx="8" fill="var(--accent)" fill-opacity="0.15"/>
+        <text x="200" y="247" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-weight="600" font-size="12" fill="var(--accent)">→ 外国税額控除で排除</text>
+        <text x="200" y="282" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="11" fill="var(--text-sub)">R-S / R-R / S-S の3競合類型</text>
+        <!-- Economic -->
+        <rect x="400" y="60" width="320" height="240" rx="12" fill="var(--point-bg)" stroke="var(--accent)" stroke-width="1.5"/>
+        <text x="560" y="92" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-weight="700" font-size="14" fill="var(--text)">経済的二重課税</text>
+        <text x="560" y="116" text-anchor="middle" font-family="Outfit,sans-serif" font-weight="500" font-size="11" fill="var(--text-sub)">Economic Double Taxation</text>
+        <text x="560" y="148" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="12" fill="var(--text)">異なる納税者 × 経済的同一所得</text>
+        <rect x="430" y="168" width="260" height="48" rx="8" fill="var(--code-bg)" stroke="var(--border)" stroke-width="1"/>
+        <text x="560" y="190" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="11" fill="var(--text-sub)">例: 外国子会社の利益→親会社配当</text>
+        <text x="560" y="206" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="11" fill="var(--text-sub)">→ 子会社に外国法人税 + 親会社に日本法人税</text>
+        <rect x="430" y="226" width="260" height="32" rx="8" fill="var(--accent)" fill-opacity="0.15"/>
+        <text x="560" y="247" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-weight="600" font-size="12" fill="var(--accent)">→ 益金不算入/間接税額控除で排除</text>
+        <text x="560" y="282" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="11" fill="var(--text-sub)">親子間配当・移転価格が典型場面</text>
+      </svg>
+    </div>
+
+    <div class="point-box reveal">
+      <h4>📌 ポイント整理</h4>
+      <ul>
+        <li>法的二重課税は「同一人・同一所得」への複数国課税であり、外国税額控除が主要な排除手段となる</li>
+        <li>経済的二重課税は「異なる主体・経済的同一所得」への課税であり、益金不算入制度や間接税額控除が対処手段となる</li>
+        <li>二重課税が生じる根本原因は、居住地管轄権と源泉地管轄権の競合にある</li>
+        <li>二重課税排除の過程で意図せず二重非課税が生じる場合があり、BEPS対策が必要となる</li>
+        <li>R-S conflict（居住地国 vs 源泉地国）が最頻出の競合類型であり、租税条約と国内法が協調して対処する</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 2 ===== -->
+<section class="section" id="s2">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Section 02</div>
+      <h2>二重課税排除方法の比較</h2>
+    </div>
+
+    <div class="reveal">
+      <h3>2-1. 全額免除方式（exemption method）</h3>
+      <p>全額免除方式とは、居住地国が国外源泉所得を課税所得から完全に除外する方法です。フランス、オランダ、ベルギーなど欧州諸国を中心に採用されてきた伝統的方式であり、テリトリアル課税（領土主義課税）の考え方に基づきます。</p>
+      <p>この方式のメリットは制度の簡素さにあります。国外所得は課税ベースから除外されるため、外国税率が高くても低くても、居住地国の税負担に影響しません。企業にとっては計算が単純であり、予見可能性が高いというメリットがあります。</p>
+      <p>一方、デメリットとして、源泉地国の税率が居住地国より低い場合には、国内で事業を行う場合に比べて海外で事業を行う方が税負担が軽くなり、資本輸出中立性（Capital Export Neutrality: CEN）が損なわれるという問題があります。また、低税率国への利益移転インセンティブが生じやすく、タックス・ヘイブンの利用を助長する恐れもあります。</p>
+      <p>免除方式にはさらに「完全免除方式」と「累進免除方式（exemption with progression）」の2つのバリエーションがあります。累進免除方式は、国外所得を課税ベースからは除外するものの、国内所得に適用する税率を決定する際に国外所得を考慮する方法です。これにより累進税率構造の歪みを防ぐことができますが、法人税では多くの国がフラット税率を採用しているため、主に個人所得税の文脈で意味を持ちます。</p>
+
+      <h3>2-2. 外国税額控除方式（credit method）</h3>
+      <p>外国税額控除方式とは、居住地国が全世界所得に課税しつつ、外国で支払った税額を自国の税額から控除する方法です。米国、日本、英国（2009年改正前）などが採用してきた方式であり、全世界所得課税主義と整合的です。</p>
+      <p>この方式の最大のメリットは、資本輸出中立性（CEN）の実現にあります。外国税額を自国の税額から控除することで、国内投資と海外投資の税引後リターンを等しくし、税制が投資先の選択に影響を与えないようにします。これは理論的に効率的な資源配分を実現する方式とされています。</p>
+      <p>しかし、実際には完全な税額控除（full credit）ではなく、控除限度額付きの通常税額控除（ordinary credit）が採用されることがほとんどです。これは、外国税率が自国の税率を超える場合に、超過分まで控除を認めると居住地国の課税ベースが浸食されるためです。控除限度額は通常、「自国の税額 × 国外所得 / 全世界所得」の算式で計算されます。</p>
+      <p>外国税額控除方式のデメリットは、制度の複雑さにあります。控除対象外国税額の範囲の画定、控除限度額の計算、国外所得金額の算定、共通費用の配賦、繰越制度の管理など、多くの計算と記録保持が必要であり、コンプライアンスコストが高くなります。</p>
+
+      <h3>2-3. 外国税額損金算入方式（deduction method）</h3>
+      <p>外国税額損金算入方式とは、外国で支払った税額を所得の計算上、損金（必要経費）として控除する方法です。外国税額控除の適用を受けない場合に選択されることがある方式ですが、排除の程度は限定的です。</p>
+      <p>例えば、所得100に対して外国税が30課された場合、税額控除方式であれば自国の税額から30が直接控除されますが、損金算入方式では課税所得が100から70に減少するにとどまり、自国の税率を23.2%とすれば、減少する税額は30 × 23.2% = 6.96にすぎません。すなわち、損金算入方式は外国税額の一部しか排除しないため、二重課税排除の効果は不完全です。</p>
+      <p>日本の法人税法においては、外国税額控除の適用を受けない外国法人税は損金の額に算入されます（法人税法41条）。ただし、控除対象外国法人税として外国税額控除の適用を受けた場合には、当該外国法人税は損金不算入となります。したがって、納税者は外国税額控除方式と損金算入方式のいずれかを選択することになり、両方を同時に適用することはできません（二重取りの防止）。</p>
+
+      <h3>2-4. 各方式の比較まとめ</h3>
+    </div>
+
+    <div class="table-wrap reveal">
+      <table>
+        <thead>
+          <tr>
+            <th>比較項目</th>
+            <th>免除方式</th>
+            <th>税額控除方式</th>
+            <th>損金算入方式</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>課税原則</td>
+            <td>領土主義（テリトリアル）</td>
+            <td>全世界所得課税</td>
+            <td>全世界所得課税</td>
+          </tr>
+          <tr>
+            <td>排除の程度</td>
+            <td>完全（国外所得を除外）</td>
+            <td>限度額まで完全</td>
+            <td>不完全（一部のみ）</td>
+          </tr>
+          <tr>
+            <td>CEN（資本輸出中立性）</td>
+            <td>×</td>
+            <td>○（限度額なしなら完全）</td>
+            <td>×</td>
+          </tr>
+          <tr>
+            <td>CIN（資本輸入中立性）</td>
+            <td>○</td>
+            <td>×</td>
+            <td>×</td>
+          </tr>
+          <tr>
+            <td>制度の複雑さ</td>
+            <td>低い</td>
+            <td>高い</td>
+            <td>低い</td>
+          </tr>
+          <tr>
+            <td>低税率国への利益移転インセンティブ</td>
+            <td>大きい</td>
+            <td>小さい（限度額あり）</td>
+            <td>中程度</td>
+          </tr>
+          <tr>
+            <td>日本の現行制度</td>
+            <td>配当に限定的採用</td>
+            <td>主要方式（法69条）</td>
+            <td>控除非選択時（法41条）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="reveal">
+      <h3>2-5. 各国の潮流と日本の位置づけ</h3>
+      <p>近年の国際的潮流として、多くの国が全世界所得課税＋税額控除方式から、テリトリアル課税＋免除方式へと移行する傾向が見られます。英国は2009年に外国配当免除制度を導入し、日本も同年に外国子会社配当益金不算入制度を導入しました。米国も2017年のTax Cuts and Jobs Act（TCJA）で参加免除制度（participation exemption）に近い仕組みを導入しています。</p>
+      <p>しかし、日本は直接外国税額控除を維持しており、外国支店所得や源泉徴収税については引き続き税額控除方式で二重課税を排除しています。すなわち、日本は配当所得については免除方式、その他の国外所得については税額控除方式という「ハイブリッド型」の体系を採用しているのが現状です。</p>
+    </div>
+
+    <div class="point-box reveal">
+      <h4>📌 ポイント整理</h4>
+      <ul>
+        <li>二重課税排除方法は大きく免除方式・税額控除方式・損金算入方式の3種類に分類される</li>
+        <li>税額控除方式はCENを実現するが制度が複雑であり、免除方式はCINを実現するが利益移転リスクがある</li>
+        <li>損金算入方式は二重課税排除の効果が不完全であり、他に選択肢がない場合の次善策にとどまる</li>
+        <li>日本は外国支店所得等には税額控除方式、外国子会社配当には免除方式のハイブリッド体系を採用</li>
+        <li>国際的には免除方式への移行が潮流だが、BEPS対策の観点から完全な領土主義への移行には慎重論もある</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 3 ===== -->
+<section class="section" id="s3">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Section 03</div>
+      <h2>日本の外国税額控除 ― 法人税法69条の全体構造</h2>
+    </div>
+
+    <div class="reveal">
+      <h3>3-1. 制度趣旨と法的根拠</h3>
+      <p>日本の外国税額控除制度は、法人税法69条に規定されています。内国法人が各事業年度において外国法人税を納付することとなる場合に、一定の控除限度額の範囲内で、その外国法人税額を法人税の額から控除する制度です。</p>
+      <p>制度の趣旨は、内国法人の国外源泉所得に対する国際的二重課税を排除し、内国法人の海外経済活動に対する税制上の中立性を確保することにあります。最高裁平成17年12月19日判決（外国税額控除余裕枠利用事件）においても、外国税額控除の趣旨は「同一の所得に対する国際的二重課税を排斥し、かつ、事業活動に対する税制の中立性を確保しようとするもの」であると判示されています。</p>
+      <p>法人税法69条1項は、内国法人が各事業年度において納付することとなる控除対象外国法人税の額がある場合に、控除限度額を限度として、その事業年度の法人税の額から控除する旨を規定しています。これがいわゆる「直接外国税額控除」であり、内国法人自身が直接に外国政府に納付した税額を控除する制度です。</p>
+
+      <h3>3-2. 条文の全体構造</h3>
+      <p>法人税法69条は極めて長大な条文ですが、その全体構造を把握することが理解の第一歩です。同条は概ね以下のように構成されています。</p>
+      <p>第1項では外国税額控除の基本規定が定められています。内国法人が控除対象外国法人税を納付する場合に、控除限度額を限度として法人税額から控除できることが規定されています。第2項以降では、控除限度額の計算方法として「当期の法人税額 × 国外所得金額 / 全世界所得金額」という基本算式が定められ、国外所得金額の計算に関する詳細規定が置かれています。</p>
+      <p>さらに、繰越控除制度として、控除限度超過額の3年間繰越し（前年以前3年間に控除限度額を超過した外国法人税額がある場合の翌期以降への繰越し）と、控除余裕額の3年間繰越し（前年以前3年間に控除限度額に余裕がある場合の翌期の超過額との相殺）が規定されています。</p>
+      <p>法人税法施行令では、控除対象外国法人税の範囲（施行令141条）、国外所得金額の計算（施行令142条）、共通費用の配賦（施行令142条の2）など、実務上極めて重要な詳細規定が置かれています。</p>
+
+      <h3>3-3. 適用要件の整理</h3>
+      <p>外国税額控除の適用を受けるための要件は以下の通りです。第一に、適用主体が内国法人であること。第二に、各事業年度において控除対象外国法人税を「納付することとなる」こと。第三に、確定申告書に控除を受けるべき金額等を記載し、かつ、その計算に関する明細書を添付すること（法人税法69条18項）。第四に、控除対象外国法人税の額を課されたことを証する書類その他の書類を保存すること（法人税法69条19項）。</p>
+      <p>ここで「納付することとなる」の意義が問題となります。これは債務確定基準に基づき、外国法人税の納付義務が確定した時点で適用を受けることができると解されています。具体的には、申告納税方式の場合は申告書の提出時、賦課課税方式の場合は賦課決定の通知を受けた時、源泉徴収方式の場合は源泉徴収される時点です。</p>
+
+      <h3>3-4. 控除の方式 ― 直接控除と間接控除</h3>
+      <p>外国税額控除には、直接外国税額控除と間接外国税額控除の2つの方式があります。直接外国税額控除は、内国法人自身が外国政府に直接納付した外国法人税を控除するものです。例えば、外国支店の所得に対して課された外国法人税や、利子・配当・使用料に対する源泉徴収税が対象となります。</p>
+      <p>間接外国税額控除は、外国子会社が源泉地国で納付した法人税のうち、親会社が受け取る配当に対応する部分を、親会社の日本法人税から控除するものです。これは経済的二重課税の排除を目的とするものでしたが、2009年度税制改正で外国子会社配当益金不算入制度が導入されたことに伴い廃止されました（詳細はセクション11で後述）。</p>
+    </div>
+
+    <div class="card reveal">
+      <h4>法人税法69条1項（要約）</h4>
+      <div class="code-block">
+<span class="comment">/* 法人税法 第69条第1項（外国税額の控除）*/</span>
+
+内国法人が各事業年度において<span class="highlight">外国法人税</span>（外国の法令により課される
+法人税に相当する税で政令で定めるもの）を納付することとなる場合には、
+
+当該事業年度の所得の金額につき…計算した金額のうち
+当該事業年度の<span class="highlight">国外所得金額</span>に対応するものとして…
+計算した金額（<span class="highlight">控除限度額</span>）を限度として、
+
+その外国法人税の額を当該事業年度の所得に対する法人税の額から
+<span class="result">控除する</span>。
+      </div>
+    </div>
+
+    <div class="point-box reveal">
+      <h4>📌 ポイント整理</h4>
+      <ul>
+        <li>外国税額控除は法人税法69条に規定され、国際的二重課税排除と税制中立性確保が制度趣旨</li>
+        <li>適用要件は①内国法人、②控除対象外国法人税の「納付することとなる」こと、③申告書への記載・明細書添付、④証拠書類の保存</li>
+        <li>「納付することとなる」は債務確定基準で判定する</li>
+        <li>間接外国税額控除は2009年度改正で廃止され、現行制度では直接外国税額控除のみが法69条の対象</li>
+        <li>外国税額控除と損金算入は選択適用であり、二重取りは許されない</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 4 ===== -->
+<section class="section" id="s4">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Section 04</div>
+      <h2>控除対象外国法人税の範囲</h2>
+    </div>
+
+    <div class="reveal">
+      <h3>4-1. 外国法人税の定義</h3>
+      <p>控除対象外国法人税の範囲は、法人税法施行令141条に詳細に規定されています。外国法人税とは、外国の法令に基づき外国またはその地方公共団体により法人の所得を課税標準として課される税をいいます。ここでいう「法人の所得を課税標準として課される税」には、所得の特定の部分を課税標準として課される税（例：源泉徴収税）も含まれます。</p>
+      <p>この定義のポイントは、外国税の名称ではなく、その実質（substance）に着目するという点です。したがって、外国の法令において「所得税」「法人税」と呼ばれていなくても、実質的に法人の所得を課税標準として課される税であれば、外国法人税に該当し得ます。逆に、名称が「所得税」であっても、実質が所得税に該当しない場合（例：実質的に取引税や消費税に該当する場合）は外国法人税には該当しません。</p>
+
+      <h3>4-2. 控除対象外国法人税の範囲</h3>
+      <p>すべての外国法人税が控除対象となるわけではありません。法人税法施行令141条3項は、以下のものを控除対象外国法人税から除外しています。</p>
+      <p>第一に、税額控除の利益が実質的に納税者以外の者に帰属する場合のその外国法人税です。これは最高裁平成17年12月19日判決で問題となった外国税額控除の余裕枠を利用した租税回避スキームへの対応として導入された規定です。</p>
+      <p>第二に、内国法人の通常行うべき取引と認められないものとして政令で定める取引に基因して生じた所得に対して課される外国法人税です。これは、外国税額控除の限度額の枠を増加させるために人為的な取引を行うことを防止するための規定です。</p>
+      <p>第三に、高率な部分の外国法人税です。具体的には、外国法人税の税率が35%を超える部分は控除対象外国法人税から除外されます（施行令142条の2第4項）。これは外国法人税の税率が著しく高い場合に、日本の法人税率を超える部分まで控除を認めることは日本の課税権を過度に侵害するとの考え方に基づきます。</p>
+
+      <h3>4-3. 具体的な外国法人税の例</h3>
+      <p>実務上、控除対象外国法人税に該当するかどうかが問題となる典型的な外国税を確認しましょう。各国の法人所得税（corporate income tax）は当然に該当します。利子・配当・使用料等に対する源泉徴収税（withholding tax）も該当します。支店利益税（branch profits tax）は、一般に外国法人税に該当するものとして取り扱われます。</p>
+      <p>一方、付加価値税（VAT）、関税、印紙税、不動産取得税などは所得を課税標準としないため、外国法人税には該当しません。また、罰金・加算税的な性質を持つ税も控除対象から除外されます。</p>
+      <p>米国の州税については、州法人所得税は外国法人税に該当しますが、州の売上税やフランチャイズ税のうち所得を課税標準としないものは該当しません。また、米国のAlternative Minimum Tax（AMT：代替ミニマム税）については、所得を課税標準として課される税として外国法人税に該当するものとされています。</p>
+
+      <h3>4-4. 外国法人税該当性の判定基準</h3>
+      <p>外国法人税該当性の判定は実務上しばしば困難です。特に発展途上国では税制の体系が必ずしも明確でない場合があり、ある外国税が「所得を課税標準として課される税」に該当するかどうかの判断が問題となります。</p>
+      <p>判定に際しては、外国の法令の規定内容と実際の課税の実態の双方を勘案する必要があります。形式的には所得税と称されていても、実質的にはライセンス料的な性質を持つ税や、鉱物資源の採掘に対する特別税なども存在し、それぞれの性質を慎重に分析しなければなりません。</p>
+      <p>国税庁は事前照会制度や文書回答手続を通じて、個別の外国税の外国法人税該当性について判断を示すことがあり、実務上はこれらの先例も参考にされます。また、租税条約において源泉地国の課税が制限されている場合には、条約で認められた範囲を超える課税は「控除対象外国法人税」に該当しないとされる点も重要です。</p>
+    </div>
+
+    <div class="table-wrap reveal">
+      <table>
+        <thead>
+          <tr>
+            <th>外国税の種類</th>
+            <th>外国法人税該当性</th>
+            <th>備考</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>各国法人所得税</td><td>○ 該当</td><td>最も典型的な外国法人税</td></tr>
+          <tr><td>源泉徴収税（利子・配当・使用料）</td><td>○ 該当</td><td>租税条約の制限税率を超える部分は除外</td></tr>
+          <tr><td>支店利益税</td><td>○ 該当</td><td>米国等で課される</td></tr>
+          <tr><td>米国AMT（代替ミニマム税）</td><td>○ 該当</td><td>所得を課税標準とする税に該当</td></tr>
+          <tr><td>付加価値税（VAT/GST）</td><td>× 非該当</td><td>消費を課税標準とする税</td></tr>
+          <tr><td>関税</td><td>× 非該当</td><td>輸入取引に対する税</td></tr>
+          <tr><td>不動産取得税・印紙税</td><td>× 非該当</td><td>所得以外を課税標準とする税</td></tr>
+          <tr><td>加算税・延滞税的性質の税</td><td>× 非該当</td><td>罰則的性質のため除外</td></tr>
+          <tr><td>税率35%超過部分</td><td>× 控除対象外</td><td>高率部分は控除対象外国法人税から除外</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="point-box reveal">
+      <h4>📌 ポイント整理</h4>
+      <ul>
+        <li>外国法人税は名称ではなく実質（所得を課税標準として課される税か）で判定する</li>
+        <li>高率部分（35%超）、租税回避的取引に基因する税、第三者帰属の税は控除対象外</li>
+        <li>源泉徴収税は控除対象だが、租税条約の制限税率を超える部分は控除対象外</li>
+        <li>VAT・関税・印紙税など所得課税でないものは外国法人税に該当しない</li>
+        <li>外国法人税該当性の判定は個別事案ごとに慎重な分析が必要</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 5 ===== -->
+<section class="section" id="s5">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Section 05</div>
+      <h2>控除限度額の計算方法</h2>
+    </div>
+
+    <div class="reveal">
+      <h3>5-1. 控除限度額の基本算式</h3>
+      <p>外国税額控除の控除限度額は、次の算式により計算されます。</p>
+    </div>
+
+    <div class="card reveal">
+      <h4>控除限度額の算式</h4>
+      <div class="code-block">
+<span class="highlight">控除限度額</span> = 当期の法人税額 × <span class="highlight">国外所得金額</span> / 全世界所得金額
+
+ただし: 国外所得金額 ≤ 全世界所得金額 × <span class="result">90%</span>（上限規制）
+      </div>
+    </div>
+
+    <div class="reveal">
+      <p>ここで「当期の法人税額」とは、外国税額控除を適用する前の法人税額（所得税額控除後の金額）をいいます。法人税法施行令142条において、具体的な計算方法が規定されています。</p>
+      <p>「全世界所得金額」は、当期の所得金額をいいます。欠損金の繰越控除前の金額を基礎とする点に注意が必要です。「国外所得金額」は当期の全世界所得金額のうち国外源泉所得に係る金額であり、その計算方法はセクション6で詳述します。</p>
+      <p>この算式の趣旨は明確です。日本の法人税額のうち、国外所得に対応する部分を上限として外国税額の控除を認めるという考え方です。すなわち、日本が国外所得に対して課税している部分のみを限度として外国税額を控除するのであり、国内所得に対応する日本の法人税まで外国税額で控除することは認められません。</p>
+
+      <h3>5-2. 90%上限規制の意義</h3>
+      <p>国外所得金額には全世界所得金額の90%という上限が設けられています（法人税法69条1項括弧書）。この規制がなければ、全世界所得がすべて国外所得である法人は控除限度額が法人税額全額と等しくなり、日本で法人税を一切負担しないという結果が生じ得ます。90%上限規制はこれを防止し、内国法人として最低限の日本法人税負担（全世界所得の10%に対応する部分）を確保するための制度です。</p>
+
+      <h3>5-3. 一括限度額方式と国別限度額方式</h3>
+      <p>控除限度額の計算には、一括限度額方式（overall limitation）と国別限度額方式（per-country limitation）の2つがあります。一括限度額方式は、すべての国からの国外所得を合算して一つの控除限度額を計算する方式です。国別限度額方式は、国ごとに個別に控除限度額を計算する方式です。</p>
+      <p>日本は一括限度額方式を採用しています。この方式の利点は、高税率国での超過税額を低税率国での余裕額で吸収できるため、全体として外国税額控除の効果が高くなる点にあります。すなわち、A国で支払った外国税額が限度額を超えていても、B国で支払った外国税額が限度額を下回っていれば、その差額分を利用できます。</p>
+      <p>一方、一括限度額方式は、低税率国の所得を増やすことで控除限度額を「水増し」し、高税率国の超過税額を控除するというタックス・プランニングの余地を生みます。このため、米国は1986年税制改正でカテゴリー別限度額方式（所得の種類ごとに限度額を計算する方式）を導入し、さらに2017年のTCJAで制度を大幅に改正しました。日本の制度ではこのような所得カテゴリー別の制限は設けられていません。</p>
+
+      <h3>5-4. 法人税額の計算上の留意点</h3>
+      <p>控除限度額の算式における「当期の法人税額」は、次の順序で調整された後の金額です。まず、各事業年度の所得に対する法人税額（法人税法66条）から、所得税額控除（法人税法68条）を適用した後の金額を基礎とします。ただし、試験研究費の特別控除その他の租税特別措置法による税額控除は、外国税額控除の適用後に行うこととされています。したがって、外国税額控除の控除限度額計算上の法人税額は、租税特別措置法の税額控除適用前の金額ということになります。</p>
+    </div>
+
+    <div class="card reveal">
+      <h4>計算例：基本的な控除限度額</h4>
+      <div class="code-block">
+<span class="comment">【前提条件】</span>
+全世界所得金額: 5,000万円
+国外所得金額:   2,000万円
+法人税額:       1,160万円（税率23.2%）
+
+<span class="comment">【控除限度額の計算】</span>
+控除限度額 = 1,160万円 × 2,000万円 / 5,000万円
+          = 1,160万円 × 0.4
+          = <span class="result">464万円</span>
+
+<span class="comment">【90%上限の確認】</span>
+5,000万円 × 90% = 4,500万円 > 2,000万円（国外所得金額）
+→ 上限規制に抵触しない
+
+<span class="comment">【結論】</span>
+外国法人税の額が464万円以下 → 全額控除可能
+外国法人税の額が464万円超  → 超過分は控除限度超過額として繰越し
+      </div>
+    </div>
+
+    <div class="point-box reveal">
+      <h4>📌 ポイント整理</h4>
+      <ul>
+        <li>控除限度額 ＝ 法人税額 × 国外所得金額 / 全世界所得金額</li>
+        <li>国外所得金額は全世界所得金額の90%が上限（最低10%は日本で課税）</li>
+        <li>日本は一括限度額方式を採用し、国別・カテゴリー別制限はない</li>
+        <li>法人税額は所得税額控除後・租税特別措置法の税額控除適用前の金額を使用</li>
+        <li>控除限度額を超える外国法人税は、控除限度超過額として3年間繰り越せる</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 6 ===== -->
+<section class="section" id="s6">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Section 06</div>
+      <h2>国外所得金額と共通費用の配賦</h2>
+    </div>
+
+    <div class="reveal">
+      <h3>6-1. 国外所得金額の定義</h3>
+      <p>国外所得金額は、控除限度額計算の分子を構成する極めて重要な要素です。法人税法施行令142条において、国外所得金額とは、内国法人の各事業年度の所得金額のうち、国外源泉所得に係る所得のみについて法人税法その他の法令の規定により計算した金額をいうものと規定されています。</p>
+      <p>国外源泉所得の範囲は、法人税法69条4項各号に規定されています。具体的には、国外事業所等帰属所得、国外資産の運用・保有・譲渡による所得、国外における人的役務の提供の対価、国外不動産の賃貸料、その他の国外源泉所得が列挙されています。この範囲は基本的に租税条約における課税権配分のルールと整合するように設計されています。</p>
+
+      <h3>6-2. 国外所得金額の計算方法</h3>
+      <p>国外所得金額は、全世界所得から国内所得を差し引いて算出するのではなく、国外源泉所得を積み上げ方式で計算します。すなわち、各国外源泉所得項目について、それぞれの収益からそれに直接対応する費用を控除して個別に計算し、その合計額を国外所得金額とするのが原則です。</p>
+      <p>この計算において最も困難な問題が、国外所得と国内所得の双方に共通する費用、すなわち共通費用の配賦です。例えば、本社の管理部門の経費、研究開発費、金融費用などは、国内事業と国外事業の双方に関連するものであり、これらをどのように国外所得に配賦するかによって国外所得金額が大きく変動します。</p>
+
+      <h3>6-3. 共通費用の配賦基準</h3>
+      <p>法人税法施行令142条の3は、共通費用の配賦方法について詳細な規定を置いています。基本的な配賦方法として、収入金額基準、資産基準、費用の性質に応じた合理的な基準が認められています。</p>
+      <p>具体的には、一般管理費については収入金額基準または資産基準により配賦するのが一般的です。例えば、本社の管理部門の人件費や事務所費用は、国内外の収入金額の比率で按分する方法が広く用いられています。支払利子については、資産基準（国外事業に係る資産の帳簿価額 / 総資産の帳簿価額）で配賦することが一般的です。研究開発費については、その性質に応じた合理的な基準（例：国内外の売上比率や研究の受益関係）で配賦します。</p>
+      <p>重要なのは、配賦基準は合理的なものでなければならず、恣意的な操作は認められないということです。また、一度採用した配賦方法は継続的に適用する必要があります（継続適用の原則）。</p>
+
+      <h3>6-4. 国外所得金額がマイナスの場合</h3>
+      <p>国外所得金額の計算結果がマイナス（損失）となる場合、国外所得金額はゼロとして扱われます。すなわち、国外事業で損失が生じても控除限度額はゼロとなるだけであり、国外損失が国内所得に対する法人税額を増加させることはありません（ただし、全世界所得の計算上は国外損失も含まれます）。</p>
+      <p>この取扱いは、外国税額控除の趣旨から当然のことです。国外所得がないにもかかわらず外国税額控除を認めることは、国内所得に対応する日本の法人税を外国税額で控除することを意味し、二重課税排除の範囲を超えてしまうからです。</p>
+
+      <h3>6-5. 共通費用配賦の実務的論点</h3>
+      <p>共通費用の配賦は、外国税額控除の実務において最も争いが生じやすい論点の一つです。特に、本社費（head office expenses）の配賦が問題となります。</p>
+      <p>日本の本社は、国内事業と国外事業の両方に対して管理機能を提供しています。本社の人件費、オフィス賃料、ITシステム費用、監査費用などは典型的な共通費用です。これらの配賦を国外所得に多く行えば国外所得金額が減少し、控除限度額も減少します。逆に、配賦を少なくすれば国外所得金額が増加し、控除限度額が増加します。</p>
+      <p>税務調査においては、共通費用の配賦が合理的な基準に基づいているかどうかが精査されます。特に、国外所得金額を人為的に増大させて控除限度額を拡大するような恣意的な配賦は否認されるリスクがあります。したがって、企業は配賦基準の選定理由を明確に文書化し、継続的に適用する体制を整備しておく必要があります。</p>
+    </div>
+
+    <div class="diagram reveal">
+      <svg viewBox="0 0 760 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="760" height="280" rx="16" fill="var(--card)"/>
+        <text x="380" y="32" text-anchor="middle" font-family="Outfit,sans-serif" font-weight="700" font-size="14" fill="var(--accent)">COMMON EXPENSE ALLOCATION</text>
+        <!-- Total -->
+        <rect x="260" y="56" width="240" height="56" rx="10" fill="var(--accent)" fill-opacity="0.18" stroke="var(--accent)" stroke-width="1.5"/>
+        <text x="380" y="80" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-weight="700" font-size="13" fill="var(--text)">共通費用（本社管理費等）</text>
+        <text x="380" y="100" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="11" fill="var(--text-sub)">人件費・利子・R&D費・間接費</text>
+        <!-- Arrow -->
+        <line x1="300" y1="112" x2="180" y2="160" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="6 3"/>
+        <line x1="460" y1="112" x2="580" y2="160" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="6 3"/>
+        <text x="380" y="145" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="11" fill="var(--accent)" font-weight="600">合理的基準で配賦</text>
+        <!-- Domestic -->
+        <rect x="60" y="160" width="240" height="84" rx="10" fill="var(--code-bg)" stroke="var(--border)" stroke-width="1"/>
+        <text x="180" y="188" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-weight="700" font-size="13" fill="var(--text)">国内所得への配賦分</text>
+        <text x="180" y="212" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="11" fill="var(--text-sub)">→ 国外所得金額に影響なし</text>
+        <text x="180" y="232" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="11" fill="var(--text-sub)">→ 国内所得の計算上控除</text>
+        <!-- Foreign -->
+        <rect x="460" y="160" width="240" height="84" rx="10" fill="var(--code-bg)" stroke="var(--border)" stroke-width="1"/>
+        <text x="580" y="188" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-weight="700" font-size="13" fill="var(--text)">国外所得への配賦分</text>
+        <text x="580" y="212" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="11" fill="var(--text-sub)">→ 国外所得金額を減少</text>
+        <text x="580" y="232" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="11" fill="var(--text-sub)">→ 控除限度額が縮小</text>
+        <!-- Note -->
+        <text x="380" y="270" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="11" fill="var(--accent)" font-weight="600">配賦基準：収入金額基準 / 資産基準 / 性質別合理基準</text>
+      </svg>
+    </div>
+
+    <div class="point-box reveal">
+      <h4>📌 ポイント整理</h4>
+      <ul>
+        <li>国外所得金額は国外源泉所得を積み上げ方式で計算し、共通費用を合理的基準で配賦する</li>
+        <li>共通費用の配賦基準は収入金額基準・資産基準・性質別基準があり、合理性と継続適用が求められる</li>
+        <li>国外所得金額がマイナスの場合はゼロとして取り扱う</li>
+        <li>共通費用の配賦は控除限度額に直接影響するため、税務調査における主要な論点となる</li>
+        <li>配賦方法の選定理由と計算過程を文書化しておくことが実務上不可欠</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 7 ===== -->
+<section class="section" id="s7">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Section 07</div>
+      <h2>繰越控除制度（控除余裕額・控除限度超過額）</h2>
+    </div>
+
+    <div class="reveal">
+      <h3>7-1. 繰越制度の趣旨</h3>
+      <p>外国税額控除は各事業年度ごとに計算されますが、国外所得の金額や外国法人税の額は年度によって大きく変動することがあります。例えば、ある年度に外国で多額の税を課されたが国外所得が少なく控除限度額が小さい場合、大部分の外国税額が控除できないという問題が生じます。逆に、外国税額が少なく控除限度額に余裕がある年度もあります。</p>
+      <p>このような年度間の変動を平準化し、外国税額控除の実効性を確保するために設けられたのが繰越制度です。法人税法69条2項は控除限度超過額の繰越しを、同条3項は控除余裕額の繰越しを規定しています。いずれも繰越期間は3年間です。</p>
+
+      <h3>7-2. 控除限度超過額の繰越し</h3>
+      <p>当期の控除対象外国法人税の額が当期の控除限度額を超える場合、その超過額を「控除限度超過額」といいます。この控除限度超過額は、翌期以降3年間にわたって繰り越すことができ、各年度の控除余裕額の範囲内で控除を受けることができます。</p>
+      <p>具体的な処理としては、翌年度以降において控除限度額に余裕（控除余裕額）がある場合に、前年以前3年間から繰り越された控除限度超過額を、古い年度のものから順に控除します。この制度により、一時的に外国税負担が集中した年度の超過額が救済されます。</p>
+
+      <h3>7-3. 控除余裕額の繰越し</h3>
+      <p>当期の控除限度額が当期の控除対象外国法人税の額を超える場合、その超過額を「控除余裕額」といいます。この控除余裕額は、翌期以降3年間にわたって繰り越すことができ、各年度の控除限度超過額の控除に充てることができます。</p>
+      <p>控除余裕額の繰越しは、控除限度超過額の繰越しと表裏一体の制度です。すなわち、ある年度に生じた控除余裕額を翌年度以降に繰り越し、その年度に生じた控除限度超過額の控除に充てることで、年度間の調整を行います。</p>
+
+      <h3>7-4. 繰越しの優先順位</h3>
+      <p>控除限度超過額と控除余裕額の双方が繰り越されている場合の適用順序は重要です。法令上、前年以前3年間に生じた控除限度超過額は、最も古い年度のものから順に控除されます。同様に、前年以前3年間に生じた控除余裕額も、最も古い年度のものから順に使用されます。FIFO（先入先出法）の考え方に基づいています。</p>
+      <p>なお、同一事業年度において控除限度超過額と控除余裕額が同時に生じることはあり得ません（一方が生じれば他方はゼロです）。したがって、繰越しの計算は、各年度が「超過年度」であったか「余裕年度」であったかを区分して管理する必要があります。</p>
+    </div>
+
+    <div class="card reveal">
+      <h4>繰越制度の計算例（3年間の推移）</h4>
+      <div class="code-block">
+<span class="comment">【前提】各年度の控除限度額と外国法人税額</span>
+
+              控除限度額   外国法人税額  超過/余裕
+─────────────────────────────────────────
+X1年度:      500万円      700万円      超過 200万円
+X2年度:      600万円      400万円      余裕 200万円
+X3年度:      550万円      800万円      超過 250万円
+
+<span class="comment">【X1年度の処理】</span>
+控除可能額: 500万円（限度額まで）
+控除限度超過額: 700 - 500 = <span class="highlight">200万円 → 繰越し</span>
+
+<span class="comment">【X2年度の処理】</span>
+当期の控除: 400万円（外国法人税全額）
+控除余裕額: 600 - 400 = 200万円
+→ X1年度からの繰越超過額200万円をこの余裕額で控除
+→ 追加控除: <span class="result">200万円</span>（X1繰越超過額を全額消化）
+→ X2年度合計控除額: 400 + 200 = <span class="result">600万円</span>
+
+<span class="comment">【X3年度の処理】</span>
+当期の控除: 550万円（限度額まで）
+控除限度超過額: 800 - 550 = <span class="highlight">250万円 → 翌期以降へ繰越し</span>
+      </div>
+    </div>
+
+    <div class="point-box reveal">
+      <h4>📌 ポイント整理</h4>
+      <ul>
+        <li>控除限度超過額（外国税額 > 限度額）は翌期以降3年間繰り越せる</li>
+        <li>控除余裕額（限度額 > 外国税額）も翌期以降3年間繰り越せる</li>
+        <li>繰越しの適用順序は古い年度のものが優先（FIFO）</li>
+        <li>繰越制度は年度間の変動を平準化し、外国税額控除の実効性を確保する</li>
+        <li>実務上は各年度の超過額・余裕額を適切に管理する台帳の整備が重要</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 8 ===== -->
+<section class="section" id="s8">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Section 08</div>
+      <h2>地方税における外国税額控除</h2>
+    </div>
+
+    <div class="reveal">
+      <h3>8-1. 地方税の外国税額控除の全体像</h3>
+      <p>法人税（国税）の外国税額控除だけでは、国際的二重課税の排除は完全ではありません。内国法人は法人税のほか、法人住民税（道府県民税・市町村民税）と法人事業税を課されます。このうち法人住民税の法人税割は法人税額を課税標準としているため、法人税額が減少すれば自動的に法人住民税も減少しますが、それだけでは不十分な場合があります。</p>
+      <p>そこで、地方税法においても外国税額控除に相当する制度が設けられています。具体的には、法人税法69条の控除限度額を超える外国法人税額がある場合に、その超過額を法人住民税（道府県民税・市町村民税）の法人税割から控除する制度です。</p>
+
+      <h3>8-2. 地方税控除限度額の計算</h3>
+      <p>地方税における控除限度額は、法人税の控除限度額に一定の比率を乗じて計算されます。道府県民税の控除限度額は、法人税の控除限度額の12.3%（標準税率の場合の概算比率）として算出されます。市町村民税の控除限度額は、法人税の控除限度額の6%程度（標準税率の場合の概算比率）として算出されます。</p>
+      <p>適用の順序としては、まず法人税で控除限度額いっぱいまで控除し、なお超過額がある場合に道府県民税で控除し、さらに残額がある場合に市町村民税で控除するという三段階の構造になっています。</p>
+
+      <h3>8-3. 法人事業税の取扱い</h3>
+      <p>法人事業税については、外国税額控除の制度は設けられていません。法人事業税の所得割は法人の所得を課税標準としますが、この所得計算上、外国法人税は損金の額に算入されるため（外国税額控除を選択しなかった場合）、間接的に二重課税が緩和されます。</p>
+      <p>なお、外国税額控除を選択した場合には外国法人税は損金不算入となりますので、法人事業税の課税標準である所得金額には外国法人税が含まれたままとなります。この点で、法人事業税については二重課税排除が不完全であるという問題が指摘されています。</p>
+    </div>
+
+    <div class="card reveal">
+      <h4>3段階控除の適用順序</h4>
+      <div class="code-block">
+<span class="comment">【Step 1：法人税での控除】</span>
+控除対象外国法人税額: 600万円
+法人税の控除限度額:   464万円
+→ 法人税から控除: <span class="result">464万円</span>
+→ 超過額: 600 - 464 = 136万円
+
+<span class="comment">【Step 2：道府県民税での控除】</span>
+道府県民税控除限度額: 464万円 × 12.3% ≒ 57万円
+→ 道府県民税から控除: <span class="result">57万円</span>
+→ 残額: 136 - 57 = 79万円
+
+<span class="comment">【Step 3：市町村民税での控除】</span>
+市町村民税控除限度額: 464万円 × 6.0% ≒ 27.8万円
+→ 市町村民税から控除: <span class="result">27.8万円</span>
+→ 最終残額: 79 - 27.8 = 51.2万円（控除不能→繰越し対象）
+      </div>
+    </div>
+
+    <div class="point-box reveal">
+      <h4>📌 ポイント整理</h4>
+      <ul>
+        <li>地方税では法人税の控除限度超過額を住民税（道府県民税→市町村民税）の順に控除する3段階方式</li>
+        <li>地方税の控除限度額は法人税の控除限度額に一定比率を乗じて算出</li>
+        <li>法人事業税には外国税額控除制度が存在せず、二重課税排除が不完全</li>
+        <li>全体の控除限度額は法人税＋道府県民税＋市町村民税の合計</li>
+        <li>3段階すべてで控除しきれない部分は繰越控除の対象となる</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 9 ===== -->
+<section class="section" id="s9">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Section 09</div>
+      <h2>みなし外国税額控除（タックス・スペアリング）</h2>
+    </div>
+
+    <div class="reveal">
+      <h3>9-1. みなし外国税額控除の意義</h3>
+      <p>みなし外国税額控除（deemed foreign tax credit）とは、租税条約上の制度であり、「タックス・スペアリング・クレジット（tax sparing credit）」とも呼ばれます。これは、発展途上国が外国投資を誘致するために設けた租税減免措置（タックス・インセンティブ）の効果が、居住地国の外国税額控除制度によって相殺されることを防止するための制度です。</p>
+      <p>例えば、発展途上国A国が外国企業の投資誘致のために法人税を減免する優遇措置を設けたとします。A国の法定税率が25%であるが、優遇措置により10%に軽減されたとしましょう。日本法人がA国で100の所得を得た場合、A国で実際に納付する税額は10です。日本の外国税額控除では、実際に納付した外国法人税額10のみが控除されます。</p>
+      <p>しかし、もしみなし外国税額控除がなければ、A国の税の軽減分15（25 - 10）は日本の法人税で吸収されてしまい、A国のタックス・インセンティブの効果が日本の税制によって失われることになります。そこで、みなし外国税額控除では、A国の法定税率25%で課されたものとみなして25を控除対象外国法人税とすることで、A国の減免措置の効果を日本企業にも享受させるのです。</p>
+
+      <h3>9-2. 制度の法的根拠</h3>
+      <p>みなし外国税額控除は国内法には規定がなく、もっぱら租税条約の規定に基づく制度です。日本が締結した租税条約のうち、発展途上国との条約にみなし外国税額控除条項が設けられていることがあります。ただし、近年の条約改定においてはみなし外国税額控除条項を削除する傾向が見られ、新たに締結される条約ではこの条項が含まれないことが多くなっています。</p>
+      <p>みなし外国税額控除の適用上、実際に減免された税額と「みなし税額」の差額が控除対象に含まれることになりますので、確定申告書において当該みなし税額の計算と適用条約の根拠を明示する必要があります。</p>
+
+      <h3>9-3. みなし外国税額控除への批判と縮小傾向</h3>
+      <p>みなし外国税額控除に対しては、以下のような批判があります。第一に、発展途上国のタックス・インセンティブが本当に投資誘致に有効であるかどうかが疑問視されていること。投資決定は税制よりも市場規模、インフラ、法制度の安定性など他の要因に左右されることが多いからです。</p>
+      <p>第二に、みなし外国税額控除により日本（居住地国）の税収が減少するが、その分が必ずしも発展途上国の開発に使われるわけではなく、企業の内部留保となる可能性があること。第三に、制度の乱用リスクがあること。タックス・インセンティブの対象ではない所得についてもみなし外国税額控除の適用を受けようとする濫用的な取引が行われるリスクがあります。</p>
+      <p>OECD は1998年の報告書において、みなし外国税額控除は必ずしも効率的な援助手段ではないと指摘しており、日本も近年の条約改定においてはこの条項を削除・縮小する傾向にあります。ただし、既存の条約にみなし外国税額控除条項が存在する限り、当該規定は有効であり、適用が可能です。</p>
+    </div>
+
+    <div class="card reveal">
+      <h4>みなし外国税額控除の効果比較</h4>
+      <div class="code-block">
+<span class="comment">【前提】A国法定税率25%、優遇措置により実効税率10%、日本法人税率23.2%</span>
+<span class="comment">A国での所得: 1,000万円</span>
+
+<span class="comment">━━━ みなし外国税額控除なしの場合 ━━━</span>
+A国税額（実際納付）:          100万円
+日本法人税額:                 232万円
+外国税額控除:                △100万円
+日本での納付税額:             <span class="highlight">132万円</span>
+税負担合計:  100 + 132 =     <span class="highlight">232万円（実効税率23.2%）</span>
+→ A国の優遇措置の効果: なし（日本で吸収）
+
+<span class="comment">━━━ みなし外国税額控除ありの場合 ━━━</span>
+A国税額（実際納付）:          100万円
+みなし税額（法定税率25%）:    250万円
+日本法人税額:                 232万円
+外国税額控除（みなし250 vs 限度額232）: △232万円
+日本での納付税額:             <span class="result">0万円</span>
+税負担合計:  100 + 0 =       <span class="result">100万円（実効税率10%）</span>
+→ A国の優遇措置の効果: 日本企業にも享受される
+      </div>
+    </div>
+
+    <div class="point-box reveal">
+      <h4>📌 ポイント整理</h4>
+      <ul>
+        <li>みなし外国税額控除は租税条約上の制度であり、発展途上国のタックス・インセンティブの効果を保全する目的</li>
+        <li>実際に納付した税額ではなく、減免前の法定税率で課されたものとみなした税額を控除対象とする</li>
+        <li>国内法に規定はなく、適用は条約のみなし外国税額控除条項に基づく</li>
+        <li>OECDの批判を背景に、近年は条約改定時に削除・縮小する傾向にある</li>
+        <li>確定申告において適用条約とみなし税額の計算根拠を明示する必要がある</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 10 ===== -->
+<section class="section" id="s10">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Section 10</div>
+      <h2>外国子会社配当益金不算入制度</h2>
+    </div>
+
+    <div class="reveal">
+      <h3>10-1. 制度の概要と導入経緯</h3>
+      <p>外国子会社配当益金不算入制度は、2009年度（平成21年度）税制改正により導入された制度で、法人税法23条の2に規定されています。内国法人が外国子会社（持株割合25%以上を6月以上保有）から受ける配当等の額の95%を益金不算入とする制度です。残り5%は配当に係る費用（管理費用等）の概算相当額として益金に算入されます。</p>
+      <p>この制度の導入により、外国子会社からの配当に関する経済的二重課税の排除方法が、間接外国税額控除方式から国外所得免除方式（exemption method）に転換されました。これは日本の国際課税制度における歴史的な大転換です。</p>
+      <p>導入の背景には、日本企業が海外子会社の利益を国内に還流させるインセンティブを高めたいという政策的意図がありました。間接外国税額控除制度のもとでは、海外子会社の利益を配当として日本に送金すると日本で追加の法人税負担が生じるケースが多く、企業は利益を海外に留保する傾向がありました。益金不算入制度の導入により、配当送金時の追加的税負担がなくなり、海外利益の国内還流（いわゆる「資金の国内還流促進」）が期待されました。</p>
+
+      <h3>10-2. 適用要件の詳細</h3>
+      <p>外国子会社配当益金不算入制度の適用要件は以下の通りです。第一に、配当を支払う法人が「外国子会社」であること。外国子会社とは、内国法人が発行済株式等の25%以上を、配当等の支払義務確定日以前6月以上継続して直接保有している外国法人をいいます。なお、租税条約に別段の定めがある場合には、持株割合の要件が緩和されることがあります（例：日米租税条約では10%以上）。</p>
+      <p>第二に、「配当等の額」であること。ここでいう配当等には、剰余金の配当、利益の配当、剰余金の分配のほか、みなし配当も含まれます。ただし、外国子会社の所在地国で損金算入される配当（例：一定のハイブリッド金融商品に基づく配当）は益金不算入の対象外とされています。これはBEPS対応の一環として導入された制限であり、二重非課税を防止する目的があります。</p>
+      <p>第三に、確定申告書に益金不算入となる配当の額の計算に関する明細書を添付すること。</p>
+
+      <h3>10-3. 95%益金不算入の趣旨</h3>
+      <p>配当の100%ではなく95%が益金不算入とされる理由は、配当に関連する間接費用（例：子会社の管理に要する費用、出張費用、法務・会計アドバイザリー費用等）が存在するからです。これらの費用は日本の課税所得の計算上、損金に算入されています。もし配当を100%益金不算入とすると、非課税所得を得るための費用が損金に算入されるという不整合が生じます。</p>
+      <p>そこで、配当の5%を益金に算入することで、間接費用の損金算入との整合性を確保しています。この5%は実際の間接費用とは無関係に一律に適用される概算額であり、実際の費用が5%を超える場合であっても、また5%に満たない場合であっても、常に5%が益金算入されます。</p>
+
+      <h3>10-4. 源泉徴収税の取扱い</h3>
+      <p>外国子会社配当益金不算入制度を適用する場合、配当に対して源泉地国で課される源泉徴収税の取扱いが問題となります。益金不算入の対象となる配当に係る源泉徴収税は、外国税額控除の対象とはなりません。これは、配当所得自体が益金不算入とされるため、当該配当に対応する外国税額も控除対象から除外するという考え方に基づきます。</p>
+      <p>この源泉徴収税は損金算入することも認められていません。すなわち、外国子会社からの配当に係る源泉徴収税は、税額控除も損金算入もできない「コスト」として確定します。これが益金不算入制度の一つの弱点であり、源泉徴収税率が高い国からの配当については、旧制度（間接外国税額控除）の方が有利であった場合もあり得ます。ただし、多くの租税条約で配当に対する源泉徴収税率は5%または0%に軽減されているため、実務上の影響は限定的です。</p>
+    </div>
+
+    <div class="table-wrap reveal">
+      <table>
+        <thead>
+          <tr>
+            <th>比較項目</th>
+            <th>益金不算入制度（現行）</th>
+            <th>間接税額控除（旧制度）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>法的根拠</td><td>法人税法23条の2</td><td>旧法人税法69条8項（廃止）</td></tr>
+          <tr><td>二重課税排除方式</td><td>国外所得免除方式</td><td>税額控除方式</td></tr>
+          <tr><td>配当の取扱い</td><td>95%益金不算入</td><td>全額益金算入（税額控除）</td></tr>
+          <tr><td>持株要件</td><td>25%以上（条約で緩和あり）</td><td>25%以上</td></tr>
+          <tr><td>源泉徴収税</td><td>控除・損金算入不可（コスト）</td><td>直接税額控除の対象</td></tr>
+          <tr><td>外国子会社の法人税</td><td>考慮しない</td><td>間接税額控除の対象</td></tr>
+          <tr><td>制度の複雑さ</td><td>相対的に簡素</td><td>非常に複雑</td></tr>
+          <tr><td>利益還流インセンティブ</td><td>高い</td><td>低い</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="point-box reveal">
+      <h4>📌 ポイント整理</h4>
+      <ul>
+        <li>外国子会社配当益金不算入制度は2009年導入、配当の95%が益金不算入（法23条の2）</li>
+        <li>外国子会社の要件は持株割合25%以上・6月以上継続保有（条約で緩和可能）</li>
+        <li>5%の益金算入は間接費用の概算相当額であり、実際の費用額とは無関係の一律適用</li>
+        <li>配当に係る源泉徴収税は税額控除も損金算入もできないコストとなる</li>
+        <li>源泉地国で損金算入される配当は益金不算入の対象外（BEPS対応）</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 11 ===== -->
+<section class="section" id="s11">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Section 11</div>
+      <h2>間接外国税額控除の廃止と制度転換</h2>
+    </div>
+
+    <div class="reveal">
+      <h3>11-1. 間接外国税額控除制度の仕組み</h3>
+      <p>間接外国税額控除（indirect foreign tax credit）は、2009年度税制改正前まで存在した制度であり、旧法人税法69条8項以下に規定されていました。この制度は、内国法人が外国子会社から配当を受ける場合に、外国子会社が源泉地国で納付した法人税のうち、配当に対応する部分を、あたかも内国法人自身が納付したものとみなして外国税額控除の対象とする制度でした。</p>
+      <p>間接外国税額控除の対象となる「みなし納付税額」の計算は、以下の算式によります。みなし納付税額 ＝ 外国子会社の外国法人税額 ×（配当額 / 外国子会社の配当可能利益）。この算式により、外国子会社が納付した法人税のうち、配当として日本に送金された利益に対応する部分が、内国法人の外国税額控除の計算に取り込まれます。</p>
+      <p>間接外国税額控除は、直接外国税額控除が法的二重課税の排除を目的とするのに対し、経済的二重課税の排除を目的とする点に特徴がありました。外国子会社が納付した法人税は、法的には外国子会社の税負担であって内国法人（親会社）の税負担ではありません。しかし、経済的に見れば、外国子会社の利益が親会社に配当として移転される際に、その利益が外国でも日本でも課税されるという二重課税が生じるため、これを排除する必要があったのです。</p>
+
+      <h3>11-2. 間接外国税額控除制度の問題点</h3>
+      <p>間接外国税額控除制度にはいくつかの深刻な問題点がありました。第一に、制度が極めて複雑であったことです。外国子会社の税引後利益、外国法人税額、配当可能利益の計算は、外国の法令に基づいて行う必要があり、かつ、日本の法人税法の観点からの調整も必要でした。さらに、孫会社以下のチェーンがある場合には、各段階の税額を積み上げて計算する必要があり（いわゆる「多段階間接税額控除」）、計算は非常に煩雑でした。</p>
+      <p>第二に、外国子会社の利益を配当として送金すると日本で追加的な税負担が生じることが多く、企業が利益を海外に留保するインセンティブを生み出していたことです。日本の法人税率が外国子会社の実効税率よりも高い場合（多くの場合そうでした）、間接税額控除では日本と外国の税率差に相当する追加税が生じました。</p>
+      <p>第三に、間接外国税額控除の適用には配当送金が必要であるため、企業のキャッシュフロー管理や事業戦略上の意思決定に税制が不必要に影響を及ぼしていたことです。</p>
+
+      <h3>11-3. 制度転換の評価</h3>
+      <p>2009年の制度転換（間接外国税額控除の廃止・外国子会社配当益金不算入制度の導入）は、以下の点で評価できます。第一に、制度が大幅に簡素化されたこと。配当の95%を益金不算入とするだけであり、外国子会社の税額計算は不要となりました。第二に、利益の国内還流のインセンティブが大幅に改善されたこと。配当送金時の追加的税負担がほぼなくなり、海外利益の国内還流が促進されました。第三に、国際的な制度調和の観点からも、多くの先進国が採用する免除方式に近づいたこと。</p>
+      <p>一方、懸念点としては、低税率国の外国子会社に利益を移転するインセンティブが増大し得ることがあります。免除方式のもとでは、外国子会社が低税率国で課税された利益を配当として送金しても日本では追加課税されないため、低税率国への利益シフトの動機が強まります。この問題に対しては、外国子会社合算税制（CFC税制、いわゆるタックスヘイブン対策税制）が歯止めの役割を果たしています。</p>
+    </div>
+
+    <div class="point-box reveal">
+      <h4>📌 ポイント整理</h4>
+      <ul>
+        <li>間接外国税額控除は外国子会社の法人税を親会社が「みなし納付」として控除する制度であった</li>
+        <li>制度の複雑さ、利益留保インセンティブ、事業判断への不要な税制の影響が主な問題点</li>
+        <li>2009年度改正で廃止され、外国子会社配当益金不算入制度に転換（税額控除→免除方式）</li>
+        <li>制度簡素化と利益還流促進が主な効果だが、低税率国への利益移転リスクにはCFC税制で対応</li>
+        <li>直接外国税額控除（法69条）は引き続き存続し、外国支店所得・源泉徴収税等に適用される</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 12 ===== -->
+<section class="section" id="s12">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Section 12</div>
+      <h2>ハイブリッド・ミスマッチ取決め（BEPS行動2）</h2>
+    </div>
+</body>
+</html>

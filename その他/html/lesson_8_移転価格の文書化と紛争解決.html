@@ -1,0 +1,935 @@
+<!DOCTYPE html><html lang="ja" data-theme="dark">
+- Google Fonts: Outfit + Noto Sans JP
+- CSS変数でダーク/ライト切替対応:
+  ダーク: 背景#0A0A0A, テキスト#FAFAFA, カード#16161A, ボーダーrgba(255,255,255,0.06)
+  ライト: 背景#FAFAF7, テキスト#1A1A1A, カード#FFFFFF, ボーダーrgba(0,0,0,0.06)
+  アクセント: #5E6AD2→#7B85E0
+- fixedヘッダー: ロゴ「税法ラボ」(紫正方形+テキスト) + ナビ(コース/条文DB/判例/ブログ) + テーマ切替(月/太陽SVG)、backdrop-filter:blur(20px)半透明
+- フッター: © 2026 税法ラボ + リンク
+- max-width:1120px, padding:0 24px, margin:0 auto
+- カード: border-radius:20px, box-shadow, ホバーtranslateY(-4px)
+- セクションラベル: 英語大文字0.75rem letter-spacing:0.12em アクセント色
+- IntersectionObserverスクロールアニメーション(.reveal→.visible)
+- ノイズテクスチャオーバーレイ, localStorage保存テーマ, レスポンシブ
+- 目次(ページ内リンク)冒頭配置, 各セクション末に「ポイント整理」ボックス
+- 表・コードブロック・SVG図解を適宜使用
+
+**コードブロックでHTMLコードを出力してください。** 1回の回答で完結。必ず最後まで出力。
+
+【コンテンツ】第8回：移転価格の文書化と紛争解決─三層文書・MAP・APA。(1)BEPS行動13と三層文書化(2)マスターファイル(3)ローカルファイル(4)CbCR(5)日本の文書化制度(6)推定課税と挙証責任(7)移転価格調査の流れ(8)MAP申立てから合意(9)対応的調整(10)APA(ユニ・バイ・マルチ)(11)APA審査プロセス(12)仲裁制度(13)Amount Bアプローチ。3万字程度<!DOCTYPE html>
+<html lang="ja" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第8回：移転価格の文書化と紛争解決─三層文書・MAP・APA | 税法ラボ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --font-en: 'Outfit', sans-serif;
+  --font-jp: 'Noto Sans JP', sans-serif;
+  --accent: #5E6AD2;
+  --accent-hover: #7B85E0;
+  --radius: 20px;
+  --radius-sm: 12px;
+  --container: 1120px;
+  --header-h: 64px;
+  --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+[data-theme="dark"] {
+  --bg: #0A0A0A;
+  --text: #FAFAFA;
+  --text-secondary: rgba(250,250,250,0.55);
+  --card: #16161A;
+  --card-hover: #1E1E24;
+  --border: rgba(255,255,255,0.06);
+  --border-strong: rgba(255,255,255,0.12);
+  --code-bg: #1E1E24;
+  --point-bg: rgba(94,106,210,0.08);
+  --point-border: rgba(94,106,210,0.25);
+  --toc-bg: #111114;
+  --table-stripe: rgba(255,255,255,0.02);
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  --shadow-hover: 0 12px 40px rgba(0,0,0,0.55);
+  --noise-opacity: 0.03;
+  --header-bg: rgba(10,10,10,0.78);
+  --svg-diagram-bg: #111114;
+  --svg-diagram-text: #FAFAFA;
+  --svg-diagram-line: rgba(255,255,255,0.3);
+  --svg-node: #23233a;
+  --svg-node-border: rgba(94,106,210,0.5);
+}
+[data-theme="light"] {
+  --bg: #FAFAF7;
+  --text: #1A1A1A;
+  --text-secondary: rgba(26,26,26,0.5);
+  --card: #FFFFFF;
+  --card-hover: #F5F5F2;
+  --border: rgba(0,0,0,0.06);
+  --border-strong: rgba(0,0,0,0.12);
+  --code-bg: #F0F0ED;
+  --point-bg: rgba(94,106,210,0.06);
+  --point-border: rgba(94,106,210,0.2);
+  --toc-bg: #F0F0ED;
+  --table-stripe: rgba(0,0,0,0.02);
+  --shadow: 0 4px 24px rgba(0,0,0,0.06);
+  --shadow-hover: 0 12px 40px rgba(0,0,0,0.1);
+  --noise-opacity: 0.018;
+  --header-bg: rgba(250,250,247,0.78);
+  --svg-diagram-bg: #F0F0ED;
+  --svg-diagram-text: #1A1A1A;
+  --svg-diagram-line: rgba(0,0,0,0.25);
+  --svg-node: #e8e8f8;
+  --svg-node-border: rgba(94,106,210,0.5);
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--header-h) + 24px); }
+body {
+  font-family: var(--font-jp);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.9;
+  font-size: 16px;
+  transition: background var(--transition), color var(--transition);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed; inset:0; z-index:9999;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px;
+  opacity: var(--noise-opacity);
+}
+.container { max-width: var(--container); padding: 0 24px; margin: 0 auto; }
+
+/* ===== HEADER ===== */
+.header {
+  position: fixed; top:0; left:0; right:0; z-index:1000;
+  height: var(--header-h);
+  background: var(--header-bg);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: background var(--transition);
+}
+.header .container {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 100%;
+}
+.logo { display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text); }
+.logo-icon {
+  width:32px; height:32px; border-radius:8px;
+  background: var(--accent); display:flex; align-items:center; justify-content:center;
+  font-family: var(--font-en); font-weight:700; font-size:14px; color:#fff;
+}
+.logo-text { font-family: var(--font-en); font-weight:700; font-size:18px; letter-spacing:-0.02em; }
+.header-right { display:flex; align-items:center; gap:8px; }
+.nav { display:flex; gap:4px; }
+.nav a {
+  font-size:0.85rem; color:var(--text-secondary); text-decoration:none;
+  padding:6px 14px; border-radius:8px;
+  transition: color var(--transition), background var(--transition);
+}
+.nav a:hover { color:var(--text); background:var(--border); }
+.theme-toggle {
+  width:40px; height:40px; border:none; background:transparent; cursor:pointer;
+  border-radius:10px; display:flex; align-items:center; justify-content:center;
+  color:var(--text-secondary);
+  transition: color var(--transition), background var(--transition);
+  margin-left:8px;
+}
+.theme-toggle:hover { color:var(--text); background:var(--border); }
+.theme-toggle svg { width:18px; height:18px; }
+.theme-toggle .sun { display:none; }
+[data-theme="light"] .theme-toggle .moon { display:none; }
+[data-theme="light"] .theme-toggle .sun { display:block; }
+
+/* ===== HERO ===== */
+.hero {
+  padding: calc(var(--header-h) + 80px) 0 60px;
+  text-align:center;
+}
+.hero-label {
+  font-family:var(--font-en); font-size:0.75rem; font-weight:600;
+  letter-spacing:0.12em; text-transform:uppercase; color:var(--accent);
+  margin-bottom:16px;
+}
+.hero h1 {
+  font-family:var(--font-jp); font-weight:800; font-size:clamp(1.8rem,4vw,2.8rem);
+  line-height:1.35; letter-spacing:-0.02em; margin-bottom:16px;
+}
+.hero-sub {
+  font-size:1.05rem; color:var(--text-secondary); max-width:680px; margin:0 auto 32px;
+  line-height:1.8;
+}
+.hero-meta {
+  display:flex; gap:24px; justify-content:center; flex-wrap:wrap;
+  font-size:0.82rem; color:var(--text-secondary);
+}
+.hero-meta span { display:flex; align-items:center; gap:6px; }
+
+/* ===== TOC ===== */
+.toc-section { padding: 20px 0 40px; }
+.toc-card {
+  background: var(--toc-bg);
+  border:1px solid var(--border);
+  border-radius: var(--radius);
+  padding:36px 40px;
+  box-shadow: var(--shadow);
+}
+.toc-card h2 {
+  font-size:1rem; font-weight:700; margin-bottom:20px;
+  display:flex; align-items:center; gap:8px;
+}
+.toc-grid { display:grid; grid-template-columns: repeat(auto-fill,minmax(320px,1fr)); gap:6px 32px; }
+.toc-grid a {
+  text-decoration:none; color:var(--text-secondary); font-size:0.88rem;
+  padding:7px 0; display:flex; align-items:baseline; gap:8px;
+  border-bottom:1px solid var(--border);
+  transition: color var(--transition);
+}
+.toc-grid a:hover { color:var(--accent); }
+.toc-num { font-family:var(--font-en); font-weight:600; color:var(--accent); font-size:0.8rem; min-width:28px; }
+
+/* ===== SECTION ===== */
+.section { padding:48px 0; }
+.section-label {
+  font-family:var(--font-en); font-size:0.75rem; font-weight:600;
+  letter-spacing:0.12em; text-transform:uppercase; color:var(--accent);
+  margin-bottom:10px;
+}
+.section h2 {
+  font-weight:800; font-size:clamp(1.3rem,2.5vw,1.75rem);
+  line-height:1.4; letter-spacing:-0.01em; margin-bottom:24px;
+}
+.section h3 {
+  font-weight:700; font-size:1.15rem; margin:32px 0 14px;
+  padding-left:14px; border-left:3px solid var(--accent);
+}
+.section h4 {
+  font-weight:600; font-size:1.02rem; margin:24px 0 10px; color:var(--accent);
+}
+.section p {
+  color:var(--text-secondary); margin-bottom:18px; text-align:justify;
+  word-break:break-all; overflow-wrap:break-word;
+}
+
+/* ===== CARD (generic) ===== */
+.card {
+  background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+  padding:32px; box-shadow:var(--shadow); margin:28px 0;
+  transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+}
+.card:hover { transform:translateY(-4px); box-shadow:var(--shadow-hover); }
+
+/* ===== POINT BOX ===== */
+.point-box {
+  background:var(--point-bg); border:1px solid var(--point-border);
+  border-radius:var(--radius-sm); padding:28px 32px; margin:36px 0 12px;
+}
+.point-box h4 {
+  color:var(--accent); font-weight:700; font-size:0.95rem; margin:0 0 12px;
+  padding:0; border:none;
+}
+.point-box ul { padding-left:20px; }
+.point-box li { color:var(--text-secondary); font-size:0.92rem; margin-bottom:6px; }
+
+/* ===== TABLE ===== */
+.table-wrap { overflow-x:auto; margin:24px 0; border-radius:var(--radius-sm); border:1px solid var(--border); }
+table { width:100%; border-collapse:collapse; font-size:0.88rem; }
+thead { background:var(--accent); color:#fff; }
+th { padding:12px 16px; text-align:left; font-weight:600; white-space:nowrap; }
+td { padding:11px 16px; border-bottom:1px solid var(--border); color:var(--text-secondary); vertical-align:top; }
+tbody tr:nth-child(even) { background:var(--table-stripe); }
+
+/* ===== CODE ===== */
+.code-block {
+  background:var(--code-bg); border:1px solid var(--border); border-radius:var(--radius-sm);
+  padding:24px 28px; margin:20px 0; overflow-x:auto;
+  font-family:'Courier New',monospace; font-size:0.82rem; line-height:1.8;
+  color:var(--text-secondary); white-space:pre-wrap; word-break:break-all;
+}
+code {
+  font-family:'Courier New',monospace; font-size:0.88em;
+  background:var(--code-bg); padding:2px 7px; border-radius:5px;
+}
+
+/* ===== SVG DIAGRAM ===== */
+.diagram-wrap {
+  background:var(--svg-diagram-bg); border:1px solid var(--border); border-radius:var(--radius-sm);
+  padding:28px; margin:28px 0; text-align:center; overflow-x:auto;
+}
+.diagram-wrap svg { max-width:100%; height:auto; }
+.diagram-caption {
+  font-size:0.8rem; color:var(--text-secondary); margin-top:12px; text-align:center;
+}
+
+/* ===== REVEAL ANIMATION ===== */
+.reveal {
+  opacity:0; transform:translateY(32px);
+  transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1), transform 0.7s cubic-bezier(0.4,0,0.2,1);
+}
+.reveal.visible { opacity:1; transform:translateY(0); }
+
+/* ===== FOOTER ===== */
+.footer {
+  border-top:1px solid var(--border); padding:40px 0; margin-top:60px;
+  text-align:center; font-size:0.82rem; color:var(--text-secondary);
+}
+.footer-links { display:flex; gap:20px; justify-content:center; margin-bottom:12px; flex-wrap:wrap; }
+.footer-links a { color:var(--text-secondary); text-decoration:none; transition:color var(--transition); }
+.footer-links a:hover { color:var(--accent); }
+
+/* ===== MOBILE NAV ===== */
+.mobile-toggle { display:none; width:40px; height:40px; border:none; background:transparent; cursor:pointer; color:var(--text); border-radius:10px; }
+.mobile-toggle:hover { background:var(--border); }
+
+@media(max-width:768px) {
+  .nav { display:none; position:absolute; top:var(--header-h); left:0; right:0;
+    background:var(--card); border-bottom:1px solid var(--border); flex-direction:column; padding:12px 24px;
+    box-shadow:var(--shadow);
+  }
+  .nav.open { display:flex; }
+  .mobile-toggle { display:flex; align-items:center; justify-content:center; }
+  .hero h1 { font-size:1.5rem; }
+  .toc-card { padding:24px 20px; }
+  .toc-grid { grid-template-columns:1fr; }
+  .card { padding:24px 20px; }
+  .point-box { padding:20px; }
+  .table-wrap { font-size:0.8rem; }
+  th, td { padding:8px 10px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="header">
+<div class="container">
+  <a href="#" class="logo">
+    <span class="logo-icon">TL</span>
+    <span class="logo-text">税法ラボ</span>
+  </a>
+  <div class="header-right">
+    <nav class="nav" id="nav">
+      <a href="#">コース</a>
+      <a href="#">条文DB</a>
+      <a href="#">判例</a>
+      <a href="#">ブログ</a>
+    </nav>
+    <button class="mobile-toggle" id="mobileToggle" aria-label="メニュー">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+  </div>
+</div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+<div class="container">
+  <div class="hero-label">Course 08 — Transfer Pricing Documentation & Dispute Resolution</div>
+  <h1>移転価格の文書化と紛争解決<br>─ 三層文書・MAP・APA</h1>
+  <p class="hero-sub">BEPS行動13が要請する三層文書化（マスターファイル・ローカルファイル・CbCR）の構造を精解し、移転価格調査から推定課税、MAP・APA・仲裁制度による紛争解決、さらにAmount Bアプローチまでを網羅的に学ぶ。</p>
+  <div class="hero-meta">
+    <span>📖 約30,000字</span>
+    <span>⏱ 読了 約70分</span>
+    <span>📅 2026年3月更新</span>
+  </div>
+</div>
+</section>
+
+<!-- ===== TOC ===== -->
+<section class="toc-section">
+<div class="container reveal">
+  <div class="toc-card">
+    <h2>📑 目次</h2>
+    <div class="toc-grid">
+      <a href="#s1"><span class="toc-num">01</span>BEPS行動13と三層文書化</a>
+      <a href="#s2"><span class="toc-num">02</span>マスターファイル</a>
+      <a href="#s3"><span class="toc-num">03</span>ローカルファイル</a>
+      <a href="#s4"><span class="toc-num">04</span>国別報告書（CbCR）</a>
+      <a href="#s5"><span class="toc-num">05</span>日本の文書化制度</a>
+      <a href="#s6"><span class="toc-num">06</span>推定課税と挙証責任</a>
+      <a href="#s7"><span class="toc-num">07</span>移転価格調査の流れ</a>
+      <a href="#s8"><span class="toc-num">08</span>MAP申立てから合意</a>
+      <a href="#s9"><span class="toc-num">09</span>対応的調整</a>
+      <a href="#s10"><span class="toc-num">10</span>APA（ユニ・バイ・マルチ）</a>
+      <a href="#s11"><span class="toc-num">11</span>APA審査プロセス</a>
+      <a href="#s12"><span class="toc-num">12</span>仲裁制度</a>
+      <a href="#s13"><span class="toc-num">13</span>Amount Bアプローチ</a>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ===== SECTION 1 ===== -->
+<section class="section" id="s1">
+<div class="container reveal">
+  <div class="section-label">Section 01</div>
+  <h2>BEPS行動13と三層文書化</h2>
+
+  <h3>1-1. BEPS プロジェクトの背景と行動13の位置づけ</h3>
+  <p>OECD/G20が主導した「税源浸食と利益移転（Base Erosion and Profit Shifting: BEPS）」プロジェクトは、2012年に検討が開始され、2015年10月に最終報告書（15の行動計画）が公表された。多国籍企業グループが、各国税制の隙間や租税条約のミスマッチを利用して利益を低税率国に人為的に移転し、実質的な課税逃れを行う構造が国際的に問題視されたことがその出発点であった。BEPSプロジェクトの15の行動計画は、大きく分けて「整合性（Coherence）」「実質性（Substance）」「透明性（Transparency）」の三本柱で構成されており、行動13「移転価格文書化と国別報告」はこの「透明性」の柱を担う極めて重要な施策として位置づけられている。</p>
+
+  <p>行動13が重要である理由は明快である。移転価格税制の執行には、多国籍企業グループの国際取引の実態を税務当局が正確に把握できることが前提となる。しかし従来、各国の移転価格文書化制度は統一性を欠き、ある国では詳細な文書が要求される一方で、他の国ではほとんど文書化義務がないという状況であった。この結果、税務当局は自国に所在する法人の情報しか十分に把握できず、グループ全体の利益配分の妥当性を検証することが困難であった。行動13は、この情報の非対称性を解消するために、統一的かつ体系的な文書化フレームワークを導入することを目的としている。</p>
+
+  <h3>1-2. 三層文書化アプローチの全体像</h3>
+  <p>行動13の最終報告書は、多国籍企業グループに対して三層構造の文書化（Three-tiered Documentation Approach）を要請している。第一層がマスターファイル（Master File）、第二層がローカルファイル（Local File）、そして第三層が国別報告書（Country-by-Country Report: CbCR）である。それぞれの文書は異なる目的と異なる詳細度を持ち、相互に補完し合う関係にある。</p>
+
+  <p>マスターファイルは、多国籍企業グループの事業活動、移転価格ポリシー、グローバルな所得配分・経済活動の全体像を示す「鳥瞰図」としての役割を果たす。ローカルファイルは、特定の法人の特定の関連者間取引について、その取引条件が独立企業原則に合致していることを詳細に分析する文書である。CbCRは、グループが活動する各国・地域ごとの収入、税引前利益、納付税額、従業員数、資本金等の集計データをテーブル形式で報告するもので、高次のリスク評価（ハイレベル・リスクアセスメント）のために用いられる。</p>
+
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 800 360" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="var(--accent)" />
+        </marker>
+      </defs>
+      <rect x="250" y="20" width="300" height="60" rx="14" fill="var(--svg-node)" stroke="var(--svg-node-border)" stroke-width="1.5"/>
+      <text x="400" y="55" text-anchor="middle" fill="var(--svg-diagram-text)" font-size="15" font-weight="700" font-family="Noto Sans JP">三層文書化アプローチ</text>
+      <line x1="280" y1="80" x2="140" y2="140" stroke="var(--svg-diagram-line)" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+      <line x1="400" y1="80" x2="400" y2="140" stroke="var(--svg-diagram-line)" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+      <line x1="520" y1="80" x2="660" y2="140" stroke="var(--svg-diagram-line)" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+      <rect x="40" y="140" width="200" height="56" rx="12" fill="var(--svg-node)" stroke="var(--accent)" stroke-width="1.5"/>
+      <text x="140" y="164" text-anchor="middle" fill="var(--accent)" font-size="13" font-weight="700" font-family="Noto Sans JP">第1層</text>
+      <text x="140" y="184" text-anchor="middle" fill="var(--svg-diagram-text)" font-size="13" font-family="Noto Sans JP">マスターファイル</text>
+      <rect x="300" y="140" width="200" height="56" rx="12" fill="var(--svg-node)" stroke="var(--accent)" stroke-width="1.5"/>
+      <text x="400" y="164" text-anchor="middle" fill="var(--accent)" font-size="13" font-weight="700" font-family="Noto Sans JP">第2層</text>
+      <text x="400" y="184" text-anchor="middle" fill="var(--svg-diagram-text)" font-size="13" font-family="Noto Sans JP">ローカルファイル</text>
+      <rect x="560" y="140" width="200" height="56" rx="12" fill="var(--svg-node)" stroke="var(--accent)" stroke-width="1.5"/>
+      <text x="660" y="164" text-anchor="middle" fill="var(--accent)" font-size="13" font-weight="700" font-family="Noto Sans JP">第3層</text>
+      <text x="660" y="184" text-anchor="middle" fill="var(--svg-diagram-text)" font-size="13" font-family="Noto Sans JP">CbCR（国別報告書）</text>
+      <rect x="15" y="220" width="250" height="120" rx="10" fill="var(--svg-diagram-bg)" stroke="var(--border-strong)" stroke-width="1"/>
+      <text x="140" y="245" text-anchor="middle" fill="var(--text-secondary)" font-size="11" font-family="Noto Sans JP">グループ全体の鳥瞰図</text>
+      <text x="140" y="265" text-anchor="middle" fill="var(--text-secondary)" font-size="11" font-family="Noto Sans JP">・組織構造・事業概要</text>
+      <text x="140" y="285" text-anchor="middle" fill="var(--text-secondary)" font-size="11" font-family="Noto Sans JP">・無形資産・金融活動</text>
+      <text x="140" y="305" text-anchor="middle" fill="var(--text-secondary)" font-size="11" font-family="Noto Sans JP">・移転価格ポリシー</text>
+      <text x="140" y="325" text-anchor="middle" fill="var(--text-secondary)" font-size="11" font-family="Noto Sans JP">提出先: 親会社所在国</text>
+      <rect x="275" y="220" width="250" height="120" rx="10" fill="var(--svg-diagram-bg)" stroke="var(--border-strong)" stroke-width="1"/>
+      <text x="400" y="245" text-anchor="middle" fill="var(--text-secondary)" font-size="11" font-family="Noto Sans JP">個別取引の詳細分析</text>
+      <text x="400" y="265" text-anchor="middle" fill="var(--text-secondary)" font-size="11" font-family="Noto Sans JP">・取引概要・機能分析</text>
+      <text x="400" y="285" text-anchor="middle" fill="var(--text-secondary)" font-size="11" font-family="Noto Sans JP">・比較対象取引の選定</text>
+      <text x="400" y="305" text-anchor="middle" fill="var(--text-secondary)" font-size="11" font-family="Noto Sans JP">・独立企業間価格の算定</text>
+      <text x="400" y="325" text-anchor="middle" fill="var(--text-secondary)" font-size="11" font-family="Noto Sans JP">提出先: 各国（ローカル）</text>
+      <rect x="535" y="220" width="250" height="120" rx="10" fill="var(--svg-diagram-bg)" stroke="var(--border-strong)" stroke-width="1"/>
+      <text x="660" y="245" text-anchor="middle" fill="var(--text-secondary)" font-size="11" font-family="Noto Sans JP">国別の集計データ</text>
+      <text x="660" y="265" text-anchor="middle" fill="var(--text-secondary)" font-size="11" font-family="Noto Sans JP">・収入・利益・税額</text>
+      <text x="660" y="285" text-anchor="middle" fill="var(--text-secondary)" font-size="11" font-family="Noto Sans JP">・従業員数・有形資産</text>
+      <text x="660" y="305" text-anchor="middle" fill="var(--text-secondary)" font-size="11" font-family="Noto Sans JP">・構成事業体リスト</text>
+      <text x="660" y="325" text-anchor="middle" fill="var(--text-secondary)" font-size="11" font-family="Noto Sans JP">提出先: 最終親会社所在国</text>
+    </svg>
+    <div class="diagram-caption">図1：BEPS行動13 三層文書化の構造</div>
+  </div>
+
+  <h3>1-3. 三層文書化の導入経緯と各国の採用状況</h3>
+  <p>2015年の最終報告書公表を受け、OECDは「包摂的枠組み（Inclusive Framework）」を通じて、OECD非加盟国を含む140以上の国・地域にBEPS対策の実施を呼びかけた。行動13の三層文書化については、CbCRを中心にミニマムスタンダード（最低基準）として位置づけられ、各国は自国の法令にこれを取り込むことが求められた。2016年から2018年にかけて、主要国の大半がCbCR提出制度を導入し、マスターファイル・ローカルファイルについても多くの国が法制化を完了した。</p>
+
+  <p>日本では、2016年度（平成28年度）税制改正により、租税特別措置法第66条の4の4以下に移転価格文書化に関する規定が新設された。具体的には、国別報告事項（CbCR）、事業概況報告事項（マスターファイル）、独立企業間価格を算定するために必要と認められる書類（ローカルファイル）の三つの文書について、提出義務・作成保存義務が法定された。この改正により、日本はBEPS行動13の勧告をほぼ忠実に国内法に転換したといえる。</p>
+
+  <h3>1-4. 三層文書間の関係性と税務当局の活用方法</h3>
+  <p>三層文書は単独で機能するものではなく、税務当局が移転価格リスクを評価し、調査対象を選定し、実際の調査において独立企業原則の遵守を検証するプロセスにおいて、段階的に活用される。CbCRは最初のスクリーニングツールとして機能する。税務当局はCbCRのデータを分析し、利益と経済活動（従業員数・有形資産）の配分に乖離が見られる国や事業体を特定する。次に、マスターファイルを参照してグループ全体のバリューチェーンや移転価格ポリシーを理解し、リスクの高い取引類型を絞り込む。最終的に、ローカルファイルの詳細な分析に基づいて、個別取引の独立企業間価格の妥当性を検証する。</p>
+
+  <p>このように、三層文書は「マクロからミクロへ」という分析の流れを支える情報インフラであり、税務当局の効率的な調査資源配分を可能にする仕組みである。また、納税者側にとっても、三層文書を適切に作成・保存しておくことは、移転価格調査における挙証責任の充足や推定課税の回避に直結するため、コンプライアンスの観点からも極めて重要である。</p>
+
+  <div class="point-box">
+    <h4>📌 セクション1 ポイント整理</h4>
+    <ul>
+      <li>BEPS行動13は「透明性」の柱を担い、多国籍企業グループの利益配分を可視化する三層文書化フレームワークを確立した。</li>
+      <li>三層文書は、マスターファイル（グループ全体像）、ローカルファイル（個別取引分析）、CbCR（国別集計データ）から構成される。</li>
+      <li>CbCRはミニマムスタンダードとして全Inclusive Framework参加国が導入義務を負い、140以上の国・地域が法制化済みである。</li>
+      <li>三層文書は「CbCR→マスターファイル→ローカルファイル」の順でマクロからミクロへの分析フローを構成する。</li>
+      <li>日本は2016年度税制改正で三層文書を租税特別措置法に導入し、行動13の勧告をほぼ完全に国内法化した。</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<!-- ===== SECTION 2 ===== -->
+<section class="section" id="s2">
+<div class="container reveal">
+  <div class="section-label">Section 02</div>
+  <h2>マスターファイル</h2>
+
+  <h3>2-1. マスターファイルの目的と性格</h3>
+  <p>マスターファイル（Master File）は、多国籍企業グループの組織構造、事業活動、無形資産の保有・利用状況、グループ内の金融活動、および移転価格ポリシーの全体像を包括的に記述する文書である。OECDの移転価格ガイドライン第V章（行動13の成果を反映して改訂された章）に、その記載項目が詳細に列挙されている。マスターファイルの主たる目的は、各国の税務当局に対して、当該グループのグローバルな事業とその移転価格ポリシーの全体的な文脈（コンテクスト）を提供することにある。</p>
+
+  <p>重要な点として、マスターファイルは全グループ共通で一つの文書として作成されるものであり、各国のローカルファイルを補完する位置づけにある。各国の税務当局はマスターファイルを通じて、当該国に所在する法人の取引を、グループ全体のバリューチェーンの中で位置づけて理解することができる。ただし、マスターファイルは個別取引の独立企業間価格を算定する文書ではなく、あくまでも高次の概観を提供するものであることに注意が必要である。</p>
+
+  <h3>2-2. マスターファイルの記載項目</h3>
+  <p>OECDガイドラインが定めるマスターファイルの標準的な記載項目は、大きく五つのカテゴリーに分類される。第一のカテゴリーは「組織構造」であり、グループの法的および資本関係を示す組織図が含まれる。第二のカテゴリーは「事業の概要」であり、利益の重要な推進要因（key drivers of business profit）、主要な製品・サービスのサプライチェーン（売上高が連結総収入の5%を超えるもの）、重要なサービス契約、主要市場の地理的情報、機能分析の概要、事業再編・事業買収の情報等が記載される。</p>
+
+  <p>第三のカテゴリーは「無形資産」に関する情報であり、無形資産の開発・所有・利用に関するグループ全体の戦略、研究開発施設の一覧、無形資産に関する重要な関連者間取引（ライセンス契約、コストシェアリング契約等）、移転価格ポリシーの概要が含まれる。第四のカテゴリーは「グループ内金融活動」であり、グループの資金調達方法、主要な金融取引相手の特定、グループ内のキャッシュプーリング等の集中財務活動の説明、移転価格ポリシーの概要が記載される。第五のカテゴリーは「財務・税務上のポジション」であり、連結財務諸表、ユニラテラルAPAやルーリングの一覧が含まれる。</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>カテゴリー</th><th>主な記載事項</th><th>目的</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>組織構造</td><td>法的組織図、資本関係、主要法人の所在地</td><td>グループの全体構造を把握</td></tr>
+        <tr><td>事業の概要</td><td>主要事業・製品、サプライチェーン、利益ドライバー、事業再編情報</td><td>バリューチェーンの理解</td></tr>
+        <tr><td>無形資産</td><td>無形資産戦略、R&D拠点、ライセンス契約、CCA</td><td>無形資産に係る利益配分の検証</td></tr>
+        <tr><td>金融活動</td><td>資金調達方法、キャッシュプーリング、財務ポリシー</td><td>グループ内金融取引の把握</td></tr>
+        <tr><td>財務・税務ポジション</td><td>連結財務諸表、APA・ルーリングのリスト</td><td>グループの財務状況と税務上の取扱いの確認</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>2-3. マスターファイル作成上の実務的課題</h3>
+  <p>マスターファイルの作成は、理論的にはグループで一つの文書を作成すれば足りるが、実務上はいくつかの課題が存在する。第一に、マスターファイルには機密性の高い情報（グループの移転価格ポリシー、主要な契約条件、無形資産戦略等）が含まれるため、これを各国の税務当局に提出することに対する企業の懸念がある。特に、ある国の税務当局に提出した情報が、租税条約の情報交換規定を通じて他国の税務当局に共有される可能性があることから、情報の秘密保持に関する不安は根強い。</p>
+
+  <p>第二に、マスターファイルの記載の詳細度についてOECDガイドラインは一定の裁量を認めているが、各国の税務当局の期待水準は異なる。ある国では概括的な記載で足りるとされる一方、他の国ではより詳細な説明が求められることがあり、実質的に一つの文書で全国の要件を充足することが困難な場合がある。第三に、マスターファイルは年度末から一定期間内（日本では最終親会計年度終了日の翌日から1年以内）に提出する必要があるが、大規模グループの場合、グループ全体の情報を収集・整理して一つの文書にまとめるには相当の時間と労力を要する。</p>
+
+  <h3>2-4. マスターファイルの言語と翻訳の問題</h3>
+  <p>マスターファイルは通常、英語で作成されることが多いが、各国の国内法が自国語での提出を要求する場合がある。日本の場合、事業概況報告事項は日本語または英語での提出が認められている（国税庁の実務上の運用）。ただし、他国では現地語への翻訳が要求されることがあり、この翻訳コストも企業にとっての負担となる。OECDは、マスターファイルについてはグループ共通の言語（通常は英語）での作成を基本とし、必要に応じて現地語への翻訳を行うアプローチを推奨しているが、各国の法令上の取扱いは依然として多様である。</p>
+
+  <div class="point-box">
+    <h4>📌 セクション2 ポイント整理</h4>
+    <ul>
+      <li>マスターファイルはグループ全体の「鳥瞰図」であり、組織構造、事業概要、無形資産、金融活動、財務・税務ポジションの5カテゴリーで構成される。</li>
+      <li>全グループ共通の一つの文書として作成し、各国のローカルファイルを補完する関係にある。</li>
+      <li>個別取引の独立企業間価格算定は含まず、グループのコンテクスト提供が主目的である。</li>
+      <li>実務上の課題として、機密情報の取扱い、各国の記載水準の差異、作成期限の制約、翻訳コストがある。</li>
+      <li>日本では事業概況報告事項として、最終親会計年度終了日の翌日から1年以内に提出義務がある。</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<!-- ===== SECTION 3 ===== -->
+<section class="section" id="s3">
+<div class="container reveal">
+  <div class="section-label">Section 03</div>
+  <h2>ローカルファイル</h2>
+
+  <h3>3-1. ローカルファイルの目的と位置づけ</h3>
+  <p>ローカルファイル（Local File）は、三層文書化の第二層として、特定の国に所在する法人が行う重要な関連者間取引について、当該取引の条件が独立企業原則に合致していることを詳細に分析・立証する文書である。マスターファイルがグループ全体の「マクロ」な視点を提供するのに対し、ローカルファイルは個別取引の「ミクロ」な分析を提供する。ローカルファイルは各国ごとに、当該国の法人が関与する重要な関連者間取引に焦点を当てて作成されるため、グループ内の各法人がそれぞれの所在国の要件に従って作成する必要がある。</p>
+
+  <p>ローカルファイルの作成は、納税者にとって単なる形式的な義務ではない。適切に作成されたローカルファイルは、移転価格調査において納税者の立場を防御する最も重要な証拠資料となる。日本においては、ローカルファイルの作成・保存を適切に行っていない場合、推定課税（租税特別措置法第66条の4第8項に基づく同業者利益率に基づく課税）のリスクが大幅に高まるため、その実務的重要性は極めて大きい。</p>
+
+  <h3>3-2. ローカルファイルの記載項目</h3>
+  <p>OECDガイドラインが定めるローカルファイルの標準的な記載項目は、大きく二つの部分に分かれる。第一部は「ローカルエンティティ」に関する情報であり、経営組織図、事業の概要・事業戦略、主要な競合他社の情報が含まれる。第二部は「関連者間取引」に関する情報であり、これがローカルファイルの核心部分である。具体的には、取引の内容と条件の記述、関与する各当事者の特定、取引金額、各取引に関連する社内・社外の契約書、詳細な機能・リスク分析（機能分析）、選定した移転価格算定方法とその選定理由、比較対象取引の選定プロセスと選定結果、経済分析（定量的分析）の詳細、APAや相互協議の対象となっている場合はその詳細、が記載される。</p>
+
+  <h3>3-3. 機能分析の重要性</h3>
+  <p>ローカルファイルにおいて最も重要な要素の一つが機能分析（Functional Analysis）である。機能分析とは、関連者間取引の各当事者が果たす機能（Functions）、使用する資産（Assets）、引き受けるリスク（Risks）を詳細に特定・分析するプロセスであり、「FAR分析」とも呼ばれる。機能分析は、独立企業間価格の算定において、検証対象法人の選定、移転価格算定方法の選定、比較対象企業の選定のすべてに影響を与えるため、ローカルファイルの品質を決定づける核心的要素である。</p>
+
+  <p>機能分析においては、単に機能・資産・リスクを列挙するだけでなく、各当事者の貢献の相対的な重要性を評価することが求められる。例えば、製造子会社が単純な委託製造（Contract Manufacturing）を行っているのか、それともフルリスク製造業者（Full-Fledged Manufacturer）として活動しているのかによって、期待される利益水準は大きく異なる。この区分は、機能分析における資産の所有状況やリスク負担の態様に基づいて判断される。OECD移転価格ガイドライン第I章では、リスクの引受けについて、契約上のリスク配分だけでなく、リスクの管理（コントロール）機能とリスクを負担する財務能力の両面から実態的に判断することが求められている。</p>
+
+  <h3>3-4. 比較対象取引の選定プロセス</h3>
+  <p>ローカルファイルのもう一つの核心要素が、比較対象取引（Comparables）の選定プロセスの記述である。独立企業原則の適用においては、関連者間取引の条件を、比較可能な非関連者間取引の条件と比較することが基本である。比較対象取引の選定においては、比較可能性の五要素、すなわち、取引の特性（製品・サービスの特性）、機能分析（果たす機能、使用する資産、引き受けるリスク）、契約条件、経済状況（市場条件）、事業戦略、を考慮する必要がある。</p>
+
+  <p>実務上、比較対象取引の選定は通常、商業データベース（Bureau van Dijk社のOrbisやTP Catalystなど）を用いた定量的スクリーニングによって行われる。このプロセスでは、まず地域、業種、独立性基準（株主構成）等の条件で候補企業を絞り込み、次に定性的な分析（事業内容、機能・リスクプロファイル等の確認）を通じて最終的な比較対象企業群を確定する。このスクリーニングの各ステップと、各ステップで適用した基準および除外した企業の理由を詳細に文書化することが、ローカルファイルの信頼性を担保する上で不可欠である。</p>
+
+  <h3>3-5. 経済分析と独立企業間価格レンジ</h3>
+  <p>比較対象取引が選定された後、選定された比較対象のデータに基づいて独立企業間価格レンジ（Arm's Length Range）を算出する。一般的には、比較対象企業の利益指標（営業利益率、総費用加算率、ベリーレシオ等）の四分位レンジ（第1四分位から第3四分位）が独立企業間価格レンジとして用いられる。検証対象法人の利益指標がこのレンジ内にあれば、移転価格は独立企業原則に合致していると結論づけられる。レンジ外にある場合は、中央値（メディアン）への調整が行われることが一般的である。</p>
+
+  <p>日本の実務においては、複数年度の平均値を使用することが認められており、通常は検証年度を含む3年間から5年間の平均利益率が用いられる。これは、単年度の利益率が景気循環や一時的な要因によって変動する影響を平準化する効果がある。ただし、複数年度平均を使用する場合の期間の選定や、比較対象企業のデータについても同期間の平均を使用する必要があることに留意が必要である。</p>
+
+  <div class="code-block">【ローカルファイルの構成例】
+
+第1部：法人情報
+ 1. 経営組織図
+ 2. 事業の概要・戦略
+ 3. 主要競合他社
+
+第2部：関連者間取引分析
+ 1. 取引の概要
+   1.1 取引の類型（棚卸資産取引／役務提供／無形資産取引／金融取引）
+   1.2 取引金額
+   1.3 契約条件
+ 2. 機能・リスク分析
+   2.1 検証対象法人の機能・資産・リスク
+   2.2 取引相手方の機能・資産・リスク
+   2.3 相対的貢献の評価
+ 3. 移転価格算定方法の選定
+   3.1 選定した方法とその理由
+   3.2 他の方法を採用しなかった理由
+ 4. 比較対象取引の選定
+   4.1 使用したデータベース
+   4.2 スクリーニング基準と手順
+   4.3 除外した企業とその理由
+   4.4 最終的な比較対象企業リスト
+ 5. 経済分析
+   5.1 利益指標の算出
+   5.2 独立企業間価格レンジ
+   5.3 結論
+
+第3部：添付資料
+ ・関連契約書
+ ・財務データ
+ ・比較対象企業の概要</div>
+
+  <div class="point-box">
+    <h4>📌 セクション3 ポイント整理</h4>
+    <ul>
+      <li>ローカルファイルは個別取引の独立企業間価格を分析・立証する文書であり、移転価格調査における最重要の防御資料である。</li>
+      <li>記載の核心は機能分析（FAR分析）と比較対象取引の選定プロセスにある。</li>
+      <li>機能分析では機能・資産・リスクの詳細な特定と相対的貢献度の評価が求められる。</li>
+      <li>比較対象取引の選定は商業データベースを用いた定量スクリーニングと定性分析の組合せで行う。</li>
+      <li>独立企業間価格レンジは通常、四分位レンジ（第1四分位〜第3四分位）で示され、レンジ外の場合はメディアンへの調整が行われる。</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<!-- ===== SECTION 4 ===== -->
+<section class="section" id="s4">
+<div class="container reveal">
+  <div class="section-label">Section 04</div>
+  <h2>国別報告書（CbCR）</h2>
+
+  <h3>4-1. CbCRの意義と法的位置づけ</h3>
+  <p>国別報告書（Country-by-Country Report: CbCR）は、三層文書化の第三層として、多国籍企業グループが活動する各国・地域における収入、税引前利益、支払税額・未払税額、資本金、利益剰余金、従業員数、有形資産（現金等を除く）等の集計データを、国・地域ごとに報告する文書である。CbCRは、BEPS行動13の中でもミニマムスタンダード（最低基準）として位置づけられており、すべてのInclusive Framework参加国が導入を義務づけられている。これはマスターファイルやローカルファイルがベストプラクティス（推奨事項）として位置づけられているのとは異なる、より強い拘束力を持つ。</p>
+
+  <p>CbCRの主たる目的は、税務当局が移転価格リスクを含む広義のBEPSリスクを評価するための高次のスクリーニングツールを提供することにある。OECDは、CbCRはそれ自体で移転価格調整の根拠として使用されるべきではなく、あくまでリスク評価のための出発点であることを繰り返し強調している。すなわち、CbCRのデータから直接的に独立企業間価格を算定したり、定式配分（Formulary Apportionment）の手段として利用したりすることは、CbCRの本来の目的から逸脱するものである。</p>
+
+  <h3>4-2. CbCRの記載項目（テーブル1・テーブル2・テーブル3）</h3>
+  <p>CbCRは三つのテーブルで構成される。テーブル1は「国・地域ごとの収入・税額・事業活動の配分に関する概要」であり、関連者間取引からの収入、非関連者からの収入、収入合計、税引前利益（損失）、支払法人税額（現金ベース）、当期未払法人税額（引当金ベース）、資本金、利益剰余金、従業員数、有形資産（現金・現金同等物を除く）の各項目を、グループが活動する国・地域ごとに集計して記載する。テーブル2は「多国籍企業グループの全構成事業体の一覧」であり、各国・地域に所在する構成事業体の名称、設立国（所在国と異なる場合）、主要な事業活動の種類を記載する。テーブル3は「追加情報」であり、CbCRの理解に資する追加的な説明を自由記述形式で記載する欄である。</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>テーブル</th><th>内容</th><th>形式</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>テーブル1</td><td>国・地域ごとの収入・税引前利益・支払税額・従業員数・有形資産等の集計</td><td>定型テーブル</td></tr>
+        <tr><td>テーブル2</td><td>全構成事業体の一覧（所在国、設立国、事業活動の種類）</td><td>定型テーブル</td></tr>
+        <tr><td>テーブル3</td><td>データの理解に必要な追加情報の説明</td><td>自由記述</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>4-3. CbCRの提出メカニズム</h3>
+  <p>CbCRの提出は原則として、最終親会社（Ultimate Parent Entity: UPE）がその所在国の税務当局に提出する。提出されたCbCRは、租税条約の情報交換規定（多数国間条約であるMAC/CbC MACを含む）に基づき、グループの構成事業体が所在する各国の税務当局に自動的に交換される。これにより、各国の税務当局は自国に所在する法人だけでなく、グループ全体の国別データにアクセスできるようになる。</p>
+
+  <p>ただし、最終親会社の所在国がCbCR制度を導入していない場合や、情報交換が有効に機能しない場合には、代理親会社（Surrogate Parent Entity）による提出やローカルファイリング（子会社が直接自国で提出）が求められることがある。日本では、最終親会社等届出事項の提出が義務づけられており、グループの最終親会社が日本法人である場合はCbCRを日本の国税当局に提出し、最終親会社が外国法人である場合は、日本に所在する子法人がその旨を届け出る仕組みとなっている。</p>
+
+  <h3>4-4. CbCRの適用対象と閾値</h3>
+  <p>CbCR提出義務が課されるのは、直前会計年度の連結総収入金額が一定の閾値以上の多国籍企業グループである。OECDが定めた閾値は連結総収入7億5,000万ユーロ（またはこれに相当する現地通貨額）であり、日本では1,000億円と定められている。この閾値は、全世界の多国籍企業グループの約10〜15%が対象となる水準に設定されているが、実際にはこれらのグループが国際取引の大部分を占めるため、カバレッジとしては十分であるとされている。</p>
+
+  <h3>4-5. CbCRレビューの動向</h3>
+  <p>OECDは、CbCRの運用状況について定期的にピアレビューを実施しており、各国の法制化状況、CbCRの交換実績、守秘義務の遵守状況等を確認している。また、2020年にはCbCRの見直し（Review of CbCR）が行われ、テーブル3の利用促進、データの一貫性の向上、CbCRデータの適正使用の確保等が勧告された。さらに近年では、CbCRの公開（Public CbCR）に関する議論も進んでおり、EUでは2023年から一定の大規模多国籍企業グループに対してCbCRの公開が義務づけられている。</p>
+
+  <div class="point-box">
+    <h4>📌 セクション4 ポイント整理</h4>
+    <ul>
+      <li>CbCRはBEPS行動13のミニマムスタンダードであり、全Inclusive Framework参加国に導入義務がある。</li>
+      <li>テーブル1（国別集計データ）、テーブル2（構成事業体一覧）、テーブル3（追加情報）の三部構成。</li>
+      <li>最終親会社が所在国に提出し、租税条約に基づく自動交換により各国の税務当局に共有される。</li>
+      <li>適用閾値は連結総収入7.5億ユーロ（日本では1,000億円）以上。</li>
+      <li>CbCRは高次のリスク評価ツールであり、直接的な移転価格調整の根拠として使用してはならない。</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<!-- ===== SECTION 5 ===== -->
+<section class="section" id="s5">
+<div class="container reveal">
+  <div class="section-label">Section 05</div>
+  <h2>日本の文書化制度</h2>
+
+  <h3>5-1. 法令上の根拠</h3>
+  <p>日本の移転価格文書化制度は、租税特別措置法（以下「措置法」）第66条の4の4から第66条の4の6に規定されている。具体的には、国別報告事項（CbCR）は措置法第66条の4の4に、事業概況報告事項（マスターファイル）は措置法第66条の4の5に、独立企業間価格を算定するために必要と認められる書類（ローカルファイル）は措置法第66条の4第6項および措置法施行規則第22条の10に規定されている。これらの規定は、2016年度（平成28年度）税制改正により新設され、2016年4月1日以後に開始する事業年度から適用されている。</p>
+
+  <h3>5-2. ローカルファイルの作成義務と同時文書化義務</h3>
+  <p>日本のローカルファイル制度の最大の特徴は、「同時文書化（Contemporaneous Documentation）」の概念の導入にある。措置法第66条の4第6項は、一の国外関連者との間の国外関連取引について、その取引金額の合計が50億円以上である場合、または無形資産取引の金額が3億円以上である場合に、確定申告書の提出期限までにローカルファイルを作成し保存する義務（同時文書化義務）を課している。</p>
+
+  <p>この同時文書化義務の重要性は、推定課税との関連で理解される。同時文書化義務の対象となる取引について適切にローカルファイルを作成・保存していない場合、税務当局は推定課税（措置法第66条の4第8項）を適用することができる。推定課税が適用されると、税務当局が選定した同業者の利益率に基づいて独立企業間価格が算定されるため、納税者にとって不利な結果となる可能性が高い。逆に、適切にローカルファイルを作成・保存していれば、税務当局は原則としてまず当該ローカルファイルの内容を検討した上で調査を進めることとなり、推定課税の適用リスクを大幅に低減できる。</p>
+
+  <h3>5-3. 同時文書化義務の閾値と対象外取引</h3>
+  <p>同時文書化義務の閾値は、一の国外関連者との年間取引金額が棚卸資産取引で50億円以上、または無形資産取引で3億円以上とされている。この閾値を下回る取引については、同時文書化義務は課されないが、税務当局の調査において資料の提出を求められた場合には、指定された期日（通常60日程度）までに資料を提出する義務がある（調査時文書化義務）。この期日までに資料を提出できない場合には、やはり推定課税の適用を受ける可能性がある。</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>文書</th><th>法令根拠</th><th>提出/作成期限</th><th>適用閾値</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>CbCR（国別報告事項）</td><td>措置法66条の4の4</td><td>最終親会計年度終了日の翌日から1年以内</td><td>連結総収入1,000億円以上</td></tr>
+        <tr><td>マスターファイル（事業概況報告事項）</td><td>措置法66条の4の5</td><td>最終親会計年度終了日の翌日から1年以内</td><td>連結総収入1,000億円以上</td></tr>
+        <tr><td>ローカルファイル（同時文書化義務）</td><td>措置法66条の4第6項</td><td>確定申告書提出期限まで</td><td>一の国外関連者との取引50億円以上 or 無形資産取引3億円以上</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>5-4. 最終親会社等届出事項</h3>
+  <p>日本の多国籍企業グループの構成事業体である内国法人は、最終親会社等届出事項を、各事業年度終了日までに所轄税務署長に提出しなければならない。この届出は、CbCRの提出義務者を特定するために必要な手続であり、グループの最終親会社の名称・所在地・会計年度等を届け出るものである。</p>
+
+  <h3>5-5. e-Taxによる電子提出</h3>
+  <p>CbCRおよびマスターファイルは、e-Taxを通じた電子提出が義務づけられている。CbCRについてはXMLフォーマットでの提出が求められ、OECDが策定したCbCR XMLスキーマに準拠した形式で作成する必要がある。マスターファイルについても電子提出が必須であるが、PDFファイル等の添付による提出が認められている。</p>
+
+  <div class="point-box">
+    <h4>📌 セクション5 ポイント整理</h4>
+    <ul>
+      <li>日本は措置法第66条の4の4以下で三層文書を法定し、2016年4月1日以後開始事業年度から適用。</li>
+      <li>ローカルファイルの「同時文書化義務」の閾値は、一の国外関連者との取引50億円以上または無形資産取引3億円以上。</li>
+      <li>同時文書化義務を怠った場合、推定課税（措置法66条の4第8項）の適用リスクが飛躍的に高まる。</li>
+      <li>CbCR・マスターファイルの適用閾値は連結総収入1,000億円以上（最終親会計年度末の翌日から1年以内に提出）。</li>
+      <li>CbCRはXMLフォーマットでe-Tax提出が義務。</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<!-- ===== SECTION 6 ===== -->
+<section class="section" id="s6">
+<div class="container reveal">
+  <div class="section-label">Section 06</div>
+  <h2>推定課税と挙証責任</h2>
+
+  <h3>6-1. 推定課税の法的根拠と趣旨</h3>
+  <p>移転価格税制における推定課税とは、税務当局が独立企業間価格を算定するために必要な情報を納税者から十分に得られない場合に、税務当局が入手し得る情報に基づいて独立企業間価格を推定的に算定する制度である。日本では措置法第66条の4第8項に規定されている。同項は、国税職員が独立企業間価格を算定するために必要と認められる帳簿書類等の提示・提出を求めた場合において、当該求めに対して適時に提示・提出がなされなかったときは、税務署長は、同種の事業を営む者の利益率等の一定の基準に基づいて、独立企業間価格を算定できると規定している。</p>
+
+  <p>推定課税の趣旨は、移転価格税制の執行における情報の非対称性の解消にある。関連者間取引の詳細は基本的に納税者側が最もよく把握しており、税務当局が外部から独立企業間価格を検証するには、納税者からの情報提供が不可欠である。推定課税は、納税者が十分な情報提供を行わない場合のサンクション（制裁的措置）として機能し、同時にローカルファイルの作成・保存のインセンティブを提供する制度設計となっている。</p>
+
+  <h3>6-2. 推定課税の発動要件</h3>
+  <p>推定課税が発動される典型的な場面は二つある。第一は、同時文書化義務の対象取引について、確定申告書の提出期限までにローカルファイルが作成・保存されていない場合である。この場合、税務当局は調査時に推定課税を適用することができる。第二は、同時文書化義務の対象外の取引（閾値未満の取引）について、税務当局が調査時に資料の提出を求めたにもかかわらず、納税者が指定期日（措置法施行規則上、原則として45日以上）までに資料を提出しなかった場合である。</p>
+
+  <p>いずれの場合も、推定課税が適用されると、税務当局は同種の事業を営む法人のデータ（いわゆるシークレットコンパラブル）に基づいて独立企業間価格を算定する。シークレットコンパラブルとは、税務当局が他の納税者の申告情報等から入手した比較対象データであり、納税者にはその具体的な内容が開示されない。このため、納税者は推定課税の結果に対して有効な反論を行うことが極めて困難となる。</p>
+
+  <h3>6-3. 挙証責任の所在</h3>
+  <p>日本の移転価格税制における挙証責任（立証責任）の所在は、実務上の重要論点である。日本の租税訴訟においては、課税処分の適法性の立証責任は原則として課税庁側にある（行政事件訴訟法の一般原則）。しかし、移転価格税制においては、独立企業間価格の算定に必要な事実関係の多くが納税者の支配領域内にあるため、実質的な立証負担が納税者側に偏る傾向がある。</p>
+
+  <p>特に推定課税が適用された場合、納税者は推定課税による算定が不合理であることを積極的に立証しなければ、課税処分を覆すことが困難となる。判例上も、推定課税の適用に際して、税務当局の算定方法が著しく不合理でない限り、その結果は尊重されるとする裁判例がある。したがって、納税者としては、推定課税の適用を回避するために、ローカルファイルを含む十分な文書化を事前に行っておくことが最も効果的な対策となる。</p>
+
+  <h3>6-4. シークレットコンパラブルの問題</h3>
+  <p>推定課税においてシークレットコンパラブルが使用される場合、納税者にはその詳細が開示されないため、手続的公正の観点から批判がある。納税者は、税務当局がどのような比較対象データを使用し、どのような基準で選定したのかを知ることができず、実効的な反論が困難となるためである。この問題は日本だけでなく多くの国で議論されており、OECDの移転価格ガイドラインも、シークレットコンパラブルの使用は可能な限り避けるべきであるとの立場をとっている。もっとも、日本の税務当局は、納税者が十分な資料を提出しない場合の最後の手段としてシークレットコンパラブルの使用を正当化しており、この点は日本の移転価格実務における特徴的な論点の一つである。</p>
+
+  <div class="point-box">
+    <h4>📌 セクション6 ポイント整理</h4>
+    <ul>
+      <li>推定課税（措置法66条の4第8項）は、必要な書類の提示・提出がない場合に税務当局が同業者利益率で独立企業間価格を算定できる制度。</li>
+      <li>同時文書化義務の不履行または調査時の資料提出期限の不遵守が推定課税の典型的発動要件。</li>
+      <li>推定課税ではシークレットコンパラブルが使用され、納税者にその詳細は開示されない。</li>
+      <li>日本の租税訴訟では課税庁が立証責任を負うのが原則だが、移転価格では実質的に納税者側の負担が大きい。</li>
+      <li>ローカルファイルの適切な作成・保存が推定課税回避の最も効果的な防御手段である。</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<!-- ===== SECTION 7 ===== -->
+<section class="section" id="s7">
+<div class="container reveal">
+  <div class="section-label">Section 07</div>
+  <h2>移転価格調査の流れ</h2>
+
+  <h3>7-1. 調査対象の選定</h3>
+  <p>移転価格調査は、税務当局がCbCRやその他の情報源を分析し、移転価格リスクの高い企業・取引を特定するところから始まる。日本の国税当局（国税局調査部または国税庁相互協議室の支援を受けた調査担当部門）は、CbCRのデータ分析、外国税務当局との情報交換、法人税確定申告書の分析、過去の調査実績等を総合的に勘案して、調査対象を選定する。特に、利益率が同業他社に比して著しく低い法人、大規模な無形資産取引を行っている法人、事業再編を行った法人、低税率国に重要な関連者を有する法人等が調査対象として選定されやすい。</p>
+
+  <h3>7-2. 予備調査と事前分析</h3>
+  <p>調査対象が選定されると、税務当局はまず予備調査（デスクワーク）を行う。この段階では、納税者が提出したCbCR、マスターファイル、過去の申告書、有価証券報告書、ウェブサイト等の公開情報を分析し、当該企業グループの事業構造、国外関連取引の概要、潜在的な移転価格リスクを把握する。また、商業データベースを用いた予備的な比較対象分析も行われることがある。この事前分析の段階で、調査の重点ポイント（フォーカスポイント）が絞り込まれる。</p>
+
+  <h3>7-3. 実地調査</h3>
+  <p>予備調査を経て、実地調査（臨場調査）が開始される。移転価格の実地調査は、通常の法人税調査と並行して行われることもあれば、移転価格に特化した専門調査として行われることもある。実地調査では、納税者に対して、ローカルファイル（同時文書化文書）の提示・提出、関連者間取引に係る契約書、社内稟議書、取締役会議事録、価格交渉記録、原価計算資料、移転価格ポリシーに関する社内文書、関連する電子メール等の広範な資料の提示・提出が求められる。</p>
+
+  <p>調査官は、提出された資料に基づいて機能分析を行い、納税者が採用した移転価格算定方法の妥当性を検証する。この過程で、納税者に対するヒアリング（質問検査）が行われ、事業の実態、取引の背景、価格決定の経緯等について詳細な聞き取りが行われる。移転価格の実地調査は通常、数ヶ月から1年以上にわたる長期間の調査となることが多い。</p>
+
+  <h3>7-4. 更正処分と異議申立て</h3>
+  <p>調査の結果、税務当局が独立企業間価格との乖離を認定した場合、まず納税者に対して調査結果の説明（指摘事項の通知）が行われ、修正申告の慫慂が行われる。納税者が修正申告に応じない場合、税務当局は更正処分を行う。更正処分が行われた場合、納税者は再調査の請求（処分庁に対する不服申立て）または国税不服審判所に対する審査請求を行うことができる。さらに、これらの行政上の不服申立てを経た上で、裁判所に取消訴訟を提起することも可能である。</p>
+
+  <p>ただし、移転価格の更正処分に対しては、多くの場合、国内の不服申立て・訴訟手続と並行して、または代替手段として、租税条約に基づく相互協議（MAP）の申立てが行われる。これは、移転価格調整が二重課税を発生させる場合に、条約相手国との協議を通じて二重課税の排除を図るためである。</p>
+
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arr2" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="var(--accent)" />
+        </marker>
+      </defs>
+      <rect x="40" y="20" width="180" height="48" rx="12" fill="var(--svg-node)" stroke="var(--svg-node-border)" stroke-width="1.5"/>
+      <text x="130" y="49" text-anchor="middle" fill="var(--svg-diagram-text)" font-size="13" font-weight="600" font-family="Noto Sans JP">①調査対象選定</text>
+      <line x1="220" y1="44" x2="280" y2="44" stroke="var(--svg-diagram-line)" stroke-width="1.5" marker-end="url(#arr2)"/>
+      <rect x="280" y="20" width="180" height="48" rx="12" fill="var(--svg-node)" stroke="var(--svg-node-border)" stroke-width="1.5"/>
+      <text x="370" y="49" text-anchor="middle" fill="var(--svg-diagram-text)" font-size="13" font-weight="600" font-family="Noto Sans JP">②予備調査</text>
+      <line x1="460" y1="44" x2="520" y2="44" stroke="var(--svg-diagram-line)" stroke-width="1.5" marker-end="url(#arr2)"/>
+      <rect x="520" y="20" width="180" height="48" rx="12" fill="var(--svg-node)" stroke="var(--svg-node-border)" stroke-width="1.5"/>
+      <text x="610" y="49" text-anchor="middle" fill="var(--svg-diagram-text)" font-size="13" font-weight="600" font-family="Noto Sans JP">③実地調査</text>
+      <line x1="610" y1="68" x2="610" y2="120" stroke="var(--svg-diagram-line)" stroke-width="1.5" marker-end="url(#arr2)"/>
+      <rect x="520" y="120" width="180" height="48" rx="12" fill="var(--svg-node)" stroke="var(--svg-node-border)" stroke-width="1.5"/>
+      <text x="610" y="149" text-anchor="middle" fill="var(--svg-diagram-text)" font-size="13" font-weight="600" font-family="Noto Sans JP">④調査結果説明</text>
+      <line x1="520" y1="144" x2="460" y2="144" stroke="var(--svg-diagram-line)" stroke-width="1.5" marker-end="url(#arr2)"/>
+      <rect x="260" y="120" width="200" height="48" rx="12" fill="var(--svg-node)" stroke="var(--svg-node-border)" stroke-width="1.5"/>
+      <text x="360" y="141" text-anchor="middle" fill="var(--svg-diagram-text)" font-size="12" font-weight="600" font-family="Noto Sans JP">⑤修正申告の慫慂</text>
+      <text x="360" y="157" text-anchor="middle" fill="var(--text-secondary)" font-size="11" font-family="Noto Sans JP">or 更正処分</text>
+      <line x1="360" y1="168" x2="360" y2="220" stroke="var(--svg-diagram-line)" stroke-width="1.5" marker-end="url(#arr2)"/>
+      <rect x="140" y="220" width="200" height="48" rx="12" fill="var(--svg-node)" stroke="var(--svg-node-border)" stroke-width="1.5"/>
+      <text x="240" y="249" text-anchor="middle" fill="var(--svg-diagram-text)" font-size="12" font-weight="600" font-family="Noto Sans JP">⑥A 不服申立て・訴訟</text>
+      <rect x="420" y="220" width="200" height="48" rx="12" fill="var(--svg-node)" stroke="var(--accent)" stroke-width="2"/>
+      <text x="520" y="249" text-anchor="middle" fill="var(--accent)" font-size="12" font-weight="700" font-family="Noto Sans JP">⑥B MAP申立て</text>
+      <line x1="260" y1="168" x2="240" y2="220" stroke="var(--svg-diagram-line)" stroke-width="1" stroke-dasharray="4"/>
+      <line x1="460" y1="168" x2="520" y2="220" stroke="var(--svg-diagram-line)" stroke-width="1" stroke-dasharray="4"/>
+      <text x="400" y="300" text-anchor="middle" fill="var(--text-secondary)" font-size="11" font-family="Noto Sans JP">※ 不服申立てとMAP申立ては並行して行うことが可能</text>
+    </svg>
+    <div class="diagram-caption">図2：移転価格調査から紛争解決までの流れ</div>
+  </div>
+
+  <div class="point-box">
+    <h4>📌 セクション7 ポイント整理</h4>
+    <ul>
+      <li>調査対象選定にはCbCRデータ分析、情報交換、申告書分析、過去の調査実績等が活用される。</li>
+      <li>予備調査（デスクワーク）→実地調査（臨場調査）→調査結果説明→修正申告慫慂/更正処分の流れで進む。</li>
+      <li>実地調査ではローカルファイル、契約書、社内文書、電子メール等の広範な資料提出が求められる。</li>
+      <li>移転価格の実地調査は数ヶ月から1年以上の長期にわたることが一般的。</li>
+      <li>更正処分後は国内不服申立て・訴訟とMAP申立ての二つの救済経路があり、並行利用が可能。</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<!-- ===== SECTION 8 ===== -->
+<section class="section" id="s8">
+<div class="container reveal">
+  <div class="section-label">Section 08</div>
+  <h2>MAP申立てから合意</h2>
+
+  <h3>8-1. MAPの定義と法的根拠</h3>
+  <p>相互協議手続（Mutual Agreement Procedure: MAP）とは、租税条約の規定に適合しない課税が行われた場合（またはその恐れがある場合）に、納税者の申立てに基づき、関係する二カ国の権限ある当局（Competent Authority）が協議を行い、条約に適合しない課税を排除するための手続である。MAPの法的根拠は、各租税条約の相互協議条項（典型的にはOECDモデル租税条約第25条）に置かれている。移転価格の文脈では、一方の国が移転価格調整を行った結果、同一の所得に対して両国で課税が行われる「経済的二重課税」が生じた場合に、MAPが最も頻繁に利用される。</p>
+
+  <h3>8-2. MAP申立ての要件</h3>
+  <p>MAP申立てを行うための基本的な要件は、租税条約の規定に適合しない課税が行われた（またはその恐れがある）ことである。移転価格調整の場合、一方の国による移転価格更正が条約上の独立企業原則（通常は条約第9条第1項）に適合しない課税であると納税者が考える場合に、MAP申立てを行うことができる。MAP申立ては、条約に適合しない課税の最初の通知の日から一定の期間内（OECDモデル条約第25条では3年以内）に行わなければならない。</p>
+
+  <p>日本においては、MAP申立ては国税庁の相互協議室（Competent Authority Division）に対して行う。申立ては書面で行い、関連する課税処分の内容、二重課税の態様、納税者が考える適正な利益配分等を記載する。日本の国税庁は、MAP申立てを受理した場合、条約相手国の権限ある当局との協議を開始する。</p>
+
+  <h3>8-3. MAP協議のプロセス</h3>
+  <p>MAP協議は通常、以下のプロセスで進行する。まず、申立てを受けた側の権限ある当局（日本で課税が行われた場合は日本の国税庁）が、相手国の権限ある当局にMAP協議の開始を通知する（ポジションペーパーの送付）。ポジションペーパーには、事案の事実関係、課税処分の内容、自国の立場（なぜ当該課税が条約に適合すると考えるか、または適合しないと考えるか）が記述される。</p>
+
+  <p>相手国の権限ある当局は、ポジションペーパーを検討した上で回答を送付する。その後、両国の権限ある当局間で、書面の交換や対面会議（またはオンライン会議）を通じて協議が行われる。協議においては、双方の課税が条約の独立企業原則に適合するかどうかが検討され、適正な利益配分について合意に達することが目指される。MAP協議は義務的な合意に至る義務を伴わない（OECDモデル条約第25条第2項は「解決するよう努力する」と規定している）ものの、BEPS行動14のミニマムスタンダードにより、各国は二重課税を解消するよう最善の努力を払うことが求められている。</p>
+
+  <h3>8-4. MAP合意と二重課税の排除</h3>
+  <p>MAP協議の結果、両国の権限ある当局が合意に達した場合、その合意に基づいて課税処分が修正される。具体的には、移転価格調整を行った国の課税がそのまま維持される場合は、相手国が「対応的調整（Corresponding Adjustment）」を行って二重課税を排除する。あるいは、調整額が減額されることで双方の課税が調整されることもある。合意の内容は納税者に通知され、納税者が合意を受諾した場合に実施される。</p>
+
+  <h3>8-5. MAP処理期間と統計</h3>
+  <p>BEPS行動14のミニマムスタンダードでは、MAP事案の平均処理期間を24ヶ月以内とすることが目標とされている。OECDは毎年MAP統計を公表しており、各国のMAP事案の件数、処理期間、解決率等が公開されている。日本のMAP事案は主に移転価格関連が占めており、近年の平均処理期間は概ね24〜30ヶ月程度となっている。ただし、複雑な事案では3年以上を要することも珍しくない。MAP協議の長期化は、納税者にとって資金コスト（二重課税状態の継続による資金的負担）の増大を意味するため、処理の迅速化は国際的な課題である。</p>
+
+  <div class="point-box">
+    <h4>📌 セクション8 ポイント整理</h4>
+    <ul>
+      <li>MAPはOECDモデル条約第25条に基づく権限ある当局間の協議手続であり、経済的二重課税の排除を目的とする。</li>
+      <li>申立て期限は条約に適合しない課税の最初の通知から通常3年以内。</li>
+      <li>MAP協議はポジションペーパーの交換→協議（書面・対面）→合意のプロセスで進行する。</li>
+      <li>BEPS行動14により平均処理期間24ヶ月以内が目標だが、複雑事案では3年以上を要することもある。</li>
+      <li>MAP合意は義務的な合意到達義務を伴わないが、各国は二重課税解消に最善努力を払う義務を負う。</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<!-- ===== SECTION 9 ===== -->
+<section class="section" id="s9">
+<div class="container reveal">
+  <div class="section-label">Section 09</div>
+  <h2>対応的調整</h2>
+
+  <h3>9-1. 対応的調整の意義</h3>
+  <p>対応的調整（Corresponding Adjustment）とは、一方の締約国が移転価格調整（一次的調整: Primary Adjustment）を行った場合に、他方の締約国がこれに対応して自国の課税を調整することで、経済的二重課税を排除する措置をいう。OECDモデル租税条約第9条第2項がその法的根拠であり、「一方の締約国が、条約第9条第1項の原則に従って関連企業の利益について調整を行った場合、他方の締約国は、当該調整が正当であると認めるときは、当該利益について課した税額について適切な調整を行う」旨を規定している。</p>
+
+  <p>対応的調整の必要性は明白である。例えば、日本の親会社Pが米国の子会社Sに製品を販売する取引において、日本の税務当局が移転価格調整を行い、販売価格が独立企業間価格より低いとして日本側の所得を増額した場合、同一の利益に対して日本と米国の両方で課税が行われる経済的二重課税が生じる。この二重課税を排除するためには、米国の税務当局がSの所得を対応的に減額する調整（対応的調整）を行う必要がある。対応的調整がなければ、条約の独立企業原則は利益を増額する方向にのみ機能し、総合的な税負担は独立企業間で取引が行われた場合を超えることになり、不合理な結果を生じる。</p>
+
+  <h3>9-2. 対応的調整の実施プロセス</h3>
+  <p>対応的調整は、通常、MAP協議の結果として実施される。一方の国が移転価格調整を行い、他方の国がMAP協議を通じてその調整の全部または一部を正当と認めた場合に、他方の国が自国の課税を調整する。対応的調整の具体的な方法は、他方の国の国内法に従って行われるが、通常は当該年度の法人税の更正（減額更正）により行われる。</p>
+
+  <p>日本においては、対応的調整は措置法第66条の4の3に規定されている。日本法人が外国税務当局による移転価格調整を受けた場合で、MAP合意により日本側の対応的調整が認められた場合、日本の税務当局が当該法人の所得を減額する更正を行う。逆に、日本の税務当局が移転価格調整を行い、外国の税務当局がMAP合意に基づいて対応的調整を行う場合もある。</p>
+
+  <h3>9-3. 対応的調整における留意点</h3>
+  <p>対応的調整の実施にはいくつかの留意点がある。第一に、対応的調整は一次的調整が「独立企業原則に合致する」と他方の国が認めた範囲で行われるため、必ずしも一次的調整の全額について対応的調整が行われるとは限らない。MAP協議の結果、一次的調整の一部のみが正当と認められた場合は、その一部についてのみ対応的調整が行われる。第二に、対応的調整に伴う利子（延滞税等）の取扱いについて、各国の取扱いが異なることがある。第三に、対応的調整の時期について、MAP合意から実際の対応的調整の実施までに時間を要する場合があり、この間の二重課税状態が継続するという問題がある。</p>
+
+  <h3>9-4. 二次的調整</h3>
+  <p>対応的調整とは区別される概念として、二次的調整（Secondary Adjustment）がある。二次的調整とは、一次的調整（移転価格の更正）の結果、独立企業間価格との差額が実際に当事者間で精算されていない場合に、当該未精算額を配当、貸付金、その他の形態の所得として取り扱う調整をいう。例えば、親会社が子会社に独立企業間価格より安く製品を販売していた場合に、移転価格調整により親会社の所得が増額されても、実際の資金の流れ（製品代金の支払い）は変わらない。この場合、差額部分を親会社から子会社への寄附金（みなし配当や貸付金）として取り扱うのが二次的調整である。日本の移転価格税制では、二次的調整の規定は明文化されていないが、寄附金課税や源泉課税との関連で実務上論点となることがある。</p>
+
+  <div class="point-box">
+    <h4>📌 セクション9 ポイント整理</h4>
+    <ul>
+      <li>対応的調整はOECDモデル条約第9条第2項に基づき、一次的調整に対応して他方の国が課税を修正する制度。</li>
+      <li>通常はMAP合意の結果として実施され、一次的調整が正当と認められた範囲で行われる。</li>
+      <li>日本では措置法第66条の4の3に規定されている。</li>
+      <li>二次的調整（未精算額のみなし配当・貸付金等としての取扱い）は対応的調整とは別概念。</li>
+      <li>対応的調整の全額実施、利子の取扱い、実施時期のタイムラグが実務上の留意点。</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<!-- ===== SECTION 10 ===== -->
+<section class="section" id="s10">
+<div class="container reveal">
+  <div class="section-label">Section 10</div>
+  <h2>APA（ユニラテラル・バイラテラル・マルチラテラル）</h2>
+
+  <h3>10-1. APAの定義と目的</h3>
+  <p>事前確認（Advance Pricing Arrangement: APA）とは、納税者と税務当局との間で、将来の一定期間における関連者間取引について、適切な移転価格算定方法及びその適用にあたっての重要な前提条件を事前に合意する制度である。APAの目的は、移転価格に関する将来の不確実性を除去し、移転価格調査・調整の事前回避を図ることにある。APAは事後的な紛争解決手段（MAP）とは異なり、事前予防的な制度であり、納税者にとっては税務リスクの大幅な軽減、税務当局にとっては調査コストの削減というメリットがある。</p>
+
+  <h3>10-2. APAの三類型</h3>
+  <p>APAには、関与する税務当局の数に応じて三つの類型がある。ユニラテラルAPA（Unilateral APA）は、一カ国の税務当局と納税者の間のみで合意するAPAであり、他国の税務当局は関与しない。バイラテラルAPA（Bilateral APA: BAPA）は、二カ国の税務当局が租税条約の相互協議条項に基づく協議を行い、納税者を含めた三者間で合意するAPAである。マルチラテラルAPA（Multilateral APA: MAPA）は、三カ国以上の税務当局が関与するAPAであり、多国間の取引について統一的な移転価格ポリシーを事前に確認する場合に利用される。</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>類型</th><th>関与する当局</th><th>メリット</th><th>デメリット</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>ユニラテラルAPA</td><td>一カ国の税務当局のみ</td><td>手続が比較的簡易・迅速</td><td>他国での二重課税リスクが残存</td></tr>
+        <tr><td>バイラテラルAPA（BAPA）</td><td>二カ国の税務当局</td><td>二重課税の事前排除が可能</td><td>手続に時間を要する（2〜3年）</td></tr>
+        <tr><td>マルチラテラルAPA（MAPA）</td><td>三カ国以上の税務当局</td><td>多国間の一貫した移転価格ポリシーの確保</td><td>手続が最も複雑・長期化</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>10-3. ユニラテラルAPAの特徴と限界</h3>
+  <p>ユニラテラルAPAは、一カ国の税務当局と納税者の間でのみ合意するため、手続が比較的簡易で処理期間も短い。しかし、重大な限界がある。ユニラテラルAPAで合意された移転価格算定方法は、当該一カ国でのみ拘束力を持ち、他方の国の税務当局はこれに拘束されない。したがって、ユニラテラルAPAに従って移転価格を設定したにもかかわらず、他方の国の税務当局が異なる見解を持ち、移転価格調整を行う可能性が残る。この場合、ユニラテラルAPAは二重課税を防止する機能を果たさない。このため、OECDは、バイラテラルまたはマルチラテラルAPAの利用を推奨している。</p>
+
+  <h3>10-4. バイラテラルAPAの利点</h3>
+  <p>バイラテラルAPA（BAPA）は、二カ国の税務当局が相互協議を通じて合意するため、合意された移転価格算定方法は両国の税務当局を拘束する。これにより、APA対象期間中の移転価格に関する二重課税リスクが実質的に排除される。BAPAは日本の移転価格実務において最も広く利用されているAPAの類型であり、日本の国税庁は毎年多数のBAPA事案を処理している。日本のBAPAの主要な相手国はアジア諸国（中国、インド、韓国、東南アジア諸国等）および米国である。</p>
+
+  <h3>10-5. マルチラテラルAPAの実際</h3>
+  <p>マルチラテラルAPAは、グループの取引が三カ国以上にまたがる場合に利用される。例えば、日本の親会社が米国と中国の子会社との間でそれぞれ異なる取引を行っており、これらの取引の移転価格が相互に関連している場合、日本・米国・中国の三カ国間でマルチラテラルAPAを締結することで、グループ全体の利益配分について統一的な確認を得ることができる。ただし、マルチラテラルAPAは三カ国以上の税務当局の同時合意が必要であるため、手続の複雑さと所要時間の長さが課題である。実務上、マルチラテラルAPAは複数のバイラテラルAPAを並行して進行させ、結果を整合させる形で運用されることが多い。</p>
+
+  <div class="point-box">
+    <h4>📌 セクション10 ポイント整理</h4>
+    <ul>
+      <li>APAは将来の一定期間の移転価格算定方法を事前に合意する制度であり、税務リスクの事前排除を目的とする。</li>
+      <li>三類型：ユニラテラル（1国）、バイラテラル（2国）、マルチラテラル（3国以上）。</li>
+      <li>ユニラテラルAPAは他国での二重課税リスクが残るため、バイラテラル以上が推奨される。</li>
+      <li>日本ではBAPAが最も多く利用され、主要相手国はアジア諸国・米国。</li>
+      <li>マルチラテラルAPAは複数BAPAの並行・整合化により実質的に運用されることが多い。</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<!-- ===== SECTION 11 ===== -->
+<section class="section" id="s11">
+<div class="container reveal">
+  <div class="section-label">Section 11</div>
+  <h2>APA審査プロセス</h2>
+
+  <h3>11-1. APA申請の準備</h3>
+  <p>APA申請の準備は、通常、事前相談（Pre-filing Meeting）から始まる。日本では、APA申請に先立ち、国税庁相互協議室（BAPA・MAPAの場合）または国税局調査部（ユニラテラルAPAの場合）に対して事前相談を行うことが推奨されている。事前相談では、対象取引の概要、想定する移転価格算定方法、主要な論点等について非公式な意見交換が行われ、APA申請の実現可能性や手続の見通しについて情報を得ることができる。</p>
+
+  <p>事前相談を経て、正式なAPA申請書を提出する。APA申請書には、申請対象取引の概要、関連当事者の情報、機能・リスク分析、提案する移転価格算定方法とその根拠、比較対象取引の分析、対象期間、主要な前提条件（クリティカル・アサンプション）等を詳細に記載する。また、申請書を裏付ける資料（契約書、財務データ、経済分析の詳細等）も併せて提出する。APA申請の品質（分析の深度と説得力）は、審査の迅速性と合意の成否に大きな影響を与えるため、専門的な準備が不可欠である。</p>
+
+  <h3>11-2. 国内審査</h3>
+  <p>APA申請書が提出されると、税務当局は国内審査を行う。日本では、ユニラテラルAPAの場合は国税局調査部が、BAPA・MAPAの場合は国税庁相互協議室が審査を担当する。国内審査では、提出された申請書の内容の検証、追加資料の要求、納税者との面談（ヒアリング）等が行われる。審査官は、提案された移転価格算定方法の妥当性、機能・リスク分析の正確性、比較対象取引の適切性、前提条件の合理性等を検証する。</p>
+
+  <p>BAPAの場合、国内審査の結果を踏まえて、日本の国税庁が自国のポジション（日本側が妥当と考える移転価格算定方法と結果）を確定し、これをポジションペーパーとして相手国の権限ある当局に送付する。相手国の権限ある当局も同様のプロセスで自国のポジションを確定し、双方のポジションペーパーが交換された後、相互協議が開始される。</p>
+
+  <h3>11-3. 相互協議（BAPAの場合）</h3>
+  <p>BAPAの相互協議は、MAPの相互協議と同様のプロセスで行われる。両国の権限ある当局がポジションペーパーを交換し、書面の往復や対面会議を通じて協議を行い、合意に達することを目指す。BAPAの協議においては、移転価格算定方法の選定（どの方法を適用するか）、検証対象法人の選定、比較対象の選定基準、利益水準指標の選定、独立企業間レンジの設定、ロールバック（過去年度への遡及適用）の可否、クリティカル・アサンプション（合意の前提条件）の設定等が協議の主要な論点となる。</p>
+
+  <h3>11-4. APA合意と確認書の締結</h3>
+  <p>相互協議の結果、両国の権限ある当局が合意に達した場合、合意内容を記載した確認書（Confirmation Letter / APA Agreement）が作成される。確認書には、合意された移転価格算定方法、その適用にあたっての前提条件（クリティカル・アサンプション）、対象取引、対象期間、年次報告の要件等が記載される。納税者は確認書の内容を確認し、受諾の意思表示を行う。受諾後、APAは正式に成立し、対象期間中は合意された方法に従って移転価格を設定すれば、税務調査で否認されるリスクは大幅に軽減される。</p>
+
+  <h3>11-5. 年次報告とコンプライアンスレビュー</h3>
+  <p>APA成立後、納税者は毎年、APA対象取引について年次報告書（Annual Report / Compliance Report）を提出する義務を負う。年次報告書には、APA対象取引の実績データ、合意された移転価格算定方法に基づく計算結果、クリティカル・アサンプションが維持されているかの確認等が記載される。税務当局は年次報告書の内容を検証し、APAの合意条件が遵守されているかどうかを確認する（コンプライアンスレビュー）。クリティカル・アサンプションが大きく変化した場合には、APAの改定（Amendment）や取消し（Cancellation）が行われることがある。</p>
+
+
+</body>
+</html>

@@ -1,0 +1,831 @@
+<!DOCTYPE html><html lang="ja" data-theme="dark">
+- Google Fonts: Outfit + Noto Sans JP
+- CSS変数でダーク/ライト切替対応:
+  ダーク: 背景#0A0A0A, テキスト#FAFAFA, カード#16161A, ボーダーrgba(255,255,255,0.06)
+  ライト: 背景#FAFAF7, テキスト#1A1A1A, カード#FFFFFF, ボーダーrgba(0,0,0,0.06)
+  アクセント: #5E6AD2→#7B85E0
+- fixedヘッダー: ロゴ「税法ラボ」(紫正方形+テキスト) + ナビ(コース/条文DB/判例/ブログ) + テーマ切替(月/太陽SVG)、backdrop-filter:blur(20px)半透明
+- フッター: © 2026 税法ラボ + リンク
+- max-width:1120px, padding:0 24px, margin:0 auto
+- カード: border-radius:20px, box-shadow, ホバーtranslateY(-4px)
+- セクションラベル: 英語大文字0.75rem letter-spacing:0.12em アクセント色
+- IntersectionObserverスクロールアニメーション(.reveal→.visible)
+- ノイズテクスチャオーバーレイ, localStorage保存テーマ, レスポンシブ
+- 目次(ページ内リンク)冒頭配置, 各セクション末に「ポイント整理」ボックス
+- 表・コードブロック・SVG図解を適宜使用
+
+**コードブロックでHTMLコードを出力してください。** 1回の回答で完結。必ず最後まで出力。
+
+【コンテンツ】第7回：移転価格税制の応用─無形資産・役務提供・金融取引。(1)OECD TPG第6章(2)無形資産の分類(3)DEMPE分析(4)HTVI(5)費用分担契約(6)グループ内役務提供(TPG第7章)(7)低付加価値役務(8)金融取引(TPG第10章)(9)グループ内貸付金利(10)保証取引(11)キャプティブ保険(12)移転価格と関税(13)更正手続と不服申立て。3万字程度<!DOCTYPE html>
+<html lang="ja" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第7回：移転価格税制の応用─無形資産・役務提供・金融取引 | 税法ラボ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--font-en:'Outfit',sans-serif;--font-jp:'Noto Sans JP',sans-serif;--accent:#5E6AD2;--accent-hover:#7B85E0;--radius:20px;--transition:0.35s cubic-bezier(.4,0,.2,1);--header-h:64px;--max-w:1120px}
+[data-theme="dark"]{--bg:#0A0A0A;--text:#FAFAFA;--card:#16161A;--border:rgba(255,255,255,0.06);--text-muted:rgba(250,250,250,0.5);--code-bg:#1E1E24;--point-bg:rgba(94,106,210,0.08);--point-border:rgba(94,106,210,0.25);--table-stripe:rgba(255,255,255,0.02);--shadow:0 4px 24px rgba(0,0,0,0.4);--shadow-hover:0 12px 40px rgba(0,0,0,0.55);--noise-opacity:0.028}
+[data-theme="light"]{--bg:#FAFAF7;--text:#1A1A1A;--card:#FFFFFF;--border:rgba(0,0,0,0.06);--text-muted:rgba(26,26,26,0.45);--code-bg:#F0F0EC;--point-bg:rgba(94,106,210,0.06);--point-border:rgba(94,106,210,0.2);--table-stripe:rgba(0,0,0,0.02);--shadow:0 4px 24px rgba(0,0,0,0.06);--shadow-hover:0 12px 40px rgba(0,0,0,0.1);--noise-opacity:0.018}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--header-h) + 24px)}
+body{font-family:var(--font-jp);background:var(--bg);color:var(--text);line-height:1.9;font-size:15.5px;transition:background var(--transition),color var(--transition);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:var(--noise-opacity);background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-repeat:repeat;background-size:256px}
+a{color:var(--accent);text-decoration:none;transition:color var(--transition)}
+a:hover{color:var(--accent-hover)}
+img,svg{display:block;max-width:100%}
+
+/* === HEADER === */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:1000;height:var(--header-h);background:rgba(10,10,10,0.7);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:background var(--transition)}
+[data-theme="light"] .site-header{background:rgba(250,250,247,0.75)}
+.header-inner{max-width:var(--max-w);margin:0 auto;padding:0 24px;height:100%;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--font-en);font-weight:700;font-size:1.1rem;color:var(--text);text-decoration:none}
+.logo-icon{width:30px;height:30px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center}
+.logo-icon svg{width:16px;height:16px}
+nav{display:flex;align-items:center;gap:28px}
+nav a{font-size:0.85rem;font-weight:500;color:var(--text-muted);transition:color var(--transition)}
+nav a:hover{color:var(--text)}
+.theme-toggle{background:none;border:1px solid var(--border);border-radius:10px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-muted);transition:all var(--transition)}
+.theme-toggle:hover{color:var(--text);border-color:var(--accent)}
+.theme-toggle svg{width:18px;height:18px}
+.theme-toggle .icon-sun{display:none}
+[data-theme="light"] .theme-toggle .icon-moon{display:none}
+[data-theme="light"] .theme-toggle .icon-sun{display:block}
+
+/* === MAIN === */
+.main-wrap{max-width:var(--max-w);margin:0 auto;padding:0 24px;padding-top:calc(var(--header-h) + 48px);padding-bottom:80px}
+
+/* Hero */
+.hero{margin-bottom:56px}
+.hero .label{font-family:var(--font-en);font-size:0.75rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.hero h1{font-family:var(--font-en);font-weight:800;font-size:clamp(2rem,5vw,3rem);line-height:1.2;margin-bottom:8px}
+.hero h1 .jp{font-family:var(--font-jp);font-weight:700;display:block;font-size:clamp(1.1rem,2.5vw,1.5rem);margin-top:8px;color:var(--text-muted)}
+.hero-meta{font-size:0.82rem;color:var(--text-muted);margin-top:16px;display:flex;gap:20px;flex-wrap:wrap}
+
+/* TOC */
+.toc-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:32px 36px;margin-bottom:56px;box-shadow:var(--shadow);transition:all var(--transition)}
+.toc-card h2{font-size:1rem;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.toc-card h2::before{content:'';width:4px;height:18px;background:var(--accent);border-radius:2px}
+.toc-list{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:6px 32px}
+.toc-list li{font-size:0.88rem;line-height:2}
+.toc-list a{color:var(--text-muted);display:flex;gap:8px;transition:color var(--transition)}
+.toc-list a:hover{color:var(--accent)}
+.toc-list .num{color:var(--accent);font-family:var(--font-en);font-weight:600;min-width:28px}
+
+/* Section */
+.section{margin-bottom:64px}
+.section .label{font-family:var(--font-en);font-size:0.75rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.section h2{font-size:1.45rem;font-weight:700;margin-bottom:20px;line-height:1.5}
+.section h3{font-size:1.12rem;font-weight:700;margin:32px 0 14px;padding-left:14px;border-left:3px solid var(--accent);line-height:1.5}
+.section h4{font-size:1rem;font-weight:600;margin:24px 0 10px;color:var(--accent)}
+.section p{margin-bottom:16px}
+
+/* Card */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;margin:24px 0;box-shadow:var(--shadow);transition:all var(--transition)}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shadow-hover)}
+
+/* Point Box */
+.point-box{background:var(--point-bg);border:1px solid var(--point-border);border-radius:16px;padding:24px 28px;margin:32px 0}
+.point-box h4{color:var(--accent);font-size:0.92rem;font-weight:700;margin:0 0 12px;display:flex;align-items:center;gap:6px}
+.point-box ul{list-style:none;padding:0}
+.point-box li{position:relative;padding-left:18px;margin-bottom:8px;font-size:0.92rem;line-height:1.8}
+.point-box li::before{content:'✓';position:absolute;left:0;color:var(--accent);font-weight:700;font-size:0.8rem}
+
+/* Tables */
+.table-wrap{overflow-x:auto;margin:24px 0;border-radius:14px;border:1px solid var(--border);background:var(--card)}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+thead{background:var(--accent);color:#fff}
+th{padding:12px 16px;text-align:left;font-weight:600;font-size:0.82rem;letter-spacing:0.03em;white-space:nowrap}
+td{padding:12px 16px;border-top:1px solid var(--border)}
+tbody tr:nth-child(even){background:var(--table-stripe)}
+
+/* Code */
+.code-block{background:var(--code-bg);border:1px solid var(--border);border-radius:14px;padding:20px 24px;margin:24px 0;overflow-x:auto;font-family:'Outfit',monospace;font-size:0.84rem;line-height:1.8;color:var(--text-muted)}
+.code-block .kw{color:var(--accent)}
+.code-block .cm{color:var(--text-muted);opacity:0.5}
+
+/* SVG Diagram */
+.diagram-wrap{margin:28px 0;text-align:center}
+.diagram-wrap svg{max-width:100%;height:auto;display:inline-block}
+.diagram-caption{font-size:0.8rem;color:var(--text-muted);margin-top:10px}
+
+/* Reveal animation */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity 0.7s ease,transform 0.7s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* Footer */
+.site-footer{border-top:1px solid var(--border);padding:40px 24px;text-align:center;font-size:0.82rem;color:var(--text-muted)}
+.footer-inner{max-width:var(--max-w);margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:12px}
+.footer-links{display:flex;gap:20px}
+.footer-links a{color:var(--text-muted);font-size:0.8rem}
+
+/* Responsive */
+@media(max-width:768px){
+  nav a.nav-desk{display:none}
+  .toc-list{grid-template-columns:1fr}
+  .card{padding:20px}
+  .hero h1{font-size:1.6rem}
+  .section h2{font-size:1.2rem}
+  .table-wrap{margin-left:-12px;margin-right:-12px;border-radius:0;border-left:none;border-right:none}
+}
+@media(max-width:480px){
+  .header-inner{padding:0 16px}
+  .main-wrap{padding:0 16px;padding-top:calc(var(--header-h) + 32px)}
+}
+</style>
+</head>
+<body>
+<!-- ===== HEADER ===== -->
+<header class="site-header">
+<div class="header-inner">
+<a href="#" class="logo">
+<span class="logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M4 19V5l8 4 8-4v14l-8-4-8 4z"/></svg></span>
+税法ラボ
+</a>
+<nav>
+<a href="#" class="nav-desk">コース</a>
+<a href="#" class="nav-desk">条文DB</a>
+<a href="#" class="nav-desk">判例</a>
+<a href="#" class="nav-desk">ブログ</a>
+<button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+<svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/></svg>
+<svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+</button>
+</nav>
+</div>
+</header>
+
+<!-- ===== MAIN ===== -->
+<main class="main-wrap">
+
+<!-- Hero -->
+<div class="hero reveal">
+<div class="label">Course 07 — Transfer Pricing Advanced</div>
+<h1>Transfer Pricing: Intangibles, Services &amp; Financial Transactions
+<span class="jp">第7回：移転価格税制の応用─無形資産・役務提供・金融取引</span>
+</h1>
+<div class="hero-meta">
+<span>税法ラボ｜国際税務コース</span>
+<span>最終更新：2026-03-04</span>
+<span>読了目安：約55分</span>
+</div>
+</div>
+
+<!-- TOC -->
+<div class="toc-card reveal">
+<h2>目次</h2>
+<ol class="toc-list">
+<li><a href="#s1"><span class="num">01</span>OECD移転価格ガイドライン第6章の概要</a></li>
+<li><a href="#s2"><span class="num">02</span>無形資産の分類と定義</a></li>
+<li><a href="#s3"><span class="num">03</span>DEMPE分析</a></li>
+<li><a href="#s4"><span class="num">04</span>HTVI（評価困難な無形資産）</a></li>
+<li><a href="#s5"><span class="num">05</span>費用分担契約（CCA）</a></li>
+<li><a href="#s6"><span class="num">06</span>グループ内役務提供（TPG第7章）</a></li>
+<li><a href="#s7"><span class="num">07</span>低付加価値役務（LVIS）</a></li>
+<li><a href="#s8"><span class="num">08</span>金融取引（TPG第10章）</a></li>
+<li><a href="#s9"><span class="num">09</span>グループ内貸付と金利設定</a></li>
+<li><a href="#s10"><span class="num">10</span>保証取引</a></li>
+<li><a href="#s11"><span class="num">11</span>キャプティブ保険</a></li>
+<li><a href="#s12"><span class="num">12</span>移転価格と関税の交錯</a></li>
+<li><a href="#s13"><span class="num">13</span>更正手続と不服申立て</a></li>
+</ol>
+</div>
+
+<!-- ============================================== -->
+<!-- SECTION 1 -->
+<!-- ============================================== -->
+<section class="section reveal" id="s1">
+<div class="label">Section 01</div>
+<h2>OECD移転価格ガイドライン第6章の概要</h2>
+
+<p>OECD移転価格ガイドライン（以下「TPG」）第6章は、無形資産に関する移転価格の問題を包括的に取り扱う章であり、2015年のBEPSプロジェクト（行動計画8〜10）を経て大幅に改訂されました。旧版の第6章は比較的簡潔な内容でしたが、改訂後は200パラグラフ以上に膨れ上がり、無形資産の定義、分類、所有と帰属に関する分析枠組み、そして具体的な評価方法論に至るまで、詳細かつ体系的な指針を提供しています。</p>
+
+<p>第6章が大幅改訂された背景には、多国籍企業グループが無形資産を低税率国に移転することで、価値創造の場とは乖離した形で所得を配分する問題が深刻化していたことがあります。たとえば、知的財産を法的にはタックスヘイブンの子会社に帰属させつつ、実質的な研究開発活動やマーケティング活動は他の高税率国で行うといったストラクチャーが広く見られました。こうした問題に対処するため、BEPSプロジェクトは「法的な所有権のみに基づく所得配分」から「価値創造に基づく所得配分」への転換を推進しました。</p>
+
+<h3>第6章の構成と射程</h3>
+
+<p>改訂第6章は、大きく以下のように構成されています。まず、セクションAで無形資産の定義と範囲を明確にしています。ここでは「無形資産」という用語の移転価格上の意味を明らかにし、会計上・法律上の定義とは必ずしも一致しないことを強調しています。次に、セクションBで無形資産の所有と帰属の問題を分析するための枠組みを提示します。ここが最も重要な部分であり、いわゆるDEMPE分析（Development, Enhancement, Maintenance, Protection, Exploitation）の概念が導入されています。セクションCでは、無形資産に関連する取引の類型（譲渡、ライセンス、費用分担契約など）を扱い、セクションDでは評価手法（特にDCF法などの所得アプローチ）に関する指針を提供しています。最後に、セクションEで評価困難な無形資産（HTVI）に関する特別のアプローチを規定しています。</p>
+
+<p>第6章の基本思想は、独立企業原則（arm's length principle）の適用にあたって、単に法的な所有権や契約上の取決めだけでなく、実際の機能・リスク・資産の分析、とりわけ無形資産の開発・維持・向上・保護・活用に関する各当事者の貢献を踏まえた実質的な分析が必要であるという点にあります。この思想は、2017年に改訂されたTPG第1章の分析枠組み（いわゆる「正確に描写された取引」の概念）とも密接に連動しています。</p>
+
+<h3>独立企業原則と無形資産の特殊性</h3>
+
+<p>無形資産に関する移転価格の問題が特に困難である理由は複数あります。第一に、無形資産は有形資産と異なり、一つとして同じものがない（ユニーク性が高い）ため、比較可能な独立企業間取引を見つけることが極めて困難です。特許技術やブランド価値は、それぞれの企業固有のものであり、市場で類似の取引が観察されることは稀です。第二に、無形資産の価値は不確実性が高く、将来のキャッシュフローに大きく依存するため、取引時点での適正価格の算定が困難です。第三に、無形資産は物理的な実体を持たないため、法的な所在地を容易に変更できるという特性があり、これが租税回避の道具として利用されやすい原因となっています。</p>
+
+<p>こうした特殊性を踏まえ、第6章は従来の比較対象取引アプローチだけでなく、所得アプローチ（割引キャッシュフロー法など）の活用を明示的に認め、さらにはHTVIアプローチという事後的な検証手段も導入しています。これにより、税務当局は無形資産取引の適正性をより実効的に検証することが可能となりました。</p>
+
+<h3>日本法との関係</h3>
+
+<p>日本の移転価格税制は、租税特別措置法第66条の4を中心に規定されています。日本法上、無形資産は「有形資産又は有価証券以外の資産で独立の経済的価値を有するもの」と広く定義されており（措置法施行令39条の12第8項）、OECD TPGの定義と概ね整合的です。また、日本の国税庁は2024年に移転価格事務運営要領を改定し、OECD TPGの改訂内容を反映しています。特に、DEMPE分析の考え方やHTVIアプローチは、日本の実務においても重要性を増しています。ただし、日本法独自の要件や手続も存在するため、OECD TPGの内容をそのまま適用できるわけではない点には留意が必要です。</p>
+
+<div class="point-box">
+<h4>📌 ポイント整理</h4>
+<ul>
+<li>TPG第6章はBEPS行動計画8〜10を受けて2015年に大幅改訂、無形資産に関する包括的な分析枠組みを提供</li>
+<li>法的所有権だけでなく、DEMPE機能に基づく実質分析が求められる</li>
+<li>無形資産のユニーク性・不確実性・移動容易性が移転価格上の困難を生む</li>
+<li>比較対象取引アプローチに加え、所得アプローチやHTVIアプローチを明示的に導入</li>
+<li>日本法（措置法66条の4）はOECD TPGと概ね整合するが、独自の要件・手続にも留意</li>
+</ul>
+</div>
+</section>
+
+<!-- ============================================== -->
+<!-- SECTION 2 -->
+<!-- ============================================== -->
+<section class="section reveal" id="s2">
+<div class="label">Section 02</div>
+<h2>無形資産の分類と定義</h2>
+
+<p>TPG第6章は、移転価格上の「無形資産」を、有形資産や金融資産ではない資産であって、商業活動において所有または管理することが可能であり、独立企業間の取引において対価が支払われるようなもの、と広く定義しています（パラ6.6）。この定義は、会計基準（IAS 38等）や法律上の知的財産の定義とは異なることに注意が必要です。会計上認識されない無形資産（自己創設のれんなど）も、移転価格上は無形資産として扱われる場合があります。</p>
+
+<h3>無形資産の主要な分類</h3>
+
+<p>TPG第6章は、無形資産を明確にカテゴリ分けすることに慎重な姿勢を示していますが、分析の便宜上、いくつかの類型を示しています。最も基本的な分類は、「営業用無形資産（trade intangibles）」と「マーケティング用無形資産（marketing intangibles）」の区分です。</p>
+
+<p>営業用無形資産とは、商品やサービスの生産に使用される無形資産であり、特許権、ノウハウ、設計図、企業秘密、ソフトウェアなどが含まれます。これらは通常、研究開発活動の成果として生み出されるものであり、企業の生産活動や技術力の根幹を成す資産です。特許権は法的に保護された権利であり、その範囲・残存期間・地理的範囲が明確であるため、比較的評価しやすい部類に入りますが、それでもユニーク性の問題は残ります。ノウハウは特許化されていない技術的知識であり、営業秘密として保護されることが多く、特許権よりもさらに評価が困難です。</p>
+
+<p>マーケティング用無形資産とは、商品やサービスの販売促進に関連する無形資産であり、商標権、トレードネーム、顧客リスト、顧客関係、販売チャネルなどが含まれます。ブランド価値はマーケティング用無形資産の代表例であり、消費者の認知度や信頼に基づく経済的価値を体現します。マーケティング用無形資産は、その性質上、広告宣伝活動やマーケティング活動の長年にわたる蓄積によって形成されるものであり、一時点で創出されるものではありません。</p>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>分類</th><th>具体例</th><th>生成活動</th><th>法的保護</th></tr>
+</thead>
+<tbody>
+<tr><td>営業用無形資産</td><td>特許権、ノウハウ、設計図、ソフトウェア</td><td>研究開発（R&amp;D）</td><td>特許法、営業秘密法</td></tr>
+<tr><td>マーケティング用無形資産</td><td>商標、ブランド、顧客リスト、販売網</td><td>広告宣伝、マーケティング</td><td>商標法、不正競争防止法</td></tr>
+<tr><td>契約上の無形資産</td><td>ライセンス契約、フランチャイズ契約、政府許認可</td><td>交渉、申請</td><td>契約法、行政法</td></tr>
+<tr><td>のれん・継続企業価値</td><td>事業全体としてのシナジー、組織能力</td><td>事業活動全体</td><td>間接的保護のみ</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>のれんと継続企業価値</h3>
+
+<p>TPG第6章は、のれん（goodwill）と継続企業価値（going concern value）についても言及しています。のれんとは、事業全体としての価値が個々の資産の価値の合計を超える部分を指し、顧客の期待、事業上の関係、従業員の技能、組織能力など、個別に識別・測定が困難な要素の集合体として理解されます。継続企業価値は、事業が継続的に営まれることによって生じる付加価値であり、組織としての一体性やシステムの統合性に起因する価値です。</p>
+
+<p>これらは個別の無形資産としては識別が困難ですが、事業譲渡やM&amp;A取引において顕在化するものであり、移転価格分析においても無視することはできません。たとえば、多国籍企業グループ内で事業再編が行われ、ある国の子会社から別の国の子会社に事業機能が移転される場合、移転される有形資産や個別の無形資産の価値だけでなく、のれんや継続企業価値も含めた「事業全体」の価値を考慮する必要があります。</p>
+
+<h3>無形資産に該当しないもの</h3>
+
+<p>TPG第6章は、無形資産の定義を広くとりつつも、一定の限定を設けています。グループシナジー（規模の経済、購買力、統合されたシステムなど）は、それ自体が無形資産ではないとされています。同様に、市場の特性（高い購買力を持つ市場、地理的優位性など）も、厳密には無形資産ではありません。ただし、これらの要素は比較可能性分析において考慮されるべきであり、移転価格に影響を与えうる重要な要素であることに変わりはありません。</p>
+
+<p>また、労働力の集合体（assembled workforce）についても議論があります。熟練した従業員の集団は、法的には無形資産として保護されないことが多いですが、事業の価値に重要な貢献をします。TPGは、労働力の集合体をそれ自体として移転可能な無形資産とは必ずしも位置づけていませんが、事業再編の文脈では、比較可能性分析において考慮すべき要素としています。</p>
+
+<h3>日本法における無形資産の範囲</h3>
+
+<p>日本の移転価格税制では、無形資産は「有形資産又は有価証券以外の資産で独立の経済的価値を有するもの」と定義されています。措置法通達では、工業所有権（特許権、実用新案権、意匠権、商標権）、著作権、ノウハウに加え、顧客リスト、販売網、政府から付与された許認可なども無形資産に含まれるとしています。2019年度税制改正では、DCF法（割引現在価値法）が独立企業間価格の算定方法として法令上明確化されました。これは、ユニーク性の高い無形資産の評価において比較対象取引が見つからない場合に、所得アプローチを適用する根拠を強化するものです。</p>
+
+<!-- Diagram: 無形資産の分類体系 -->
+<div class="diagram-wrap">
+<svg viewBox="0 0 800 340" fill="none" xmlns="http://www.w3.org/2000/svg" style="max-width:720px">
+<rect x="280" y="10" width="240" height="44" rx="10" fill="#5E6AD2" fill-opacity="0.15" stroke="#5E6AD2" stroke-width="1.5"/>
+<text x="400" y="38" text-anchor="middle" fill="#5E6AD2" font-size="14" font-weight="600" font-family="'Noto Sans JP',sans-serif">移転価格上の無形資産</text>
+<line x1="400" y1="54" x2="400" y2="90" stroke="#5E6AD2" stroke-width="1.5"/>
+<line x1="130" y1="90" x2="670" y2="90" stroke="#5E6AD2" stroke-width="1.5"/>
+<line x1="130" y1="90" x2="130" y2="110" stroke="#5E6AD2" stroke-width="1.5"/>
+<line x1="310" y1="90" x2="310" y2="110" stroke="#5E6AD2" stroke-width="1.5"/>
+<line x1="490" y1="90" x2="490" y2="110" stroke="#5E6AD2" stroke-width="1.5"/>
+<line x1="670" y1="90" x2="670" y2="110" stroke="#5E6AD2" stroke-width="1.5"/>
+<rect x="40" y="110" width="180" height="40" rx="8" fill="#5E6AD2" fill-opacity="0.1" stroke="#5E6AD2" stroke-width="1"/>
+<text x="130" y="135" text-anchor="middle" fill="currentColor" font-size="12" font-weight="600" font-family="'Noto Sans JP',sans-serif">営業用無形資産</text>
+<rect x="220" y="110" width="180" height="40" rx="8" fill="#5E6AD2" fill-opacity="0.1" stroke="#5E6AD2" stroke-width="1"/>
+<text x="310" y="135" text-anchor="middle" fill="currentColor" font-size="12" font-weight="600" font-family="'Noto Sans JP',sans-serif">マーケティング用</text>
+<rect x="400" y="110" width="180" height="40" rx="8" fill="#5E6AD2" fill-opacity="0.1" stroke="#5E6AD2" stroke-width="1"/>
+<text x="490" y="135" text-anchor="middle" fill="currentColor" font-size="12" font-weight="600" font-family="'Noto Sans JP',sans-serif">契約上の無形資産</text>
+<rect x="580" y="110" width="180" height="40" rx="8" fill="#5E6AD2" fill-opacity="0.1" stroke="#5E6AD2" stroke-width="1"/>
+<text x="670" y="135" text-anchor="middle" fill="currentColor" font-size="12" font-weight="600" font-family="'Noto Sans JP',sans-serif">のれん・GCV</text>
+<text x="130" y="180" text-anchor="middle" fill="currentColor" font-size="11" font-family="'Noto Sans JP',sans-serif" opacity="0.65">特許権</text>
+<text x="130" y="200" text-anchor="middle" fill="currentColor" font-size="11" font-family="'Noto Sans JP',sans-serif" opacity="0.65">ノウハウ</text>
+<text x="130" y="220" text-anchor="middle" fill="currentColor" font-size="11" font-family="'Noto Sans JP',sans-serif" opacity="0.65">設計図</text>
+<text x="130" y="240" text-anchor="middle" fill="currentColor" font-size="11" font-family="'Noto Sans JP',sans-serif" opacity="0.65">ソフトウェア</text>
+<text x="310" y="180" text-anchor="middle" fill="currentColor" font-size="11" font-family="'Noto Sans JP',sans-serif" opacity="0.65">商標・ブランド</text>
+<text x="310" y="200" text-anchor="middle" fill="currentColor" font-size="11" font-family="'Noto Sans JP',sans-serif" opacity="0.65">顧客リスト</text>
+<text x="310" y="220" text-anchor="middle" fill="currentColor" font-size="11" font-family="'Noto Sans JP',sans-serif" opacity="0.65">販売チャネル</text>
+<text x="490" y="180" text-anchor="middle" fill="currentColor" font-size="11" font-family="'Noto Sans JP',sans-serif" opacity="0.65">ライセンス</text>
+<text x="490" y="200" text-anchor="middle" fill="currentColor" font-size="11" font-family="'Noto Sans JP',sans-serif" opacity="0.65">フランチャイズ</text>
+<text x="490" y="220" text-anchor="middle" fill="currentColor" font-size="11" font-family="'Noto Sans JP',sans-serif" opacity="0.65">許認可</text>
+<text x="670" y="180" text-anchor="middle" fill="currentColor" font-size="11" font-family="'Noto Sans JP',sans-serif" opacity="0.65">自己創設のれん</text>
+<text x="670" y="200" text-anchor="middle" fill="currentColor" font-size="11" font-family="'Noto Sans JP',sans-serif" opacity="0.65">組織能力</text>
+<text x="670" y="220" text-anchor="middle" fill="currentColor" font-size="11" font-family="'Noto Sans JP',sans-serif" opacity="0.65">シナジー</text>
+<rect x="100" y="280" width="600" height="44" rx="8" fill="none" stroke="#5E6AD2" stroke-width="1" stroke-dasharray="6 4"/>
+<text x="400" y="306" text-anchor="middle" fill="#5E6AD2" font-size="11" font-family="'Noto Sans JP',sans-serif">※ 会計上認識されなくても、移転価格上は無形資産に該当しうる</text>
+</svg>
+<div class="diagram-caption">図：移転価格上の無形資産分類体系</div>
+</div>
+
+<div class="point-box">
+<h4>📌 ポイント整理</h4>
+<ul>
+<li>移転価格上の無形資産は会計上・法律上の定義より広い概念であり、独立の経済的価値を持つ無形の資産全般を含む</li>
+<li>営業用無形資産（特許・ノウハウ等）とマーケティング用無形資産（商標・顧客リスト等）が主要カテゴリ</li>
+<li>のれん・継続企業価値も事業譲渡や再編時には考慮が必要</li>
+<li>グループシナジーや市場特性は無形資産そのものではないが、比較可能性分析で考慮される</li>
+<li>日本法は2019年改正でDCF法を法令化し、ユニーク無形資産の評価基盤を強化</li>
+</ul>
+</div>
+</section>
+
+<!-- ============================================== -->
+<!-- SECTION 3 -->
+<!-- ============================================== -->
+<section class="section reveal" id="s3">
+<div class="label">Section 03</div>
+<h2>DEMPE分析</h2>
+
+<p>DEMPE分析は、TPG第6章の中核をなす分析枠組みであり、BEPSプロジェクトの最も重要な成果の一つです。DEMPEとは、Development（開発）、Enhancement（改良・向上）、Maintenance（維持）、Protection（保護）、Exploitation（活用）の頭文字を取ったもので、無形資産に関連するリターンは、これらの機能を実質的に遂行し、関連するリスクを管理・負担する当事者に帰属すべきであるとする考え方を示しています。</p>
+
+<h3>DEMPE機能の詳細</h3>
+
+<p>Development（開発）は、無形資産を最初に創出する活動です。これには、基礎研究から応用研究、製品開発に至るまでのR&amp;D活動全般が含まれます。研究者や技術者の配置、研究設備の運用、研究プロジェクトの管理・意思決定などが開発機能の要素です。重要なのは、資金提供（ファンディング）のみでは開発機能の遂行とは認められないという点です。実際の研究活動の遂行、研究の方向性に関する意思決定、リスク管理が伴わなければ、開発に関連するリターンを享受する根拠は乏しいと判断されます。</p>
+
+<p>Enhancement（改良・向上）は、既存の無形資産の価値を高める活動です。ソフトウェアのバージョンアップ、特許技術の改良、ブランド価値の向上などが含まれます。Enhancement機能は、Developmentとは独立に評価されるべきであり、たとえば、親会社が開発した技術を子会社が改良して地域市場に適応させた場合、その改良活動に対する対価が考慮されるべきです。マーケティング活動によるブランド価値の向上も、Enhancement機能として重要です。</p>
+
+<p>Maintenance（維持）は、無形資産の既存の価値を保つための活動です。品質管理、システムの保守・更新、継続的な特許監視などが含まれます。維持活動がなければ、無形資産の価値は経時的に減少するため、この機能は見過ごされがちですが重要です。</p>
+
+<p>Protection（保護）は、無形資産を第三者の侵害から守る活動です。特許出願・維持、商標登録、訴訟対応、営業秘密の管理体制の構築・運用などが含まれます。知的財産の法的保護は弁護士費用や特許庁への手数料といったコストを伴い、また戦略的な判断（どの市場で特許を取得するか等）も必要です。</p>
+
+<p>Exploitation（活用）は、無形資産を事業活動において実際に利用し、収益を生み出す活動です。製品の製造・販売、ライセンスの供与、ブランドを活用したマーケティングなどが含まれます。活用機能は収益に直結する機能であり、市場開拓、顧客対応、販売戦略の策定と実行など、商業的な成功に不可欠な要素を含みます。</p>
+
+<h3>法的所有権 vs DEMPE機能</h3>
+
+<p>DEMPE分析の核心は、無形資産の法的所有者が必ずしも無形資産に関連するリターンの全部を享受する権利を持つわけではない、という点にあります。従来の実務では、知的財産の法的所有者（特許権者・商標権者等）がロイヤルティ収入を受け取ることを当然視する傾向がありましたが、DEMPE分析はこの前提を根本から問い直します。</p>
+
+<p>たとえば、以下のような事例を考えてみましょう。日本の親会社Pが研究開発部門を有し、実質的にすべてのR&amp;D活動を遂行しています。一方、シンガポールの子会社Sが特許権の法的所有者として登録されており、グループ各社からロイヤルティを徴収しています。Sには研究者は在籍せず、R&amp;D活動への実質的な関与はなく、単に法的な特許権の名義人としてのみ機能しています。このような場合、DEMPE分析の下では、Sが法的所有者であるという事実のみをもって、特許に関連するリターンをSに帰属させることは認められません。実質的にDEMPE機能を遂行しているのはPであるため、Pが無形資産に関連するリターンの大部分を享受すべきであるとの結論に至ります。</p>
+
+<h3>分析の6ステップ</h3>
+
+<p>TPG第6章パラ6.34以下は、無形資産に関する取引を分析するための以下の6段階のプロセスを提示しています。第1ステップとして、関連する無形資産を特定します。どのような無形資産が存在し、それぞれどのような経済的価値を持つのかを明らかにします。第2ステップとして、関連する契約上の取決めに基づき、各当事者の法的な権利を確認します。第3ステップとして、各当事者のDEMPE機能の遂行状況、使用資産、引受リスクの実態を分析します。第4ステップとして、契約上の取決めと実際の行為が整合しているかを検証します。不整合がある場合は、実際の行為に基づいて取引を再描写（delineate）する必要があります。第5ステップとして、正確に描写された取引に基づき、独立企業間価格を算定します。第6ステップとして、各当事者のDEMPE機能への貢献度に応じて、リターンを配分します。</p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 800 200" fill="none" xmlns="http://www.w3.org/2000/svg" style="max-width:760px">
+<rect x="10" y="60" width="110" height="80" rx="12" fill="#5E6AD2" fill-opacity="0.12" stroke="#5E6AD2" stroke-width="1.5"/>
+<text x="65" y="96" text-anchor="middle" fill="#5E6AD2" font-size="14" font-weight="700" font-family="'Outfit',sans-serif">D</text>
+<text x="65" y="118" text-anchor="middle" fill="currentColor" font-size="10" font-family="'Noto Sans JP',sans-serif">開発</text>
+<rect x="145" y="60" width="110" height="80" rx="12" fill="#5E6AD2" fill-opacity="0.12" stroke="#5E6AD2" stroke-width="1.5"/>
+<text x="200" y="96" text-anchor="middle" fill="#5E6AD2" font-size="14" font-weight="700" font-family="'Outfit',sans-serif">E</text>
+<text x="200" y="118" text-anchor="middle" fill="currentColor" font-size="10" font-family="'Noto Sans JP',sans-serif">改良・向上</text>
+<rect x="280" y="60" width="110" height="80" rx="12" fill="#5E6AD2" fill-opacity="0.12" stroke="#5E6AD2" stroke-width="1.5"/>
+<text x="335" y="96" text-anchor="middle" fill="#5E6AD2" font-size="14" font-weight="700" font-family="'Outfit',sans-serif">M</text>
+<text x="335" y="118" text-anchor="middle" fill="currentColor" font-size="10" font-family="'Noto Sans JP',sans-serif">維持</text>
+<rect x="415" y="60" width="110" height="80" rx="12" fill="#5E6AD2" fill-opacity="0.12" stroke="#5E6AD2" stroke-width="1.5"/>
+<text x="470" y="96" text-anchor="middle" fill="#5E6AD2" font-size="14" font-weight="700" font-family="'Outfit',sans-serif">P</text>
+<text x="470" y="118" text-anchor="middle" fill="currentColor" font-size="10" font-family="'Noto Sans JP',sans-serif">保護</text>
+<rect x="550" y="60" width="110" height="80" rx="12" fill="#5E6AD2" fill-opacity="0.12" stroke="#5E6AD2" stroke-width="1.5"/>
+<text x="605" y="96" text-anchor="middle" fill="#5E6AD2" font-size="14" font-weight="700" font-family="'Outfit',sans-serif">E</text>
+<text x="605" y="118" text-anchor="middle" fill="currentColor" font-size="10" font-family="'Noto Sans JP',sans-serif">活用</text>
+<rect x="685" y="60" width="110" height="80" rx="12" fill="#5E6AD2" fill-opacity="0.25" stroke="#5E6AD2" stroke-width="2"/>
+<text x="740" y="96" text-anchor="middle" fill="#5E6AD2" font-size="11" font-weight="700" font-family="'Outfit',sans-serif">Return</text>
+<text x="740" y="118" text-anchor="middle" fill="currentColor" font-size="10" font-family="'Noto Sans JP',sans-serif">リターン配分</text>
+<path d="M120 100 L145 100" stroke="#5E6AD2" stroke-width="1.5" marker-end="url(#arr)"/>
+<path d="M255 100 L280 100" stroke="#5E6AD2" stroke-width="1.5" marker-end="url(#arr)"/>
+<path d="M390 100 L415 100" stroke="#5E6AD2" stroke-width="1.5" marker-end="url(#arr)"/>
+<path d="M525 100 L550 100" stroke="#5E6AD2" stroke-width="1.5" marker-end="url(#arr)"/>
+<path d="M660 100 L685 100" stroke="#5E6AD2" stroke-width="1.5" marker-end="url(#arr)"/>
+<defs><marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0 0 L8 3 L0 6z" fill="#5E6AD2"/></marker></defs>
+<text x="400" y="25" text-anchor="middle" fill="currentColor" font-size="13" font-weight="600" font-family="'Noto Sans JP',sans-serif">DEMPE フレームワーク</text>
+<text x="400" y="180" text-anchor="middle" fill="currentColor" font-size="10" font-family="'Noto Sans JP',sans-serif" opacity="0.5">各機能への実質的貢献度に応じてリターンが配分される</text>
+</svg>
+<div class="diagram-caption">図：DEMPEフレームワークの概念図</div>
+</div>
+
+<h3>資金提供者の地位</h3>
+
+<p>DEMPE分析において特に重要なのは、資金提供（ファンディング）のみを行う当事者の扱いです。TPG第6章パラ6.59〜6.64は、資金提供者がDEMPE機能を何ら遂行せず、リスクの管理にも実質的に関与していない場合、その者は無形資産の開発に関連する利益のうち、リスク調整後のリターン（risk-adjusted return on capital）のみを享受する権利を有するにとどまるとしています。つまり、資金提供のリスクに見合った金融リターンは認められるものの、無形資産そのものから生じる超過利益（entrepreneurial profit）を享受することは認められないということです。</p>
+
+<p>これは、タックスヘイブンにペーパーカンパニーを設立し、そこから他のグループ企業にR&amp;D資金を提供させ、開発された知的財産の法的所有権をペーパーカンパニーに帰属させるというスキームに対する直接的な対抗措置です。このようなスキームでは、ペーパーカンパニーはDEMPE機能を何ら遂行しておらず、リスクの管理にも関与していないため、金融リターンを超えるリターンを享受する根拠がありません。</p>
+
+<h3>実務上の課題</h3>
+
+<p>DEMPE分析の実務適用には多くの課題が伴います。まず、各DEMPE機能の「重要度」をどのように評価するかが問題となります。開発・改良機能と維持・保護機能では、価値創造への貢献度が異なるのが通常であり、画一的な配分基準は存在しません。次に、DEMPE機能がグループ内の複数の法人にまたがって遂行されている場合（共同開発など）、各法人の貢献度をどのように測定・配分するかが困難です。さらに、DEMPE機能の遂行状況を「立証」するために、どのような文書・証拠が必要かという問題もあります。日本の実務では、移転価格文書（ローカルファイル、マスターファイル）においてDEMPE分析の結果を記載することが求められ始めています。</p>
+
+<div class="point-box">
+<h4>📌 ポイント整理</h4>
+<ul>
+<li>DEMPEは開発・改良・維持・保護・活用の5機能を分析し、無形資産のリターンを実質的貢献度に応じて配分する枠組み</li>
+<li>法的所有権だけではリターンを享受する根拠にならない──DEMPE機能の実質的遂行が必要</li>
+<li>資金提供のみの当事者は、リスク調整後の金融リターンのみ享受可能</li>
+<li>分析の6ステップ：無形資産の特定→契約確認→DEMPE実態分析→整合性検証→価格算定→リターン配分</li>
+<li>実務上、各機能の重要度評価・貢献度測定・文書化が主要課題</li>
+</ul>
+</div>
+</section>
+
+<!-- ============================================== -->
+<!-- SECTION 4 -->
+<!-- ============================================== -->
+<section class="section reveal" id="s4">
+<div class="label">Section 04</div>
+<h2>HTVI（評価困難な無形資産）</h2>
+
+<p>Hard-to-Value Intangibles（HTVI、評価困難な無形資産）は、TPG第6章セクションDで導入された概念であり、BEPS行動計画8の重要な成果の一つです。HTVIとは、取引時点において信頼できる比較対象が存在せず、かつ将来のキャッシュフローや所得に関する予測が極めて不確実な無形資産を指します。</p>
+
+<h3>HTVIアプローチの背景と趣旨</h3>
+
+<p>従来、無形資産の移転価格は取引時点の情報に基づいて事前に（ex ante）決定されていました。しかし、無形資産の価値は高度に不確実であり、取引時点の評価と事後的に実現した所得との間に大きな乖離が生じることが珍しくありません。たとえば、開発途上の医薬品の特許を、成功確率や将来の市場規模に関する不確実な予測に基づいてグループ内で移転した場合、その後に医薬品が大ヒットして莫大な利益を生み出しても、低い移転価格で低税率国に移転済みであったため、高税率国は課税機会を逸するという問題がありました。</p>
+
+<p>HTVIアプローチは、こうした情報の非対称性と不確実性の問題に対処するため、税務当局が「事後的な結果（ex post outcomes）」を用いて「事前の価格設定（ex ante pricing）」の妥当性を検証することを認めるものです。具体的には、取引後に実現した実際の所得が、取引時点の予測から大幅に乖離している場合、税務当局はその乖離を「取引時点の価格設定が不適切であったことの推定的証拠」として利用することができます。</p>
+
+<h3>HTVIの要件と適用範囲</h3>
+
+<p>HTVIアプローチが適用される無形資産は、以下の特性を有するものです。すなわち、取引時点において、無形資産が部分的にしか開発されていない場合、商業的利用が開始されてから相当の年数が経過するまで大規模な収入が見込まれない場合、無形資産が斬新な方法で活用されることが予定されており、過去の実績に基づく予測が困難な場合、取引時点での適正な評価額の範囲が広い場合などが挙げられます。</p>
+
+<p>典型的なHTVIとしては、開発段階にある医薬品の特許、革新的な技術に関するノウハウ、新規市場向けのブランドライセンスなどが考えられます。一方、既に商業化されて安定した収益を生み出している成熟した特許や商標は、通常はHTVIには該当しません。</p>
+
+<h3>セーフハーバー（免除要件）</h3>
+
+<p>HTVIアプローチの適用には、いくつかの免除要件（セーフハーバー）が設けられています。これらのいずれかに該当する場合、税務当局は事後的な結果を推定的証拠として利用することができません。具体的には、以下のような場合です。第一に、納税者が取引時点で、合理的な予測に基づく包括的な財務予測を作成し、その予測の前提となる仮定が合理的であったことを証明できる場合。第二に、無形資産の移転に関する契約において、将来の不確実性を反映した価格調整メカニズム（条件付対価、マイルストーン支払い等）が組み込まれている場合。第三に、事後の結果と事前の予測との乖離が、取引時点で合理的に予見できなかった事象（予測不可能な事象）に起因する場合。第四に、事前の予測と事後の結果との乖離が20%以内である場合（一部の国で採用されている基準）。</p>
+
+<h3>日本におけるHTVI</h3>
+
+<p>日本は2019年度税制改正で、特定無形資産に関する価格調整措置（措置法66条の4第8項〜第11項）を導入しました。これは、OECD TPGのHTVIアプローチに対応するものです。特定無形資産とは、「独自の価値を有し、かつ予測収益額が不確実な無形資産」と定義されており、具体的には、研究開発段階の知的財産や新規のビジネスモデルに関連する無形資産などが該当します。</p>
+
+<p>日本法の価格調整措置では、特定無形資産の取引において、事後の所得が事前の予測の120%を超えるか、80%を下回る場合に、税務当局が事前の価格設定を更正できるとしています。ただし、納税者が取引時点で合理的な予測を行い、その根拠となる資料を保存している場合には、この措置の適用は免除されます。また、予測と結果の乖離が予測不可能な事象に起因する場合も免除されます。</p>
+
+<div class="code-block">
+<span class="cm">/* 日本法上のHTVI価格調整措置の概要 */</span>
+<br><br>
+<span class="kw">適用要件：</span><br>
+&nbsp;&nbsp;・特定無形資産の国外関連取引であること<br>
+&nbsp;&nbsp;・DCF法に基づく予測と実績の乖離が±20%超<br>
+<br>
+<span class="kw">免除要件（セーフハーバー）：</span><br>
+&nbsp;&nbsp;(1) 合理的な予測 + 根拠資料の保存<br>
+&nbsp;&nbsp;(2) 乖離が予見不可能な事象に起因<br>
+&nbsp;&nbsp;(3) 価格調整メカニズムの契約上の組込み<br>
+<br>
+<span class="kw">根拠条文：</span> 租税特別措置法 第66条の4 第8項〜第11項
+</div>
+
+<h3>HTVIアプローチの実務的含意</h3>
+
+<p>HTVIアプローチの導入は、多国籍企業グループの実務に大きな影響を与えています。まず、無形資産の移転に際して、より精緻な財務予測（DCFモデルなど）を作成し、その前提・仮定を文書化することが不可欠となりました。また、契約において価格調整メカニズム（contingent payments、earn-out clauses、milestone payments等）を組み込むことが、リスク管理の観点からも推奨されるようになりました。さらに、移転後一定期間にわたって、実際の結果と事前の予測を比較・検証するモニタリング体制の構築も重要となっています。</p>
+
+<p>一方、HTVIアプローチに対しては批判もあります。事後的な結果を用いて事前の価格設定を検証することは、「後知恵バイアス」の問題を孕んでおり、取引時点では合理的だった判断が、事後的に「不適切」とされるリスクがあります。また、HTVIアプローチの適用に際して各国の税務当局の運用が異なる場合、二重課税のリスクが高まるという懸念もあります。</p>
+
+<div class="point-box">
+<h4>📌 ポイント整理</h4>
+<ul>
+<li>HTVIは取引時点で価値評価が極めて困難な無形資産であり、事後的結果を用いた検証が認められる</li>
+<li>日本は2019年改正で「特定無形資産の価格調整措置」を導入（予測と実績の乖離が±20%超で発動）</li>
+<li>セーフハーバー：合理的予測の文書化、価格調整メカニズムの契約組込み、予見不可能事象の証明</li>
+<li>実務対応：精緻なDCFモデル作成、価格調整条項の契約組込み、継続的モニタリング体制構築</li>
+<li>後知恵バイアスや各国運用の差異に伴う二重課税リスクに留意</li>
+</ul>
+</div>
+</section>
+
+<!-- ============================================== -->
+<!-- SECTION 5 -->
+<!-- ============================================== -->
+<section class="section reveal" id="s5">
+<div class="label">Section 05</div>
+<h2>費用分担契約（CCA）</h2>
+
+<p>費用分担契約（Cost Contribution Arrangement: CCA）は、2以上の関連企業が、無形資産の開発や役務の取得にかかる費用とリスクを分担し、各参加者が開発成果に対する持分を取得する取決めです。TPG第8章がCCAに関する詳細な指針を提供しており、BEPSプロジェクトを経て大幅に改訂されました。</p>
+
+<h3>CCAの基本構造と類型</h3>
+
+<p>CCAは大きく二つの類型に分かれます。一つは開発CCA（development CCA）であり、新たな無形資産の共同開発を目的とするものです。もう一つは役務CCA（services CCA）であり、グループ共通の役務（たとえばITシステムの共同利用）の費用を分担するものです。実務上より複雑で重要なのは開発CCAであり、以下では主に開発CCAを中心に解説します。</p>
+
+<p>開発CCAの基本的な仕組みは以下のとおりです。参加者AとBがそれぞれ50%ずつの持分を持つCCAを締結し、新たな技術の共同開発を行います。開発費用は各参加者がそれぞれの持分比率に応じて負担します。開発成果（特許等）は各参加者がそれぞれの地域で利用する権利を取得し、互いにロイヤルティを支払う必要はありません。CCAの核心は、各参加者が「合理的に期待される便益（reasonably anticipated benefits）」に比例して費用を分担するという点にあります。</p>
+
+<h3>参加者適格性と貢献</h3>
+
+<p>CCAの参加者となるためには、いくつかの要件を満たす必要があります。最も重要な要件は、参加者がCCAの成果から合理的に期待される便益を享受する能力を持っていること、そしてCCAの活動に対して実質的に貢献（contribution）する能力を持っていることです。BEPSプロジェクト後の改訂により、単に資金を提供するだけの当事者は、CCAの「参加者」としての地位を得ることが困難になりました。これはDEMPE分析の考え方と整合しています。</p>
+
+<p>CCAにおける貢献とは、各参加者がCCA活動のために提供するあらゆる価値のことです。これには、既存の無形資産の使用許諾（pre-existing intangibles）、R&amp;D人員の提供、設備・施設の提供、資金の提供などが含まれます。各参加者の貢献の価値は、独立企業間価格で評価されなければなりません。</p>
+
+<h3>バイインとバイアウト</h3>
+
+<p>CCAに新たな参加者が加入する場合（バイイン）や、既存の参加者が脱退する場合（バイアウト）には、その時点でのCCA成果の価値に基づいた対価の授受が必要です。たとえば、CCAの開始から5年が経過し、既に相当の研究成果が蓄積されている段階で新たな参加者Cが加入する場合、Cは既存の研究成果に対する持分を取得するためにバイイン・ペイメントを支払わなければなりません。このバイイン・ペイメントは、既存の成果の時価に基づいて算定される必要があります。</p>
+
+<p>同様に、参加者が脱退する場合には、脱退時点でのCCA成果に対する持分の価値に基づくバイアウト・ペイメントを受け取る権利があります。バイインおよびバイアウトの価格算定は、無形資産の評価と同様の手法（DCF法等）を用いて行われることが多く、実務上は複雑な評価問題を伴います。</p>
+
+<h3>期待便益の測定と調整</h3>
+
+<p>CCAの費用分担比率は、各参加者の「合理的に期待される便益」の割合に基づいて決定されます。期待便益の測定には、売上高予測、利益予測、使用量予測などの指標が使用されます。どの指標を使用するかは、CCAの性質や業種によって異なりますが、選択された指標は、各参加者がCCA成果から得る便益を合理的に反映するものでなければなりません。</p>
+
+<p>実務上は、各参加者の分担比率を毎年見直し、実際の便益の実現状況に応じて調整（true-up / true-down）を行うことが一般的です。この調整の仕組みは、CCA契約の中で明確に定めておく必要があります。ただし、調整は合理的な範囲内で行われるべきであり、極端な変動が毎年生じるようなCCAは、その設計自体に問題がある可能性があります。</p>
+
+<h3>日本のCCAに関する規定</h3>
+
+<p>日本の移転価格税制には、CCAに特化した明文規定は存在しません。しかし、CCA取引も移転価格税制の適用対象となる国外関連取引に含まれるため、独立企業間価格の算定が求められます。日本の国税庁は、移転価格事務運営要領において、CCAの分析に関する一定の指針を提供しています。実務上は、OECD TPGの指針を参考にしつつ、日本法の枠組みの中でCCAの適正性を判断することになります。</p>
+
+<div class="point-box">
+<h4>📌 ポイント整理</h4>
+<ul>
+<li>CCAは複数の関連企業が費用・リスクを分担し、成果の持分を取得する取決め（開発CCA・役務CCAの2類型）</li>
+<li>各参加者は「合理的に期待される便益」に比例して費用を負担する</li>
+<li>BEPSプロジェクト後、資金提供のみの参加者はCCA参加者適格性が制限的に判断される</li>
+<li>バイイン・バイアウト時にはCCA成果の時価に基づく対価授受が必要</li>
+<li>分担比率は毎年見直し・調整が原則、日本には明文規定はないがTPGを参照して運用</li>
+</ul>
+</div>
+</section>
+
+<!-- ============================================== -->
+<!-- SECTION 6 -->
+<!-- ============================================== -->
+<section class="section reveal" id="s6">
+<div class="label">Section 06</div>
+<h2>グループ内役務提供（TPG第7章）</h2>
+
+<p>TPG第7章は、多国籍企業グループ内における役務提供取引の移転価格問題を取り扱います。多国籍企業グループでは、親会社やリージョナル本社が子会社に対して経営管理サービス、IT支援、法務・税務アドバイス、人事管理、財務管理などの多様な役務を提供することが一般的です。これらの役務提供取引が独立企業間価格に基づいているかどうかは、移転価格税制上の重要な論点です。</p>
+
+<h3>役務提供が行われたか否かの判定（ベネフィット・テスト）</h3>
+
+<p>グループ内役務提供の分析における最初の問題は、そもそも移転価格上の「役務提供」が行われたといえるかどうかです。TPG第7章パラ7.6以下は、独立企業であれば、自ら行うか第三者から購入するかしたであろう活動が、他のグループ企業によって行われた場合に、移転価格上の役務提供があったと判定されるとしています。これを「ベネフィット・テスト」と呼びます。</p>
+
+<p>ベネフィット・テストに合格しない活動、すなわち役務の受領者に経済的便益を提供しない活動については、対価を請求することは認められません。典型的な例として、親会社が自らの株主としての利益のために行う活動（株主活動: shareholder activities）があります。たとえば、親会社の取締役会の運営費用、連結財務諸表の作成費用、親会社の株式上場維持費用、親会社の株主総会の運営費用などは、子会社に対する役務提供ではなく、親会社自身の株主としての活動とされ、子会社に対して費用を請求することはできません。</p>
+
+<p>同様に、重複活動（duplicative activities）も問題となります。子会社が既に自ら行っている活動と同じ活動を親会社が行っている場合、親会社の活動は子会社に経済的便益を提供しないため、対価を請求することは原則として認められません。ただし、重複が合理的な理由に基づく場合（たとえば、リスク管理のためのセカンドオピニオン的な活動）は、例外的に認められることがあります。</p>
+
+<h3>役務提供の対価の算定方法</h3>
+
+<p>役務提供が行われたと認められた場合、次にその対価を独立企業間価格に基づいて算定する必要があります。算定方法としては、直接請求方式（direct-charge method）と間接請求方式（indirect-charge method）があります。</p>
+
+<p>直接請求方式は、特定の役務提供について、その内容と費用を明確に特定し、個別に対価を請求する方法です。特定のコンサルティングプロジェクトやIT開発プロジェクトなど、役務の内容とコストが明確に特定できる場合に適用されます。間接請求方式は、複数の子会社に提供される共通的な役務について、合理的な配賦基準に基づいて費用を配分する方法です。経営管理サービスやITインフラの提供など、個別の受益者を特定することが困難な場合に用いられます。配賦基準としては、売上高比、従業員数比、IT利用量比など、役務の性質に応じた合理的な基準が選択されます。</p>
+
+<p>対価の水準については、原価基準法（コストプラス法）が最も一般的に適用されます。役務提供のコストに適正なマークアップを加算して対価を算定します。マークアップ率は、独立企業間の比較可能な取引における利益率を参考に決定されます。ただし、比較対象取引が見つかる場合には、独立価格比準法（CUP法）が最も信頼性の高い方法として適用されることもあります。</p>
+
+<h3>パススルーコスト</h3>
+
+<p>グループ内役務提供に関連して、パススルーコスト（pass-through costs）の取扱いが実務上重要な問題となります。親会社がグループ各社のために外部の第三者からサービス（たとえば、グローバルな法律事務所のアドバイス）を調達し、そのコストを子会社に転嫁する場合、このコストにマークアップを加算すべきかどうかが問題となります。TPG第7章は、単なるコストの転嫁にすぎない場合（すなわち、親会社が何らの付加価値も提供していない場合）には、マークアップなしでコストを転嫁することが認められるとしています。ただし、親会社が外部サービスの選定・管理・調整などの付加価値を提供している場合には、その付加価値に対するマークアップが正当化されます。</p>
+
+<div class="point-box">
+<h4>📌 ポイント整理</h4>
+<ul>
+<li>ベネフィット・テスト：独立企業であれば対価を支払って取得したであろう便益が提供されたか否かが判定基準</li>
+<li>株主活動（連結決算作成、株主総会運営等）は子会社への役務提供に該当せず、費用請求不可</li>
+<li>直接請求方式と間接請求方式（配賦基準による費用配分）の二つの方法</li>
+<li>対価算定はコストプラス法が一般的、比較対象取引があればCUP法も適用可能</li>
+<li>パススルーコストは付加価値がなければマークアップなしで転嫁可能</li>
+</ul>
+</div>
+</section>
+
+<!-- ============================================== -->
+<!-- SECTION 7 -->
+<!-- ============================================== -->
+<section class="section reveal" id="s7">
+<div class="label">Section 07</div>
+<h2>低付加価値役務（LVIS）</h2>
+
+<p>低付加価値グループ内役務（Low Value-Adding Intra-group Services: LVIS）は、TPG第7章セクションDで導入された簡便法（simplified approach）です。BEPS行動計画10の成果として、低付加価値役務に関する紛争を減少させ、コンプライアンスコストを軽減することを目的としています。</p>
+
+<h3>LVISの定義と特徴</h3>
+
+<p>低付加価値役務とは、グループ内で提供される支援的性質の役務であって、グループのコアビジネスの一部を構成せず、独自で価値の高い無形資産の使用や創出を伴わず、重要なリスクの引受けや創出を伴わない役務を指します。具体的には、会計・経理処理、人事管理（採用・給与計算等）、ITサポート、法務・税務コンプライアンス支援、一般的な事務管理サービスなどが該当します。</p>
+
+<p>一方、以下の役務はLVISから除外されます。まず、グループのコアビジネスを構成する役務（たとえば、製薬会社グループにおけるR&amp;Dサービス）は除外されます。次に、研究開発サービス、製造サービス、販売・マーケティングサービスなどの高付加価値役務も除外されます。また、金融取引に関するサービス（トレジャリー機能を含む）も、LVISの範囲外とされています。さらに、保険サービスや上級経営管理サービスもLVISには含まれません。</p>
+
+<h3>簡便法の仕組み</h3>
+
+<p>LVISの簡便法は、以下の要素で構成されています。第一に、低付加価値役務に関するコストプール（cost pool）を特定します。役務提供者が負担するすべての直接費用と間接費用を集計し、株主活動や非対象役務に関するコストを除外します。第二に、合理的な配賦基準を用いて、コストプールの費用を各受益者に配分します。第三に、配分されたコストに対して5%のマークアップを加算します。</p>
+
+<p>この5%のマークアップは、TPG第7章パラ7.61において「通常のケースでは独立企業間の条件として受け入れられる」水準として示されています。ただし、これはセーフハーバーではなく、あくまで簡便法としての指針であり、すべての状況で自動的に適用されるわけではありません。</p>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>項目</th><th>LVIS（低付加価値役務）</th><th>通常の役務提供</th></tr>
+</thead>
+<tbody>
+<tr><td>マークアップ</td><td>原則5%</td><td>比較分析に基づく（通常5〜15%程度）</td></tr>
+<tr><td>ベネフィット・テスト</td><td>簡略化された証明</td><td>個別の立証が必要</td></tr>
+<tr><td>文書化要件</td><td>簡略化</td><td>詳細な文書化が必要</td></tr>
+<tr><td>対象例</td><td>会計、IT支援、人事管理</td><td>R&amp;D、製造、マーケティング</td></tr>
+<tr><td>配賦基準</td><td>合理的基準で可</td><td>より厳格な基準が求められる</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>各国のLVIS採用状況</h3>
+
+<p>LVISの簡便法は、OECD加盟国を中心に多くの国で導入されていますが、採用の程度や具体的な運用は国によって異なります。一部の国ではLVISの簡便法を正式に国内法に取り込んでいる一方、他の国では行政上の運用指針として参考にするにとどめています。また、インドのように、LVISの簡便法を受け入れつつも、独自の条件（たとえば、便益の受領を証明するための追加的な要件）を課している国もあります。</p>
+
+<p>日本においては、LVISの簡便法を法令上明確に導入してはいませんが、国税庁の実務においてはTPGの指針を参考にする姿勢が見られます。日本の税務調査では、グループ内役務提供の対価の妥当性が頻繁に問題とされており、特にコストの配賦基準の合理性やマークアップ率の適正性が争点となります。LVISの簡便法の考え方を活用することで、こうした紛争リスクを軽減できる可能性があります。</p>
+
+<h3>LVIS適用の実務上の留意点</h3>
+
+<p>LVIS簡便法を適用する際には、いくつかの実務上の留意点があります。まず、対象となる役務が真にLVISの定義に該当するかの慎重な判断が必要です。コアビジネスに密接に関連する役務をLVISとして処理した場合、税務当局から否認されるリスクがあります。次に、コストプールの構成要素の正確な特定と、株主活動や非対象役務の適切な除外が必要です。さらに、配賦基準の選定においては、各受益者の便益と合理的な関係を有する基準を選ぶ必要があり、恣意的な基準の選択は認められません。文書化の面では、LVISの要件を満たすことを示す十分な記録の作成・保存が重要です。</p>
+
+<div class="point-box">
+<h4>📌 ポイント整理</h4>
+<ul>
+<li>LVISは支援的性質の役務で、コアビジネスではなく、重要な無形資産やリスクを伴わないもの</li>
+<li>簡便法：コストプール特定→配賦基準で配分→5%マークアップ</li>
+<li>R&amp;D、製造、マーケティング、金融、保険、上級経営管理サービスは除外</li>
+<li>日本は法令上の明文規定はないが、実務でTPGの指針を参照</li>
+<li>LVIS該当性の慎重な判断、コストプールの正確な構成、合理的な配賦基準の選定が重要</li>
+</ul>
+</div>
+</section>
+
+<!-- ============================================== -->
+<!-- SECTION 8 -->
+<!-- ============================================== -->
+<section class="section reveal" id="s8">
+<div class="label">Section 08</div>
+<h2>金融取引（TPG第10章）</h2>
+
+<p>TPG第10章は、2020年2月に新たに追加された章であり、グループ内金融取引の移転価格問題に関する包括的な指針を提供します。BEPS行動計画4（利子控除制限）および行動計画8〜10（価値創造に沿った移転価格）の成果を踏まえ、グループ内貸付、保証取引、キャプティブ保険、キャッシュプーリングなどの金融取引に関する詳細な分析枠組みを示しています。</p>
+
+<h3>第10章追加の背景</h3>
+
+<p>従来、TPGにはグループ内金融取引に特化した章は存在せず、一般的な独立企業原則の枠組みの中で金融取引も分析されていました。しかし、金融取引は多国籍企業グループの租税最適化において極めて重要な役割を果たしており、過大な利子支払いを通じた所得移転、保証料の不適切な設定、キャプティブ保険を利用した利益移転などの問題が深刻化していました。特にグループ内貸付は、金利設定の適正性に加え、そもそも貸付として認識すべきか出資として再認定すべきかという根本的な問題をも含んでいました。</p>
+
+<h3>正確な取引の描写（delineation）</h3>
+
+<p>第10章は、TPG第1章の「正確に描写された取引」の概念を金融取引に適用する際の具体的な指針を提供しています。金融取引の分析においても、契約上の取決めだけでなく、実際の行為、各当事者の機能・リスク・資産、経済環境、事業戦略など、あらゆる関連要素を考慮して取引を正確に描写する必要があります。</p>
+
+<p>特に重要なのは、グループ内貸付について、「債務と認識すべきか、出資と認識すべきか」の判断です。第10章パラ10.5以下は、借り手が独立企業であれば借入れ可能な金額を超える資金の提供は、移転価格の観点からは貸付ではなく出資として扱われるべき場合があるとしています。この判断においては、借り手の信用力、債務返済能力、既存の債務水準、借入条件、グループ全体の資金構造などが考慮されます。</p>
+
+<h3>トレジャリー機能の分析</h3>
+
+<p>多くの多国籍企業グループは、グループ内の資金管理を統括するトレジャリーセンター（treasury center）を設置しています。トレジャリーセンターは、グループ内貸付、キャッシュプーリング、為替リスク管理、外部借入の管理などの機能を一元的に遂行します。第10章は、トレジャリーセンターが提供するサービスの対価設定に関しても、機能・リスク分析に基づく独立企業間価格の算定を求めています。</p>
+
+<p>トレジャリーセンターの分析においては、当該センターが実質的にリスクを引き受けているのか、それとも単にグループ全体のリスクを代行して管理しているだけなのかの区別が重要です。実質的なリスク負担がなく、単にルーティンの資金管理機能を提供しているにすぎない場合、トレジャリーセンターのリターンはルーティン役務提供に対する対価の水準にとどまるべきです。一方、トレジャリーセンターが信用リスクの分析、金利リスクの管理、為替ヘッジ戦略の策定など、実質的な金融機能を遂行し、関連するリスクを管理している場合には、より高いリターンが正当化されます。</p>
+
+<h3>キャッシュプーリング</h3>
+
+<p>キャッシュプーリング（cash pooling）は、グループ内の余剰資金と不足資金を集約・再配分する仕組みであり、多くの多国籍企業グループで採用されています。キャッシュプーリングには、物理的プーリング（physical pooling、実際の資金移動を伴う）とノーショナルプーリング（notional pooling、資金移動を伴わず、銀行口座上の残高を相殺する）の二つの形態があります。</p>
+
+<p>第10章パラ10.117以下は、キャッシュプーリングに関する移転価格分析の指針を提供しています。キャッシュプーリングによって生じるシナジー効果（たとえば、グループ全体としてより有利な金利条件を得られること）は、各参加者に公平に配分されるべきです。キャッシュプーリングの管理者が超過利益を享受し、参加者が不利な条件で資金を提供・利用するような取決めは、独立企業間条件とは認められません。</p>
+
+<div class="point-box">
+<h4>📌 ポイント整理</h4>
+<ul>
+<li>TPG第10章は2020年に新設された金融取引に関する包括的な指針</li>
+<li>グループ内貸付について「債務か出資か」の判断枠組みを提供（借り手の信用力・返済能力等を考慮）</li>
+<li>トレジャリーセンターは実質的な機能・リスク負担の程度に応じたリターンを得るべき</li>
+<li>キャッシュプーリングのシナジー効果は参加者間で公平に配分されるべき</li>
+<li>金融取引も「正確に描写された取引」に基づく分析が必要</li>
+</ul>
+</div>
+</section>
+
+<!-- ============================================== -->
+<!-- SECTION 9 -->
+<!-- ============================================== -->
+<section class="section reveal" id="s9">
+<div class="label">Section 09</div>
+<h2>グループ内貸付と金利設定</h2>
+
+<p>グループ内貸付の金利設定は、移転価格税制において最も頻繁に問題となるテーマの一つです。多国籍企業グループは、外部金融機関からの借入れに加え、グループ内の資金融通（intercompany loans）を広く活用しています。グループ内貸付の金利が独立企業間条件を満たしていない場合、所得の不適切な移転が生じ、税務上の問題となります。</p>
+
+<h3>金利設定の分析枠組み</h3>
+
+<p>グループ内貸付の金利設定の分析は、以下のステップで行われます。まず、取引の正確な描写として、貸付の条件（金額、通貨、期間、返済条件、担保の有無、劣後性の有無等）を明確にし、その取引が独立企業間でも成立しうるものであるかを検証します。次に、借り手の信用格付けを評価します。独立企業間取引では、貸し手は借り手の信用リスクを評価した上で金利を決定するため、この信用力評価が金利設定の基礎となります。</p>
+
+<p>借り手の信用格付けの評価においては、「グループ全体の信用力」と「単体の信用力（standalone credit rating）」のどちらを基準とするかが重要な論点です。第10章パラ10.75以下は、暗黙の支援（implicit support）の概念を導入しています。グループに属する企業は、単体で存在する場合よりも高い信用力を享受することが多く、これはグループとの関連性に起因する暗黙の支援（implicit support）によるものです。たとえば、大手多国籍企業グループの子会社は、単体では低い信用格付けであっても、親会社による暗黙の支援があることから、外部の金融機関からより有利な条件で借入れを行うことができる場合があります。</p>
+
+<p>第10章は、この暗黙の支援は受動的連携（passive association）の一種であり、これに対する対価の支払いは通常不要であるとしています。つまり、グループに属することによる信用力向上の効果は、グループシナジーの一部として各メンバーに自然に帰属するものであり、親会社が暗黙の支援に対して追加の対価を要求することは、独立企業間条件とは認められないということです。</p>
+
+<h3>比較対象取引の選定</h3>
+
+<p>グループ内貸付の金利の適正性を検証するためには、比較対象取引を特定する必要があります。比較対象取引としては、借り手が外部金融機関から同様の条件で借入れた場合の金利（外部比較対象）、同様の信用格付け・貸付条件を持つ第三者間貸付取引の金利（内部比較対象またはデータベース比較対象）などが利用されます。</p>
+
+<p>比較対象取引の選定においては、以下の要素の比較可能性を確保する必要があります。すなわち、借り手の信用格付け、貸付金額、貸付期間（テナー）、通貨、返済条件（一括返済か分割返済か）、担保の有無と種類、財務制限条項（コベナンツ）の有無と内容、劣後性の有無、金利の種類（固定金利か変動金利か）、市場環境（金利水準の時期的な変動）などです。</p>
+
+<p>実務上は、ローンデータベース（Bloomberg、Thomson Reuters LPC Dealscan等）を利用して比較対象取引を検索することが一般的です。また、クレジット・デフォルト・スワップ（CDS）スプレッドやボンドイールドを参考にすることもあります。</p>
+
+<h3>日本における実務と論点</h3>
+
+<p>日本の移転価格税制では、グループ内貸付金利についても独立企業間価格の算定が求められます。実務上、日本企業が海外子会社に対して行うグループ内貸付の金利設定が問題となることが多く、特に以下の論点が争点となりやすい分野です。</p>
+
+<p>第一に、通貨の問題があります。日本の親会社が円建てで貸し付ける場合と、借り手の現地通貨建てで貸し付ける場合では、適用される金利水準が大きく異なります。通貨リスクをどちらが負担するかによって、適正な金利水準も変わります。第二に、信用格付けの評価方法が問題となります。借り手の単体の信用格付けをどのように評価するか、グループの暗黙の支援をどの程度考慮するかは、実務上の主要な争点です。第三に、過小資本税制（措置法66条の5）や過大支払利子税制（措置法66条の5の2）との関係も重要です。これらの制度は、グループ内貸付の利子の損金算入を制限するものであり、移転価格税制とは別の角度から利子の妥当性を規制しています。</p>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>比較可能性要素</th><th>内容</th><th>実務上の留意点</th></tr>
+</thead>
+<tbody>
+<tr><td>信用格付け</td><td>借り手の債務返済能力の評価</td><td>単体 vs グループ支援考慮後の格付け</td></tr>
+<tr><td>貸付金額</td><td>ローンの元本総額</td><td>大口ローンはスプレッドが異なる傾向</td></tr>
+<tr><td>テナー（期間）</td><td>貸付の残存期間</td><td>長期ほど信用リスクプレミアム増大</td></tr>
+<tr><td>通貨</td><td>貸付の表示通貨</td><td>高金利通貨 vs 低金利通貨の差異</td></tr>
+<tr><td>担保</td><td>担保の有無・種類</td><td>有担保は金利低下要因</td></tr>
+<tr><td>コベナンツ</td><td>財務制限条項の有無</td><td>厳格なコベナンツは金利低下要因</td></tr>
+<tr><td>市場環境</td><td>取引時点の金利水準</td><td>時期の整合性を確保</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="point-box">
+<h4>📌 ポイント整理</h4>
+<ul>
+<li>金利設定は取引条件の正確な描写→信用格付け評価→比較対象取引の選定→金利レンジの算定のステップで行う</li>
+<li>暗黙の支援（implicit support）は受動的連携であり、原則として追加対価は不要</li>
+<li>比較対象取引は信用格付け・金額・期間・通貨・担保等の比較可能性を確保して選定</li>
+<li>日本では過小資本税制・過大支払利子税制との複合的な検討が必要</li>
+<li>ローンデータベース・CDSスプレッド等の市場データを活用した分析が実務標準</li>
+</ul>
+</div>
+</section>
+
+<!-- ============================================== -->
+<!-- SECTION 10 -->
+<!-- ============================================== -->
+<section class="section reveal" id="s10">
+<div class="label">Section 10</div>
+<h2>保証取引</h2>
+
+<p>グループ内保証取引（intra-group guarantees）は、TPG第10章セクションCで取り扱われています。親会社が子会社の外部借入に対して保証を提供する取引は、多国籍企業グループにおいて極めて一般的です。この保証によって子会社はより有利な条件（低い金利）で外部借入を行うことが可能になりますが、保証の提供に対して対価（保証料）を請求すべきか否か、請求する場合にはいかなる水準が適正かが移転価格上の問題となります。</p>
+
+<h3>保証の性質の分析</h3>
+
+<p>グループ内保証の分析においては、まず保証の性質を正確に理解する必要があります。保証には様々な形態がありますが、最も典型的なのは、親会社が子会社の外部借入に対して連帯保証を提供するケースです。この場合、子会社が債務不履行に陥ったときに、親会社が子会社に代わって債務を履行する義務を負います。</p>
+
+<p>保証取引の分析において最も重要な論点の一つは、前述の暗黙の支援（implicit support）と明示的保証（explicit guarantee）の区別です。暗黙の支援とは、グループに属することによって自然に享受される信用力の向上効果であり、これに対する対価は不要とされています。一方、明示的保証とは、親会社が法的拘束力のある保証契約を締結して子会社の債務を保証するものであり、これに対しては対価（保証料）の請求が正当化される場合があります。</p>
+
+<p>しかし、明示的保証に対する保証料の算定に際しては、暗黙の支援の効果を二重に計上しないよう注意が必要です。子会社の信用格付けを評価する際に既にグループの暗黙の支援を考慮している場合、明示的保証による追加的な信用力向上効果のみが保証料の基礎となるべきです。</p>
+
+<h3>保証料の算定方法</h3>
+
+<p>保証料の算定方法としては、主に以下の三つのアプローチが用いられます。第一に、CUP法に基づくアプローチです。独立企業間で提供される類似の保証取引の保証料率を比較対象として利用します。金融機関が第三者に対して提供する保証（スタンドバイ信用状など）の手数料率が参考になります。</p>
+
+<p>第二に、利回り（yield）アプローチです。保証がある場合と保証がない場合の借入金利の差額を、保証の経済的価値として把握し、その差額を保証者と被保証者の間で適切に配分するアプローチです。たとえば、子会社が保証なしの場合の借入金利が5%、保証ありの場合の借入金利が3%であれば、保証の経済的価値は2%であり、このうち一定割合が保証料として保証者に帰属すべきとされます。</p>
+
+<p>第三に、コストアプローチです。保証者が保証によって負担するリスクに基づき、期待損失（expected loss）と信用リスクプレミアムを勘案して保証料を算定します。これは、保証者が保証の提供によって引き受ける信用リスクの対価として、保険料的な考え方に基づいて保証料を算定するものです。</p>
+
+<h3>保証の便益の配分</h3>
+
+<p>第10章パラ10.103は、保証によって生じる便益（金利低下効果）は、保証者と被保証者の双方に配分されるべきであるとしています。つまり、保証による金利低下効果の全額を保証料として保証者に支払わせるのではなく、被保証者も金利低下の恩恵を享受すべきであるということです。これは、独立企業間の保証取引においても、被保証者が金利低下のメリットを一部享受するのが通常であることに基づいています。</p>
+
+<p>実務上は、利回りアプローチに基づき、保証なしの金利と保証ありの金利の差額を、保証者と被保証者の間で適切に配分する方法が広く使用されています。配分比率の決定には、保証者のリスク負担の程度、被保証者の交渉力、市場の状況などが考慮されます。</p>
+
+<div class="point-box">
+<h4>📌 ポイント整理</h4>
+<ul>
+<li>暗黙の支援（受動的連携、対価不要）と明示的保証（法的拘束力あり、対価検討要）の区別が出発点</li>
+<li>保証料算定にはCUP法、利回りアプローチ、コストアプローチの三つの方法</li>
+<li>暗黙の支援効果との二重計上を避けるため、明示的保証による「追加的」信用力向上のみを基礎とする</li>
+<li>保証による便益は保証者と被保証者の双方に配分されるべき</li>
+<li>利回りアプローチ（金利差額の配分）が実務上最も広く使用される</li>
+</ul>
+</div>
+</section>
+
+<!-- ============================================== -->
+<!-- SECTION 11 -->
+<!-- ============================================== -->
+<section class="section reveal" id="s11">
+<div class="label">Section 11</div>
+<h2>キャプティブ保険</h2>
+
+<p>キャプティブ保険（captive insurance）は、多国籍企業グループが自らの保険ニーズを満たすために設立する保険子会社を通じた保険取引です。TPG第10章セクションDがこの問題を詳細に取り扱っています。キャプティブ保険は、グループのリスク管理戦略の一部として正当に活用される場合がある一方、利益移転のツールとして悪用されるリスクもあるため、移転価格の観点から慎重な分析が必要です。</p>
+
+<h3>キャプティブ保険の基本構造</h3>
+
+<p>キャプティブ保険の典型的な構造は、以下のとおりです。多国籍企業グループの子会社（被保険者）が、グループ内に設立された保険子会社（キャプティブ）に対して保険料を支払い、保険の付保を受けます。キャプティブは、受け取った保険料を原資として保険準備金を積み立て、保険事故が発生した場合に保険金を支払います。キャプティブは、自らが引き受けたリスクの一部を外部の再保険会社に再保険（reinsurance）として移転する場合もあります。</p>
+
+<p>キャプティブ保険は、バミューダ、ケイマン諸島、バーモント州、シンガポールなどのキャプティブ設立に有利な規制環境を持つ法域に設立されることが多く、これらの法域は保険料に対する課税が軽減されている場合があります。このため、グループ各社が支払う保険料が過大である場合、高税率国から低税率国への所得移転が生じることになります。</p>
+
+<h3>移転価格上の論点</h3>
+
+<p>キャプティブ保険の移転価格分析には、いくつかの特有の論点があります。第一に、そもそもキャプティブ取引が「保険」として認識されるべきかという問題です。独立企業間で行われる保険取引は、リスクの分散（risk diversification）とリスクの移転（risk transfer）を本質的要素としています。キャプティブが引き受けるリスクが、グループ内のリスクのみである場合、十分なリスクの分散が行われているかが問題となります。また、キャプティブがリスクを引き受ける実質的な能力（十分な資本、保険引受の専門知識、保険事故に対する支払能力）を有しているかも重要な検討事項です。</p>
+
+<p>第二に、保険料の水準が独立企業間条件を満たしているかという問題です。キャプティブに支払われる保険料が、独立の保険会社に支払われる保険料と比較して過大である場合、移転価格税制上の問題が生じます。保険料の算定においては、保険引受リスクのアクチュアリー（保険数理）分析が重要な役割を果たします。</p>
+
+<p>第三に、キャプティブが行う再保険取引の適正性の問題です。キャプティブがリスクの大部分を外部の再保険会社に再保険として移転している場合、キャプティブ自体がリスクを引き受けているとはいえず、その経済的実質はフロンティング（fronting）にすぎない可能性があります。フロンティングとは、形式的には保険者として行動するが、実質的なリスク負担は再保険会社が行っている状態を指します。この場合、キャプティブは保険引受に対する対価ではなく、フロンティングサービスに対する手数料のみを受け取るべきとされます。</p>
+
+<h3>分析のアプローチ</h3>
+
+<p>TPG第10章は、キャプティブ保険の移転価格分析において、以下のステップを示しています。まず、取引の正確な描写として、キャプティブが保険引受に関して実質的にどのような機能を遂行し、どのようなリスクを負担しているかを分析します。次に、キャプティブが引き受けたリスクについて、十分な分散が行われているかを検討します。さらに、キャプティブの保険料水準を、独立の保険市場における比較可能な保険料と比較します。最後に、キャプティブの利益水準が、その機能・リスク負担に見合った水準であるかを検証します。</p>
+
+<p>保険料のベンチマーキングにおいては、独立の保険会社が提供する同様の保険の保険料率（市場クォート）を比較対象として利用することが一般的です。ただし、キャプティブ保険は通常の保険市場では引受けが困難なリスク（非標準的なリスク）をカバーすることもあるため、比較可能な市場クォートが得られない場合もあります。そのような場合には、アクチュアリー分析に基づく保険料の算定が代替的アプローチとして用いられます。</p>
+
+<div class="point-box">
+<h4>📌 ポイント整理</h4>
+<ul>
+<li>キャプティブ保険はグループ内リスク管理の正当な手段だが、保険料の過大設定による利益移転リスクがある</li>
+<li>キャプティブ取引が「保険」として認識されるには、リスク分散とリスク移転の実質が必要</li>
+<li>リスクの大部分を再保険に移転する場合はフロンティングに過ぎず、手数料のみが適正対価となる</li>
+<li>保険料のベンチマーキングには市場クォートまたはアクチュアリー分析を使用</li>
+<li>キャプティブの機能・リスク・資本の実態に基づく分析が移転価格上不可欠</li>
+</ul>
+</div>
+</section>
+
+<!-- ============================================== -->
+<!-- SECTION 12 -->
+<!-- ============================================== -->
+<section class="section reveal" id="s12">
+<div class="label">Section 12</div>
+<h2>移転価格と関税の交錯</h2>
+
+<p>移転価格税制と関税制度は、いずれもグループ内取引の価格の適正性に関わる制度ですが、その目的と方向性は根本的に異なります。移転価格税制は、グループ内取引の価格が過大または過小に設定されることによる法人税の課税ベースの侵食を防止するものであり、輸入国の観点からは移転価格が「高い」方が好ましい（課税ベースが大きくなる）場合があります。一方、関税制度は、輸入品の関税評価額に基づいて関税を課すものであり、輸入国の観点からは関税評価額が「高い」方が関税収入は増加しますが、輸入者としては関税評価額を「低く」したいインセンティブがあります。</p>
+
+<h3>矛盾する方向性</h3>
+
+<p>この二つの制度の間には、構造的な矛盾があります。多国籍企業グループが輸入国における移転価格を高く設定すると、その国における法人税の課税ベースは減少しますが、関税評価額は増加して関税負担が増える可能性があります。逆に、移転価格を低く設定すると、法人税の課税ベースは増加しますが、関税評価額は減少して関税負担が軽くなります。このため、多国籍企業グループは、法人税と関税の合計負担を最小化するために、移転価格の設定に際して両方の制度を考慮する必要があります。</p>
+
+
+</body>
+</html>

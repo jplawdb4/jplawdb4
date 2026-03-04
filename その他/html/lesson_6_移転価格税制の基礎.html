@@ -1,0 +1,1345 @@
+<!DOCTYPE html><html lang="ja" data-theme="dark">
+- Google Fonts: Outfit + Noto Sans JP
+- CSS変数でダーク/ライト切替対応:
+  ダーク: 背景#0A0A0A, テキスト#FAFAFA, カード#16161A, ボーダーrgba(255,255,255,0.06)
+  ライト: 背景#FAFAF7, テキスト#1A1A1A, カード#FFFFFF, ボーダーrgba(0,0,0,0.06)
+  アクセント: #5E6AD2→#7B85E0
+- fixedヘッダー: ロゴ「税法ラボ」(紫正方形+テキスト) + ナビ(コース/条文DB/判例/ブログ) + テーマ切替(月/太陽SVG)、backdrop-filter:blur(20px)半透明
+- フッター: © 2026 税法ラボ + リンク
+- max-width:1120px, padding:0 24px, margin:0 auto
+- カード: border-radius:20px, box-shadow, ホバーtranslateY(-4px)
+- セクションラベル: 英語大文字0.75rem letter-spacing:0.12em アクセント色
+- IntersectionObserverスクロールアニメーション(.reveal→.visible)
+- ノイズテクスチャオーバーレイ, localStorage保存テーマ, レスポンシブ
+- 目次(ページ内リンク)冒頭配置, 各セクション末に「ポイント整理」ボックス
+- 表・コードブロック・SVG図解を適宜使用
+
+**コードブロックでHTMLコードを出力してください。** 1回の回答で完結。必ず最後まで出力。
+
+【コンテンツ】第6回：移転価格税制の基礎─独立企業原則と算定方法。(1)移転価格の歴史(米国1968年〜)(2)独立企業原則(ALP)(3)日本の条文構造(措置法66条の4)(4)国外関連者の定義(5)基本三法の詳解(6)CUP法(7)再販売価格基準法(8)原価基準法(9)TNMM(10)利益分割法(11)最適方法ルール(12)比較可能性分析の5要素。3万字程度<!DOCTYPE html>
+<html lang="ja" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第6回：移転価格税制の基礎─独立企業原則と算定方法 | 税法ラボ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   CSS VARIABLES & THEME SYSTEM
+   ============================================ */
+:root {
+  --font-en: 'Outfit', sans-serif;
+  --font-jp: 'Noto Sans JP', sans-serif;
+  --accent: #5E6AD2;
+  --accent-hover: #7B85E0;
+  --accent-soft: rgba(94,106,210,0.10);
+  --accent-soft2: rgba(94,106,210,0.18);
+  --radius: 20px;
+  --radius-sm: 12px;
+  --radius-xs: 8px;
+  --shadow-card: 0 2px 20px rgba(0,0,0,0.12);
+  --shadow-card-hover: 0 8px 40px rgba(0,0,0,0.18);
+  --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+  --max-w: 1120px;
+  --header-h: 64px;
+}
+
+[data-theme="dark"] {
+  --bg: #0A0A0A;
+  --bg-secondary: #111114;
+  --text: #FAFAFA;
+  --text-secondary: #A0A0A8;
+  --text-tertiary: #6B6B76;
+  --card: #16161A;
+  --card-alt: #1C1C22;
+  --border: rgba(255,255,255,0.06);
+  --border-strong: rgba(255,255,255,0.12);
+  --code-bg: #1E1E26;
+  --point-bg: rgba(94,106,210,0.08);
+  --point-border: rgba(94,106,210,0.25);
+  --toc-bg: #111114;
+  --table-stripe: rgba(255,255,255,0.02);
+  --noise-opacity: 0.025;
+  --header-bg: rgba(10,10,10,0.78);
+  --svg-diagram-bg: #12121A;
+  --highlight: rgba(94,106,210,0.15);
+}
+
+[data-theme="light"] {
+  --bg: #FAFAF7;
+  --bg-secondary: #F0F0ED;
+  --text: #1A1A1A;
+  --text-secondary: #5A5A62;
+  --text-tertiary: #8A8A94;
+  --card: #FFFFFF;
+  --card-alt: #F5F5F2;
+  --border: rgba(0,0,0,0.06);
+  --border-strong: rgba(0,0,0,0.12);
+  --code-bg: #F0F0ED;
+  --point-bg: rgba(94,106,210,0.05);
+  --point-border: rgba(94,106,210,0.20);
+  --toc-bg: #FFFFFF;
+  --table-stripe: rgba(0,0,0,0.02);
+  --noise-opacity: 0.015;
+  --header-bg: rgba(250,250,247,0.78);
+  --svg-diagram-bg: #F0F0F5;
+  --highlight: rgba(94,106,210,0.10);
+}
+
+/* ============================================
+   RESET & BASE
+   ============================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--header-h) + 24px); }
+body {
+  font-family: var(--font-jp);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.9;
+  font-size: 16px;
+  transition: background var(--transition), color var(--transition);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Noise texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: var(--noise-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+}
+
+a { color: var(--accent); text-decoration: none; transition: color var(--transition); }
+a:hover { color: var(--accent-hover); }
+img { max-width: 100%; display: block; }
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ============================================
+   LAYOUT
+   ============================================ */
+.container {
+  max-width: var(--max-w);
+  padding: 0 24px;
+  margin: 0 auto;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: var(--header-h);
+  background: var(--header-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: background var(--transition), border-color var(--transition);
+}
+.header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-en);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text);
+  text-decoration: none;
+}
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.logo-icon svg { width: 18px; height: 18px; }
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav { display: flex; align-items: center; gap: 4px; }
+.nav a {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  padding: 6px 14px;
+  border-radius: 8px;
+  transition: color var(--transition), background var(--transition);
+}
+.nav a:hover, .nav a.active {
+  color: var(--text);
+  background: var(--accent-soft);
+}
+.theme-toggle {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+  margin-left: 8px;
+}
+.theme-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+.theme-toggle svg { width: 18px; height: 18px; }
+.theme-toggle .icon-sun,
+[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+[data-theme="light"] .theme-toggle .icon-moon { display: none; }
+[data-theme="light"] .theme-toggle .icon-sun { display: block; }
+
+/* Mobile menu */
+.menu-toggle {
+  display: none;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+.menu-toggle svg { width: 20px; height: 20px; }
+
+/* ============================================
+   HERO
+   ============================================ */
+.hero {
+  padding-top: calc(var(--header-h) + 80px);
+  padding-bottom: 60px;
+  text-align: center;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-soft2);
+  border-radius: 100px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
+  font-family: var(--font-en);
+  letter-spacing: 0.04em;
+  margin-bottom: 24px;
+}
+.hero h1 {
+  font-family: var(--font-jp);
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.3;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+.hero h1 span {
+  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-sub {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  max-width: 660px;
+  margin: 0 auto 32px;
+  line-height: 1.85;
+}
+.hero-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  color: var(--text-tertiary);
+  font-size: 0.85rem;
+}
+.hero-meta span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.hero-meta svg { width: 16px; height: 16px; opacity: 0.6; }
+
+/* ============================================
+   SECTION LABEL
+   ============================================ */
+.section-label {
+  font-family: var(--font-en);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+/* ============================================
+   CARDS
+   ============================================ */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px;
+  box-shadow: var(--shadow-card);
+  transition: transform var(--transition), box-shadow var(--transition), background var(--transition), border-color var(--transition);
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+}
+.card h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+.card h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-top: 32px;
+  margin-bottom: 14px;
+  line-height: 1.4;
+}
+.card h4 {
+  font-size: 1.08rem;
+  font-weight: 600;
+  margin-top: 24px;
+  margin-bottom: 10px;
+}
+.card p {
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.95;
+}
+.card p strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* ============================================
+   TABLE OF CONTENTS
+   ============================================ */
+.toc-card {
+  background: var(--toc-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 36px 40px;
+  margin-bottom: 48px;
+}
+.toc-card h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.toc-card h2 svg { width: 20px; height: 20px; color: var(--accent); }
+.toc-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 6px 32px;
+}
+.toc-list li { display: flex; }
+.toc-list a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: var(--radius-xs);
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  width: 100%;
+  transition: all var(--transition);
+}
+.toc-list a:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.toc-num {
+  font-family: var(--font-en);
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: var(--accent);
+  min-width: 28px;
+}
+
+/* ============================================
+   CONTENT SECTIONS
+   ============================================ */
+.content-section {
+  margin-bottom: 48px;
+}
+
+/* Point Summary Box */
+.point-box {
+  background: var(--point-bg);
+  border: 1px solid var(--point-border);
+  border-radius: var(--radius-sm);
+  padding: 24px 28px;
+  margin-top: 28px;
+}
+.point-box-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.point-box-title svg { width: 16px; height: 16px; }
+.point-box ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.point-box li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+  font-size: 0.93rem;
+  line-height: 1.75;
+}
+.point-box li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* Code blocks */
+.code-block {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 24px 28px;
+  margin: 20px 0;
+  overflow-x: auto;
+  font-family: 'Courier New', monospace;
+  font-size: 0.88rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+}
+.code-block .kw { color: var(--accent); font-weight: 600; }
+.code-block .cm { color: var(--text-tertiary); }
+.code-block .str { color: #7ec699; }
+.code-block .num { color: #f5a623; }
+
+/* Tables */
+.table-wrap {
+  overflow-x: auto;
+  margin: 20px 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+thead {
+  background: var(--accent-soft);
+}
+th {
+  padding: 14px 18px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+td {
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  line-height: 1.7;
+  vertical-align: top;
+}
+tr:nth-child(even) td {
+  background: var(--table-stripe);
+}
+tr:last-child td { border-bottom: none; }
+
+/* SVG Diagrams */
+.diagram-wrap {
+  background: var(--svg-diagram-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 32px;
+  margin: 24px 0;
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+}
+.diagram-wrap svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Highlight box */
+.highlight-box {
+  background: var(--highlight);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+  padding: 18px 22px;
+  margin: 20px 0;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.85;
+}
+
+/* ============================================
+   SCROLL ANIMATIONS
+   ============================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1), transform 0.7s cubic-bezier(0.4,0,0.2,1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 0;
+  margin-top: 80px;
+  text-align: center;
+}
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.footer-copy {
+  font-size: 0.82rem;
+  color: var(--text-tertiary);
+  font-family: var(--font-en);
+}
+.footer-links {
+  display: flex;
+  gap: 20px;
+}
+.footer-links a {
+  font-size: 0.82rem;
+  color: var(--text-tertiary);
+  transition: color var(--transition);
+}
+.footer-links a:hover { color: var(--accent); }
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+  .nav { display: none; }
+  .menu-toggle { display: flex; }
+  .card { padding: 28px 22px; }
+  .toc-card { padding: 24px 22px; }
+  .toc-list { grid-template-columns: 1fr; }
+  .hero { padding-top: calc(var(--header-h) + 48px); padding-bottom: 40px; }
+  .hero-meta { flex-wrap: wrap; justify-content: center; }
+  .footer-inner { flex-direction: column; align-items: center; }
+  .code-block { padding: 18px 16px; font-size: 0.8rem; }
+  table { font-size: 0.8rem; }
+  th, td { padding: 10px 12px; }
+  .diagram-wrap { padding: 20px 12px; }
+  .container { padding: 0 16px; }
+}
+@media (max-width: 480px) {
+  .hero h1 { font-size: 1.6rem; }
+  .card h2 { font-size: 1.3rem; }
+}
+
+/* Mobile nav overlay */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: var(--bg);
+  padding-top: calc(var(--header-h) + 24px);
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.mobile-nav.open { display: flex; }
+.mobile-nav a {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text);
+  padding: 14px 24px;
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================
+     HEADER
+     ============================================ -->
+<header class="header">
+  <div class="container">
+    <a href="#" class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v14"/><path d="M4 19h16"/><path d="M12 3v16"/></svg>
+      </div>
+      税法ラボ
+    </a>
+    <div class="header-right">
+      <nav class="nav">
+        <a href="#" class="active">コース</a>
+        <a href="#">条文DB</a>
+        <a href="#">判例</a>
+        <a href="#">ブログ</a>
+      </nav>
+      <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <button class="menu-toggle" id="menuToggle" aria-label="メニュー">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="#">コース</a>
+  <a href="#">条文DB</a>
+  <a href="#">判例</a>
+  <a href="#">ブログ</a>
+</div>
+
+<!-- ============================================
+     MAIN CONTENT
+     ============================================ -->
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-badge">COURSE 06 ─ TRANSFER PRICING</div>
+      <h1>移転価格税制の基礎<br><span>独立企業原則と算定方法</span></h1>
+      <p class="hero-sub">国際取引における移転価格税制の全体像を理解し、独立企業原則（Arm's Length Principle）から各算定方法の詳細構造までを体系的に学習します。</p>
+      <div class="hero-meta">
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          約45分
+        </span>
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          全12章
+        </span>
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          上級
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <!-- TABLE OF CONTENTS -->
+    <div class="toc-card reveal">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        目次
+      </h2>
+      <ul class="toc-list">
+        <li><a href="#sec1"><span class="toc-num">01</span>移転価格の歴史──米国1968年規則から現代まで</a></li>
+        <li><a href="#sec2"><span class="toc-num">02</span>独立企業原則（ALP）の意義と理論的基盤</a></li>
+        <li><a href="#sec3"><span class="toc-num">03</span>日本の条文構造──租税特別措置法66条の4</a></li>
+        <li><a href="#sec4"><span class="toc-num">04</span>国外関連者の定義と支配関係の判定</a></li>
+        <li><a href="#sec5"><span class="toc-num">05</span>基本三法の詳解──概観と選択基準</a></li>
+        <li><a href="#sec6"><span class="toc-num">06</span>独立価格比準法（CUP法）</a></li>
+        <li><a href="#sec7"><span class="toc-num">07</span>再販売価格基準法（RP法）</a></li>
+        <li><a href="#sec8"><span class="toc-num">08</span>原価基準法（CP法）</a></li>
+        <li><a href="#sec9"><span class="toc-num">09</span>取引単位営業利益法（TNMM）</a></li>
+        <li><a href="#sec10"><span class="toc-num">10</span>利益分割法（PS法）</a></li>
+        <li><a href="#sec11"><span class="toc-num">11</span>最適方法ルール（Best Method Rule）</a></li>
+        <li><a href="#sec12"><span class="toc-num">12</span>比較可能性分析の5要素</a></li>
+      </ul>
+    </div>
+
+    <!-- ============================================
+         SECTION 1: 移転価格の歴史
+         ============================================ -->
+    <section id="sec1" class="content-section reveal">
+      <div class="card">
+        <div class="section-label">SECTION 01</div>
+        <h2>移転価格の歴史──米国1968年規則から現代まで</h2>
+
+        <h3>1-1. 移転価格問題の原点</h3>
+        <p>移転価格（Transfer Pricing）とは、関連企業間の国際取引において設定される価格のことを指します。例えば、日本の親会社がアメリカの子会社に製品を販売する際の価格、あるいは日本の親会社がシンガポールの子会社からロイヤルティを受け取る際の料率など、グループ内部で設定されるあらゆる対価が移転価格に該当します。この価格設定は、各国の課税所得を直接左右するため、国際税務における最も重要な論点の一つとなっています。</p>
+
+        <p>移転価格の問題が初めて認識されたのは20世紀初頭のことですが、制度として本格的に整備されたのは1960年代のアメリカにおいてです。多国籍企業の活動が拡大するにつれ、関連企業間取引を通じて利益を低税率国に移転する手法が目立つようになり、各国の税務当局は課税ベースの侵食（Base Erosion）に対する危機感を強めていきました。</p>
+
+        <h3>1-2. 米国内国歳入法§482と1968年規則</h3>
+        <p>移転価格税制の歴史を語る上で、最も重要な起点は米国内国歳入法（Internal Revenue Code）第482条です。この条文自体は1928年に制定されたもので、関連当事者間取引に対する課税権限を内国歳入庁（IRS）に付与するものでした。しかし、第482条の具体的な運用方法を定めたのが、1968年に公布された財務省規則（Treasury Regulations）です。</p>
+
+        <p>1968年規則は、独立企業間価格の算定方法として以下の三つの手法を規定しました。第一に、独立価格比準法（Comparable Uncontrolled Price Method、略してCUP法）です。これは関連者間取引と比較可能な非関連者間取引の価格を直接比較する方法で、最も直接的かつ信頼性の高い方法とされました。第二に、再販売価格基準法（Resale Price Method、略してRP法）です。これは関連者から購入した棚卸資産を非関連者に再販売する際の価格から、適正な粗利益率（Gross Margin）を差し引いて独立企業間価格を逆算する方法です。第三に、原価基準法（Cost Plus Method、略してCP法）です。これは売り手の原価に適正な利益マークアップを加算して独立企業間価格を算出する方法です。</p>
+
+        <p>これら三つの手法は「基本三法」（Traditional Transaction Methods）と呼ばれ、その後の世界各国の移転価格税制の基礎となりました。1968年規則は、棚卸資産取引についてはCUP法を最優先とする「優先順位ルール」（Priority Rule）を採用していた点が重要です。つまり、CUP法が適用可能であれば必ずCUP法を使用しなければならず、CUP法が使えない場合にのみRP法やCP法を使うことができるとされていたのです。</p>
+
+        <h3>1-3. 1970〜80年代の議論と転機</h3>
+        <p>1968年規則の導入後、多国籍企業の活動はますます複雑化していきました。特に無形資産（特許権、商標権、ノウハウなど）の国際的な移転や共有が増大し、基本三法だけでは対応が困難なケースが目立つようになりました。無形資産取引については比較可能な非関連者間取引を見つけることが極めて困難であり、CUP法はもとよりRP法やCP法の適用も多くの場合に問題を抱えていました。</p>
+
+        <p>1986年の税制改革法（Tax Reform Act of 1986）では、第482条に「超過収益（Superreturn）」に関する規定が追加され、無形資産の移転に対する課税強化が図られました。この改正は「所得が関連する活動の経済的実質に相応する（commensurate with the income）」べきであるという原則を導入し、いわゆる「相応性基準（Commensurate with Income Standard）」として知られるようになりました。</p>
+
+        <h3>1-4. 1994年米国最終規則と利益法の台頭</h3>
+        <p>1986年改正を受け、米国財務省は長い議論の末、1994年に新たな最終規則を公布しました。この規則は移転価格税制の歴史において画期的な転換点となりました。最大の変更点は、従来の「優先順位ルール」を廃止し、「最適方法ルール（Best Method Rule）」を導入したことです。最適方法ルールとは、すべての算定方法は対等であり、個々の事案において最も信頼性の高い結果を与える方法を選択すべきであるという原則です。</p>
+
+        <p>さらに、1994年規則は基本三法に加えて、利益に基づく算定方法を正式に導入しました。具体的には、比較利益法（Comparable Profits Method、略してCPM）と利益分割法（Profit Split Method、略してPS法）です。CPMは、検証対象企業の営業利益率を比較対象企業のそれと比較する手法であり、後にOECDが採用するTNMM（取引単位営業利益法）の原型とも言える方法です。利益分割法は、関連者間取引から生じる統合利益を何らかの合理的な基準で各当事者に配分する手法です。</p>
+
+        <h3>1-5. OECD移転価格ガイドラインの発展</h3>
+        <p>国際的な規範の整備においては、経済協力開発機構（OECD）が中心的な役割を果たしました。OECDは1979年に「移転価格と多国籍企業」と題する最初のガイドラインを公表し、独立企業原則を国際的な基本原則として確認しました。1995年には全面改訂された「多国籍企業と税務当局のための移転価格ガイドライン」が公表され、これが現在の国際標準の基礎となっています。</p>
+
+        <p>OECDガイドラインは、独立企業原則を堅持しつつも、各国の実務に柔軟性を認める構成となっています。基本三法（CUP法、RP法、CP法）を「伝統的取引基準法」として位置づけるとともに、取引単位営業利益法（Transactional Net Margin Method、略してTNMM）および利益分割法を「取引単位利益法」として認めました。TNMMは、米国のCPMとは若干の相違点があるものの、基本的な発想は共通しています。</p>
+
+        <p>その後、2010年にはOECDガイドラインの大幅改訂が行われ、利益法（TNMMおよび利益分割法）の地位が格段に引き上げられました。従来のガイドラインでは「伝統的取引基準法が優先される」という一定の序列が存在していましたが、2010年改訂により「最適方法アプローチ（Most Appropriate Method Approach）」が採用され、事案に応じて最も適切な方法を選択すべきことが明確に示されました。</p>
+
+        <h3>1-6. BEPS行動計画と現代の動向</h3>
+        <p>2012年にOECD/G20が立ち上げた「税源浸食と利益移転（Base Erosion and Profit Shifting、略してBEPS）プロジェクト」は、移転価格税制に再び大きな変革をもたらしました。BEPSプロジェクトの15の行動計画のうち、行動8〜10が直接的に移転価格税制に関連しています。行動8は無形資産に関する移転価格、行動9はリスクと資本に関する移転価格、行動10は高リスク取引に関する移転価格をそれぞれ扱っています。</p>
+
+        <p>BEPSプロジェクトの成果として、2017年にOECDガイドラインが再び大幅改訂されました。この改訂では、特に無形資産の定義と評価方法、リスクの配分に関する分析枠組み、および低付加価値グループ内役務提供に関する簡素化措置（セーフハーバー）が重要な変更点として導入されました。さらに、取引の「正確な描写（Accurate Delineation）」という概念が強調され、関連者間取引の経済的実質を重視する姿勢がより一層明確になりました。</p>
+
+        <p>また、BEPSプロジェクトの行動13では、移転価格の文書化に関する三層構造のアプローチが導入されました。すなわち、マスターファイル（Master File）、ローカルファイル（Local File）、および国別報告書（Country-by-Country Report、略してCbCR）の三つの文書を作成・提出すべきことが勧告され、多くの国がこれを国内法に取り込んでいます。</p>
+
+        <p>日本においても、移転価格税制は昭和61年（1986年）に租税特別措置法に導入されて以来、国際的な動向に合わせて継続的に改正されてきました。日本法の詳細な条文構造については、後のセクションで詳述します。</p>
+
+        <!-- SVG Timeline Diagram -->
+        <div class="diagram-wrap">
+          <svg viewBox="0 0 900 180" xmlns="http://www.w3.org/2000/svg" font-family="'Outfit','Noto Sans JP',sans-serif">
+            <line x1="60" y1="90" x2="860" y2="90" stroke="#5E6AD2" stroke-width="2" stroke-dasharray="6 4"/>
+            <g>
+              <circle cx="100" cy="90" r="8" fill="#5E6AD2"/>
+              <text x="100" y="72" text-anchor="middle" fill="#5E6AD2" font-size="13" font-weight="700">1968</text>
+              <text x="100" y="118" text-anchor="middle" fill="#A0A0A8" font-size="10">米国§482規則</text>
+            </g>
+            <g>
+              <circle cx="230" cy="90" r="8" fill="#5E6AD2"/>
+              <text x="230" y="72" text-anchor="middle" fill="#5E6AD2" font-size="13" font-weight="700">1979</text>
+              <text x="230" y="118" text-anchor="middle" fill="#A0A0A8" font-size="10">OECD初版GL</text>
+            </g>
+            <g>
+              <circle cx="350" cy="90" r="8" fill="#5E6AD2"/>
+              <text x="350" y="72" text-anchor="middle" fill="#5E6AD2" font-size="13" font-weight="700">1986</text>
+              <text x="350" y="118" text-anchor="middle" fill="#A0A0A8" font-size="10">日本法導入</text>
+            </g>
+            <g>
+              <circle cx="470" cy="90" r="8" fill="#5E6AD2"/>
+              <text x="470" y="72" text-anchor="middle" fill="#5E6AD2" font-size="13" font-weight="700">1994</text>
+              <text x="470" y="118" text-anchor="middle" fill="#A0A0A8" font-size="10">米国最終規則</text>
+              <text x="470" y="132" text-anchor="middle" fill="#A0A0A8" font-size="10">BMR導入</text>
+            </g>
+            <g>
+              <circle cx="590" cy="90" r="8" fill="#5E6AD2"/>
+              <text x="590" y="72" text-anchor="middle" fill="#5E6AD2" font-size="13" font-weight="700">1995</text>
+              <text x="590" y="118" text-anchor="middle" fill="#A0A0A8" font-size="10">OECD GL改訂</text>
+            </g>
+            <g>
+              <circle cx="710" cy="90" r="8" fill="#5E6AD2"/>
+              <text x="710" y="72" text-anchor="middle" fill="#5E6AD2" font-size="13" font-weight="700">2010</text>
+              <text x="710" y="118" text-anchor="middle" fill="#A0A0A8" font-size="10">利益法格上げ</text>
+            </g>
+            <g>
+              <circle cx="820" cy="90" r="8" fill="#5E6AD2"/>
+              <text x="820" y="72" text-anchor="middle" fill="#5E6AD2" font-size="13" font-weight="700">2017</text>
+              <text x="820" y="118" text-anchor="middle" fill="#A0A0A8" font-size="10">BEPS対応改訂</text>
+            </g>
+          </svg>
+        </div>
+
+        <div class="point-box">
+          <div class="point-box-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            ポイント整理
+          </div>
+          <ul>
+            <li>移転価格税制の制度的起源は1968年の米国財務省規則にあり、CUP法・RP法・CP法の「基本三法」と優先順位ルールが確立された</li>
+            <li>1994年米国規則で「最適方法ルール」が採用され、利益法（CPM・PS法）が正式に認められた</li>
+            <li>OECD移転価格ガイドラインは1979年初版→1995年改訂→2010年改訂→2017年BEPS対応改訂と発展してきた</li>
+            <li>2010年改訂でTNMMと利益分割法の地位が向上し、基本三法との間の序列が撤廃された</li>
+            <li>BEPSプロジェクト（行動8〜10、行動13）により、無形資産・リスク配分・文書化が大幅に強化された</li>
+            <li>日本は1986年に移転価格税制を導入し、国際標準に沿って継続的に法改正を行っている</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 2: 独立企業原則（ALP）
+         ============================================ -->
+    <section id="sec2" class="content-section reveal">
+      <div class="card">
+        <div class="section-label">SECTION 02</div>
+        <h2>独立企業原則（ALP）の意義と理論的基盤</h2>
+
+        <h3>2-1. 独立企業原則とは何か</h3>
+        <p>独立企業原則（Arm's Length Principle、略してALP）とは、関連企業間取引の価格は、仮に当該取引が独立した第三者間で行われたとしたならば設定されたであろう価格と一致すべきであるという原則です。英語の"arm's length"とは「腕の長さの距離」、すなわち「一定の距離を保った」という意味であり、取引当事者間に特殊な関係がなく、互いに独立した立場で交渉を行ったであろう状態を示す比喩的表現です。</p>
+
+        <p>この原則はOECDモデル租税条約第9条に明確に規定されています。同条第1項は次のように定めています。「一方の締約国の企業と他方の締約国の企業との間に、その商業上又は資金上の関係において、双方の企業の間に設定され又は課された条件が、独立の企業の間に設定されたであろう条件と異なるときは、その条件がないとしたならば一方の企業の利得となったであろうとされる利得であってその条件により当該一方の企業の利得とならなかったものを当該一方の企業の利得に算入して租税を課することができる。」これがALPの条約上の表現です。</p>
+
+        <h3>2-2. ALPの理論的根拠</h3>
+        <p>ALPが国際的に採用されている理由は複数あります。第一に、ALPは関連企業と独立企業を課税上等しく取り扱うことで、競争上の中立性を確保することができます。もし関連企業間取引に特別な課税ルールが適用されなければ、多国籍企業グループは移転価格の操作を通じて税負担を人為的に軽減することが可能となり、独立企業との間で不公平な競争条件が生じます。ALPはこうした歪みを是正する機能を果たしています。</p>
+
+        <p>第二に、ALPは各国の課税権の適正な配分に資します。国際取引から生じる所得は、その経済的活動が行われた国で課税されることが原則ですが、移転価格の操作によって所得が人為的に他国に移転されると、活動実施国の課税ベースが侵食されます。ALPは、各国が自国の経済活動に見合った課税所得を確保することを可能にします。</p>
+
+        <p>第三に、ALPは二重課税の排除にも寄与します。移転価格調整が行われた場合、対応的調整（Corresponding Adjustment）を通じて相手国の課税所得を減額することで、同一の所得に対する二重課税を排除することが可能になります。この対応的調整の枠組みは、OECDモデル租税条約第9条第2項に規定されています。</p>
+
+        <h3>2-3. ALPの限界と批判</h3>
+        <p>ALPは広く受け入れられている原則ですが、理論的・実務的な限界も指摘されています。最も根本的な批判は、ALPが「独立企業間であれば設定されたであろう価格」という仮想的（hypothetical）な基準に依拠している点です。現実には、関連企業間取引の多くは、独立企業間では発生しないような取引形態を含んでいます。例えば、多国籍企業グループ内での高度に統合されたサプライチェーンや、企業グループ全体で共有されるシナジー効果は、独立企業間取引では再現できないものです。</p>
+
+        <p>また、無形資産の評価においてALPの適用は特に困難です。独自の特許技術やブランド価値など、ユニークな無形資産については比較可能な非関連者間取引が存在しないことが多く、ALPの基本的前提である「比較可能性」が成り立たないケースが頻繁に生じます。このため、一部の学者や実務家は、ALPに代わる方法として定式配分法（Formulary Apportionment）を提唱しています。定式配分法とは、多国籍企業グループの統合利益を、売上高、従業員数、資産などの所定の配分要素に基づいて各国に機械的に配分する方法です。</p>
+
+        <p>しかし、OECDは一貫してALPを支持する立場を取っています。その主な理由は、定式配分法には配分要素の選定や統合利益の算定において各国間の合意が困難であること、事業の実態を反映しない機械的な配分がかえって歪みを生じさせる可能性があること、そして現行の租税条約の枠組みとの整合性が取れないことなどが挙げられます。BEPSプロジェクトにおいても、ALPは基本原則として維持されており、その射程の拡張と精緻化が図られています。</p>
+
+        <h3>2-4. OECDモデル租税条約第9条の構造</h3>
+        <p>ALPの条約上の根拠であるOECDモデル租税条約第9条は、二つの項から構成されています。第1項は上述したとおり、関連企業間取引の条件が独立企業間のそれと異なる場合に、締約国が利益を調整して課税できることを規定しています。ここで重要なのは、第1項が「条件（conditions）」という広い概念を使用している点です。これは単に価格だけでなく、取引条件全般（支払条件、契約条件、リスク負担の配分など）を含むと解されています。</p>
+
+        <p>第2項は対応的調整（Corresponding Adjustment）に関する規定です。一方の締約国が第1項に基づいて利益調整を行った場合、他方の締約国は二重課税を排除するために自国の課税所得を適切に調整すべきことを定めています。ただし、この対応的調整は義務ではなく、他方の締約国が当初の調整が正当であると認めた場合にのみ行われます。</p>
+
+        <div class="highlight-box">
+          <strong>OECDモデル租税条約第9条第1項（要旨）：</strong>関連企業間の商業上・資金上の関係において設定された条件が、独立企業間で設定されたであろう条件と異なる場合、一方の企業の利得に算入されなかった利得を当該企業の利得に算入して租税を課することができる。
+        </div>
+
+        <h3>2-5. ALPと「取引の正確な描写」</h3>
+        <p>2017年のOECDガイドライン改訂で特に強調された概念が「取引の正確な描写（Accurate Delineation of the Actual Transaction）」です。これは、関連者間取引の移転価格を分析するにあたって、まず当該取引の経済的実質を正確に把握することが出発点であるという考え方です。形式的な契約内容だけでなく、各当事者が実際に遂行する機能（Functions）、引き受けるリスク（Risks）、使用する資産（Assets）を総合的に分析し、取引の真の性質を明らかにすることが求められます。</p>
+
+        <p>この概念の重要性は、特にリスクの配分に関して顕著に表れます。2017年改訂ガイドラインは、リスクの配分を分析するための六段階のフレームワークを提示しています。すなわち、(i) 経済的に重要なリスクの特定、(ii) 契約上のリスク配分の確認、(iii) 各当事者のリスクに関連する機能の分析（特にリスクの管理・統制機能およびリスク負担のための財務的能力）、(iv) 契約上のリスク配分と当事者の実際の行動との整合性の確認、(v) リスクが適切に配分されていない場合のリスクの再配分、(vi) 適切にリスクが配分された取引に対する価格設定、というステップです。</p>
+
+        <div class="point-box">
+          <div class="point-box-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            ポイント整理
+          </div>
+          <ul>
+            <li>独立企業原則（ALP）は、関連企業間取引の価格が独立企業間で設定されたであろう価格と一致すべきことを要求する原則である</li>
+            <li>ALPはOECDモデル租税条約第9条に規定されており、競争中立性の確保、課税権の適正配分、二重課税の排除に寄与する</li>
+            <li>ALPの限界として、比較可能取引が存在しない場合の適用困難性、仮想的基準への依拠などが指摘されている</li>
+            <li>代替案として定式配分法が提唱されているが、OECDはALPの維持を一貫して支持している</li>
+            <li>2017年OECD改訂ガイドラインでは「取引の正確な描写」概念が強調され、機能・リスク・資産の実態分析が重視されている</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 3: 日本の条文構造
+         ============================================ -->
+    <section id="sec3" class="content-section reveal">
+      <div class="card">
+        <div class="section-label">SECTION 03</div>
+        <h2>日本の条文構造──租税特別措置法66条の4</h2>
+
+        <h3>3-1. 日本における移転価格税制の導入経緯</h3>
+        <p>日本に移転価格税制が導入されたのは昭和61年（1986年）のことです。この年の税制改正により、租税特別措置法（以下「措置法」）に第66条の4が新設されました。導入の背景には、日本企業の海外進出の拡大と、それに伴う国外関連者との取引を通じた所得移転への懸念がありました。また、国際的には米国が既に移転価格税制を運用しており、日米間の課税権の調整の観点からも日本における制度整備が急務とされていたのです。</p>
+
+        <p>制度導入当初は基本三法のみが算定方法として規定されていましたが、その後の国際的な動向を踏まえて数次にわたる改正が行われています。平成16年度（2004年）税制改正では取引単位営業利益法（TNMM）と利益分割法が正式に導入され、平成23年度（2011年）改正では「最適方法ルール」が採用されました。さらに、平成28年度（2016年）改正ではBEPSプロジェクトの勧告を踏まえた文書化義務の整備が行われ、平成31年度（2019年）改正ではディスカウント・キャッシュ・フロー法（DCF法）が新たな算定方法として追加されました。</p>
+
+        <h3>3-2. 措置法66条の4の全体構造</h3>
+        <p>措置法第66条の4は、移転価格税制の中心的な条文として極めて詳細な規定を置いています。その全体構造を理解するためには、まず条文の各項が規定する内容を把握することが必要です。</p>
+
+        <p>第1項は移転価格税制の適用要件と効果を定める本則規定です。法人が国外関連者との間で行った取引（国外関連取引）の対価の額が独立企業間価格と異なる場合に、当該取引が独立企業間価格で行われたものとみなして、法人の所得を計算する旨を規定しています。この条文の適用は、納税者が申告した価格と独立企業間価格との間に差異がある場合に自動的に発動するものであり、課税庁による特別な認定行為は要件とされていません。</p>
+
+        <p>第2項は独立企業間価格の算定方法を規定しています。棚卸資産取引については、(i) 独立価格比準法（CUP法）およびその準ずる方法、(ii) 再販売価格基準法（RP法）およびその準ずる方法、(iii) 原価基準法（CP法）およびその準ずる方法、(iv) 取引単位営業利益法（TNMM）およびその準ずる方法、(v) 利益分割法およびその準ずる方法、(vi) これらに準ずる方法と同等の方法、(vii) ディスカウント・キャッシュ・フロー法、のうち最も適切な方法を用いることとされています。棚卸資産取引以外の取引（役務提供、無形資産の使用許諾等）についても、これに準じた算定方法が規定されています。</p>
+
+        <div class="code-block">
+<span class="cm">/* 租税特別措置法 第66条の4（概要構造） */</span>
+
+<span class="kw">第1項</span> ─ 本則規定（適用要件・効果）
+  法人が国外関連者との取引を行った場合、
+  対価の額が独立企業間価格と異なるときは、
+  独立企業間価格で取引が行われたものとみなす。
+
+<span class="kw">第2項</span> ─ 独立企業間価格の算定方法
+  <span class="str">一号</span>：棚卸資産の販売・購入取引
+    イ. CUP法 / ロ. RP法 / ハ. CP法
+    ニ. TNMM / ホ. 利益分割法
+    ヘ. DCF法
+  <span class="str">二号</span>：棚卸資産取引以外の取引
+
+<span class="kw">第3項〜第6項</span> ─ 国外関連者・関連取引の定義
+
+<span class="kw">第7項</span> ─ 推定課税（シークレット・コンパラブル）
+
+<span class="kw">第8項</span> ─ 文書化義務
+
+<span class="kw">第9項以下</span> ─ 事前確認、手続規定 等
+        </div>
+
+        <h3>3-3. 第1項──適用要件と法的効果</h3>
+        <p>第1項の適用要件は次の三つに整理できます。第一に、適用対象となる主体は「法人」です。すなわち、個人事業者は移転価格税制の直接の適用対象とはなりません（ただし、所得税法にも同趣旨の規定が存在します）。第二に、「国外関連者」との間の取引であることが要件です。国外関連者の定義については次のセクションで詳述しますが、概括的に言えば、法人との間に50%以上の直接・間接の持株関係がある外国法人、または実質的支配関係がある外国法人を指します。第三に、当該取引の対価の額が「独立企業間価格」と異なることが要件です。</p>
+
+        <p>法的効果としては、取引の対価の額が独立企業間価格で行われたものと「みなす」とされています。この「みなし」規定の意味は極めて重要です。法人が実際に受領した（または支払った）対価の額にかかわらず、税務上はあたかも独立企業間価格で取引が行われたかのように所得金額を計算することになります。この効果は所得の「増額修正」のみを意味し、「減額修正」（すなわち独立企業間価格よりも高い対価を受領していた場合に所得を減額すること）は原則として認められないと解されています。この一方向性は、日本の移転価格税制の重要な特徴の一つです。</p>
+
+        <h3>3-4. 第7項──推定課税と質問検査権</h3>
+        <p>日本の移転価格税制の特徴的な規定として、第7項の推定課税規定があります。これは、納税者が算定方法の適用に必要な書類その他の物件を遅滞なく提示又は提出しなかった場合に、税務署長が当該法人の事業と同種の事業を営む法人に対して質問検査権を行使して得た情報（いわゆるシークレット・コンパラブル）に基づいて独立企業間価格を推定できることを定めた規定です。</p>
+
+        <p>この推定課税規定は、移転価格調査における文書提出の重要性を示すものです。納税者が適切な文書を準備・提出しなければ、課税庁が独自に収集した比較対象情報に基づいて課税処分が行われるリスクがあり、しかもその比較対象情報は守秘義務の制約から納税者に開示されない可能性があります。この制度は、納税者に対して適切な移転価格文書の作成・保管を促すインセンティブとして機能しています。</p>
+
+        <h3>3-5. 文書化義務の三層構造</h3>
+        <p>平成28年度（2016年）税制改正により、BEPSプロジェクト行動13の勧告に沿って、移転価格の文書化義務が整備されました。具体的には、(i) 国別報告事項（CbCR）、(ii) 事業概況報告事項（マスターファイル）、(iii) 独立企業間価格を算定するために必要と認められる書類（ローカルファイル）の三層構造となっています。</p>
+
+        <p>ローカルファイルの作成・保管義務は、一の国外関連者との取引金額が50億円以上、または無形資産取引金額が3億円以上の場合に課されます。これらの閾値を下回る場合であっても、ローカルファイルに相当する書類を「同時文書化」（確定申告書の提出期限までに作成）しておくことが推奨されています。同時文書化がなされていない場合には、調査官から書類の提示を求められた日から一定期間（原則60日、延長の場合75日）以内に提出する義務が課せられます。</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>文書類型</th>
+                <th>内容</th>
+                <th>対象企業</th>
+                <th>提出先</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>国別報告事項（CbCR）</strong></td>
+                <td>各国所在の構成事業体ごとの収入、税引前利益、納付税額、資本金、従業員数等</td>
+                <td>直前会計年度の連結総収入金額1,000億円以上の多国籍企業グループの最終親会社等</td>
+                <td>最終親会社等の所在地国の税務当局</td>
+              </tr>
+              <tr>
+                <td><strong>事業概況報告事項（マスターファイル）</strong></td>
+                <td>グループ全体の組織構造、事業概要、財務活動、無形資産、関連者間取引の概要等</td>
+                <td>直前会計年度の連結総収入金額1,000億円以上の多国籍企業グループの構成事業体</td>
+                <td>構成事業体の所在地国の税務当局</td>
+              </tr>
+              <tr>
+                <td><strong>ローカルファイル</strong></td>
+                <td>個別取引の移転価格算定方法の詳細、比較可能性分析、財務データ等</td>
+                <td>一の国外関連者との取引金額50億円以上 or 無形資産取引3億円以上の法人</td>
+                <td>法人の所轄税務署</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="point-box">
+          <div class="point-box-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            ポイント整理
+          </div>
+          <ul>
+            <li>日本の移転価格税制は1986年に措置法66条の4として導入され、国際動向に合わせて改正が重ねられている</li>
+            <li>第1項が本則規定で、国外関連者との取引の対価が独立企業間価格と異なる場合に「みなし」による所得修正を行う</li>
+            <li>第2項が算定方法を列挙し、CUP法・RP法・CP法・TNMM・利益分割法・DCF法のうち最適方法を選択する</li>
+            <li>第7項の推定課税規定（シークレット・コンパラブル）は文書未提出時のリスクとして実務上極めて重要</li>
+            <li>文書化義務はCbCR・マスターファイル・ローカルファイルの三層構造で、閾値に応じた作成義務が課される</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 4: 国外関連者の定義
+         ============================================ -->
+    <section id="sec4" class="content-section reveal">
+      <div class="card">
+        <div class="section-label">SECTION 04</div>
+        <h2>国外関連者の定義と支配関係の判定</h2>
+
+        <h3>4-1. 国外関連者の概念</h3>
+        <p>移転価格税制が適用されるためには、取引の相手方が「国外関連者」に該当する必要があります。国外関連者とは、法人との間に特殊の関係がある外国法人をいい、措置法第66条の4第3項および第4項に定義規定が置かれています。「特殊の関係」とは、一般に「支配関係」と呼ばれるものであり、具体的には以下の三つの類型に分類されます。</p>
+
+        <p>第一の類型は、「持株関係」に基づく支配です。法人と外国法人の間に、直接又は間接に50%以上の株式保有関係がある場合を指します。例えば、日本の親会社Aが外国法人Bの発行済株式の50%以上を直接保有している場合、BはAの国外関連者に該当します。また、AがCの株式を60%保有し、CがBの株式を80%保有している場合、AのBに対する間接保有割合は48%（60%×80%）となり50%未満ですが、日本の実務では連鎖保有の計算方法について、各段階の保有割合の乗算ではなく、特定の方法が適用される場合があります。施行令ではこの間接保有割合の計算方法が詳細に規定されています。</p>
+
+        <p>第二の類型は、「実質的支配関係」です。持株割合が50%未満であっても、一方の法人が他方の法人の事業の方針の全部又は一部につき実質的に決定できる関係がある場合には、国外関連者に該当します。実質的支配関係の有無は、取締役の過半数を派遣しているかどうか、重要な契約の締結に対する拒否権があるかどうか、資金の供給に依存しているかどうかなどの事実関係を総合的に勘案して判断されます。</p>
+
+        <p>第三の類型は、「同一の者による支配」です。法人と外国法人が、同一の者（個人又は法人）によってそれぞれ支配されている場合、これらは互いに国外関連者に該当します。例えば、個人Xが日本法人Aの株式の60%と外国法人Bの株式の55%を保有している場合、AとBは同一の者Xによる支配を通じて国外関連者の関係に立ちます。いわゆる兄弟会社の関係です。</p>
+
+        <h3>4-2. 50%基準の詳細</h3>
+        <p>日本法における50%基準は、国際的に見ると比較的標準的な水準に設定されています。米国では50%以上の直接・間接保有、ドイツでは25%以上、英国では「参加関係（participation）」の概念に基づいています。OECDモデル租税条約第9条では具体的な数値基準を定めておらず、「一方の企業が他方の企業の経営、支配又は資本に直接又は間接に参加している場合」という広い定義を採用しています。</p>
+
+        <p>50%基準の適用において注意すべきは、「以上」ではなく「超」の問題です。措置法の規定は発行済株式の総数又は出資金額の「100分の50以上」と規定しています。したがって、ちょうど50%の保有であっても国外関連者に該当します。また、株式保有割合の計算に当たっては、自己株式は分母から除外されます。</p>
+
+        <h3>4-3. 特殊の関係の判定時期</h3>
+        <p>国外関連者の関係が成立するかどうかは、「その取引の行われた時」の状況に基づいて判定されます。したがって、事業年度の途中で持株割合が変動した場合には、個々の取引が行われた時点における関係を確認する必要があります。例えば、年度当初は45%の保有であったのが年度途中で55%に増加した場合、保有割合が50%以上になった時点以降の取引が移転価格税制の適用対象となります。</p>
+
+        <!-- SVG Diagram: Parent-Subsidiary Relationships -->
+        <div class="diagram-wrap">
+          <svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans JP','Outfit',sans-serif">
+            <!-- Title -->
+            <text x="350" y="28" text-anchor="middle" fill="#5E6AD2" font-size="14" font-weight="700">国外関連者の判定パターン</text>
+
+            <!-- Pattern 1: Direct holding -->
+            <rect x="20" y="60" width="180" height="50" rx="10" fill="#5E6AD2" fill-opacity="0.15" stroke="#5E6AD2" stroke-width="1.5"/>
+            <text x="110" y="88" text-anchor="middle" fill="#FAFAFA" font-size="12" font-weight="600">日本法人A（親）</text>
+            <line x1="110" y1="110" x2="110" y2="155" stroke="#5E6AD2" stroke-width="2" marker-end="url(#arrow)"/>
+            <text x="130" y="138" fill="#A0A0A8" font-size="11">60%</text>
+            <rect x="20" y="155" width="180" height="50" rx="10" fill="#5E6AD2" fill-opacity="0.08" stroke="#5E6AD2" stroke-width="1" stroke-dasharray="4 3"/>
+            <text x="110" y="183" text-anchor="middle" fill="#A0A0A8" font-size="12">外国法人B（子）</text>
+            <text x="110" y="230" text-anchor="middle" fill="#7ec699" font-size="11" font-weight="600">✓ 国外関連者</text>
+
+            <!-- Pattern 2: Indirect holding -->
+            <rect x="260" y="60" width="180" height="50" rx="10" fill="#5E6AD2" fill-opacity="0.15" stroke="#5E6AD2" stroke-width="1.5"/>
+            <text x="350" y="88" text-anchor="middle" fill="#FAFAFA" font-size="12" font-weight="600">日本法人A</text>
+            <line x1="350" y1="110" x2="350" y2="155" stroke="#5E6AD2" stroke-width="2"/>
+            <text x="370" y="138" fill="#A0A0A8" font-size="11">100%</text>
+            <rect x="260" y="155" width="180" height="50" rx="10" fill="#5E6AD2" fill-opacity="0.08" stroke="#5E6AD2" stroke-width="1"/>
+            <text x="350" y="183" text-anchor="middle" fill="#A0A0A8" font-size="12">外国法人C</text>
+            <line x1="350" y1="205" x2="350" y2="250" stroke="#5E6AD2" stroke-width="2"/>
+            <text x="370" y="233" fill="#A0A0A8" font-size="11">55%</text>
+            <rect x="260" y="250" width="180" height="50" rx="10" fill="#5E6AD2" fill-opacity="0.08" stroke="#5E6AD2" stroke-width="1" stroke-dasharray="4 3"/>
+            <text x="350" y="278" text-anchor="middle" fill="#A0A0A8" font-size="12">外国法人D</text>
+            <text x="350" y="318" text-anchor="middle" fill="#7ec699" font-size="11" font-weight="600">✓ 間接支配で関連者</text>
+
+            <!-- Pattern 3: Brother companies -->
+            <rect x="500" y="60" width="180" height="50" rx="10" fill="#5E6AD2" fill-opacity="0.15" stroke="#5E6AD2" stroke-width="1.5"/>
+            <text x="590" y="88" text-anchor="middle" fill="#FAFAFA" font-size="12" font-weight="600">個人X</text>
+            <line x1="548" y1="110" x2="520" y2="155" stroke="#5E6AD2" stroke-width="2"/>
+            <text x="515" y="138" fill="#A0A0A8" font-size="11">55%</text>
+            <line x1="632" y1="110" x2="660" y2="155" stroke="#5E6AD2" stroke-width="2"/>
+            <text x="660" y="138" fill="#A0A0A8" font-size="11">70%</text>
+            <rect x="460" y="155" width="120" height="50" rx="10" fill="#5E6AD2" fill-opacity="0.08" stroke="#5E6AD2" stroke-width="1"/>
+            <text x="520" y="183" text-anchor="middle" fill="#A0A0A8" font-size="11">日本法人E</text>
+            <rect x="600" y="155" width="120" height="50" rx="10" fill="#5E6AD2" fill-opacity="0.08" stroke="#5E6AD2" stroke-width="1" stroke-dasharray="4 3"/>
+            <text x="660" y="183" text-anchor="middle" fill="#A0A0A8" font-size="11">外国法人F</text>
+            <line x1="580" y1="180" x2="600" y2="180" stroke="#f5a623" stroke-width="2" stroke-dasharray="4 3"/>
+            <text x="590" y="230" text-anchor="middle" fill="#7ec699" font-size="11" font-weight="600">✓ 兄弟会社で関連者</text>
+
+            <!-- Arrow marker -->
+            <defs>
+              <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#5E6AD2"/>
+              </marker>
+            </defs>
+          </svg>
+        </div>
+
+        <h3>4-4. 国外関連取引の範囲</h3>
+        <p>国外関連者との間のすべての取引が移転価格税制の対象となるわけではありません。措置法第66条の4第1項は、法人が「国外関連者との間で資産の販売、資産の購入、役務の提供その他の取引」を行った場合と規定しています。「その他の取引」には、無形資産の使用許諾、金銭の貸付・借入、債務保証、費用分担契約（CCA）に基づく分担金の支払・受領など、広範な取引が含まれます。</p>
+
+        <p>ただし、国外関連者との取引であっても、国内源泉所得に該当する取引（例えば、国外関連者が日本国内に有する恒久的施設を通じて行う取引）については、移転価格税制ではなく、国内法の一般的な所得計算規定が適用されるべき場合があります。また、金融取引については、移転価格税制と過少資本税制・過大支払利子税制との適用関係の整理が必要です。</p>
+
+        <div class="point-box">
+          <div class="point-box-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            ポイント整理
+          </div>
+          <ul>
+            <li>国外関連者は三類型で判定される：(1)持株関係50%以上、(2)実質的支配関係、(3)同一の者による支配（兄弟会社）</li>
+            <li>間接保有割合の計算方法は施行令に詳細な規定があり、各段階の保有割合の単純な乗算ではない場合がある</li>
+            <li>判定は「取引の行われた時」の状況によるため、持株変動がある年度は取引時点ごとに確認が必要</li>
+            <li>国外関連取引の範囲は広く、棚卸資産の売買だけでなく、役務提供、無形資産取引、金融取引等も含まれる</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 5: 基本三法の詳解──概観と選択基準
+         ============================================ -->
+    <section id="sec5" class="content-section reveal">
+      <div class="card">
+        <div class="section-label">SECTION 05</div>
+        <h2>基本三法の詳解──概観と選択基準</h2>
+
+        <h3>5-1. 基本三法の位置づけ</h3>
+        <p>基本三法（Traditional Transaction Methods）とは、独立価格比準法（CUP法）、再販売価格基準法（RP法）、原価基準法（CP法）の三つの算定方法の総称です。これらはいずれも「取引基準法」（Transaction-Based Methods）に分類され、個々の取引の価格又は利益率を直接比較するアプローチを採用しています。基本三法は1968年の米国規則で確立されて以来、移転価格税制の算定方法の中核を形成してきました。</p>
+
+        <p>基本三法の特徴は、比較対象となる非関連者間取引（Comparable Uncontrolled Transaction）を特定し、その価格または粗利益率を基準として独立企業間価格を算定する点にあります。CUP法は取引価格そのものを比較し、RP法は買い手側の粗利益率（売上総利益率）を比較し、CP法は売り手側の原価に対するマークアップ率を比較します。いずれの方法も、比較可能な非関連者間取引の存在が適用の前提条件となるため、比較可能性の分析が極めて重要です。</p>
+
+        <h3>5-2. 基本三法と利益法の対比</h3>
+        <p>基本三法は「粗利益（Gross Profit）」レベルでの比較を行うのに対し、利益法（TNMM・利益分割法）は「営業利益（Operating Profit）」レベルでの比較を行います。粗利益レベルでの比較は、販売費及び一般管理費（SGA費用）の影響を受けないため、理論的にはより正確な比較が可能です。しかし、粗利益レベルでの比較には、商品やサービスの特性、取引条件、機能の類似性について高い水準の比較可能性が求められます。</p>
+
+        <p>一方、営業利益レベルでの比較は、会計処理の違い（特に売上原価とSGA費用の区分の違い）の影響を受けにくいという利点があります。例えば、同じ経費でもある企業では売上原価に計上し、他の企業ではSGA費用に計上するということがあり得ますが、営業利益レベルでの比較ではこうした区分の違いは問題になりません。この点は、TNMMが実務上広く利用される理由の一つとなっています。</p>
+
+        <h3>5-3. 算定方法の選択における考慮事項</h3>
+        <p>平成23年度（2011年）税制改正で最適方法ルールが導入されたことにより、日本においてはすべての算定方法は対等な地位を有し、個別事案に応じて最も適切な方法を選択すべきこととされています。選択に当たっての考慮事項としては、OECDガイドラインが示す以下の要素が参考になります。</p>
+
+        <p>第一に、各方法の長所と短所です。例えば、CUP法は最も直接的な比較が可能ですが、高い比較可能性が求められます。RP法は製品の差異の影響を受けにくいですが、買い手の粗利益率データが必要です。CP法は製造活動の比較に適しますが、原価の範囲の定義に注意が必要です。第二に、国外関連取引の性質です。取引の種類（棚卸資産取引、役務提供、無形資産取引）によって、適切な方法が異なります。第三に、信頼できる情報（特に非関連者間取引に関するデータ）の利用可能性です。比較対象取引のデータが入手できなければ、理論上は最適な方法であっても実際には適用できません。第四に、比較対象取引と検証対象取引との間の比較可能性の程度です。高い比較可能性が確保できる方法ほど、信頼性の高い結果をもたらします。</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>方法</th>
+                <th>比較の対象</th>
+                <th>比較水準</th>
+                <th>主な適用場面</th>
+                <th>比較可能性の要求度</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>CUP法</strong></td>
+                <td>取引価格</td>
+                <td>価格</td>
+                <td>コモディティ取引、ロイヤルティ</td>
+                <td>極めて高い</td>
+              </tr>
+              <tr>
+                <td><strong>RP法</strong></td>
+                <td>売上総利益率</td>
+                <td>粗利益</td>
+                <td>販売子会社（限定的機能）</td>
+                <td>高い</td>
+              </tr>
+              <tr>
+                <td><strong>CP法</strong></td>
+                <td>原価マークアップ率</td>
+                <td>粗利益</td>
+                <td>受託製造、役務提供</td>
+                <td>高い</td>
+              </tr>
+              <tr>
+                <td><strong>TNMM</strong></td>
+                <td>営業利益率指標</td>
+                <td>営業利益</td>
+                <td>広範（最も汎用的）</td>
+                <td>中程度</td>
+              </tr>
+              <tr>
+                <td><strong>利益分割法</strong></td>
+                <td>利益配分割合</td>
+                <td>統合利益</td>
+                <td>高度に統合された取引</td>
+                <td>事案により異なる</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="point-box">
+          <div class="point-box-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            ポイント整理
+          </div>
+          <ul>
+            <li>基本三法はCUP法・RP法・CP法の三つで、いずれも非関連者間取引との価格・利益率比較に基づく</li>
+            <li>基本三法は粗利益レベル、利益法は営業利益レベルでの比較という点で方法論的に異なる</li>
+            <li>最適方法ルールの下では全方法が対等であり、事案ごとに最も信頼性の高い結果を与える方法を選択する</li>
+            <li>方法選択の考慮要素は：各方法の長所短所、取引の性質、データの利用可能性、比較可能性の程度</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 6: CUP法
+         ============================================ -->
+    <section id="sec6" class="content-section reveal">
+      <div class="card">
+        <div class="section-label">SECTION 06</div>
+        <h2>独立価格比準法（CUP法）</h2>
+
+        <h3>6-1. CUP法の基本構造</h3>
+        <p>独立価格比準法（Comparable Uncontrolled Price Method、CUP法）は、国外関連取引に係る棚卸資産の価格と、比較可能な非関連者間取引（Comparable Uncontrolled Transaction）における同種の棚卸資産の価格を直接比較する方法です。すべての算定方法の中で最も直接的かつ信頼性の高い方法とされており、適用が可能な場合には他のいずれの方法にも優先して採用されるべきとする考え方が一般的です。</p>
+
+        <p>CUP法の適用パターンには二つの類型があります。第一は「内部CUP」（Internal CUP）であり、検証対象法人（又はその国外関連者）が、同一又は類似の棚卸資産について非関連者との間で取引を行っている場合に、その取引価格を比較対象として用いるものです。第二は「外部CUP」（External CUP）であり、検証対象法人とは無関係な第三者間の取引価格を比較対象として用いるものです。一般に、内部CUPの方が比較可能性が高いとされますが、外部CUPも公開市場価格データなどが利用可能な場合には有効です。</p>
+
+        <h3>6-2. CUP法の適用要件</h3>
+        <p>CUP法を適用するためには、比較対象取引と検証対象取引の間に高度な比較可能性が確保されていなければなりません。CUP法は取引価格を直接比較する方法であるため、価格に影響を与えるあらゆる要素について比較可能性が求められます。具体的には、棚卸資産の物理的特性、品質、耐久性、信頼性、入手可能性、供給量などの製品特性が重要です。加えて、取引条件（支払条件、納品条件、保証の有無、販売量、市場レベル等）、取引の時期と市場環境、地理的市場、各当事者が遂行する機能とリスクの引受状況なども考慮すべき要素です。</p>
+
+        <p>価格に重大な影響を及ぼす差異が存在する場合には、合理的な差異調整（Comparability Adjustment）を行うことが求められます。例えば、取引量の違いによる数量割引の影響、支払条件の違いによる利息相当額の調整、輸送条件の違いによる運賃の調整などが考えられます。ただし、差異調整が多岐にわたり、その信頼性が低下する場合には、CUP法の適用自体を断念し、他の方法を検討すべきです。</p>
+
+        <h3>6-3. CUP法が有効な場面</h3>
+        <p>CUP法は、特にコモディティ取引（石油、天然ガス、金属、穀物などの一次産品取引）において有効に機能します。コモディティは品質規格が標準化されており、公開市場における相場価格が利用可能であるため、外部CUPの適用が比較的容易です。OECDガイドラインでもコモディティ取引についてはCUP法の適用を強く推奨しており、相場価格（Quoted Price）を基準として用いることが認められています。</p>
+
+        <p>また、ロイヤルティ取引（ライセンス契約）においてもCUP法が適用される場合があります。例えば、同一の無形資産について関連者と非関連者の双方にライセンスが付与されている場合には、非関連者へのライセンス料率を内部CUPとして用いることができます。ただし、ライセンス条件（地理的範囲、独占/非独占、サブライセンス権の有無など）の違いが料率に重大な影響を与えるため、慎重な比較可能性分析が必要です。</p>
+
+        <h3>6-4. CUP法の限界</h3>
+        <p>CUP法の最大の限界は、実際に比較可能な非関連者間取引を見つけることが困難であるケースが多い点です。多国籍企業がグループ内で取引する製品や役務は、しばしば高度にカスタマイズされたものであり、全く同一又は十分に類似した製品が第三者間で取引されている事例を見つけることは容易ではありません。特に、独自の技術やブランドが組み込まれた製品については、CUP法の適用は一般的に困難です。</p>
+
+        <p>さらに、CUP法は価格を直接比較するため、わずかな製品差異や取引条件の違いが結果に大きな影響を与えます。このため、RP法やCP法のような粗利益率を比較する方法と比較して、比較可能性に対する感度が極めて高いという特性があります。差異調整で対応できない場合、CUP法は信頼性を失い、他の方法を選択すべきことになります。</p>
+
+        <div class="highlight-box">
+          <strong>実務上の留意点：</strong>内部CUPが利用可能な場合には、まず内部CUPの適用可能性を検討すべきです。内部CUPでは、同一の検証対象法人が行う取引を比較するため、製品特性・機能・リスク等の多くの要素が一致又は類似しており、外部CUPに比べて高い比較可能性が期待できます。
+        </div>
+
+        <div class="point-box">
+          <div class="point-box-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            ポイント整理
+          </div>
+          <ul>
+            <li>CUP法は取引価格を直接比較する最も直接的な算定方法であり、適用可能であれば最も信頼性が高い</li>
+            <li>内部CUP（自社の非関連者取引）と外部CUP（第三者間取引）の二類型がある</li>
+            <li>コモディティ取引では公開市場の相場価格を外部CUPとして活用可能</li>
+            <li>製品差異が小さく、取引条件の調整が可能な場合に最も有効に機能する</li>
+            <li>ユニークな製品や高度にカスタマイズされた取引では適用が困難な場合が多い</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 7: 再販売価格基準法（RP法）
+         ============================================ -->
+    <section id="sec7" class="content-section reveal">
+      <div class="card">
+        <div class="section-label">SECTION 07</div>
+        <h2>再販売価格基準法（RP法）</h2>
+
+        <h3>7-1. RP法の基本構造</h3>
+        <p>再販売価格基準法（Resale Price Method、RP法）は、国外関連者から購入した棚卸資産を非関連者に再販売する場合に適用される方法です。具体的には、再販売価格から、比較可能な非関連者間取引における通常の利益率（粗利益率）に相当する金額を差し引いて独立企業間価格を算定します。</p>
+
+        <p>算式で表すと、独立企業間価格（仕入価格） = 再販売価格 ×（1 − 通常の利益率）です。ここで「通常の利益率」とは、比較可能な非関連者間取引において再販売者が獲得している売上総利益率（Gross Margin）のことです。例えば、日本の販売子会社が親会社から製品を仕入れて100万円で非関連の顧客に再販売しており、比較可能な独立の販売業者の粗利益率が25%であるとすれば、独立企業間仕入価格は100万円 ×（1 − 0.25）= 75万円と算定されます。</p>
+
+        <h3>7-2. RP法の理論的根拠と適用場面</h3>
+        <p>RP法の理論的根拠は、独立した再販売者であれば、その遂行する機能とリスクに見合った一定の粗利益を獲得するであろうという前提にあります。再販売者が遂行する機能が類似していれば、取り扱う製品が異なっていても、粗利益率は比較的安定しているという経験則に基づいています。</p>
+
+        <p>RP法は、特に限定的な販売機能のみを遂行する販売子会社（Limited Risk Distributor、LRD）の取引を検証する場合に最も適しています。販売子会社が自らの独自の無形資産（ブランド、販売ノウハウなど）を有しておらず、親会社のブランドと製品をそのまま再販売する場合には、当該販売子会社の粗利益率は主としてその遂行する販売機能（在庫管理、注文処理、配送手配、アフターサービスなど）に対する対価を反映すべきです。</p>
+
+        <p>一方、再販売者が製品に対して重要な付加価値を加えている場合（例えば、組立、加工、再包装、重要な品質検査など）には、RP法の適用は困難になります。こうした付加価値活動は粗利益率を構造的に変化させるため、単純な粗利益率の比較では適切な結果が得られないからです。</p>
+
+        <h3>7-3. 比較可能性の要素</h3>
+        <p>RP法の適用に当たっては、比較対象取引の再販売者と検証対象法人の間で以下の要素が比較可能であることが重要です。第一に、遂行する機能（販売活動の内容、在庫リスクの負担、マーケティング活動の範囲など）の類似性です。第二に、取り扱う製品の市場レベルと種類です。粗利益率は製品カテゴリーによって大きく異なるため、同じ種類の製品を扱う再販売者を比較対象とすべきです。第三に、会計処理の一貫性です。粗利益率の計算に影響を与える会計処理（例えば、運賃や保険料の売上原価算入の有無）が一致していることが求められます。</p>
+
+        <p>RP法の利点は、CUP法と比較して、製品の物理的特性の違いの影響を受けにくい点にあります。同じ種類の販売機能を遂行していれば、異なる製品を扱っていても粗利益率は比較的近い水準に収束する傾向があります。しかし、この利点はあくまで相対的なものであり、比較可能性が十分に確保されていない場合にはRP法の結果も信頼性を欠くことになります。</p>
+
+        <h3>7-4. RP法の実務上の課題</h3>
+        <p>RP法の実務上の課題として、まず比較対象となる独立の再販売者の粗利益率データの入手が挙げられます。粗利益率のデータは、公開されている財務データベース（例えばBureau van Dijk社のORBISデータベース）から入手できる場合がありますが、多くのデータベースでは営業利益率は入手できても、粗利益率の信頼性の高いデータが利用できないことがあります。これは、各企業の会計処理による売上原価と販管費の区分が統一されていないためです。この課題は、RP法よりもTNMMが実務上好まれる大きな理由の一つとなっています。</p>
+
+        <p>もう一つの課題は、再販売者が追加的な機能やリスクを負担している場合の調整です。例えば、販売子会社が自社ブランドの構築活動やローカルなマーケティング活動を行っている場合、その粗利益率にはこれらの活動に対する対価が含まれるべきです。しかし、比較対象となる独立企業がどの程度のマーケティング活動を行っているかを正確に把握することは容易ではなく、差異調整の信頼性が問題となることがあります。</p>
+
+        <div class="code-block">
+<span class="cm">/* RP法の計算例 */</span>
+
+<span class="kw">前提条件：</span>
+  日本販売子会社が親会社から製品を仕入れ、非関連者に再販売
+  再販売価格 = <span class="num">1,000万円</span>
+  比較可能な独立販売業者の粗利益率 = <span class="num">30%</span>
+
+<span class="kw">独立企業間仕入価格の算定：</span>
+  独立企業間価格 = 再販売価格 ×（1 − 通常の利益率）
+                 = <span class="num">1,000万円</span> ×（1 − <span class="num">0.30</span>）
+                 = <span class="num">700万円</span>
+
+<span class="kw">判定：</span>
+  実際の仕入価格が <span class="num">700万円</span> を下回る場合
+  → 差額が移転価格調整の対象
+  例: 実際の仕入価格 = <span class="num">600万円</span> の場合
+  → 親会社側の所得が <span class="num">100万円</span> 過少計上
+        </div>
+
+        <div class="point-box">
+          <div class="point-box-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            ポイント整理
+          </div>
+          <ul>
+            <li>RP法は再販売価格から通常の粗利益率を控除して独立企業間仕入価格を算定する方法</li>
+            <li>限定的な販売機能を遂行する販売子会社の取引検証に最も適している</li>
+            <li>製品差異の影響をCUP法より受けにくいが、機能・リスクの類似性は依然として重要</li>
+            <li>粗利益率データの入手困難性と会計処理の不統一が実務上の主要な課題</li>
+            <li>再販売者が重要な付加価値活動を行っている場合には適用が困難</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 8: 原価基準法（CP法）
+         ============================================ -->
+    <section id="sec8" class="content-section reveal">
+      <div class="card">
+        <div class="section-label">SECTION 08</div>
+        <h2>原価基準法（CP法）</h2>
+
+        <h3>8-1. CP法の基本構造</h3>
+        <p>原価基準法（Cost Plus Method、CP法）は、棚卸資産の供給者（売り手）側の原価に通常の利益率（マークアップ率）を加算して独立企業間価格を算定する方法です。算式で表すと、独立企業間価格 = 原価 ×（1 + 通常の利益率）です。ここで「原価」とは売り手が負担する直接費と間接費を含む製造原価（又は取得原価）であり、「通常の利益率」とは比較可能な非関連者間取引における原価に対するマークアップ率（Cost Plus Markup）のことです。</p>
+
+        <p>例えば、日本の製造親会社が海外の販売子会社に製品を販売する場合、親会社の製造原価が800万円で、比較可能な独立製造業者の原価マークアップ率が15%であるとすれば、独立企業間販売価格は800万円 ×（1 + 0.15）= 920万円と算定されます。</p>
+
+        <h3>8-2. CP法の適用場面</h3>
+        <p>CP法は、特に受託製造（Contract Manufacturing）や委託加工取引において最も有効に機能します。受託製造者は、発注者の仕様に従って製造活動を行い、その原価に一定のマークアップを上乗せした対価を受領するビジネスモデルです。このような取引では、受託製造者の利益は原価に対するマークアップとして表現されることが自然であり、CP法の論理構造と整合的です。</p>
+
+        <p>また、グループ内役務提供取引（Management Fee、技術支援料など）においてもCP法（又はこれに準ずる方法）が適用されることがあります。役務提供の対価は、しばしば役務提供に要した費用に一定のマークアップを加算する形で設定されるため、CP法のアプローチが適しています。OECDガイドラインでは、低付加価値のグループ内役務提供については、原価にわずかなマークアップ（5%が簡素化措置として示されている）を加算する方法が認められています。</p>
+
+        <h3>8-3. 原価の範囲と会計処理の問題</h3>
+        <p>CP法の適用において最も注意すべき点の一つは、「原価」の定義と範囲です。原価には直接材料費、直接労務費、製造間接費が含まれますが、どこまでを「原価」に含め、どこからを「販売費及び一般管理費」として除外するかについては、会計基準や企業の会計方針によって差異が生じ得ます。このため、検証対象法人と比較対象企業の間で原価の範囲を統一した上で比較を行うことが必要です。</p>
+
+        <p>特に問題となるのは、研究開発費の取扱いです。研究開発費を原価に含めるか否かによってマークアップ率は大きく変動します。また、減価償却費の計算方法（定額法、定率法等）や、棚卸資産の評価方法（先入先出法、総平均法等）の違いも原価の金額に影響を与えるため、比較可能性分析においてこれらの要素を検討する必要があります。</p>
+
+        <h3>8-4. CP法とRP法の対称性</h3>
+        <p>CP法とRP法は、ある意味で「鏡像」のような関係にあります。RP法が再販売者（買い手）側から独立企業間価格を逆算するのに対し、CP法は供給者（売り手）側から独立企業間価格を順算します。両者は、関連者間取引の「どちら側」に焦点を当てるかが異なるだけで、基本的な比較のロジックは共通しています。</p>
+
+        <p>一般的な指針として、取引のうち「より単純な機能を遂行する当事者」の側から検証を行うことが推奨されています。販売子会社の機能が単純であればRP法が適し、受託製造子会社の機能が単純であればCP法が適するということになります。ただし、最適方法ルールの下では、これは絶対的なルールではなく、あくまで考慮要素の一つです。</p>
+
+        <div class="code-block">
+<span class="cm">/* CP法の計算例 */</span>
+
+<span class="kw">前提条件：</span>
+  日本の製造子会社（受託製造）が海外親会社に製品を供給
+  製造原価 = <span class="num">5,000万円</span>
+  比較可能な独立受託製造業者のマークアップ率 = <span class="num">12%</span>
+
+<span class="kw">独立企業間販売価格の算定：</span>
+  独立企業間価格 = 原価 ×（1 + 通常の利益率）
+                 = <span class="num">5,000万円</span> ×（1 + <span class="num">0.12</span>）
+                 = <span class="num">5,600万円</span>
+
+<span class="kw">判定：</span>
+  実際の販売価格が <span class="num">5,600万円</span> を下回る場合
+  → 差額が移転価格調整の対象
+        </div>
+
+        <div class="point-box">
+          <div class="point-box-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            ポイント整理
+          </div>
+          <ul>
+            <li>CP法は売り手の原価に通常のマークアップ率を加算して独立企業間価格を算定する方法</li>
+            <li>受託製造、委託加工、グループ内役務提供に最も適した方法</li>
+            <li>原価の範囲（特にR&D費の取扱い）と会計処理の統一が比較可能性確保の鍵</li>
+            <li>RP法との対称的関係にあり、「より単純な機能の当事者」側から検証するのが一般的指針</li>
+          </ul>
+        </div>
+      </div>
+</body>
+</html>

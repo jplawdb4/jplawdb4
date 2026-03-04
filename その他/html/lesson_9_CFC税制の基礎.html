@@ -1,0 +1,1206 @@
+<!DOCTYPE html><html lang="ja" data-theme="dark">
+- Google Fonts: Outfit + Noto Sans JP
+- CSS変数でダーク/ライト切替対応:
+  ダーク: 背景#0A0A0A, テキスト#FAFAFA, カード#16161A, ボーダーrgba(255,255,255,0.06)
+  ライト: 背景#FAFAF7, テキスト#1A1A1A, カード#FFFFFF, ボーダーrgba(0,0,0,0.06)
+  アクセント: #5E6AD2→#7B85E0
+- fixedヘッダー: ロゴ「税法ラボ」(左上、紫正方形アイコン+テキスト) + ナビ(コース/条文DB/判例/ブログ) + テーマ切替ボタン(月/太陽SVGアイコン)
+  ヘッダー背景: backdrop-filter:blur(20px), 半透明
+- フッター: © 2026 税法ラボ + リンク(トップ/利用規約/プライバシー/お問い合わせ)
+- max-width:1120px, margin:0 auto, padding:0 24px
+- カード: border-radius:20px, box-shadow, ホバーでtranslateY(-4px)
+- セクションラベル: 英語大文字0.75rem letter-spacing:0.12em アクセント色
+- IntersectionObserverによるスクロールアニメーション(.reveal→.visible)
+- ノイズテクスチャオーバーレイ(SVG feTurbulence)
+- テーマ切替はlocalStorageに保存
+- レスポンシブ対応(モバイル含む)
+- 本文フォントサイズ: 1rem, 行間1.8, 読みやすさ重視
+- 見出しはOutfit font-weight:800
+- コードブロック・表・図解(SVG)を適宜使用
+- 目次(ページ内リンク)を冒頭に配置
+- 各セクション末に「ポイント整理」ボックスを配置
+
+**コードブロックでHTMLコードを出力してください。**
+1回の回答で完結すること。必ず最後まで出力すること。
+
+【コンテンツ】第9回：CFC税制の基礎 ─ 制度趣旨と適用対象の判定
+内容: (1)CFC税制の誕生—米国Subpart F（1962年）から各国への波及 (2)CFC税制の制度趣旨—資本輸出中立性とタックスヘイブン対策 (3)日本のCFC税制の条文構造（措置法66条の6〜66条の9の2） (4)外国関係会社の定義—持株基準と実質支配基準 (5)特定外国関係会社の3類型—ペーパーカンパニー・事実上のキャッシュボックス・ブラックリスト国所在法人 (6)ペーパーカンパニーの認定基準の詳細分析 (7)事実上のキャッシュボックスの判定（受動的所得30%超かつ総資産に占める有価証券等50%超） (8)対象外国関係会社の判定—租税負担割合の計算方法 (9)20%基準と30%基準のトリガー税率 (10)租税負担割合の計算における実務上の論点 (11)各国CFC税制の比較（米国GILTI・英国・ドイツ・フランス・豪州） (12)BEPS行動3のCFC勧告と各国の対応
+5万字以上Based on the detailed specifications, I'll create a comprehensive single-file HTML educational content about CFC (Controlled Foreign Corporation) tax rules. This is a massive document, so let me build it systematically.
+<!DOCTYPE html>
+<html lang="ja" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第9回：CFC税制の基礎 ─ 制度趣旨と適用対象の判定 | 税法ラボ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ===== CSS Variables ===== */
+:root {
+  --font-heading: 'Outfit', 'Noto Sans JP', sans-serif;
+  --font-body: 'Noto Sans JP', 'Outfit', sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  --accent: #5E6AD2;
+  --accent-hover: #7B85E0;
+  --radius-card: 20px;
+  --radius-sm: 12px;
+  --radius-xs: 8px;
+  --max-width: 1120px;
+  --header-h: 64px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="dark"] {
+  --bg: #0A0A0A;
+  --text: #FAFAFA;
+  --text-secondary: #A0A0A0;
+  --card: #16161A;
+  --card-hover: #1C1C22;
+  --border: rgba(255,255,255,0.06);
+  --border-strong: rgba(255,255,255,0.12);
+  --code-bg: #1E1E24;
+  --point-bg: rgba(94,106,210,0.08);
+  --point-border: rgba(94,106,210,0.3);
+  --toc-bg: #111114;
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
+  --shadow-card-hover: 0 12px 40px rgba(0,0,0,0.5);
+  --header-bg: rgba(10,10,10,0.78);
+  --noise-opacity: 0.03;
+  --table-stripe: rgba(255,255,255,0.02);
+  --svg-diagram-bg: #111116;
+  --tag-bg: rgba(94,106,210,0.12);
+}
+
+[data-theme="light"] {
+  --bg: #FAFAF7;
+  --text: #1A1A1A;
+  --text-secondary: #666666;
+  --card: #FFFFFF;
+  --card-hover: #F5F5F2;
+  --border: rgba(0,0,0,0.06);
+  --border-strong: rgba(0,0,0,0.12);
+  --code-bg: #F2F2EF;
+  --point-bg: rgba(94,106,210,0.05);
+  --point-border: rgba(94,106,210,0.25);
+  --toc-bg: #F0F0ED;
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.06);
+  --shadow-card-hover: 0 12px 40px rgba(0,0,0,0.1);
+  --header-bg: rgba(250,250,247,0.78);
+  --noise-opacity: 0.015;
+  --table-stripe: rgba(0,0,0,0.02);
+  --svg-diagram-bg: #F0F0ED;
+  --tag-bg: rgba(94,106,210,0.08);
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + 24px);
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+  font-size: 1rem;
+  transition: background var(--transition), color var(--transition);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Noise Overlay ===== */
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: var(--noise-opacity);
+}
+
+/* ===== Container ===== */
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ===== Header ===== */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-h);
+  background: var(--header-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  z-index: 1000;
+  transition: background var(--transition);
+}
+
+.header-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-icon svg { width: 18px; height: 18px; }
+
+.logo-text {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.header-nav a {
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color var(--transition);
+}
+
+.header-nav a:hover { color: var(--text); }
+.header-nav a.active { color: var(--accent); }
+
+.theme-toggle {
+  background: none;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all var(--transition);
+}
+
+.theme-toggle:hover {
+  color: var(--text);
+  border-color: var(--accent);
+  background: var(--tag-bg);
+}
+
+.theme-toggle svg { width: 18px; height: 18px; }
+
+[data-theme="dark"] .icon-sun { display: none; }
+[data-theme="light"] .icon-moon { display: none; }
+
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  padding: 4px;
+}
+
+/* ===== Hero ===== */
+.hero {
+  padding: calc(var(--header-h) + 72px) 0 56px;
+}
+
+.hero-label {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+.hero h1 {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+}
+
+.hero-description {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  line-height: 1.85;
+  max-width: 740px;
+}
+
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.hero-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.hero-meta-item svg { width: 16px; height: 16px; opacity: 0.6; }
+
+.hero-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.tag {
+  display: inline-block;
+  padding: 4px 14px;
+  background: var(--tag-bg);
+  color: var(--accent);
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* ===== Table of Contents ===== */
+.toc-card {
+  background: var(--toc-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 36px 40px;
+  margin: 32px 0 56px;
+}
+
+.toc-card h2 {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.toc-card h2 svg { width: 20px; height: 20px; color: var(--accent); }
+
+.toc-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 6px 32px;
+}
+
+.toc-list li {
+  border-bottom: 1px solid var(--border);
+}
+
+.toc-list a {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  padding: 10px 0;
+  transition: color var(--transition);
+}
+
+.toc-list a:hover { color: var(--accent); }
+
+.toc-num {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: var(--accent);
+  min-width: 28px;
+}
+
+/* ===== Sections ===== */
+.section {
+  margin-bottom: 72px;
+}
+
+.section-label {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.section h2 {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  margin-bottom: 28px;
+}
+
+.section h3 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-top: 40px;
+  margin-bottom: 16px;
+  padding-left: 16px;
+  border-left: 3px solid var(--accent);
+}
+
+.section h4 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-top: 32px;
+  margin-bottom: 12px;
+  color: var(--accent-hover);
+}
+
+.section p {
+  margin-bottom: 18px;
+}
+
+/* ===== Cards ===== */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 32px;
+  margin: 28px 0;
+  transition: all var(--transition);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.card h4 {
+  margin-top: 0;
+}
+
+/* ===== Point Box ===== */
+.point-box {
+  background: var(--point-bg);
+  border: 1px solid var(--point-border);
+  border-radius: var(--radius-sm);
+  padding: 28px 32px;
+  margin: 36px 0;
+}
+
+.point-box-title {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--accent);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.point-box-title svg { width: 18px; height: 18px; }
+
+.point-box ul {
+  list-style: none;
+  padding: 0;
+}
+
+.point-box li {
+  position: relative;
+  padding: 6px 0 6px 22px;
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+.point-box li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 14px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.6;
+}
+
+/* ===== Code Block ===== */
+.code-block {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 24px 28px;
+  margin: 24px 0;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.code-block .keyword { color: #c678dd; }
+.code-block .string { color: #98c379; }
+.code-block .comment { color: #5c6370; font-style: italic; }
+.code-block .number { color: #d19a66; }
+.code-block .accent-code { color: var(--accent-hover); }
+
+.code-label {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+/* ===== Table ===== */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 24px 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+thead {
+  background: var(--code-bg);
+}
+
+th {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.82rem;
+  text-align: left;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border-strong);
+  white-space: nowrap;
+}
+
+td {
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+tr:nth-child(even) { background: var(--table-stripe); }
+
+/* ===== SVG Diagram ===== */
+.diagram-wrapper {
+  background: var(--svg-diagram-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 32px 24px;
+  margin: 28px 0;
+  text-align: center;
+  overflow-x: auto;
+}
+
+.diagram-wrapper svg text {
+  font-family: var(--font-body);
+}
+
+.diagram-caption {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: 14px;
+  text-align: center;
+}
+
+/* ===== Blockquote ===== */
+blockquote {
+  border-left: 3px solid var(--accent);
+  padding: 16px 24px;
+  margin: 24px 0;
+  background: var(--tag-bg);
+  border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+/* ===== Inline ===== */
+strong { font-weight: 700; }
+em { font-style: italic; }
+code {
+  font-family: var(--font-mono);
+  background: var(--code-bg);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.88em;
+}
+
+a.inline-link {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ===== Scroll Reveal ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== Footer ===== */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 0;
+  margin-top: 80px;
+}
+
+.footer-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.footer-copy {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.footer-links {
+  display: flex;
+  gap: 24px;
+}
+
+.footer-links a {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+.footer-links a:hover { color: var(--accent); }
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  :root { --header-h: 56px; }
+
+  .header-nav { display: none; }
+  .header-nav.open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: var(--header-h);
+    left: 0;
+    right: 0;
+    background: var(--header-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    gap: 12px;
+  }
+
+  .mobile-menu-btn { display: block; }
+
+  .hero { padding: calc(var(--header-h) + 40px) 0 40px; }
+  .hero h1 { font-size: 1.6rem; }
+
+  .toc-card { padding: 24px 20px; }
+  .toc-list { grid-template-columns: 1fr; }
+
+  .card { padding: 24px 20px; }
+  .point-box { padding: 20px 20px; }
+  .code-block { padding: 18px 16px; font-size: 0.78rem; }
+
+  .section h3 { font-size: 1.08rem; }
+
+  .footer-inner { flex-direction: column; text-align: center; }
+  .footer-links { flex-wrap: wrap; justify-content: center; }
+
+  table { font-size: 0.82rem; }
+  th, td { padding: 10px 12px; }
+}
+
+@media (max-width: 480px) {
+  .hero h1 { font-size: 1.35rem; }
+  .container { padding: 0 16px; }
+  .header-inner { padding: 0 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Noise Overlay -->
+<svg class="noise-overlay" xmlns="http://www.w3.org/2000/svg">
+  <filter id="noiseFilter">
+    <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+  </filter>
+  <rect width="100%" height="100%" filter="url(#noiseFilter)"/>
+</svg>
+
+<!-- Header -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v14"/><path d="M4 19h16"/><path d="M8 7h8"/><path d="M8 11h6"/></svg>
+      </div>
+      <span class="logo-text">税法ラボ</span>
+    </a>
+    <nav class="header-nav" id="headerNav">
+      <a href="#" class="active">コース</a>
+      <a href="#">条文DB</a>
+      <a href="#">判例</a>
+      <a href="#">ブログ</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+    </nav>
+    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="メニュー">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+<!-- Hero -->
+<div class="container">
+<section class="hero reveal">
+  <div class="hero-label">Course 09 — International Tax</div>
+  <h1>CFC税制の基礎<br>─ 制度趣旨と適用対象の判定</h1>
+  <p class="hero-description">
+    外国子会社合算税制（CFC税制）は、国際租税法の中核をなす制度の一つです。本講では、CFC税制が誕生した歴史的背景から、日本法の条文構造、外国関係会社・特定外国関係会社の判定基準、租税負担割合の計算方法、さらには各国CFC税制の比較とBEPS行動3の勧告まで、実務家が把握すべき論点を網羅的に解説します。
+  </p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      2026年3月4日
+    </div>
+    <div class="hero-meta-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      読了目安 約90分
+    </div>
+    <div class="hero-meta-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      全12セクション
+    </div>
+  </div>
+  <div class="hero-tags">
+    <span class="tag">CFC税制</span>
+    <span class="tag">国際課税</span>
+    <span class="tag">タックスヘイブン対策税制</span>
+    <span class="tag">措置法66条の6</span>
+    <span class="tag">BEPS行動3</span>
+  </div>
+</section>
+</div>
+
+<!-- Table of Contents -->
+<div class="container">
+<div class="toc-card reveal">
+  <h2>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+    目次
+  </h2>
+  <ol class="toc-list">
+    <li><a href="#sec1"><span class="toc-num">01</span>CFC税制の誕生—米国Subpart Fから各国への波及</a></li>
+    <li><a href="#sec2"><span class="toc-num">02</span>CFC税制の制度趣旨—資本輸出中立性とタックスヘイブン対策</a></li>
+    <li><a href="#sec3"><span class="toc-num">03</span>日本のCFC税制の条文構造（措置法66条の6〜66条の9の2）</a></li>
+    <li><a href="#sec4"><span class="toc-num">04</span>外国関係会社の定義—持株基準と実質支配基準</a></li>
+    <li><a href="#sec5"><span class="toc-num">05</span>特定外国関係会社の3類型</a></li>
+    <li><a href="#sec6"><span class="toc-num">06</span>ペーパーカンパニーの認定基準の詳細分析</a></li>
+    <li><a href="#sec7"><span class="toc-num">07</span>事実上のキャッシュボックスの判定</a></li>
+    <li><a href="#sec8"><span class="toc-num">08</span>対象外国関係会社の判定—租税負担割合の計算方法</a></li>
+    <li><a href="#sec9"><span class="toc-num">09</span>20%基準と30%基準のトリガー税率</a></li>
+    <li><a href="#sec10"><span class="toc-num">10</span>租税負担割合の計算における実務上の論点</a></li>
+    <li><a href="#sec11"><span class="toc-num">11</span>各国CFC税制の比較</a></li>
+    <li><a href="#sec12"><span class="toc-num">12</span>BEPS行動3のCFC勧告と各国の対応</a></li>
+  </ol>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- Section 1 -->
+<!-- ============================================================ -->
+<div class="container">
+<section class="section reveal" id="sec1">
+  <div class="section-label">Section 01</div>
+  <h2>CFC税制の誕生—米国Subpart F（1962年）から各国への波及</h2>
+
+  <h3>1-1. CFC税制とは何か</h3>
+  <p>
+    CFC税制（Controlled Foreign Corporation Rules／外国子会社合算税制）とは、内国法人や居住者が、低税率国に設立された外国子会社を通じて所得を留保し、自国での課税を繰り延べる行為を防止するために設けられた国際租税制度である。具体的には、内国法人等が一定の支配関係を有する外国法人（CFC）が得た所得の全部または一部を、配当の有無にかかわらず、内国法人等の所得に合算して課税する仕組みである。
+  </p>
+  <p>
+    この制度は「タックスヘイブン対策税制」とも呼ばれ、日本においては租税特別措置法第66条の6以下に規定されている。しかしながら、CFC税制は日本独自の制度ではなく、もともと米国が1962年に導入した「Subpart F」制度がその起源であり、その後、主要先進国を中心に世界各国に広がっていった。CFC税制を正しく理解するためには、まずその歴史的背景と各国への波及過程を把握することが不可欠である。
+  </p>
+
+  <h3>1-2. 米国Subpart F制度の成立背景（1962年Revenue Act）</h3>
+  <p>
+    米国のCFC税制であるSubpart F制度は、1962年のRevenue Act（歳入法）により導入された。その立法の背景には、1960年代初頭の米国における国際課税をめぐる政策論争がある。当時、米国の多国籍企業は、バハマ、バミューダ、パナマ、スイスといった低税率国・地域に子会社を設立し、そこに所得を留保することで米国での課税を長期にわたって繰り延べていた。
+  </p>
+  <p>
+    当時の米国税制では、外国子会社が得た所得は、実際に配当として米国親会社に送金されるまで米国では課税されなかった。これは法人格の独立性（separate entity doctrine）に基づく原則であり、外国子会社は米国親会社とは別個の納税主体として扱われていた。しかし、この原則を利用して、米国企業が低税率国に「ペーパーカンパニー」や「ベース・カンパニー」を設立し、実質的に米国に帰属すべき所得をこれらの国に移転・留保するケースが増加した。
+  </p>
+  <p>
+    ジョン・F・ケネディ大統領は1961年の税制改革教書（Tax Message to Congress）において、海外での課税繰延べ（deferral）を制限する提案を行った。ケネディ大統領の当初の提案は非常に包括的なもので、すべての外国子会社の所得について繰延べを廃止し、発生時に米国親会社の所得に合算するというものであった。しかし、この提案は議会の強い反対に直面した。米国企業の国際競争力を損なうとの懸念、および既に高税率国で事業を行っている企業にまで過度な負担を課すとの批判が相次いだのである。
+  </p>
+  <p>
+    最終的に議会を通過した1962年Revenue Actでは、ケネディ大統領の当初提案から大幅に後退し、「特定の種類の受動的所得（passive income）」と「ベースカンパニー所得（base company income）」に限定してCFC合算課税を行うという妥協案が採用された。これがSubpart F制度（IRC §951-965）である。「Subpart F」という名称は、Internal Revenue Code（内国歳入法典）のSubchapter N（国際課税に関する章）のPart IIIのSubpart Fに規定されていることに由来する。
+  </p>
+
+  <h3>1-3. Subpart F制度の基本構造</h3>
+  <p>
+    1962年に成立したSubpart F制度の基本構造は以下のとおりである。まず、CFC（Controlled Foreign Corporation）の定義として、米国株主（United States shareholders）が議決権の50%超を直接・間接に保有する外国法人がCFCとされた。ここでいう「米国株主」とは、議決権の10%以上を保有する米国人（US person）を指す。
+  </p>
+  <p>
+    次に、合算の対象となる所得（Subpart F income）は、大きく分けて以下の4つのカテゴリーに分類された。第一に、保険所得（insurance income）、すなわちCFCが行う保険引受けに係る所得である。第二に、外国ベースカンパニー所得（Foreign Base Company Income: FBCI）であり、これはさらに、外国個人持株会社所得（Foreign Personal Holding Company Income: FPHCI）、外国ベースカンパニー販売所得（Foreign Base Company Sales Income）、および外国ベースカンパニー役務所得（Foreign Base Company Services Income）に細分化される。第三に、ボイコット関連所得、第四に、特定の違法支払いに関する所得である。
+  </p>
+  <p>
+    FPHCIには、配当、利子、使用料（ロイヤルティ）、賃貸料、キャピタルゲイン等の受動的所得が含まれる。ベースカンパニー販売所得は、関連者との間で行われる動産の購入・販売であって、当該動産がCFCの所在国外で製造され、かつ所在国外で使用・消費される場合の所得を対象としている。ベースカンパニー役務所得は、関連者のために行われる技術的・経営的な役務の提供であって、当該役務がCFCの所在国外で遂行される場合の所得である。
+  </p>
+  <p>
+    このように、Subpart Fは所得の性質に着目した「トランザクション・アプローチ」（取引ごとのアプローチ）を採用しており、CFCの全所得を合算するのではなく、租税回避のリスクが高い特定類型の所得のみを合算の対象としている。この点は、後述するように、各国のCFC税制設計において重要な分岐点となっている。
+  </p>
+
+  <h3>1-4. 各国CFC税制への波及の経緯</h3>
+  <p>
+    米国が1962年にSubpart Fを導入した後、CFC税制は主要先進国に波及していった。この波及の過程は、おおむね以下の3つの時期に分けて整理することができる。
+  </p>
+  <p>
+    第一の波及期は1970年代であり、ドイツ（1972年）、カナダ（1976年）、日本（1978年）、フランス（1980年）がCFC税制を導入した。ドイツのAußensteuergesetz（対外租税法、略称AStG）は1972年に制定され、ヨーロッパにおけるCFC税制の先駆けとなった。ドイツの制度は、低課税国に所在する外国法人の受動的所得を合算するという設計であり、米国のSubpart Fと基本的な発想を共有している。日本は1978年（昭和53年）の租税特別措置法改正により、いわゆる「タックスヘイブン対策税制」を導入した。これは当時、ケイマン諸島やバハマ等に設立された日本企業の海外子会社を通じた租税回避が社会的に問題視されたことが直接的な契機であった。
+  </p>
+  <p>
+    第二の波及期は1980年代から1990年代であり、英国（1984年）、ニュージーランド（1988年）、オーストラリア（1990年）、スウェーデン（1990年）、ノルウェー（1992年）、フィンランド（1995年）等がCFC税制を導入した。この時期は、金融のグローバル化が急速に進展し、多国籍企業によるタックスプランニングがさらに高度化・複雑化したことを背景としている。英国のCFC税制は1984年に導入され、その後2012年に大幅な改正が行われた。オーストラリアの制度は、かなり詳細な規定を有しており、「tainted income」（汚染された所得）という概念を用いてCFC合算の対象所得を特定する独自のアプローチを採用している。
+  </p>
+  <p>
+    第三の波及期は2000年代以降であり、中国（2008年）、韓国（1997年改正強化）、インド（2015年）、ブラジル（各種改正）、南アフリカ（2000年代）等の新興国・途上国にもCFC税制が拡大した。特に、2013年以降のOECD/G20によるBEPS（Base Erosion and Profit Shifting：税源浸食と利益移転）プロジェクトは、CFC税制の国際的な標準化に大きな影響を与えた。BEPS行動3（Action 3）はCFC税制の強化を勧告しており、これを受けて多くの国がCFC税制の見直し・導入を行っている。
+  </p>
+
+  <h3>1-5. CFC税制の類型論—エンティティ・アプローチとトランザクション・アプローチ</h3>
+  <p>
+    各国のCFC税制を比較する際に重要な視点の一つが、合算の方法に関するアプローチの違いである。大きく分けて、「エンティティ・アプローチ」（entity approach）と「トランザクション・アプローチ」（transactional approach）の2つの類型が存在する。
+  </p>
+  <p>
+    エンティティ・アプローチとは、CFCの所得全体を合算の対象とする方法である。このアプローチでは、CFCが一定の要件（例えば、租税負担割合が基準値以下であること）を満たす場合に、当該CFCの所得の全額を内国法人の所得に合算する。日本の旧タックスヘイブン対策税制（2017年度改正前の措置法66条の6）は、基本的にこのエンティティ・アプローチを採用していた。このアプローチのメリットは、制度が比較的シンプルであり、執行が容易であることである。一方、デメリットとしては、低税率国で実質的な事業活動を行っている企業の能動的事業所得まで合算の対象となるおそれがあり、過大合算（over-inclusion）のリスクがある。
+  </p>
+  <p>
+    トランザクション・アプローチとは、CFCの所得のうち、特定の性質を有する所得（受動的所得やベースカンパニー所得等）のみを合算の対象とする方法である。米国のSubpart Fが典型的なトランザクション・アプローチであり、英国の2012年改正後のCFC税制や、2017年度改正後の日本のCFC税制もこの方向に移行している。このアプローチのメリットは、実質的な事業活動から生じた能動的所得（active income）を合算の対象から除外できるため、過大合算のリスクが低い点にある。デメリットとしては、所得の分類が複雑であり、納税者と課税当局の双方に大きな事務負担を生じさせることがある。
+  </p>
+  <p>
+    2017年度（平成29年度）の日本の税制改正により、日本のCFC税制は「エンティティ・アプローチ」から「エンティティ・アプローチとトランザクション・アプローチの混合型」へと移行した。すなわち、「会社単位の合算課税」（エンティティ・アプローチ）を基本としつつ、一定の要件を満たす場合には「受動的所得の部分合算課税」（トランザクション・アプローチ）を適用するというハイブリッド型の制度設計が採用されている。この改正は、BEPS行動3の勧告を受けたものであり、日本のCFC税制の大きな転換点となった。
+  </p>
+
+  <h3>1-6. CFC税制と他の国際租税制度との関係</h3>
+  <p>
+    CFC税制は、国際租税法の中で単独で機能する制度ではなく、他の制度と密接に関連している。主要な関連制度として、移転価格税制（Transfer Pricing Rules）、過少資本税制（Thin Capitalization Rules）・過大支払利子税制（Earnings Stripping Rules）、外国税額控除制度（Foreign Tax Credit）、租税条約、および2021年以降のOECD/G20の第2の柱（Pillar Two）であるグローバル・ミニマム課税（GloBE Rules）がある。
+  </p>
+  <p>
+    特に、グローバル・ミニマム課税との関係は近年の重要論点である。GloBE Rulesは、多国籍企業グループの実効税率が15%を下回る場合にトップアップ税（上乗せ税）を課すものであり、CFC税制と機能的に重複する部分がある。実際、GloBE Rulesの下では、QDMTT（適格国内ミニマムトップアップ税）やIIR（所得合算ルール）がCFC税制と同様の効果を持つ場面がある。今後、CFC税制とグローバル・ミニマム課税の関係をどのように整理するかは、各国の税制設計における重要な課題となっている。
+  </p>
+
+  <div class="point-box">
+    <div class="point-box-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      セクション1 ポイント整理
+    </div>
+    <ul>
+      <li>CFC税制とは、内国法人が支配する低税率国の外国子会社の所得を、配当の有無にかかわらず内国法人の所得に合算して課税する制度である。起源は1962年の米国Subpart F制度にある。</li>
+      <li>ケネディ大統領の当初提案（全所得合算）は議会の反対により後退し、受動的所得・ベースカンパニー所得に限定した合算課税という形で成立した。このSubpart Fの設計は「トランザクション・アプローチ」と呼ばれる。</li>
+      <li>CFC税制は1970年代以降、ドイツ、日本、英国、豪州等の先進国に波及し、2000年代以降は新興国にも拡大した。BEPS行動3（2015年）がさらなる国際標準化を推進している。</li>
+      <li>日本のCFC税制は2017年度改正で「エンティティ・アプローチ」から「ハイブリッド型」に移行した。今後はグローバル・ミニマム課税（GloBE Rules）との関係整理が重要な課題となる。</li>
+    </ul>
+  </div>
+</section>
+</div>
+
+<!-- ============================================================ -->
+<!-- Section 2 -->
+<!-- ============================================================ -->
+<div class="container">
+<section class="section reveal" id="sec2">
+  <div class="section-label">Section 02</div>
+  <h2>CFC税制の制度趣旨—資本輸出中立性とタックスヘイブン対策</h2>
+
+  <h3>2-1. CFC税制の根本的な政策目的</h3>
+  <p>
+    CFC税制の制度趣旨を正確に理解することは、個別の適用判定やグレーゾーンの解釈において極めて重要である。CFC税制には複数の政策目的が内包されているが、主要なものとして以下の4つを挙げることができる。第一に「資本輸出中立性」（Capital Export Neutrality: CEN）の確保、第二に「タックスヘイブンを利用した租税回避の防止」、第三に「課税ベースの保全」（Revenue Protection）、第四に「公平性の確保」（Equity）である。
+  </p>
+  <p>
+    これらの政策目的は互いに関連しつつも、必ずしも同一方向を向いているわけではない。例えば、資本輸出中立性を徹底すれば、すべての海外所得を即時に居住地国で合算課税すべきことになるが、これは自国企業の国際競争力を損なう可能性がある。一方、タックスヘイブン対策に焦点を当てれば、低税率国に所在するCFCのみを合算対象とすれば足りることになる。CFC税制の設計は、これらの政策目的間のバランスをどのように取るかという問題に帰着する。
+  </p>
+
+  <h3>2-2. 資本輸出中立性（CEN）の概念</h3>
+  <p>
+    資本輸出中立性とは、税制が投資の立地選択に影響を与えないべきであるという中立性の原則である。すなわち、投資家が国内に投資しても海外に投資しても、税引き後のリターンが等しくなるよう税制を設計すべきだとする考え方である。これは、経済学的には、資本の最適配分を実現するために、すべての投資が同一の実効税率に直面すべきだとする効率性の要請に基づいている。
+  </p>
+  <p>
+    資本輸出中立性を完全に実現するためには、居住地国課税原則（worldwide taxation with full credit）を採用し、海外所得も国内所得と同じ税率で課税した上で、外国で支払った税額を控除するという制度設計が必要になる。米国は伝統的にこの全世界所得課税方式を採用してきた（2017年のTax Cuts and Jobs Act以前）。
+  </p>
+  <p>
+    しかし、法人格の独立性の原則により、外国子会社が得た所得は配当として送金されるまで親会社の所得とはみなされない。この「繰延べ」（deferral）が認められる限り、資本輸出中立性は損なわれる。なぜなら、低税率国に子会社を設立して所得を留保すれば、その分だけ課税が繰り延べられ、時間的価値の分だけ税負担が軽減されるからである。CFC税制は、この繰延べの利益を特定の場面で排除することにより、資本輸出中立性を（部分的に）回復させる機能を持っている。
+  </p>
+
+  <h3>2-3. 資本輸入中立性（CIN）との対比</h3>
+  <p>
+    資本輸出中立性と対をなす概念として、資本輸入中立性（Capital Import Neutrality: CIN）がある。これは、特定の国の市場で活動するすべての企業が、その出身国にかかわらず同一の税負担に直面すべきだとする原則である。資本輸入中立性を実現するためには、源泉地国課税原則（territorial taxation）を採用し、海外所得を居住地国で課税しないことが必要になる。
+  </p>
+  <p>
+    CENとCINは、理論的には両立しない。CENを追求すれば居住地国での合算課税が必要になり、CINを追求すれば海外所得の免除が必要になる。CFC税制はCENの側に立つ制度であるが、完全なCENを実現するものではなく、低税率国に所在するCFCの特定の所得についてのみ繰延べを排除するという限定的な制度である。
+  </p>
+  <p>
+    近年は、資本所有中立性（Capital Ownership Neutrality: CON）という第三の中立性概念も提唱されている。CONは、税制が企業の所有構造（どの国の企業がどの資産を所有するか）に影響を与えないべきだとする原則である。CFC税制はCONの観点からも分析可能であり、例えば、CFC税制が厳格な国の企業が海外子会社を売却し、CFC税制の緩い国の企業がこれを買収するといった「所有構造の歪み」を生じさせていないかという検証が行われている。
+  </p>
+
+  <h3>2-4. タックスヘイブン対策としてのCFC税制</h3>
+  <p>
+    CFC税制のもう一つの重要な制度趣旨は、タックスヘイブンを利用した租税回避の防止である。タックスヘイブン（tax haven）とは、一般に、法人税率がゼロまたは著しく低い国・地域であって、銀行秘密法制により情報の秘匿性が高く、かつ外国企業の誘致のための優遇税制を有する国・地域を指す。典型的なタックスヘイブンとしては、ケイマン諸島、英領ヴァージン諸島（BVI）、バミューダ、バハマ、ジャージー島、ガーンジー島等が挙げられる。
+  </p>
+  <p>
+    多国籍企業がタックスヘイブンを利用する典型的なスキームとしては、以下のようなものがある。第一に、知的財産権のタックスヘイブン子会社への移転である。例えば、日本の親会社がケイマン諸島の子会社に特許権やブランドの使用権を移転し、第三国の関連会社がケイマン子会社にロイヤルティを支払うことで、実質的に日本で生じるべき所得をケイマン諸島に移転するスキームである。第二に、金融所得のタックスヘイブンへの集中である。グループ内の余剰資金をタックスヘイブンの子会社に集中し、利子所得や有価証券の運用益をタックスヘイブンに留保するスキームである。第三に、再請求書（reinvoicing）スキームである。タックスヘイブンの子会社を介在させて、グループ内の商品売買の利益をタックスヘイブンに留保するスキームである。
+  </p>
+  <p>
+    CFC税制は、これらのスキームに対する対抗措置として機能する。すなわち、タックスヘイブンの子会社に留保された所得を、日本の親会社の所得に合算することにより、タックスヘイブンへの所得移転のインセンティブを減殺する。ただし、CFC税制は、所得の「移転」そのものを否認する制度ではなく、あくまでタックスヘイブン子会社の所得を親会社に「合算」する制度である点に注意が必要である。所得の移転そのものを是正する制度は移転価格税制であり、CFC税制と移転価格税制は相互補完的な関係にある。
+  </p>
+
+  <h3>2-5. 課税ベースの保全と税収確保</h3>
+  <p>
+    CFC税制の第三の政策目的は、居住地国の課税ベースの保全、すなわち税収の確保である。多国籍企業が低税率国に所得を移転・留保することは、居住地国の法人税収の減少をもたらす。OECD/G20のBEPSプロジェクトにおいて、税源浸食と利益移転（Base Erosion and Profit Shifting）の規模は年間1,000億ドルから2,400億ドル（世界全体の法人税収の4%から10%に相当）と推計されている。
+  </p>
+  <p>
+    CFC税制は、低税率国に移転された所得を居住地国に取り戻す機能を持つことにより、課税ベースの浸食を防止する。これは、税収確保という財政上の要請に基づくものであるが、同時に、課税ベースの浸食が進めば国内の税負担配分にも歪みが生じ、国内専業企業と多国籍企業の間の税負担の不公平という問題が発生することにも関連している。
+  </p>
+
+  <h3>2-6. 公平性の確保—水平的公平と垂直的公平</h3>
+  <p>
+    CFC税制の第四の政策目的は、課税の公平性の確保である。国内のみで事業を営む企業が国内の法人税率に従って課税される一方、多国籍企業がタックスヘイブンを利用することで実効税率を大幅に引き下げることができるとすれば、同程度の所得を得ている企業間で税負担が異なることになり、水平的公平に反する。
+  </p>
+  <p>
+    また、租税回避のスキームを構築するためには、国際的なタックスプランニングの専門家を雇用し、複雑な法的構造を維持するための費用が必要であり、このようなスキームを利用できるのは主に大規模な多国籍企業に限られる。中小企業や個人事業主にはこのような選択肢が実質的に利用不可能であり、結果として、規模の大きい企業ほど低い実効税率を享受するという逆進的な状況が生じうる。CFC税制は、このような不公平を是正する機能を有している。
+  </p>
+
+  <h3>2-7. CFC税制に対する批判論</h3>
+  <p>
+    以上のような政策目的にもかかわらず、CFC税制に対しては様々な批判も存在する。第一の批判は、CFC税制が自国企業の国際競争力を損なうという点である。CFC税制が厳格な国の企業は、CFC税制の緩い国の競合企業に比べて、低税率国での事業展開において不利な立場に置かれる。このため、CFC税制が過度に厳格であれば、企業の本社移転（corporate inversion）や海外流出を招くリスクがある。
+  </p>
+  <p>
+    第二の批判は、CFC税制の遵守コスト（compliance cost）が高いことである。CFC税制の適用判定には、外国子会社の所得の計算、租税負担割合の算定、能動的所得と受動的所得の区分等、複雑な作業が必要であり、特に多数の海外子会社を有する多国籍企業にとって大きな事務負担となっている。
+  </p>
+  <p>
+    第三の批判は、CFC税制が経済的二重課税を生じさせる可能性があることである。CFCの所得がCFC税制により合算課税された後、当該所得が配当として送金された場合に、再度課税が行われると二重課税となる。この問題に対処するため、各国のCFC税制は通常、合算済み所得に対応する配当を課税所得から除外する措置（日本では二重課税調整の規定）を設けているが、完全な調整が行われない場面もある。
+  </p>
+
+  <h3>2-8. 日本のCFC税制における制度趣旨の解釈</h3>
+  <p>
+    日本のCFC税制の制度趣旨については、最高裁判例においても明示的に述べられている。最高裁平成21年10月29日判決（デンソー事件）は、タックスヘイブン対策税制の趣旨について、「内国法人が、法人税の負担がないか又は極めて低い国若しくは地域に子会社を設立し、当該子会社を利用して、我が国における税負担を不当に回避し又は軽減することを防止する」ことにあると判示した。
+  </p>
+  <p>
+    この判決は、CFC税制が租税回避防止規定であることを明確にしたものであるが、同時に、「実体のある事業活動を行っている外国子会社」にまでCFC税制を適用することは制度趣旨に反するとの解釈の余地を残した。この点は、適用除外規定（経済活動基準）の解釈において重要な意義を有している。すなわち、CFC税制の適用に際しては、形式的な要件充足のみならず、制度趣旨に照らした実質的判断が求められる場面があるということである。
+  </p>
+  <p>
+    なお、平成29年度税制改正により日本のCFC税制が大幅に改正された際の税制改正大綱においては、CFC税制の趣旨について「外国子会社を通じた租税回避への対応」に加えて、「BEPS行動3の勧告への対応」および「制度の適正化」が改正の目的として挙げられている。これは、日本のCFC税制が純粋な国内的租税回避対策から、国際的な課税ルールの調和を視野に入れた制度へと発展してきたことを示している。
+  </p>
+
+  <div class="point-box">
+    <div class="point-box-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      セクション2 ポイント整理
+    </div>
+    <ul>
+      <li>CFC税制には、資本輸出中立性（CEN）の確保、タックスヘイブン対策、課税ベースの保全、公平性の確保という4つの政策目的が内包されている。</li>
+      <li>CENとは、税制が投資の立地選択に影響を与えないべきだとする原則であり、CFC税制は課税繰延べの排除を通じてCENを部分的に回復する機能を持つ。</li>
+      <li>CFC税制に対しては、国際競争力の阻害、遵守コストの高さ、経済的二重課税のリスクという批判がある。制度設計においてはこれらのトレードオフのバランスが重要となる。</li>
+      <li>日本の最高裁判例（デンソー事件）は、CFC税制が租税回避防止規定であることを確認しつつ、実体のある事業活動を行う外国子会社への過度な適用は制度趣旨に反しうるとの解釈を示した。</li>
+    </ul>
+  </div>
+</section>
+</div>
+
+<!-- ============================================================ -->
+<!-- Section 3 -->
+<!-- ============================================================ -->
+<div class="container">
+<section class="section reveal" id="sec3">
+  <div class="section-label">Section 03</div>
+  <h2>日本のCFC税制の条文構造（措置法66条の6〜66条の9の2）</h2>
+
+  <h3>3-1. 条文の全体構造</h3>
+  <p>
+    日本のCFC税制は、租税特別措置法（以下「措置法」という）第66条の6から第66条の9の2までに規定されている。2017年度（平成29年度）の大幅改正後の条文構造は極めて複雑であり、関連する政令（租税特別措置法施行令）および省令（租税特別措置法施行規則）の規定も含めると、膨大な条文量となっている。ここでは、条文の全体構造を俯瞰し、各条文の役割と相互関係を整理する。
+  </p>
+  <p>
+    条文の全体的な構造は以下のとおりである。措置法第66条の6は、CFC税制の中核規定であり、内国法人の特定外国関係会社等に係る所得の課税の特例を定めている。同条第1項が合算課税の本則規定であり、第2項以下に各種の定義・計算方法が規定されている。措置法第66条の7は外国税額控除に関する規定、措置法第66条の8は課税済配当等の益金不算入（二重課税調整）に関する規定、措置法第66条の9の2は特殊関係株主等である内国法人に係る特定外国法人の所得に係る課税の特例に関する規定である。
+  </p>
+
+  <h3>3-2. 判定フローの概観</h3>
+  <p>
+    日本のCFC税制の適用判定は、複数のステップを経て行われる。全体の判定フローを理解することが、個別の論点を正確に把握するための前提となる。判定フローは大きく分けて6つのステップで構成される。
+  </p>
+  <p>
+    ステップ1は「外国関係会社」への該当性判定である。まず、対象となる外国法人が「外国関係会社」に該当するかどうかを判定する。外国関係会社とは、居住者・内国法人が直接・間接に株式等の50%以上を保有する外国法人、または実質的に支配している外国法人をいう（措置法66条の6第2項第1号）。この判定については第4セクションで詳述する。
+  </p>
+  <p>
+    ステップ2は「特定外国関係会社」への該当性判定である。外国関係会社のうち、ペーパーカンパニー、事実上のキャッシュボックス、またはブラックリスト国所在法人のいずれかに該当するものは「特定外国関係会社」とされる（措置法66条の6第2項第2号）。特定外国関係会社に該当する場合、租税負担割合が30%以上でなければ、全所得合算（会社単位の合算課税）が適用される。この判定については第5セクションから第7セクションで詳述する。
+  </p>
+  <p>
+    ステップ3は「対象外国関係会社」への該当性判定である。外国関係会社のうち、特定外国関係会社に該当しないもので、租税負担割合が20%未満のものは「対象外国関係会社」とされる（措置法66条の6第2項第3号）。この判定については第8セクションから第10セクションで詳述する。
+  </p>
+  <p>
+    ステップ4は「経済活動基準」の判定である。対象外国関係会社について、事業基準、実体基準、管理支配基準、および所在地国基準（非関連者基準）の4つの経済活動基準をすべて満たすかどうかを判定する。4つの基準のいずれか1つでも満たさない場合は、全所得合算（会社単位の合算課税）が適用される。4つの基準をすべて満たす場合はステップ5に進む。
+  </p>
+  <p>
+    ステップ5は「部分合算課税」の適用判定である。経済活動基準をすべて満たす対象外国関係会社については、その所得のうち「受動的所得」（部分対象外国関係会社の特定所得の金額）のみが合算の対象となる（部分合算課税）。受動的所得には、配当、利子、使用料、有価証券の譲渡益、デリバティブ取引の損益等が含まれる。
+  </p>
+  <p>
+    ステップ6は合算所得の計算と二重課税調整である。合算対象とされた所得の金額は、内国法人の所得に加算される。その際、外国税額控除（措置法66条の7）および課税済配当の二重課税調整（措置法66条の8）が適用される。
+  </p>
+
+  <!-- SVG Diagram: CFC判定フロー -->
+  <div class="diagram-wrapper">
+    <svg viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;">
+      <!-- Background rectangles -->
+      <rect x="300" y="10" width="300" height="50" rx="12" fill="#5E6AD2" opacity="0.15" stroke="#5E6AD2" stroke-width="1.5"/>
+      <text x="450" y="42" text-anchor="middle" fill="#5E6AD2" font-size="15" font-weight="700">外国法人</text>
+
+      <!-- Arrow -->
+      <line x1="450" y1="60" x2="450" y2="90" stroke="#5E6AD2" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+      <!-- Step 1 -->
+      <rect x="250" y="90" width="400" height="50" rx="12" fill="#5E6AD2" opacity="0.10" stroke="#5E6AD2" stroke-width="1.5"/>
+      <text x="450" y="120" text-anchor="middle" fill="currentColor" font-size="14" font-weight="600">Step1: 外国関係会社に該当するか？(50%保有/実質支配)</text>
+
+      <line x1="450" y1="140" x2="450" y2="170" stroke="#5E6AD2" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <text x="460" y="162" fill="#5E6AD2" font-size="12">Yes</text>
+      <line x1="650" y1="115" x2="780" y2="115" stroke="#888" stroke-width="1.5" stroke-dasharray="5,4"/>
+      <text x="790" y="120" fill="#888" font-size="12">No → 適用なし</text>
+
+      <!-- Step 2 -->
+      <rect x="220" y="170" width="460" height="50" rx="12" fill="#5E6AD2" opacity="0.10" stroke="#5E6AD2" stroke-width="1.5"/>
+      <text x="450" y="200" text-anchor="middle" fill="currentColor" font-size="14" font-weight="600">Step2: 特定外国関係会社か？(ペーパー/CB/ブラックリスト)</text>
+
+      <!-- Branch Yes -->
+      <line x1="330" y1="220" x2="200" y2="260" stroke="#5E6AD2" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <text x="240" y="245" fill="#5E6AD2" font-size="12">Yes</text>
+
+      <rect x="60" y="260" width="280" height="50" rx="12" fill="#c678dd" opacity="0.12" stroke="#c678dd" stroke-width="1.5"/>
+      <text x="200" y="290" text-anchor="middle" fill="currentColor" font-size="13" font-weight="600">租税負担割合 30%未満？</text>
+
+      <line x1="200" y1="310" x2="200" y2="350" stroke="#5E6AD2" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <text x="210" y="335" fill="#5E6AD2" font-size="12">Yes</text>
+
+      <rect x="80" y="350" width="240" height="44" rx="10" fill="#5E6AD2" opacity="0.2" stroke="#5E6AD2" stroke-width="2"/>
+      <text x="200" y="378" text-anchor="middle" fill="#5E6AD2" font-size="14" font-weight="700">会社単位の合算課税</text>
+
+      <!-- Branch No → Step 3 -->
+      <line x1="570" y1="220" x2="680" y2="260" stroke="#5E6AD2" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <text x="635" y="245" fill="#888" font-size="12">No</text>
+
+      <rect x="540" y="260" width="300" height="50" rx="12" fill="#5E6AD2" opacity="0.10" stroke="#5E6AD2" stroke-width="1.5"/>
+      <text x="690" y="290" text-anchor="middle" fill="currentColor" font-size="13" font-weight="600">Step3: 租税負担割合 20%未満？</text>
+
+      <line x1="690" y1="310" x2="690" y2="350" stroke="#5E6AD2" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <text x="700" y="335" fill="#5E6AD2" font-size="12">Yes</text>
+
+      <!-- Step 4 -->
+      <rect x="540" y="350" width="300" height="50" rx="12" fill="#5E6AD2" opacity="0.10" stroke="#5E6AD2" stroke-width="1.5"/>
+      <text x="690" y="380" text-anchor="middle" fill="currentColor" font-size="13" font-weight="600">Step4: 経済活動基準をすべて充足？</text>
+
+      <!-- Branch: Fail -->
+      <line x1="590" y1="400" x2="440" y2="440" stroke="#5E6AD2" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <text x="485" y="427" fill="#5E6AD2" font-size="12">不充足</text>
+
+      <rect x="310" y="440" width="240" height="44" rx="10" fill="#5E6AD2" opacity="0.2" stroke="#5E6AD2" stroke-width="2"/>
+      <text x="430" y="468" text-anchor="middle" fill="#5E6AD2" font-size="14" font-weight="700">会社単位の合算課税</text>
+
+      <!-- Branch: Pass -->
+      <line x1="790" y1="400" x2="790" y2="440" stroke="#5E6AD2" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <text x="800" y="425" fill="#5E6AD2" font-size="12">充足</text>
+
+      <rect x="660" y="440" width="260" height="44" rx="10" fill="#98c379" opacity="0.2" stroke="#98c379" stroke-width="2"/>
+      <text x="790" y="468" text-anchor="middle" fill="#98c379" font-size="14" font-weight="700">部分合算課税（受動的所得）</text>
+
+      <!-- Not CFC -->
+      <text x="850" y="290" fill="#888" font-size="12">No → 適用なし</text>
+      <line x1="840" y1="285" x2="855" y2="285" stroke="#888" stroke-width="1.5" stroke-dasharray="5,4"/>
+
+      <!-- Arrowhead marker -->
+      <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#5E6AD2"/>
+        </marker>
+      </defs>
+    </svg>
+    <p class="diagram-caption">図3-1: 日本のCFC税制 判定フロー概要図</p>
+  </div>
+
+  <h3>3-3. 措置法66条の6の条文構造</h3>
+  <p>
+    措置法第66条の6は、CFC税制の中核をなす条文であり、2017年度改正後の構造は極めて複雑である。条文は大きく分けて以下の要素で構成されている。
+  </p>
+  <p>
+    第1項は合算課税の本則規定である。内国法人が外国関係会社の発行済株式等の10%以上を直接・間接に有する場合において、当該外国関係会社が特定外国関係会社に該当するとき（租税負担割合30%未満）、または対象外国関係会社に該当し経済活動基準を満たさないとき（租税負担割合20%未満かつ経済活動基準不充足）は、当該外国関係会社の適用対象金額のうち、当該内国法人の持分割合に対応する金額を、当該内国法人の益金に算入する旨を規定している。
+  </p>
+  <p>
+    第2項は各種の定義規定であり、「外国関係会社」（第1号）、「特定外国関係会社」（第2号）、「対象外国関係会社」（第3号）、「部分対象外国関係会社」（第4号）等の定義が置かれている。第3項以下には、適用対象金額の計算方法、部分適用対象金額の計算方法等が規定されている。
+  </p>
+
+  <h3>3-4. 政令・省令の役割</h3>
+  <p>
+    CFC税制に関する具体的な計算方法や判定基準の多くは、租税特別措置法施行令（措置法施行令）および租税特別措置法施行規則（措置法施行規則）に委任されている。主要な政令規定として、措置法施行令第39条の14の3（外国関係会社の判定に関する詳細規定）、第39条の15（特定外国関係会社の判定基準の詳細）、第39条の17の2（適用対象金額の計算方法）、第39条の17の3（部分適用対象金額の計算方法）等がある。
+  </p>
+  <p>
+    特に重要なのが、租税負担割合の計算方法を定める政令規定である。租税負担割合の計算は、CFC税制の適用可否を左右する核心的な判定事項であるが、その計算方法は極めて技術的であり、政令・省令の詳細な規定を参照しなければ正確な計算を行うことができない。この点については第8セクションから第10セクションで詳しく検討する。
+  </p>
+
+  <h3>3-5. 通達の位置づけ</h3>
+  <p>
+    CFC税制に関しては、国税庁から「租税特別措置法（法人税関係）通達」が公表されており、各条文の解釈指針が示されている。通達は法的拘束力を有するものではないが、課税実務において重要な参照資料となっている。特に、CFC税制のように条文が複雑であり、かつ事実認定を伴う判定が多い分野では、通達の果たす役割が大きい。
+  </p>
+  <p>
+    主要な通達として、措置法通達66の6-1以下がある。これらの通達では、外国関係会社の判定に関する具体的な事例、経済活動基準の各要件の解釈、租税負担割合の計算における具体的な取扱い等が詳細に示されている。ただし、通達はあくまで課税庁の内部指針であり、納税者を法的に拘束するものではない。裁判例において通達の解釈が否定された例もあり、通達に過度に依存することは適切ではない。
+  </p>
+
+  <h3>3-6. 2017年度改正の概要と経緯</h3>
+  <p>
+    2017年度（平成29年度）の税制改正は、日本のCFC税制にとって最も大きな転換点であった。この改正は、OECD/G20のBEPS行動3の勧告を受けたものであり、CFC税制の基本的な枠組みを根本的に変更した。
+  </p>
+  <p>
+    改正前の日本のCFC税制は、基本的にエンティティ・アプローチを採用しており、外国関係会社が「特定外国子会社等」に該当し、適用除外基準（事業基準、実体基準、管理支配基準、非関連者基準・所在地国基準）のいずれかを満たさない場合に、当該外国関係会社の所得全体が合算の対象とされていた。一方、適用除外基準をすべて満たす場合は、合算課税は適用されなかった（一部の資産性所得を除く）。
+  </p>
+  <p>
+    2017年度改正後は、前述の判定フローのとおり、「特定外国関係会社」「対象外国関係会社」「部分対象外国関係会社」という3つの区分が設けられ、特定外国関係会社については30%基準、対象外国関係会社については20%基準という2段階のトリガー税率が採用された。また、経済活動基準をすべて満たす対象外国関係会社については、受動的所得の部分合算課税が導入された。これにより、日本のCFC税制は、エンティティ・アプローチとトランザクション・アプローチを組み合わせたハイブリッド型の制度に移行した。
+  </p>
+
+  <div class="code-block">
+    <div class="code-label">条文参照: 措置法66条の6 第1項（概要）</div>
+<span class="comment">/* 合算課税の本則（簡略化表記） */</span>
+
+内国法人に係る<span class="keyword">外国関係会社</span>のうち、次に掲げるものの
+各事業年度の<span class="accent-code">適用対象金額</span>に、当該各事業年度の
+当該内国法人の<span class="accent-code">請求権勘案保有株式等割合</span>を乗じて
+計算した金額は、当該内国法人の収益の額とみなして
+益金の額に算入する。
+
+一　<span class="keyword">特定外国関係会社</span>
+    → 租税負担割合 <span class="number">30%</span> 未満
+二　<span class="keyword">対象外国関係会社</span>（経済活動基準不充足）
+    → 租税負担割合 <span class="number">20%</span> 未満 かつ 経済活動基準を満たさない
+
+※ 部分合算課税（受動的所得のみ）
+    <span class="keyword">部分対象外国関係会社</span>
+    → 租税負担割合 <span class="number">20%</span> 未満 かつ 経済活動基準をすべて充足
+  </div>
+
+  <h3>3-7. 措置法66条の7〜66条の9の2の概要</h3>
+  <p>
+    措置法66条の7は、CFC合算課税に伴う外国税額控除の特例を規定している。CFCの所得に対して外国で課された税額について、内国法人が外国税額控除を適用できる旨を定めている。これは、CFC合算課税による二重課税を防止するための規定であり、外国関係会社の所在地国で課された法人税に相当する税額が控除の対象となる。
+  </p>
+  <p>
+    措置法66条の8は、課税済配当等の益金不算入を規定している。CFC税制により合算課税された所得に対応する配当が、後日内国法人に支払われた場合、当該配当の額は益金に算入しない旨を定めている。これも二重課税調整の規定であり、CFC税制により既に課税された所得が、配当時に再度課税されることを防止する。
+  </p>
+  <p>
+    措置法66条の9の2は、特殊関係株主等である内国法人に係る外国関係法人に係る所得の課税の特例を規定している。これは、内国法人が外国法人を通じて間接的に外国関係会社の株式を保有している場合に適用される規定であり、CFC税制の適用を、直接保有の場合だけでなく、間接的な保有関係がある場合にも拡張するものである。
+  </p>
+
+  <div class="point-box">
+    <div class="point-box-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      セクション3 ポイント整理
+    </div>
+    <ul>
+      <li>日本のCFC税制は措置法66条の6から66条の9の2に規定されており、2017年度改正後の判定フローは「外国関係会社→特定外国関係会社/対象外国関係会社→経済活動基準→全所得合算/部分合算」の多段階構造となっている。</li>
+      <li>特定外国関係会社（ペーパーカンパニー等）には30%のトリガー税率が適用され、対象外国関係会社には20%のトリガー税率が適用される。経済活動基準をすべて満たす対象外国関係会社は部分合算課税（受動的所得のみ）の対象となる。</li>
+      <li>具体的な計算方法の多くは政令・省令に委任されており、通達が解釈指針として重要な役割を果たしている。CFC税制の正確な適用のためには法令・政令・省令・通達の横断的な理解が不可欠である。</li>
+      <li>措置法66条の7（外国税額控除）および66条の8（課税済配当の益金不算入）は、CFC合算課税に伴う二重課税を調整するための規定である。</li>
+    </ul>
+  </div>
+</section>
+</div>
+
+<!-- ============================================================ -->
+<!-- Section 4 -->
+<!-- ============================================================ -->
+<div class="container">
+<section class="section reveal" id="sec4">
+  <div class="section-label">Section 04</div>
+  <h2>外国関係会社の定義—持株基準と実質支配基準</h2>
+
+  <h3>4-1. 「外国関係会社」の定義—条文の読み方</h3>
+  <p>
+    CFC税制の第一の判定ステップは、対象となる外国法人が「外国関係会社」に該当するかどうかである。措置法第66条の6第2項第1号は、外国関係会社を「次に掲げる外国法人をいう」と定義し、イとロの2つの基準を定めている。イが「持株基準」（50%基準）であり、ロが「実質支配基準」である。いずれか一方の基準を満たせば、当該外国法人は外国関係会社に該当する。
+  </p>
+
+  <h3>4-2. 持株基準（50%基準）</h3>
+  <p>
+    持株基準とは、居住者及び内国法人が直接及び間接に保有する株式等の数又は金額が、当該外国法人の発行済株式等の総数又は総額の50%以上となる場合に、当該外国法人を外国関係会社とする基準である。ここでいう「居住者及び内国法人」には、特定の居住者・内国法人のみならず、すべての居住者及び内国法人が含まれる点に注意が必要である。すなわち、複数の無関係な日本の企業・個人の持株割合を合算して50%以上となれば、外国関係会社に該当する。
+  </p>
+  <p>
+    「直接及び間接」に保有するとは、直接保有のみならず、他の外国法人等を通じた間接保有も含むという意味である。間接保有割合の計算方法は、政令に詳細な規定がある。基本的には、連鎖保有の場合は各段階の保有割合を乗じて計算する（いわゆる「掛け算方式」）。例えば、内国法人Aが外国法人Bの株式の80%を保有し、外国法人Bが外国法人Cの株式の70%を保有している場合、内国法人Aの外国法人Cに対する間接保有割合は80%×70%＝56%となる。
+  </p>
+  <p>
+    ただし、措置法施行令第39条の14の3の規定により、間接保有割合の計算において、一定の信託を通じた保有や、議決権のない株式の保有も考慮される。また、新株予約権付社債等のように、将来的に株式に転換される可能性のある有価証券の取扱いについても留意が必要である。
+  </p>
+
+  <h3>4-3. 請求権勘案保有株式等の割合</h3>
+  <p>
+    持株基準の判定においては、「発行済株式等」の保有割合で判定するのが原則であるが、実際の合算金額の計算においては「請求権勘案保有株式等の割合」が用いられる。「請求権」とは、剰余金の配当等を受ける権利であり、保有する株式等の数のみならず、当該株式等に係る配当請求権の内容も考慮される。
+  </p>
+  <p>
+    例えば、外国法人Xが普通株式と優先株式を発行しており、日本の内国法人Aが普通株式のみを保有しているが、優先株式に高率の配当が優先的に支払われる設計となっている場合、内国法人Aの実質的な経済的持分は発行済株式等の保有割合とは異なる場合がある。請求権勘案保有株式等の割合は、このような場合の実質的な持分割合を反映するために設けられた概念である。
+  </p>
+
+  <h3>4-4. 実質支配基準</h3>
+  <p>
+    実質支配基準は、持株割合が50%未満であっても、居住者又は内国法人が外国法人を「実質的に支配している」と認められる場合に、当該外国法人を外国関係会社とする基準である。この基準は、形式的な持株割合の操作（例えば、第三者名義株式の利用や、議決権と経済的持分の分離等）によってCFC税制の適用を免れることを防止するために設けられている。
+  </p><s
+</body>
+</html>

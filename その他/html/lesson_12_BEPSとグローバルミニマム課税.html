@@ -1,0 +1,1001 @@
+<!DOCTYPE html><html lang="ja" data-theme="dark">
+- Google Fonts: Outfit + Noto Sans JP
+- CSS変数でダーク/ライト切替対応:
+  ダーク: 背景#0A0A0A, テキスト#FAFAFA, カード#16161A, ボーダーrgba(255,255,255,0.06)
+  ライト: 背景#FAFAF7, テキスト#1A1A1A, カード#FFFFFF, ボーダーrgba(0,0,0,0.06)
+  アクセント: #5E6AD2→#7B85E0
+- fixedヘッダー: ロゴ「税法ラボ」(紫正方形+テキスト) + ナビ(コース/条文DB/判例/ブログ) + テーマ切替(月/太陽SVG)、backdrop-filter:blur(20px)半透明
+- フッター: © 2026 税法ラボ + リンク
+- max-width:1120px, padding:0 24px, margin:0 auto
+- カード: border-radius:20px, box-shadow, ホバーtranslateY(-4px)
+- セクションラベル: 英語大文字0.75rem letter-spacing:0.12em アクセント色
+- IntersectionObserverスクロールアニメーション(.reveal→.visible)
+- ノイズテクスチャオーバーレイ, localStorage保存テーマ, レスポンシブ
+- 目次(ページ内リンク)冒頭配置, 各セクション末に「ポイント整理」ボックス
+- 表・コードブロック・SVG図解を適宜使用
+
+**コードブロックでHTMLコードを出力してください。** 1回の回答で完結。必ず最後まで出力。
+
+【コンテンツ】第12回：BEPSとグローバルミニマム課税─Pillar1&2。(1)BEPSの背景(2)15行動計画(3)包摂的枠組み(4)二本の柱(5)Pillar1 Amount A(6)Amount B(7)Pillar2趣旨(8)GloBE4つの仕組み(IIR・UTPR・STTR・Subject to Tax)(9)IIR詳細(10)UTPR計算(11)ETR計算(12)QDMTT(13)移行期セーフハーバー(14)日本の国内法制化(15)今後の展望。3万字程度<!DOCTYPE html>
+<html lang="ja" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第12回：BEPSとグローバルミニマム課税─Pillar1&2 | 税法ラボ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════ CSS VARIABLES & THEMING ═══════════════ */
+:root {
+  --font-en: 'Outfit', sans-serif;
+  --font-jp: 'Noto Sans JP', sans-serif;
+  --accent: #5E6AD2;
+  --accent-hover: #7B85E0;
+  --radius: 20px;
+  --radius-sm: 12px;
+  --max-w: 1120px;
+  --header-h: 64px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="dark"] {
+  --bg: #0A0A0A;
+  --text: #FAFAFA;
+  --text-secondary: rgba(250,250,250,0.55);
+  --card: #16161A;
+  --card-hover: #1C1C22;
+  --border: rgba(255,255,255,0.06);
+  --border-strong: rgba(255,255,255,0.12);
+  --code-bg: #1E1E24;
+  --point-bg: rgba(94,106,210,0.08);
+  --point-border: rgba(94,106,210,0.25);
+  --toc-bg: #111114;
+  --table-stripe: rgba(255,255,255,0.02);
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  --shadow-hover: 0 12px 40px rgba(0,0,0,0.55);
+  --noise-opacity: 0.025;
+  --header-bg: rgba(10,10,10,0.78);
+  --svg-diagram-bg: #12121A;
+  --svg-text: #FAFAFA;
+  --svg-line: rgba(255,255,255,0.2);
+  --svg-fill: rgba(94,106,210,0.15);
+}
+
+[data-theme="light"] {
+  --bg: #FAFAF7;
+  --text: #1A1A1A;
+  --text-secondary: rgba(26,26,26,0.5);
+  --card: #FFFFFF;
+  --card-hover: #F5F5F2;
+  --border: rgba(0,0,0,0.06);
+  --border-strong: rgba(0,0,0,0.1);
+  --code-bg: #F0F0ED;
+  --point-bg: rgba(94,106,210,0.05);
+  --point-border: rgba(94,106,210,0.2);
+  --toc-bg: #F2F2EF;
+  --table-stripe: rgba(0,0,0,0.02);
+  --shadow: 0 4px 24px rgba(0,0,0,0.06);
+  --shadow-hover: 0 12px 40px rgba(0,0,0,0.1);
+  --noise-opacity: 0.015;
+  --header-bg: rgba(250,250,247,0.78);
+  --svg-diagram-bg: #F0F0ED;
+  --svg-text: #1A1A1A;
+  --svg-line: rgba(0,0,0,0.2);
+  --svg-fill: rgba(94,106,210,0.1);
+}
+
+/* ═══════════════ RESET & BASE ═══════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--header-h) + 24px); }
+
+body {
+  font-family: var(--font-jp);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.9;
+  font-size: 15.5px;
+  transition: background var(--transition), color var(--transition);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Noise overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: var(--noise-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+.container { max-width: var(--max-w); padding: 0 24px; margin: 0 auto; }
+
+a { color: var(--accent); text-decoration: none; transition: color var(--transition); }
+a:hover { color: var(--accent-hover); }
+
+::selection { background: rgba(94,106,210,0.3); color: var(--text); }
+
+img { max-width: 100%; }
+
+/* ═══════════════ HEADER ═══════════════ */
+.header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  height: var(--header-h);
+  background: var(--header-bg);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: background var(--transition);
+}
+.header .container {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 100%;
+}
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.logo-icon {
+  width: 30px; height: 30px; background: var(--accent);
+  border-radius: 7px; display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-en); font-weight: 800; font-size: 14px; color: #fff;
+}
+.logo-text {
+  font-weight: 700; font-size: 16px; color: var(--text); letter-spacing: -0.02em;
+}
+.nav { display: flex; align-items: center; gap: 28px; }
+.nav a {
+  font-size: 13.5px; font-weight: 500; color: var(--text-secondary);
+  transition: color var(--transition); letter-spacing: 0.01em;
+}
+.nav a:hover { color: var(--text); }
+
+.theme-toggle {
+  background: none; border: 1px solid var(--border-strong);
+  border-radius: 10px; width: 38px; height: 38px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all var(--transition); color: var(--text-secondary);
+}
+.theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+.theme-toggle svg { width: 18px; height: 18px; }
+.theme-toggle .sun { display: none; }
+[data-theme="light"] .theme-toggle .moon { display: none; }
+[data-theme="light"] .theme-toggle .sun { display: block; }
+
+/* Mobile menu */
+.menu-btn {
+  display: none; background: none; border: none; color: var(--text);
+  cursor: pointer; padding: 4px;
+}
+.menu-btn svg { width: 22px; height: 22px; }
+
+/* ═══════════════ HERO ═══════════════ */
+.hero {
+  padding: calc(var(--header-h) + 72px) 0 64px;
+  text-align: center;
+}
+.hero-label {
+  font-family: var(--font-en); font-size: 0.75rem; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 16px;
+}
+.hero h1 {
+  font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+  font-weight: 800; line-height: 1.35;
+  letter-spacing: -0.03em; margin-bottom: 18px;
+}
+.hero h1 span { color: var(--accent); }
+.hero-sub {
+  font-size: 1rem; color: var(--text-secondary);
+  max-width: 640px; margin: 0 auto; line-height: 1.8;
+}
+.hero-meta {
+  margin-top: 24px; display: flex; gap: 20px; justify-content: center;
+  font-size: 0.82rem; color: var(--text-secondary);
+}
+.hero-meta span { display: flex; align-items: center; gap: 5px; }
+
+/* ═══════════════ TOC ═══════════════ */
+.toc-card {
+  background: var(--toc-bg); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 36px 40px;
+  margin-bottom: 56px; box-shadow: var(--shadow);
+  transition: background var(--transition), border var(--transition);
+}
+.toc-card h2 {
+  font-size: 1.05rem; font-weight: 700; margin-bottom: 20px;
+  display: flex; align-items: center; gap: 8px;
+}
+.toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 6px 32px; }
+.toc-grid a {
+  display: flex; align-items: baseline; gap: 8px;
+  font-size: 0.88rem; color: var(--text-secondary);
+  padding: 6px 0; transition: color var(--transition);
+  border-bottom: 1px solid var(--border);
+}
+.toc-grid a:hover { color: var(--accent); }
+.toc-num {
+  font-family: var(--font-en); font-weight: 600;
+  font-size: 0.78rem; color: var(--accent); min-width: 24px;
+}
+
+/* ═══════════════ SECTIONS ═══════════════ */
+.section { padding: 48px 0; }
+.section-label {
+  font-family: var(--font-en); font-size: 0.75rem; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 10px;
+}
+.section h2 {
+  font-size: clamp(1.35rem, 3vw, 1.65rem);
+  font-weight: 800; letter-spacing: -0.02em;
+  margin-bottom: 24px; line-height: 1.4;
+}
+.section h3 {
+  font-size: 1.12rem; font-weight: 700; margin: 32px 0 14px;
+  padding-left: 14px; border-left: 3px solid var(--accent);
+}
+.section h4 {
+  font-size: 1rem; font-weight: 600; margin: 24px 0 10px;
+}
+.section p { margin-bottom: 16px; color: var(--text); }
+
+/* ═══════════════ CARDS ═══════════════ */
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 32px;
+  box-shadow: var(--shadow); margin-bottom: 32px;
+  transition: all var(--transition);
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--border-strong);
+}
+
+/* ═══════════════ POINT BOX ═══════════════ */
+.point-box {
+  background: var(--point-bg); border: 1px solid var(--point-border);
+  border-radius: var(--radius-sm); padding: 24px 28px;
+  margin: 32px 0 16px;
+}
+.point-box h4 {
+  font-size: 0.88rem; font-weight: 700; color: var(--accent);
+  margin: 0 0 12px; display: flex; align-items: center; gap: 6px;
+  border: none; padding: 0;
+}
+.point-box ul { list-style: none; padding: 0; }
+.point-box li {
+  position: relative; padding-left: 18px; margin-bottom: 8px;
+  font-size: 0.9rem; line-height: 1.75;
+}
+.point-box li::before {
+  content: '✓'; position: absolute; left: 0; color: var(--accent); font-weight: 700;
+}
+
+/* ═══════════════ TABLES ═══════════════ */
+.table-wrap {
+  overflow-x: auto; margin: 24px 0; border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+table {
+  width: 100%; border-collapse: collapse; font-size: 0.88rem;
+}
+thead { background: var(--card); }
+th {
+  text-align: left; padding: 12px 16px; font-weight: 600;
+  border-bottom: 2px solid var(--border-strong);
+  font-size: 0.82rem; white-space: nowrap;
+}
+td {
+  padding: 11px 16px; border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+tr:nth-child(even) td { background: var(--table-stripe); }
+
+/* ═══════════════ CODE BLOCKS ═══════════════ */
+.code-block {
+  background: var(--code-bg); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 20px 24px;
+  margin: 20px 0; overflow-x: auto;
+  font-family: 'Outfit', 'Courier New', monospace;
+  font-size: 0.84rem; line-height: 1.8;
+  color: var(--text);
+}
+.code-block .comment { color: var(--text-secondary); }
+.code-block .keyword { color: var(--accent); font-weight: 600; }
+.code-block .num { color: #E0976F; }
+
+code {
+  background: var(--code-bg); padding: 2px 7px;
+  border-radius: 5px; font-size: 0.88em;
+  font-family: 'Outfit', monospace;
+}
+
+/* ═══════════════ SVG DIAGRAMS ═══════════════ */
+.diagram-wrap {
+  background: var(--svg-diagram-bg); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 24px;
+  margin: 24px 0; overflow-x: auto;
+  text-align: center;
+}
+.diagram-wrap svg { max-width: 100%; height: auto; }
+.diagram-caption {
+  text-align: center; font-size: 0.82rem;
+  color: var(--text-secondary); margin-top: 10px;
+}
+
+/* ═══════════════ SCROLL ANIMATION ═══════════════ */
+.reveal {
+  opacity: 0; transform: translateY(28px);
+  transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1), transform 0.7s cubic-bezier(0.4,0,0.2,1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ═══════════════ FOOTER ═══════════════ */
+.footer {
+  border-top: 1px solid var(--border); padding: 40px 0;
+  margin-top: 64px; text-align: center;
+}
+.footer-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 16px;
+}
+.footer-copy { font-size: 0.82rem; color: var(--text-secondary); }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { font-size: 0.82rem; color: var(--text-secondary); }
+.footer-links a:hover { color: var(--accent); }
+
+/* ═══════════════ RESPONSIVE ═══════════════ */
+@media (max-width: 768px) {
+  .nav { display: none; }
+  .menu-btn { display: block; }
+  .hero { padding: calc(var(--header-h) + 48px) 0 40px; }
+  .hero-meta { flex-direction: column; gap: 6px; align-items: center; }
+  .toc-card { padding: 24px 20px; }
+  .toc-grid { grid-template-columns: 1fr; }
+  .card { padding: 22px 18px; }
+  .section h2 { font-size: 1.3rem; }
+  .section h3 { font-size: 1.02rem; }
+  .point-box { padding: 18px 16px; }
+  .footer-inner { flex-direction: column; text-align: center; }
+  .code-block { padding: 14px 16px; font-size: 0.78rem; }
+  .table-wrap { font-size: 0.82rem; }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 14.5px; }
+  .container { padding: 0 16px; }
+  .hero h1 { font-size: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header class="header">
+  <div class="container">
+    <a href="#" class="logo">
+      <div class="logo-icon">税</div>
+      <span class="logo-text">税法ラボ</span>
+    </a>
+    <nav class="nav">
+      <a href="#">コース</a>
+      <a href="#">条文DB</a>
+      <a href="#">判例</a>
+      <a href="#">ブログ</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+    </nav>
+    <button class="menu-btn" id="menuBtn" aria-label="メニュー">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-label">COURSE — LECTURE 12</div>
+    <h1>BEPSとグローバルミニマム課税<br><span>Pillar 1 & Pillar 2</span></h1>
+    <p class="hero-sub">多国籍企業の税源浸食と利益移転（BEPS）に対する国際的取組みの全体像を解説。OECD/G20包摂的枠組みが打ち出した「二本の柱」を中心に、制度設計から日本の国内法化まで体系的に学びます。</p>
+    <div class="hero-meta">
+      <span>📅 2026年3月4日更新</span>
+      <span>⏱ 約90分</span>
+      <span>📝 約30,000字</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ TOC ═══════════════ -->
+<div class="container">
+  <div class="toc-card reveal">
+    <h2>📑 目次</h2>
+    <div class="toc-grid">
+      <a href="#sec1"><span class="toc-num">01</span>BEPSの背景──なぜ国際課税改革が必要になったか</a>
+      <a href="#sec2"><span class="toc-num">02</span>BEPS 15の行動計画</a>
+      <a href="#sec3"><span class="toc-num">03</span>包摂的枠組み（Inclusive Framework）</a>
+      <a href="#sec4"><span class="toc-num">04</span>二本の柱（Two-Pillar Solution）概観</a>
+      <a href="#sec5"><span class="toc-num">05</span>Pillar 1 ── Amount A：新たな課税権配分</a>
+      <a href="#sec6"><span class="toc-num">06</span>Pillar 1 ── Amount B：基本的マーケティング・販売活動</a>
+      <a href="#sec7"><span class="toc-num">07</span>Pillar 2の趣旨──グローバルミニマム課税の基本思想</a>
+      <a href="#sec8"><span class="toc-num">08</span>GloBEの4つの仕組み（IIR・UTPR・STTR・Subject to Tax Rule）</a>
+      <a href="#sec9"><span class="toc-num">09</span>IIR（所得合算ルール）の詳細</a>
+      <a href="#sec10"><span class="toc-num">10</span>UTPR（軽課税支払ルール）の計算</a>
+      <a href="#sec11"><span class="toc-num">11</span>ETR（実効税率）の計算メカニズム</a>
+      <a href="#sec12"><span class="toc-num">12</span>QDMTT（適格国内ミニマムトップアップ税）</a>
+      <a href="#sec13"><span class="toc-num">13</span>移行期セーフハーバー</a>
+      <a href="#sec14"><span class="toc-num">14</span>日本の国内法制化──各法改正の全体像</a>
+      <a href="#sec15"><span class="toc-num">15</span>今後の展望──国際課税の未来</a>
+    </div>
+  </div>
+</div>
+
+<main class="container">
+
+<!-- ═══════════════ SECTION 1 ═══════════════ -->
+<section class="section reveal" id="sec1">
+  <div class="section-label">SECTION 01</div>
+  <h2>BEPSの背景──なぜ国際課税改革が必要になったか</h2>
+
+  <h3>国際課税制度の歴史的出発点</h3>
+  <p>現行の国際課税の基本的枠組みは、1920年代に国際連盟の財政委員会が策定した原則に遡る。当時の世界経済は、有形資産を中心とした製造業が主流であり、企業活動は物理的な工場や店舗といった「恒久的施設（Permanent Establishment: PE）」を通じて行われていた。この前提のもとで確立されたのが、「PE なければ課税なし」という原則である。すなわち、市場国（消費者がいる国）が外国企業に課税するためには、当該企業がその国に物理的拠点を有していることが必要条件とされた。</p>
+  <p>また、「独立企業原則（Arm's Length Principle）」に基づく移転価格税制もこの時代に端を発する。関連企業間の取引価格は、独立した第三者間で設定されるであろう価格と同等であるべきとするこの原則は、国際的二重課税を回避しつつ各国の課税権を調整するための基本ルールとして、OECDモデル租税条約第9条に結実している。</p>
+
+  <h3>デジタル経済の台頭と制度の不整合</h3>
+  <p>1990年代後半以降のインターネットの急速な普及は、企業活動の在り方を根本的に変容させた。Google、Apple、Facebook（現Meta）、Amazonといった巨大テクノロジー企業は、物理的拠点をほとんど置くことなく、世界中の市場から莫大な収益を上げるビジネスモデルを確立した。デジタル広告、クラウドサービス、アプリストア、電子商取引プラットフォームなどのサービスは、ユーザーがいる国にPEを設置しなくとも提供可能であり、従来の「PE なければ課税なし」の原則は、市場国の課税権を実質的に空洞化させた。</p>
+  <p>さらに、知的財産（IP）の重要性が飛躍的に増大したことも、税源浸食の温床となった。多国籍企業グループは、高い価値を有する特許、商標、アルゴリズムなどのIPを、アイルランド、オランダ、ルクセンブルク、シンガポールといった低税率国や、特定の優遇税制を設ける国・地域の子会社に移転し、グループ全体の税負担を大幅に圧縮するストラクチャーを構築した。いわゆる「ダブルアイリッシュ・ウィズ・ア・ダッチサンドイッチ」と呼ばれるスキームがその典型例であり、利益が実質的な経済活動と乖離した形で低税率国に集中する事態が常態化した。</p>
+
+  <h3>具体的事例と社会的批判の高まり</h3>
+  <p>2012年、英国議会の公会計委員会は、スターバックス、Google、Amazonの3社を招致し、英国内で多額の売上を上げながらほとんど法人税を納付していない実態を追及した。スターバックスは英国で約4億ポンドの売上があったにもかかわらず、過去3年間法人税を支払っていなかった。Googleは英国で32億ポンドの売上に対しわずか600万ポンドの法人税しか納付せず、Amazonに至っては33.5億ポンドの売上に対し法人税は250万ポンドにすぎなかった。</p>
+  <p>これらの事実は広くメディアで報道され、市民社会からの強い批判を招いた。「フェアな税負担（Fair Share of Tax）」を求める世論が各国で高まり、国際課税制度の抜本的改革を求める政治的圧力が急速に強まった。2012年のG20メキシコサミットにおいて、各国首脳はOECDに対し、BEPSの問題に包括的に取り組むための行動計画の策定を正式に要請した。</p>
+
+  <h3>リーマンショック後の財政的要請</h3>
+  <p>2008年の世界金融危機とその後のソブリン危機は、先進各国の財政を著しく悪化させた。緊縮財政のもと社会保障の削減や増税を余儀なくされる中、巨大多国籍企業が極めて低い実効税率で運営している実態は、課税の公平性と社会的正義の観点から到底容認し得ないという認識が各国政府に共有された。税収確保の必要性という実務的観点からも、BEPSへの対応は喫緊の課題と位置づけられたのである。</p>
+
+  <h3>途上国への影響</h3>
+  <p>BEPSの問題は先進国に限ったものではない。むしろ、途上国は法人税への依存度が高く（歳入に占める法人税の割合が先進国の2〜3倍に達する国も多い）、税務当局の執行能力が相対的に限られているため、多国籍企業による利益移転の影響をより深刻に受ける。国連、IMF、世界銀行などの国際機関も、BEPSが途上国の持続可能な開発目標（SDGs）達成を阻害し得ると指摘し、問題解決に向けた国際的な取組みの必要性を強調した。</p>
+
+  <div class="point-box">
+    <h4>📌 ポイント整理</h4>
+    <ul>
+      <li>現行国際課税制度は1920年代の有形資産中心経済を前提に設計され、デジタル経済下で制度的不整合が表面化した</li>
+      <li>「PEなければ課税なし」原則の下、物理的拠点なしに莫大な収益を上げる多国籍企業に市場国が課税できない問題が発生した</li>
+      <li>IP移転を活用した「ダブルアイリッシュ」等のスキームにより、利益が実質的経済活動と乖離する形で低税率国に集中した</li>
+      <li>2008年金融危機後の各国財政悪化が改革の政治的機運を醸成し、2012年のG20がOECDにBEPS行動計画策定を要請した</li>
+      <li>途上国は法人税依存度が高く、BEPSの影響をより深刻に受けるため、包摂的な国際的対応が求められた</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════ SECTION 2 ═══════════════ -->
+<section class="section reveal" id="sec2">
+  <div class="section-label">SECTION 02</div>
+  <h2>BEPS 15の行動計画</h2>
+
+  <h3>行動計画の策定経緯</h3>
+  <p>2013年7月、OECDは「税源浸食と利益移転に関する行動計画（Action Plan on Base Erosion and Profit Shifting）」を公表した。この行動計画は15の具体的な行動（Action 1〜15）で構成され、2年間という異例の短期間での成果物取りまとめが目標として設定された。2015年10月、OECDはG20トルコ・アンタルヤサミットに合わせ、全15行動の最終報告書を公表した。この一連のプロジェクトには、OECD加盟国のみならず、G20メンバーの非OECD国も参画し、国際課税の歴史上かつてない規模と速度で改革が進められた。</p>
+
+  <h3>15の行動計画の全体構造</h3>
+  <p>15の行動計画は、大きく以下の4つの柱に整理できる。第一に、「整合性（Coherence）」の確保であり、各国の国内税制間の不整合を利用した二重非課税を防止することを目的とする（行動2〜5）。第二に、「実質性（Substance）」の確保であり、課税上の取扱いと実質的な経済活動の所在を一致させることを目的とする（行動6〜10）。第三に、「透明性（Transparency）」の確保であり、税務当局の情報把握を強化することを目的とする（行動11〜14）。そして第四に、これらの措置を実効的に実施するための横断的措置（行動1, 15）が位置づけられる。</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>行動</th><th>テーマ</th><th>分類</th><th>概要</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>電子経済の課税上の課題</td><td>横断的</td><td>デジタル経済がもたらす課税上の課題を包括的に分析。Pillar 1の原型</td></tr>
+        <tr><td>2</td><td>ハイブリッド・ミスマッチ取極めの無力化</td><td>整合性</td><td>事業体・金融商品の性質決定の相違（ハイブリッド）を利用した二重非課税の防止</td></tr>
+        <tr><td>3</td><td>外国子会社合算税制（CFC税制）の強化</td><td>整合性</td><td>低税率国の子会社に留保された所得を親会社に合算課税するルールの効果的設計</td></tr>
+        <tr><td>4</td><td>利子控除制限</td><td>整合性</td><td>過大な利子支払による税源浸食の制限（EBITDA比率ルール等）</td></tr>
+        <tr><td>5</td><td>有害な税慣行への対抗</td><td>整合性</td><td>パテントボックス税制等の優遇措置に「実質的活動」要件を導入（Nexusアプローチ）</td></tr>
+        <tr><td>6</td><td>租税条約の濫用防止</td><td>実質性</td><td>条約漁り（Treaty Shopping）を防止するためのLOB条項・PPT条項の導入</td></tr>
+        <tr><td>7</td><td>PE認定の人為的回避防止</td><td>実質性</td><td>コミッショネア契約等によるPE回避への対抗（PE定義の拡充）</td></tr>
+        <tr><td>8–10</td><td>移転価格税制と価値創造の一致</td><td>実質性</td><td>無形資産取引、リスク移転、ハイリスク取引の移転価格ガイドライン改訂</td></tr>
+        <tr><td>11</td><td>BEPSデータの収集・分析</td><td>透明性</td><td>BEPS の規模と経済的影響を測定する分析手法の確立</td></tr>
+        <tr><td>12</td><td>義務的開示制度</td><td>透明性</td><td>アグレッシブな租税計画の義務的開示（MDR）</td></tr>
+        <tr><td>13</td><td>移転価格文書化と国別報告書</td><td>透明性</td><td>マスターファイル・ローカルファイル・CbCR の三層構造文書化</td></tr>
+        <tr><td>14</td><td>紛争解決メカニズムの効率化</td><td>透明性</td><td>相互協議手続（MAP）の改善と義務的仲裁の導入</td></tr>
+        <tr><td>15</td><td>多国間協定の策定</td><td>横断的</td><td>既存二国間租税条約を一括改正する多国間条約（MLI）の開発</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>主要な行動計画の詳細</h3>
+  <h4>行動2：ハイブリッド・ミスマッチ</h4>
+  <p>ハイブリッド・ミスマッチとは、同一の事業体や金融商品が、関係する2か国の税制上異なる性質決定を受けることを利用して、一方の国で損金算入されるにもかかわらず他方の国で益金不算入となる（D/NI: Deduction/No Inclusion）、あるいは両国で損金算入される（DD: Double Deduction）といった結果を導くスキームをいう。行動2は、このようなミスマッチの効果を無力化するための国内法上の勧告と、モデル租税条約の改正案を提示した。具体的には、「一次的対応」として支払国側で損金算入を否認し、「防衛的対応」として受取国側で益金に算入する二段階のアプローチを推奨している。</p>
+
+  <h4>行動4：利子控除制限</h4>
+  <p>多国籍企業グループ内の過大な借入れ（シン・キャピタライゼーション）を通じた利益移転は、BEPSの主要な手法の一つである。行動4は、純利子費用（支払利子から受取利子を控除したもの）の損金算入を、EBITDAの一定割合（10%〜30%の幅で各国が設定）に制限する「固定比率ルール（Fixed Ratio Rule）」を勧告した。さらに、グループ全体の外部借入比率との比較を認める「グループ比率ルール（Group Ratio Rule）」も選択肢として示されている。</p>
+
+  <h4>行動13：国別報告書（CbCR）</h4>
+  <p>行動13は、多国籍企業の移転価格文書化を三層構造（マスターファイル、ローカルファイル、国別報告書）とすることを勧告した。特にCbCR（Country-by-Country Report）は、グループの事業活動が行われている各国・地域ごとに、収入金額、税引前利益、納付税額、従業員数、有形資産額等の情報を開示することを求めるものであり、税務当局間で自動交換される。年間連結総収入7.5億ユーロ（日本法上は1,000億円）以上の多国籍企業グループに提出義務が課される。</p>
+
+  <h4>行動15：多国間条約（MLI）</h4>
+  <p>BEPS対策の多くは租税条約の改正を必要とするが、世界に3,000以上ある二国間租税条約を個別に改正していたのでは何十年もかかる。行動15は、既存の二国間条約を一括して修正する「税源浸食及び利益移転防止のための租税条約関連措置を実施するための多国間条約（Multilateral Convention to Implement Tax Treaty Related Measures to Prevent BEPS: MLI）」を開発した。MLIは2017年6月に署名式が行われ、日本を含む100か国以上が署名した。各国は対象条約と適用する条項を選択でき、両締約国が共通して選択した条項が当該二国間条約に上書き適用される仕組みとなっている。</p>
+
+  <div class="point-box">
+    <h4>📌 ポイント整理</h4>
+    <ul>
+      <li>15の行動計画は「整合性」「実質性」「透明性」「横断的措置」の4つの柱で構成される</li>
+      <li>ハイブリッド・ミスマッチ、利子控除制限、CFC税制強化が整合性の柱を形成する</li>
+      <li>CbCRにより連結総収入7.5億ユーロ超のグループに国別の税務情報開示が義務化された</li>
+      <li>MLIにより3,000超の二国間租税条約の一括改正が可能となった</li>
+      <li>行動1（電子経済課税）の未解決課題がPillar 1・Pillar 2への発展の起点となった</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════ SECTION 3 ═══════════════ -->
+<section class="section reveal" id="sec3">
+  <div class="section-label">SECTION 03</div>
+  <h2>包摂的枠組み（Inclusive Framework）</h2>
+
+  <h3>包摂的枠組みの成立経緯</h3>
+  <p>2015年のBEPS最終報告書公表後、その実施をモニタリングし、残された課題（特に行動1のデジタル課税問題）に取り組むための国際的なプラットフォームの必要性が認識された。2016年、OECDとG20は「BEPS包摂的枠組み（OECD/G20 Inclusive Framework on BEPS: IF）」を設立した。包摂的枠組みの最大の特徴は、OECD非加盟国や途上国を含む全ての参加国・地域が対等な立場（on an equal footing）で意思決定に参加できる点にある。この枠組みにより、国際課税ルールの策定は従来のOECD加盟国中心のプロセスから、より広範な国際的合意形成のプロセスへと転換した。</p>
+
+  <h3>参加国の拡大と意義</h3>
+  <p>包摂的枠組みへの参加国・地域は発足当初の約80から、2024年時点で145以上にまで拡大した。これにはアフリカ、アジア、中南米の多くの途上国が含まれる。参加国は、BEPS関連の4つのミニマムスタンダード（行動5：有害税制、行動6：条約濫用防止、行動13：CbCR、行動14：紛争解決）の実施にコミットし、ピアレビューを受ける。この仕組みは、国際課税の議論が先進国のクラブであるOECDだけのものではなく、世界全体の問題であるという認識を体現するものであり、後の二本の柱の合意における正統性の基盤となった。</p>
+
+  <h3>行動1からの発展──デジタル課税問題の難航</h3>
+  <p>行動1の最終報告書は、デジタル経済の課税上の課題を分析しつつも、その解決策については「リングフェンス（特別扱い）」することは困難であるとし、具体的な制度設計を先送りした。これを受け、包摂的枠組みのもとで「デジタル化に伴う課税上の課題に関するタスクフォース（Task Force on the Digital Economy: TFDE）」が設置され、議論が継続された。</p>
+  <p>2018年3月には中間報告書が公表され、長期的解決策が見出されない場合の暫定措置としてデジタルサービス税（DST）の選択肢が示された。実際にフランス、イタリア、スペイン、英国、インドなどが独自のDSTを導入ないし導入を表明し、米国はこれを「不当な差別的課税」として強く反発した。特に、米国通商代表部（USTR）はフランスDSTに対し通商法301条に基づく調査を開始し、報復関税の発動を示唆するなど、国際的な通商摩擦に発展した。</p>
+  <p>こうした緊張関係が、多国間での抜本的解決策の合意に向けた政治的インセンティブを高め、2019年以降、包摂的枠組みは「二本の柱（Two-Pillar Solution）」に向けた集中的な交渉に移行した。2021年7月1日、包摂的枠組みの130か国・地域が二本の柱に関する声明に合意し、同年10月8日に最終的な声明が公表された。この合意は「歴史的」と評され、国際課税ルールの100年ぶりの大改革と位置づけられた。</p>
+
+  <h3>包摂的枠組みの組織的構造</h3>
+  <p>包摂的枠組みの技術的作業は、複数のワーキングパーティ（WP）を通じて行われる。特にPillar 1についてはタスクフォース・オン・ザ・デジタルエコノミー（TFDE）が、Pillar 2についてはワーキングパーティ11（WP11）が中心的な役割を担っている。これらの技術的成果は、包摂的枠組みの全体会合において承認され、G20財務大臣・中央銀行総裁会議およびG20首脳会議に報告される。OECDの税務政策・管理センター（CTPA）が事務局機能を担い、テクニカルノートやモデルルールの起草を行っている。</p>
+
+  <div class="point-box">
+    <h4>📌 ポイント整理</h4>
+    <ul>
+      <li>包摂的枠組みは2016年設立、145か国以上が対等な立場で参加する国際課税の議論・合意形成プラットフォーム</li>
+      <li>参加国はBEPS4つのミニマムスタンダード実施にコミットし、ピアレビューを受ける</li>
+      <li>デジタル課税問題の先送りと各国独自DST導入による通商摩擦が「二本の柱」合意の政治的推進力となった</li>
+      <li>2021年10月に130か国以上が二本の柱に関する声明に合意（国際課税の100年ぶりの大改革）</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════ SECTION 4 ═══════════════ -->
+<section class="section reveal" id="sec4">
+  <div class="section-label">SECTION 04</div>
+  <h2>二本の柱（Two-Pillar Solution）概観</h2>
+
+  <h3>基本構造</h3>
+  <p>包摂的枠組みが合意した解決策は、相互に補完的な二本の柱で構成される。Pillar 1は「課税権の配分」に関するルールであり、巨大多国籍企業の利益の一部を、物理的拠点の有無にかかわらず市場国に再配分する仕組みである。Pillar 2は「グローバルミニマム課税」に関するルールであり、多国籍企業の各国における実効税率が最低税率（15%）を下回る場合に、追加的な課税（トップアップ税）を課す仕組みである。</p>
+
+  <!-- SVG Diagram -->
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 860 420" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP','Outfit',sans-serif;">
+      <!-- Background -->
+      <rect x="0" y="0" width="860" height="420" rx="12" fill="var(--svg-diagram-bg)"/>
+      <!-- Title -->
+      <text x="430" y="40" text-anchor="middle" font-size="16" font-weight="700" fill="var(--svg-text)">二本の柱（Two-Pillar Solution）全体構造</text>
+      <!-- Pillar 1 Box -->
+      <rect x="40" y="70" width="370" height="310" rx="14" fill="var(--svg-fill)" stroke="var(--accent)" stroke-width="1.5"/>
+      <text x="225" y="100" text-anchor="middle" font-size="14" font-weight="700" fill="var(--accent)">Pillar 1：課税権の再配分</text>
+      <rect x="70" y="120" width="310" height="60" rx="8" fill="var(--card)" stroke="var(--border-strong)" stroke-width="1"/>
+      <text x="225" y="147" text-anchor="middle" font-size="12" font-weight="600" fill="var(--svg-text)">Amount A</text>
+      <text x="225" y="167" text-anchor="middle" font-size="10" fill="var(--text-secondary)">超過利益の25%を市場国に配分</text>
+      <rect x="70" y="200" width="310" height="60" rx="8" fill="var(--card)" stroke="var(--border-strong)" stroke-width="1"/>
+      <text x="225" y="227" text-anchor="middle" font-size="12" font-weight="600" fill="var(--svg-text)">Amount B</text>
+      <text x="225" y="247" text-anchor="middle" font-size="10" fill="var(--text-secondary)">基本的販売・マーケティング活動への固定リターン</text>
+      <rect x="70" y="280" width="310" height="80" rx="8" fill="var(--card)" stroke="var(--border-strong)" stroke-width="1"/>
+      <text x="225" y="307" text-anchor="middle" font-size="11" font-weight="600" fill="var(--svg-text)">対象企業</text>
+      <text x="225" y="327" text-anchor="middle" font-size="10" fill="var(--text-secondary)">全世界売上 200億ユーロ超</text>
+      <text x="225" y="347" text-anchor="middle" font-size="10" fill="var(--text-secondary)">利益率 10% 超の多国籍企業 (約100社)</text>
+      <!-- Pillar 2 Box -->
+      <rect x="450" y="70" width="370" height="310" rx="14" fill="var(--svg-fill)" stroke="var(--accent)" stroke-width="1.5"/>
+      <text x="635" y="100" text-anchor="middle" font-size="14" font-weight="700" fill="var(--accent)">Pillar 2：グローバルミニマム課税</text>
+      <rect x="480" y="120" width="310" height="50" rx="8" fill="var(--card)" stroke="var(--border-strong)" stroke-width="1"/>
+      <text x="635" y="150" text-anchor="middle" font-size="11" font-weight="600" fill="var(--svg-text)">IIR（所得合算ルール）</text>
+      <rect x="480" y="180" width="310" height="50" rx="8" fill="var(--card)" stroke="var(--border-strong)" stroke-width="1"/>
+      <text x="635" y="210" text-anchor="middle" font-size="11" font-weight="600" fill="var(--svg-text)">UTPR（軽課税支払ルール）</text>
+      <rect x="480" y="240" width="310" height="50" rx="8" fill="var(--card)" stroke="var(--border-strong)" stroke-width="1"/>
+      <text x="635" y="270" text-anchor="middle" font-size="11" font-weight="600" fill="var(--svg-text)">STTR（租税条約の源泉課税ルール）</text>
+      <rect x="480" y="300" width="310" height="60" rx="8" fill="var(--card)" stroke="var(--border-strong)" stroke-width="1"/>
+      <text x="635" y="325" text-anchor="middle" font-size="11" font-weight="600" fill="var(--svg-text)">最低税率 15%</text>
+      <text x="635" y="347" text-anchor="middle" font-size="10" fill="var(--text-secondary)">連結売上 7.5億ユーロ超のグループ対象</text>
+      <!-- Arrow -->
+      <text x="430" y="410" text-anchor="middle" font-size="10" fill="var(--text-secondary)">両柱は相互補完的に機能し、公正かつ安定的な国際課税の実現を目指す</text>
+    </svg>
+    <p class="diagram-caption">図1：Two-Pillar Solution の全体像</p>
+  </div>
+
+  <h3>Pillar 1 の基本的考え方</h3>
+  <p>Pillar 1は、物理的拠点がなくとも「重大かつ持続的な関与（significant and sustained engagement）」がある市場国に対し、新たな課税権（nexus）を認めるものである。その核心は、従来のPE概念を超えて、収益ベースで課税権の有無を判断する点にある。Amount Aは、対象企業の超過利益（利益率10%を超える部分）の25%を、売上に応じて市場国に配分する仕組みである。Amount Bは、市場国における基本的な販売・マーケティング活動に対し、移転価格上の固定リターンを保証するものである。</p>
+
+  <h3>Pillar 2 の基本的考え方</h3>
+  <p>Pillar 2は、「底辺への競争（Race to the Bottom）」に歯止めをかけることを目的とする。各国が多国籍企業を誘致するために法人税率を引き下げ続ける競争は、各国の課税ベースを浸食し、公共サービスの財源を損なう。Pillar 2は、多国籍企業グループの各国における実効税率が15%の最低税率を下回る場合に、親会社所在国または他のグループ構成国がトップアップ税を課すことで、全ての利益が少なくとも15%の税負担を負うことを確保する。この仕組みにより、低税率国に利益を移転するインセンティブが大幅に減殺されることが期待される。</p>
+
+  <h3>二本の柱の相互関係</h3>
+  <p>二本の柱は対処する問題が異なるが、相互に補完的に機能する。Pillar 1が「どこで課税するか（where to tax）」の問題に対処するのに対し、Pillar 2は「最低限いくら課税するか（how much to tax at minimum）」の問題に対処する。Pillar 1による課税権の再配分が実現しても、その利益が低税率国を経由している場合には十分な税収が確保されない可能性がある。Pillar 2のミニマム課税がこの問題を補完する。また、Pillar 2によるミニマム課税が導入されても、それだけでは市場国の正当な課税権が確保されるわけではなく、Pillar 1がこの問題を補完する。</p>
+
+  <div class="point-box">
+    <h4>📌 ポイント整理</h4>
+    <ul>
+      <li>Pillar 1は「どこで課税するか」──課税権の再配分（対象：全世界売上200億ユーロ超、利益率10%超の企業約100社）</li>
+      <li>Pillar 2は「最低限いくら課税するか」──グローバルミニマム税率15%（対象：連結売上7.5億ユーロ超のグループ）</li>
+      <li>両柱は相互補完的であり、「課税権の所在」と「最低税率の確保」の両面から公正な国際課税を実現する</li>
+      <li>Pillar 1は多国間条約による合意・発効が必要であるのに対し、Pillar 2は各国の国内法で実施可能（コモンアプローチ）</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════ SECTION 5 ═══════════════ -->
+<section class="section reveal" id="sec5">
+  <div class="section-label">SECTION 05</div>
+  <h2>Pillar 1 ── Amount A：新たな課税権配分</h2>
+
+  <h3>Amount A の基本設計</h3>
+  <p>Amount Aは、Pillar 1の中核をなす仕組みであり、一定の大規模多国籍企業の利益の一部を、物理的拠点の有無にかかわらず、売上が生じている市場国に配分するものである。従来の移転価格税制や恒久的施設概念に基づく利益配分ルールとは根本的に異なる、新たな課税権（new taxing right）の創設である。</p>
+
+  <h3>対象企業の範囲（スコープ）</h3>
+  <p>Amount Aの適用対象となるのは、全世界における連結売上高が200億ユーロを超え、かつ利益率（税引前利益/売上高）が10%を超える多国籍企業グループである。この閾値は、制度の円滑な運用を確保するため、当初は比較的高い水準に設定されており、対象企業数は世界で約100社程度と推定される。なお、将来的には売上閾値を100億ユーロに引き下げることが予定されている。</p>
+  <p>採掘業（鉱業・石油・ガス等）および規制金融サービス（銀行・保険等）は、Amount Aの適用対象から除外される。これは、これらの業種の利益が主として資源の所在地や規制の対象地域で生じるものであり、デジタル化に伴う課税権配分の問題とは性質が異なるとの判断に基づく。</p>
+
+  <h3>利益配分のメカニズム</h3>
+  <p>Amount Aの利益配分は以下のステップで行われる。まず、対象企業グループの連結財務諸表上の税引前利益を基準として、利益率10%を超える部分（「超過利益」「残余利益」）を算定する。次に、この超過利益の25%がAmount Aとして市場国に配分される。配分は、各市場国における売上高の比率に基づいて行われる（売上配賦キー）。</p>
+
+  <div class="code-block">
+<span class="comment">// Amount A の計算例</span>
+
+<span class="keyword">グループ全世界売上高</span>:    <span class="num">500億ユーロ</span>
+<span class="keyword">税引前利益</span>:              <span class="num">100億ユーロ</span>（利益率20%）
+<span class="keyword">通常利益</span>（10%分）:        <span class="num">50億ユーロ</span>
+<span class="keyword">超過利益</span>（20%-10%=10%分）: <span class="num">50億ユーロ</span>
+
+<span class="keyword">Amount A</span> = 超過利益 × 25%
+         = <span class="num">50億ユーロ × 25% = 12.5億ユーロ</span>
+
+<span class="comment">// 市場国Xの売上が全体の8%の場合</span>
+<span class="keyword">市場国Xへの配分額</span> = <span class="num">12.5億ユーロ × 8% = 1億ユーロ</span>
+  </div>
+
+  <h3>ネクサス（課税権の接続点）</h3>
+  <p>市場国がAmount Aの配分を受けるためには、当該市場国において一定以上の売上（ネクサス閾値）がなければならない。この閾値は、一般的には100万ユーロ以上の売上とされるが、GDPが400億ユーロ未満の小規模経済においては25万ユーロに引き下げられる。このネクサスは従来のPE概念とは全く異なり、純粋に収益ベースで判断される点が革新的である。</p>
+
+  <h3>収益の源泉地決定ルール</h3>
+  <p>Amount Aの配分においては、売上が「どの市場国で生じたか」を決定するルール（revenue sourcing rule）が極めて重要となる。このルールは、取引の種類（広告サービス、消費者向け商品、デジタルサービス、コンポーネント等）ごとに詳細なソーシングルールが設けられる。例えば、オンライン広告サービスの場合、広告が閲覧されるエンドユーザーの所在地が収益の源泉国とされる。物品販売の場合、最終消費者への引渡地が基準となる。</p>
+
+  <h3>二重課税の排除</h3>
+  <p>Amount Aにより市場国に配分された利益に対し、市場国が課税する一方で、従来その利益に課税していた国（通常は親会社所在国やIPの所在国）の課税が維持されたままでは二重課税が生じる。この問題に対処するため、Amount Aの枠組みには「二重課税排除メカニズム」が組み込まれる。具体的には、「解放利益（relieving profit）」を負担する国が、外国税額控除またはその他の方法により二重課税を排除する義務を負う。</p>
+
+  <h3>多国間条約（MLC）の必要性と交渉状況</h3>
+  <p>Amount Aの実施には、既存の租税条約上の原則（PE要件、独立企業原則）と整合的でない新たな課税権を創設するため、多国間条約（Multilateral Convention: MLC）の締結が必要である。包摂的枠組みは2023年10月にMLCのテキストを公表し、署名に向けた交渉が続けられている。しかし、米国、中国、インド等の主要国の参加が依然として不確実であり、MLCの発効時期については見通しが立っていない。包摂的枠組みは当初2023年中の署名を目指していたが、交渉の長期化により繰り返し延期されている。</p>
+
+  <div class="point-box">
+    <h4>📌 ポイント整理</h4>
+    <ul>
+      <li>Amount Aは売上200億ユーロ超・利益率10%超の企業（約100社）の超過利益の25%を市場国に配分する</li>
+      <li>ネクサスは従来のPEではなく、売上100万ユーロ（小規模経済は25万ユーロ）の収益ベースで判断する</li>
+      <li>収益の源泉地決定ルールは取引類型ごとに詳細に規定される</li>
+      <li>実施には多国間条約（MLC）の締結が必要だが、主要国の参加確保が課題であり、発効時期は不透明</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════ SECTION 6 ═══════════════ -->
+<section class="section reveal" id="sec6">
+  <div class="section-label">SECTION 06</div>
+  <h2>Pillar 1 ── Amount B：基本的マーケティング・販売活動</h2>
+
+  <h3>Amount Bの趣旨</h3>
+  <p>Amount Bは、市場国における基本的なマーケティング・販売活動（baseline marketing and distribution activities）に対して、移転価格税制上の固定リターンを設定するものである。Amount Aが全く新しい課税権の創設であるのに対し、Amount Bは既存の移転価格税制の枠組みの中での簡素化・標準化措置と位置づけられる。</p>
+
+  <h3>背景にある問題</h3>
+  <p>現行の移転価格税制のもと、市場国の販売子会社に帰属すべき利益の算定をめぐって、多国籍企業と市場国の税務当局との間で頻繁に紛争が生じている。特に途上国の税務当局にとって、高度な移転価格分析を要する個別的な利益配分の検証は、人材・情報・データベースの面で大きな負担となっており、結果として十分な税収確保ができていないという問題がある。Amount Bは、このような「基本的」な販売・マーケティング活動に対して固定的な利益水準を設定することで、移転価格紛争を減少させ、税務執行の予測可能性と確実性を向上させることを目指す。</p>
+
+  <h3>適用範囲</h3>
+  <p>Amount Bが適用されるのは、市場国において対面（in-country）で行われる卸売販売活動（wholesale distribution）および販売代理活動のうち、「基本的」と認定されるものに限られる。「基本的」か否かの判断は、当該活動が「限定されたリスクしか負わない」「独自の価値ある無形資産を所有・使用しない」「TNMM（取引単位営業利益法）の適用が適切である」等の基準に基づく。高度なマーケティング機能や独自のブランド開発活動を行う販売子会社は、Amount Bの対象外となり、通常の移転価格分析が適用される。</p>
+
+  <h3>固定リターンの設定方法</h3>
+  <p>Amount Bの固定リターンは、包摂的枠組みが作成する「プライシングマトリクス」に基づいて決定される。このマトリクスは、産業分類と、対象企業の資産集約度（operating asset intensity）および経費集約度（operating expense intensity）を変数として、売上高に対する営業利益率の形で固定リターンを示す。これにより、従来は個別の比較可能性分析（ベンチマーク分析）を要していたプロセスが大幅に簡素化される。</p>
+
+  <h3>Amount AとAmount Bの関係</h3>
+  <p>Amount AとAmount Bは、Pillar 1の中で異なる機能を果たすが、相互に独立した仕組みである。Amount Aが「超過利益の配分」という新たな課税権に関するものであるのに対し、Amount Bは「通常利益の範囲内での適正配分」を簡素化する措置である。したがって、Amount Bは Amount Aの適用対象でない企業（売上200億ユーロ未満の企業）にも適用される。Amount Bの実施はMLCの発効を要件としておらず、OECDの移転価格ガイドラインの改訂として各国が国内法化することで実施可能であり、2025年1月以降の段階的な導入が目指されている。</p>
+
+  <div class="point-box">
+    <h4>📌 ポイント整理</h4>
+    <ul>
+      <li>Amount Bは市場国の基本的販売・マーケティング活動に固定リターンを設定する簡素化措置</li>
+      <li>産業分類・資産集約度・経費集約度に基づく「プライシングマトリクス」で利益率が決定される</li>
+      <li>Amount Aと異なりMLCの発効を必要とせず、移転価格ガイドラインの改訂として国内法化可能</li>
+      <li>途上国の税務執行の予測可能性向上と移転価格紛争の削減が主要な政策目的</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════ SECTION 7 ═══════════════ -->
+<section class="section reveal" id="sec7">
+  <div class="section-label">SECTION 07</div>
+  <h2>Pillar 2の趣旨──グローバルミニマム課税の基本思想</h2>
+
+  <h3>「底辺への競争」の問題</h3>
+  <p>過去数十年間、各国は外国直接投資（FDI）を誘致するために法人税率の引下げ競争を繰り広げてきた。OECD加盟国の平均法定法人税率は、2000年の32.2%から2023年の23.5%へと大幅に低下した。この「底辺への競争（Race to the Bottom）」は、各国の税収基盤を浸食するのみならず、中小企業や多国籍展開をしていない国内企業との間の競争条件の公平性を損ない、さらには公共サービスの財源を圧迫するという深刻な問題を引き起こしてきた。</p>
+  <p>特に問題となったのは、一部の国・地域が「タックスヘイブン」として極めて低い税率や免税措置を提供することで、多国籍企業の利益を不当に吸引していた実態である。ケイマン諸島、バミューダ、バージン諸島といった典型的タックスヘイブンに加え、アイルランド（12.5%、実質的にはそれ以下の場合も）、オランダ（イノベーションボックス税制）、ルクセンブルク（各種ルーリング）、シンガポール（各種優遇措置）といった先進国・地域も、特定の所得類型に対して極めて低い実効税率を提供し、多国籍企業のストラクチャリングの受け皿となっていた。</p>
+
+  <h3>Pillar 2の基本的発想</h3>
+  <p>Pillar 2の核心的な発想は、「全ての大規模多国籍企業の利益は、どこで生じようとも、少なくとも15%の実効税率で課税されるべきである」という原則を国際的に確立することにある。この最低税率を下回る課税がなされている場合に、追加的な課税（トップアップ税: Top-up Tax）を他の国が課すことで、低税率国に利益を移転するインセンティブを根本的に削減する。重要なのは、Pillar 2が各国の法人税率を直接引き上げることを強制するものではなく、あくまで低税率国で課税されなかった部分を他の国が「補完的に」課税するという構造になっている点である。これにより、各国の課税主権は形式的に維持される。</p>
+
+  <h3>最低税率15%の設定根拠</h3>
+  <p>15%という最低税率は、政治的交渉の産物であり、経済学的に最適な水準として導出されたものではない。交渉過程では、フランス・ドイツなどの高税率国は21%以上を主張し、アイルランドやハンガリーなどの低税率国は15%でも高すぎると反発した。最終的に15%は、米国バイデン政権が提案した水準でもあり、「野心的でありながら現実的」な合意点として落ち着いた。この税率は、2021年10月の包摂的枠組みの声明で確定された。</p>
+
+  <h3>GloBEルール（Global Anti-Base Erosion Rules）</h3>
+  <p>Pillar 2を実現するための具体的な制度設計がGloBEルールである。GloBEルールは、2021年12月に公表された「モデルルール」、2022年3月の「コメンタリー」、2022年12月の「行政ガイダンス」等を通じて詳細に規定されている。GloBEルールは、連結売上高が7.5億ユーロ（直近4事業年度のうち少なくとも2事業年度）を超える多国籍企業グループを対象とし、IIR（所得合算ルール）とUTPR（軽課税支払ルール）の2つの主要ルールで構成される。これにSTTR（源泉地国ルール）が条約ベースの補完的ルールとして加わる。</p>
+
+  <h3>対象外となるエンティティ</h3>
+  <p>GloBEルールは、一定のエンティティを適用対象から除外している。政府機関、国際機関、非営利団体、年金基金、投資ファンド（最終親会社の場合）、不動産投資ビークルなどがこれに該当する。これらのエンティティは、その活動の性質上、利益移転の手段として使われるリスクが低いか、政策的に除外する合理性があると判断されたためである。</p>
+
+  <div class="point-box">
+    <h4>📌 ポイント整理</h4>
+    <ul>
+      <li>Pillar 2は法人税率の「底辺への競争」に歯止めをかけ、全ての大規模多国籍企業の利益に最低15%の課税を確保する</li>
+      <li>低税率国の税率を直接引き上げるのではなく、他国が「補完的に」トップアップ税を課す仕組み（課税主権を尊重）</li>
+      <li>15%の税率は政治的交渉の産物であり、連結売上7.5億ユーロ超のグループが対象</li>
+      <li>GloBEルールはモデルルール・コメンタリー・行政ガイダンスで構成される詳細な制度設計</li>
+      <li>政府機関・年金基金・非営利団体等は適用対象外</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════ SECTION 8 ═══════════════ -->
+<section class="section reveal" id="sec8">
+  <div class="section-label">SECTION 08</div>
+  <h2>GloBEの4つの仕組み（IIR・UTPR・STTR・Subject to Tax Rule）</h2>
+
+  <h3>4つの仕組みの全体像</h3>
+  <p>Pillar 2の枠組みは、複数のルールが階層的に適用されることで、低課税利益に対するトップアップ課税の「網」を張り巡らせる仕組みとなっている。主要な構成要素は、IIR（Income Inclusion Rule：所得合算ルール）、UTPR（Undertaxed Profits Rule：軽課税支払ルール、旧称UTPR: Undertaxed Payment Rule）、STTR（Subject to Tax Rule：源泉地国ルール）の3つであり、QDMTT（Qualified Domestic Minimum Top-up Tax：適格国内ミニマムトップアップ税）が追加的な仕組みとして機能する。</p>
+
+  <!-- SVG Diagram: Priority Order -->
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans JP','Outfit',sans-serif;">
+      <rect x="0" y="0" width="800" height="380" rx="12" fill="var(--svg-diagram-bg)"/>
+      <text x="400" y="35" text-anchor="middle" font-size="15" font-weight="700" fill="var(--svg-text)">GloBEルールの適用優先順位</text>
+      <!-- Step 1: QDMTT -->
+      <rect x="50" y="60" width="700" height="55" rx="10" fill="var(--accent)" fill-opacity="0.15" stroke="var(--accent)" stroke-width="1.5"/>
+      <text x="82" y="82" font-size="11" font-weight="700" fill="var(--accent)">PRIORITY 1</text>
+      <text x="82" y="102" font-size="13" font-weight="600" fill="var(--svg-text)">QDMTT（適格国内ミニマムトップアップ税）── 低課税国自身がトップアップ税を課す</text>
+      <!-- Arrow -->
+      <line x1="400" y1="115" x2="400" y2="140" stroke="var(--svg-line)" stroke-width="1.5" stroke-dasharray="4"/>
+      <polygon points="395,138 405,138 400,146" fill="var(--svg-line)"/>
+      <text x="420" y="134" font-size="9" fill="var(--text-secondary)">QDMTTで捕捉されない場合</text>
+      <!-- Step 2: IIR -->
+      <rect x="50" y="148" width="700" height="55" rx="10" fill="var(--accent)" fill-opacity="0.1" stroke="var(--accent)" stroke-width="1"/>
+      <text x="82" y="170" font-size="11" font-weight="700" fill="var(--accent)">PRIORITY 2</text>
+      <text x="82" y="190" font-size="13" font-weight="600" fill="var(--svg-text)">IIR（所得合算ルール）── 最終親会社所在国がトップアップ税を課す</text>
+      <!-- Arrow -->
+      <line x1="400" y1="203" x2="400" y2="228" stroke="var(--svg-line)" stroke-width="1.5" stroke-dasharray="4"/>
+      <polygon points="395,226 405,226 400,234" fill="var(--svg-line)"/>
+      <text x="420" y="222" font-size="9" fill="var(--text-secondary)">IIRが適用されない場合</text>
+      <!-- Step 3: UTPR -->
+      <rect x="50" y="236" width="700" height="55" rx="10" fill="var(--accent)" fill-opacity="0.07" stroke="var(--accent)" stroke-width="1"/>
+      <text x="82" y="258" font-size="11" font-weight="700" fill="var(--accent)">PRIORITY 3</text>
+      <text x="82" y="278" font-size="13" font-weight="600" fill="var(--svg-text)">UTPR（軽課税支払ルール）── 他のグループ構成国が損金算入否認等で補完課税</text>
+      <!-- STTR -->
+      <rect x="50" y="310" width="700" height="55" rx="10" fill="var(--svg-fill)" stroke="var(--border-strong)" stroke-width="1"/>
+      <text x="82" y="332" font-size="11" font-weight="700" fill="var(--accent)">条約ベース</text>
+      <text x="82" y="352" font-size="13" font-weight="600" fill="var(--svg-text)">STTR（源泉地国ルール）── 源泉地国が条約上の限度税率を引き上げて課税</text>
+    </svg>
+    <p class="diagram-caption">図2：GloBEルールの適用優先順位（QDMTT → IIR → UTPR、STTR は条約ベースで独立）</p>
+  </div>
+
+  <h3>IIR（所得合算ルール）</h3>
+  <p>IIRは、GloBEルールの第一義的な適用ルールであり、多国籍企業グループの最終親会社（UPE: Ultimate Parent Entity）の所在国が、低課税の子会社・支店の所得に対してトップアップ税を課す仕組みである。トップダウン・アプローチにより、UPEから出資構造を辿って最も近い親会社がIIRを適用する。IIRの概念は、既存のCFC（外国子会社合算）税制と類似するが、適用対象が特定の受動的所得に限定されず全ての所得を対象とする点、また最低税率15%を下回る実効税率の差額のみをトップアップする点で異なる。</p>
+
+  <h3>UTPR（軽課税支払ルール）</h3>
+  <p>UTPRは、IIRのバックストップとして機能する。UPEの所在国がIIRを導入していない場合、または中間持株会社を通じてIIRが十分に適用されない場合に、他のグループ構成国がUTPRを通じてトップアップ税を回収する。UTPRの具体的な実施方法は、損金算入の否認または同等の調整により追加的な税額を課すものとされる。UTPRによるトップアップ税の配分は、各国の有形資産額と従業員数に基づいて行われる（配賦キー）。</p>
+
+  <h3>STTR（源泉地国ルール）</h3>
+  <p>STTRは、途上国の利益を保護するための条約ベースのルールである。二国間租税条約が、利子、ロイヤルティ等の特定の支払に対する源泉税率を低い水準に制限している場合、支払先でこれらの所得に対する税率が9%未満であるときに、源泉地国（支払元の国）がその差額分について追加的に源泉課税する権利を認めるものである。STTRは、GloBEルール（IIR・UTPR）とは独立した条約ベースのルールであり、GloBEルールの適用に先立って適用される。STTRの閾値税率は9%であり、GloBEの15%とは異なる点に注意が必要である。</p>
+
+  <h3>適用順序のルール</h3>
+  <p>GloBEルールの適用には明確な優先順位がある。まず、低課税国自身がQDMTTを導入している場合、当該国のQDMTTが最優先で適用される。QDMTTで課された税額は、IIRやUTPRによるトップアップ税額から控除される。QDMTTが導入されていない場合、またはQDMTTで十分にトップアップされない場合に、IIRが適用される。IIRも適用されない場合に、UTPRがバックストップとして機能する。この「QDMTT → IIR → UTPR」の適用順序は、GloBEルールの効果的な運用にとって極めて重要であり、二重トップアップ（同一の低課税利益に対して複数のルールが重複適用される事態）を防止する機能を有する。</p>
+
+  <div class="point-box">
+    <h4>📌 ポイント整理</h4>
+    <ul>
+      <li>IIRはトップダウンで最終親会社所在国が低課税子会社にトップアップ税を課す第一義的ルール</li>
+      <li>UTPRはIIRのバックストップとして、他のグループ構成国が有形資産・従業員数で按分してトップアップ税を課す</li>
+      <li>STTRは条約ベースで源泉地国が利子・ロイヤルティ等に追加源泉課税する途上国保護ルール（閾値9%）</li>
+      <li>適用優先順位は QDMTT → IIR → UTPR の順であり、二重トップアップを防止する設計</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════ SECTION 9 ═══════════════ -->
+<section class="section reveal" id="sec9">
+  <div class="section-label">SECTION 09</div>
+  <h2>IIR（所得合算ルール）の詳細</h2>
+
+  <h3>IIRの法的構造</h3>
+  <p>IIRは、多国籍企業グループの構成エンティティが所在する法域（jurisdiction）において、GloBEルールに基づく実効税率（ETR）が最低税率15%を下回る場合に、親会社に対して当該法域に関するトップアップ税を課す仕組みである。重要なのは、IIRが「エンティティ単位」ではなく「法域単位（jurisdictional blending）」で適用される点である。すなわち、同一法域に所在する全ての構成エンティティのGloBE所得と調整対象租税を合算して当該法域のETRを算定し、ETRが15%を下回る場合にのみトップアップ税が発生する。</p>
+
+  <h3>トップダウン・アプローチ</h3>
+  <p>IIRは「トップダウン・アプローチ」で適用される。これは、グループの持分構造の最上位から順に、IIRを適用すべき親会社を特定するアプローチである。まず、最終親会社（UPE）がIIRを導入している法域に所在する場合、UPEがIIRを適用する。UPEがIIRを導入していない法域に所在する場合、持分構造を下に辿り、IIRを導入している法域に所在する中間親会社（IPE: Intermediate Parent Entity）がIIRを適用する。複数のIPEがIIRを適用する場合、より高い位置の（UPEに近い）IPEが優先する。このトップダウン・アプローチにより、同一の低課税所得に対して複数の親会社がIIRを重複適用する事態が回避される。</p>
+
+  <h3>持分割合に基づく按分</h3>
+  <p>IIRによるトップアップ税額は、親会社の低課税構成エンティティに対する持分割合に基づいて按分される。例えば、UPEがある低課税法域の子会社を80%所有している場合、当該法域のトップアップ税額の80%がUPEに帰属する。残りの20%については、少数持分所有者がIIRを導入している法域に所在する場合にはその所有者がIIRを適用し、そうでない場合にはUTPRの対象となり得る。</p>
+
+  <h3>除外所得（Substance-based Income Exclusion: SBIE）</h3>
+  <p>IIRの適用に当たっては、実質的な経済活動に基づく所得を除外する仕組み（SBIE）が設けられている。SBIEは、各法域の有形資産の帳簿価額の5%と給与費用の5%の合計額をGloBE所得から控除することで、当該法域における実質的な事業活動から生じる所得をトップアップ税の対象から除外する。この除外は、Pillar 2が利益移転を防止することを目的としつつも、実質的な経済活動に伴う利益に対しては各国の税制上の自律性（低税率で誘致する自由）を一定程度認めるという政策判断に基づく。なお、移行期間中は有形資産・給与費用とも8%から始まり、10年間で段階的に5%に引き下げられる。</p>
+
+  <div class="code-block">
+<span class="comment">// IIR トップアップ税の計算例</span>
+
+<span class="keyword">法域Xの構成エンティティ</span>:
+  GloBE所得合計:     <span class="num">1,000</span>
+  調整対象租税合計:   <span class="num">100</span>（ETR = 10%）
+  有形資産帳簿価額:   <span class="num">2,000</span>
+  給与費用:           <span class="num">800</span>
+
+<span class="keyword">SBIE</span> = 2,000 × 5% + 800 × 5% = <span class="num">100 + 40 = 140</span>
+
+<span class="keyword">超過利益</span> = 1,000 − 140 = <span class="num">860</span>
+
+<span class="keyword">トップアップ税率</span> = 15% − 10% = <span class="num">5%</span>
+
+<span class="keyword">トップアップ税額</span> = 860 × 5% = <span class="num">43</span>
+
+<span class="comment">// UPEが80%所有の場合</span>
+<span class="keyword">UPE帰属トップアップ税</span> = 43 × 80% = <span class="num">34.4</span>
+  </div>
+
+  <h3>部分所有親会社（POPE）の取扱い</h3>
+  <p>GloBEルールには「部分所有親会社（Partially-Owned Parent Entity: POPE）」の概念がある。POPEとは、最終親会社以外の構成エンティティで、その持分の20%超がグループ外の者に保有されているものをいう。POPEについては、そのPOPEを頂点とするサブグループについてIIRを別途適用する仕組みが設けられており、これによりグループ外の少数持分保有者の利益が適切に考慮される。</p>
+
+  <h3>IIRと既存CFC税制の関係</h3>
+  <p>多くの国は既にCFC税制を有しているが、IIRとCFC税制は目的・構造が異なる。CFC税制は特定の「受動的所得」や「汚染所得」を対象とし、親会社の課税所得に合算するものであるのに対し、IIRは全ての所得を対象とし、ETRが15%を下回る差額のみをトップアップするものである。GloBEルールは、CFC税制に基づいて課された税額を「調整対象租税」に含めて考慮するため、CFC税制が適用された結果、ETRが15%以上となれば、IIRのトップアップ税は発生しない。両制度は併存するが、二重課税は調整されることになる。</p>
+
+  <div class="point-box">
+    <h4>📌 ポイント整理</h4>
+    <ul>
+      <li>IIRは法域単位でETRを算定し、15%未満の場合にトップダウン・アプローチで親会社にトップアップ税を課す</li>
+      <li>SBIE（有形資産5%＋給与5%）により実質的経済活動に基づく所得はトップアップ税から除外される</li>
+      <li>持分割合に基づく按分により、各親会社の負担が持分に応じて配分される</li>
+      <li>既存CFC税制による税額は調整対象租税に含まれ、二重課税は調整される</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════ SECTION 10 ═══════════════ -->
+<section class="section reveal" id="sec10">
+  <div class="section-label">SECTION 10</div>
+  <h2>UTPR（軽課税支払ルール）の計算</h2>
+
+  <h3>UTPRの機能と適用場面</h3>
+  <p>UTPR（Undertaxed Profits Rule）は、IIRのバックストップとして設計されたルールである。IIRが適用されない場合、すなわち最終親会社の所在国がIIRを導入していない場合や、中間持株会社のIIR適用で捕捉しきれない低課税利益が残存する場合に、他のグループ構成国がUTPRを通じてトップアップ税を回収する。UTPRの存在により、GloBEルールの適用範囲に「穴」が生じることを防ぎ、ルール全体の実効性が担保される。</p>
+
+  <h3>UTPRの適用メカニズム</h3>
+  <p>UTPRの適用は、以下のステップで行われる。第一に、低課税法域におけるIIRトップアップ税額のうち、IIR（及びQDMTT）で回収されなかった残額（「UTPRトップアップ税額」）を算定する。第二に、このUTPRトップアップ税額を、UTPRを導入している法域に所在するグループ構成エンティティの間で配賦する。配賦は、各法域の「有形資産の帳簿価額」と「従業員数」を均等に加重した配賦キーに基づいて行われる。</p>
+
+  <div class="code-block">
+<span class="comment">// UTPR 配賦キーの計算</span>
+
+<span class="keyword">法域Aの配賦キー</span>:
+  有形資産割合: 法域Aの有形資産 / UTPR適用全法域の有形資産合計
+  従業員割合:   法域Aの従業員数 / UTPR適用全法域の従業員数合計
+  配賦率 = (有形資産割合 + 従業員割合) / 2
+
+<span class="comment">// 具体例</span>
+<span class="keyword">UTPRトップアップ税総額</span>: <span class="num">100</span>
+
+法域A: 有形資産 <span class="num">300</span>, 従業員 <span class="num">500人</span>
+法域B: 有形資産 <span class="num">200</span>, 従業員 <span class="num">300人</span>
+法域C: 有形資産 <span class="num">500</span>, 従業員 <span class="num">200人</span>
+合 計: 有形資産 <span class="num">1,000</span>, 従業員 <span class="num">1,000人</span>
+
+<span class="keyword">法域Aの配賦率</span> = (300/1000 + 500/1000) / 2 = <span class="num">40%</span>
+<span class="keyword">法域Aの負担額</span> = 100 × 40% = <span class="num">40</span>
+  </div>
+
+  <h3>UTPRの実施方法</h3>
+  <p>UTPRによるトップアップ税の具体的な徴収方法については、各国の裁量に委ねられている。モデルルールは、「損金算入の否認（denial of deduction）」または「これと同等の調整」によることとしている。実務的には、グループ内支払に係る損金算入を否認することで実効的な追加税額を発生させる方法が想定されている。ただし、損金算入の否認では正確にトップアップ税額と一致させることが困難な場合もあり、各国は「同等の調整」として独自の方法を採用し得る。日本の国内法化では、法人税の追加納付義務（特定多国籍企業グループ等に係る各対象会計年度の国際最低課税額に対する法人税）として規定されている。</p>
+
+  <h3>UTPRの適用開始時期の延期</h3>
+  <p>UTPRの適用開始は、IIRよりも1年遅い2025年度（2025年1月1日以後開始事業年度）とされた。これは、UTPRが他国の低課税利益に対して課税するという性質上、各国の準備期間を十分に確保する必要があるとの判断に基づく。また、IIRが先行適用されることで、UTPRの対象となる残余のトップアップ税額が限定されることも期待された。</p>
+
+  <h3>米国との関係──UTPRをめぐる論争</h3>
+  <p>UTPRは、米国をはじめとする一部の国から強い批判を受けている。米国はIIRを導入していないため、米国に最終親会社を置く多国籍企業グループの低課税利益に対しては、他国のUTPRが適用される可能性がある。米国はこれを「自国企業に対する不当な域外適用課税」として反発し、UTPRの適用に対する対抗措置を検討している。この問題は、Pillar 2の実施における最大の政治的課題の一つとなっている。</p>
+
+  <div class="point-box">
+    <h4>📌 ポイント整理</h4>
+    <ul>
+      <li>UTPRはIIRで回収しきれないトップアップ税をバックストップとして他のグループ構成国が回収する仕組み</li>
+      <li>配賦キーは有形資産帳簿価額と従業員数を均等加重して計算する</li>
+      <li>実施方法は損金算入否認等で、日本は法人税の追加納付義務として国内法化した</li>
+      <li>適用開始はIIRの1年後（2025年度〜）、米国はUTPRの域外適用性を強く批判している</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════ SECTION 11 ═══════════════ -->
+<section class="section reveal" id="sec11">
+  <div class="section-label">SECTION 11</div>
+  <h2>ETR（実効税率）の計算メカニズム</h2>
+
+  <h3>ETR計算の重要性</h3>
+  <p>GloBEルールの適用において、各法域のETR（Effective Tax Rate：実効税率）の計算は制度の根幹をなす。ETRが15%（最低税率）以上であればトップアップ税は発生せず、15%未満であればその差額がトップアップ税率となる。したがって、ETRの計算方法の正確な理解は、GloBEルールの適用結果を決定する上で不可欠である。</p>
+
+  <h3>ETRの計算式</h3>
+  <p>GloBE上のETRは、以下の計算式で算定される。</p>
+
+  <div class="code-block">
+<span class="keyword">ETR</span> = 調整対象租税（Adjusted Covered Taxes）÷ GloBE所得（GloBE Income）
+
+<span class="comment">// トップアップ税率</span>
+<span class="keyword">トップアップ税率</span> = 15% − ETR  <span class="comment">（ETR ≥ 15% の場合はゼロ）</span>
+
+<span class="comment">// トップアップ税額</span>
+<span class="keyword">トップアップ税額</span> = (GloBE所得 − SBIE除外額) × トップアップ税率 + 追加トップアップ税額
+  </div>
+
+  <h3>GloBE所得の算定</h3>
+  <p>GloBE所得は、構成エンティティの連結財務諸表上の純利益（financial accounting net income or loss）を出発点として、一連の調整を加えて算定される。財務諸表は、最終親会社が用いる会計基準（IFRS、US GAAP等の適格会計基準）に基づくものとされる。</p>
+  <p>主要な調整項目には以下のものがある。第一に、グループ内取引の消去復元（連結消去された取引の一部を法域単位で復元する）。第二に、除外配当・除外持分損益（国際的二重課税を回避するため、一定の配当・持分法損益を除外）。第三に、除外キャピタルゲイン・ロス（一定の株式譲渡益・損を除外）。第四に、非対称的外貨換算差損益の調整。第五に、既往の誤謬修正および会計方針変更の影響の処理。第六に、年金費用の調整（確定給付型年金の保険数理上の差異等）。第七に、資産再評価損益の調整。第八に、非適格リファイナブル税額控除・適格リファイナブル税額控除の調整。</p>
+  <p>これらの調整は極めて技術的かつ詳細であり、GloBEルールの実務における最大の課題の一つとなっている。特に、連結財務諸表上の会計処理とGloBEルール上の取扱いの差異を正確に把握し、適切な調整を行う能力が各企業に求められる。</p>
+
+  <h3>調整対象租税（Adjusted Covered Taxes）</h3>
+  <p>調整対象租税は、構成エンティティの財務諸表上の税金費用（current tax expense）を出発点として、一連の調整を加えて算定される。ここでの「租税」は広義であり、法人所得税のみならず、それと同等の効果を有する租税（利益に基づいて課される税）を含む。</p>
+  <p>主要な調整項目には以下のものがある。第一に、GloBE所得に含まれない項目に関する税額の除外。第二に、不確実な税務ポジション（UTP）に係る税金費用の調整。第三に、適格リファイナブル税額控除の取扱い（所得として処理するか税額から控除するか）。第四に、CFC税制に基づく課税の配分（親会社で課されたCFC税額を、対象子会社の法域に配分する）。第五に、繰延税金の調整（一定の条件のもと、繰延税金負債の発生を調整対象租税に含める「繰延税金調整」）。</p>
+
+  <h3>繰延税金の取扱い（GloBE繰延税金調整）</h3>
+  <p>GloBEルールの最も技術的に複雑な部分の一つが、繰延税金の取扱いである。一時差異に基づく繰延税金負債（DTL）・繰延税金資産（DTA）は、将来の税負担の前倒し計上・後倒し計上を反映するものであり、特定年度のETR計算に取り込むかどうかが重要な論点となる。GloBEルールは「GloBE繰延税金調整」の仕組みを通じて、一定の繰延税金をETR計算に取り込む。ただし、DTLについては、15%（最低税率）を超える税率で計上されたものは15%にキャップされ（15%超の部分は考慮されない）、また、5年以内に取り崩されないDTLについては「DTLリキャプチャー」として、当初の年度のETRを遡及的に再計算する仕組みが設けられている。</p>
+
+  <h3>法域間のブレンディング</h3>
+  <p>前述のとおり、GloBEルールのETR計算は「法域ブレンディング（jurisdictional blending）」方式を採用している。これは、同一法域に所在する全ての構成エンティティのGloBE所得と調整対象租税を合算して法域全体のETRを算定する方式である。この方式により、同一法域内にETRが高い構成エンティティと低い構成エンティティが混在する場合、法域全体では15%以上のETRとなる可能性があり、トップアップ税が発生しないこともあり得る。なお、「エンティティ別ブレンディング」や「グローバルブレンディング」は採用されていない。</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>項目</th><th>GloBE所得の調整</th><th>調整対象租税の調整</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>出発点</td><td>連結財務諸表上の純利益</td><td>当期税金費用</td></tr>
+        <tr><td>グループ内取引</td><td>消去復元</td><td>関連税額の配分</td></tr>
+        <tr><td>配当・持分法損益</td><td>一定割合を除外</td><td>対応税額を除外</td></tr>
+        <tr><td>株式譲渡益</td><td>一定のものを除外</td><td>対応税額を除外</td></tr>
+        <tr><td>CFC税額</td><td>──</td><td>親会社法域から対象法域に配分</td></tr>
+        <tr><td>繰延税金</td><td>──</td><td>一定の条件で含める（15%キャップ付き）</td></tr>
+        <tr><td>税額控除</td><td>適格リファイナブルは所得に加算</td><td>非適格は税額として認識</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="point-box">
+    <h4>📌 ポイント整理</h4>
+    <ul>
+      <li>ETR = 調整対象租税 ÷ GloBE所得で算定され、15%未満の場合にトップアップ税が発生する</li>
+      <li>GloBE所得は連結財務諸表上の純利益を出発点に多数の調整を加えて算定する</li>
+      <li>調整対象租税は当期税金費用を出発点に、CFC税額の配分・繰延税金調整等を経て算定する</li>
+      <li>繰延税金は15%キャップ・5年DTLリキャプチャー等の特有ルールが適用される</li>
+      <li>法域ブレンディング方式により、同一法域内のエンティティ間の相殺が認められる</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════ SECTION 12 ═══════════════ -->
+<section class="section reveal" id="sec12">
+  <div class="section-label">SECTION 12</div>
+  <h2>QDMTT（適格国内ミニマムトップアップ税）</h2>
+
+  <h3>QDMTTの意義</h3>
+  <p>QDMTT（Qualified Domestic Minimum Top-up Tax）は、GloBEルールの適用優先順位において最上位に位置する仕組みであり、低課税国自身が自国に所在する構成エンティティの低課税利益に対してトップアップ税を課すものである。QDMTTの最大の意義は、トップアップ税の税収が低課税国自身に帰属する点にある。IIRやUTPRでは、トップアップ税の税収は親会社所在国や他のグループ構成国に流出するが、QDMTTを導入すればその税収を自国で確保できる。</p>
+
+  <h3>QDMTTが注目される理由</h3>
+  <p>GloBEルールの導入が進む中、多くの国がQDMTTの導入を急いでいる。その主な理由は以下の通りである。第一に、税収の確保である。自国が低課税法域に該当する場合、QDMTTを導入しなければ、トップアップ税の税収がIIRやUTPRを通じて他国に移転してしまう。QDMTTの導入により、その税収を自国に留めることができる。第二に、政策的柔軟性の維持である。QDMTTを導入する国は、基本的な法人税率を低水準に維持しつつも、GloBEルールの対象となる大規模多国籍企業グループに対してのみ追加課税を行うという選択が可能となる。これにより、国内中小企業や非対象グループへの影響を最小限に抑えつつ、GloBEルールへの対応が可能となる。</p>
+
+  <h3>適格性の要件</h3>
+  <p>QDMTTが「適格」と認められるためには、GloBEルールのモデルルールと整合的な方法でトップアップ税額を算定するものでなければならない。具体的には、GloBE所得の算定方法、調整対象租税の算定方法、SBIE除外の計算等が、モデルルールの規定と実質的に同等であることが求められる。ただし、出発点となる会計基準については、国際的な会計基準ではなく、国内の会計基準（ローカルGAAP）を用いることが認められている（「QDMTTセーフハーバー」の下での一定の簡素化措置もある）。</p>
+  <p>包摂的枠組みは、各国のQDMTTの適格性を審査するためのピアレビュープロセスを設けている。ピアレビューを通じて適格と認定されたQDMTTは、IIR・UTPRにおいて完全にクレジットされる（QDMTT税額がトップアップ税額から控除される）。適格と認定されないQDMTTは、国内法上の追加税額にすぎず、IIR・UTPRの控除対象とならないリスクがある。</p>
+
+  <h3>QDMTT導入国の状況</h3>
+  <p>2024年末時点で、QDMTTの導入を発表または導入済みの国・地域は急速に増加している。英国、韓国、スイス、ベトナム、香港、シンガポール、マレーシア、UAE、バルバドスなど、多様な法域がQDMTTの導入に動いている。特に、従来低税率で知られた法域がQDMTTを導入する動きは、GloBEルールが税率引下げ競争に対して実効的な歯止めをかけつつあることを示している。日本もQDMTTに相当する制度の導入を検討しているが、日本の法定実効税率は約30%であり、GloBE上のETRが15%を下回るケースは限定的であると考えられるため、QDMTTの必要性は相対的に低い。</p>
+
+
+</body>
+</html>

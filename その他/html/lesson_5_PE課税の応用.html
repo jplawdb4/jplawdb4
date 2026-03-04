@@ -1,0 +1,856 @@
+<!DOCTYPE html><html lang="ja" data-theme="dark">
+- Google Fonts: Outfit + Noto Sans JP
+- CSS変数でダーク/ライト切替対応:
+  ダーク: 背景#0A0A0A, テキスト#FAFAFA, カード#16161A, ボーダーrgba(255,255,255,0.06)
+  ライト: 背景#FAFAF7, テキスト#1A1A1A, カード#FFFFFF, ボーダーrgba(0,0,0,0.06)
+  アクセント: #5E6AD2→#7B85E0
+- fixedヘッダー: ロゴ「税法ラボ」(紫正方形+テキスト) + ナビ(コース/条文DB/判例/ブログ) + テーマ切替(月/太陽SVG)、backdrop-filter:blur(20px)半透明
+- フッター: © 2026 税法ラボ + リンク
+- max-width:1120px, padding:0 24px, margin:0 auto
+- カード: border-radius:20px, box-shadow, ホバーtranslateY(-4px)
+- セクションラベル: 英語大文字0.75rem letter-spacing:0.12em アクセント色
+- IntersectionObserverスクロールアニメーション(.reveal→.visible)
+- ノイズテクスチャオーバーレイ, localStorage保存テーマ, レスポンシブ
+- 目次(ページ内リンク)冒頭配置, 各セクション末に「ポイント整理」ボックス
+- 表・コードブロック・SVG図解を適宜使用
+
+**コードブロックでHTMLコードを出力してください。** 1回の回答で完結。必ず最後まで出力。
+
+【コンテンツ】第5回：PE課税の応用─代理人PE・AOA・帰属所得。(1)代理人PE(従属vs独立)(2)BEPS行動7コミッショネア対策(3)契約締結代理人の新定義(4)独立代理人除外の厳格化(5)AOAの概要(6)AOA二段階分析(7)PEへの資本配賦(8)内部取引の認識と計算(9)日本のAOA導入(2014年)(10)計算事例演習(11)デジタル経済とPE限界(12)Pillar1との関係。3万字程度<!DOCTYPE html>
+<html lang="ja" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第5回：PE課税の応用─代理人PE・AOA・帰属所得 | 税法ラボ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/*=============================================
+  CSS CUSTOM PROPERTIES
+=============================================*/
+:root {
+  --font-en: 'Outfit', sans-serif;
+  --font-jp: 'Noto Sans JP', sans-serif;
+  --accent: #5E6AD2;
+  --accent-hover: #7B85E0;
+  --accent-glow: rgba(94,106,210,0.25);
+  --radius: 20px;
+  --radius-sm: 12px;
+  --radius-xs: 8px;
+  --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+  --max-w: 1120px;
+  --header-h: 64px;
+}
+
+[data-theme="dark"] {
+  --bg: #0A0A0A;
+  --bg-secondary: #111114;
+  --text: #FAFAFA;
+  --text-muted: #9A9A9A;
+  --card: #16161A;
+  --card-hover: #1C1C22;
+  --border: rgba(255,255,255,0.06);
+  --border-strong: rgba(255,255,255,0.12);
+  --code-bg: #1E1E24;
+  --point-bg: rgba(94,106,210,0.08);
+  --point-border: rgba(94,106,210,0.3);
+  --table-stripe: rgba(255,255,255,0.02);
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
+  --shadow-card-hover: 0 12px 40px rgba(0,0,0,0.6);
+  --noise-opacity: 0.03;
+  --header-bg: rgba(10,10,10,0.8);
+  --toc-active: rgba(94,106,210,0.12);
+}
+
+[data-theme="light"] {
+  --bg: #FAFAF7;
+  --bg-secondary: #F0F0ED;
+  --text: #1A1A1A;
+  --text-muted: #6B6B6B;
+  --card: #FFFFFF;
+  --card-hover: #F8F8F6;
+  --border: rgba(0,0,0,0.06);
+  --border-strong: rgba(0,0,0,0.12);
+  --code-bg: #F4F4F2;
+  --point-bg: rgba(94,106,210,0.05);
+  --point-border: rgba(94,106,210,0.25);
+  --table-stripe: rgba(0,0,0,0.02);
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.06);
+  --shadow-card-hover: 0 12px 40px rgba(0,0,0,0.1);
+  --noise-opacity: 0.02;
+  --header-bg: rgba(250,250,247,0.8);
+  --toc-active: rgba(94,106,210,0.08);
+}
+
+/*=============================================
+  RESET & BASE
+=============================================*/
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--header-h) + 32px);font-size:16px;}
+body{font-family:var(--font-jp);background:var(--bg);color:var(--text);line-height:1.85;transition:background var(--transition),color var(--transition);overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+
+/* Noise overlay */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:var(--noise-opacity);background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");background-repeat:repeat;background-size:256px 256px;}
+
+a{color:var(--accent);text-decoration:none;transition:color var(--transition);}
+a:hover{color:var(--accent-hover);}
+img{max-width:100%;display:block;}
+
+.container{max-width:var(--max-w);padding:0 24px;margin:0 auto;}
+
+/*=============================================
+  HEADER
+=============================================*/
+.header{position:fixed;top:0;left:0;right:0;z-index:1000;height:var(--header-h);background:var(--header-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:background var(--transition);}
+.header .container{display:flex;align-items:center;justify-content:space-between;height:100%;}
+.header-logo{display:flex;align-items:center;gap:10px;font-family:var(--font-en);font-weight:700;font-size:1.15rem;color:var(--text);text-decoration:none;}
+.header-logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;}
+.header-logo-icon svg{width:18px;height:18px;}
+.header-nav{display:flex;align-items:center;gap:28px;}
+.header-nav a{font-size:0.875rem;font-weight:500;color:var(--text-muted);transition:color var(--transition);}
+.header-nav a:hover,.header-nav a.active{color:var(--text);}
+
+.theme-toggle{background:none;border:1px solid var(--border);border-radius:10px;width:40px;height:40px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:all var(--transition);}
+.theme-toggle:hover{border-color:var(--accent);color:var(--accent);}
+.theme-toggle svg{width:18px;height:18px;}
+.theme-toggle .icon-sun{display:none;}
+[data-theme="light"] .theme-toggle .icon-moon{display:none;}
+[data-theme="light"] .theme-toggle .icon-sun{display:block;}
+
+@media(max-width:768px){
+  .header-nav a:not(.theme-toggle){display:none;}
+  .header-nav{gap:12px;}
+}
+
+/*=============================================
+  HERO
+=============================================*/
+.hero{padding:calc(var(--header-h) + 80px) 0 64px;text-align:center;}
+.hero-label{font-family:var(--font-en);font-size:0.75rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;}
+.hero h1{font-family:var(--font-jp);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;line-height:1.35;margin-bottom:16px;letter-spacing:-0.02em;}
+.hero h1 span{background:linear-gradient(135deg,var(--accent),var(--accent-hover));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:1.05rem;color:var(--text-muted);max-width:700px;margin:0 auto 32px;line-height:1.8;}
+.hero-meta{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;font-size:0.85rem;color:var(--text-muted);}
+.hero-meta span{display:flex;align-items:center;gap:6px;}
+
+/*=============================================
+  TOC
+=============================================*/
+.toc-section{padding:0 0 64px;}
+.toc-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:40px;box-shadow:var(--shadow-card);transition:all var(--transition);}
+.toc-card h2{font-size:1.1rem;font-weight:700;margin-bottom:24px;display:flex;align-items:center;gap:10px;}
+.toc-card h2::before{content:'';width:4px;height:20px;background:var(--accent);border-radius:2px;}
+.toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px;}
+.toc-item{display:flex;align-items:baseline;gap:12px;padding:10px 14px;border-radius:var(--radius-xs);transition:background var(--transition);font-size:0.92rem;}
+.toc-item:hover{background:var(--toc-active);}
+.toc-item .num{font-family:var(--font-en);font-weight:700;font-size:0.8rem;color:var(--accent);min-width:28px;}
+.toc-item a{color:var(--text);text-decoration:none;}
+.toc-item a:hover{color:var(--accent);}
+
+/*=============================================
+  SECTION & CONTENT
+=============================================*/
+.section{padding:48px 0;}
+.section-label{font-family:var(--font-en);font-size:0.75rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+.section h2{font-size:clamp(1.35rem,2.5vw,1.75rem);font-weight:800;line-height:1.4;margin-bottom:32px;letter-spacing:-0.01em;}
+.section h3{font-size:1.15rem;font-weight:700;margin:32px 0 16px;padding-left:16px;border-left:3px solid var(--accent);}
+.section h4{font-size:1.02rem;font-weight:600;margin:24px 0 12px;color:var(--accent);}
+
+.content-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:48px;box-shadow:var(--shadow-card);transition:all var(--transition);margin-bottom:24px;}
+.content-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-card-hover);}
+
+.content-card p{margin-bottom:20px;font-size:0.97rem;line-height:1.95;color:var(--text);}
+.content-card p:last-child{margin-bottom:0;}
+
+@media(max-width:768px){
+  .content-card{padding:28px 20px;}
+  .toc-card{padding:28px 20px;}
+  .toc-grid{grid-template-columns:1fr;}
+}
+
+/*=============================================
+  POINT BOX
+=============================================*/
+.point-box{background:var(--point-bg);border:1px solid var(--point-border);border-radius:var(--radius-sm);padding:28px 32px;margin:32px 0 8px;}
+.point-box-title{font-weight:700;font-size:0.95rem;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.point-box-title svg{width:18px;height:18px;}
+.point-box ul{list-style:none;padding:0;}
+.point-box li{position:relative;padding:5px 0 5px 22px;font-size:0.92rem;line-height:1.75;}
+.point-box li::before{content:'✓';position:absolute;left:0;color:var(--accent);font-weight:700;font-size:0.85rem;}
+
+/*=============================================
+  TABLE
+=============================================*/
+.table-wrap{overflow-x:auto;margin:24px 0;border-radius:var(--radius-sm);border:1px solid var(--border);}
+table{width:100%;border-collapse:collapse;font-size:0.9rem;}
+thead{background:var(--accent);color:#fff;}
+thead th{padding:14px 18px;text-align:left;font-weight:600;font-size:0.85rem;letter-spacing:0.02em;white-space:nowrap;}
+tbody td{padding:13px 18px;border-bottom:1px solid var(--border);vertical-align:top;}
+tbody tr:nth-child(even){background:var(--table-stripe);}
+tbody tr:hover{background:var(--toc-active);}
+
+/*=============================================
+  CODE BLOCK
+=============================================*/
+.code-block{background:var(--code-bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:24px 28px;margin:24px 0;overflow-x:auto;font-family:'Outfit',monospace;font-size:0.85rem;line-height:1.7;color:var(--text-muted);}
+.code-block .hl-keyword{color:var(--accent);}
+.code-block .hl-num{color:#E06C75;}
+.code-block .hl-comment{color:#5C6370;font-style:italic;}
+.code-block .hl-string{color:#98C379;}
+
+code{font-family:'Outfit',monospace;background:var(--code-bg);padding:2px 7px;border-radius:4px;font-size:0.88em;}
+
+/*=============================================
+  SVG DIAGRAM
+=============================================*/
+.diagram-wrap{margin:32px 0;text-align:center;}
+.diagram-wrap svg{max-width:100%;height:auto;margin:0 auto;}
+.diagram-caption{font-size:0.82rem;color:var(--text-muted);margin-top:12px;text-align:center;}
+
+/*=============================================
+  SCROLL ANIMATION
+=============================================*/
+.reveal{opacity:0;transform:translateY(32px);transition:opacity 0.7s cubic-bezier(0.4,0,0.2,1),transform 0.7s cubic-bezier(0.4,0,0.2,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/*=============================================
+  FOOTER
+=============================================*/
+.footer{padding:48px 0;border-top:1px solid var(--border);margin-top:64px;}
+.footer .container{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+.footer-copy{font-size:0.82rem;color:var(--text-muted);}
+.footer-links{display:flex;gap:20px;}
+.footer-links a{font-size:0.82rem;color:var(--text-muted);}
+.footer-links a:hover{color:var(--accent);}
+
+/*=============================================
+  MISC
+=============================================*/
+.divider{height:1px;background:var(--border);margin:64px 0;}
+.highlight{color:var(--accent);font-weight:600;}
+.note{font-size:0.88rem;color:var(--text-muted);padding:16px 20px;background:var(--code-bg);border-radius:var(--radius-xs);margin:16px 0;border-left:3px solid var(--accent);}
+.spacer{height:48px;}
+</style>
+</head>
+<body>
+
+<!-- ============================================= -->
+<!-- HEADER -->
+<!-- ============================================= -->
+<header class="header">
+<div class="container">
+  <a href="#" class="header-logo">
+    <div class="header-logo-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v14l-8-4-8 4z"/></svg>
+    </div>
+    税法ラボ
+  </a>
+  <nav class="header-nav">
+    <a href="#" class="active">コース</a>
+    <a href="#">条文DB</a>
+    <a href="#">判例</a>
+    <a href="#">ブログ</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+  </nav>
+</div>
+</header>
+
+<main>
+<!-- ============================================= -->
+<!-- HERO -->
+<!-- ============================================= -->
+<section class="hero">
+<div class="container">
+  <div class="hero-label">Course 05 — Permanent Establishment Advanced</div>
+  <h1>PE課税の応用<br><span>代理人PE・AOA・帰属所得</span></h1>
+  <p class="hero-sub">国際課税の最重要概念であるPE（恒久的施設）を深掘りし、代理人PEの判定基準、BEPS行動7による改正、AOA（帰属主義）の二段階分析、そしてデジタル経済との関係まで包括的に解説します。</p>
+  <div class="hero-meta">
+    <span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      2026年3月4日
+    </span>
+    <span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      約60分
+    </span>
+    <span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      上級レベル
+    </span>
+  </div>
+</div>
+</section>
+
+<!-- ============================================= -->
+<!-- TABLE OF CONTENTS -->
+<!-- ============================================= -->
+<section class="toc-section">
+<div class="container">
+  <div class="toc-card reveal">
+    <h2>目 次</h2>
+    <div class="toc-grid">
+      <div class="toc-item"><span class="num">01</span><a href="#sec1">代理人PE（従属 vs 独立）</a></div>
+      <div class="toc-item"><span class="num">02</span><a href="#sec2">BEPS行動7 コミッショネア対策</a></div>
+      <div class="toc-item"><span class="num">03</span><a href="#sec3">契約締結代理人の新定義</a></div>
+      <div class="toc-item"><span class="num">04</span><a href="#sec4">独立代理人除外の厳格化</a></div>
+      <div class="toc-item"><span class="num">05</span><a href="#sec5">AOAの概要</a></div>
+      <div class="toc-item"><span class="num">06</span><a href="#sec6">AOA二段階分析</a></div>
+      <div class="toc-item"><span class="num">07</span><a href="#sec7">PEへの資本配賦</a></div>
+      <div class="toc-item"><span class="num">08</span><a href="#sec8">内部取引の認識と計算</a></div>
+      <div class="toc-item"><span class="num">09</span><a href="#sec9">日本のAOA導入（2014年）</a></div>
+      <div class="toc-item"><span class="num">10</span><a href="#sec10">計算事例演習</a></div>
+      <div class="toc-item"><span class="num">11</span><a href="#sec11">デジタル経済とPE限界</a></div>
+      <div class="toc-item"><span class="num">12</span><a href="#sec12">Pillar 1 との関係</a></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============================================= -->
+<!-- SECTION 1: 代理人PE（従属 vs 独立） -->
+<!-- ============================================= -->
+<section class="section" id="sec1">
+<div class="container">
+  <div class="content-card reveal">
+    <div class="section-label">Section 01</div>
+    <h2>代理人PE（従属 vs 独立）</h2>
+
+    <h3>1-1. 代理人PEとは何か──物理的拠点なきPE認定</h3>
+    <p>国際課税において「恒久的施設（PE: Permanent Establishment）」は、源泉地国に課税権が生じるか否かを分ける最重要の閾値概念です。伝統的にPEといえば支店・工場・事務所といった物理的な「場所PE（fixed place of business PE）」が想起されますが、実務上はもう一つの類型──「代理人PE（agency PE）」──が極めて重要な役割を果たします。</p>
+    <p>代理人PEとは、外国企業が相手国に物理的な事業拠点を構えていなくても、その国において当該企業のために活動する「人」（個人または法人）の行為を通じて課税上のPEが認定される仕組みです。OECDモデル租税条約第5条第5項および第6項がこれを規定しています。この規定の背景には、企業が意図的に物理的拠点を設けず、現地の代理人を通じて事業活動を行うことで課税を回避する行為を防止するという政策目的があります。</p>
+    <p>代理人PEの議論で最も根本的な区別が、「従属代理人（dependent agent）」と「独立代理人（independent agent）」の二分法です。従属代理人を通じた活動はPEを構成し得るのに対し、独立代理人を通じた活動は原則としてPEを構成しません。この区別は一見単純に思えますが、実際の適用場面では極めて微妙な判断を要し、各国の税務当局と納税者の間で長年にわたり紛争の種となってきました。</p>
+
+    <h3>1-2. OECDモデル租税条約第5条第5項（BEPS以前の旧規定）</h3>
+    <p>2017年のOECDモデル条約改訂前の第5条第5項は、次のような構造を持っていました。ある者が締約国の一方において、他方の締約国の企業に代わって行動し、かつ当該企業の名において契約を締結する権限を有し、これを常習的に（habitually）行使している場合、当該企業は当該一方の国にPEを有するものとされる──ただし、その者の活動が第5条第4項に列挙される準備的・補助的活動に限定される場合を除きます。</p>
+    <p>ここで注目すべきは、旧規定においてPE認定の鍵となったのが「企業の名において契約を締結する権限（authority to conclude contracts in the name of the enterprise）」という文言であったことです。この「企業の名において（in the name of）」という要件は文言上かなり狭い射程を持っており、代理人が自己の名において契約を締結するケース──たとえばコミッショネア（commissionnaire）契約──では要件を満たさないと解釈される余地がありました。この点こそが後にBEPS行動7で問題視されることになります。</p>
+
+    <h3>1-3. 従属代理人の判定基準</h3>
+    <p>従属代理人と認定されるためには、伝統的に以下の要素が考慮されてきました。第一に、当該代理人が本人企業の詳細な指示・管理の下で活動しているか（instructions and control）。第二に、当該代理人が企業のために契約を締結する権限を有し、これを反復的に行使しているか。第三に、当該代理人が事業リスクを自ら負担していないか。第四に、当該代理人の報酬が、取引の成果に連動しない固定的なものであるか、あるいは成果に連動するにしても本人企業がリスクを実質的に負担しているか。</p>
+    <p>これらの要素は総合的に判断されます。例えば、日本支店の従業員が本社のために日常的に契約交渉を行い、本社がほぼ自動的に承認しているような場合、たとえ形式上の署名権限が本社に留保されていたとしても、実質的に見て当該従業員が「契約を締結する権限を行使している」と評価される可能性があります。OECDモデル条約のコメンタリーも、形式的な署名権限の所在だけでなく、実質的な交渉・合意の過程に着目すべきことを示唆しています。</p>
+
+    <h3>1-4. 独立代理人の判定基準</h3>
+    <p>OECDモデル条約第5条第6項（BEPS以前）は、企業が通常の業務の範囲内で活動する仲立人・問屋その他の独立の地位を有する代理人を通じて事業活動を行っている場合には、当該代理人の存在のみを理由としてPEが認定されることはないと規定していました。独立代理人と認められるための要件は、法的・経済的に独立した地位を有すること、および通常の業務（ordinary course of business）の範囲内で活動していることの二点に要約されます。</p>
+    <p>法的独立性とは、代理人が本人企業から法的に独立した人格を有し、自らの判断で事業活動を行う能力を持つことを意味します。経済的独立性とは、代理人が事業リスクを自ら負担し、複数の本人（principal）のために活動し、特定の一社に経済的に従属していないことを意味します。もっとも、一社のためにのみ活動しているという事実だけでは直ちに独立性が否定されるわけではありませんが、強い推定を生じさせる要素となります。</p>
+    <p>「通常の業務の範囲内」という要件は、代理人が本人企業のために行う活動が、当該代理人自身の通常の事業活動の一環であるかどうかを問います。例えば、独立した販売代理店が複数のメーカーの製品を取り扱い、自らの事業として販売促進を行っている場合、その活動は通常の業務範囲内と評価されやすいでしょう。これに対し、代理店がメーカーの指示に逐一従い、メーカーの事業上の意思決定に従属しているような場合には、たとえ法的に独立した法人であっても、経済的従属性が認められ、独立代理人の要件を満たさない可能性があります。</p>
+
+    <h3>1-5. 従属と独立の境界線──実務上の困難</h3>
+    <p>従属代理人と独立代理人の区別は、理論上は明快に見えても、実務では極めて困難な判断を要求します。典型的な問題領域をいくつか挙げましょう。</p>
+    <p>まず、「専属的」に一社のために活動する代理人の扱いです。独立した法人格を持つ販売子会社が親会社の製品のみを販売している場合、法的独立性はあるものの、経済的には相当程度に親会社に依存しています。このような子会社が親会社のためにPEを構成するかどうかは、BEPS以前から争点となっていました。</p>
+    <p>次に、「権限」の解釈です。契約締結権限は形式的に判断すべきか実質的に判断すべきか。代理人が交渉を行い、契約条件を実質的に合意に導いているが、最終的な署名は本社が行う場合──これは「rubber stamp（形式的承認）」の問題として知られています──PE認定はどうなるか。多くの判例・裁決で、形式ではなく実質に着目すべきとの立場が示されていますが、各国の運用にはばらつきがあります。</p>
+    <p>さらに、「常習性（habituality）」の判断も容易ではありません。年に何回の契約締結行為があれば「常習的」といえるのか。月に一度か、四半期に一度か。この点については明確な数値基準はなく、事案ごとの事実認定に委ねられています。</p>
+
+    <h3>1-6. 主要な判例と実務上の展開</h3>
+    <p>代理人PEに関する判例は各国で集積されています。フランスのZimmer事件（2010年）では、英国のZimmer社がフランスにおいてコミッショネア契約を通じて医療機器を販売していたケースで、フランスの最高行政裁判所（Conseil d'État）は、コミッショネアが自己の名で契約を締結しているため、Zimmer社のPEは認定されないと判断しました。この判決は、「企業の名において」という文言を厳格に解釈するもので、BEPS行動7の議論に大きな影響を与えました。</p>
+    <p>ノルウェーのDell事件（2011年）でも同様の争点が扱われ、ノルウェー最高裁はコミッショネアを通じた販売スキームにおいてDell社のPEを認めない判断を下しました。これらの判例は、OECDモデル条約の旧文言の下では、コミッショネア型スキームがPE認定を回避する有効な手段として機能し得ることを示したものであり、まさにBEPS行動7で対処すべき「問題」として認識される契機となりました。</p>
+    <p>他方、インドでは代理人PEに関してより積極的な認定が行われる傾向があり、Morgan Stanley事件やe-Funds事件などで、インド当局がサービス提供者を通じた代理人PEの成立を主張してきました。これらの事例は、同一の条約文言であっても、各国の解釈姿勢によって結論が大きく異なり得ることを如実に示しています。</p>
+
+    <div class="point-box">
+      <div class="point-box-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        ポイント整理
+      </div>
+      <ul>
+        <li>代理人PEは物理的拠点がなくても「人」の活動を通じてPEが認定される仕組みであり、OECDモデル条約第5条第5項・第6項が規律する。</li>
+        <li>従属代理人（dependent agent）はPEを構成し得るが、独立代理人（independent agent）は原則としてPEを構成しない。</li>
+        <li>従属性の判断は、指示・管理の程度、契約締結権限の有無、事業リスクの帰属、経済的従属性などを総合考慮して行われる。</li>
+        <li>旧規定の「企業の名において契約を締結する権限」という文言は、コミッショネア型スキームによるPE回避の余地を生じさせた。</li>
+        <li>Zimmer事件・Dell事件などの判例が示した解釈上の限界が、BEPS行動7の改正へとつながった。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============================================= -->
+<!-- SECTION 2: BEPS行動7 コミッショネア対策 -->
+<!-- ============================================= -->
+<section class="section" id="sec2">
+<div class="container">
+  <div class="content-card reveal">
+    <div class="section-label">Section 02</div>
+    <h2>BEPS行動7 コミッショネア対策</h2>
+
+    <h3>2-1. BEPSプロジェクトの背景と行動7の位置づけ</h3>
+    <p>BEPS（Base Erosion and Profit Shifting：税源浸食と利益移転）プロジェクトは、2012年にOECDとG20の共同イニシアティブとして開始され、2015年に15の行動計画の最終報告書が公表されました。多国籍企業が各国の税制の差異や抜け穴を利用して、経済活動が実際に行われている場所とは異なる低税率国に利益を移転させる問題に対処することが、このプロジェクトの核心的な目的です。</p>
+    <p>行動7（Preventing the Artificial Avoidance of Permanent Establishment Status）は、PE認定の人為的な回避を防止するための措置を策定するものです。企業が事業拠点としてのPEの認定を意図的に回避するために用いてきた戦略には、主にコミッショネア・アレンジメントの利用、契約の人為的分割、特定活動免除の濫用などがあり、行動7はこれらの各戦略に対する対抗措置を提案しました。</p>
+
+    <h3>2-2. コミッショネア・アレンジメントとは何か</h3>
+    <p>コミッショネア（commissionnaire）とは、大陸法系の国（特にフランス、ベルギー、オランダなど）で認められている法律上の概念であり、自己の名で、しかし他人（本人・コミタント）の計算において、物品の売買その他の取引を行う者を指します。英米法のエージェント（agent）と異なり、コミッショネアは契約の相手方に対して自己の名で権利義務を取得し、本人の存在は契約上顕名されません。</p>
+    <p>この法律構造を租税条約に当てはめると、コミッショネアは「企業の名において（in the name of the enterprise）」契約を締結しているわけではなく、「自己の名において（in its own name）」契約を締結していることになります。したがって、旧OECDモデル条約第5条第5項の文言を厳格に解釈すれば、コミッショネアを通じた販売活動は代理人PEの要件を満たさないという結論に至る可能性があります。</p>
+
+    <h3>2-3. コミッショネア・スキームの実態</h3>
+    <p>コミッショネア・アレンジメントが国際的な租税回避スキームとして広く利用されるようになった経緯を理解するには、その典型的な構造を見る必要があります。例えば、A国に所在する製造業者X社が、B国において製品を販売したいとします。伝統的には、X社がB国に販売子会社Y社を設立し、Y社がX社から製品を購入して顧客に再販売するという構造が一般的でした。この場合、Y社はX社から法的にも経済的にも独立した主体として、B国で独自の事業利益を計上し、B国で課税されます。</p>
+    <p>ところが、この構造をコミッショネア型に変更すると、状況は大きく変わります。Y社をX社のコミッショネアとして位置づけ、Y社は自己の名でB国の顧客と売買契約を締結するものの、その契約は実質的にX社の計算で行われます。在庫の所有権はX社に帰属し続け、販売に伴う主要な経済的リスクもX社が負担します。Y社はコミッション（手数料）のみを報酬として受領します。</p>
+    <p>この結果、Y社のB国における課税所得は手数料部分に限定され、販売利益の大部分はA国のX社に帰属することになります。しかもX社はB国にPEを有しないとされるため、B国はX社の利益に対して課税権を行使できません。もしA国が低税率国であれば、この構造全体として大きな節税効果が生じます。これはまさにBEPSの典型的なパターンであり、経済活動の実質的な所在地（B国）と利益の帰属先（A国）の乖離が生じています。</p>
+
+    <h3>2-4. 行動7による対抗措置の概要</h3>
+    <p>BEPS行動7は、コミッショネア・アレンジメント等を通じたPE回避に対処するため、OECDモデル条約第5条第5項および第6項の改正を勧告しました。改正の核心は、「企業の名において契約を締結する」という旧来の狭い基準を、より広範な機能基準（functional test）に置き換えることです。</p>
+    <p>具体的には、改正後の第5条第5項は、ある者が締約国の一方において企業に代わって行動し、当該企業の名において契約を締結するか、または当該企業が所有し若しくは使用権を有する財産の移転若しくは使用許諾のための契約、若しくは当該企業によるサービス提供のための契約の締結において主要な役割（principal role）を常習的に果たし、その結果として契約が当該企業によって重要な修正なく（without material modification）通常締結されるに至る場合に、代理人PEを認定するものとしました。</p>
+    <p>この改正により、コミッショネアのように「自己の名で」契約を締結する者であっても、実質的に本人企業のために主要な役割を果たし、契約締結に至らしめている場合には、PE認定の対象となります。すなわち、法的な契約名義の形式ではなく、契約締結プロセスにおける実質的な役割と機能に着目するアプローチへの転換が図られたのです。</p>
+
+    <h3>2-5. MLI（多数国間条約）を通じた実施</h3>
+    <p>BEPS行動7の勧告は、既存の二国間租税条約に反映させる必要がありますが、世界中に数千本存在する租税条約を個別に改正するのは非現実的です。そこで活用されたのが、BEPS行動15に基づいて策定された「税源浸食及び利益移転を防止するための租税条約関連措置を実施するための多数国間条約（MLI: Multilateral Convention to Implement Tax Treaty Related Measures to Prevent BEPS）」です。</p>
+    <p>MLIの第12条は、行動7のコミッショネア対策（代理人PEに関する改正）を規定しており、MLIの締約国は自国の既存の租税条約にこの改正を適用することを選択できます。ただし、MLIは「最低基準（minimum standard）」と「それ以外の勧告」を区別しており、行動7のPE関連規定は最低基準には含まれず、各国の任意選択事項とされています。このため、MLIを通じた行動7の実施状況は国ごとに異なります。日本はMLIの第12条を採択しており、相手国も同様に採択している場合には、対象となる租税条約に新たな代理人PEの定義が適用されます。</p>
+
+    <div class="point-box">
+      <div class="point-box-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        ポイント整理
+      </div>
+      <ul>
+        <li>BEPS行動7は、コミッショネア・アレンジメントなどを通じたPE認定の人為的回避を防止するために策定された。</li>
+        <li>コミッショネアは「自己の名で本人の計算で」契約を締結する者であり、旧規定の「企業の名において」要件を満たさないとの解釈が可能であった。</li>
+        <li>改正後の規定は、契約名義の形式ではなく、契約締結プロセスにおける実質的な役割（principal role）に着目する機能的アプローチを採用した。</li>
+        <li>改正はMLI（多数国間条約）第12条を通じて既存の租税条約にも適用可能であるが、各国の任意選択事項である。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============================================= -->
+<!-- SECTION 3: 契約締結代理人の新定義 -->
+<!-- ============================================= -->
+<section class="section" id="sec3">
+<div class="container">
+  <div class="content-card reveal">
+    <div class="section-label">Section 03</div>
+    <h2>契約締結代理人の新定義</h2>
+
+    <h3>3-1. 新第5条第5項の構造分析</h3>
+    <p>BEPS行動7を反映した2017年OECDモデル条約の新第5条第5項は、代理人PEの認定基準を大幅に拡張しました。その条文構造を詳細に分析すると、PE認定のためには以下の要件が充足される必要があります。</p>
+    <p>第一に、ある者（a person）が締約国の一方において、他方の締約国の企業に代わって行動していること（acts on behalf of an enterprise）。ここでいう「者」は、個人でも法人でもよく、当該企業の従業員であるか否かを問いません。「企業に代わって行動する」とは、代理人としての法的地位のみならず、経済的実態として企業の利益のために活動していることを包括的に捉える概念です。</p>
+    <p>第二に、当該者が以下のいずれかの行為を常習的に行っていること。（a）当該企業の名において契約を締結すること、または（b）当該企業が所有し若しくは使用権を有する財産の移転・使用許諾のための契約、若しくは当該企業によるサービスの提供のための契約の締結において、主要な役割を常習的に果たし、その結果として当該契約が当該企業によって重要な修正なく通常締結されるに至ること。</p>
+    <p>第三に、当該者の活動が第5条第4項に列挙される準備的・補助的活動に限定されないこと。</p>
+
+    <h3>3-2.「主要な役割（principal role）」の意義</h3>
+    <p>新規定の核心的な概念が「主要な役割を果たす（plays the principal role leading to the conclusion of contracts）」です。この文言は、代理人が必ずしも法的な意味で契約を「締結」する必要はなく、契約が締結されるに至る過程において中心的・主導的な役割を果たしていれば足りることを意味します。</p>
+    <p>OECDコメンタリー（2017年版）によれば、「主要な役割」とは、代理人の行為が契約締結の決定的な要因となっていることを指します。具体的には、代理人が契約条件の交渉を行い、顧客との間で実質的な合意を形成し、本人企業が形式的に承認するだけで契約が成立するような場合が典型例です。重要なのは、代理人の交渉活動が契約内容を実質的に確定させているかどうかであり、法的な署名権限の所在は決定的な考慮要素ではありません。</p>
+    <p>ただし、代理人が単に顧客を紹介するだけ（lead generation）や、マーケティング活動を行うだけでは、通常は「主要な役割」とは評価されません。代理人の活動と契約締結との間に十分な因果関係が求められるのです。また、代理人が交渉を行うものの、本人企業側で実質的な再交渉や修正が常態的に行われている場合には、「重要な修正なく通常締結される」という要件を満たさない可能性があります。</p>
+
+    <h3>3-3.「重要な修正なく（without material modification）」の判断基準</h3>
+    <p>新規定のもう一つの重要な要件が「重要な修正なく通常締結される（routinely concluded without material modification by the enterprise）」です。これは、代理人が主要な役割を果たして実質的にまとめた契約が、本人企業によってほぼそのまま承認・締結されている実態があるかどうかを問うものです。</p>
+    <p>「重要な修正」が何を意味するかは、個々の事案の文脈において判断されます。価格、数量、納期、支払条件などの主要な契約条件が代理人の交渉段階で実質的に確定しており、本人企業がそれを形式的に追認するだけであれば、「重要な修正なく締結される」と評価されるでしょう。逆に、本人企業が契約条件を独自に精査し、頻繁に修正を加えている場合には、代理人の役割は「主要」とは評価されにくくなります。</p>
+    <p>この判断においては、「通常（routinely）」という文言にも注意が必要です。個別の取引において偶然に修正が行われなかったとしても、それだけでこの要件が満たされるわけではありません。全体的なパターンとして、代理人がまとめた契約が修正なく承認されることが常態化しているかどうかが問われます。</p>
+
+    <h3>3-4. 対象となる契約の範囲</h3>
+    <p>新規定が対象とする契約の範囲も重要な論点です。旧規定では「企業の名における契約」としか規定されていませんでしたが、新規定は対象契約を三つの類型に具体化しています。すなわち、（a）当該企業が所有し又は使用権を有する財産の移転のための契約（物品販売が典型）、（b）当該企業が所有し又は使用権を有する財産の使用許諾のための契約（ライセンス契約が典型）、（c）当該企業によるサービスの提供のための契約、の三類型です。</p>
+    <p>この類型化により、代理人の活動がこれらの契約のいずれかに関連するものである場合に、PE認定の可能性が生じることが明確化されました。なお、企業自身が使用するための物品・サービスの調達契約（例えばオフィス用品の購入）は、企業の事業活動に関する契約とは性質が異なるため、通常はこの規定の射程に含まれないと解されています。</p>
+
+    <h3>3-5. 具体的な適用場面</h3>
+    <p>新規定の適用場面を具体例で考えてみましょう。A国のソフトウェア企業X社が、B国において販売活動を行うためにY氏を現地の営業担当者として雇用しているとします。Y氏はB国の顧客を訪問し、ソフトウェアのデモンストレーションを行い、ライセンス条件の交渉を行います。Y氏が顧客と合意に達すると、契約書をX社本社に送付し、X社の担当役員が署名して契約が成立します。X社本社は通常、Y氏がまとめた条件をそのまま承認しています。</p>
+    <p>この場合、旧規定の下では、Y氏はX社の「名において」契約を「締結」していない（署名権限がない）として、PE認定が否定される可能性がありました。しかし新規定の下では、Y氏がソフトウェアのライセンス契約の締結において「主要な役割」を果たし、その結果として契約がX社によって「重要な修正なく通常締結される」に至っている以上、Y氏の活動を通じてX社はB国にPEを有すると認定される可能性が高いでしょう。</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>比較項目</th><th>旧規定（BEPS前）</th><th>新規定（BEPS後）</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>契約締結の態様</td><td>「企業の名において」締結する権限</td><td>「企業の名において」締結 <strong>または</strong> 主要な役割を果たし重要な修正なく締結される</td></tr>
+          <tr><td>コミッショネア</td><td>PE回避の余地あり</td><td>実質的に捕捉される</td></tr>
+          <tr><td>判断基準</td><td>法的形式（署名権限）を重視</td><td>経済的実質（機能・役割）を重視</td></tr>
+          <tr><td>対象契約の範囲</td><td>限定なし（一般的）</td><td>財産移転・使用許諾・サービス提供の3類型</td></tr>
+          <tr><td>常習性要件</td><td>あり</td><td>あり（変更なし）</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="point-box">
+      <div class="point-box-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        ポイント整理
+      </div>
+      <ul>
+        <li>新第5条第5項は、「企業の名において」の要件に加え、「主要な役割を果たし、重要な修正なく契約が締結されるに至る」という代替基準を導入した。</li>
+        <li>「主要な役割」は法的な署名権限ではなく、契約締結プロセスにおける実質的な貢献度で判断される。</li>
+        <li>「重要な修正なく通常締結される」は、代理人の交渉結果が本人企業にほぼそのまま追認される常態を意味する。</li>
+        <li>対象契約は、財産移転・使用許諾・サービス提供の3類型に具体化された。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============================================= -->
+<!-- SECTION 4: 独立代理人除外の厳格化 -->
+<!-- ============================================= -->
+<section class="section" id="sec4">
+<div class="container">
+  <div class="content-card reveal">
+    <div class="section-label">Section 04</div>
+    <h2>独立代理人除外の厳格化</h2>
+
+    <h3>4-1. 新第5条第6項の改正内容</h3>
+    <p>BEPS行動7は、代理人PEの認定基準を拡張する（第5条第5項の改正）と同時に、独立代理人の除外規定（第5条第6項）についても重要な改正を行いました。新第5条第6項は、第5条第5項が適用される場合であっても、ある者が独立の地位を有する代理人として通常の業務の範囲内で企業のために活動するときは、PE認定は行われない旨を規定していますが、ここに決定的な制限条件が追加されました。</p>
+    <p>追加された制限とは、当該代理人が「もっぱらまたは主として（exclusively or almost exclusively）」一つの企業またはその密接関連企業（closely related enterprises）のために活動している場合には、当該代理人は独立代理人とは認められないというものです。この改正は、関連企業グループ内の代理人が「独立代理人」の地位を主張してPE認定を回避することを防止する目的を持っています。</p>
+
+    <h3>4-2.「もっぱらまたは主として」の基準</h3>
+    <p>「もっぱらまたは主として（exclusively or almost exclusively）」という文言は、代理人の活動の相手方がどの程度特定の企業（グループ）に集中しているかを問うものです。OECDコメンタリーはこの文言について詳細なガイダンスを提供しています。「もっぱら」は文字通り100%を意味し、「主として」は厳密な数値基準は示されていないものの、活動の大部分が特定の一社または関連グループのためのものであることを意味すると解されています。</p>
+    <p>実務的には、売上高の割合、活動時間の配分、取引件数の割合などの客観的指標に基づいて判断されることが想定されます。例えば、ある販売代理店の売上の90%が特定の一社の製品によるものであれば、「主として」当該企業のために活動していると評価される可能性が高いでしょう。逆に、複数のメーカーの製品を取り扱い、特定のメーカーへの売上依存度が50%程度にとどまる場合には、「主として」とまではいえない可能性があります。</p>
+
+    <h3>4-3.「密接関連企業」の定義</h3>
+    <p>新規定が「密接関連企業（closely related enterprises）」を考慮要素に加えたことは、極めて重要な改正点です。2017年OECDモデル条約第5条第8項は、密接関連企業の定義を設けています。ある者と企業が「密接に関連する」とされるのは、一方が他方を支配している場合、または両者が同一の者若しくは企業によって支配されている場合です。具体的には、50%以上の受益的持分を直接・間接に保有する場合などが該当します。</p>
+    <p>この「密接関連企業」概念の導入により、例えばグループ企業A社のコミッショネアとして活動するB社が、A社およびA社の関連会社C社のためにのみ活動している場合、B社は「もっぱらまたは主として密接関連企業のために活動している」ことになり、独立代理人の除外の適用が否定されます。これは、同一グループ内で形式的に別法人を介在させることによるPE回避スキームを封じるための措置です。</p>
+
+    <h3>4-4. 独立代理人除外の厳格化がもたらす実務的影響</h3>
+    <p>独立代理人除外の厳格化は、特にグループ企業間のサービス提供構造に大きな影響を与えます。例えば、日本の親会社がアジア各国に販売子会社を有し、各子会社が親会社の製品を各国市場で販売しているとします。これまで各子会社は法的に独立した法人であるため、仮に親会社のための代理人的活動を行っていたとしても、独立代理人として扱われる可能性がありました。</p>
+    <p>しかし新規定の下では、各子会社が「主として」親会社（密接関連企業）のために活動しており、かつ第5条第5項の要件（主要な役割、重要な修正なき契約締結等）を満たす場合、独立代理人の除外は適用されず、各子会社の活動を通じて親会社が各国にPEを有するとの認定がなされ得ます。これは移転価格の観点からも重要な含意を持ち、従来は子会社の独立企業としての機能・リスクに基づいて報酬が設定されていたものが、PE課税との二重構造になり得るという問題を提起しています。</p>
+    <p>もっとも、BEPS行動7の報告書およびOECDコメンタリーは、グループ企業が独立代理人としての要件を満たすこと自体は理論上可能であるとしつつも、「もっぱらまたは主として」要件によって実際上はそのような認定が困難になる場面が多いことを認めています。企業グループとしては、各国における活動の実態を再点検し、PE認定リスクを適切に管理することが求められます。</p>
+
+    <div class="point-box">
+      <div class="point-box-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        ポイント整理
+      </div>
+      <ul>
+        <li>新第5条第6項は、「もっぱらまたは主として」一つの企業またはその密接関連企業のために活動する代理人を独立代理人から除外した。</li>
+        <li>「密接関連企業」は50%以上の持分による支配関係で判定され、グループ内スキームの封じ込めが意図されている。</li>
+        <li>グループ企業間のサービス提供構造に重大な影響をもたらし、PE認定リスクの再評価が必要となった。</li>
+        <li>独立代理人除外の適用が否定されると、子会社の活動を通じた親会社のPE認定が生じ得る。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============================================= -->
+<!-- SECTION 5: AOAの概要 -->
+<!-- ============================================= -->
+<section class="section" id="sec5">
+<div class="container">
+  <div class="content-card reveal">
+    <div class="section-label">Section 05</div>
+    <h2>AOA（Authorised OECD Approach）の概要</h2>
+
+    <h3>5-1. PEへの利益帰属問題の所在</h3>
+    <p>PEが認定されると、次の問題は「PEにどれだけの利益を帰属させるか」です。PE課税の二段構造──まずPEの存否を判断し（第5条）、次にPEへの利益帰属を計算する（第7条）──において、利益帰属の問題は第7条（事業利得条項）の解釈問題として位置づけられます。</p>
+    <p>PEは法的に独立した主体ではなく、本店と同一の法人の一部にすぎません。したがって、PEと本店の間の取引は、法的には「自己との取引」であり、第三者間取引のような明確な対価設定がなされないことが通常です。この法的一体性と経済的分離の緊張関係が、PEへの利益帰属を困難にしている根本的な原因です。</p>
+    <p>歴史的に、PEへの利益帰属については大きく二つのアプローチが存在してきました。一つは「関連企業アプローチ（relevant business activity approach）」または「機能的分離企業アプローチ」と呼ばれるもので、PEの行う機能、使用する資産、負担するリスクに基づいて、PEを仮想的に独立した企業として扱い、独立企業原則（arm's length principle）に基づいて利益を帰属させるものです。もう一つは、企業全体の利益を何らかの配分基準（売上高、従業員数、資産額等）によって按分する「利益分割アプローチ」です。</p>
+
+    <h3>5-2. AOAの策定経緯</h3>
+    <p>OECDは、PEへの利益帰属に関する国際的な統一基準を確立するため、2008年に「PEへの利益帰属に関する報告書（Report on the Attribution of Profits to Permanent Establishments）」を公表し、2010年にこれを改訂しました。この報告書で示されたアプローチが「承認されたOECDアプローチ（Authorised OECD Approach: AOA）」です。</p>
+    <p>AOAは、OECDモデル条約第7条（2010年改訂版）の解釈として策定されたものです。2010年のOECDモデル条約改訂により、第7条の文言はAOAの考え方を明確に反映するものとなりました。もっとも、各国の既存の租税条約の多くは旧第7条に基づいており、新第7条に基づく条約はまだ限定的です。この点は、AOAの適用範囲を考える上で重要な実務的課題です。</p>
+
+    <h3>5-3. AOAの基本原則──完全な仮想独立企業</h3>
+    <p>AOAの根本的な考え方は、PEを「本店から独立した仮想的な企業（functionally separate entity）」として扱い、あたかもPEが独立した第三者企業であるかのように利益を帰属させるというものです。これは、OECDモデル条約第7条第2項に規定される「独立企業擬制（separate and independent enterprise fiction）」を徹底したものといえます。</p>
+    <p>AOAの下では、PEと本店の間のいわゆる「内部取引（dealings）」も、独立企業間取引と同様に認識・計上されます。これは従来の多くの国の実務慣行とは異なるアプローチです。旧来の実務では、PEと本店は法的に同一主体であるため、両者間の取引は税務上認識しないか、限定的にしか認識しないという立場が一般的でした。AOAはこの立場を根本的に変更し、PEと本店の間の資産移転、サービス提供、資金移動等についても、独立企業原則に基づく適正な対価を認識すべきとしています。</p>
+
+    <!-- Diagram: AOA概念図 -->
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 800 340" fill="none" xmlns="http://www.w3.org/2000/svg" style="max-width:700px">
+        <rect x="40" y="40" width="300" height="120" rx="16" fill="var(--card)" stroke="var(--accent)" stroke-width="2"/>
+        <text x="190" y="85" text-anchor="middle" fill="var(--text)" font-size="16" font-weight="700" font-family="Noto Sans JP">本店（Home Office）</text>
+        <text x="190" y="115" text-anchor="middle" fill="var(--text-muted)" font-size="12" font-family="Noto Sans JP">A国所在・法人全体の主体</text>
+        <text x="190" y="140" text-anchor="middle" fill="var(--text-muted)" font-size="12" font-family="Noto Sans JP">SPF（重要人的機能）の一部</text>
+        <rect x="460" y="40" width="300" height="120" rx="16" fill="var(--card)" stroke="var(--accent)" stroke-width="2"/>
+        <text x="610" y="85" text-anchor="middle" fill="var(--text)" font-size="16" font-weight="700" font-family="Noto Sans JP">PE（支店等）</text>
+        <text x="610" y="115" text-anchor="middle" fill="var(--text-muted)" font-size="12" font-family="Noto Sans JP">B国所在・仮想独立企業として扱う</text>
+        <text x="610" y="140" text-anchor="middle" fill="var(--text-muted)" font-size="12" font-family="Noto Sans JP">SPFに基づき資産・リスク帰属</text>
+        <line x1="340" y1="100" x2="460" y2="100" stroke="var(--accent)" stroke-width="2" stroke-dasharray="8 4"/>
+        <polygon points="452,94 464,100 452,106" fill="var(--accent)"/>
+        <polygon points="348,94 336,100 348,106" fill="var(--accent)"/>
+        <text x="400" y="88" text-anchor="middle" fill="var(--accent)" font-size="11" font-weight="600" font-family="Noto Sans JP">内部取引</text>
+        <text x="400" y="124" text-anchor="middle" fill="var(--text-muted)" font-size="10" font-family="Noto Sans JP">(dealings)</text>
+        <rect x="160" y="220" width="480" height="90" rx="16" fill="var(--point-bg)" stroke="var(--point-border)" stroke-width="1"/>
+        <text x="400" y="255" text-anchor="middle" fill="var(--accent)" font-size="14" font-weight="700" font-family="Noto Sans JP">AOA = 完全な仮想独立企業アプローチ</text>
+        <text x="400" y="280" text-anchor="middle" fill="var(--text-muted)" font-size="12" font-family="Noto Sans JP">第1段階：機能・事実分析 → 第2段階：独立企業原則による利益帰属</text>
+      </svg>
+      <div class="diagram-caption">図1：AOAの概念──PEを仮想独立企業として扱い、内部取引を認識する</div>
+    </div>
+
+    <div class="point-box">
+      <div class="point-box-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        ポイント整理
+      </div>
+      <ul>
+        <li>PEが認定された後の利益帰属は、OECDモデル条約第7条（事業利得条項）の問題として扱われる。</li>
+        <li>AOAは2008年/2010年にOECDが策定した、PEへの利益帰属の統一的アプローチである。</li>
+        <li>AOAの核心は、PEを「完全な仮想独立企業」として扱い、本店との内部取引も独立企業原則に基づいて認識・計上する点にある。</li>
+        <li>旧来の多くの国の実務（内部取引の限定的認識）からの根本的な転換を伴う。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============================================= -->
+<!-- SECTION 6: AOA二段階分析 -->
+<!-- ============================================= -->
+<section class="section" id="sec6">
+<div class="container">
+  <div class="content-card reveal">
+    <div class="section-label">Section 06</div>
+    <h2>AOA二段階分析</h2>
+
+    <h3>6-1. 第1段階：機能・事実分析（Functional and Factual Analysis）</h3>
+    <p>AOAの第1段階は、PEを仮想的に独立した企業として特徴づけるための分析です。具体的には、PEが遂行する「機能」、PEに帰属する「資産」、PEが負担する「リスク」、さらにPEに帰属すべき「資本」を特定します。この分析は、移転価格税制における機能分析（functional analysis）と概念的に類似していますが、PEの場合にはPEと本店が法的に同一主体であるという特殊性から、独自の方法論が必要とされます。</p>
+    <p>第1段階の分析において最も重要な概念が「重要人的機能（Significant People Functions: SPF）」です。SPFとは、資産の経済的所有および引受リスクの帰属を決定する上で重要な意味を持つ、人によって遂行される機能（活動）を指します。AOAは、このSPFの所在を基準として、資産およびリスクをPEまたは本店に帰属させるという方法論を採用しています。</p>
+    <p>SPFの具体的内容は業種によって異なります。銀行業であれば、融資の審査・承認・モニタリングに関する意思決定を行う機能がSPFに該当します。保険業であれば、保険リスクの引受に関する意思決定がSPFとなります。製造業であれば、製造工程の管理・品質管理に関する意思決定、あるいは在庫管理に関する重要な意思決定がSPFとなり得ます。</p>
+    <p>SPFの所在を特定する際には、当該機能を実際に遂行している「人」の物理的所在地が基準となります。例えば、融資の審査・承認を行う担当者が支店（PE）に所在していれば、当該SPFはPEに帰属し、その結果として関連する融資資産およびリスクもPEに帰属することになります。重要なのは、形式的な意思決定権限の所在ではなく、実質的に当該機能を遂行している者の所在地です。</p>
+
+    <h3>6-2. 第2段階：独立企業原則の適用（Application of the Arm's Length Principle）</h3>
+    <p>第1段階の分析を通じてPEの機能・資産・リスクが特定されると、第2段階では、移転価格税制の方法論を準用して、PEに帰属すべき利益を算定します。具体的には、OECDの移転価格ガイドラインに準拠した分析を行い、PEと本店の間の内部取引（dealings）について独立企業原則に基づく対価を認定します。</p>
+    <p>内部取引の認識は、AOAにおける最も革新的な要素の一つです。法的には存在しないPEと本店の間の「取引」を税務上認識するためには、経済的実質に基づく擬制が必要となります。AOAの下では、第1段階の分析を通じて特定された機能・資産・リスクの帰属関係に基づき、PEと本店の間に「内部取引」が存在するものと擬制し、当該内部取引に対して独立企業原則に基づく対価を付すのです。</p>
+    <p>例えば、PEが製造機能を遂行し、本店が販売機能を遂行しているとすれば、PEから本店への製品の内部移転が内部取引として認識され、当該移転に対して独立企業間価格が設定されます。また、本店がPEのために管理業務を提供している場合には、当該管理サービスが内部取引として認識され、適正なサービス報酬が算定されます。</p>
+    <p>第2段階で用いられる移転価格算定方法は、OECDの移転価格ガイドラインに規定される各手法──独立価格比準法（CUP法）、再販売価格基準法（RP法）、原価基準法（CP法）、取引単位営業利益法（TNMM）、利益分割法（PS法）──のうち、「最も適切な方法（most appropriate method）」が選択されます。PEの場合、比較可能な独立企業間取引を見つけることが困難な場合が多く、実務的にはTNMMやPS法が用いられることが比較的多いとされています。</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>段階</th><th>分析内容</th><th>主要概念</th><th>成果物</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>第1段階</td><td>機能・事実分析</td><td>重要人的機能（SPF）</td><td>PEの機能・資産・リスク・資本の特定</td></tr>
+          <tr><td>第2段階</td><td>独立企業原則の適用</td><td>内部取引の認識・対価設定</td><td>PEへの帰属利益の算定</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>6-3. AOAの業種別適用──銀行業の例</h3>
+    <p>AOAの適用方法は業種によって大きく異なります。OECDの報告書はPart I（一般原則）のほか、Part II（銀行業）、Part III（金融商品のグローバルトレーディング）、Part IV（保険業）に分かれており、各業種の特性に応じた詳細なガイダンスを提供しています。</p>
+    <p>銀行業を例にとると、銀行のPE（支店）への利益帰属において最も重要なSPFは、融資の審査・承認・モニタリング機能、すなわち信用リスクの引受に関する意思決定機能です。融資ポートフォリオの「経済的所有」は、この信用リスク引受機能を遂行している場所に帰属します。したがって、融資の審査・承認がPEで行われていれば、当該融資資産はPEに帰属し、利息収入もPEの収益として認識されます。</p>
+    <p>銀行業においてもう一つ特徴的な論点が「自由資本（free capital）」の配賦です。銀行はその事業の性質上、大きなレバレッジ（負債対資本比率）で経営されています。PEに帰属すべき自由資本の額を適切に算定することは、PEの利息費用の算定に直結し、ひいてはPEの課税所得に大きな影響を与えます。この点については第7章で詳しく扱います。</p>
+
+    <div class="point-box">
+      <div class="point-box-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        ポイント整理
+      </div>
+      <ul>
+        <li>AOAの第1段階は、SPF（重要人的機能）の所在を基準にPEの機能・資産・リスク・資本を特定する機能・事実分析である。</li>
+        <li>第2段階は、第1段階の分析結果に基づき、PEと本店の間の内部取引を認識し、独立企業原則に基づく利益帰属を行う。</li>
+        <li>SPFは業種ごとに異なり、銀行業では信用リスク引受の意思決定、保険業ではリスク引受の意思決定が典型的なSPFとなる。</li>
+        <li>移転価格算定方法はOECDガイドラインに準拠し、最も適切な方法が選択される。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============================================= -->
+<!-- SECTION 7: PEへの資本配賦 -->
+<!-- ============================================= -->
+<section class="section" id="sec7">
+<div class="container">
+  <div class="content-card reveal">
+    <div class="section-label">Section 07</div>
+    <h2>PEへの資本配賦</h2>
+
+    <h3>7-1. なぜ資本配賦が重要か</h3>
+    <p>PEへの利益帰属を計算する上で、資本配賦（capital attribution）は決定的に重要な要素です。その理由は単純明快で、PEに帰属する資本の額が、PEの利息費用の控除額を左右し、結果としてPEの課税所得に直接的な影響を与えるからです。</p>
+    <p>企業の資金調達は自己資本（エクイティ）と他人資本（デット）の組み合わせで行われます。他人資本（借入金）に対する利息は費用として控除可能ですが、自己資本に対する「配当」は費用として控除できません。したがって、PEに多くの自己資本を配賦すれば、PEで控除可能な利息費用が減少し、課税所得が増加します。逆に、PEへの自己資本の配賦を最小限にとどめ、PEが多額の借入金（特に本店からの内部借入）で資金調達しているとすれば、利息費用の控除によりPEの課税所得が大幅に減少する可能性があります。</p>
+    <p>この問題は、PEと本店が法的に同一主体であることから特に深刻です。独立した子会社であれば、自己資本と他人資本の構成は市場の規律によって一定程度制約されますが、PEと本店の間の資金配分は企業の内部的な決定にすぎず、税務上の操作の余地が大きいのです。</p>
+
+    <h3>7-2. AOAにおける資本配賦の方法</h3>
+    <p>AOAは、PEに対して「十分な自由資本（adequate amount of free capital）」を配賦すべきことを求めています。「自由資本」とは、利息等の資本コストを生じさせない資本、すなわちエクイティに相当するものです。AOAの報告書は、自由資本の配賦方法として主に以下のアプローチを示しています。</p>
+    <p>第一に「資本配分アプローチ（capital allocation approach）」があります。これは、企業全体の実際の自由資本を、PEと本店の間で一定の基準（リスク加重資産額、資産額等）に基づいて按分する方法です。例えば、企業全体の自由資本が100億円、PEのリスク加重資産が企業全体の30%を占める場合、PEに配賦される自由資本は30億円となります。</p>
+    <p>第二に「薄い資本化アプローチ（thin capitalisation approach）」があります。これは、PEと同等の機能・資産・リスクを有する独立した比較可能企業の資本構成を基準として、PEに帰属すべき自由資本の額を算定する方法です。比較可能企業の自己資本比率が20%であり、PEの総資産が50億円であるならば、PEに配賦すべき自由資本は10億円となります。</p>
+    <p>第三に「安全港アプローチ（safe harbour approach）」があります。これは、特に銀行業において採用されることが多い方法で、バーゼル規制等の金融規制上要求される最低自己資本額をPEの自由資本として用いるものです。</p>
+    <p>いずれのアプローチを採用するにせよ、PEに配賦される自由資本は、PEが独立した企業であったならば、そのリスクプロファイルに照らして保有するであろう額と整合的でなければなりません。この「独立企業原則との整合性」がAOAにおける資本配賦の根本的な指導原則です。</p>
+
+    <h3>7-3. 利息費用の配分</h3>
+    <p>自由資本の配賦に伴い、PEの利息費用も算定されます。企業全体の外部借入金のうち、PEに帰属する部分について、実際の外部借入利率に基づく利息費用がPEの費用として認識されます。また、本店からPEへの内部資金移転（または逆方向の移転）が存在する場合には、当該内部資金移転に対しても独立企業原則に基づく利息を認識することがAOAの下では求められます。</p>
+    <p>ただし、本店からPEへの「内部貸付」に対する利息の取扱いは、国によって対応が異なります。一部の国は内部利息の認識を認めていますが、他の国はPEと本店が法的に同一主体である以上、「自己への貸付」は認められないとの立場をとっています。OECDのAOA報告書は、原則として内部利息を認識すべきとの立場を示していますが、銀行業以外の事業における実務的な適用には依然として困難が伴います。</p>
+
+    <div class="point-box">
+      <div class="point-box-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        ポイント整理
+      </div>
+      <ul>
+        <li>PEへの資本配賦は、利息費用の控除額を通じてPEの課税所得に直接影響するため、極めて重要な論点である。</li>
+        <li>AOAは「十分な自由資本」の配賦を要求し、資本配分・薄い資本化・安全港の各アプローチを提示している。</li>
+        <li>いずれのアプローチも、PEが独立企業であれば保有するであろう資本額との整合性が求められる。</li>
+        <li>内部利息の認識についてはAOAと各国実務の間にギャップが存在する。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============================================= -->
+<!-- SECTION 8: 内部取引の認識と計算 -->
+<!-- ============================================= -->
+<section class="section" id="sec8">
+<div class="container">
+  <div class="content-card reveal">
+    <div class="section-label">Section 08</div>
+    <h2>内部取引の認識と計算</h2>
+
+    <h3>8-1. 内部取引（dealings）の意義</h3>
+    <p>AOAの最も革新的かつ議論を呼ぶ側面が、PEと本店の間の「内部取引（dealings）」の税務上の認識です。法的には、PEと本店は同一法人の一部であり、両者間に法律上の「取引」は存在しません。しかしAOAは、PEを仮想独立企業として扱う以上、PEと本店の間の資産・サービス・資金の移動を経済的な「取引」として認識し、独立企業原則に基づく対価を設定すべきとしています。</p>
+    <p>内部取引の認識が必要となる典型的な場面を列挙すると、PEで製造した製品を本店経由で第三者に販売する場合の製品移転、本店がPEに対して経営管理サービスを提供する場合のサービス提供、PEが本店から無形資産の使用許諾を受けている場合のロイヤルティ、本店からPEへの資金の移転に伴う内部利息、PEと本店の間での有形資産の移転などがあります。</p>
+
+    <h3>8-2. 内部取引の認識基準</h3>
+    <p>すべてのPEと本店の間の経済的移動が内部取引として認識されるわけではありません。AOAの下で内部取引が認識されるためには、第1段階の機能・事実分析の結果として、実質的な経済的価値の移転が認められることが必要です。OECDの報告書は、内部取引の認識に際して、以下の点を考慮すべきとしています。</p>
+    <p>まず、当該経済的移動が企業の帳簿記録に反映されているか。帳簿上の記録は内部取引の認識の出発点とはなりますが、決定的な要素ではありません。帳簿記録がなくても経済的実質に基づいて内部取引が認識される場合もあれば、帳簿記録があっても経済的実質を伴わないとして認識が否定される場合もあります。次に、当該経済的移動が独立企業間で行われたならば対価の支払いを伴うものであるか。この判断は、移転価格税制の文脈における「便益テスト（benefit test）」に類似します。PEが本店から受領したサービスが、PEにとって独立企業であれば自ら行うか外部から購入したであろうものであれば、対価を伴う内部取引として認識されます。</p>
+
+    <h3>8-3. 内部取引の対価設定方法</h3>
+    <p>内部取引が認識された場合、その対価は独立企業原則に基づいて設定されます。使用される移転価格算定方法は、AOA第2段階で前述したとおり、OECDの移転価格ガイドラインに規定される方法のうち最も適切なものが選択されます。</p>
+    <p>内部取引の対価設定においては、比較可能性分析が重要な役割を果たします。PEと本店の間の内部取引と比較可能な独立企業間取引を特定し、その対価水準を参考にして内部取引の対価を算定します。しかし、PEの場合、比較可能な独立企業間取引を見つけることが特に困難であることが多いです。PEは本店の一部であり、その活動は本店との密接な統合関係の中で行われているため、完全に独立した企業間取引と比較可能な状況を見出すことは容易ではありません。</p>
+    <p>この困難に対処するため、実務的にはTNMM（取引単位営業利益法）が広く用いられています。TNMMの下では、PEの機能・資産・リスクに照らして比較可能な独立企業の営業利益率を参照し、PEの適正な利益水準を算定します。また、PEの機能がルーティン的なものである場合（例えば、単純な販売・マーケティング機能のみを遂行している場合）には、PEに対してルーティン機能に見合う定型的な報酬（routine return）を配分し、残余利益を本店に帰属させるアプローチが採られることもあります。</p>
+
+    <h3>8-4. 無形資産に関する内部取引</h3>
+    <p>無形資産（特許、商標、ノウハウ、顧客リストなど）に関する内部取引は、実務上特に複雑な問題を提起します。無形資産の「経済的所有」をPEと本店のいずれに帰属させるかは、当該無形資産の開発・維持・保護・活用に関するSPFの所在によって決定されます。</p>
+    <p>例えば、本店の研究開発部門が特許を開発し、PEがその特許を利用して製品を製造・販売している場合、特許の経済的所有は本店に帰属し、PEは本店に対して独立企業原則に基づくロイヤルティを内部取引として支払うべきとされます。逆に、PEの研究開発チームが特許の開発に重要な貢献をしている場合には、特許の経済的所有の一部がPEに帰属する可能性があり、利益の配分もそれに応じて調整されます。</p>
+
+    <div class="point-box">
+      <div class="point-box-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        ポイント整理
+      </div>
+      <ul>
+        <li>AOAは、PEと本店の間の経済的移動を「内部取引（dealings）」として認識し、独立企業原則に基づく対価を設定する。</li>
+        <li>内部取引の認識は帳簿記録だけでなく経済的実質に基づき、便益テストによる検証が行われる。</li>
+        <li>対価設定にはOECDの移転価格算定方法が準用され、特にTNMMが実務上多用される。</li>
+        <li>無形資産の内部取引は、SPFの所在に基づく経済的所有の帰属が出発点となる。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============================================= -->
+<!-- SECTION 9: 日本のAOA導入（2014年） -->
+<!-- ============================================= -->
+<section class="section" id="sec9">
+<div class="container">
+  <div class="content-card reveal">
+    <div class="section-label">Section 09</div>
+    <h2>日本のAOA導入（2014年）</h2>
+
+    <h3>9-1. 日本の国内法改正の背景</h3>
+    <p>日本は、2014年度（平成26年度）税制改正において、PEへの利益帰属に関する国内法の規定をAOAに基づくものに改正しました。改正法は2016年（平成28年）4月1日以後に開始する事業年度から適用されています。この改正は、日本の国際課税制度の近代化における画期的な出来事であり、「総合主義」から「帰属主義」への転換として広く知られています。</p>
+    <p>改正前の日本の法人税法は、いわゆる「総合主義（全所得主義：worldwide income approach）」に基づいていました。総合主義の下では、外国法人が日本にPEを有する場合、当該PEに帰属する所得だけでなく、当該PEの有無にかかわらず日本国内に源泉がある所得（国内源泉所得）の全てに対して課税権が及びました。つまり、PEの存在は課税の「入口」ではあるものの、課税の範囲はPEに帰属する所得に限定されるわけではなく、日本国内に源泉がある所得全体に広がっていたのです。</p>
+    <p>この総合主義は、OECDモデル条約第7条（事業利得条項）の構造とは整合しないものでした。OECDモデル条約第7条は、一方の締約国の企業の利益は、当該企業が他方の締約国にPEを通じて事業を行っている場合に限り、当該他方の国で課税され得るが、その場合でもPEに帰属する部分の利益のみが課税されるとしています。すなわち、条約は「帰属主義（attributable income approach）」を採用しているのです。</p>
+
+    <h3>9-2. 総合主義から帰属主義への転換</h3>
+    <p>2014年の改正により、日本の法人税法は条約の帰属主義と整合する体系に移行しました。改正後の法人税法は、外国法人に対する課税を、PEに帰属する所得（PE帰属所得）とそれ以外の国内源泉所得に区分し、PE帰属所得についてはAOAの方法論に基づいて計算することとしています。</p>
+    <p>具体的には、法人税法第138条（国内源泉所得の定義）が改正され、外国法人が日本にPEを有する場合の事業所得について、「PEに帰属すべき所得」という概念が導入されました。PEに帰属すべき所得は、PEを独立した企業とみなし、PEと本店の間の内部取引を独立企業原則に基づいて認識した上で計算されます。</p>
+    <p>この改正に伴い、法人税法施行令および法人税法基本通達にも詳細な規定が設けられました。特に重要なのは、内部取引に関する文書化義務の導入です。移転価格税制における文書化要件と同様に、PEと本店の間の内部取引についても、独立企業原則に基づく対価設定の根拠を文書化して保存することが求められるようになりました。</p>
+
+    <h3>9-3. 日本法における内部取引の取扱い</h3>
+    <p>日本の改正法において内部取引がどのように取り扱われるかを具体的に見てみましょう。法人税法は、PEと本店の間の内部取引について、PEが独立した企業であるとした場合に成立したであろう対価（独立企業間価格）を認識すべきことを規定しています。これは、AOAの内部取引の認識と完全に整合するアプローチです。</p>
+    <p>ただし、日本法には一つの重要な制限があります。それは、PEの所在地国（日本）と本店所在地国の間に租税条約が締結されており、当該条約がAOAに基づく新第7条を採用していない場合には、条約の規定が国内法に優先するという点です。日本が締結している租税条約の中には、旧第7条に基づくものが依然として多く、そのような条約の下では内部取引の完全な認識が条約上制約される可能性があります。この条約と国内法の関係は、日本におけるAOA適用の実務において重要な検討事項です。</p>
+
+    <h3>9-4. 改正の実務的影響</h3>
+    <p>総合主義から帰属主義への転換は、日本で事業を行う外国法人に対して多面的な影響を及ぼしました。まず課税範囲の変化です。総合主義の下では、PEの存在により日本の国内源泉所得全体に課税が及んでいたのに対し、帰属主義の下ではPEに帰属する所得のみが事業利得として課税されます。これにより、PEに帰属しない日本国内源泉所得（例えば、PE活動と無関係な投資所得等）については、別途の課税関係が生じることになります。</p>
+    <p>次に、内部取引の認識に伴う実務負担の増加です。企業は、PEと本店の間の資産・サービス・資金の移動を把握し、各内部取引について独立企業間価格を設定し、その根拠を文書化する必要があります。これは、移転価格コンプライアンスに匹敵する事務負担を生じさせます。</p>
+    <p>さらに、資本配賦の問題も日本の実務に持ち込まれました。日本法は、PEに配賦すべき資本の額の算定方法について詳細な規定を設けており、企業はこれに従ってPEの自己資本額を算定し、利息費用の控除額を計算する必要があります。日本の規定は基本的にAOAの資本配賦アプローチに沿ったものですが、具体的な算定方法や選択肢について独自の規定を設けている部分もあります。</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>項目</th><th>改正前（総合主義）</th><th>改正後（帰属主義/AOA）</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>課税範囲</td><td>PEの有無に関わらず国内源泉所得全体</td><td>PE帰属所得 ＋ その他の国内源泉所得（区分）</td></tr>
+          <tr><td>利益帰属方法</td><td>国内法独自のルール</td><td>AOAに基づく独立企業原則</td></tr>
+          <tr><td>内部取引</td><td>原則として不認識</td><td>認識・独立企業間価格で計上</td></tr>
+          <tr><td>資本配賦</td><td>明確な規定なし</td><td>AOAに基づく資本配賦規定</td></tr>
+          <tr><td>文書化</td><td>要求なし</td><td>内部取引に関する文書化義務</td></tr>
+          <tr><td>適用開始</td><td>—</td><td>2016年4月1日以後開始事業年度</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="point-box">
+      <div class="point-box-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        ポイント整理
+      </div>
+      <ul>
+        <li>日本は2014年度税制改正で「総合主義」から「帰属主義（AOA）」に転換し、2016年4月以後の事業年度から適用を開始した。</li>
+        <li>改正により、PEと本店間の内部取引を独立企業原則に基づいて認識・計上する体系に移行した。</li>
+        <li>文書化義務が導入され、内部取引の対価設定根拠の保存が求められるようになった。</li>
+        <li>既存の租税条約が旧第7条に基づく場合、条約上の制約によりAOAの完全適用が限定される可能性がある。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============================================= -->
+<!-- SECTION 10: 計算事例演習 -->
+<!-- ============================================= -->
+<section class="section" id="sec10">
+<div class="container">
+  <div class="content-card reveal">
+    <div class="section-label">Section 10</div>
+    <h2>計算事例演習</h2>
+
+    <h3>10-1. 事例1：製造業のPE帰属所得計算</h3>
+    <p>ここでは具体的な数値例を用いて、AOAに基づくPE帰属所得の計算プロセスを体感してみましょう。</p>
+
+    <h4>【前提事実】</h4>
+    <p>A国法人X社は、日本にPE（支店）を有して製品の販売活動を行っています。X社はA国の工場で製品を製造し、日本PEが日本の顧客に対する販売を担当しています。日本PEの従業員は営業担当者10名、営業管理者2名です。日本PEの第三者への売上高は100億円、X社全体の売上高は500億円です。X社全体の自己資本は200億円、総資産は1,000億円です。日本PEの総資産は150億円です。X社全体の外部借入金利率は年3%です。</p>
+
+    <h4>【第1段階：機能・事実分析】</h4>
+    <p>まず、日本PEの機能を特定します。日本PEは販売・マーケティング機能を遂行しています。顧客への訪問、契約交渉、注文処理、アフターサービスなどが主な活動です。製造機能はA国本店が遂行しています。研究開発機能もA国本店に集中しています。</p>
+    <p>次にSPFの所在を特定します。販売活動に関するSPFは日本PEに所在します。在庫管理に関するSPFはA国本店に所在します（在庫リスクは本店が負担）。製造に関するSPFはA国本店に所在します。このSPF分析の結果、日本PEは主に販売・マーケティング機能を遂行する「リミテッドリスク・ディストリビューター」的な位置づけとなります。</p>
+
+    <h4>【資本配賦】</h4>
+    <div class="code-block">
+<span class="hl-comment">// 資本配分アプローチを採用</span>
+X社全体の自己資本: <span class="hl-num">200</span>億円
+X社全体の総資産:   <span class="hl-num">1,000</span>億円
+自己資本比率:      <span class="hl-num">200</span> / <span class="hl-num">1,000</span> = <span class="hl-num">20</span>%
+
+日本PEの総資産:    <span class="hl-num">150</span>億円
+日本PEに配賦すべき自由資本:
+  <span class="hl-num">150</span>億円 × <span class="hl-num">20</span>% = <span class="hl-keyword">30億円</span>
+
+日本PEの他人資本:
+  <span class="hl-num">150</span>億円 − <span class="hl-num">30</span>億円 = <span class="hl-keyword">120億円</span>
+
+日本PEの利息費用:
+  <span class="hl-num">120</span>億円 × <span class="hl-num">3</span>% = <span class="hl-keyword">3.6億円</span>
+    </div>
+
+    <h4>【第2段階：利益帰属の計算】</h4>
+    <p>日本PEを「リミテッドリスク・ディストリビューター」として位置づけ、TNMMを適用します。比較可能な独立販売会社の営業利益率（売上高営業利益率）を検索した結果、四分位範囲が2%～5%、中央値が3.5%であったとします。</p>
+
+    <div class="code-block">
+<span class="hl-comment">// TNMMによるPE帰属利益の算定</span>
+日本PEの第三者売上高:    <span class="hl-num">100</span>億円
+適用利益率（中央値）:     <span class="hl-num">3.5</span>%
+
+<span class="hl-keyword">日本PEの営業利益 = 100億円 × 3.5% = 3.5億円</span>
+
+<span class="hl-comment">// 逆算による内部取引対価</span>
+日本PEの売上高:          <span class="hl-num">100</span>億円
+日本PEの営業費用(人件費等): <span class="hl-num">15</span>億円
+日本PEの利息費用:        <span class="hl-num">3.6</span>億円
+日本PEの営業利益:        <span class="hl-num">3.5</span>億円
+
+本店からの仕入（内部取引）:
+  <span class="hl-num">100</span> − <span class="hl-num">15</span> − <span class="hl-num">3.6</span> − <span class="hl-num">3.5</span> = <span class="hl-keyword">77.9億円</span>
+
+<span class="hl-comment">// 日本PEの課税所得</span>
+売上高       <span class="hl-num">100.0</span>億円
+売上原価     <span class="hl-num">△77.9</span>億円  (内部取引：本店からの仕入)
+粗利益       <span class="hl-num">22.1</span>億円
+営業費用     <span class="hl-num">△15.0</span>億円
+利息費用     <span class="hl-num">△3.6</span>億円
+<span class="hl-keyword">PE帰属所得    3.5億円</span>
+    </div>
+
+    <h3>10-2. 事例2：代理人PEの帰属所得計算</h3>
+    <h4>【前提事実】</h4>
+    <p>B国法人Y社（ソフトウェア開発会社）は、日本に物理的拠点を有していませんが、日本居住者のZ氏（個人代理人）を通じて日本の顧客にソフトウェアライセンスを販売しています。Z氏はY社のために日本の顧客と交渉し、ライセンス契約の締結に主要な役割を果たしています。Y社はZ氏に売上の8%を手数料として支払っています。Z氏を通じた日本での年間ライセンス売上は30億円です。</p>
+
+    <h4>【PE認定の分析】</h4>
+    <p>Z氏は、Y社のソフトウェアライセンス契約（使用許諾契約）の締結において主要な役割を果たし、Y社はZ氏がまとめた条件をほぼそのまま承認しています。したがって、新OECDモデル条約第5条第5項(b)の要件を満たし、Z氏の活動を通じてY社は日本に代理人PEを有すると認定されます。</p>
+
+    <h4>【帰属所得の計算】</h4>
+    <p>代理人PEの場合、PE自体は物理的施設を有さないため、帰属所得の計算は代理人の機能に着目して行われます。AOAの下では、代理人PEに帰属する機能は代理人が遂行する機能（販売交渉、契約締結の主要な役割）であり、代理人PEは独立した販売エージェントと比較されます。</p>
+
+
+</body>
+</html>

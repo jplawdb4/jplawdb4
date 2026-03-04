@@ -1,0 +1,1032 @@
+<!DOCTYPE html><html lang="ja" data-theme="dark">
+- Google Fonts: Outfit + Noto Sans JP
+- CSS変数でダーク/ライト切替対応:
+  ダーク: 背景#0A0A0A, テキスト#FAFAFA, カード#16161A, ボーダーrgba(255,255,255,0.06)
+  ライト: 背景#FAFAF7, テキスト#1A1A1A, カード#FFFFFF, ボーダーrgba(0,0,0,0.06)
+  アクセント: #5E6AD2→#7B85E0
+- fixedヘッダー: ロゴ「税法ラボ」(紫正方形+テキスト) + ナビ(コース/条文DB/判例/ブログ) + テーマ切替(月/太陽SVG)、backdrop-filter:blur(20px)半透明
+- フッター: © 2026 税法ラボ + リンク
+- max-width:1120px, padding:0 24px, margin:0 auto
+- カード: border-radius:20px, box-shadow, ホバーtranslateY(-4px)
+- セクションラベル: 英語大文字0.75rem letter-spacing:0.12em アクセント色
+- IntersectionObserverスクロールアニメーション(.reveal→.visible)
+- ノイズテクスチャオーバーレイ, localStorage保存テーマ, レスポンシブ
+- 目次(ページ内リンク)冒頭配置, 各セクション末に「ポイント整理」ボックス
+- 表・コードブロック・SVG図解を適宜使用
+
+**コードブロックでHTMLコードを出力してください。** 1回の回答で完結。必ず最後まで出力。
+
+【コンテンツ】第1回：国際課税総論─全体像と基本原則。(1)国際課税とは何か(2)居住地国課税と源泉地国課税(3)居住者・非居住者の判定基準(4)国内源泉所得の範囲(5)国際的二重課税の発生メカニズム(6)二重課税排除の方法論(7)租税回避とタックスヘイブン問題(8)法源の階層(国内法・条約・ソフトロー)(9)OECDとG20の役割(10)日本の国際課税制度発展史(11)デジタル経済と新潮流(12)全12回の学習ロードマップ。3万字程度<!DOCTYPE html>
+<html lang="ja" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第1回：国際課税総論─全体像と基本原則 | 税法ラボ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ========== CSS Variables ========== */
+:root {
+  --font-en: 'Outfit', sans-serif;
+  --font-jp: 'Noto Sans JP', sans-serif;
+  --accent: #5E6AD2;
+  --accent-hover: #7B85E0;
+  --radius: 20px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="dark"] {
+  --bg: #0A0A0A;
+  --text: #FAFAFA;
+  --text-muted: rgba(250,250,250,0.55);
+  --card: #16161A;
+  --card-hover: #1C1C22;
+  --border: rgba(255,255,255,0.06);
+  --border-strong: rgba(255,255,255,0.12);
+  --code-bg: #1E1E24;
+  --point-bg: rgba(94,106,210,0.08);
+  --point-border: rgba(94,106,210,0.3);
+  --toc-bg: #111114;
+  --table-stripe: rgba(255,255,255,0.02);
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  --shadow-hover: 0 12px 40px rgba(0,0,0,0.55);
+  --noise-opacity: 0.03;
+  --header-bg: rgba(10,10,10,0.78);
+  --svg-diagram-bg: #121216;
+  --svg-text: #FAFAFA;
+  --svg-line: rgba(255,255,255,0.2);
+  --svg-fill: rgba(94,106,210,0.15);
+}
+
+[data-theme="light"] {
+  --bg: #FAFAF7;
+  --text: #1A1A1A;
+  --text-muted: rgba(26,26,26,0.5);
+  --card: #FFFFFF;
+  --card-hover: #F5F5F2;
+  --border: rgba(0,0,0,0.06);
+  --border-strong: rgba(0,0,0,0.12);
+  --code-bg: #F0F0ED;
+  --point-bg: rgba(94,106,210,0.06);
+  --point-border: rgba(94,106,210,0.25);
+  --toc-bg: #F2F2EF;
+  --table-stripe: rgba(0,0,0,0.02);
+  --shadow: 0 4px 24px rgba(0,0,0,0.06);
+  --shadow-hover: 0 12px 40px rgba(0,0,0,0.1);
+  --noise-opacity: 0.02;
+  --header-bg: rgba(250,250,247,0.78);
+  --svg-diagram-bg: #F5F5F2;
+  --svg-text: #1A1A1A;
+  --svg-line: rgba(0,0,0,0.2);
+  --svg-fill: rgba(94,106,210,0.12);
+}
+
+/* ========== Reset ========== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+body {
+  font-family: var(--font-jp);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.9;
+  font-size: 16px;
+  transition: background var(--transition), color var(--transition);
+  overflow-x: hidden;
+}
+
+/* Noise overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: var(--noise-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px;
+}
+
+/* ========== Layout ========== */
+.container { max-width: 1120px; padding: 0 24px; margin: 0 auto; }
+
+/* ========== Header ========== */
+.header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: var(--header-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: background var(--transition);
+}
+.header-inner {
+  max-width: 1120px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 64px;
+}
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
+.logo-icon {
+  width: 32px; height: 32px; background: var(--accent); border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-en); font-weight: 800; font-size: 14px; color: #fff;
+}
+.logo-text { font-family: var(--font-jp); font-weight: 700; font-size: 1.1rem; }
+.nav { display: flex; align-items: center; gap: 28px; }
+.nav a {
+  font-size: 0.875rem; color: var(--text-muted); text-decoration: none;
+  font-weight: 500; transition: color var(--transition);
+}
+.nav a:hover { color: var(--accent); }
+.theme-toggle {
+  background: none; border: 1px solid var(--border-strong); border-radius: 10px;
+  width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--text); transition: all var(--transition);
+}
+.theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+.theme-toggle svg { width: 18px; height: 18px; }
+.sun-icon { display: none; }
+[data-theme="light"] .moon-icon { display: none; }
+[data-theme="light"] .sun-icon { display: block; }
+
+/* Mobile nav */
+.menu-btn { display: none; background: none; border: none; color: var(--text); cursor: pointer; }
+@media (max-width: 768px) {
+  .nav { display: none; position: absolute; top: 64px; left: 0; right: 0; background: var(--header-bg); backdrop-filter: blur(20px); flex-direction: column; padding: 20px; gap: 16px; border-bottom: 1px solid var(--border); }
+  .nav.open { display: flex; }
+  .menu-btn { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; }
+}
+
+/* ========== Hero ========== */
+.hero {
+  padding: 140px 0 60px;
+  text-align: center;
+}
+.hero-label {
+  font-family: var(--font-en); font-size: 0.75rem; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent);
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800; line-height: 1.3;
+  margin-bottom: 16px;
+}
+.hero h1 span { color: var(--accent); }
+.hero-desc {
+  font-size: 1.05rem; color: var(--text-muted); max-width: 680px; margin: 0 auto 30px;
+  line-height: 1.85;
+}
+.hero-meta {
+  display: flex; justify-content: center; gap: 24px; flex-wrap: wrap;
+  font-size: 0.85rem; color: var(--text-muted);
+}
+.hero-meta span { display: flex; align-items: center; gap: 6px; }
+
+/* ========== Table of Contents ========== */
+.toc-card {
+  background: var(--toc-bg); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 36px 40px; margin: 40px auto 60px;
+  max-width: 820px;
+}
+.toc-card h2 {
+  font-size: 1.1rem; font-weight: 700; margin-bottom: 20px;
+  display: flex; align-items: center; gap: 10px;
+}
+.toc-list { list-style: none; columns: 1; }
+.toc-list li { margin-bottom: 8px; }
+.toc-list a {
+  color: var(--text-muted); text-decoration: none; font-size: 0.92rem;
+  transition: color var(--transition); display: flex; align-items: baseline; gap: 10px;
+}
+.toc-list a:hover { color: var(--accent); }
+.toc-num {
+  font-family: var(--font-en); font-weight: 600; color: var(--accent);
+  font-size: 0.8rem; min-width: 28px;
+}
+
+/* ========== Section ========== */
+.section { padding: 50px 0; }
+.section-label {
+  font-family: var(--font-en); font-size: 0.75rem; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent);
+  margin-bottom: 10px;
+}
+.section h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; margin-bottom: 28px;
+  line-height: 1.4;
+}
+.section h3 {
+  font-size: 1.25rem; font-weight: 700; margin: 36px 0 16px;
+  padding-left: 14px; border-left: 3px solid var(--accent);
+}
+.section h4 {
+  font-size: 1.05rem; font-weight: 600; margin: 28px 0 12px;
+}
+.section p {
+  margin-bottom: 18px; color: var(--text); line-height: 1.95;
+}
+
+/* ========== Card ========== */
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 32px 36px;
+  box-shadow: var(--shadow); margin: 28px 0;
+  transition: all var(--transition);
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--border-strong);
+}
+
+/* ========== Point Box ========== */
+.point-box {
+  background: var(--point-bg); border: 1px solid var(--point-border);
+  border-radius: 16px; padding: 28px 32px; margin: 36px 0 20px;
+}
+.point-box h4 {
+  font-size: 0.95rem; font-weight: 700; color: var(--accent);
+  margin: 0 0 14px; border: none; padding: 0;
+  display: flex; align-items: center; gap: 8px;
+}
+.point-box ul { list-style: none; padding: 0; }
+.point-box ul li {
+  position: relative; padding-left: 18px; margin-bottom: 8px;
+  font-size: 0.93rem; line-height: 1.75;
+}
+.point-box ul li::before {
+  content: '✓'; position: absolute; left: 0; color: var(--accent); font-weight: 700;
+}
+
+/* ========== Table ========== */
+.table-wrap { overflow-x: auto; margin: 24px 0; border-radius: 14px; border: 1px solid var(--border); }
+table {
+  width: 100%; border-collapse: collapse; font-size: 0.9rem;
+}
+th {
+  background: var(--accent); color: #fff; font-weight: 600;
+  padding: 12px 16px; text-align: left; white-space: nowrap;
+}
+td {
+  padding: 12px 16px; border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+tr:nth-child(even) td { background: var(--table-stripe); }
+
+/* ========== Code Block ========== */
+.code-block {
+  background: var(--code-bg); border: 1px solid var(--border);
+  border-radius: 14px; padding: 24px 28px; margin: 24px 0;
+  font-family: 'Courier New', monospace; font-size: 0.88rem;
+  line-height: 1.7; overflow-x: auto; white-space: pre-wrap;
+}
+.code-block .comment { color: var(--text-muted); }
+.code-block .keyword { color: var(--accent); font-weight: 600; }
+
+/* ========== SVG Diagram ========== */
+.diagram-wrap {
+  background: var(--svg-diagram-bg); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 32px; margin: 28px 0;
+  text-align: center; overflow-x: auto;
+}
+.diagram-wrap svg { max-width: 100%; height: auto; }
+.diagram-caption {
+  font-size: 0.82rem; color: var(--text-muted); margin-top: 14px;
+  text-align: center;
+}
+
+/* ========== Reveal Animation ========== */
+.reveal {
+  opacity: 0; transform: translateY(32px);
+  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.reveal.visible {
+  opacity: 1; transform: translateY(0);
+}
+
+/* ========== Footer ========== */
+.footer {
+  border-top: 1px solid var(--border); padding: 40px 0;
+  margin-top: 60px; text-align: center;
+}
+.footer-inner {
+  max-width: 1120px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 16px;
+}
+.footer-copy { font-size: 0.82rem; color: var(--text-muted); }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a {
+  font-size: 0.82rem; color: var(--text-muted); text-decoration: none;
+  transition: color var(--transition);
+}
+.footer-links a:hover { color: var(--accent); }
+
+/* ========== Roadmap grid ========== */
+.roadmap-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px; margin: 24px 0;
+}
+.roadmap-item {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 22px 24px;
+  transition: all var(--transition);
+}
+.roadmap-item:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); border-color: var(--accent); }
+.roadmap-num {
+  font-family: var(--font-en); font-weight: 800; font-size: 1.6rem;
+  color: var(--accent); line-height: 1;
+}
+.roadmap-title { font-weight: 700; font-size: 0.95rem; margin: 8px 0 6px; }
+.roadmap-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.65; }
+
+/* ========== Responsive ========== */
+@media (max-width: 768px) {
+  .hero { padding: 110px 0 40px; }
+  .hero h1 { font-size: 1.7rem; }
+  .toc-card { padding: 24px 20px; }
+  .card { padding: 24px 20px; }
+  .point-box { padding: 20px 18px; }
+  .code-block { padding: 18px 16px; font-size: 0.82rem; }
+  .section h2 { font-size: 1.35rem; }
+  .footer-inner { flex-direction: column; text-align: center; }
+}
+
+/* Subtle link style within text */
+.section a {
+  color: var(--accent); text-decoration: underline;
+  text-decoration-color: rgba(94,106,210,0.3);
+  text-underline-offset: 3px; transition: text-decoration-color var(--transition);
+}
+.section a:hover { text-decoration-color: var(--accent); }
+
+/* Separator */
+.sep { border: none; border-top: 1px solid var(--border); margin: 50px 0; }
+
+/* Inline highlight */
+.hl { color: var(--accent); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="header">
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <div class="logo-icon">税</div>
+      <span class="logo-text">税法ラボ</span>
+    </a>
+    <button class="menu-btn" onclick="document.querySelector('.nav').classList.toggle('open')" aria-label="メニュー">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+    <nav class="nav">
+      <a href="#">コース</a>
+      <a href="#">条文DB</a>
+      <a href="#">判例</a>
+      <a href="#">ブログ</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="テーマ切替">
+        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-label">INTERNATIONAL TAX LAW — LECTURE 01</div>
+    <h1>国際課税総論<br><span>全体像と基本原則</span></h1>
+    <p class="hero-desc">グローバル経済の深化とともに、国際課税の重要性はかつてないほど高まっています。本講では、居住地国課税・源泉地国課税の基本原理からデジタル経済時代の最前線まで、国際課税の全体像を体系的に解説します。</p>
+    <div class="hero-meta">
+      <span>📘 全12回シリーズ 第1回</span>
+      <span>⏱ 約30,000字</span>
+      <span>📅 2026年3月公開</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TABLE OF CONTENTS ===== -->
+<div class="container">
+  <div class="toc-card reveal">
+    <h2>📑 目次</h2>
+    <ol class="toc-list">
+      <li><a href="#sec1"><span class="toc-num">01</span>国際課税とは何か</a></li>
+      <li><a href="#sec2"><span class="toc-num">02</span>居住地国課税と源泉地国課税</a></li>
+      <li><a href="#sec3"><span class="toc-num">03</span>居住者・非居住者の判定基準</a></li>
+      <li><a href="#sec4"><span class="toc-num">04</span>国内源泉所得の範囲</a></li>
+      <li><a href="#sec5"><span class="toc-num">05</span>国際的二重課税の発生メカニズム</a></li>
+      <li><a href="#sec6"><span class="toc-num">06</span>二重課税排除の方法論</a></li>
+      <li><a href="#sec7"><span class="toc-num">07</span>租税回避とタックスヘイブン問題</a></li>
+      <li><a href="#sec8"><span class="toc-num">08</span>法源の階層（国内法・条約・ソフトロー）</a></li>
+      <li><a href="#sec9"><span class="toc-num">09</span>OECDとG20の役割</a></li>
+      <li><a href="#sec10"><span class="toc-num">10</span>日本の国際課税制度発展史</a></li>
+      <li><a href="#sec11"><span class="toc-num">11</span>デジタル経済と新潮流</a></li>
+      <li><a href="#sec12"><span class="toc-num">12</span>全12回の学習ロードマップ</a></li>
+    </ol>
+  </div>
+</div>
+
+<!-- ===== SECTION 1 ===== -->
+<section id="sec1" class="section">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">SECTION 01</div>
+      <h2>国際課税とは何か</h2>
+
+      <h3>1-1. 国際課税の定義と射程</h3>
+      <p>国際課税（International Taxation）とは、複数の国家の課税管轄権が交錯する場面における租税法上の問題を取り扱う法分野です。企業や個人が国境を越えて経済活動を行う場合、所得の稼得地、支払地、受領者の居住地など、複数の接点（ネクサス）を通じて複数の国家が課税権を主張しうる状況が生じます。国際課税は、こうした課税権の競合と調整に関する法的枠組みの総体を指します。</p>
+
+      <p>国際課税の射程は極めて広範です。具体的には、非居住者および外国法人に対する所得課税、国際的な資本取引に対する課税、移転価格税制、外国子会社合算税制（いわゆるタックスヘイブン対策税制）、外国税額控除制度、租税条約の解釈適用、さらには近年注目を集めるデジタル経済課税やグローバル最低課税（GloBEルール）に至るまで、多岐にわたる領域を包含します。これらはそれぞれ独立した制度でありながら、国際的二重課税の排除と租税回避の防止という共通の政策目的のもとで有機的に連関しています。</p>
+
+      <p>国際課税を学ぶ際に最初に理解すべきは、この分野が純粋な国内法の問題でも、純粋な国際法の問題でもないという点です。各国の国内租税法が課税管轄権の範囲と方法を定め、二国間の租税条約がその調整を図り、さらにOECDモデル租税条約やBEPS（税源浸食と利益移転）プロジェクトの勧告といったソフトロー的な国際的合意がその方向性を規律するという、重層的な法構造を有しています。</p>
+
+      <h3>1-2. なぜ今、国際課税が重要なのか</h3>
+      <p>国際課税の重要性が急速に高まっている背景には、20世紀後半以降の経済のグローバル化の加速があります。ヒト・モノ・カネ・情報の国境を越えた移動が日常化し、多国籍企業のサプライチェーンは世界中に展開されています。UNCTAD（国連貿易開発会議）の統計によれば、世界の直接投資（FDI）残高はGDP比で1990年の約10%から2020年代には40%を超える水準にまで拡大しました。こうした経済実態の変化は、課税権の配分という伝統的な問題に対して、根本的な見直しを迫っています。</p>
+
+      <p>加えて、デジタル経済の台頭は、物理的な拠点（恒久的施設＝PE）を前提とした従来の国際課税ルールの限界を露呈させました。巨大テクノロジー企業が市場国に物理的な存在を持たずに莫大な収益を上げるという現象は、「価値がどこで創造されるか」という根源的な問いを突きつけています。2021年のOECD/G20による「二つの柱」（Two-Pillar Solution）の合意は、こうした問題に対する国際社会の回答であり、約100年にわたる国際課税の枠組みを根本から再構築しようとする歴史的な試みです。</p>
+
+      <p>日本においても、国際課税は実務上の重要性を増しています。日本企業の海外展開はますます拡大し、海外子会社からの配当、ロイヤルティ、利子等の国際的な所得フローは年々増加しています。また、インバウンド投資の促進という政策課題もあり、非居住者・外国法人に対する課税の在り方は、日本の国際競争力に直結する問題となっています。さらに、国際的な租税回避への対応は、税収の確保と課税の公平性の観点から、喫緊の政策課題として位置づけられています。</p>
+
+      <h3>1-3. 国際課税法の学問的位置づけ</h3>
+      <p>国際課税法は、租税法と国際法の交錯領域に位置する学際的な法分野です。租税法の観点からは、所得課税の基本原理である所得概念、帰属主義、課税管轄権の問題と深く関わります。他方、国際法の観点からは、国家主権の発現としての課税権、条約法、国際機関法の問題と接続します。さらに、経済学の視点からは、資本輸出中立性（CEN）や資本輸入中立性（CIN）といった効率性の基準、国際的な資源配分への影響といった政策分析も重要です。</p>
+
+      <p>学問的方法論としては、比較法的アプローチが不可欠です。国際課税の問題は、各国の国内法がどのような課税管轄権を設定し、それらが如何に交錯するかという具体的な法律関係の分析を基礎とします。そのため、日本法のみならず、主要国（米国、英国、ドイツ、フランス等）の国内租税法の基本構造を理解し、それらの共通点と相違点を把握することが必要です。同時に、OECDモデル租税条約とそのコメンタリー、国連モデル租税条約、さらにはBEPSプロジェクトの各行動計画の内容を正確に理解することも求められます。</p>
+
+      <p>本講座は、こうした多角的な視点を踏まえつつ、日本法を基軸として国際課税の体系的な理解を目指すものです。初学者にも分かりやすい解説を心がけつつ、実務家にとっても有益な深度のある分析を提供します。全12回の講座を通じて、受講者が国際課税の基本原理を確実に修得し、複雑な国際取引に対する課税問題を自ら分析する能力を身につけることを目標としています。</p>
+
+      <div class="point-box">
+        <h4>📌 セクション1 ポイント整理</h4>
+        <ul>
+          <li>国際課税とは、複数国家の課税管轄権が交錯する場面における租税法上の問題群の総体である。</li>
+          <li>射程は非居住者課税、移転価格税制、タックスヘイブン対策税制、外国税額控除、租税条約、デジタル課税など広範に及ぶ。</li>
+          <li>国内租税法・租税条約・ソフトローの三層構造で規律されており、重層的な法源の理解が不可欠である。</li>
+          <li>経済のグローバル化とデジタル化が国際課税ルールの根本的再構築を促しており、実務的重要性はかつてなく高い。</li>
+          <li>学問的には租税法・国際法・経済学の交錯領域であり、比較法的アプローチが方法論上不可欠である。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ===== SECTION 2 ===== -->
+<section id="sec2" class="section">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">SECTION 02</div>
+      <h2>居住地国課税と源泉地国課税</h2>
+
+      <h3>2-1. 二つの課税原則の概念</h3>
+      <p>国際課税の基本構造を理解するうえで最も重要な概念が、居住地国課税（Residence-Based Taxation）と源泉地国課税（Source-Based Taxation）の区別です。この二つの課税原則は、国際課税のあらゆる論点の出発点となるものであり、その正確な理解なくして国際課税の体系を把握することはできません。</p>
+
+      <p>居住地国課税とは、納税者の居住地国（Residence State）が、その居住者の全世界所得（Worldwide Income）に対して課税権を行使するという原則です。この原則のもとでは、居住者が国内で稼得した所得だけでなく、外国で稼得した所得も含めた全ての所得が課税の対象となります。個人についていえば、日本の居住者は、日本国内で得た給与所得のみならず、米国で得た配当所得やシンガポールで得た不動産賃貸所得など、世界中で得た所得の全てについて日本において申告納税する義務を負います。法人についても同様に、内国法人は全世界の事業活動から生じた所得について日本の法人税の対象となります。</p>
+
+      <p>他方、源泉地国課税とは、所得の源泉地国（Source State）が、自国内で発生した所得（国内源泉所得）に対して課税権を行使するという原則です。この原則のもとでは、所得を稼得した者の居住地にかかわらず、所得が自国の領域内で発生した限りにおいて課税が行われます。例えば、米国企業が日本国内で事業活動を行って利益を得た場合、日本は源泉地国として当該利益に対する課税権を有します。</p>
+
+      <h3>2-2. 属人主義と属地主義</h3>
+      <p>居住地国課税と源泉地国課税は、それぞれ「属人主義」と「属地主義」という法理論上の考え方と対応関係にあります。属人主義（Personal Jurisdiction）とは、国家が自国と人的な結びつき（居住、国籍等）を有する者に対して課税権を行使する考え方です。その理論的根拠は、居住者は国家から公共サービス（治安維持、インフラ整備、社会保障等）の便益を受けており、その対価として全世界所得に対する納税義務を負うべきであるという「便益説」（Benefit Theory）に求められます。</p>
+
+      <p>属地主義（Territorial Jurisdiction）とは、国家が自国の領域内で生じた経済活動や所得に対して課税権を行使する考え方です。その理論的根拠は、所得が発生した場所の国家がその所得の創出に寄与している（市場の提供、法制度の整備、労働力の供給等）以上、当該国家には課税権が認められるべきであるという考え方にあります。</p>
+
+      <p>現実の各国の課税制度は、居住地国課税と源泉地国課税の双方を組み合わせた形で構成されています。すなわち、多くの国は自国の居住者に対しては全世界所得課税（居住地国課税の原則）を適用しつつ、非居住者に対しては国内源泉所得に限定した課税（源泉地国課税の原則）を行っています。日本の所得税法および法人税法もこの二元的構造を採用しています。</p>
+
+      <h3>2-3. 全世界所得課税と領土主義課税</h3>
+      <p>居住者に対する課税方式には、全世界所得課税（Worldwide Taxation）と領土主義課税（Territorial Taxation）の二つのアプローチがあります。全世界所得課税は、居住者の全世界所得に対して課税し、外国で課された税額を控除する方式です。日本、米国（2017年税制改革以前）、英国（一定の修正を伴う）等が採用してきました。</p>
+
+      <p>領土主義課税は、居住者であっても国内源泉所得のみに課税し、国外源泉所得を課税の対象から除外する方式です。フランス、香港等が伝統的にこの方式を採用してきました。もっとも、純粋な領土主義を採用している国は少なく、多くの場合、配当免除方式（Participation Exemption）や所得種類別の免除方式として部分的に導入されています。</p>
+
+      <p>近年の国際的な潮流として注目されるのは、全世界所得課税から修正された領土主義課税への移行です。米国は2017年の税制改革（Tax Cuts and Jobs Act）により、法人の海外子会社からの配当について100%の受取配当控除を導入し、実質的に領土主義的な仕組みへと転換しました。日本も2009年度税制改正で外国子会社配当益金不算入制度を導入しており、海外子会社の稼得した利益が配当として日本の親会社に還流する場面では、二重課税の排除がより円滑に行われるようになりました。</p>
+
+      <!-- SVG Diagram: Residence vs Source -->
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg">
+          <!-- Background boxes -->
+          <rect x="40" y="60" width="320" height="300" rx="16" fill="var(--svg-fill)" stroke="var(--svg-line)" stroke-width="1.5"/>
+          <rect x="440" y="60" width="320" height="300" rx="16" fill="var(--svg-fill)" stroke="var(--svg-line)" stroke-width="1.5"/>
+          <!-- Headers -->
+          <text x="200" y="40" text-anchor="middle" fill="var(--accent)" font-family="Outfit, sans-serif" font-weight="700" font-size="16">居住地国課税</text>
+          <text x="200" y="56" text-anchor="middle" fill="var(--accent)" font-family="Outfit, sans-serif" font-weight="600" font-size="11" letter-spacing="1">RESIDENCE-BASED</text>
+          <text x="600" y="40" text-anchor="middle" fill="var(--accent)" font-family="Outfit, sans-serif" font-weight="700" font-size="16">源泉地国課税</text>
+          <text x="600" y="56" text-anchor="middle" fill="var(--accent)" font-family="Outfit, sans-serif" font-weight="600" font-size="11" letter-spacing="1">SOURCE-BASED</text>
+          <!-- Residence side content -->
+          <text x="200" y="105" text-anchor="middle" fill="var(--svg-text)" font-family="'Noto Sans JP', sans-serif" font-weight="600" font-size="13">属人主義（Personal）</text>
+          <text x="200" y="140" text-anchor="middle" fill="var(--svg-text)" font-family="'Noto Sans JP', sans-serif" font-size="12" opacity="0.7">居住者の全世界所得に課税</text>
+          <rect x="80" y="165" width="240" height="40" rx="8" fill="var(--accent)" opacity="0.15" stroke="var(--accent)" stroke-width="1"/>
+          <text x="200" y="190" text-anchor="middle" fill="var(--svg-text)" font-family="'Noto Sans JP', sans-serif" font-size="12">国内所得 ＋ 国外所得 → 全て課税</text>
+          <text x="200" y="235" text-anchor="middle" fill="var(--svg-text)" font-family="'Noto Sans JP', sans-serif" font-size="11" opacity="0.65">根拠：便益説</text>
+          <text x="200" y="255" text-anchor="middle" fill="var(--svg-text)" font-family="'Noto Sans JP', sans-serif" font-size="11" opacity="0.65">公共サービスの受益 → 納税義務</text>
+          <text x="200" y="290" text-anchor="middle" fill="var(--svg-text)" font-family="'Noto Sans JP', sans-serif" font-size="11" opacity="0.65">採用国：日本・米国・英国等</text>
+          <text x="200" y="330" text-anchor="middle" fill="var(--svg-text)" font-family="'Noto Sans JP', sans-serif" font-size="11" opacity="0.65">二重課税排除：外国税額控除方式</text>
+          <!-- Source side content -->
+          <text x="600" y="105" text-anchor="middle" fill="var(--svg-text)" font-family="'Noto Sans JP', sans-serif" font-weight="600" font-size="13">属地主義（Territorial）</text>
+          <text x="600" y="140" text-anchor="middle" fill="var(--svg-text)" font-family="'Noto Sans JP', sans-serif" font-size="12" opacity="0.7">国内源泉所得のみに課税</text>
+          <rect x="480" y="165" width="240" height="40" rx="8" fill="var(--accent)" opacity="0.15" stroke="var(--accent)" stroke-width="1"/>
+          <text x="600" y="190" text-anchor="middle" fill="var(--svg-text)" font-family="'Noto Sans JP', sans-serif" font-size="12">国内所得のみ → 課税対象</text>
+          <text x="600" y="235" text-anchor="middle" fill="var(--svg-text)" font-family="'Noto Sans JP', sans-serif" font-size="11" opacity="0.65">根拠：経済的帰属説</text>
+          <text x="600" y="255" text-anchor="middle" fill="var(--svg-text)" font-family="'Noto Sans JP', sans-serif" font-size="11" opacity="0.65">所得創出への国家の寄与 → 課税権</text>
+          <text x="600" y="290" text-anchor="middle" fill="var(--svg-text)" font-family="'Noto Sans JP', sans-serif" font-size="11" opacity="0.65">対象：非居住者・外国法人</text>
+          <text x="600" y="330" text-anchor="middle" fill="var(--svg-text)" font-family="'Noto Sans JP', sans-serif" font-size="11" opacity="0.65">典型手法：源泉徴収課税</text>
+          <!-- Arrow between -->
+          <line x1="370" y1="210" x2="430" y2="210" stroke="var(--accent)" stroke-width="2" stroke-dasharray="6,4"/>
+          <text x="400" y="200" text-anchor="middle" fill="var(--accent)" font-family="'Noto Sans JP', sans-serif" font-weight="700" font-size="18">⇄</text>
+          <text x="400" y="240" text-anchor="middle" fill="var(--accent)" font-family="'Noto Sans JP', sans-serif" font-weight="600" font-size="10">競合 → 二重課税</text>
+          <!-- Bottom note -->
+          <text x="400" y="400" text-anchor="middle" fill="var(--svg-text)" font-family="'Noto Sans JP', sans-serif" font-size="11" opacity="0.5">多くの国は両原則を併用し、居住者には全世界所得課税、非居住者には源泉地国課税を適用</text>
+        </svg>
+        <div class="diagram-caption">図2-1：居住地国課税と源泉地国課税の基本構造</div>
+      </div>
+
+      <h3>2-4. 国籍主義の特殊性</h3>
+      <p>属人主義の変種として、国籍に基づく課税（Citizenship-Based Taxation）があります。これは、国籍を有する者に対して、居住地にかかわらず全世界所得に対する納税義務を課すという方式です。現在、この方式を全面的に採用しているのは米国とエリトリアのみであり、国際的には極めて少数派です。</p>
+
+      <p>米国の国籍主義課税は、米国市民（US Citizens）および永住権保持者（Green Card Holders）が、たとえ海外に居住していても、全世界の所得について米国への納税義務を負うことを意味します。これは国際的に見て特異な制度であり、二重課税の問題を深刻化させる要因となっています。もっとも、米国は外国税額控除（Foreign Tax Credit）や海外勤労所得控除（Foreign Earned Income Exclusion）といった二重課税排除措置を設けることで、その影響を緩和しています。</p>
+
+      <p>日本は国籍主義を採用しておらず、課税管轄権の基準は居住地に求められます。ただし、日本国籍を有する者が国外に転出した場合の取扱いについては、出国税（国外転出時課税制度）をはじめとする特別な規定が設けられており、国籍と課税の関係が完全に無関係というわけではありません。</p>
+
+      <div class="point-box">
+        <h4>📌 セクション2 ポイント整理</h4>
+        <ul>
+          <li>居住地国課税は属人主義に基づき居住者の全世界所得に課税する原則であり、源泉地国課税は属地主義に基づき国内源泉所得に課税する原則である。</li>
+          <li>ほとんどの国は両原則を併用し、居住者に全世界所得課税、非居住者に源泉地国課税を行う二元的構造を採る。</li>
+          <li>近年は全世界所得課税から修正された領土主義（配当免除方式等）への移行が国際的潮流となっている。</li>
+          <li>国籍主義課税は米国の特殊な制度であり、国際的には少数派である。</li>
+          <li>二つの課税原則の競合が国際的二重課税を生み出す根本的なメカニズムである。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ===== SECTION 3 ===== -->
+<section id="sec3" class="section">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">SECTION 03</div>
+      <h2>居住者・非居住者の判定基準</h2>
+
+      <h3>3-1. 居住者概念の重要性</h3>
+      <p>国際課税において、ある個人または法人が「居住者」であるか「非居住者」であるかという区分は、課税の範囲と方法を決定する最も基本的な基準です。前節で見たとおり、居住者には全世界所得課税が適用され、非居住者には国内源泉所得に限定した課税が適用されるため、この区分は納税義務の範囲に決定的な差異をもたらします。</p>
+
+      <p>居住者概念の判定は、一見すると単純な問題のように思えるかもしれませんが、実際にはきわめて複雑な判断を要する場面が少なくありません。個人について言えば、複数の国に住居を有する場合、頻繁に国際間を移動する場合、家族と本人が異なる国に居住する場合など、居住地の判定が容易でない事例は数多く存在します。法人についても、設立地と実質的管理の場所が異なる場合には、同様の問題が生じます。</p>
+
+      <h3>3-2. 日本法における個人の居住者判定</h3>
+      <p>日本の所得税法は、個人を「居住者」と「非居住者」に区分し、さらに居住者を「非永住者」とそれ以外の者（永住者）に区分する三段階の構造を採用しています。所得税法第2条第1項第3号は、「居住者」を「国内に住所を有し、又は現在まで引き続いて一年以上居所を有する個人」と定義しています。ここでいう「住所」とは、民法上の住所概念と同様に、「各人の生活の本拠」を意味すると解されています（所得税基本通達2-1）。</p>
+
+      <p>住所の判定に際しては、客観的事実に基づいて総合的に判断されます。具体的な考慮要素としては、住居の所在・状況、職業、資産の所在、親族の居住状況、国籍、在留資格の種類等が挙げられます。最高裁平成23年2月18日判決（武富士事件）は、贈与税の課税に関連して住所の認定が争われた事案であり、住所の判定が客観的な生活の本拠により行われるべきことを確認した重要判例として知られています。</p>
+
+      <p>「非永住者」とは、居住者のうち、日本の国籍を有しておらず、かつ過去10年以内において国内に住所又は居所を有していた期間の合計が5年以下である個人をいいます（所得税法第2条第1項第4号）。非永住者は、国内源泉所得および国外源泉所得のうち国内で支払われ又は国内に送金されたものについてのみ課税されるという中間的な取扱いを受けます。この制度は、日本に短期間滞在する外国人に対する課税を緩和し、日本への人材誘致を促進する政策目的に基づくものです。</p>
+
+      <h3>3-3. 法人の居住者判定</h3>
+      <p>法人の居住地判定については、国際的に二つの主要なアプローチが存在します。第一は「設立準拠法主義」（Incorporation Test）であり、法人が設立された国を居住地国とする基準です。第二は「管理支配地主義」（Place of Effective Management Test）であり、法人の実質的な管理・支配が行われる場所を居住地国とする基準です。</p>
+
+      <p>日本の法人税法は、設立準拠法主義を基本としています。法人税法第2条第3号は、「内国法人」を「国内に本店又は主たる事務所を有する法人」と定義しています。ここでいう「本店」は登記上の本店所在地を基準とする形式的な概念であり、実質的な管理の場所は直接の判定基準とはされていません。もっとも、実務上は実質的な管理の場所が課税上の取扱いに影響を及ぼすことがあり、特に租税条約上の「居住者」の判定（条約上のタイブレーカー・ルール）においては、管理支配地が決定的な基準となります。</p>
+
+      <p>英国やオーストラリアなど、多くのコモンロー系の国は、伝統的に管理支配地主義を採用してきました。英国法上、法人は設立地が英国内であれば当然に英国居住法人とされますが、設立地が英国外であっても、中央管理支配（Central Management and Control）が英国内で行われている場合には英国居住法人として取り扱われます。この「中央管理支配」は、通常、取締役会の開催場所を中心として判断されますが、単に形式的な取締役会の開催場所だけでなく、実質的な意思決定がどこで行われているかが重要な考慮要素とされます。</p>
+
+      <h3>3-4. 双方居住者問題とタイブレーカー・ルール</h3>
+      <p>各国の居住者判定基準が異なるため、同一の納税者が複数の国で居住者として認定されるという「双方居住者」（Dual Resident）の問題が生じ得ます。例えば、日本の国内法上は日本の居住者と判定され、同時に米国の国内法上も米国の居住者と判定される場合です。双方居住者は、両国から全世界所得に対する課税を受けることになり、深刻な二重課税が発生します。</p>
+
+      <p>この問題を解決するために、租税条約には「タイブレーカー・ルール」（Tie-Breaker Rule）と呼ばれる規定が設けられています。OECDモデル租税条約第4条第2項は、個人の双方居住者問題について、以下の順序で居住地国を決定するルールを定めています。第一に恒久的住居（Permanent Home）の所在地、第二に重要な利害関係の中心（Centre of Vital Interests）の所在地、第三に常用の住居（Habitual Abode）の所在地、第四に国籍が判定基準となり、これらの基準によっても決定できない場合には、両締約国の権限ある当局の合意により決定されます。</p>
+
+      <p>法人の双方居住者問題については、OECDモデル租税条約第4条第3項が「実質的管理の場所」（Place of Effective Management, POEM）を基準としてきました。しかし、2017年のOECDモデル条約改正により、法人の双方居住者問題は両締約国の権限ある当局間の相互協議によって解決することとされ、POEMの自動的な適用は廃止されました。これは、法人の実質的管理の場所の判定が実務上困難であること、および企業が意図的にPOEMを操作して条約上の恩典を享受する事例が見られたことを踏まえた改正です。</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>判定基準</th>
+              <th>個人</th>
+              <th>法人</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>日本国内法</td>
+              <td>住所（生活の本拠）又は1年以上の居所</td>
+              <td>本店又は主たる事務所の所在地（設立準拠法主義）</td>
+            </tr>
+            <tr>
+              <td>OECDモデル条約 タイブレーカー</td>
+              <td>恒久的住居→利害関係中心→常用住居→国籍→相互協議</td>
+              <td>相互協議（2017年改正以降）</td>
+            </tr>
+            <tr>
+              <td>米国国内法</td>
+              <td>市民権テスト / グリーンカードテスト / 実質的滞在テスト</td>
+              <td>設立準拠法主義</td>
+            </tr>
+            <tr>
+              <td>英国国内法</td>
+              <td>法定居住テスト（SRT）</td>
+              <td>設立地 又は 中央管理支配地</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="point-box">
+        <h4>📌 セクション3 ポイント整理</h4>
+        <ul>
+          <li>居住者と非居住者の区分は、課税の範囲（全世界所得 vs 国内源泉所得）を決定する最も基本的な基準である。</li>
+          <li>日本法は個人について住所（生活の本拠）又は1年以上の居所を居住者判定基準とし、法人について本店所在地を基準とする。</li>
+          <li>非永住者制度は、国籍がなく過去10年で通算5年以下の在住者に対する中間的な課税方式である。</li>
+          <li>双方居住者問題は、租税条約のタイブレーカー・ルール（個人）又は相互協議（法人）で解決される。</li>
+          <li>国際的には設立準拠法主義と管理支配地主義の二つのアプローチが並存する。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ===== SECTION 4 ===== -->
+<section id="sec4" class="section">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">SECTION 04</div>
+      <h2>国内源泉所得の範囲</h2>
+
+      <h3>4-1. 国内源泉所得の意義</h3>
+      <p>源泉地国課税を実施するためには、どのような所得が「国内で発生した所得」に該当するかを明確にする必要があります。この「国内源泉所得」（Domestic Source Income）の範囲の画定は、非居住者および外国法人に対する課税の範囲を直接に規定する重要な問題です。日本の所得税法第161条および法人税法第138条は、国内源泉所得の類型を詳細に列挙しています。</p>
+
+      <p>国内源泉所得の範囲の画定にあたっては、所得の種類ごとに異なる「源泉」（ソース）の基準が用いられます。事業所得については事業活動の遂行地、不動産所得については不動産の所在地、利子所得については債務者の所在地、配当所得については配当を支払う法人の本店所在地、使用料所得については無形資産の使用地、といった具合に、所得の性質に応じた源泉地の判定基準が設けられています。これらの基準は、経済的な実質に着目して定められたものですが、技術的な判定基準であるため、場合によっては経済的実質と乖離する場面も生じ得ます。</p>
+
+      <h3>4-2. 日本法における国内源泉所得の類型</h3>
+      <p>所得税法第161条は、国内源泉所得を以下の類型に分類して規定しています。まず第1号は、国内において行う事業から生ずる所得その他の国内にある資産の運用、保有又は譲渡により生ずる所得として政令で定めるものを定めています。これが最も包括的な類型であり、恒久的施設（PE）に帰属する事業所得を中心として、広範な所得が含まれます。</p>
+
+      <p>第2号以下は、より具体的な所得類型を列挙しています。国内にある資産の譲渡による所得（不動産、株式等）、人的役務の提供の対価（国内での芸能・スポーツ活動を含む）、国内にある不動産の貸付けによる対価、内国法人から受ける配当等、国内において業務を行う者に対する貸付金の利子、国内において業務を行う者から受ける使用料、国内で行われた勤務に対する給与・報酬等が定められています。</p>
+
+      <p>特に重要なのは、恒久的施設（PE: Permanent Establishment）の概念です。PEとは、事業を行う一定の場所であり、具体的には支店、事務所、工場、建設工事現場等が含まれます。非居住者又は外国法人が日本国内にPEを有する場合、そのPEに帰属する所得（事業利得）は日本の課税対象となります。他方、PEを有しない場合には、事業所得は原則として日本では課税されません（PE なければ課税なし＝No PE, No Tax の原則）。この原則は国際課税において極めて重要であり、租税条約においても事業利得の課税に関する基本的な枠組みとして確立しています。</p>
+
+      <h3>4-3. 恒久的施設（PE）の詳細</h3>
+      <p>恒久的施設の概念は、国際課税の根幹をなすものであり、OECDモデル租税条約第5条に詳細な規定が設けられています。PEは大きく三つの類型に分類されます。</p>
+
+      <p>第一は「場所PE」（Fixed Place of Business PE）です。これは「事業が行われる固定的な場所」を意味し、支店、事務所、工場、作業場、鉱山・油田等の天然資源の採取場所が典型例です。場所PEが認められるためには、事業の場所が「固定」されていること（地理的固定性）、「一定の期間」存続すること（時間的永続性）、その場所を通じて「事業が行われる」こと（事業活動性）という三つの要件を満たす必要があります。</p>
+
+      <p>第二は「建設PE」（Construction PE）です。建設工事現場、建設若しくは据付けの工事又はこれらの指揮監督活動で、12か月（OECDモデル条約の基準。条約によっては6か月）を超える期間存続するものがPEとされます。建設PEは場所PEの特則であり、一定の期間要件を満たした場合にのみPEの認定がなされる点に特徴があります。</p>
+
+      <p>第三は「代理人PE」（Agency PE）です。非居住者又は外国法人のために行動する者が、その名において契約を締結する権限を有し、かつその権限を常習的に行使する場合には、その者の活動を通じてPEが認められます。BEPSプロジェクトの行動計画7を受けたOECDモデル条約の改正により、代理人PEの範囲は拡大され、契約の「締結」だけでなく「締結に主要な役割を果たす」活動も対象とされるようになりました。これは、形式的に契約締結権限を与えないことでPEの認定を回避する手法（いわゆるコミッショネア・アレンジメント）に対応するための改正です。</p>
+
+      <div class="code-block"><span class="comment">/* 所得税法第161条（国内源泉所得）の構造 */</span>
+
+<span class="keyword">■ 第1号</span>  事業所得等（PE帰属所得を含む）
+<span class="keyword">■ 第2号</span>  国内資産の譲渡所得（不動産、一定の株式等）
+<span class="keyword">■ 第3号</span>  人的役務提供事業の対価
+<span class="keyword">■ 第4号</span>  不動産の賃貸料等
+<span class="keyword">■ 第5号</span>  配当等（内国法人から）
+<span class="keyword">■ 第6号</span>  貸付金の利子
+<span class="keyword">■ 第7号</span>  使用料（工業所有権、著作権等）
+<span class="keyword">■ 第8号</span>  給与・報酬・年金等
+<span class="keyword">■ 第8号の2</span> 事業の広告宣伝のための賞金
+<span class="keyword">■ 第9号</span>  生命保険契約に基づく年金等
+<span class="keyword">■ 第10号</span> 定期預金の利子等
+<span class="keyword">■ 第11号</span> 匿名組合契約に基づく利益の分配
+<span class="keyword">■ 第12号</span> その他政令で定めるもの
+
+<span class="comment">/* 課税方式 */</span>
+PE帰属所得 → <span class="keyword">総合課税（申告納税）</span>
+投資所得（配当・利子・使用料）→ <span class="keyword">源泉徴収課税（20.42%等）</span></div>
+
+      <h3>4-4. 所得源泉の判定と国際的調和</h3>
+      <p>国内源泉所得の範囲の画定は各国の国内法に委ねられているため、同一の所得について複数の国がそれぞれ「自国の国内源泉所得」と主張する事態（源泉地の積極的抵触）や、いずれの国も自国の国内源泉所得と認めない事態（源泉地の消極的抵触）が生じ得ます。前者は二重課税の原因となり、後者は二重非課税の原因となります。</p>
+
+      <p>こうした問題を軽減するため、租税条約では各種の所得類型ごとに課税権の配分ルールが定められています。例えば、事業利得は原則として居住地国のみが課税し、源泉地国はPEが存在する場合に限って課税できるとされます（OECDモデル条約第7条）。配当については源泉地国にも一定限度（通常5%～15%）の課税権が留保されます（第10条）。利子についても同様に、源泉地国の課税が一定限度に制限されます（第11条）。使用料については、OECDモデル条約では源泉地国免税とされていますが、国連モデル条約や多くの途上国との条約では源泉地国にも課税権が認められています。</p>
+
+      <div class="point-box">
+        <h4>📌 セクション4 ポイント整理</h4>
+        <ul>
+          <li>国内源泉所得の範囲の画定は、源泉地国課税の適用範囲を直接規定する重要問題である。</li>
+          <li>所得税法第161条は国内源泉所得を類型ごとに詳細に列挙し、それぞれの源泉地の判定基準を定めている。</li>
+          <li>PE（恒久的施設）は場所PE・建設PE・代理人PEの三類型に分類され、「PE なければ課税なし」が国際課税の基本原則である。</li>
+          <li>BEPS行動計画7により代理人PEの範囲が拡大され、コミッショネア・アレンジメントへの対応が図られた。</li>
+          <li>租税条約は所得類型ごとに源泉地国の課税権を制限することで、国際的な調和を図っている。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ===== SECTION 5 ===== -->
+<section id="sec5" class="section">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">SECTION 05</div>
+      <h2>国際的二重課税の発生メカニズム</h2>
+
+      <h3>5-1. 国際的二重課税の定義</h3>
+      <p>国際的二重課税（International Double Taxation）とは、同一の所得に対して、二以上の国が同一の課税期間において課税を行う状態を指します。これは国際課税において最も基本的かつ重要な問題であり、国際課税制度の多くの仕組みは、この二重課税を排除することを目的として設計されています。</p>
+
+      <p>OECDモデル租税条約のコメンタリーにおいては、国際的二重課税を「二以上の国が、同一の納税者に対し、同一の所得又は資産について、同一の期間にわたり、同等の租税を課すること」（juridical double taxation：法的二重課税）と定義しています。これは、文字どおり同一の納税者が二つの国で課税される場面であり、典型的には居住地国の全世界所得課税と源泉地国の国内源泉所得課税が重なる場合に生じます。</p>
+
+      <p>これに対して、同一の所得が異なる納税者の手において二以上の国で課税される場面を「経済的二重課税」（Economic Double Taxation）と呼びます。典型例は、親会社と子会社の間の取引で、移転価格の更正によって同一の利益が両国で課税される場合です。経済的二重課税は法的二重課税とは性質を異にしますが、その経済的影響は同様に深刻であり、国際的な対応が求められています。</p>
+
+      <h3>5-2. 二重課税の発生パターン</h3>
+      <p>国際的二重課税が発生する典型的なパターンは以下の三つに整理できます。</p>
+
+      <p>第一のパターンは、居住地国と源泉地国の課税の競合（Residence-Source Conflict）です。これは最も一般的な二重課税の発生パターンであり、居住地国が全世界所得に対して課税し、同時に源泉地国が国内源泉所得に対して課税する場合に生じます。例えば、日本の居住者が米国の不動産から賃貸所得を得る場合、日本は居住地国として全世界所得の一部として当該所得に課税し、米国は源泉地国として米国内の不動産所得に課税します。結果として、同一の所得が日米両国で課税される二重課税が発生します。</p>
+
+      <p>第二のパターンは、居住地国同士の課税の競合（Residence-Residence Conflict）です。前述の双方居住者の問題がこれに該当します。同一の納税者が二つの国で居住者と認定された場合、両国がそれぞれ全世界所得に対して課税を行うため、全ての所得について二重課税が生じます。このパターンは、租税条約のタイブレーカー・ルールによって解決が図られています。</p>
+
+      <p>第三のパターンは、源泉地国同士の課税の競合（Source-Source Conflict）です。これは、同一の所得について二つの国がそれぞれ自国の国内源泉所得であると主張する場合に生じます。例えば、技術サービスの提供がA国で行われ、その成果がB国で利用される場合、A国は役務提供地を基準に国内源泉所得と主張し、B国は利用地を基準に国内源泉所得と主張する可能性があります。</p>
+
+      <!-- SVG: Double Taxation Mechanism -->
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 800 350" xmlns="http://www.w3.org/2000/svg">
+          <!-- Country A -->
+          <rect x="50" y="80" width="200" height="180" rx="14" fill="var(--svg-fill)" stroke="var(--svg-line)" stroke-width="1.5"/>
+          <text x="150" y="60" text-anchor="middle" fill="var(--accent)" font-family="'Noto Sans JP', sans-serif" font-weight="700" font-size="15">A国（居住地国）</text>
+          <text x="150" y="120" text-anchor="middle" fill="var(--svg-text)" font-family="'Noto Sans JP', sans-serif" font-size="12">居住者 X</text>
+          <rect x="85" y="140" width="130" height="30" rx="6" fill="var(--accent)" opacity="0.2" stroke="var(--accent)" stroke-width="1"/>
+          <text x="150" y="160" text-anchor="middle" fill="var(--svg-text)" font-family="'Noto Sans JP', sans-serif" font-size="11">全世界所得に課税</text>
+          <text x="150" y="200" text-anchor="middle" fill="var(--svg-text)" font-family="'Noto Sans JP', sans-serif" font-size="11" opacity="0.7">国内所得 100</text>
+          <text x="150" y="220" text-anchor="middle" fill="var(--svg-text)" font-family="'Noto Sans JP', sans-serif" font-size="11" opacity="0.7">国外所得 200</text>
+          <text x="150" y="245" text-anchor="middle" fill="var(--accent)" font-family="'Noto Sans JP', sans-serif" font-weight="600" font-size="12">税額 = 300 × 30% = 90</text>
+          <!-- Country B -->
+          <rect x="550" y="80" width="200" height="180" rx="14" fill="var(--svg-fill)" stroke="var(--svg-line)" stroke-width="1.5"/>
+          <text x="650" y="60" text-anchor="middle" fill="var(--accent)" font-family="'Noto Sans JP', sans-serif" font-weight="700" font-size="15">B国（源泉地国）</text>
+          <text x="650" y="120" text-anchor="middle" fill="var(--svg-text)" font-family="'Noto Sans JP', sans-serif" font-size="12">所得の発生地</text>
+          <rect x="585" y="140" width="130" height="30" rx="6" fill="var(--accent)" opacity="0.2" stroke="var(--accent)" stroke-width="1"/>
+          <text x="650" y="160" text-anchor="middle" fill="var(--svg-text)" font-family="'Noto Sans JP', sans-serif" font-size="11">国内源泉所得に課税</text>
+          <text x="650" y="200" text-anchor="middle" fill="var(--svg-text)" font-family="'Noto Sans JP', sans-serif" font-size="11" opacity="0.7">B国源泉所得 200</text>
+          <text x="650" y="245" text-anchor="middle" fill="var(--accent)" font-family="'Noto Sans JP', sans-serif" font-weight="600" font-size="12">税額 = 200 × 25% = 50</text>
+          <!-- Arrow -->
+          <path d="M260 170 L540 170" stroke="var(--accent)" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrowhead)"/>
+          <defs><marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="var(--accent)"/></marker></defs>
+          <text x="400" y="155" text-anchor="middle" fill="var(--svg-text)" font-family="'Noto Sans JP', sans-serif" font-size="11" opacity="0.7">所得 200 が国境を越えて移動</text>
+          <!-- Result -->
+          <rect x="270" y="280" width="260" height="50" rx="10" fill="var(--accent)" opacity="0.12" stroke="var(--accent)" stroke-width="1.5"/>
+          <text x="400" y="302" text-anchor="middle" fill="var(--accent)" font-family="'Noto Sans JP', sans-serif" font-weight="700" font-size="13">二重課税額 = 90 + 50 = 140</text>
+          <text x="400" y="322" text-anchor="middle" fill="var(--svg-text)" font-family="'Noto Sans JP', sans-serif" font-size="11" opacity="0.7">所得200に対して実効税率 70%（= 90+50-単独課税分）</text>
+        </svg>
+        <div class="diagram-caption">図5-1：居住地国課税と源泉地国課税の競合による二重課税の発生</div>
+      </div>
+
+      <h3>5-3. 二重課税の経済的影響</h3>
+      <p>国際的二重課税を放置した場合、重大な経済的悪影響が生じます。第一に、国際的な投資・取引に対する実効税率が異常に高くなり、国境を越えた経済活動に対する阻害要因となります。上記の設例では、所得200に対して両国合計で最大140の税負担が生じ得ますが、これは国内取引であれば生じない過度の税負担です。</p>
+
+      <p>第二に、資本の最適配分が妨げられます。二重課税が存在する場合、たとえ海外投資の方が生産性が高くても、税引後のリターンが低下するため、投資家は国内投資を選好するようになります。これは国際的な資源配分の効率性を損ない、世界全体の経済的厚生を減少させます。</p>
+
+      <p>第三に、各国間の税制の差異を利用した租税裁定（Tax Arbitrage）の動機を強めます。二重課税を回避するために、納税者は複雑な取引構造を用いて所得を低税率国に移転したり、費用を高税率国に配分したりするインセンティブを持ちます。こうした行為は経済的合理性ではなく税務上の有利性に基づくものであり、経済資源の非効率な配分をもたらします。</p>
+
+      <div class="point-box">
+        <h4>📌 セクション5 ポイント整理</h4>
+        <ul>
+          <li>国際的二重課税は、法的二重課税（同一納税者への二重課税）と経済的二重課税（同一所得の異なる納税者への課税）に分類される。</li>
+          <li>主な発生パターンは、居住地国 vs 源泉地国、居住地国 vs 居住地国、源泉地国 vs 源泉地国の三つである。</li>
+          <li>二重課税は国際投資の阻害、資本の非効率配分、租税裁定の助長といった経済的悪影響をもたらす。</li>
+          <li>二重課税の排除は国際課税制度の最も基本的な政策目的の一つであり、外国税額控除や免除方式を通じて実現される。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ===== SECTION 6 ===== -->
+<section id="sec6" class="section">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">SECTION 06</div>
+      <h2>二重課税排除の方法論</h2>
+
+      <h3>6-1. 外国税額控除方式（Credit Method）</h3>
+      <p>二重課税を排除するための方法として最も広く用いられているのが、外国税額控除方式（Foreign Tax Credit Method）です。この方式のもとでは、居住地国が居住者の全世界所得に対して課税を行いつつ、外国（源泉地国）で課された税額を居住地国の税額から控除することで、二重課税の排除を図ります。</p>
+
+      <p>日本の外国税額控除制度は、所得税法第95条および法人税法第69条に規定されています。法人税法第69条を例にとると、内国法人が外国法人税を納付する場合、一定の控除限度額の範囲内でその外国法人税額を法人税額から控除することが認められています。控除限度額は、「法人税額 ×（国外所得金額 ÷ 全世界所得金額）」の算式によって計算されます。この控除限度額の仕組みは、外国税額控除がわが国の税額を超えて適用されることを防止し、国内源泉所得に対する課税権を保護する機能を有しています。</p>
+
+      <p>外国税額控除方式には、直接控除（Direct Credit）と間接控除（Indirect Credit / Deemed Paid Credit）の区別があります。直接控除は、納税者自身が外国で直接納付した税額を控除するものです。間接控除は、外国子会社が外国で納付した税額を、当該子会社から配当を受ける親会社の段階で控除することを認めるものです。日本では、2009年度税制改正で外国子会社配当益金不算入制度が導入されたことに伴い、法人段階での間接外国税額控除は廃止されました。これは、日本が法人の国外配当所得について全世界所得課税から免除方式へと方針を転換したことを意味しています。</p>
+
+      <h3>6-2. 免除方式（Exemption Method）</h3>
+      <p>免除方式（Exemption Method）は、居住地国が国外源泉所得を課税の対象から除外することで二重課税を排除する方法です。この方式には、完全免除方式（Full Exemption）と累進免除方式（Exemption with Progression）の二つの変形があります。</p>
+
+      <p>完全免除方式では、国外源泉所得が完全に課税対象から除外され、税率の計算においても考慮されません。これに対して累進免除方式では、国外源泉所得自体は課税対象から除外されるものの、国内源泉所得に対して適用される税率を決定する際には国外源泉所得を含めた全世界所得を基礎として累進税率が適用されます。累進免除方式は、特に個人所得税において、累進税率のもとでの公平性を確保する観点から採用されることが多く、ドイツやオーストリア等がこの方式を採用しています。</p>
+
+      <p>免除方式の長所は、計算が比較的単純であること、および資本輸入中立性（CIN）を達成できることです。免除方式のもとでは、源泉地国で活動する企業は、居住地国の税率にかかわらず源泉地国の税率のみに服するため、源泉地国の市場における競争条件が等しくなります。しかし、免除方式の短所として、居住者がより低い税率の国で所得を稼得するインセンティブが生じ、居住地国の税収が減少するリスクがあります。</p>
+
+      <h3>6-3. 控除方式と免除方式の比較</h3>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>比較項目</th>
+              <th>外国税額控除方式</th>
+              <th>免除方式</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>基本的仕組み</td>
+              <td>全世界所得課税 ＋ 外国税額の控除</td>
+              <td>国外源泉所得を課税対象から除外</td>
+            </tr>
+            <tr>
+              <td>中立性の性質</td>
+              <td>資本輸出中立性（CEN）</td>
+              <td>資本輸入中立性（CIN）</td>
+            </tr>
+            <tr>
+              <td>居住地国の税収</td>
+              <td>国内外の税率差分を確保</td>
+              <td>国外所得分の税収を放棄</td>
+            </tr>
+            <tr>
+              <td>計算の複雑さ</td>
+              <td>控除限度額の計算が複雑</td>
+              <td>相対的に単純</td>
+            </tr>
+            <tr>
+              <td>低税率国への投資インセンティブ</td>
+              <td>限定的（居住地国税率まで追加課税）</td>
+              <td>大きい（源泉地国税率のみ）</td>
+            </tr>
+            <tr>
+              <td>主な採用国</td>
+              <td>日本・米国・英国</td>
+              <td>フランス・オランダ・ドイツ（部分的）</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>6-4. 控除方式（Deduction Method）とその限界</h3>
+      <p>外国税額控除方式や免除方式のほかに、外国で納付した税額を所得計算上の必要経費（損金）として控除する「控除方式」（Deduction Method）があります。日本の法人税法においても、外国税額控除の適用に代えて、外国法人税額を損金の額に算入する選択が認められています（法人税法第41条の2）。</p>
+
+      <p>しかし、控除方式は二重課税を完全には排除できません。外国税額を経費として控除しても、その経費控除による税負担の軽減額は外国税額そのものよりも小さくなるためです。例えば、国外所得100に対して源泉地国で25の税が課された場合、外国税額控除方式であれば25全額が控除されますが、控除方式の場合、25を必要経費として控除した結果の税負担軽減額は25×税率（例えば30%）＝7.5にとどまります。したがって、控除方式は外国税額控除方式に比べて二重課税の排除が不十分であり、国際課税の文脈では補完的な位置づけにとどまります。</p>
+
+      <h3>6-5. 租税条約による課税権の調整</h3>
+      <p>二重課税の排除において、租税条約は決定的に重要な役割を果たしています。租税条約は、二国間の課税権の配分を事前に定めることで、二重課税の発生自体を防止し、又はその程度を軽減する機能を有しています。具体的には、源泉地国の課税権を制限する規定（配当・利子・使用料に対する源泉税率の引下げ等）と、居住地国に二重課税排除義務を課す規定（外国税額控除又は免除の実施義務）が両輪となって機能しています。</p>
+
+      <p>日本は2025年1月時点で、約80の国・地域との間で租税条約ネットワークを構築しています。これらの条約は、基本的にOECDモデル租税条約を基礎としつつも、相手国の経済発展段階や投資関係の特性に応じて、個別の修正が加えられています。例えば、先進国との条約では配当の源泉税率がゼロ又は5%に設定されることが多いのに対し、途上国との条約では10%～15%の源泉税率が維持される傾向があります。</p>
+
+      <div class="point-box">
+        <h4>📌 セクション6 ポイント整理</h4>
+        <ul>
+          <li>二重課税排除の主要な方法は外国税額控除方式と免除方式であり、控除方式は補完的手段にとどまる。</li>
+          <li>外国税額控除は資本輸出中立性（CEN）を達成し、免除方式は資本輸入中立性（CIN）を達成するとされる。</li>
+          <li>日本は2009年の外国子会社配当益金不算入制度導入により、法人段階で部分的に免除方式を採用した。</li>
+          <li>租税条約は課税権の配分を通じて二重課税の発生を防止・軽減する機能を担う。</li>
+          <li>控除限度額の仕組みは、外国税額控除の濫用を防止し国内課税権を保護する安全弁として機能する。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ===== SECTION 7 ===== -->
+<section id="sec7" class="section">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">SECTION 07</div>
+      <h2>租税回避とタックスヘイブン問題</h2>
+
+      <h3>7-1. 租税回避の概念</h3>
+      <p>国際課税の分野において、租税回避（Tax Avoidance）は最も重要な政策課題の一つです。租税回避とは、私法上の法形式を濫用的に利用することにより、租税法規の想定する通常の取引形態とは異なる法形式を用いて、税負担を不当に軽減又は排除する行為を指します。これは違法な脱税（Tax Evasion）とは区別されます。脱税が法的義務の不履行（所得の隠蔽、虚偽の申告等）であるのに対し、租税回避は法形式上は適法な取引を通じて行われる点に特徴があります。もっとも、両者の境界は必ずしも明確ではなく、特に国際的な文脈では「攻撃的な税務計画」（Aggressive Tax Planning）と呼ばれるグレーゾーンが広がっています。</p>
+
+      <p>租税回避が国際課税の文脈で特に深刻な問題となるのは、各国の税制の差異を利用することで、純粋に国内の取引では実現し得ない大幅な税負担の軽減が可能となるためです。多国籍企業は、各国間の税率差、課税ベースの定義の相違、租税条約のネットワークの間隙を巧みに利用することで、グループ全体の実効税率を大幅に引き下げることが可能です。</p>
+
+      <h3>7-2. タックスヘイブンとは</h3>
+      <p>タックスヘイブン（Tax Haven）とは、一般に、法人税が無税又は著しく低税率であり、実質的な経済活動を伴わない法人の設立を容易にし、かつ金融情報の秘匿性が高い国・地域を指します。もっとも、「タックスヘイブン」の定義は一義的ではなく、その範囲は文脈に応じて変動します。OECDは1998年の報告書「有害な税の競争」において、無税又は名目的な税率、実質的な活動の欠如（Ring-Fencing）、透明性の欠如、情報交換の欠如を有害な税制の特徴として挙げました。</p>
+
+      <p>伝統的なタックスヘイブンとしては、英領バージン諸島（BVI）、ケイマン諸島、バミューダ、パナマ、リヒテンシュタインなどがよく知られていますが、問題はこうした小国・地域に限定されるものではありません。アイルランド、ルクセンブルク、オランダ、シンガポール等の先進国・中進国も、特定の税制上の優遇措置を通じて多国籍企業の利益を引きつけてきたことが指摘されています。2016年のパナマ文書の流出は、タックスヘイブンを利用した税負担軽減の実態を広く一般に知らしめ、国際的な対応を加速させる契機となりました。</p>
+
+      <h3>7-3. 代表的な国際的租税回避スキーム</h3>
+      <p>国際的な租税回避の手法は多種多様ですが、代表的なスキームとして以下のものが挙げられます。</p>
+
+      <p>第一に、移転価格操作（Transfer Pricing Manipulation）です。多国籍企業グループ内の取引において、独立企業間価格から乖離した対価を設定することで、利益を高税率国から低税率国へ移転する手法です。例えば、低税率国の子会社が開発した知的財産のライセンス料を人為的に高く設定し、高税率国の関連会社の利益を圧縮する方法があります。</p>
+
+      <p>第二に、条約漁り（Treaty Shopping）です。租税条約の恩典（源泉税の減免等）を享受するために、条約相手国に導管会社（Conduit Company）を設立し、本来は条約の恩典を受ける資格のない第三国の居住者が間接的に恩典を利用する手法です。例えば、租税条約を有しないC国の企業が、日本との租税条約でロイヤルティの源泉税率がゼロとされているB国に子会社を設立し、その子会社を通じてロイヤルティを受領するケースがこれに該当します。</p>
+
+      <p>第三に、過大な負債を利用した利益移転（Debt Push-Down / Earnings Stripping）です。多国籍企業が、低税率国の関連会社から高税率国の関連会社に対して過大な融資を行い、高税率国の関連会社が支払う利子を損金に算入することで、高税率国の課税ベースを侵食する手法です。利子の支払いは源泉地国で損金算入が認められる一方、受取利子は低税率国で低い税率で課税されるため、グループ全体の税負担が軽減されます。</p>
+
+      <p>第四に、ハイブリッド・ミスマッチ・アレンジメント（Hybrid Mismatch Arrangements）です。ある国では出資（エクイティ）として扱われ、別の国では貸付（デット）として扱われるハイブリッド金融商品や、ある国では法人として扱われ、別の国ではパススルー事業体として扱われるハイブリッド事業体を利用して、一方の国で損金算入が認められつつ他方の国では益金に算入されないという二重非課税の状態を作り出す手法です。</p>
+
+      <h3>7-4. 租税回避に対する対抗措置</h3>
+      <p>各国は、国際的な租税回避に対抗するために様々な措置を講じています。日本の国内法における主要な対抗措置は以下のとおりです。</p>
+
+      <p>外国子会社合算税制（CFC税制、タックスヘイブン対策税制）は、租税負担の軽い外国関係会社（特定外国関係会社等）の所得を、日本の株主（内国法人又は居住者）の所得に合算して課税する制度です（租税特別措置法第66条の6等）。これにより、タックスヘイブンに設立されたペーパーカンパニー等を通じた利益の留保による課税の繰延べを防止しています。2017年度税制改正により、会社単位の合算課税から、一定の受動的所得（パッシブ所得）に限定した部分合算課税も導入され、制度の精緻化が図られました。</p>
+
+      <p>移転価格税制は、関連者間取引の対価が独立企業間価格から乖離している場合に、税務当局が独立企業間価格に基づいて所得を再計算する制度です（租税特別措置法第66条の4等）。独立企業間価格の算定方法としては、独立価格比準法（CUP法）、再販売価格基準法（RP法）、原価基準法（CP法）、取引単位営業利益法（TNMM）、利益分割法（PS法）等が認められています。</p>
+
+      <p>過大支払利子税制は、関連者間の借入に対する支払利子のうち、調整所得金額の一定割合を超える部分の損金算入を制限する制度です（租税特別措置法第66条の5の2等）。BEPSプロジェクトの行動計画4の勧告を踏まえ、2019年度税制改正で対象純支払利子等の額が調整所得金額の20%を超える場合にその超過部分の損金算入を制限する仕組みに改正されました。</p>
+
+      <div class="point-box">
+        <h4>📌 セクション7 ポイント整理</h4>
+        <ul>
+          <li>租税回避は適法な法形式を利用した税負担の不当な軽減であり、違法な脱税と区別される。</li>
+          <li>タックスヘイブンは低税率・実質活動の欠如・秘匿性を特徴とし、国際的租税回避の基盤となってきた。</li>
+          <li>代表的な回避スキームとして、移転価格操作、条約漁り、過大利子控除、ハイブリッド・ミスマッチがある。</li>
+          <li>日本の主要な対抗措置はCFC税制、移転価格税制、過大支払利子税制であり、BEPS勧告を踏まえて精緻化が進んでいる。</li>
+          <li>2016年パナマ文書は国際世論を喚起し、透明性向上と対抗措置強化の国際的機運を高めた。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ===== SECTION 8 ===== -->
+<section id="sec8" class="section">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">SECTION 08</div>
+      <h2>法源の階層（国内法・条約・ソフトロー）</h2>
+
+      <h3>8-1. 国際課税における法源の重層構造</h3>
+      <p>国際課税の法的枠組みは、国内租税法、租税条約、およびソフトローという三層の法源によって構成されています。これらの法源は階層的な関係に立ち、それぞれ異なる法的性質と機能を有しています。国際課税を正確に理解し適用するためには、この法源の重層構造を明確に把握することが不可欠です。</p>
+
+      <h3>8-2. 第一層：国内租税法</h3>
+      <p>国際課税の法的基盤を形成するのは、各国の国内租税法です。日本の場合、所得税法、法人税法、相続税法、租税特別措置法等が中核的な法源となります。課税管轄権の範囲、居住者・非居住者の定義、国内源泉所得の類型、税率、外国税額控除の仕組みなど、国際課税の基本的な制度設計は全て国内法によって規律されています。</p>
+
+      <p>国内租税法は、国家主権の発現として各国が独自に制定するものであり、その内容は各国の政策判断によって異なります。このことが、国際課税における二重課税や二重非課税の問題の根本的な原因となっています。国内法は、憲法上の租税法律主義の要請を受け、法律の形式で制定される必要があり、政令・省令・通達等によって補完されています。</p>
+
+      <h3>8-3. 第二層：租税条約</h3>
+      <p>第二層の法源である租税条約は、二国間（まれに多国間）の国際合意であり、国際課税における法的規律の中核を担っています。日本国憲法第98条第2項は「日本国が締結した条約及び確立された国際法規は、これを誠実に遵守することを必要とする」と定め、条約の国内法的効力を認めています。租税条約と国内法の関係については、日本では条約が国内法に優先するものと解されています（条約優位説）。</p>
+
+      <p>租税条約の基本的機能は、二重課税の排除と脱税の防止の二つに集約されます。二重課税の排除については、各種の所得類型ごとに源泉地国の課税権を制限し（配当・利子・使用料の源泉税率の引下げ、事業利得のPE要件など）、居住地国に外国税額控除又は免除の実施義務を課すことで実現されます。脱税の防止については、情報交換条項（Exchange of Information）や徴収共助条項（Assistance in the Collection of Taxes）が規定されています。</p>
+
+      <p>租税条約の解釈にあたっては、条約法に関するウィーン条約（1969年）の解釈原則が適用されます。すなわち、条約は「文脈によりかつその趣旨及び目的に照らして」解釈されるべきとされています（ウィーン条約第31条第1項）。租税条約に特有の解釈問題として、OECDモデル租税条約のコメンタリーの法的位置づけがあります。コメンタリーは条約そのものではなく、法的拘束力はありませんが、条約の解釈の補足的手段として実務上極めて重要な役割を果たしています。日本の裁判例においても、OECDモデル条約のコメンタリーが解釈の参考とされることがあります。</p>
+
+      <h3>8-4. 第三層：ソフトロー</h3>
+      <p>国際課税の第三層の法源として、法的拘束力を持たないものの実務上大きな影響力を有する「ソフトロー」（Soft Law）が存在します。ソフトローの代表的なものとして、OECDの移転価格ガイドライン、BEPSプロジェクトの各行動計画に基づく勧告、OECDモデル租税条約のコメンタリー、G20のコミュニケ（共同声明）、包摂的枠組み（Inclusive Framework）の合意文書などが挙げられます。</p>
+
+      <p>ソフトローは法的拘束力を有しないため、各国はその内容を国内法化するかどうかについて裁量を有しています。しかし、実際には主要国がOECDの勧告に基づいて国内法を改正し、又は条約を改定するケースが圧倒的に多く、ソフトローが事実上の国際的な標準（デファクト・スタンダード）として機能しています。特にBEPSプロジェクトの成果は、140を超える国・地域が参加する「BEPS包摂的枠組み」を通じて、先進国のみならず途上国も含めた広範な国際合意として共有されています。</p>
+
+      <p>ソフトローの法的位置づけについては、学説上も議論がありますが、少なくとも以下の機能を果たしていることは広く認められています。第一に、国内法および条約の解釈指針としての機能です。税務当局や裁判所が国内法や条約の規定を解釈する際に、OECDのガイドラインやコメンタリーが参照されることで、各国の解釈の統一が促進されます。第二に、立法の方向性を示すアジェンダ・セッティング機能です。OECDやG20が国際的な政策課題を設定し、その解決策を勧告することで、各国の国内法制の発展が方向づけられます。</p>
+
+      <div class="code-block"><span class="comment">/* 国際課税における法源の階層 */</span>
+
+<span class="keyword">第1層 ── 国内租税法</span>
+   ├── 所得税法・法人税法・相続税法
+   ├── 租税特別措置法
+   ├── 政令（施行令）・省令（施行規則）
+   └── 通達（法的拘束力なし、行政解釈として実務を規律）
+
+<span class="keyword">第2層 ── 租税条約</span>（国内法に優先）
+   ├── 二国間租税条約（約80の条約ネットワーク）
+   ├── 税務行政執行共助条約（多国間条約）
+   └── BEPS防止措置実施条約（MLI）
+
+<span class="keyword">第3層 ── ソフトロー</span>（法的拘束力なし、事実上の国際標準）
+   ├── OECDモデル租税条約コメンタリー
+   ├── OECD移転価格ガイドライン
+   ├── BEPS行動計画の勧告・報告書
+   ├── GloBEモデルルール・コメンタリー
+   └── G20コミュニケ・IF合意文書</div>
+
+      <div class="point-box">
+        <h4>📌 セクション8 ポイント整理</h4>
+        <ul>
+          <li>国際課税の法源は、国内租税法、租税条約、ソフトローの三層構造をなす。</li>
+          <li>日本では租税条約が国内法に優先する（条約優位説）。</li>
+          <li>租税条約の基本機能は二重課税の排除と脱税の防止の二つである。</li>
+          <li>ソフトロー（OECDガイドライン・BEPS勧告等）は法的拘束力を持たないが、事実上の国際標準として各国の法制度に大きな影響を与えている。</li>
+          <li>条約解釈にはウィーン条約法条約の原則が適用され、OECDコメンタリーは補足的解釈手段として重要である。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ===== SECTION 9 ===== -->
+<section id="sec9" class="section">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">SECTION 09</div>
+      <h2>OECDとG20の役割</h2>
+
+      <h3>9-1. OECDの租税委員会</h3>
+      <p>経済協力開発機構（OECD）は、国際課税の分野において最も重要な国際機関であり、約100年にわたって国際課税ルールの形成と発展を主導してきました。OECDの租税委員会（Committee on Fiscal Affairs, CFA）は、国際課税に関する政策研究、基準設定、各国間の調整を行う中心的な機関です。</p>
+
+      <p>OECDの国際課税分野における主要な成果として、以下のものが挙げられます。第一に、OECDモデル租税条約の策定と継続的改訂です。OECDモデル条約は、二国間租税条約の交渉において雛形として使用されるものであり、世界中の租税条約の基本的な構造と内容を規定しています。最新の2017年版では、BEPSプロジェクトの成果を反映した大幅な改訂が行われました。</p>
+
+      <p>第二に、OECD移転価格ガイドライン（Transfer Pricing Guidelines for Multinational Enterprises and Tax Administrations）の策定です。このガイドラインは、移転価格税制の適用に関する包括的な指針であり、独立企業原則の解釈と適用方法を詳細に規定しています。各国の移転価格税制の運用において事実上の標準として機能しており、日本の移転価格事務運営要領もこのガイドラインを踏まえて策定されています。</p>
+
+      <p>第三に、有害な税の競争に対する取組みです。OECDは1998年に「有害な税の競争：新たなグローバルな問題」と題する報告書を公表し、タックスヘイブンや有害な優遇税制に対する国際的な対応の枠組みを提示しました。その後、税の透明性と情報交換に関するグローバル・フォーラムが設立され、各国の税制の透明性や情報交換体制のピアレビューが実施されています。</p>
+
+      <h3>9-2. BEPSプロジェクト</h3>
+      <p>OECDとG20の国際課税分野における最大の成果は、BEPS（Base Erosion and Profit Shifting：税源浸食と利益移転）プロジェクトです。このプロジェクトは、多国籍企業が各国の税制の間隙や不整合を利用して利益を人為的に低税率国・地域に移転し、各国の課税ベースを侵食している問題に対する包括的な対応策を策定することを目的として、2013年にG20の要請のもとでOECDが開始しました。</p>
+
+      <p>BEPSプロジェクトは15の行動計画（Action Plans）から構成されています。行動計画1はデジタル経済の課税上の課題、行動計画2はハイブリッド・ミスマッチ・アレンジメントの効果の無力化、行動計画3はCFC税制の強化、行動計画4は利子控除の制限、行動計画5は有害税制への対応、行動計画6は条約の濫用防止、行動計画7はPE認定の人為的回避の防止、行動計画8-10は移転価格税制と価値創造との整合性確保、行動計画11はBEPSのデータ分析、行動計画12は義務的開示ルール、行動計画13は移転価格文書化の再検討（国別報告書の導入）、行動計画14は紛争解決メカニズムの効率化、行動計画15は多国間条約の策定です。</p>
+
+      <p>2015年10月にBEPS最終報告書が公表され、2016年以降、各国においてBEPS勧告の国内法化が進められてきました。日本も、外国子会社合算税制の改正（2017年度）、過大支払利子税制の見直し（2019年度）、国別報告書の導入（2016年度）など、BEPS勧告を踏まえた制度改正を順次実施しています。</p>
+
+      <h3>9-3. 二つの柱（Two-Pillar Solution）</h3>
+      <p>BEPSプロジェクトの延長線上にある最も野心的な取組みが、「二つの柱」（Two-Pillar Solution）と呼ばれる国際課税の新しい枠組みです。2021年10月にOECD/G20の包摂的枠組み（Inclusive Framework）に参加する約140の国・地域の合意によって策定されました。</p>
+
+
+</body>
+</html>

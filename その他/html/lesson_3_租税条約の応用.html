@@ -1,0 +1,1272 @@
+<!DOCTYPE html><html lang="ja" data-theme="dark">
+- Google Fonts: Outfit + Noto Sans JP
+- CSS変数でダーク/ライト切替対応:
+  ダーク: 背景#0A0A0A, テキスト#FAFAFA, カード#16161A, ボーダーrgba(255,255,255,0.06)
+  ライト: 背景#FAFAF7, テキスト#1A1A1A, カード#FFFFFF, ボーダーrgba(0,0,0,0.06)
+  アクセント: #5E6AD2→#7B85E0
+- fixedヘッダー: ロゴ「税法ラボ」(紫正方形+テキスト) + ナビ(コース/条文DB/判例/ブログ) + テーマ切替(月/太陽SVG)、backdrop-filter:blur(20px)半透明
+- フッター: © 2026 税法ラボ + リンク
+- max-width:1120px, padding:0 24px, margin:0 auto
+- カード: border-radius:20px, box-shadow, ホバーtranslateY(-4px)
+- セクションラベル: 英語大文字0.75rem letter-spacing:0.12em アクセント色
+- IntersectionObserverスクロールアニメーション(.reveal→.visible)
+- ノイズテクスチャオーバーレイ, localStorage保存テーマ, レスポンシブ
+- 目次(ページ内リンク)冒頭配置, 各セクション末に「ポイント整理」ボックス
+- 表・コードブロック・SVG図解を適宜使用
+
+**コードブロックでHTMLコードを出力してください。** 1回の回答で完結。必ず最後まで出力。
+
+【コンテンツ】第3回：租税条約の応用─特典制限・濫用防止・MLI。(1)条約濫用(Treaty Shopping)(2)LOB条項(日米条約中心)(3)PPT(4)導管取引否認(5)BEPS行動6(6)MLIの概要と仕組み(7)MLI適用メカニズム(8)日本のMLI適用状況(9)情報交換(EOI・AEOI・CRS)(10)CRS報告義務(11)徴収共助(12)仲裁条項(13)デジタル課税と条約の将来。3万字程度<!DOCTYPE html>
+<html lang="ja" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第3回：租税条約の応用─特典制限・濫用防止・MLI｜税法ラボ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/*============================================================
+  CSS VARIABLES & THEME
+============================================================*/
+:root {
+  --font-en: 'Outfit', sans-serif;
+  --font-jp: 'Noto Sans JP', sans-serif;
+  --accent: #5E6AD2;
+  --accent-hover: #7B85E0;
+  --accent-10: rgba(94,106,210,0.10);
+  --accent-20: rgba(94,106,210,0.20);
+  --radius: 20px;
+  --radius-sm: 12px;
+  --radius-xs: 8px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.08);
+  --shadow-lg: 0 12px 48px rgba(0,0,0,0.12);
+  --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+  --header-h: 64px;
+  --max-w: 1120px;
+}
+
+[data-theme="dark"] {
+  --bg: #0A0A0A;
+  --bg-secondary: #111114;
+  --text: #FAFAFA;
+  --text-secondary: #A0A0A8;
+  --card: #16161A;
+  --card-hover: #1C1C22;
+  --border: rgba(255,255,255,0.06);
+  --border-strong: rgba(255,255,255,0.12);
+  --code-bg: #1E1E24;
+  --point-bg: rgba(94,106,210,0.08);
+  --point-border: rgba(94,106,210,0.25);
+  --toc-bg: #111114;
+  --noise-opacity: 0.03;
+  --table-stripe: rgba(255,255,255,0.02);
+  --svg-diagram-bg: #12121A;
+}
+
+[data-theme="light"] {
+  --bg: #FAFAF7;
+  --bg-secondary: #F0F0ED;
+  --text: #1A1A1A;
+  --text-secondary: #6B6B74;
+  --card: #FFFFFF;
+  --card-hover: #F7F7F4;
+  --border: rgba(0,0,0,0.06);
+  --border-strong: rgba(0,0,0,0.12);
+  --code-bg: #F2F2EF;
+  --point-bg: rgba(94,106,210,0.06);
+  --point-border: rgba(94,106,210,0.20);
+  --toc-bg: #FFFFFF;
+  --noise-opacity: 0.02;
+  --table-stripe: rgba(0,0,0,0.02);
+  --svg-diagram-bg: #F0F0F8;
+}
+
+/*============================================================
+  RESET & BASE
+============================================================*/
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--header-h) + 32px); }
+body {
+  font-family: var(--font-jp);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.9;
+  font-size: 16px;
+  font-weight: 400;
+  transition: background var(--transition), color var(--transition);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/*-- Noise Overlay --*/
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: var(--noise-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+a { color: var(--accent); text-decoration: none; transition: color var(--transition); }
+a:hover { color: var(--accent-hover); }
+img { max-width: 100%; display: block; }
+
+.container { max-width: var(--max-w); padding: 0 24px; margin: 0 auto; }
+
+/*============================================================
+  HEADER
+============================================================*/
+.header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--header-h);
+  z-index: 1000;
+  background: rgba(10,10,10,0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: background var(--transition), border var(--transition);
+}
+[data-theme="light"] .header { background: rgba(250,250,247,0.78); }
+
+.header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-en);
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--text);
+  text-decoration: none;
+}
+.logo-icon {
+  width: 32px; height: 32px;
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.logo-icon svg { width: 18px; height: 18px; }
+
+.header-right { display: flex; align-items: center; gap: 8px; }
+
+.nav { display: flex; align-items: center; gap: 4px; }
+.nav a {
+  padding: 6px 14px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border-radius: 8px;
+  transition: color var(--transition), background var(--transition);
+}
+.nav a:hover, .nav a.active { color: var(--text); background: var(--accent-10); }
+
+.theme-toggle {
+  width: 40px; height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: all var(--transition);
+  margin-left: 8px;
+}
+.theme-toggle:hover { color: var(--text); border-color: var(--border-strong); background: var(--accent-10); }
+.theme-toggle svg { width: 18px; height: 18px; }
+.theme-toggle .sun { display: none; }
+[data-theme="light"] .theme-toggle .moon { display: none; }
+[data-theme="light"] .theme-toggle .sun { display: block; }
+
+/*-- Mobile Menu --*/
+.menu-toggle {
+  display: none;
+  width: 40px; height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  color: var(--text-secondary);
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 4px;
+}
+.menu-toggle span { display: block; width: 18px; height: 2px; background: currentColor; border-radius: 1px; transition: var(--transition); }
+
+@media (max-width: 768px) {
+  .nav { display: none; position: absolute; top: var(--header-h); left: 0; right: 0;
+    flex-direction: column; background: var(--card); border-bottom: 1px solid var(--border);
+    padding: 12px; gap: 2px;
+  }
+  .nav.open { display: flex; }
+  .nav a { padding: 12px 16px; border-radius: var(--radius-xs); }
+  .menu-toggle { display: flex; }
+}
+
+/*============================================================
+  HERO
+============================================================*/
+.hero {
+  padding: calc(var(--header-h) + 72px) 0 64px;
+  text-align: center;
+}
+.hero-label {
+  font-family: var(--font-en);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-size: clamp(1.8rem, 4.5vw, 3rem);
+  font-weight: 800;
+  line-height: 1.3;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+.hero h1 span { color: var(--accent); }
+.hero-sub {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  max-width: 640px;
+  margin: 0 auto 32px;
+  line-height: 1.8;
+}
+.hero-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+}
+.hero-meta span { display: flex; align-items: center; gap: 6px; }
+.hero-meta svg { width: 16px; height: 16px; opacity: 0.6; }
+
+/*============================================================
+  TOC (Table of Contents)
+============================================================*/
+.toc-section { padding: 0 0 48px; }
+.toc-card {
+  background: var(--toc-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 36px 40px;
+  transition: background var(--transition), border var(--transition);
+}
+.toc-title {
+  font-family: var(--font-en);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+}
+.toc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 6px 32px;
+}
+.toc-grid a {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: var(--radius-xs);
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  transition: all var(--transition);
+}
+.toc-grid a:hover { color: var(--text); background: var(--accent-10); }
+.toc-num {
+  font-family: var(--font-en);
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: var(--accent);
+  min-width: 28px;
+}
+
+/*============================================================
+  SECTION / ARTICLE STYLES
+============================================================*/
+.section { padding: 48px 0; }
+.section-label {
+  font-family: var(--font-en);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.section h2 {
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 24px;
+  letter-spacing: -0.01em;
+}
+.section h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 32px 0 16px;
+  padding-left: 14px;
+  border-left: 3px solid var(--accent);
+}
+.section h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 24px 0 12px;
+}
+
+.section p {
+  margin-bottom: 18px;
+  color: var(--text-secondary);
+  line-height: 2;
+}
+.section p strong { color: var(--text); font-weight: 600; }
+
+/*============================================================
+  CONTENT CARD
+============================================================*/
+.content-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px 44px;
+  margin-bottom: 32px;
+  transition: all var(--transition);
+  box-shadow: var(--shadow);
+}
+.content-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--border-strong);
+}
+
+@media (max-width: 768px) {
+  .content-card { padding: 28px 20px; }
+  .toc-card { padding: 24px 20px; }
+}
+
+/*============================================================
+  POINT BOX
+============================================================*/
+.point-box {
+  background: var(--point-bg);
+  border: 1px solid var(--point-border);
+  border-radius: var(--radius-sm);
+  padding: 24px 28px;
+  margin: 32px 0 8px;
+}
+.point-box-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.point-box p { margin-bottom: 8px; font-size: 0.93rem; line-height: 1.85; }
+.point-box p:last-child { margin-bottom: 0; }
+
+/*============================================================
+  TABLE
+============================================================*/
+.table-wrap {
+  overflow-x: auto;
+  margin: 24px 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+thead { background: var(--accent-10); }
+th {
+  padding: 12px 16px;
+  font-weight: 600;
+  text-align: left;
+  font-size: 0.82rem;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: top;
+  line-height: 1.7;
+}
+tr:nth-child(even) { background: var(--table-stripe); }
+tr:last-child td { border-bottom: none; }
+
+/*============================================================
+  CODE BLOCK
+============================================================*/
+.code-block {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 20px 24px;
+  margin: 24px 0;
+  overflow-x: auto;
+  font-family: 'Courier New', Consolas, monospace;
+  font-size: 0.85rem;
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+.code-block .keyword { color: var(--accent); font-weight: 600; }
+.code-block .comment { color: var(--text-secondary); opacity: 0.5; font-style: italic; }
+.code-block .string { color: #7EC699; }
+.code-label {
+  font-family: var(--font-en);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+/*============================================================
+  SVG DIAGRAM
+============================================================*/
+.diagram-wrap {
+  background: var(--svg-diagram-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 32px 24px;
+  margin: 24px 0;
+  text-align: center;
+  overflow-x: auto;
+}
+.diagram-wrap svg text {
+  font-family: var(--font-jp);
+}
+.diagram-caption {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-top: 12px;
+}
+
+/*============================================================
+  SCROLL ANIMATION
+============================================================*/
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1), transform 0.7s cubic-bezier(0.4,0,0.2,1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/*============================================================
+  FOOTER
+============================================================*/
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 0;
+  margin-top: 64px;
+  text-align: center;
+}
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.footer-copy {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+.footer-links {
+  display: flex; gap: 20px;
+}
+.footer-links a {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+.footer-links a:hover { color: var(--accent); }
+
+@media (max-width: 640px) {
+  .footer-inner { justify-content: center; flex-direction: column; }
+}
+
+/*============================================================
+  UTILITY / MISC
+============================================================*/
+.inline-accent { color: var(--accent); font-weight: 600; }
+.tag {
+  display: inline-block;
+  padding: 3px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 6px;
+  background: var(--accent-10);
+  color: var(--accent);
+  margin: 2px 2px;
+}
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 40px 0;
+}
+blockquote {
+  border-left: 3px solid var(--accent);
+  padding: 12px 20px;
+  margin: 20px 0;
+  background: var(--accent-10);
+  border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+  font-size: 0.93rem;
+  color: var(--text-secondary);
+}
+</style>
+</head>
+
+<body>
+
+<!-- ============================================================
+     HEADER
+============================================================ -->
+<header class="header">
+  <div class="container">
+    <a href="#" class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v14l-8-4-8 4z"/></svg>
+      </div>
+      税法ラボ
+    </a>
+    <div class="header-right">
+      <nav class="nav" id="mainNav">
+        <a href="#" class="active">コース</a>
+        <a href="#">条文DB</a>
+        <a href="#">判例</a>
+        <a href="#">ブログ</a>
+      </nav>
+      <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <button class="menu-toggle" id="menuToggle" aria-label="メニュー">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- ============================================================
+     HERO
+============================================================ -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-label">Course 03 — International Tax Treaty</div>
+    <h1>租税条約の応用<br><span>特典制限・濫用防止・MLI</span></h1>
+    <p class="hero-sub">条約濫用（Treaty Shopping）から多数国間条約（MLI）の適用メカニズム、情報交換・CRS・仲裁条項、そしてデジタル課税の未来まで、租税条約の最先端テーマを体系的に解説します。</p>
+    <div class="hero-meta">
+      <span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        2026年3月
+      </span>
+      <span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        約90分
+      </span>
+      <span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        全13セクション
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TABLE OF CONTENTS
+============================================================ -->
+<section class="toc-section">
+  <div class="container">
+    <div class="toc-card reveal">
+      <div class="toc-title">Table of Contents</div>
+      <div class="toc-grid">
+        <a href="#sec1"><span class="toc-num">01</span>条約濫用（Treaty Shopping）</a>
+        <a href="#sec2"><span class="toc-num">02</span>LOB条項（日米条約中心）</a>
+        <a href="#sec3"><span class="toc-num">03</span>PPT（主要目的テスト）</a>
+        <a href="#sec4"><span class="toc-num">04</span>導管取引否認</a>
+        <a href="#sec5"><span class="toc-num">05</span>BEPS行動6</a>
+        <a href="#sec6"><span class="toc-num">06</span>MLIの概要と仕組み</a>
+        <a href="#sec7"><span class="toc-num">07</span>MLI適用メカニズム</a>
+        <a href="#sec8"><span class="toc-num">08</span>日本のMLI適用状況</a>
+        <a href="#sec9"><span class="toc-num">09</span>情報交換（EOI・AEOI・CRS）</a>
+        <a href="#sec10"><span class="toc-num">10</span>CRS報告義務</a>
+        <a href="#sec11"><span class="toc-num">11</span>徴収共助</a>
+        <a href="#sec12"><span class="toc-num">12</span>仲裁条項</a>
+        <a href="#sec13"><span class="toc-num">13</span>デジタル課税と条約の将来</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 1 : 条約濫用（Treaty Shopping）
+============================================================ -->
+<section class="section" id="sec1">
+  <div class="container">
+    <div class="content-card reveal">
+      <div class="section-label">Section 01</div>
+      <h2>条約濫用（Treaty Shopping）</h2>
+
+      <h3>条約濫用の定義と基本構造</h3>
+      <p>租税条約は、二国間（あるいは多国間）で締結される国際的な合意であり、源泉地国における課税を軽減・免除することで二重課税を排除し、国際的な経済活動を促進することを主な目的としています。しかしながら、この条約上の特典（treaty benefits）は本来、締約国の居住者に対して付与されるものです。<strong>条約濫用（Treaty Shopping）</strong>とは、本来は条約上の特典を享受する資格を持たない第三国の居住者が、特典を有する締約国に中間的な事業体（導管会社等）を設立し、その事業体を通じて所得を流すことで、条約上の特典を不当に取得する行為を指します。</p>
+
+      <p>より具体的に述べれば、条約濫用は以下のような三段階の構造を典型的にとります。まず第一に、第三国の居住者（真の受益者）が存在します。第二に、この真の受益者が、有利な租税条約を締結している国に中間事業体を設立します。第三に、この中間事業体が名目上の所得の受領者となり、条約上の軽減税率や免除を享受した上で、最終的な利益を第三国の真の受益者に移転します。この一連の流れにおいて、中間事業体は実質的な事業活動をほとんど行わず、単なる「導管」（conduit）として機能するに過ぎません。</p>
+
+      <h3>Treaty Shoppingの典型的パターン</h3>
+      <p>条約濫用の最も典型的なパターンは、<strong>導管会社パターン（conduit company arrangement）</strong>です。例えば、A国の投資家がB国の企業から配当を受領する場合を考えます。A国とB国の間には租税条約がないか、あっても配当に対する源泉税率が高いとします。そこで、A国の投資家は、B国と有利な条約を締結しているC国に子会社を設立し、C国子会社を通じてB国企業に出資します。B国企業からの配当はまずC国子会社に支払われ、この段階でB国・C国間の条約により低率の源泉税が適用されます。その後、C国子会社はA国の親会社に対して利益を移転します（配当、利子、ロイヤルティ、サービス料等の形で）。このとき、C国子会社は実質的な事業活動を行っていないため、C国での課税も最小限にとどまります。</p>
+
+      <p>もう一つの典型例として、<strong>ステッピングストーンパターン（stepping stone arrangement）</strong>があります。これは導管会社パターンをさらに洗練させたもので、C国の中間事業体が単に所得を右から左に流すのではなく、受領した所得を費用の支払い（管理費、利子、ロイヤルティ等）によって相殺し、C国での課税ベースを圧縮する手法です。この場合、中間事業体にはある程度の実体がある場合もあり、純粋な導管パターンよりも検出が困難です。</p>
+
+      <h3>条約濫用が問題となる理由</h3>
+      <p>条約濫用が国際税務において深刻な問題とされる理由は複数あります。第一に、条約濫用は条約の互恵性（reciprocity）を損なうという点が挙げられます。租税条約は二国間の交渉の結果として締結されるものであり、各締約国は相手国の居住者に対して一定の譲歩（源泉税率の引下げ等）を行います。この譲歩は、相手国も同様の譲歩を行うことを前提としています。条約濫用により第三国の居住者がこの特典にフリーライドすると、条約交渉の前提が崩れ、締約国の税収が一方的に侵食されることになります。</p>
+
+      <p>第二に、条約濫用は税の公平性（equity）を歪めるという問題があります。同一の経済活動から得られる所得であっても、条約濫用のスキームを組成できる者とそうでない者の間で、実効税率に大きな差が生じます。これは水平的公平（同じ状況にある者には同じ税負担）の観点から正当化し難い結果です。</p>
+
+      <p>第三に、条約濫用は各国の課税主権を実質的に侵害するという側面があります。源泉地国が条約交渉で合意した水準を超えて課税権を放棄させられることになり、国家の財政基盤に影響を及ぼし得ます。</p>
+
+      <h3>条約濫用に対する各国の対応の歴史</h3>
+      <p>条約濫用に対する国際的な問題意識は比較的早い時期から存在しました。OECDは1977年モデル条約コメンタリーにおいて既に条約濫用の問題に言及しており、その後、1986年の「導管会社に関する報告書（Double Taxation Conventions and the Use of Conduit Companies）」において、より詳細な分析を行っています。この報告書では、導管会社を利用した条約濫用の典型的パターンが分析され、これに対処するための方策として、国内法上の措置（実質的帰属主義の適用等）、条約上の措置（受益者要件の厳格化等）、および当事国間の情報交換の活用が提案されました。</p>
+
+      <p>米国は条約濫用防止において先駆的な役割を果たしてきました。1981年のAiken Industries判決は、中間事業体を利用した利子の導管取引について、受益所有者（beneficial owner）の概念を重視した判断を示しました。また、米国は1980年代後半から租税条約にLOB（Limitation on Benefits）条項を挿入するようになり、これが後のOECDモデル条約および各国の条約実務に大きな影響を与えました。</p>
+
+      <p>日本においては、従来、条約濫用に対する明文の否認規定は必ずしも十分ではなく、一般的な租税回避否認法理（例えば、法人税法132条の同族会社の行為計算否認規定や、所得税法157条の同族会社等の行為計算否認規定）の適用可能性が議論される程度でした。しかし、2004年の日米租税条約改正により詳細なLOB条項が導入されたことを皮切りに、日本の条約実務も条約濫用防止の方向に大きく舵を切ることになりました。</p>
+
+      <!-- SVG Diagram: Treaty Shopping Basic Structure -->
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 720 320" fill="none" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;">
+          <!-- A国 投資家 -->
+          <rect x="20" y="120" width="160" height="80" rx="14" fill="var(--accent-10)" stroke="var(--accent)" stroke-width="1.5"/>
+          <text x="100" y="155" text-anchor="middle" fill="var(--text)" font-size="13" font-weight="600">A国（第三国）</text>
+          <text x="100" y="178" text-anchor="middle" fill="var(--text-secondary)" font-size="11">真の受益者・投資家</text>
+          <!-- C国 導管会社 -->
+          <rect x="280" y="120" width="160" height="80" rx="14" fill="var(--accent-20)" stroke="var(--accent)" stroke-width="2"/>
+          <text x="360" y="155" text-anchor="middle" fill="var(--text)" font-size="13" font-weight="700">C国（条約国）</text>
+          <text x="360" y="178" text-anchor="middle" fill="var(--accent)" font-size="11" font-weight="600">導管会社（Conduit）</text>
+          <!-- B国 所得源泉 -->
+          <rect x="540" y="120" width="160" height="80" rx="14" fill="var(--accent-10)" stroke="var(--accent)" stroke-width="1.5"/>
+          <text x="620" y="155" text-anchor="middle" fill="var(--text)" font-size="13" font-weight="600">B国（源泉地国）</text>
+          <text x="620" y="178" text-anchor="middle" fill="var(--text-secondary)" font-size="11">配当・利子等の支払者</text>
+          <!-- Arrows -->
+          <line x1="180" y1="150" x2="278" y2="150" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+          <line x1="440" y1="150" x2="538" y2="150" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+          <path d="M538 175 L442 175" stroke="var(--accent-hover)" stroke-width="1.5" stroke-dasharray="6 3" marker-end="url(#arrowhead2)"/>
+          <path d="M278 175 L182 175" stroke="var(--accent-hover)" stroke-width="1.5" stroke-dasharray="6 3" marker-end="url(#arrowhead2)"/>
+          <!-- Labels -->
+          <text x="230" y="140" text-anchor="middle" fill="var(--text-secondary)" font-size="10">出資</text>
+          <text x="490" y="140" text-anchor="middle" fill="var(--text-secondary)" font-size="10">出資</text>
+          <text x="490" y="192" text-anchor="middle" fill="var(--accent-hover)" font-size="10">配当（低率源泉税）</text>
+          <text x="230" y="192" text-anchor="middle" fill="var(--accent-hover)" font-size="10">利益移転</text>
+          <!-- Treaty label -->
+          <rect x="400" y="30" width="180" height="36" rx="8" fill="var(--accent-10)" stroke="var(--accent)" stroke-width="1" stroke-dasharray="4 2"/>
+          <text x="490" y="53" text-anchor="middle" fill="var(--accent)" font-size="11" font-weight="600">B-C間の租税条約適用</text>
+          <line x1="490" y1="66" x2="490" y2="118" stroke="var(--accent)" stroke-width="1" stroke-dasharray="4 2"/>
+          <!-- No treaty label -->
+          <rect x="100" y="250" width="220" height="36" rx="8" fill="var(--table-stripe)" stroke="var(--border-strong)" stroke-width="1"/>
+          <text x="210" y="273" text-anchor="middle" fill="var(--text-secondary)" font-size="11">A-B間：条約なし/高税率</text>
+          <defs>
+            <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="var(--accent)"/></marker>
+            <marker id="arrowhead2" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="var(--accent-hover)"/></marker>
+          </defs>
+        </svg>
+        <div class="diagram-caption">図1：Treaty Shopping の基本スキーム（導管会社パターン）</div>
+      </div>
+
+      <h3>受益所有者（Beneficial Owner）概念との関係</h3>
+      <p>条約濫用の文脈で重要な概念の一つが<strong>「受益所有者」（beneficial owner）</strong>です。OECDモデル条約の第10条（配当）、第11条（利子）、第12条（ロイヤルティ）は、いずれも条約上の軽減税率の適用を「受益所有者」が相手国の居住者である場合に限定しています。この受益所有者要件は、単なる名義上の受領者ではなく、所得に対して実質的な支配権・処分権を有する者のみが条約上の特典を享受できることを意味します。</p>
+
+      <p>しかしながら、受益所有者概念だけでは条約濫用を十分に防止できないことが明らかになっています。導管会社が形式的にはある程度の「所有権」を主張できる場合や、ステッピングストーンパターンのように所得の流れが間接的である場合には、受益所有者要件の適用が困難な場合があるためです。このような認識から、受益所有者要件に加えて、より包括的な濫用防止規定（LOB条項やPPT等）の必要性が認識されるようになりました。</p>
+
+      <div class="point-box">
+        <div class="point-box-title">✦ ポイント整理</div>
+        <p><strong>条約濫用（Treaty Shopping）</strong>とは、条約上の特典を享受する資格のない第三国居住者が、有利な条約を持つ国に導管会社を設立し、不当に条約上の特典を取得する行為です。典型例は導管会社パターンとステッピングストーンパターンの二類型であり、条約の互恵性の毀損、税の公平性の歪曲、課税主権の侵害という三つの問題を引き起こします。受益所有者（beneficial owner）概念は一定の歯止めとなりますが、単独では不十分であり、LOB条項やPPT等の包括的濫用防止規定が必要とされています。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 2 : LOB条項（日米条約中心）
+============================================================ -->
+<section class="section" id="sec2">
+  <div class="container">
+    <div class="content-card reveal">
+      <div class="section-label">Section 02</div>
+      <h2>LOB条項（日米条約中心）</h2>
+
+      <h3>LOB条項の概念と目的</h3>
+      <p><strong>LOB条項（Limitation on Benefits：特典制限条項）</strong>は、条約濫用に対する最も体系的かつ詳細な対抗手段です。LOB条項は、条約上の特典を享受するための「適格性テスト」（qualification test）を設定し、一定の要件を満たした者のみが条約上の特典を受けられるようにする仕組みです。この条項の基本的な考え方は、条約の特典は当該締約国と「真正な結びつき」（genuine link）を有する者にのみ付与されるべきであるということにあります。</p>
+
+      <p>LOB条項は、米国が1980年代後半から自国の租税条約に積極的に導入した経緯があり、米国モデル条約において最も精緻な規定が置かれています。その後、2004年改正の日米租税条約（正式名称：「所得に対する租税に関する二重課税の回避及び脱税の防止のための日本国とアメリカ合衆国との間の条約」）において極めて詳細なLOB条項（第22条）が設けられ、これが日本の租税条約実務に大きな影響を与えました。</p>
+
+      <h3>日米租税条約第22条（LOB条項）の構造</h3>
+      <p>日米租税条約第22条のLOB条項は、多層的な構造を有しています。基本的な枠組みとして、条約上の特典を受けるためには、所得の受領者が「適格者」（qualified person）であるか、あるいは適格者でなくても一定の追加テストを満たす必要があります。以下では、この構造を詳細に検討します。</p>
+
+      <h4>（1）適格者テスト（Qualified Person Test）</h4>
+      <p>LOB条項の中核をなすのが「適格者テスト」です。日米租税条約第22条第1項・第2項によれば、以下のカテゴリーに該当する者は「適格者」として条約上の特典を享受できます。</p>
+
+      <p><strong>個人：</strong>締約国の居住者である個人は、それだけで適格者とされます。これは、個人が条約濫用の主体となることは通常考えにくいためです。個人は特定の国に物理的に存在し、その国の社会に統合されていることが通常であり、条約濫用目的で個人の居住地を変更することは法人の設立に比べて実行が困難です。</p>
+
+      <p><strong>締約国・地方公共団体等：</strong>締約国の政府、地方公共団体、中央銀行等の政府機関も適格者とされます。これらの主体が条約濫用を行う動機は通常存在しないためです。</p>
+
+      <p><strong>上場会社テスト：</strong>締約国において公認の証券取引所に上場している会社は適格者とされます。これは、上場会社はその株式が広く分散して保有されており、特定の第三国居住者が条約濫用目的で当該会社を支配することが困難であるという前提に基づいています。具体的には、日米条約においては、主要な種類の株式がいずれかの締約国の公認の証券取引所に上場されていることが要件とされています。</p>
+
+      <p><strong>所有・課税ベース侵食テスト：</strong>上場していない法人等の場合、株式の50%以上を適格者が直接・間接に所有しており（所有テスト）、かつ、その所得の50%以上が控除可能な支払い（利子、ロイヤルティ等）として非適格者に流出していないこと（課税ベース侵食テスト / base erosion test）を満たす場合に適格者とされます。この課税ベース侵食テストは、形式的には適格者が株式を所有していても、実質的には所得の大部分が非適格者に移転されている場合を排除するためのものです。</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>適格者カテゴリー</th>
+              <th>主な要件</th>
+              <th>趣旨</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>個人</td>
+              <td>締約国の居住者であること</td>
+              <td>個人による条約濫用は通常困難</td>
+            </tr>
+            <tr>
+              <td>政府・地方公共団体</td>
+              <td>締約国の政府機関等であること</td>
+              <td>政府機関による濫用リスクは低い</td>
+            </tr>
+            <tr>
+              <td>上場会社</td>
+              <td>主要株式が公認証券取引所に上場</td>
+              <td>株式分散により支配が困難</td>
+            </tr>
+            <tr>
+              <td>非上場会社等（所有+課税ベース侵食テスト）</td>
+              <td>適格者による50%以上の所有 ＋ 非適格者への控除可能支払いが50%未満</td>
+              <td>実質的な帰属関係の確認</td>
+            </tr>
+            <tr>
+              <td>免税団体（年金基金等）</td>
+              <td>締約国法に基づく年金基金・公益法人等</td>
+              <td>制度目的に照らし濫用リスクは低い</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4>（2）能動的事業活動テスト（Active Trade or Business Test）</h4>
+      <p>適格者テストを満たさない場合であっても、<strong>能動的事業活動テスト</strong>を満たせば条約上の特典を享受できます。このテストは、所得の受領者が居住地国において実質的な事業活動（substantial business activity）を行っており、かつ、条約上の特典が請求される所得が当該事業活動に関連し又は付随するものである場合に、条約上の特典を認めるものです。</p>
+
+      <p>能動的事業活動テストの趣旨は、居住地国において真正な経済的プレゼンスを有する事業体は、たとえ所有構造の観点から適格者テストを満たさなくても、当該国との間に十分な結びつきがあると考えられるという点にあります。ただし、「実質的」の判断は相対的であり、源泉地国での活動と比較して居住地国での活動が著しく小規模である場合には、このテストを満たさないとされる可能性があります。</p>
+
+      <h4>（3）派生的受益テスト（Derivative Benefits Test）</h4>
+      <p>日米条約第22条には<strong>派生的受益テスト</strong>も含まれています。これは、申請者自体は適格者テストを満たさないが、その株主が同等以上の条約上の特典を享受できる国の居住者であり、かつ課税ベース侵食テストを満たす場合に、特典を認めるものです。例えば、第三国Xの居住者が日本の子会社の株主である場合、X国と源泉地国（米国）との間にX国居住者が直接投資した場合と同等以上の条約上の特典が確保されているならば、日本の子会社を通じたとしても条約上の特典を認めてもよいという考え方です。</p>
+
+      <h4>（4）権限ある当局による認定（Competent Authority Determination）</h4>
+      <p>上記のいずれのテストも満たさない場合であっても、最後の手段として、<strong>権限ある当局</strong>（日本では国税庁長官、米国ではIRS）に申請し、個別に条約上の特典の付与を認定してもらうことが可能です。これは、LOB条項のルールベースの基準では捕捉しきれない正当なケースに対する安全弁としての機能を果たしています。ただし、権限ある当局の認定は裁量的であり、時間もかかるため、実務上は予測可能性に欠ける面があります。</p>
+
+      <h3>LOB条項の実務上の課題</h3>
+      <p>LOB条項は条約濫用防止に有効な手段ですが、いくつかの実務上の課題も指摘されています。第一に、LOB条項は極めて技術的・複雑であり、その適用判断にはかなりの専門知識が必要とされます。特に、多層的な持株構造を有する多国籍企業グループにおいて、間接所有の計算や課税ベース侵食テストの適用は容易ではありません。</p>
+
+      <p>第二に、LOB条項はルールベースのアプローチであるため、その網をすり抜ける新たなスキームが考案される可能性が常に存在します。条約濫用は形態を変えて繰り返し出現する傾向があり、固定的なルールだけでは対応しきれない場合があります。この点が、後述するPPT（Principal Purpose Test：主要目的テスト）のようなプリンシプルベースのアプローチが併用される理由の一つです。</p>
+
+      <p>第三に、LOB条項はEU域内での適用に関して特有の問題を生じさせます。EU法上の基本的自由（設立の自由、資本移動の自由等）との関係で、LOB条項がEU居住者に対して差別的な効果を持つ場合、EU法との抵触が生じる可能性があります。この問題は、特に日欧間の租税条約交渉において重要な論点となっています。</p>
+
+      <div class="point-box">
+        <div class="point-box-title">✦ ポイント整理</div>
+        <p><strong>LOB条項</strong>は、適格者テスト（個人、政府、上場会社、所有+課税ベース侵食テスト、免税団体）、能動的事業活動テスト、派生的受益テスト、権限ある当局認定の多層構造で条約上の特典享受資格を判定します。日米租税条約第22条はその最も精緻な例であり、ルールベースの明確性が利点ですが、複雑性や新たなスキームへの対応限界が課題です。LOB条項は後述するPPTと併用されることで、より包括的な濫用防止が図られます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 3 : PPT（主要目的テスト）
+============================================================ -->
+<section class="section" id="sec3">
+  <div class="container">
+    <div class="content-card reveal">
+      <div class="section-label">Section 03</div>
+      <h2>PPT（主要目的テスト：Principal Purpose Test）</h2>
+
+      <h3>PPTの概要と背景</h3>
+      <p><strong>PPT（Principal Purpose Test：主要目的テスト）</strong>は、租税条約上の特典の付与を判断する際に、取引や取決めの主要な目的の一つが条約上の特典の取得にあったかどうかを基準とするプリンシプルベース（原則ベース）の濫用防止規定です。PPTはOECD/G20のBEPS（Base Erosion and Profit Shifting：税源浸食と利益移転）プロジェクトの行動6において策定され、2017年OECDモデル条約改訂により第29条第9項として導入されました。</p>
+
+      <p>PPTの導入背景には、LOB条項だけでは条約濫用を十分に防止できないという認識があります。LOB条項はルールベースのアプローチであるため、明確性と予測可能性に優れる反面、その基準を形式的に充足しつつ実質的には条約濫用に該当する取引を排除できない場合があります。PPTはこの限界を補完するものであり、取引の実質に着目して条約上の特典の適否を判断する柔軟な基準を提供します。</p>
+
+      <h3>PPTの要件</h3>
+      <p>OECDモデル条約第29条第9項のPPTは、以下の要件で構成されています。取引、取決め、又はその他の行為の<strong>主要な目的の一つ</strong>（one of the principal purposes）が条約上の特典の取得であったと合理的に結論づけられる場合には、当該特典を付与しないこととされます。ただし、当該特典の付与が条約の関連規定の目的及び趣旨（object and purpose）に合致することが立証された場合には、この限りではありません。</p>
+
+      <p>この規定の構造を分解すると、以下の三つの要素が抽出されます。第一に、「主要な目的の一つ」という閾値（threshold）です。これは、条約上の特典の取得が唯一の目的である必要はなく、複数の目的のうちの一つであれば足りることを意味します。ただし、「主要な」（principal）という限定があるため、付随的・副次的な目的にすぎない場合には該当しません。第二に、「合理的に結論づけられる」（can reasonably be concluded）という客観的判断基準です。これは、納税者の主観的意図だけでなく、客観的な事実関係に基づいて判断されることを意味します。第三に、「目的・趣旨合致」（in accordance with the object and purpose）の救済規定です。たとえ主要な目的の一つが条約上の特典の取得であったとしても、当該特典の付与が条約の関連規定の目的・趣旨に合致する場合には、特典が否認されないという安全弁が設けられています。</p>
+
+      <h3>PPTの適用に関する具体例</h3>
+      <p>OECDのBEPS行動6最終報告書およびモデル条約コメンタリーには、PPTの適用に関する多数の具体例が示されています。以下にいくつかの代表的な例を紹介します。</p>
+
+      <p><strong>事例1（条約濫用が認定される場合）：</strong>A国の居住者であるX社は、B国の会社の株式を保有しています。A国とB国の間の租税条約では配当に対する源泉税率が15%です。X社は、B国とC国の間の条約（配当に対する源泉税率5%）を利用するために、C国に子会社Y社を設立し、B国の会社の株式をY社に移転します。Y社はC国において実質的な事業活動を行わず、従業員もいません。この場合、Y社のB国株式保有の主要な目的の一つはB国・C国条約上の軽減税率を取得することにあると合理的に結論づけられ、PPTにより特典が否認される可能性が高いといえます。</p>
+
+      <p><strong>事例2（条約濫用が認定されない場合）：</strong>A国の多国籍企業グループが、地域統括機能の集約のためにB国に地域統括会社を設立します。この統括会社は、B国において相当数の従業員を雇用し、地域内の子会社の管理・監督、資金調達、知的財産管理等の実質的な機能を果たしています。この統括会社がB国の条約ネットワークを利用して各国からの配当等を受領する場合、たとえB国が税率の低い法域であったとしても、統括会社の設立には正当な事業上の理由（genuine business reasons）があり、PPTによる特典否認は通常行われないとされます。</p>
+
+      <h3>PPTとLOBの関係</h3>
+      <p>BEPS行動6は、条約濫用防止のための最低基準（minimum standard）として、以下の三つの選択肢を提示しました。第一に、PPTの単独採用。第二に、簡素版LOBとPPTの併用。第三に、詳細版LOBと「導管取引に限定した」PPT又は国内法上の濫用防止規定の併用。実務上、多くの国がPPTの単独採用を選択しており、PPTは事実上のグローバルスタンダードとなりつつあります。米国のように伝統的にLOBを重視する国も存在しますが、BEPS後の条約実務ではPPTの役割が増大しています。</p>
+
+      <p>PPTとLOBは相互補完的な関係にあります。LOBはルールベースで明確性が高いが柔軟性に欠け、PPTはプリンシプルベースで柔軟性が高いが予測可能性に欠けるという性質があります。両者を併用することで、LOBの形式的基準とPPTの実質的判断の双方による多重的な濫用防止が実現されます。日本が近年締結する租税条約においても、LOB条項とPPTの双方を含むものが増加しています。</p>
+
+      <div class="point-box">
+        <div class="point-box-title">✦ ポイント整理</div>
+        <p><strong>PPT</strong>は「取引の主要な目的の一つが条約上の特典の取得であったか」を基準とするプリンシプルベースの濫用防止規定です。「主要な目的の一つ」という低い閾値、客観的な判断基準、および目的・趣旨合致の救済規定という三要素で構成されます。LOBのルールベースの限界を補完し、BEPS行動6の最低基準として多くの国が採用するグローバルスタンダードとなっています。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 4 : 導管取引否認
+============================================================ -->
+<section class="section" id="sec4">
+  <div class="container">
+    <div class="content-card reveal">
+      <div class="section-label">Section 04</div>
+      <h2>導管取引否認</h2>
+
+      <h3>導管取引の概念</h3>
+      <p><strong>導管取引（conduit arrangement）</strong>とは、所得の流れの中間に介在する事業体が、当該所得に対する実質的な経済的権利を有さず、単に所得を受領して別の者に移転する「パイプ」として機能する取引類型を指します。導管取引は条約濫用の最も一般的な形態であり、前述のTreaty Shoppingの中核的な仕組みです。</p>
+
+      <p>導管取引否認のアプローチは、条約レベルと国内法レベルの双方で展開されています。条約レベルでは、受益所有者（beneficial owner）概念の厳格な適用、LOB条項、PPTがそれぞれ導管取引を否認する機能を果たします。国内法レベルでは、各国の一般的租税回避否認規定（GAAR：General Anti-Avoidance Rule）や個別否認規定が適用される場合があります。</p>
+
+      <h3>受益所有者概念による導管取引の否認</h3>
+      <p>OECDモデル条約の第10条（配当）、第11条（利子）、第12条（ロイヤルティ）における「受益所有者」要件は、導管取引否認の最も基本的なツールです。2014年のOECDコメンタリー改訂により、受益所有者の概念は以下のように明確化されました。すなわち、所得の受領者が当該所得を使用・享受する権利を有さず、契約上又は法律上の義務として他の者に移転する立場にある場合、当該受領者は受益所有者とはいえないとされます。</p>
+
+      <p>この文脈で重要な判例として、ヨーロッパ司法裁判所（CJEU）の2019年の判決群（いわゆるDanish Cases）が挙げられます。これらの事件では、デンマーク企業が支払った配当・利子について、EU親子会社指令・利子ロイヤルティ指令上の源泉税免除が請求されましたが、CJEUは、受領者がルクセンブルクの持株会社であり実質的な経済活動を行っていないこと等を考慮し、これらが導管会社であるとして免除の適用を否定しました。この判決は、導管取引の否認に関するEUレベルの重要な先例となりました。</p>
+
+      <h3>日本における導管取引への対応</h3>
+      <p>日本においては、租税条約の受益所有者要件の解釈・適用を通じた導管取引否認が主要な対応手段です。また、日本の多くの租税条約にはLOB条項が含まれており、導管会社が適格者テストを満たさない場合には条約上の特典が否認されます。さらに、国内法上は、法人税法132条の2（組織再編成に係る行為計算否認）や、所得税法等の各種個別否認規定が導管取引に適用される余地があります。</p>
+
+      <p>実務上の重要な論点として、導管取引か否かの判断基準の問題があります。単に中間事業体が低い税率の法域に所在するという事実だけでは、導管取引とは判定されません。判断においては、中間事業体の事業活動の実質性、従業員の有無、意思決定の場所、リスク負担の有無、所得の処分権の有無等の諸要素が総合的に考慮されます。日本の実務では、これらの要素を踏まえた事実認定が重要であり、特に源泉徴収義務者（支払者）の立場からは、条約上の特典を主張する受領者が受益所有者に該当するかどうかの判断を支払時点で行う必要があるため、実務上の困難が伴います。</p>
+
+      <div class="point-box">
+        <div class="point-box-title">✦ ポイント整理</div>
+        <p><strong>導管取引否認</strong>は、受益所有者概念の厳格適用、LOB条項、PPTの三層で実現されます。2014年OECDコメンタリー改訂で受益所有者概念が明確化され、2019年Danish CasesがEUレベルの重要先例を形成しました。日本では条約上の受益所有者要件とLOB条項が主要な否認ツールであり、中間事業体の実質性を総合的に判断する事実認定が鍵となります。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 5 : BEPS行動6
+============================================================ -->
+<section class="section" id="sec5">
+  <div class="container">
+    <div class="content-card reveal">
+      <div class="section-label">Section 05</div>
+      <h2>BEPS行動6：条約濫用の防止</h2>
+
+      <h3>BEPS プロジェクトの位置づけ</h3>
+      <p>OECD/G20の<strong>BEPS（Base Erosion and Profit Shifting：税源浸食と利益移転）プロジェクト</strong>は、2012年のG20メキシコサミットでの要請を受けて2013年に開始され、2015年に15の行動計画に関する最終報告書が公表されました。BEPSプロジェクトは、多国籍企業による国際的な租税回避に対する包括的な対応策を策定することを目的としており、国際税務の枠組みを根本的に変革する画期的な取組みです。</p>
+
+      <p><strong>行動6「条約濫用の防止」（Preventing the Granting of Treaty Benefits in Inappropriate Circumstances）</strong>は、15の行動計画の中でも最も重要な位置づけを与えられた行動の一つです。行動6は四つの「最低基準」（minimum standards）の一つとして位置づけられており、すべてのBEPS包摂的枠組み参加国（140か国以上）が実施を約束しています。「最低基準」とは、その実施が義務的であり、ピアレビュー（相互審査）によって実施状況が監視される項目を指します。</p>
+
+      <h3>行動6の内容</h3>
+      <p>行動6の最終報告書は、以下の主要な要素で構成されています。第一に、条約の前文（preamble）の改訂です。従来の租税条約の前文は、二重課税の排除を主な目的として掲げていましたが、行動6は、「脱税又は租税回避（条約濫用を通じたトリーティ・ショッピングの取決めを含む）による非課税又は軽減された課税の機会を創出することなく」二重課税を排除することを明確にする文言を追加することを勧告しました。この前文の改訂は、条約の目的及び趣旨の解釈に影響を与え、PPTの適用における「目的・趣旨合致」の判断基準を方向づける重要な意味を持ちます。</p>
+
+      <p>第二に、前述の最低基準として、PPTの単独採用、簡素版LOBとPPTの併用、または詳細版LOBと限定的PPT・国内法GAARの併用のいずれかの選択肢が設定されました。この最低基準により、すべての包摂的枠組み参加国の租税条約に何らかの形の濫用防止規定が導入されることが担保されています。</p>
+
+      <p>第三に、行動6はOECDモデル条約コメンタリーの大幅な改訂を伴い、条約濫用に関する詳細なガイダンス（事例集を含む）が提供されました。これにより、PPTやLOB条項の適用に関する予測可能性が一定程度向上しました。</p>
+
+      <h3>行動6の最低基準の実施状況</h3>
+      <p>行動6の最低基準の実施は、BEPS包摂的枠組みによるピアレビューを通じて監視されています。ピアレビューは2018年に第1回が実施され、その後定期的に実施されています。実施の主要な手段は、二国間条約の個別改正とMLI（多数国間条約、後述）の締結の二つです。MLIの活用により、多くの国が既存の租税条約ネットワーク全体にPPTを一括導入することが可能になりました。</p>
+
+      <p>ピアレビューの結果によれば、多くの国がMLIの署名・批准を通じて行動6の最低基準を実施していますが、一部の国では二国間条約の改正が遅れているケースもあります。また、PPTの実際の適用事例はまだ限定的であり、PPTの解釈・適用に関する実務の蓄積は今後の課題とされています。</p>
+
+      <div class="code-block">
+        <div class="code-label">BEPS Action 6 — Minimum Standard Options</div>
+<span class="keyword">Option A:</span> PPT 単独採用
+           → 最も多くの国が採用（MLI Article 7 経由）
+
+<span class="keyword">Option B:</span> 簡素版 LOB + PPT 併用
+           → LOBの形式基準＋PPTの実質判断
+
+<span class="keyword">Option C:</span> 詳細版 LOB + 限定的PPT/国内GAAR
+           → 米国型の詳細LOB＋導管取引限定のPPT
+           → 又はLOB＋国内法上のGAAR
+
+<span class="comment">// すべてのBEPS包摂的枠組み参加国（140か国超）が</span>
+<span class="comment">// いずれかのOptionを実施する義務を負う</span>
+      </div>
+
+      <div class="point-box">
+        <div class="point-box-title">✦ ポイント整理</div>
+        <p><strong>BEPS行動6</strong>は「条約濫用の防止」を扱う最低基準であり、条約前文の改訂（二重非課税防止の明示）と、PPT単独・簡素版LOB+PPT・詳細版LOB+限定PPT/GAARの三選択肢を中核としています。140か国超のBEPS包摂的枠組み参加国が実施義務を負い、ピアレビューにより監視されます。実施手段としてMLIが重要な役割を果たしており、PPTの実務上の適用事例の蓄積が今後の課題です。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 6 : MLIの概要と仕組み
+============================================================ -->
+<section class="section" id="sec6">
+  <div class="container">
+    <div class="content-card reveal">
+      <div class="section-label">Section 06</div>
+      <h2>MLIの概要と仕組み</h2>
+
+      <h3>MLIとは何か</h3>
+      <p><strong>MLI（Multilateral Instrument：多数国間条約�strong>、正式名称「税源浸食及び利益移転を防止するための租税条約関連措置を実施するための多数国間条約」）</strong>は、BEPS行動15の成果として2016年11月に採択され、2017年6月にパリで署名式が行われた国際条約です。MLIは、BEPSプロジェクトの成果を既存の二国間租税条約に迅速かつ効率的に反映させるための革新的な手段として設計されました。</p>
+
+      <p>MLIが必要とされた背景には、国際的な租税条約ネットワークの規模の問題があります。世界には約3,000以上の二国間租税条約が存在しており、BEPSプロジェクトの成果をすべての条約に反映させるためには、従来の方法（個別の二国間交渉による改正）では膨大な時間と労力を要します。仮に年間数十本のペースで改正を行ったとしても、すべての条約の改正を完了するまでに数十年を要する計算になります。MLIは、この問題を一挙に解決するために、単一の多数国間条約により既存の二国間条約を一括修正するという画期的なアプローチを採用しました。</p>
+
+      <h3>MLIの法的構造</h3>
+      <p>MLIの最も特徴的な点は、既存の二国間租税条約を<strong>「置き換える」のではなく「修正する」</strong>（modify）という法的構造です。MLIは、既存の二国間条約（MLIでは「対象租税協定」（Covered Tax Agreement：CTA）と呼ばれます）の関連規定を修正する効果を有しますが、二国間条約自体は引き続き存在し続けます。つまり、MLIと二国間条約は並存し、二国間条約のうちMLIにより修正された部分についてはMLIの規定が適用され、それ以外の部分については二国間条約の規定がそのまま適用されるという構造です。</p>
+
+      <p>MLIのもう一つの重要な特徴は、<strong>「柔軟性」（flexibility）</strong>のメカニズムです。MLIの各条項には、義務的規定と任意的規定が混在しており、署名国はMLIの各条項について適用するかどうかを選択する（留保する）ことができます。この柔軟性により、各国は自国の政策的優先事項に応じてMLIの適用範囲を調整することが可能です。ただし、BEPS最低基準に該当する条項（行動6のPPT等）については、留保が認められないか、限定的な留保のみが許容されます。</p>
+
+      <h3>MLIの主要な内容</h3>
+      <p>MLIは全39条で構成されており、以下の主要なパートに分かれています。</p>
+
+      <p><strong>第1部（適用範囲と用語の解釈）：</strong>MLIの適用範囲、対象租税協定の定義等を規定します。</p>
+
+      <p><strong>第2部（ハイブリッドミスマッチ）：</strong>BEPS行動2の成果を反映し、ハイブリッド事業体（hybrid entity）を通じた二重非課税の防止に関する規定を含みます。具体的には、MLI第3条が透明的事業体（fiscally transparent entity）に関する規定を設けています。</p>
+
+      <p><strong>第3部（条約濫用）：</strong>BEPS行動6の成果を反映し、条約の前文の改訂（第6条）、PPTの導入（第7条）、配当移転取引の防止（第8条）、不動産化体株式の譲渡益課税（第9条）等を規定します。第7条のPPTはMLIの最も重要な規定の一つであり、BEPS最低基準としてほぼすべての署名国が採用しています。</p>
+
+      <p><strong>第4部（恒久的施設の認定回避）：</strong>BEPS行動7の成果を反映し、PE（Permanent Establishment：恒久的施設）の認定回避を防止するための規定を含みます。コミッショネアアレンジメントの防止（第12条）、PEの例外規定の限定（第13条）、契約の分割によるPE回避の防止（第14条）等が規定されています。</p>
+
+      <p><strong>第5部（紛争解決の改善）：</strong>BEPS行動14の成果を反映し、相互協議手続（MAP：Mutual Agreement Procedure）の改善（第16条）および義務的仲裁（第18条～第26条）に関する規定を含みます。義務的仲裁は任意的規定であり、採用するかどうかは各国の判断に委ねられています。</p>
+
+      <p><strong>第6部・第7部（最終規定）：</strong>署名、批准、発効、脱退等の手続規定を定めています。</p>
+
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 760 400" fill="none" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;">
+          <!-- Center: MLI -->
+          <circle cx="380" cy="200" r="64" fill="var(--accent-20)" stroke="var(--accent)" stroke-width="2"/>
+          <text x="380" y="195" text-anchor="middle" fill="var(--text)" font-size="16" font-weight="700">MLI</text>
+          <text x="380" y="215" text-anchor="middle" fill="var(--accent)" font-size="10">多数国間条約</text>
+          <!-- Part labels around -->
+          <rect x="100" y="40" width="140" height="56" rx="10" fill="var(--card)" stroke="var(--accent)" stroke-width="1.2"/>
+          <text x="170" y="63" text-anchor="middle" fill="var(--accent)" font-size="10" font-weight="600">第2部</text>
+          <text x="170" y="80" text-anchor="middle" fill="var(--text)" font-size="11">ハイブリッド</text>
+
+          <rect x="310" y="20" width="140" height="56" rx="10" fill="var(--card)" stroke="var(--accent)" stroke-width="1.2"/>
+          <text x="380" y="43" text-anchor="middle" fill="var(--accent)" font-size="10" font-weight="600">第3部</text>
+          <text x="380" y="60" text-anchor="middle" fill="var(--text)" font-size="11">条約濫用（PPT等）</text>
+
+          <rect x="520" y="40" width="140" height="56" rx="10" fill="var(--card)" stroke="var(--accent)" stroke-width="1.2"/>
+          <text x="590" y="63" text-anchor="middle" fill="var(--accent)" font-size="10" font-weight="600">第4部</text>
+          <text x="590" y="80" text-anchor="middle" fill="var(--text)" font-size="11">PE認定回避防止</text>
+
+          <rect x="90" y="300" width="160" height="56" rx="10" fill="var(--card)" stroke="var(--accent)" stroke-width="1.2"/>
+          <text x="170" y="323" text-anchor="middle" fill="var(--accent)" font-size="10" font-weight="600">第5部</text>
+          <text x="170" y="340" text-anchor="middle" fill="var(--text)" font-size="11">紛争解決（MAP・仲裁）</text>
+
+          <rect x="510" y="300" width="160" height="56" rx="10" fill="var(--card)" stroke="var(--accent)" stroke-width="1.2"/>
+          <text x="590" y="323" text-anchor="middle" fill="var(--accent)" font-size="10" font-weight="600">第6部・第7部</text>
+          <text x="590" y="340" text-anchor="middle" fill="var(--text)" font-size="11">最終規定（発効等）</text>
+          <!-- Lines from MLI to parts -->
+          <line x1="340" y1="152" x2="215" y2="96" stroke="var(--border-strong)" stroke-width="1"/>
+          <line x1="380" y1="136" x2="380" y2="76" stroke="var(--border-strong)" stroke-width="1"/>
+          <line x1="420" y1="152" x2="545" y2="96" stroke="var(--border-strong)" stroke-width="1"/>
+          <line x1="340" y1="248" x2="215" y2="300" stroke="var(--border-strong)" stroke-width="1"/>
+          <line x1="420" y1="248" x2="545" y2="300" stroke="var(--border-strong)" stroke-width="1"/>
+        </svg>
+        <div class="diagram-caption">図2：MLIの主要パート構成</div>
+      </div>
+
+      <div class="point-box">
+        <div class="point-box-title">✦ ポイント整理</div>
+        <p><strong>MLI</strong>は既存の二国間租税条約を「置き換える」のではなく「修正する」多数国間条約であり、BEPSプロジェクトの成果を約3,000以上の条約ネットワークに迅速に反映させる革新的手段です。柔軟性メカニズム（留保・選択）により各国の政策に対応しつつ、最低基準（PPT等）の一括適用を実現しています。全39条が6部構成で、ハイブリッドミスマッチ、条約濫用防止、PE回避防止、紛争解決改善を網羅します。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 7 : MLI適用メカニズム
+============================================================ -->
+<section class="section" id="sec7">
+  <div class="container">
+    <div class="content-card reveal">
+      <div class="section-label">Section 07</div>
+      <h2>MLI適用メカニズム</h2>
+
+      <h3>「マッチング」の仕組み</h3>
+      <p>MLIの適用メカニズムの核心は<strong>「マッチング」（matching）</strong>の概念にあります。MLIは、両締約国がともにMLIの署名国であり、かつ、ある条項について両国ともに留保していない場合にのみ、当該条項が二国間条約を修正する効果を持ちます。つまり、MLIの各規定は、両方の締約国が当該規定の適用に合意している場合にのみ適用されるという「二国間のマッチング」が必要です。</p>
+
+      <p>このマッチングの仕組みは、MLIの柔軟性を支える基盤であると同時に、その適用関係を複雑にする要因でもあります。各国がMLIのどの条項を採用し、どの条項に留保を付したかは、各国がMLI署名時に提出する「留保・通告の一覧」（List of Reservations and Notifications）に記載されます。この一覧はOECDのウェブサイトで公開されており、特定の二国間条約にMLIがどのように適用されるかを確認するためには、両国の留保・通告を照合する必要があります。</p>
+
+      <h3>対象租税協定（CTA）の通告</h3>
+      <p>MLIが適用される二国間条約は、各署名国がMLIの「対象租税協定」（Covered Tax Agreement：CTA）として通告したものに限られます。署名国は、自国が締結しているすべての二国間条約をCTAとして通告することもできますし、一部のみを通告することもできます。MLIが特定の二国間条約を修正するためには、<strong>両方の締約国</strong>がその二国間条約をCTAとして通告していることが必要です。一方の締約国のみが通告している場合、その二国間条約はMLIの対象外となります。</p>
+
+      <h3>コンパティビリティ条項（互換性条項）</h3>
+      <p>MLIの各条項には、既存の二国間条約に類似の規定が存在する場合の取扱いを定める<strong>コンパティビリティ条項</strong>（compatibility clause）が設けられています。既存の二国間条約にMLIの規定と同等以上の規定が既に存在する場合、MLIの規定は当該二国間条約の規定に「代わって適用される」（apply in place of）か、「適用される既存の規定がない場合に適用される」（apply in the absence of）かのいずれかの形で適用されます。このコンパティビリティ条項の運用は、MLIの適用関係を正確に理解するための重要なポイントです。</p>
+
+      <h3>MLIの発効と適用開始のタイミング</h3>
+      <p>MLIの発効・適用開始のタイミングは多段階で定められています。まず、MLI自体は5か国の批准書の寄託から3か月後に発効します（実際には2018年7月1日に発効しました）。次に、各署名国についてのMLIの発効は、当該国の批准書等の寄託の日から3か月を経過した後の月の初日です。さらに、特定の二国間条約についてのMLIの適用開始は、源泉徴収される税については一定の日以後に支払われる所得について適用され、その他の税については一定の日以後に開始する課税期間について適用されます。この多段階の発効・適用メカニズムにより、MLIの適用開始時期は条約ごとに異なる場合があります。</p>
+
+      <div class="code-block">
+        <div class="code-label">MLI適用判定フローチャート（疑似コード）</div>
+<span class="keyword">function</span> isMLIApplicable(countryA, countryB, article) {
+  <span class="comment">// Step 1: 両国がMLI署名・批准済みか</span>
+  <span class="keyword">if</span> (!countryA.hasRatifiedMLI || !countryB.hasRatifiedMLI)
+    <span class="keyword">return</span> <span class="string">false</span>;
+
+  <span class="comment">// Step 2: 両国が当該二国間条約をCTAとして通告済みか</span>
+  <span class="keyword">if</span> (!countryA.notifiedAsCTA(treaty) || !countryB.notifiedAsCTA(treaty))
+    <span class="keyword">return</span> <span class="string">false</span>;
+
+  <span class="comment">// Step 3: 当該条項について両国とも留保していないか（マッチング）</span>
+  <span class="keyword">if</span> (countryA.hasReservation(article) || countryB.hasReservation(article))
+    <span class="keyword">return</span> <span class="string">false</span>;
+
+  <span class="comment">// Step 4: 発効・適用開始日の確認</span>
+  <span class="keyword">const</span> effectiveDate = calculateEffectiveDate(countryA, countryB);
+  <span class="keyword">return</span> currentDate >= effectiveDate;
+}
+      </div>
+
+      <div class="point-box">
+        <div class="point-box-title">✦ ポイント整理</div>
+        <p><strong>MLI適用メカニズム</strong>は、両締約国のマッチング（両国が署名・批准済み、両国がCTA通告済み、両国が留保なし）を核とし、コンパティビリティ条項による既存規定との調整、多段階の発効・適用開始タイミングから構成されます。各国の留保・通告一覧はOECDサイトで公開されており、特定条約へのMLI適用状況は両国の通告を照合して判定する必要があります。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 8 : 日本のMLI適用状況
+============================================================ -->
+<section class="section" id="sec8">
+  <div class="container">
+    <div class="content-card reveal">
+      <div class="section-label">Section 08</div>
+      <h2>日本のMLI適用状況</h2>
+
+      <h3>日本のMLI署名・批准の経緯</h3>
+      <p>日本は2017年6月7日にパリで開催されたMLIの署名式において署名を行い、2018年9月26日に批准書を寄託しました。これにより、日本についてのMLIは2019年1月1日に発効しています。日本はMLIに対して積極的な姿勢を示しており、広範な二国間条約をCTAとして通告しています。</p>
+
+      <h3>日本のCTA通告と留保の概要</h3>
+      <p>日本は約40の二国間租税条約をMLIのCTAとして通告しました。ただし、日米租税条約はCTAとして通告されていません。これは、日米租税条約にはすでに詳細なLOB条項（第22条）が存在しており、MLIによる修正の必要性が低いと判断されたことが主な理由です。また、米国自体がMLIに署名していないという事情もあります。</p>
+
+      <p>日本のMLIにおける主要な選択・留保は以下の通りです。PPT（第7条）については、日本はPPTの採用を選択しています。これにより、日本がCTAとして通告した条約のうち、相手国もPPTを採用している場合には、PPTが当該条約に適用されます。PE関連規定（第12条～第15条）については、日本は一部の規定について選択的に対応しています。義務的仲裁（第18条～第26条）については、日本はこの規定を採用していません。これは、日本が国内法上の問題等を理由として、義務的仲裁の導入に慎重な姿勢を取っていることによります。</p>
+
+      <h3>日本の条約ネットワークへのMLIの影響</h3>
+      <p>MLIの適用により、日本の租税条約ネットワークには以下のような変化が生じています。第一に、多くの条約にPPTが導入されたことで、条約上の特典享受に際して「主要な目的の一つが特典取得でないこと」が要件として追加されました。これは日本の源泉地国課税権の保護を強化する効果があります。第二に、条約前文の改訂により、二重非課税の防止が条約の目的として明確化されました。第三に、PEの認定に関する規定が一部修正され、人為的なPE回避がより困難になりました。</p>
+
+      <p>実務上の観点からは、日本の納税者（特に外国法人や非居住者に対する支払いを行う源泉徴収義務者）は、MLIの適用状況を正確に把握する必要があります。具体的には、相手国との間の二国間条約がMLIにより修正されているかどうか、修正されている場合にどの規定が適用されるかを確認する必要があります。この確認作業には、日本の留保・通告一覧と相手国の留保・通告一覧の照合が不可欠です。</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>MLI条項</th>
+              <th>内容</th>
+              <th>日本の対応</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>第6条</td>
+              <td>前文改訂（二重非課税防止）</td>
+              <td>採用</td>
+            </tr>
+            <tr>
+              <td>第7条</td>
+              <td>PPT（主要目的テスト）</td>
+              <td>採用（最低基準）</td>
+            </tr>
+            <tr>
+              <td>第8条</td>
+              <td>配当移転取引</td>
+              <td>選択的に対応</td>
+            </tr>
+            <tr>
+              <td>第9条</td>
+              <td>不動産化体株式の譲渡益</td>
+              <td>選択的に対応</td>
+            </tr>
+            <tr>
+              <td>第12-15条</td>
+              <td>PE回避防止</td>
+              <td>一部採用</td>
+            </tr>
+            <tr>
+              <td>第16-17条</td>
+              <td>MAP改善</td>
+              <td>採用</td>
+            </tr>
+            <tr>
+              <td>第18-26条</td>
+              <td>義務的仲裁</td>
+              <td>不採用</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="point-box">
+        <div class="point-box-title">✦ ポイント整理</div>
+        <p>日本は2017年署名、2018年批准、2019年発効でMLIに参加し、約40条約をCTAとして通告しています。日米条約は対象外です（既存LOBの充実＋米国未署名）。PPTの採用によりCTA通告済み条約に濫用防止規定が一括導入された一方、義務的仲裁は未採用です。実務上は、各相手国との間でMLIのマッチング状況を個別に確認する必要があります。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 9 : 情報交換（EOI・AEOI・CRS）
+============================================================ -->
+<section class="section" id="sec9">
+  <div class="container">
+    <div class="content-card reveal">
+      <div class="section-label">Section 09</div>
+      <h2>情報交換（EOI・AEOI・CRS）</h2>
+
+      <h3>租税条約における情報交換の枠組み</h3>
+      <p>租税条約における情報交換（Exchange of Information：EOI）は、締約国間で税務に関する情報を共有する仕組みであり、条約の実効性を担保するための重要な柱です。OECDモデル条約第26条は情報交換に関する基本規定を設けており、締約国の権限ある当局が、条約の実施又は国内税法の執行に関連する情報を交換することを義務づけています。</p>
+
+      <p>情報交換の類型は、大きく以下の三種類に分類されます。<strong>要請に基づく情報交換（Exchange of Information on Request：EOIR）</strong>は、一方の締約国の権限ある当局が、特定の納税者に関する情報を他方の締約国の権限ある当局に要請し、要請を受けた国が情報を提供するものです。これは最も伝統的な情報交換の形態です。<strong>自発的情報交換（Spontaneous Exchange of Information）</strong>は、一方の締約国が、他方の締約国にとって有用と考えられる情報を、要請なしに自発的に提供するものです。<strong>自動的情報交換（Automatic Exchange of Information：AEOI）</strong>は、一定のカテゴリーの情報を定期的・自動的に交換するものであり、近年最も注目を集めている形態です。</p>
+
+      <h3>AEOI（自動的情報交換）の発展</h3>
+      <p>自動的情報交換の発展は、国際的な税務透明性の向上において画期的な進展をもたらしました。従来の要請ベースの情報交換では、まず納税者の情報が外国に存在するという事実を把握していなければ要請すらできないという構造的な限界がありました。自動的情報交換は、この限界を克服し、金融口座情報等を事前の要請なしに体系的に交換することで、租税回避の抑止力を飛躍的に高めるものです。</p>
+
+      <p>AEOIの国際的な推進において決定的な転機となったのが、米国の<strong>FATCA（Foreign Account Tax Compliance Act：外国口座税務コンプライアンス法）</strong>です。FATCAは2010年に制定され、外国金融機関（FFI）に対して、米国人が保有する口座の情報を米国内国歳入庁（IRS）に報告することを義務づけました。FATCAは米国の一方的な措置でしたが、その後、各国との間で政府間協定（IGA：Intergovernmental Agreement）が締結され、事実上の多国間的な情報交換の枠組みが形成されました。</p>
+
+      <p>FATCAの成功を受けて、OECDはグローバルな自動的情報交換の基準の策定に着手し、2014年に<strong>CRS（Common Reporting Standard：共通報告基準）</strong>を公表しました。CRSはFATCAの国際版ともいえるものであり、参加国の金融機関が非居住者の口座情報を収集し、これを各国の税務当局間で自動的に交換する仕組みです。</p>
+
+      <h3>CRSの仕組み</h3>
+      <p>CRSの仕組みは以下のように構成されています。まず、<strong>報告金融機関（Reporting Financial Institution）</strong>が、自行の口座保有者の居住地国を特定する手続（デューデリジェンス手続）を行います。この手続では、口座保有者から自己証明書（self-certification）を取得し、合理的な方法で居住地国を判定します。次に、非居住者と判定された口座保有者の情報（氏名、住所、居住地国、納税者番号（TIN）、口座番号、口座残高又は価額、利子・配当等の所得の金額等）を自国の税務当局に報告します。最後に、各国の税務当局が、収集した情報を口座保有者の居住地国の税務当局と自動的に交換します。</p>
+
+      <p>CRSの法的基盤としては、OECDの「税務行政執行共助条約（Multilateral Convention on Mutual Administrative Assistance in Tax Matters）」が主要な枠組みを提供しています。この条約に基づく「権限ある当局間の合意」（Competent Authority Agreement：CAA）を締結することで、二国間又は多国間の自動的情報交換が実施されます。日本は2018年9月に第1回のCRSに基づく情報交換を実施し、その後毎年実施しています。</p>
+
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 720 280" fill="none" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;">
+          <!-- 金融機関 -->
+          <rect x="20" y="40" width="180" height="70" rx="12" fill="var(--accent-10)" stroke="var(--accent)" stroke-width="1.5"/>
+          <text x="110" y="70" text-anchor="middle" fill="var(--text)" font-size="12" font-weight="600">A国の金融機関</text>
+          <text x="110" y="90" text-anchor="middle" fill="var(--text-secondary)" font-size="10">口座情報を収集・報告</text>
+          <!-- A国税務当局 -->
+          <rect x="270" y="40" width="180" height="70" rx="12" fill="var(--accent-20)" stroke="var(--accent)" stroke-width="2"/>
+          <text x="360" y="70" text-anchor="middle" fill="var(--text)" font-size="12" font-weight="700">A国 税務当局</text>
+          <text x="360" y="90" text-anchor="middle" fill="var(--accent)" font-size="10">情報を集約</text>
+          <!-- B国税務当局 -->
+          <rect x="520" y="40" width="180" height="70" rx="12" fill="var(--accent-20)" stroke="var(--accent)" stroke-width="2"/>
+          <text x="610" y="70" text-anchor="middle" fill="var(--text)" font-size="12" font-weight="700">B国 税務当局</text>
+          <text x="610" y="90" text-anchor="middle" fill="var(--accent)" font-size="10">居住者の口座情報受領</text>
+          <!-- Arrows -->
+          <line x1="200" y1="75" x2="268" y2="75" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+          <line x1="450" y1="75" x2="518" y2="75" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+          <!-- Labels -->
+          <text x="234" y="66" text-anchor="middle" fill="var(--text-secondary)" font-size="9">報告</text>
+          <text x="484" y="66" text-anchor="middle" fill="var(--text-secondary)" font-size="9">自動交換</text>
+          <!-- 口座保有者 -->
+          <rect x="20" y="170" width="180" height="70" rx="12" fill="var(--card)" stroke="var(--border-strong)" stroke-width="1"/>
+          <text x="110" y="200" text-anchor="middle" fill="var(--text)" font-size="12" font-weight="500">B国居住者</text>
+          <text x="110" y="220" text-anchor="middle" fill="var(--text-secondary)" font-size="10">A国に口座を保有</text>
+          <line x1="110" y1="170" x2="110" y2="112" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="4 2"/>
+          <text x="135" y="148" fill="var(--text-secondary)" font-size="9">口座開設</text>
+          <!-- 結果 -->
+          <rect x="520" y="170" width="180" height="70" rx="12" fill="var(--card)" stroke="var(--border-strong)" stroke-width="1"/>
+          <text x="610" y="195" text-anchor="middle" fill="var(--text)" font-size="11" font-weight="500">B国が自国居住者の</text>
+          <text x="610" y="215" text-anchor="middle" fill="var(--text)" font-size="11" font-weight="500">海外口座情報を把握</text>
+          <line x1="610" y1="170" x2="610" y2="112" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="4 2"/>
+        </svg>
+        <div class="diagram-caption">図3：CRS（共通報告基準）による自動的情報交換の流れ</div>
+      </div>
+
+      <div class="point-box">
+        <div class="point-box-title">✦ ポイント整理</div>
+        <p>情報交換はEOIR（要請ベース）、自発的交換、AEOI（自動的交換）の三類型から成り、CRSはFATCAの国際版として2014年に策定されたグローバルなAEOI基準です。報告金融機関のデューデリジェンス→自国税務当局への報告→居住地国税務当局との自動交換という三段階の仕組みで、非居住者の口座情報が毎年体系的に交換されます。日本は2018年から毎年CRSに基づく情報交換を実施しています。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 10 : CRS報告義務
+============================================================ -->
+<section class="section" id="sec10">
+  <div class="container">
+    <div class="content-card reveal">
+      <div class="section-label">Section 10</div>
+      <h2>CRS報告義務</h2>
+
+      <h3>日本における CRS 国内法の整備</h3>
+      <p>日本においてCRSの国内実施を担保する法律は、「租税条約等の実施に伴う所得税法、法人税法及び地方税法の特例等に関する法律」（租税条約等実施特例法）です。同法の第10条の5以下に、「報告対象契約についての届出書の提出義務」および「報告金融機関等の報告義務」に関する規定が設けられています。</p>
+
+      <p>CRSに基づく報告義務は、以下の主要な要素から構成されます。<strong>報告金融機関</strong>（Reporting Financial Institution）の範囲として、銀行、証券会社、保険会社（特定の貯蓄性保険）、投資信託の販売会社等が含まれます。ただし、政府機関、国際機関、中央銀行、年金基金等は「非報告金融機関」として報告義務が免除されます。</p>
+
+      <p><strong>報告対象口座</strong>（Reportable Account）の特定に関しては、報告金融機関は、口座保有者（個人および法人）の居住地国を特定するためのデューデリジェンス手続を実施する義務を負います。個人口座の場合、新規口座（2017年1月1日以降に開設された口座）については、口座開設時に自己証明書を取得して居住地国を確認します。既存口座（2016年12月31日以前に開設された口座）については、金融機関が保有する既存の記録（住所情報等）に基づいて居住地国を判定します。法人口座の場合も同様のデューデリジェンス手続が行われ、さらに法人の実質的支配者（controlling person）の居住地国も確認する必要があります。</p>
+
+      <h3>報告される情報の内容</h3>
+      <p>CRSに基づいて報告される情報は、口座保有者の氏名（法人の場合は名称）、住所、居住地国、納税者番号（TIN：Taxpayer Identification Number）、生年月日（個人の場合）、口座番号、年末の口座残高又は価額、年間の利子・配当・その他の所得の総額、並びに口座の解約の場合にはその旨等です。これらの情報は、報告金融機関から日本の国税庁に提出され、国税庁が口座保有者の居住地国の税務当局に自動的に送信します。</p>
+
+      <h3>報告義務違反に対する制裁</h3>
+      <p>日本の法律上、CRSに基づく報告義務に違反した場合には罰則が設けられています。報告金融機関が正当な理由なく報告を行わなかった場合、又は虚偽の報告を行った場合には、1年以下の懲役又は50万円以下の罰金に処されます。また、口座保有者が自己証明書に虚偽の記載を行った場合にも罰則が科されます。</p>
+
+      <h3>CRS の課題と発展</h3>
+      <p>CRSは国際的な税務透明性を飛躍的に向上させた画期的な制度ですが、いくつかの課題も指摘されています。第一に、暗号資産（仮想通貨）に関する報告です。従来のCRSは伝統的な金融口座を対象としていましたが、暗号資産の普及に伴い、暗号資産に関する情報の自動交換も必要とされるようになりました。これに対応するため、OECDは2022年に<strong>CARF（Crypto-Asset Reporting Framework：暗号資産報告フレームワーク）</strong>を公表し、暗号資産に関する情報の自動交換の枠組みを整備しました。CARFは2027年からの情報交換開始を目標としています。</p>
+
+      <p>第二に、CRSの回避行為への対応が挙げられます。一部の者がCRSの報告対象とならない法域に資産を移転する、又は報告対象とならない種類の資産に組み替える等の回避行為が報告されています。OECDは、CRS回避スキームに関する情報共有の仕組み（Mandatory Disclosure Rules）の整備等を通じて、これらの回避行為への対処を進めています。</p>
+
+      <div class="point-box">
+        <div class="point-box-title">✦ ポイント整理</div>
+        <p><strong>CRS報告義務</strong>は、租税条約等実施特例法を根拠として日本で施行されています。報告金融機関（銀行・証券会社等）が口座保有者のデューデリジェンス（新規口座：自己証明書取得、既存口座：既存記録確認）を行い、非居住者口座の情報を国税庁に報告し、国税庁が居住地国に自動送信します。暗号資産への拡張（CARF）やCRS回避行為への対応が今後の重要な発展方向です。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 11 : 徴収共助
+============================================================ -->
+<section class="section" id="sec11">
+  <div class="container">
+    <div class="content-card reveal">
+      <div class="section-label">Section 11</div>
+      <h2>徴収共助</h2>
+
+      <h3>徴収共助の意義</h3>
+      <p><strong>徴収共助（Assistance in the Collection of Taxes）</strong>とは、一方の締約国の租税債権を他方の締約国が代わって徴収する国際的な協力の仕組みです。OECDモデル条約第27条に規定されており、また、税務行政執行共助条約にも徴収共助に関する規定が含まれています。</p>
+
+      <p>徴収共助が必要とされる背景には、租税の属地的性格の問題があります。国家の徴税権は原則として自国の領域内でのみ行使でき、他国の領域内で直接的な徴収活動を行うことはできません（国際法上の主権原則）。したがって、納税者が海外に資産を保有している場合や、海外に移住した場合には、自国の租税債権の実現が困難になる場合があります。徴収共助は、この問題を国際協力によって解決する仕組みです。</p>
+
+      <h3>徴収共助の要件と手続</h3>
+      <p>OECDモデル条約第27条に基づく徴収共助の要件は以下の通りです。まず、徴収を要請する国の法令に基づいて租税債権が確定していることが必要です。次に、当該租税債権が要請国の法令に基づいて執行可能であることが必要です。さらに、要請を受けた国は、当該租税債権を自国の租税債権と同様に取り扱い、自国の法令に基づく徴収手続に従って徴収します。</p>
+
+      <p>重要な制限として、被要請国は、要請国の租税債権について自国の法令では認められないような徴収措置をとる義務は負いません。また、被要請国の公序に反する場合や、要請国が自国で利用可能な徴収手段を尽くしていない場合には、徴収共助を拒否することができるとされています。</p>
+
+
+</body>
+</html>

@@ -1,0 +1,1399 @@
+<!DOCTYPE html><html lang="ja" data-theme="dark">
+- Google Fonts: Outfit + Noto Sans JP
+- CSS変数でダーク/ライト切替対応:
+  ダーク: 背景#0A0A0A, テキスト#FAFAFA, カード#16161A, ボーダーrgba(255,255,255,0.06)
+  ライト: 背景#FAFAF7, テキスト#1A1A1A, カード#FFFFFF, ボーダーrgba(0,0,0,0.06)
+  アクセント: #5E6AD2→#7B85E0
+- fixedヘッダー: ロゴ「税法ラボ」(紫正方形+テキスト) + ナビ(コース/条文DB/判例/ブログ) + テーマ切替(月/太陽SVG)、backdrop-filter:blur(20px)半透明
+- フッター: © 2026 税法ラボ + リンク
+- max-width:1120px, padding:0 24px, margin:0 auto
+- カード: border-radius:20px, box-shadow, ホバーtranslateY(-4px)
+- セクションラベル: 英語大文字0.75rem letter-spacing:0.12em アクセント色
+- IntersectionObserverスクロールアニメーション(.reveal→.visible)
+- ノイズテクスチャオーバーレイ, localStorage保存テーマ, レスポンシブ
+- 目次(ページ内リンク)冒頭配置, 各セクション末に「ポイント整理」ボックス
+- 表・コードブロック・SVG図解を適宜使用
+
+**コードブロックでHTMLコードを出力してください。** 1回の回答で完結。必ず最後まで出力。
+
+【コンテンツ】第4回：PE課税の基礎─恒久的施設の定義と類型。(1)PE概念の歴史(2)基本定義「固定的事業場所」(3)支店PE・工場PE(4)建設PE(12ヶ月基準)(5)サービスPE(6)準備的・補助的活動除外(7)BEPSによるアンチフラグメンテーション(8)日本国内法のPE概念(9)PE認定の主要判例(10)PEなければ課税なし原則(11)実務チェックリスト。3万字程度<!DOCTYPE html>
+<html lang="ja" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第4回：PE課税の基礎─恒久的施設の定義と類型 | 税法ラボ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ======================================
+   CSS CUSTOM PROPERTIES
+   ====================================== */
+:root {
+  --font-en: 'Outfit', sans-serif;
+  --font-jp: 'Noto Sans JP', sans-serif;
+  --accent: #5E6AD2;
+  --accent-hover: #7B85E0;
+  --radius: 20px;
+  --radius-sm: 12px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --max-width: 1120px;
+  --header-h: 64px;
+}
+
+[data-theme="dark"] {
+  --bg: #0A0A0A;
+  --text: #FAFAFA;
+  --text-secondary: #A0A0A0;
+  --card: #16161A;
+  --card-hover: #1C1C22;
+  --border: rgba(255,255,255,0.06);
+  --border-strong: rgba(255,255,255,0.12);
+  --code-bg: #1E1E24;
+  --highlight: rgba(94,106,210,0.10);
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  --shadow-hover: 0 12px 40px rgba(0,0,0,0.5);
+  --noise-opacity: 0.025;
+  --header-bg: rgba(10,10,10,0.78);
+  --point-bg: #1A1A2E;
+  --point-border: rgba(94,106,210,0.3);
+  --table-stripe: rgba(255,255,255,0.02);
+  --toc-bg: #111115;
+}
+
+[data-theme="light"] {
+  --bg: #FAFAF7;
+  --text: #1A1A1A;
+  --text-secondary: #6B6B6B;
+  --card: #FFFFFF;
+  --card-hover: #F5F5F2;
+  --border: rgba(0,0,0,0.06);
+  --border-strong: rgba(0,0,0,0.12);
+  --code-bg: #F0F0EC;
+  --highlight: rgba(94,106,210,0.06);
+  --shadow: 0 4px 24px rgba(0,0,0,0.06);
+  --shadow-hover: 0 12px 40px rgba(0,0,0,0.10);
+  --noise-opacity: 0.015;
+  --header-bg: rgba(250,250,247,0.78);
+  --point-bg: #F0F0FF;
+  --point-border: rgba(94,106,210,0.25);
+  --table-stripe: rgba(0,0,0,0.02);
+  --toc-bg: #F5F5F0;
+}
+
+/* ======================================
+   RESET & BASE
+   ====================================== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + 32px);
+}
+
+body {
+  font-family: var(--font-jp);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.9;
+  font-size: 16px;
+  transition: background var(--transition), color var(--transition);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Noise overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: var(--noise-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+a { color: var(--accent); text-decoration: none; transition: color var(--transition); }
+a:hover { color: var(--accent-hover); }
+
+img { max-width: 100%; height: auto; }
+
+/* ======================================
+   LAYOUT
+   ====================================== */
+.container {
+  max-width: var(--max-width);
+  padding: 0 24px;
+  margin: 0 auto;
+}
+
+/* ======================================
+   HEADER
+   ====================================== */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-h);
+  background: var(--header-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  z-index: 1000;
+  transition: background var(--transition);
+}
+
+.header-inner {
+  max-width: var(--max-width);
+  padding: 0 24px;
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-en);
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-icon svg { width: 18px; height: 18px; }
+
+nav { display: flex; align-items: center; gap: 28px; }
+
+nav a {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: color var(--transition);
+  letter-spacing: 0.01em;
+}
+nav a:hover { color: var(--text); }
+nav a.active { color: var(--accent); }
+
+.theme-toggle {
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: all var(--transition);
+  flex-shrink: 0;
+}
+.theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+.theme-toggle svg { width: 18px; height: 18px; }
+.theme-toggle .sun { display: none; }
+.theme-toggle .moon { display: block; }
+[data-theme="light"] .theme-toggle .sun { display: block; }
+[data-theme="light"] .theme-toggle .moon { display: none; }
+
+/* Mobile menu */
+.mobile-toggle {
+  display: none;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  color: var(--text-secondary);
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 4px;
+}
+.mobile-toggle span {
+  display: block;
+  width: 16px;
+  height: 1.5px;
+  background: currentColor;
+  border-radius: 2px;
+  transition: var(--transition);
+}
+
+/* ======================================
+   HERO
+   ====================================== */
+.hero {
+  padding-top: calc(var(--header-h) + 80px);
+  padding-bottom: 60px;
+  text-align: center;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-en);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+}
+
+.hero-badge::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+.hero h1 {
+  font-family: var(--font-jp);
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.3;
+  margin-bottom: 20px;
+  letter-spacing: -0.02em;
+}
+
+.hero-sub {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  max-width: 680px;
+  margin: 0 auto 32px;
+  line-height: 1.8;
+}
+
+.hero-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.hero-meta span { display: flex; align-items: center; gap: 6px; }
+.hero-meta svg { width: 16px; height: 16px; opacity: 0.6; }
+
+/* ======================================
+   TABLE OF CONTENTS
+   ====================================== */
+.toc-section {
+  padding-bottom: 60px;
+}
+
+.toc-card {
+  background: var(--toc-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px 48px;
+  transition: all var(--transition);
+}
+
+.toc-card h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.toc-card h2 svg { width: 20px; height: 20px; color: var(--accent); }
+
+.toc-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 8px 32px;
+}
+
+.toc-list li { display: flex; }
+
+.toc-list a {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 8px 0;
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  width: 100%;
+  transition: color var(--transition);
+  border-bottom: 1px solid var(--border);
+  flex-grow: 1;
+}
+
+.toc-list a:hover { color: var(--accent); }
+
+.toc-num {
+  font-family: var(--font-en);
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: var(--accent);
+  min-width: 28px;
+}
+
+/* ======================================
+   CONTENT SECTIONS
+   ====================================== */
+.content-section {
+  padding-bottom: 72px;
+}
+
+.section-label {
+  font-family: var(--font-en);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+  display: block;
+}
+
+.content-section h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 800;
+  line-height: 1.35;
+  margin-bottom: 32px;
+  letter-spacing: -0.01em;
+}
+
+.content-section h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-top: 40px;
+  margin-bottom: 16px;
+  padding-left: 16px;
+  border-left: 3px solid var(--accent);
+}
+
+.content-section h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-top: 28px;
+  margin-bottom: 12px;
+  color: var(--accent);
+}
+
+.content-section p {
+  margin-bottom: 20px;
+  color: var(--text-secondary);
+  line-height: 2;
+}
+
+.content-section p strong { color: var(--text); font-weight: 600; }
+
+/* ======================================
+   CARDS
+   ====================================== */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 36px;
+  box-shadow: var(--shadow);
+  transition: all var(--transition);
+  margin-bottom: 28px;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--border-strong);
+}
+
+/* Point summary box */
+.point-box {
+  background: var(--point-bg);
+  border: 1px solid var(--point-border);
+  border-radius: var(--radius);
+  padding: 32px 36px;
+  margin-top: 36px;
+  margin-bottom: 20px;
+}
+
+.point-box h4 {
+  color: var(--accent) !important;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-top: 0 !important;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-left: none !important;
+  padding-left: 0 !important;
+}
+
+.point-box h4 svg { width: 18px; height: 18px; }
+
+.point-list {
+  list-style: none;
+  counter-reset: point;
+}
+
+.point-list li {
+  counter-increment: point;
+  padding: 8px 0 8px 32px;
+  position: relative;
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  line-height: 1.8;
+}
+
+.point-list li::before {
+  content: counter(point);
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 22px;
+  height: 22px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 6px;
+  font-family: var(--font-en);
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ======================================
+   TABLES
+   ====================================== */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 24px 0;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+th {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  text-align: left;
+  padding: 14px 18px;
+  white-space: nowrap;
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+}
+
+td {
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+tr:nth-child(even) td { background: var(--table-stripe); }
+tr:last-child td { border-bottom: none; }
+
+/* ======================================
+   CODE BLOCKS
+   ====================================== */
+.code-block {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 24px 28px;
+  margin: 24px 0;
+  overflow-x: auto;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+}
+
+.code-block .keyword { color: var(--accent); font-weight: 600; }
+.code-block .comment { opacity: 0.5; font-style: italic; }
+.code-block .string { color: #80C995; }
+
+code {
+  font-family: 'Courier New', monospace;
+  font-size: 0.88em;
+  background: var(--code-bg);
+  padding: 2px 7px;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+}
+
+/* ======================================
+   SVG DIAGRAMS
+   ====================================== */
+.diagram-container {
+  margin: 32px 0;
+  text-align: center;
+}
+
+.diagram-container svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.diagram-caption {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-top: 12px;
+  text-align: center;
+}
+
+/* ======================================
+   REVEAL ANIMATIONS
+   ====================================== */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* ======================================
+   FOOTER
+   ====================================== */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 0;
+  margin-top: 40px;
+}
+
+.footer-inner {
+  max-width: var(--max-width);
+  padding: 0 24px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.footer-copy {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.footer-links {
+  display: flex;
+  gap: 20px;
+}
+
+.footer-links a {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+.footer-links a:hover { color: var(--accent); }
+
+/* ======================================
+   BLOCKQUOTE
+   ====================================== */
+blockquote {
+  border-left: 3px solid var(--accent);
+  padding: 16px 24px;
+  margin: 24px 0;
+  background: var(--highlight);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.9;
+}
+
+blockquote strong { color: var(--text); }
+
+/* ======================================
+   RESPONSIVE
+   ====================================== */
+@media (max-width: 768px) {
+  :root { --header-h: 56px; }
+  nav { display: none; }
+  .mobile-toggle { display: flex; }
+  nav.open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: var(--header-h);
+    left: 0;
+    right: 0;
+    background: var(--header-bg);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    gap: 12px;
+  }
+  .hero { padding-top: calc(var(--header-h) + 48px); padding-bottom: 40px; }
+  .hero h1 { font-size: 1.7rem; }
+  .toc-card { padding: 24px; }
+  .toc-list { grid-template-columns: 1fr; }
+  .card { padding: 24px; }
+  .point-box { padding: 20px 24px; }
+  .content-section h2 { font-size: 1.4rem; }
+  .hero-meta { flex-wrap: wrap; justify-content: center; gap: 12px; }
+  .footer-inner { flex-direction: column; text-align: center; }
+  .code-block { padding: 16px 18px; font-size: 0.8rem; }
+  table { font-size: 0.8rem; }
+  th, td { padding: 10px 12px; }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 15px; }
+  .container { padding: 0 16px; }
+  .header-inner { padding: 0 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===================== HEADER ===================== -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <span class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v14"/><path d="M4 19h16"/><path d="M8 9h8"/><path d="M8 13h5"/></svg>
+      </span>
+      税法ラボ
+    </a>
+    <nav id="mainNav">
+      <a href="#" class="active">コース</a>
+      <a href="#">条文DB</a>
+      <a href="#">判例</a>
+      <a href="#">ブログ</a>
+    </nav>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <button class="mobile-toggle" id="mobileToggle" aria-label="メニュー">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero container">
+  <div class="reveal">
+    <span class="hero-badge">COURSE 04 — INTERNATIONAL TAX</span>
+    <h1>PE課税の基礎<br>恒久的施設の定義と類型</h1>
+    <p class="hero-sub">国際課税の根幹を成す「恒久的施設（Permanent Establishment）」の概念を、OECDモデル租税条約・BEPS防止措置条約・日本国内法の三層構造で体系的に解説します。</p>
+    <div class="hero-meta">
+      <span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        約60分
+      </span>
+      <span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        約30,000字
+      </span>
+      <span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+        中級〜上級
+      </span>
+      <span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        2026.03.04 更新
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== TABLE OF CONTENTS ===================== -->
+<section class="toc-section container">
+  <div class="toc-card reveal">
+    <h2>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      目次
+    </h2>
+    <ol class="toc-list">
+      <li><a href="#sec1"><span class="toc-num">01</span>PE概念の歴史的発展</a></li>
+      <li><a href="#sec2"><span class="toc-num">02</span>基本定義「固定的事業場所」</a></li>
+      <li><a href="#sec3"><span class="toc-num">03</span>支店PE・工場PE</a></li>
+      <li><a href="#sec4"><span class="toc-num">04</span>建設PE（12ヶ月基準）</a></li>
+      <li><a href="#sec5"><span class="toc-num">05</span>サービスPE</a></li>
+      <li><a href="#sec6"><span class="toc-num">06</span>準備的・補助的活動除外</a></li>
+      <li><a href="#sec7"><span class="toc-num">07</span>BEPSによるアンチフラグメンテーション</a></li>
+      <li><a href="#sec8"><span class="toc-num">08</span>日本国内法のPE概念</a></li>
+      <li><a href="#sec9"><span class="toc-num">09</span>PE認定の主要判例</a></li>
+      <li><a href="#sec10"><span class="toc-num">10</span>PEなければ課税なし原則</a></li>
+      <li><a href="#sec11"><span class="toc-num">11</span>実務チェックリスト</a></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ===================== SECTION 1 ===================== -->
+<section id="sec1" class="content-section container">
+  <div class="reveal">
+    <span class="section-label">SECTION 01 — HISTORICAL DEVELOPMENT</span>
+    <h2>PE概念の歴史的発展</h2>
+
+    <div class="card">
+      <h3>1-1. PE概念はなぜ生まれたか</h3>
+      <p>恒久的施設（Permanent Establishment、以下「PE」）という概念は、国際課税の歴史のなかで最も重要な概念の一つであり、その発展は約150年にわたる歴史を有しています。19世紀後半から20世紀初頭にかけて、産業革命を契機として国際的な商取引が急速に拡大しました。これに伴い、ある国の企業が他国の領域内で事業活動を行い、所得を得るケースが増加し、「源泉地国は、外国企業の所得に対してどこまで課税権を行使できるのか」という根本的な問題が生じたのです。</p>
+
+      <p>この問題の背景には、<strong>居住地国課税の原則</strong>と<strong>源泉地国課税の原則</strong>という二つの対立する課税権の主張がありました。居住地国の立場からすれば、自国の居住者（法人を含む）はその全世界所得に対して課税されるべきです。一方、源泉地国の立場からすれば、自国の領域内で生じた所得については、たとえそれが外国法人によって稼得されたものであっても、自国に課税権があるはずです。両者の主張がそのまま衝突すれば、同一所得に対する二重課税が不可避となり、国際的な経済活動を著しく阻害することになります。</p>
+
+      <p>PE概念は、まさにこの二重課税の回避と課税権の合理的配分を実現するための「交通整理」のルールとして誕生しました。すなわち、外国企業が源泉地国において一定の実質的な事業活動の拠点──すなわちPE──を有する場合にのみ、源泉地国はその事業利得に対する課税権を行使できるという原則が確立されたのです。</p>
+
+      <h3>1-2. 19世紀プロイセン・ドイツにおける起源</h3>
+      <p>PE概念の最も初期の形態は、19世紀半ばのプロイセンおよびドイツの税法に見出すことができます。1845年のプロイセン営業税法（Preußisches Gewerbesteuergesetz）は、事業者が営業を行う場所に基づいて課税権を配分するルールを設けており、ここに「固定的な事業の場所（stehender Gewerbebetrieb）」という概念の萌芽が見られます。</p>
+
+      <p>1899年のプロイセンとオーストリア＝ハンガリー帝国との間の二重課税防止条約は、現存する最も古い租税条約の一つであり、ここで「Betriebsstätte（事業場所）」という用語が明確に使用されました。この条約は、事業利得の課税権は事業場所が所在する国に帰属するという原則を定めており、今日のPE課税の原型といえるものです。</p>
+
+      <p>この時期のPE概念は、物理的な施設（建物、工場、作業場など）に焦点を当てた非常に具象的なものでした。工場の煙突が見え、労働者が出入りする建物が存在すれば、そこに事業場所があることは明白です。しかし、事業活動の形態が多様化するにつれ、この物理的施設中心のアプローチでは十分に対応できないケースが生じるようになりました。</p>
+
+      <h3>1-3. 国際連盟とOECDモデルの形成</h3>
+      <p>第一次世界大戦後の1920年代、国際連盟（League of Nations）は二重課税問題の解決に向けた国際的な取り組みを開始しました。1923年に発表された「四人の経済学者の報告書」（ブルインス、エイナウディ、セリグマン、スタンプの各教授による報告）は、経済的帰属（economic allegiance）の理論に基づき、所得の課税権配分の基本原則を提示しました。この報告書は、事業利得については、原則として居住地国に課税権があるが、源泉地国に恒久的施設がある場合には例外的に源泉地国の課税権が認められるべきであるとの方向性を示しました。</p>
+
+      <p>1928年には、国際連盟が最初のモデル租税条約草案を発表し、PE（permanent establishment / établissement stable）の定義が国際的に共通化される第一歩が踏み出されました。この草案では、PEの例示として、事業の経営を行う場所、支店、事務所、工場、作業場、鉱山・油井その他の天然資源採取場所が列挙されました。</p>
+
+      <p>第二次世界大戦後、OEEC（後のOECD）が国際連盟の作業を引き継ぎ、1963年に最初のOECDモデル租税条約草案を公表しました。このモデル条約の第5条にPEの定義が包括的に規定され、以後、世界中の二国間租税条約がこのモデルに準拠して締結されることとなりました。OECDモデル租税条約は、1977年、1992年、2003年、2010年、2014年、2017年に改訂が行われ、その都度PE概念の精緻化が図られてきました。</p>
+
+      <h3>1-4. 国連モデル条約との比較</h3>
+      <p>OECDモデル租税条約が主として先進国間の課税権配分を念頭に置いているのに対し、国連モデル租税条約（United Nations Model Double Taxation Convention）は、先進国と発展途上国との間の条約を念頭に置いており、源泉地国の課税権をより広く認める傾向があります。</p>
+
+      <p>PE概念に関しても、国連モデルはOECDモデルよりも広い定義を採用しています。特に、国連モデルは<strong>サービスPE</strong>（一定期間以上のサービス提供活動によるPE認定）の規定を有しており、これはOECDモデルの2017年改訂前には存在しなかった規定です。また、建設PE の認定基準についても、国連モデルは6ヶ月という短い期間基準を採用しており（OECDモデルは12ヶ月）、源泉地国の課税権がより広く確保されています。</p>
+
+      <p>さらに、国連モデルは保険PEの規定も有しており、外国保険会社が代理人を通じて保険料を収受する場合にPEの存在を認めるなど、発展途上国における経済活動の実態に即した規定を設けています。日本の租税条約実務においても、交渉相手国の発展段階に応じて、OECDモデルベースの条約と国連モデルの要素を取り入れた条約の双方が存在しています。</p>
+
+      <h3>1-5. デジタル経済時代の挑戦</h3>
+      <p>21世紀に入り、デジタル経済の急速な進展は、PE概念に対する最大の挑戦をもたらしました。従来のPE概念は、物理的な拠点の存在を前提としていましたが、デジタル企業はサーバーやウェブサイトを通じて、物理的拠点を設けることなく外国で大規模な事業活動を行い、多大な収益を上げることが可能です。</p>
+
+      <p>OECD/G20のBEPS（税源浸食と利益移転）プロジェクトの行動計画1「デジタル経済の課税上の課題への対処」は、この問題に正面から取り組みました。その後の議論は、いわゆる「二つの柱」アプローチ（Pillar One とPillar Two）として結実し、Pillar OneはPE概念を超えた新たな課税権配分ルールの構築を、Pillar Twoはグローバル・ミニマム課税を目指すものです。</p>
+
+      <p>こうした議論の進展にもかかわらず、PE概念は依然として国際課税の根幹をなす概念であり続けています。Pillar Oneの新たなルールが完全に実施されたとしても、PE概念に基づく課税ルールは引き続き大多数の国際取引に適用されるためです。したがって、PE概念の正確な理解は、国際税務の実務家にとって不可欠のものです。</p>
+    </div>
+
+    <!-- SVG Timeline -->
+    <div class="diagram-container reveal">
+      <svg viewBox="0 0 900 200" xmlns="http://www.w3.org/2000/svg" style="max-width:900px;">
+        <defs>
+          <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#5E6AD2" stop-opacity="0.3"/>
+            <stop offset="50%" stop-color="#5E6AD2"/>
+            <stop offset="100%" stop-color="#7B85E0"/>
+          </linearGradient>
+        </defs>
+        <!-- Main line -->
+        <line x1="40" y1="100" x2="860" y2="100" stroke="url(#lineGrad)" stroke-width="2"/>
+        <!-- Nodes -->
+        <circle cx="80" cy="100" r="8" fill="#5E6AD2"/>
+        <text x="80" y="75" text-anchor="middle" fill="#5E6AD2" font-family="Outfit" font-size="13" font-weight="700">1845</text>
+        <text x="80" y="135" text-anchor="middle" fill="currentColor" font-size="10" font-family="Noto Sans JP" opacity="0.6">プロイセン</text>
+        <text x="80" y="150" text-anchor="middle" fill="currentColor" font-size="10" font-family="Noto Sans JP" opacity="0.6">営業税法</text>
+
+        <circle cx="210" cy="100" r="8" fill="#5E6AD2"/>
+        <text x="210" y="75" text-anchor="middle" fill="#5E6AD2" font-family="Outfit" font-size="13" font-weight="700">1899</text>
+        <text x="210" y="135" text-anchor="middle" fill="currentColor" font-size="10" font-family="Noto Sans JP" opacity="0.6">プロイセン＝</text>
+        <text x="210" y="150" text-anchor="middle" fill="currentColor" font-size="10" font-family="Noto Sans JP" opacity="0.6">墺条約</text>
+
+        <circle cx="340" cy="100" r="8" fill="#5E6AD2"/>
+        <text x="340" y="75" text-anchor="middle" fill="#5E6AD2" font-family="Outfit" font-size="13" font-weight="700">1928</text>
+        <text x="340" y="135" text-anchor="middle" fill="currentColor" font-size="10" font-family="Noto Sans JP" opacity="0.6">国際連盟</text>
+        <text x="340" y="150" text-anchor="middle" fill="currentColor" font-size="10" font-family="Noto Sans JP" opacity="0.6">モデル草案</text>
+
+        <circle cx="470" cy="100" r="8" fill="#5E6AD2"/>
+        <text x="470" y="75" text-anchor="middle" fill="#5E6AD2" font-family="Outfit" font-size="13" font-weight="700">1963</text>
+        <text x="470" y="135" text-anchor="middle" fill="currentColor" font-size="10" font-family="Noto Sans JP" opacity="0.6">OECDモデル</text>
+        <text x="470" y="150" text-anchor="middle" fill="currentColor" font-size="10" font-family="Noto Sans JP" opacity="0.6">条約草案</text>
+
+        <circle cx="600" cy="100" r="8" fill="#5E6AD2"/>
+        <text x="600" y="75" text-anchor="middle" fill="#5E6AD2" font-family="Outfit" font-size="13" font-weight="700">2015</text>
+        <text x="600" y="135" text-anchor="middle" fill="currentColor" font-size="10" font-family="Noto Sans JP" opacity="0.6">BEPS最終</text>
+        <text x="600" y="150" text-anchor="middle" fill="currentColor" font-size="10" font-family="Noto Sans JP" opacity="0.6">報告書</text>
+
+        <circle cx="730" cy="100" r="8" fill="#5E6AD2"/>
+        <text x="730" y="75" text-anchor="middle" fill="#5E6AD2" font-family="Outfit" font-size="13" font-weight="700">2017</text>
+        <text x="730" y="135" text-anchor="middle" fill="currentColor" font-size="10" font-family="Noto Sans JP" opacity="0.6">MLI署名/</text>
+        <text x="730" y="150" text-anchor="middle" fill="currentColor" font-size="10" font-family="Noto Sans JP" opacity="0.6">OECDモデル改訂</text>
+
+        <circle cx="830" cy="100" r="8" fill="#7B85E0"/>
+        <text x="830" y="75" text-anchor="middle" fill="#7B85E0" font-family="Outfit" font-size="13" font-weight="700">2025–</text>
+        <text x="830" y="135" text-anchor="middle" fill="currentColor" font-size="10" font-family="Noto Sans JP" opacity="0.6">Pillar 1 / 2</text>
+        <text x="830" y="150" text-anchor="middle" fill="currentColor" font-size="10" font-family="Noto Sans JP" opacity="0.6">実施段階</text>
+      </svg>
+      <p class="diagram-caption">図1-1：PE概念の歴史的発展タイムライン</p>
+    </div>
+
+    <div class="point-box">
+      <h4>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        セクション1 ポイント整理
+      </h4>
+      <ul class="point-list">
+        <li>PE概念は、居住地国課税と源泉地国課税の調整メカニズムとして、19世紀プロイセンの営業税法に端を発する。</li>
+        <li>国際連盟（1928年）、OECD（1963年〜）を経てモデル条約第5条として国際標準化が進んだ。</li>
+        <li>国連モデルは源泉地国の課税権をより広く認め、サービスPEや短縮された建設PE基準（6ヶ月）を含む。</li>
+        <li>デジタル経済はPE概念の限界を露呈させ、BEPS行動計画・Pillar Oneへと議論が発展した。</li>
+        <li>新しい国際課税ルール（Pillar 1 / 2）の下でもPE概念は引き続き中心的な役割を果たす。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SECTION 2 ===================== -->
+<section id="sec2" class="content-section container">
+  <div class="reveal">
+    <span class="section-label">SECTION 02 — BASIC DEFINITION</span>
+    <h2>基本定義「固定的事業場所」</h2>
+
+    <div class="card">
+      <h3>2-1. OECDモデル租税条約第5条第1項</h3>
+      <p>PE概念の基本定義は、OECDモデル租税条約第5条第1項に規定されています。原文は次のとおりです。</p>
+
+      <blockquote>
+        <strong>"For the purposes of this Convention, the term 'permanent establishment' means a fixed place of business through which the business of an enterprise is wholly or partly carried on."</strong><br><br>
+        「この条約の適用上、「恒久的施設」とは、企業がその事業の全部又は一部を行っている固定的な事業の場所をいう。」
+      </blockquote>
+
+      <p>この定義から、PE認定の基本三要件を抽出することができます。すなわち、<strong>（i）事業の場所（place of business）</strong>の存在、<strong>（ii）その場所の固定性（fixed）</strong>、<strong>（iii）当該場所を通じた企業の事業活動の遂行（through which the business is carried on）</strong>の三つです。これらの要件が同時に充足される場合にのみ、PEの存在が認められます。以下、各要件について詳細に検討します。</p>
+
+      <h3>2-2. 第一要件：「事業の場所」（Place of Business）</h3>
+      <p>「事業の場所」とは、事業活動を行うために使用される一定の場所を意味します。OECDモデル租税条約コメンタリー（以下「コメンタリー」）は、この概念について詳細な解説を行っています。</p>
+
+      <p>まず、「事業の場所」は、必ずしも企業が所有する施設である必要はありません。賃借している施設、さらには他者の施設を継続的に利用している場合であっても、「事業の場所」に該当し得ます。コメンタリーは、企業が特定の場所を「自由に使用できる状態（at the disposal of）」にあれば足りるとしています。この「自由に使用できる状態」という基準は柔軟に解釈されており、正式な法的権利（所有権や賃借権）の存在は要求されません。</p>
+
+      <p>例えば、外国企業のセールスマンが毎日顧客企業のオフィスの一角を使用して業務を行っている場合、当該セールスマンに対する明示的な使用許諾が存在しなくとも、事実上当該場所を自由に使用できる状態にあると評価され、「事業の場所」と認定される可能性があります。逆に、ホテルの客室を一時的に使用して商談を行う程度では、通常「自由に使用できる状態」とは評価されません。</p>
+
+      <p>「事業の場所」は、有体物に限定されません。コメンタリーは、一定の空間（場所）があれば足りるとしており、必ずしも建物や機械設備などの有体物が必要とは限らないことを明らかにしています。露天市場における一定の場所や、倉庫内の特定の区画なども「事業の場所」に該当し得ます。</p>
+
+      <h3>2-3. 第二要件：「固定性」（Fixed）</h3>
+      <p>「固定性」の要件は、<strong>場所的固定性</strong>と<strong>時間的固定性</strong>の二つの側面を有しています。</p>
+
+      <p><strong>場所的固定性</strong>とは、事業活動が特定の地理的地点と結びついていることを意味します。ある企業が特定の事業場所を持たず、契約国の領域内を移動しながら事業活動を行っている場合、場所的固定性は認められません。ただし、コメンタリーは、事業活動の性質上、一定の地理的範囲内で場所を移動する場合（例えば、鉱山内の異なる区画間での移動）には、当該地理的範囲全体を一つの「事業の場所」と見ることができるとしています。</p>
+
+      <p><strong>時間的固定性</strong>とは、事業の場所が一定期間以上存続していることを意味します。一時的・短期的な事業活動は、通常PEの認定には至りません。コメンタリーは明確な最低期間基準を定めていませんが、6ヶ月未満の事業活動は通常PEを構成しないとのガイダンスを提供しています。ただし、これは絶対的なルールではなく、事業活動の性質が反復的である場合（例えば、毎年同じ場所で季節的な事業を行うなど）には、個々の期間が6ヶ月未満であっても、全体として固定性が認められる場合があります。</p>
+
+      <h3>2-4. 第三要件：「事業活動の遂行」（Business Carried On Through）</h3>
+      <p>第三の要件は、企業の事業活動が当該固定的な場所を「通じて」行われていることです。これは単に場所を保有しているだけでは不十分であり、その場所において実際に事業活動が遂行されている必要があることを意味しています。</p>
+
+      <p>「通じて」（through which）という表現は広く解釈されています。事業活動が当該場所「において」（in）行われている場合のみならず、当該場所「から」（from）行われている場合も含まれます。例えば、道路舗装業者が事務所から作業現場に出向いて作業を行う場合、事業活動は事務所を「通じて」行われていると評価されます。</p>
+
+      <p>事業活動は、通常、企業の人員（従業員その他の企業の指揮命令を受ける者）によって遂行されます。完全に自動化された設備（自動販売機やサーバーなど）の場合であっても、人的介在なく事業活動が遂行されているとして、PEの存在が認定される可能性があります。この点は、デジタル経済における課税の文脈で特に重要な意味を持っています。</p>
+    </div>
+
+    <div class="table-wrapper reveal">
+      <table>
+        <thead>
+          <tr>
+            <th>要件</th>
+            <th>内容</th>
+            <th>判定のポイント</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>場所（Place of Business）</strong></td>
+            <td>事業活動に使用される施設・場所の存在</td>
+            <td>所有権・賃借権不要。"at the disposal of" で足りる</td>
+          </tr>
+          <tr>
+            <td><strong>固定性（Fixed）</strong></td>
+            <td>場所的固定性＋時間的固定性（継続性）</td>
+            <td>6ヶ月が目安だが絶対基準ではない。反復的活動に注意</td>
+          </tr>
+          <tr>
+            <td><strong>事業遂行（Business Carried On）</strong></td>
+            <td>当該場所を通じた実際の事業活動</td>
+            <td>"in"だけでなく"from"も含む。自動化設備も対象</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card reveal">
+      <h3>2-5. 基本定義の適用例</h3>
+      <p>具体例をいくつか検討しましょう。まず、米国法人A社が日本に事務所を賃借し、そこに常駐の営業担当者3名を配置して、日本の顧客に対する製品の販売活動を行っているケースを考えます。この場合、事務所という「事業の場所」が存在し、賃借により場所的固定性があり、かつ年間を通じて営業活動が行われているので時間的固定性も充たされ、さらに営業活動という事業活動が当該場所を通じて遂行されているため、三要件がいずれも充足され、当該事務所は A社のPEに該当します。</p>
+
+      <p>次に、英国法人B社の技術者が、日本の顧客企業のオフィスに3ヶ月間常駐してシステム導入支援を行うケースを考えます。この場合、顧客企業のオフィスの一角が「事業の場所」に該当する可能性がありますが、3ヶ月という期間は時間的固定性の観点から短いと評価される可能性が高く、このケースではPEの認定に至らない可能性があります。ただし、同様のプロジェクトが反復的に行われている場合には、結論が異なる可能性があることに留意が必要です。</p>
+
+      <p>さらに、ドイツ法人C社が日本国内にサーバーを設置し、当該サーバーを通じて日本の顧客に対するオンラインサービスを提供しているケースも考えてみましょう。サーバーは「事業の場所」に該当し得ますが、後述する「準備的・補助的活動」の除外規定の適用が問題となります。また、サーバーの所在地に人員が常駐していない場合であっても、自動化された設備を通じた事業活動の遂行として、PE認定の余地があることはコメンタリーが認めるところです。</p>
+    </div>
+
+    <div class="point-box reveal">
+      <h4>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        セクション2 ポイント整理
+      </h4>
+      <ul class="point-list">
+        <li>PEの基本定義は「固定的な事業の場所を通じて事業活動を行う」の三要件で構成される。</li>
+        <li>「事業の場所」は有体物不要であり、"at the disposal of" 基準で判定する。</li>
+        <li>固定性は場所的（地理的結びつき）＋時間的（継続性）の二軸で判定し、6ヶ月が一応の目安。</li>
+        <li>「事業活動の遂行」は場所 "in" のみならず "from" でも認定可能であり、自動化設備を含む。</li>
+        <li>個別ケースの判定には、コメンタリーの具体的ガイダンスと事実関係の精査が不可欠である。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SECTION 3 ===================== -->
+<section id="sec3" class="content-section container">
+  <div class="reveal">
+    <span class="section-label">SECTION 03 — BRANCH PE & FACTORY PE</span>
+    <h2>支店PE・工場PE</h2>
+
+    <div class="card">
+      <h3>3-1. OECDモデル第5条第2項の例示リスト</h3>
+      <p>OECDモデル租税条約第5条第2項は、PEの典型的な形態を例示列挙しています。この規定は次のように定めています。</p>
+
+      <blockquote>
+        「恒久的施設には、特に次のものを含む。<br>
+        (a) 事業の経営の場所（a place of management）<br>
+        (b) 支店（a branch）<br>
+        (c) 事務所（an office）<br>
+        (d) 工場（a factory）<br>
+        (e) 作業場（a workshop）<br>
+        (f) 鉱山、油井若しくはガス井、採石場その他天然資源を採取する場所（a mine, an oil or gas well, a quarry or any other place of extraction of natural resources）」
+      </blockquote>
+
+      <p>ここで重要なのは、「特に次のものを含む（includes especially）」という表現です。この表現は、第2項の列挙が<strong>限定列挙ではなく例示列挙</strong>であることを明確にしています。したがって、第2項に列挙されていない形態の施設であっても、第1項の基本定義を充たす限りPEに該当し得ます。</p>
+
+      <p>逆に、第2項に列挙された施設であっても、第1項の基本定義の要件（特に固定性や事業遂行の要件）を充たさなければ、PEとは認定されません。すなわち、第2項は第1項の具体化であって、独立の判定基準を設けるものではないとされています。もっとも、この点については学説上の議論もあり、第2項に列挙された施設は、その性質上、第1項の要件を充たすことが推定されるとする見解も有力です。</p>
+
+      <h3>3-2. 支店PE</h3>
+      <p>支店（branch）は、PEの最も典型的かつ重要な形態です。支店とは、本店から地理的に離れた場所に設置された事業所であり、独立した法人格を有しないものの、一定の事業活動を自律的に遂行する機能を有するものをいいます。</p>
+
+      <p>日本の法制度上、外国法人が日本国内で継続的に事業を行おうとする場合、会社法に基づき日本における代表者を定め、営業所（支店）の登記を行う必要があります（会社法第817条以下）。この登記された支店は、租税条約上のPEに該当することが通常です。</p>
+
+      <p>支店PEの帰属利得の算定は、<strong>AOA（Authorised OECD Approach）</strong>に基づいて行われます。AOAは、PEを本店から独立した別個の企業であるかのように擬制し（独立企業原則の適用）、PEに帰属する資産・リスク・資本を特定した上で、PEの利得を算定するアプローチです。この方法は、OECDモデル租税条約第7条に規定されており、2010年の改訂で明確化されました。日本では、2014年度税制改正においてAOAが国内法に取り込まれています。</p>
+
+      <h3>3-3. 工場PE</h3>
+      <p>工場（factory）もPEの典型的な形態です。製造業を営む外国法人が日本国内に製造工場を設置して製品を製造している場合、当該工場はPEに該当します。ここで注意すべきは、工場で製造された製品が主として外国（本国を含む）に輸出される場合であっても、工場自体はPEに該当するという点です。</p>
+
+      <p>工場PEの認定において実務上問題となるのは、下請製造（contract manufacturing）との区別です。外国法人Aが日本法人Bに製品の製造を委託し、B社がA社の仕様に基づいて製品を製造する場合、B社の工場はB社自身の施設であり、A社の「事業の場所」ではないため、通常はA社のPEには該当しません。しかし、A社がB社の工場に対して実質的な支配権を行使している場合（例えば、A社の従業員が常駐してB社の製造工程を監督・指揮しているなど）には、B社の工場がA社の「自由に使用できる」施設と評価され、PEの認定に至る可能性があります。</p>
+
+      <h3>3-4. 事業の経営の場所（Place of Management）</h3>
+      <p>「事業の経営の場所」とは、企業の事業に関する経営上の意思決定が行われる場所をいいます。必ずしも本店である必要はなく、取締役会が定期的に開催される場所や、経営幹部が日常的に事業上の重要決定を行う場所が該当します。</p>
+
+      <p>この類型が実務上問題となるのは、国際的な企業グループにおいて、親会社の役員が子会社所在国に頻繁に出張し、子会社の事業に関する実質的な経営判断を当該国で行うケースです。このような場合、親会社が子会社所在国に「事業の経営の場所」としてのPEを有すると認定される可能性があります。</p>
+
+      <h3>3-5. 事務所PE</h3>
+      <p>事務所（office）は、その名のとおり事務作業を行う場所です。営業事務所、管理事務所、連絡事務所など様々な形態がありますが、後述する「準備的・補助的活動」の除外規定（第5条第4項）との関係に注意が必要です。連絡事務所が顧客との連絡調整のみを行い、契約締結や価格交渉には一切関与しない場合、準備的・補助的活動としてPEから除外される可能性があります。しかし、連絡事務所と称しながら実質的に営業活動を行っている場合には、PEの認定を受けることになります。</p>
+    </div>
+
+    <div class="table-wrapper reveal">
+      <table>
+        <thead>
+          <tr>
+            <th>PE類型</th>
+            <th>条文根拠</th>
+            <th>典型例</th>
+            <th>注意点</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>経営場所</strong></td>
+            <td>5条2項(a)</td>
+            <td>取締役会開催場所</td>
+            <td>グループ企業役員の海外出張頻度に注意</td>
+          </tr>
+          <tr>
+            <td><strong>支店</strong></td>
+            <td>5条2項(b)</td>
+            <td>営業所・支社</td>
+            <td>AOAに基づく利得帰属の算定が必要</td>
+          </tr>
+          <tr>
+            <td><strong>事務所</strong></td>
+            <td>5条2項(c)</td>
+            <td>営業事務所</td>
+            <td>準備的・補助的活動除外との区別が重要</td>
+          </tr>
+          <tr>
+            <td><strong>工場</strong></td>
+            <td>5条2項(d)</td>
+            <td>製造工場</td>
+            <td>下請製造との区別、支配権の有無</td>
+          </tr>
+          <tr>
+            <td><strong>作業場</strong></td>
+            <td>5条2項(e)</td>
+            <td>修理作業場</td>
+            <td>規模を問わず該当し得る</td>
+          </tr>
+          <tr>
+            <td><strong>天然資源採取場所</strong></td>
+            <td>5条2項(f)</td>
+            <td>鉱山・油田</td>
+            <td>採取活動の探査段階も含み得る</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="point-box reveal">
+      <h4>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        セクション3 ポイント整理
+      </h4>
+      <ul class="point-list">
+        <li>第5条第2項は「例示列挙」であり、列挙されていない施設もPEに該当し得る。</li>
+        <li>支店PEは最も典型的な類型であり、利得帰属はAOA（独立企業原則に基づく擬制的独立企業アプローチ）で算定する。</li>
+        <li>工場PEでは、下請製造と自社工場の区別が実務上重要であり、支配権の実質に着目して判定する。</li>
+        <li>「事業の経営の場所」は、経営上の意思決定がなされる場所であり、親会社役員の子会社国訪問パターンに注意が必要。</li>
+        <li>事務所PEについては、準備的・補助的活動除外の該当性を常に検討する必要がある。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SECTION 4 ===================== -->
+<section id="sec4" class="content-section container">
+  <div class="reveal">
+    <span class="section-label">SECTION 04 — CONSTRUCTION PE</span>
+    <h2>建設PE（12ヶ月基準）</h2>
+
+    <div class="card">
+      <h3>4-1. OECDモデル第5条第3項</h3>
+      <p>OECDモデル租税条約第5条第3項は、建設工事現場に関する特別のPE規定を設けています。</p>
+
+      <blockquote>
+        「建設工事現場又は建設若しくは据付けの工事は、12ヶ月を超える期間存続する場合にのみ、恒久的施設を構成する。」<br>
+        "A building site or construction or installation project constitutes a permanent establishment only if it lasts more than twelve months."
+      </blockquote>
+
+      <p>この規定は、基本定義（第1項）の特則（lex specialis）として位置づけられています。建設工事現場は、その性質上、一時的なものであり、工事完了後には消滅します。このような一時的な活動に対して基本定義の固定性要件をそのまま適用すると、多くの建設工事現場がPEに該当しないことになりかねません。しかし、大規模かつ長期の建設工事は、源泉地国に実質的な経済的関与をもたらすものであり、一定の課税権を認める必要性があります。そこで、12ヶ月基準という明確な閾値を設けて、PEの認定基準を特別に定めたのがこの規定です。</p>
+
+      <h3>4-2. 「12ヶ月」の計算方法</h3>
+      <p>12ヶ月の起算点は、工事の<strong>準備活動が開始された日</strong>です。コメンタリーは、請負業者が工事現場で準備活動を開始した日（例えば、仮設事務所の設置や工事用機材の搬入を開始した日）が起算点となることを明らかにしています。設計図面の作成や本国での準備作業は含まれませんが、現地での地質調査などの準備作業は含まれます。</p>
+
+      <p>12ヶ月の満了日は、工事が実質的に完了した日（仮完成を含む）又は確定的に放棄された日です。引渡し後の補修・手直し作業のために少数の要員が残留する期間は、原則として12ヶ月の計算に含まれますが、コメンタリーはこの点について事実関係に基づく個別判断が必要であるとしています。</p>
+
+      <p>重要なのは、工事の<strong>一時的中断は12ヶ月の計算を中断させない</strong>という点です。季節的な理由（冬季の工事中断など）、資材の調達遅延、労使紛争その他の理由により工事が一時的に中断しても、中断期間は12ヶ月の計算に算入されます。これは、一時的中断を利用してPE認定を回避することを防ぐ趣旨です。</p>
+
+      <h3>4-3. 「建設工事現場」の範囲</h3>
+      <p>「建設工事現場」（building site）には、ビル、道路、橋梁、運河の建設のほか、建物の改修工事も含まれます。「建設又は据付けの工事」（construction or installation project）には、設備の据付けやプラントの組立ても含まれます。コメンタリーは、浚渫工事やパイプラインの敷設工事もこの範囲に含まれることを確認しています。</p>
+
+      <p>建設に付随する設計・監督活動についても、工事の一部を構成するものとして建設PE規定の適用対象となります。ただし、独立した設計コンサルティング契約に基づくサービスの提供は、建設PE規定ではなく、基本定義又はサービスPE規定の問題となります。</p>
+
+      <h3>4-4. 工事の分割と合算の問題</h3>
+      <p>建設PE認定を回避するために、12ヶ月を超える工事を複数の短期契約に分割するケースが見られます。例えば、全体工期18ヶ月の工事を、それぞれ9ヶ月の二つの契約に分割し、形式上は別個の工事であるとする手法です。</p>
+
+      <p>コメンタリーは、このような人為的な分割に対して実質的に対応する姿勢を示しています。具体的には、商業的・地理的に一体の工事（commercially and geographically coherent whole）が複数の契約に分割されている場合、それらの契約は合算して12ヶ月基準を適用すべきであるとしています。合算の基準としては、工事が同一の発注者に対するものであるか、工事が同一の場所又は近接した場所で行われているか、工事が一体のプロジェクトを構成するかなどの要素が考慮されます。</p>
+
+      <p>さらに、<strong>関連企業による下請</strong>の問題もあります。外国法人A社が12ヶ月を超える工事を受注し、そのうち一部を関連会社B社に下請けさせた場合、B社が工事現場で作業した期間はA社の12ヶ月計算に算入されます。これは、コメンタリーが明示的に認めている取扱いです。ただし、A社とは無関連の独立した下請業者C社が作業した期間については、C社自身の建設PE認定の問題として別途判定されます。</p>
+
+      <h3>4-5. 各国条約における期間基準の差異</h3>
+      <p>OECDモデルの12ヶ月基準はあくまでモデルであり、実際の二国間条約では異なる期間基準が採用されている場合があります。国連モデルは6ヶ月基準を採用しています。日本が締結している租税条約においても、条約相手国によって6ヶ月、12ヶ月、その他の期間基準が採用されています。したがって、具体的なケースにおいては、適用される個別条約の規定を確認することが不可欠です。</p>
+    </div>
+
+    <div class="code-block reveal">
+<span class="comment">/* 建設PE 12ヶ月判定のフローチャート（擬似コード） */</span>
+
+<span class="keyword">function</span> assessConstructionPE(project) {
+  <span class="keyword">let</span> startDate = project.preparatoryWorkStartDate;  <span class="comment">// 現地準備作業開始日</span>
+  <span class="keyword">let</span> endDate   = project.completionOrAbandonmentDate;
+
+  <span class="comment">// 一時的中断は控除しない</span>
+  <span class="keyword">let</span> totalDuration = endDate - startDate; <span class="comment">// 暦日で計算</span>
+
+  <span class="comment">// 関連企業の下請期間を合算</span>
+  <span class="keyword">for</span> (sub <span class="keyword">of</span> project.relatedSubcontractors) {
+    totalDuration = <span class="keyword">max</span>(totalDuration, sub.endDate - startDate);
+  }
+
+  <span class="comment">// 人為的分割の合算チェック</span>
+  <span class="keyword">if</span> (project.isArtificiallySplit()) {
+    totalDuration = sumCoherentProjects(project);
+  }
+
+  <span class="keyword">return</span> totalDuration > <span class="string">12 months</span>
+    ? <span class="string">"PE認定あり"</span>
+    : <span class="string">"PE認定なし"</span>;
+}
+    </div>
+
+    <div class="point-box reveal">
+      <h4>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        セクション4 ポイント整理
+      </h4>
+      <ul class="point-list">
+        <li>建設PEは第5条第3項の特別規定であり、12ヶ月超の存続が要件（OECDモデル基準）。</li>
+        <li>起算点は現地での準備活動開始日であり、一時的中断は12ヶ月計算を中断させない。</li>
+        <li>商業的・地理的に一体の工事を人為的に分割しても、合算して12ヶ月基準を適用すべきとされる。</li>
+        <li>関連企業による下請期間は元請企業の12ヶ月計算に算入される。</li>
+        <li>実際の二国間条約では6ヶ月基準など異なる閾値が採用されている場合があり、個別条約の確認が必須。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SECTION 5 ===================== -->
+<section id="sec5" class="content-section container">
+  <div class="reveal">
+    <span class="section-label">SECTION 05 — SERVICE PE</span>
+    <h2>サービスPE</h2>
+
+    <div class="card">
+      <h3>5-1. サービスPE規定の意義</h3>
+      <p>サービスPE（Services PE）は、外国企業が一国においてコンサルティング、技術支援、経営指導などのサービスを一定期間以上提供する場合に、固定的な事業場所を持たなくともPEの存在を認める規定です。この規定は、従来のPE概念（物理的施設の存在を前提とする基本定義）では捕捉できないサービス提供活動を課税の対象とするために設けられたものです。</p>
+
+      <p>OECDモデル租税条約は、2017年の改訂まではサービスPE規定を本文に含んでいませんでした。しかし、国連モデル租税条約は早くからサービスPE規定（第5条第3項(b)）を有しており、多くの発展途上国が締結する租税条約に同様の規定が盛り込まれてきました。日本が締結している租税条約の中にも、サービスPE規定を含むものが少なからず存在します。</p>
+
+      <h3>5-2. 国連モデルにおけるサービスPE</h3>
+      <p>国連モデル租税条約第5条第3項(b)は、サービスPEについて次のように規定しています。企業が一方の締約国内において役務の提供（コンサルティング・サービスを含む）を行う場合であって、同一の又は関連するプロジェクトについて、当該他方の締約国内で当該企業の被用者その他の人員を通じてそのような活動が12ヶ月の間に合計183日を超える期間行われるときは、当該活動は恒久的施設を通じて行われるものとされます。</p>
+
+      <p>この規定のポイントは以下の通りです。第一に、物理的な固定施設の存在は不要であり、人員の物理的存在（physical presence）で足りるという点です。第二に、「同一の又は関連するプロジェクト」ごとに判定されるという点です。複数の無関連なプロジェクトについてそれぞれ短期間のサービスを提供しても、合算はされません。第三に、183日の計算は「12ヶ月の間に」行われるため、暦年ではなく任意の12ヶ月間（rolling 12-month period）で判定されるという点です。</p>
+
+      <h3>5-3. 日本の租税条約における取扱い</h3>
+      <p>日本が締結している租税条約におけるサービスPE規定の有無は、条約相手国によって異なります。先進国との条約（例えば、日米租税条約、日英租税条約）には通常サービスPE規定が含まれていませんが、発展途上国との条約にはサービスPE規定が含まれていることが多い状況です。</p>
+
+      <p>サービスPE規定が存在しない条約の下では、サービス提供活動がPEを構成するかどうかは、基本定義（第5条第1項）に基づいて判定されます。この場合、顧客企業のオフィスに常駐してサービスを提供していれば、「固定的な事業の場所」と認定される余地がありますが、顧客先を巡回してサービスを提供する場合には、場所的固定性が認められない可能性があります。</p>
+
+      <h3>5-4. BEPS後の展開</h3>
+      <p>BEPS行動計画7「恒久的施設認定の人為的回避の防止」は、サービスPE規定をOECDモデル租税条約に導入するオプションを提示しました。これを受けて、2017年のOECDモデル改訂ではサービスPEに関する規定がコメンタリーに追加されましたが、条約本文への組み込みは各国の選択に委ねられています。</p>
+
+      <p>BEPS防止措置条約（MLI、Multilateral Instrument）は、サービスPE規定の選択的導入を認めています（MLI第14条）。しかし、MLIの署名国のうち、サービスPE規定の適用を選択した国は限定的であり、この規定の普及は今後の課題です。日本はMLI上のサービスPE規定を選択していませんが、個別の二国間条約交渉においてサービスPE規定を含める場合があります。</p>
+    </div>
+
+    <div class="point-box reveal">
+      <h4>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        セクション5 ポイント整理
+      </h4>
+      <ul class="point-list">
+        <li>サービスPEは固定施設なしでも人員の物理的存在に基づきPE認定を行う規定である。</li>
+        <li>国連モデルは「12ヶ月中183日超」を閾値とするサービスPE規定を有している。</li>
+        <li>OECDモデルは2017年改訂でもサービスPEを条約本文に含めず、選択的アプローチとした。</li>
+        <li>日本の租税条約では相手国に応じてサービスPE規定の有無が異なるため、個別確認が必須。</li>
+        <li>サービスPE規定がない条約では、基本定義で判定するが、顧客先常駐の場合に注意が必要。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SECTION 6 ===================== -->
+<section id="sec6" class="content-section container">
+  <div class="reveal">
+    <span class="section-label">SECTION 06 — PREPARATORY / AUXILIARY EXEMPTION</span>
+    <h2>準備的・補助的活動除外</h2>
+
+    <div class="card">
+      <h3>6-1. OECDモデル第5条第4項の構造</h3>
+      <p>OECDモデル租税条約第5条第4項は、企業が固定的な事業場所を有している場合であっても、当該場所で行われる活動が「準備的又は補助的な性格のもの」（preparatory or auxiliary character）にすぎないときは、PEを構成しないと規定しています。この規定は、PE概念のネガティブ・リスト（除外リスト）として機能しており、PE認定の範囲を適切に限定する役割を果たしています。</p>
+
+      <p>2017年改訂前のOECDモデル第5条第4項は、以下の活動を具体的に列挙した上で、それぞれについてPEからの除外を認めていました。(a) 物品又は商品の保管、展示又は引渡しのためにのみ施設を使用すること、(b) 物品又は商品の在庫を保管、展示又は引渡しのためにのみ保有すること、(c) 物品又は商品の在庫を他の企業による加工のためにのみ保有すること、(d) 物品又は商品の購入又は情報の収集のためにのみ固定的な事業の場所を保有すること、(e) その他の準備的又は補助的な性格の活動を行うためにのみ固定的な事業の場所を保有すること、(f) 上記(a)から(e)までの活動の組合せのためにのみ固定的な事業の場所を保有すること（ただし当該組合せの結果としての全体の活動が準備的又は補助的な性格のものである場合に限る）。</p>
+
+      <p>2017年改訂前の規定では、(a)から(d)までの活動は、それ自体が「準備的又は補助的」であるか否かを問わず自動的にPEから除外されると解釈される余地がありました。この解釈は、特にeコマース企業が大規模な物流倉庫を源泉地国に設置しながらPE認定を免れるスキームに利用されました。</p>
+
+      <h3>6-2. 「準備的」と「補助的」の意味</h3>
+      <p>「準備的」（preparatory）な活動とは、企業の本質的かつ重要な事業活動を後日行うための前段階的な活動を意味します。コメンタリーは、市場調査、情報収集、許認可の取得などを例示しています。この種の活動は、将来の本格的な事業活動の準備段階にすぎず、それ自体は独立した収益を生み出すものではありません。</p>
+
+      <p>「補助的」（auxiliary）な活動とは、企業の本質的かつ重要な事業活動を支援する活動であって、それ自体は企業の利益に対して小さな割合しか貢献しないものを意味します。本社のIT部門が利用するデータバックアップ施設や、広報用の資料を保管する倉庫などが該当し得ます。</p>
+
+      <p>「準備的又は補助的」であるか否かの判定は、当該活動と企業全体の事業活動との関係に基づいて行われます。コメンタリーは、ある活動が企業の事業の「本質的かつ重要な部分」（essential and significant part）を構成するかどうかが決定的な基準であるとしています。企業の主要な収益源となる活動や、顧客に提供する価値の中核を担う活動は、「本質的かつ重要な部分」に該当し、準備的・補助的活動の除外は適用されません。</p>
+
+      <h3>6-3. 2017年改訂による厳格化</h3>
+      <p>BEPS行動計画7を受けた2017年のOECDモデル改訂は、第5条第4項に重要な変更を加えました。具体的には、(a)から(d)までの各活動についても、「準備的又は補助的な性格のもの」であることが要件として追加されたのです。これにより、例えば、大規模な物流倉庫における在庫の保管・引渡し活動が企業の事業の本質的かつ重要な部分を構成する場合には、もはやPEからの除外は認められなくなりました。</p>
+
+      <p>この改正は、特にアマゾン等の大規模eコマース企業による課税回避スキームへの対抗措置として意図されたものです。これらの企業は、各国に大規模な物流倉庫（フルフィルメント・センター）を設置して商品の保管・梱包・発送を行いながら、旧規定の(a)又は(b)に該当するとしてPE認定を免れていたとされています。</p>
+
+      <h3>6-4. 物流倉庫の取扱い</h3>
+      <p>2017年改訂後の規定の下では、物流倉庫がPEを構成するか否かは、当該倉庫の活動が企業全体の事業活動との関係で「準備的又は補助的」であるかどうかにより判定されます。例えば、オンライン小売業者にとって、商品の迅速な配送は顧客に提供するサービスの中核であり、物流倉庫はその中核的サービスを実現するために不可欠な施設です。したがって、物流倉庫における在庫管理・梱包・発送活動は「準備的又は補助的」とは言えず、PEを構成する可能性が高いと考えられます。</p>
+
+      <p>他方、メーカーが外国市場への参入を検討するために当該国にショールームを設け、製品のサンプルを展示して潜在顧客の反応を調査する場合、このような活動は市場調査という準備的活動であり、PEからの除外が認められる可能性があります。</p>
+    </div>
+
+    <div class="diagram-container reveal">
+      <svg viewBox="0 0 800 340" xmlns="http://www.w3.org/2000/svg" style="max-width:800px;">
+        <!-- Background -->
+        <rect x="20" y="20" width="760" height="300" rx="16" fill="none" stroke="currentColor" stroke-opacity="0.1" stroke-width="1"/>
+        <!-- Title -->
+        <text x="400" y="52" text-anchor="middle" fill="#5E6AD2" font-family="Outfit" font-size="14" font-weight="700">PREPARATORY / AUXILIARY EXEMPTION — DECISION FLOW</text>
+        <!-- Boxes -->
+        <rect x="260" y="75" width="280" height="44" rx="10" fill="#5E6AD2" fill-opacity="0.15" stroke="#5E6AD2" stroke-width="1.5"/>
+        <text x="400" y="102" text-anchor="middle" fill="currentColor" font-size="12" font-family="Noto Sans JP" font-weight="600">固定的事業場所が存在するか？</text>
+
+        <line x1="400" y1="119" x2="400" y2="145" stroke="#5E6AD2" stroke-width="1.5" marker-end="url(#arrowPE)"/>
+        <text x="410" y="138" fill="#5E6AD2" font-size="10" font-family="Outfit" font-weight="600">YES</text>
+
+        <rect x="220" y="145" width="360" height="44" rx="10" fill="#5E6AD2" fill-opacity="0.15" stroke="#5E6AD2" stroke-width="1.5"/>
+        <text x="400" y="172" text-anchor="middle" fill="currentColor" font-size="12" font-family="Noto Sans JP" font-weight="600">活動は企業事業の本質的・重要部分か？</text>
+
+        <line x1="300" y1="189" x2="200" y2="235" stroke="#5E6AD2" stroke-width="1.5"/>
+        <text x="230" y="215" fill="#5E6AD2" font-size="10" font-family="Outfit" font-weight="600">NO（準備的/補助的）</text>
+        <line x1="500" y1="189" x2="600" y2="235" stroke="#5E6AD2" stroke-width="1.5"/>
+        <text x="555" y="215" fill="#5E6AD2" font-size="10" font-family="Outfit" font-weight="600">YES（本質的）</text>
+
+        <rect x="100" y="235" width="200" height="44" rx="10" fill="none" stroke="currentColor" stroke-opacity="0.2" stroke-width="1.5"/>
+        <text x="200" y="262" text-anchor="middle" fill="currentColor" font-size="12" font-family="Noto Sans JP" font-weight="600">PE除外 ✓</text>
+
+        <rect x="500" y="235" width="200" height="44" rx="10" fill="#5E6AD2" fill-opacity="0.3" stroke="#5E6AD2" stroke-width="1.5"/>
+        <text x="600" y="262" text-anchor="middle" fill="currentColor" font-size="12" font-family="Noto Sans JP" font-weight="700">PE認定 →課税</text>
+
+        <defs><marker id="arrowPE" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#5E6AD2"/></marker></defs>
+      </svg>
+      <p class="diagram-caption">図6-1：準備的・補助的活動除外の判定フロー</p>
+    </div>
+
+    <div class="point-box reveal">
+      <h4>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        セクション6 ポイント整理
+      </h4>
+      <ul class="point-list">
+        <li>第5条第4項は「準備的又は補助的」な活動をPEから除外するネガティブ・リストである。</li>
+        <li>2017年改訂により、物品の保管・展示・引渡しなども「準備的・補助的」であることの実質要件が追加された。</li>
+        <li>判定基準は、活動が企業全体の事業の「本質的かつ重要な部分」を構成するか否かである。</li>
+        <li>大規模eコマースの物流倉庫は2017年改訂後PE認定される可能性が高まった。</li>
+        <li>ショールーム等の市場調査施設は、引き続き準備的活動として除外される余地がある。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SECTION 7 ===================== -->
+<section id="sec7" class="content-section container">
+  <div class="reveal">
+    <span class="section-label">SECTION 07 — BEPS ANTI-FRAGMENTATION</span>
+    <h2>BEPSによるアンチフラグメンテーション</h2>
+
+    <div class="card">
+      <h3>7-1. フラグメンテーション（活動分断）問題</h3>
+      <p>フラグメンテーション（fragmentation）とは、PE認定を回避するために、本来一体の事業活動を複数のグループ企業や複数の場所に分断し、それぞれの活動が「準備的又は補助的」であるとして第5条第4項の除外を主張するスキームを指します。</p>
+
+      <p>例えば、多国籍企業グループが、ある国において次のように活動を分散させるケースを考えてみましょう。子会社Aが製品の在庫保管を行い、子会社Bが顧客からの問い合わせに対応する情報収集を行い、子会社Cが製品の展示を行い、親会社の従業員が定期的に現地を訪れて顧客と面談するという体制です。各活動を個別に見れば、それぞれが「準備的又は補助的」と評価される余地がありますが、全体として見れば、これらの活動は一体として当該国における事業活動の遂行を構成しています。</p>
+
+      <p>2017年改訂前のOECDモデルでは、このようなフラグメンテーション・スキームに対する明示的な対抗規定が存在せず、各活動を個別に評価する余地がありました。BEPS行動計画7は、この問題への対処を主要な検討項目の一つとして取り上げました。</p>
+
+      <h3>7-2. アンチフラグメンテーション規則（第5条第4.1項）</h3>
+      <p>BEPS行動計画7を受けた2017年のOECDモデル改訂により、新たに第5条第4.1項が追加されました。この規定は、次の要件を充たす場合に第5条第4項の除外の適用を否定します。</p>
+
+      <p>すなわち、(i) 同一の企業又は関連企業（closely related enterprises）が、同一の国に複数の固定的事業場所を有し、(ii) それぞれの場所で行われる活動が一体的な事業活動（cohesive business operation）を構成し、(iii) いずれかの場所の活動又は当該複数の場所における活動の全体的な組合せが「準備的又は補助的」に該当しない場合には、当該場所の活動について第5条第4項の除外は適用されません。</p>
+
+      <p>この規定により、上記のような活動分散スキームは無効化されます。各子会社及び親会社の活動を全体として評価し、それが一体的な事業活動を構成し、かつ全体として見て「準備的又は補助的」でないと判定されれば、PE認定が行われることになります。</p>
+
+      <h3>7-3. 「関連企業」（Closely Related Enterprises）の定義</h3>
+      <p>アンチフラグメンテーション規則の適用範囲を画する重要な概念として、「関連企業」の定義があります。2017年改訂後のOECDモデル第5条第8項は、ある企業と他の企業が相互に支配関係にある場合、又は同一の者若しくは企業によって支配されている場合に、両企業は「関連企業」に該当すると定めています。</p>
+
+      <p>ここでいう「支配」（control）は、50%以上の受益権（beneficial interest）の直接又は間接の保有を一つの基準としていますが、これは形式的な基準にすぎず、事実関係の全体的な評価に基づいて「支配」の有無が判定されます。したがって、50%未満の持分しか保有していなくても、事実上の支配権を行使している場合には「関連企業」に該当する可能性があります。</p>
+
+      <h3>7-4. MLI第13条によるアンチフラグメンテーションの導入</h3>
+      <p>BEPS防止措置条約（MLI）第13条は、アンチフラグメンテーション規則の既存の二国間租税条約への導入を可能にしています。MLI第13条は複数のオプションを提供しており、各署名国は自国の選択に基づいて適用範囲を決定します。</p>
+
+      <p>日本はMLI第13条について、第5条第4項の「準備的・補助的」要件の追加（Option A）とアンチフラグメンテーション規定の追加（第4.1項の導入）の双方を選択しています。ただし、これらの規定が実際に適用されるためには、条約相手国も同様の選択を行っている必要があり、相手国の留保・選択の状況によって適用の有無が異なります。</p>
+
+      <h3>7-5. コミッショネア・アレンジメントへの対処</h3>
+      <p>BEPS行動計画7は、フラグメンテーション問題と並んで、<strong>コミッショネア・アレンジメント</strong>（commissionnaire arrangement）によるPE認定回避についても対処を求めました。コミッショネア・アレンジメントとは、大陸法系の国に見られるコミッショネア契約を利用し、現地の販売者が自己の名義で（しかし外国本人のために）契約を締結する仕組みです。従来のOECDモデルでは、代理人PEの認定には代理人が「本人の名義で」契約を締結する権限を有することが要件とされていたため、コミッショネアは代理人PEに該当しないと解釈される余地がありました。</p>
+
+      <p>2017年改訂後の第5条第5項は、代理人が「契約を締結し、又は契約の締結に至る主要な役割を反復的に果たす」場合に代理人PEの認定を行うこととし、コミッショネア・アレンジメントによるPE回避を封じました。</p>
+    </div>
+
+    <div class="point-box reveal">
+      <h4>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        セクション7 ポイント整理
+      </h4>
+      <ul class="point-list">
+        <li>フラグメンテーションは一体的活動を分断して各活動の「準備的・補助的」除外を主張するスキーム。</li>
+        <li>2017年新設の第5条第4.1項（アンチフラグメンテーション規則）は、関連企業の活動を合算して除外該当性を判定。</li>
+        <li>「関連企業」は50%以上の受益権保有を一つの目安とするが、事実上の支配でも認定される。</li>
+        <li>MLI第13条によりアンチフラグメンテーション規則の既存条約への導入が可能であるが、相手国の選択次第。</li>
+        <li>コミッショネア・アレンジメントについても2017年改訂により代理人PEの要件が拡大された。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SECTION 8 ===================== -->
+<section id="sec8" class="content-section container">
+  <div class="reveal">
+    <span class="section-label">SECTION 08 — JAPANESE DOMESTIC LAW</span>
+    <h2>日本国内法のPE概念</h2>
+
+    <div class="card">
+      <h3>8-1. 所得税法・法人税法におけるPE規定</h3>
+      <p>日本の国内法は、所得税法第164条及び法人税法第141条において、非居住者・外国法人の国内源泉所得に対する課税の範囲を規定し、この文脈で恒久的施設（PE）の概念を用いています。2014年度及び2018年度の税制改正により、国内法のPE定義が租税条約の定義に大幅に近づけられました。</p>
+
+      <p>所得税法第2条第1項第8号の4及び法人税法第2条第12号の19は、恒久的施設を次の三類型に分類して定義しています。第一が<strong>支店PE等</strong>（非居住者又は外国法人の国内にある支店、事務所、工場その他事業を行う一定の場所）、第二が<strong>建設PE</strong>（非居住者又は外国法人の国内にある建設作業場等で、1年を超えて行われるもの）、第三が<strong>代理人PE</strong>（非居住者又は外国法人に代わって、その事業に関し、反復して契約を締結し又は契約の締結のために反復して主要な役割を果たす者等）です。</p>
+
+      <h3>8-2. 2018年改正の主要内容</h3>
+      <p>2018年度税制改正（平成30年度改正）は、BEPS行動計画7の勧告を受けて、国内法のPE定義を大幅に見直しました。主要な改正点は以下のとおりです。</p>
+
+      <p>第一に、<strong>代理人PEの範囲の拡大</strong>です。改正前は、代理人PEの認定には「契約を締結する権限」を有することが要件でしたが、改正後は「契約の締結のために反復して主要な役割を果たす」場合も含まれるようになりました。これはBEPS行動計画7のコミッショネア対策に対応するものです。</p>
+
+      <p>第二に、<strong>独立代理人の除外の厳格化</strong>です。改正前は、独立代理人（independent agent）を通じた活動はPEを構成しないとされていましたが、改正後は、代理人が「もっぱら又は主として」一つの関連企業のために行動する場合には、独立代理人の除外を適用しないこととされました。</p>
+
+      <p>第三に、<strong>準備的・補助的活動除外の見直し</strong>です。改正後は、在庫の保管・引渡し等の活動についても「準備的又は補助的な性格のもの」であることが除外の要件として明示されました。</p>
+
+      <h3>8-3. 租税条約との関係</h3>
+      <p>日本の法体系上、租税条約は国内法に優先する効力を有します（憲法第98条第2項）。したがって、PE認定の判定においては、まず適用される租税条約のPE定義を確認し、租税条約のPE定義と国内法のPE定義が異なる場合には、租税条約の定義が優先的に適用されます。</p>
+
+      <p>具体的には、租税条約のPE定義が国内法よりも狭い場合（例えば、租税条約上はPEに該当しないが国内法上はPEに該当する場合）、租税条約の定義が優先し、PE認定はなされません。逆に、租税条約のPE定義が国内法よりも広い場合（例えば、租税条約上はPEに該当するが国内法上はPEに該当しない場合）、実務上は国内法上の課税根拠がないためPEに対する課税は行われないとされています。</p>
+
+      <p>ただし、日本が締結している租税条約は約80本以上に及び、それぞれのPE定義は微妙に異なります。したがって、具体的な案件における PE認定の判定に当たっては、適用される個別条約の条文を精査することが不可欠です。</p>
+
+      <h3>8-4. PEへの利得帰属（AOA）</h3>
+      <p>日本は2014年度税制改正により、PEへの利得帰属の方法としてAOA（Authorised OECD Approach）を採用しました（法人税法第138条、第142条等）。AOAの下では、PEを本店から独立した別個の企業であるかのように擬制し（機能的に独立した企業の擬制）、PEに帰属する機能、資産、リスクを特定した上で、PEの利得を独立企業原則に基づいて算定します。</p>
+
+      <p>AOAの適用は、二段階のプロセスで行われます。第一段階では、PEに帰属する機能（人的機能：significant people functions）を特定し、それに基づいてPEに帰属する資産、リスク、及び資本を配分します。第二段階では、PEと本店との間の内部取引（dealings）を独立企業原則に従って認識・評価し、PEの利得を算定します。</p>
+
+      <p>この内部取引の認識は、AOAの最も特徴的な点です。法的には一つの法人内部の取引（支店と本店の間の取引）には独立した取引としての法的効果はありませんが、AOAの下では、これを独立企業間の取引であるかのように擬制して移転価格の原則を適用するのです。例えば、本店がPEに在庫を提供した場合、その在庫の移転は内部取引として認識され、独立企業間価格で評価されます。</p>
+    </div>
+
+    <div class="table-wrapper reveal">
+      <table>
+        <thead>
+          <tr>
+            <th>PE類型</th>
+            <th>国内法の根拠</th>
+            <th>2018年改正のポイント</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>支店PE等</strong></td>
+            <td>所法164条1項1号等</td>
+            <td>準備的・補助的除外に実質要件を追加</td>
+          </tr>
+          <tr>
+            <td><strong>建設PE</strong></td>
+            <td>所法164条1項2号等</td>
+            <td>1年超基準の維持（条約で短縮される場合あり）</td>
+          </tr>
+          <tr>
+            <td><strong>代理人PE</strong></td>
+            <td>所法164条1項3号等</td>
+            <td>「主要な役割」の追加、独立代理人除外の厳格化</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+</body>
+</html>
