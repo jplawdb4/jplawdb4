@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenAI Codex 完全ガイド — クラウドベース ソフトウェアエンジニアリングエージェント</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   CSS CUSTOM PROPERTIES — DARK / LIGHT THEMES
+   ============================================================ */
+:root{
+  /* ---- dark (default) ---- */
+  --bg:#0A0A0A;
+  --card:#16161A;
+  --card-hover:#1C1C22;
+  --border:rgba(255,255,255,0.06);
+  --border-strong:rgba(255,255,255,0.12);
+  --accent:#5E6AD2;
+  --accent-light:#7B85E0;
+  --accent-dark:#4A54B8;
+  --gradient:linear-gradient(135deg,#5E6AD2 0%,#8B5CF6 50%,#EC4899 100%);
+  --gradient-subtle:linear-gradient(135deg,rgba(94,106,210,0.15) 0%,rgba(139,92,246,0.10) 50%,rgba(236,72,153,0.05) 100%);
+  --text-primary:#FAFAFA;
+  --text-secondary:#8A8A9A;
+  --text-tertiary:#55556A;
+  --code-bg:#111113;
+  --code-border:rgba(255,255,255,0.08);
+  --tag-bg:rgba(94,106,210,0.12);
+  --tag-text:#7B85E0;
+  --success:#22C55E;
+  --warning:#F59E0B;
+  --danger:#EF4444;
+  --info:#3B82F6;
+  --shadow:0 0 0 1px rgba(255,255,255,0.06),0 4px 24px rgba(0,0,0,0.4);
+  --shadow-lg:0 0 0 1px rgba(255,255,255,0.06),0 8px 48px rgba(0,0,0,0.6);
+  --radius:12px;
+  --radius-sm:8px;
+  --radius-lg:16px;
+  --toc-bg:rgba(22,22,26,0.95);
+}
+[data-theme="light"]{
+  --bg:#F4F4F8;
+  --card:#FFFFFF;
+  --card-hover:#F9F9FB;
+  --border:rgba(0,0,0,0.08);
+  --border-strong:rgba(0,0,0,0.14);
+  --accent:#4A54B8;
+  --accent-light:#5E6AD2;
+  --accent-dark:#3A44A0;
+  --gradient:linear-gradient(135deg,#4A54B8 0%,#7C3AED 50%,#DB2777 100%);
+  --gradient-subtle:linear-gradient(135deg,rgba(74,84,184,0.08) 0%,rgba(124,58,237,0.05) 50%,rgba(219,39,119,0.03) 100%);
+  --text-primary:#1A1A2E;
+  --text-secondary:#6B6B80;
+  --text-tertiary:#9999AA;
+  --code-bg:#F0F0F4;
+  --code-border:rgba(0,0,0,0.08);
+  --tag-bg:rgba(74,84,184,0.10);
+  --tag-text:#4A54B8;
+  --success:#16A34A;
+  --warning:#D97706;
+  --danger:#DC2626;
+  --info:#2563EB;
+  --shadow:0 0 0 1px rgba(0,0,0,0.06),0 4px 24px rgba(0,0,0,0.08);
+  --shadow-lg:0 0 0 1px rgba(0,0,0,0.06),0 8px 48px rgba(0,0,0,0.12);
+  --toc-bg:rgba(255,255,255,0.95);
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px;-webkit-text-size-adjust:100%}
+body{
+  font-family:'Outfit','Noto Sans JP',system-ui,-apple-system,sans-serif;
+  background:var(--bg);
+  color:var(--text-primary);
+  line-height:1.8;
+  transition:background .35s ease,color .35s ease;
+  overflow-x:hidden;
+}
+a{color:var(--accent-light);text-decoration:none;transition:color .2s}
+a:hover{color:var(--accent);text-decoration:underline}
+img{max-width:100%;height:auto;display:block}
+::selection{background:var(--accent);color:#fff}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.page-wrapper{max-width:960px;margin:0 auto;padding:0 24px 120px}
+@media(min-width:1200px){.page-wrapper{max-width:1020px}}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{
+  text-align:center;
+  padding:100px 0 60px;
+  position:relative;
+}
+.hero::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:radial-gradient(ellipse 600px 400px at 50% 20%,rgba(94,106,210,0.12),transparent);
+  pointer-events:none;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--tag-bg);
+  color:var(--tag-text);
+  font-size:.75rem;font-weight:600;
+  padding:6px 16px;border-radius:100px;
+  letter-spacing:.04em;text-transform:uppercase;
+  margin-bottom:24px;
+}
+.hero-badge span{font-size:.6rem;opacity:.6}
+.hero h1{
+  font-size:clamp(2rem,5vw,3.4rem);
+  font-weight:800;
+  line-height:1.15;
+  background:var(--gradient);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  margin-bottom:16px;
+}
+.hero .subtitle{
+  font-size:clamp(1rem,2vw,1.2rem);
+  color:var(--text-secondary);
+  max-width:680px;
+  margin:0 auto 32px;
+  font-weight:400;
+}
+.hero-meta{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:24px;
+  color:var(--text-tertiary);font-size:.85rem;
+}
+.hero-meta span{display:flex;align-items:center;gap:6px}
+
+/* ============================================================
+   THEME TOGGLE
+   ============================================================ */
+.theme-toggle{
+  position:fixed;top:20px;right:20px;z-index:9999;
+  width:48px;height:48px;
+  border:1px solid var(--border-strong);
+  border-radius:50%;
+  background:var(--card);
+  color:var(--text-primary);
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;
+  box-shadow:var(--shadow);
+  transition:all .3s ease;
+}
+.theme-toggle:hover{transform:scale(1.1);border-color:var(--accent)}
+
+/* ============================================================
+   TOC — TABLE OF CONTENTS
+   ============================================================ */
+.toc{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:32px;
+  margin-bottom:48px;
+  box-shadow:var(--shadow);
+}
+.toc-title{
+  font-size:1.1rem;font-weight:700;
+  margin-bottom:20px;
+  display:flex;align-items:center;gap:8px;
+}
+.toc-title::before{
+  content:'📑';font-size:1.2rem;
+}
+.toc ol{
+  list-style:none;counter-reset:toc-counter;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:8px 24px;
+}
+.toc li{counter-increment:toc-counter}
+.toc li a{
+  display:flex;align-items:baseline;gap:10px;
+  padding:8px 12px;
+  border-radius:var(--radius-sm);
+  font-size:.9rem;
+  color:var(--text-secondary);
+  transition:all .2s;
+}
+.toc li a::before{
+  content:counter(toc-counter,decimal-leading-zero);
+  font-size:.75rem;font-weight:700;
+  color:var(--accent);
+  min-width:22px;
+}
+.toc li a:hover{
+  background:var(--gradient-subtle);
+  color:var(--text-primary);
+  text-decoration:none;
+}
+
+/* ============================================================
+   SECTION
+   ============================================================ */
+.section{margin-bottom:64px}
+.section-label{
+  font-size:.7rem;font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  color:var(--accent);
+  margin-bottom:4px;
+}
+.section-title{
+  font-size:clamp(1.4rem,3vw,1.9rem);
+  font-weight:800;
+  margin-bottom:20px;
+  line-height:1.3;
+}
+.section-title .num{
+  background:var(--gradient);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  margin-right:8px;
+}
+
+/* ============================================================
+   CARD
+   ============================================================ */
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:28px;
+  box-shadow:var(--shadow);
+  margin-bottom:20px;
+  transition:all .25s ease;
+}
+.card:hover{border-color:var(--border-strong);background:var(--card-hover)}
+.card h4{font-size:1.05rem;font-weight:700;margin-bottom:10px}
+.card p,.card li{color:var(--text-secondary);font-size:.92rem;line-height:1.75}
+
+/* ============================================================
+   PROSE
+   ============================================================ */
+.prose{color:var(--text-secondary);font-size:.95rem;line-height:1.85}
+.prose p{margin-bottom:16px}
+.prose strong{color:var(--text-primary);font-weight:600}
+.prose em{color:var(--accent-light)}
+.prose h4{color:var(--text-primary);font-size:1.05rem;font-weight:700;margin:28px 0 10px}
+
+/* ============================================================
+   CODE BLOCK
+   ============================================================ */
+pre.code-block{
+  background:var(--code-bg);
+  border:1px solid var(--code-border);
+  border-radius:var(--radius-sm);
+  padding:20px 24px;
+  overflow-x:auto;
+  font-family:'SF Mono','Fira Code','Cascadia Code',monospace;
+  font-size:.82rem;
+  line-height:1.7;
+  color:var(--text-secondary);
+  margin:16px 0;
+}
+code{
+  font-family:'SF Mono','Fira Code','Cascadia Code',monospace;
+  background:var(--code-bg);
+  padding:2px 7px;border-radius:4px;
+  font-size:.85em;
+  color:var(--accent-light);
+}
+
+/* ============================================================
+   TABLE
+   ============================================================ */
+.table-wrap{overflow-x:auto;margin:20px 0;border-radius:var(--radius);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+thead{background:var(--code-bg)}
+th{
+  text-align:left;padding:14px 18px;
+  font-weight:700;font-size:.78rem;
+  text-transform:uppercase;letter-spacing:.06em;
+  color:var(--text-tertiary);
+  border-bottom:1px solid var(--border);
+}
+td{
+  padding:14px 18px;
+  border-bottom:1px solid var(--border);
+  color:var(--text-secondary);
+  vertical-align:top;
+}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(94,106,210,0.03)}
+
+/* ============================================================
+   TAG / BADGE
+   ============================================================ */
+.tag{
+  display:inline-block;
+  background:var(--tag-bg);color:var(--tag-text);
+  font-size:.72rem;font-weight:600;
+  padding:3px 10px;border-radius:100px;
+  margin:2px 4px 2px 0;
+}
+.tag.green{background:rgba(34,197,94,0.12);color:var(--success)}
+.tag.yellow{background:rgba(245,158,11,0.12);color:var(--warning)}
+.tag.red{background:rgba(239,68,68,0.12);color:var(--danger)}
+.tag.blue{background:rgba(59,130,246,0.12);color:var(--info)}
+
+/* ============================================================
+   CALLOUT
+   ============================================================ */
+.callout{
+  display:flex;gap:14px;
+  background:var(--gradient-subtle);
+  border:1px solid var(--border);
+  border-left:3px solid var(--accent);
+  border-radius:var(--radius-sm);
+  padding:18px 22px;
+  margin:20px 0;
+  font-size:.9rem;
+  color:var(--text-secondary);
+}
+.callout.warn{border-left-color:var(--warning)}
+.callout.danger{border-left-color:var(--danger)}
+.callout.info{border-left-color:var(--info)}
+.callout-icon{font-size:1.2rem;flex-shrink:0;line-height:1.6}
+
+/* ============================================================
+   FLOW DIAGRAM (CSS only)
+   ============================================================ */
+.flow{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;
+  margin:24px 0;
+}
+.flow-step{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  padding:12px 20px;
+  font-size:.82rem;font-weight:600;
+  color:var(--text-primary);
+  text-align:center;
+  min-width:120px;
+}
+.flow-arrow{
+  color:var(--accent);font-size:1.2rem;font-weight:700;
+  user-select:none;
+}
+
+/* ============================================================
+   GRID HELPERS
+   ============================================================ */
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+
+/* ============================================================
+   STEP LIST
+   ============================================================ */
+.steps{counter-reset:step-counter;margin:20px 0}
+.step-item{
+  counter-increment:step-counter;
+  display:flex;gap:16px;
+  padding:18px 0;
+  border-bottom:1px solid var(--border);
+}
+.step-item:last-child{border-bottom:none}
+.step-num{
+  flex-shrink:0;
+  width:36px;height:36px;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--gradient);
+  color:#fff;
+  font-size:.85rem;font-weight:700;
+  border-radius:50%;
+}
+.step-num::after{content:counter(step-counter)}
+.step-body h4{font-size:.95rem;font-weight:700;margin-bottom:4px;color:var(--text-primary)}
+.step-body p{font-size:.88rem;color:var(--text-secondary);line-height:1.7}
+
+/* ============================================================
+   LINK CARD
+   ============================================================ */
+.link-card{
+  display:block;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  padding:16px 20px;
+  margin:8px 0;
+  transition:all .2s;
+  color:var(--text-secondary);
+  font-size:.88rem;
+}
+.link-card:hover{
+  border-color:var(--accent);
+  background:var(--card-hover);
+  text-decoration:none;
+  color:var(--text-primary);
+}
+.link-card strong{color:var(--accent-light);font-weight:600}
+
+/* ============================================================
+   PROGRESS BAR (decorative)
+   ============================================================ */
+.meter{
+  height:6px;background:var(--code-bg);
+  border-radius:3px;overflow:hidden;margin:8px 0 4px;
+}
+.meter-fill{
+  height:100%;border-radius:3px;
+  background:var(--gradient);
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer{
+  text-align:center;
+  padding:48px 0;
+  border-top:1px solid var(--border);
+  margin-top:80px;
+  color:var(--text-tertiary);
+  font-size:.8rem;
+}
+
+/* ============================================================
+   SCROLL-TO-TOP
+   ============================================================ */
+.scroll-top{
+  position:fixed;bottom:24px;right:24px;z-index:999;
+  width:44px;height:44px;
+  border:1px solid var(--border-strong);
+  border-radius:50%;
+  background:var(--card);
+  color:var(--text-primary);
+  font-size:1.1rem;
+  cursor:pointer;
+  display:none;align-items:center;justify-content:center;
+  box-shadow:var(--shadow);
+  transition:all .3s;
+}
+.scroll-top.visible{display:flex}
+.scroll-top:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media(max-width:640px){
+  .page-wrapper{padding:0 16px 80px}
+  .hero{padding:64px 0 40px}
+  .toc ol{grid-template-columns:1fr}
+  .card{padding:20px}
+  .flow{flex-direction:column}
+  .flow-arrow{transform:rotate(90deg)}
+  table{font-size:.8rem}
+  th,td{padding:10px 12px}
+}
+</style>
+</head>
+<body data-theme="dark">
+
+<!-- ============================================================
+     THEME TOGGLE
+     ============================================================ -->
+<button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">🌙</button>
+
+<!-- ============================================================
+     SCROLL TO TOP
+     ============================================================ -->
+<button class="scroll-top" id="scrollTop" aria-label="トップへ戻る">↑</button>
+
+<div class="page-wrapper">
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<header class="hero">
+  <div class="hero-badge">OpenAI Codex <span>|</span> Cloud Agent</div>
+  <h1>OpenAI Codex 完全ガイド</h1>
+  <p class="subtitle">ChatGPTから利用できるクラウドベースのソフトウェアエンジニアリングエージェント「Codex」について、概要から使い方、料金、セキュリティ、他ツール比較まで体系的に解説します。</p>
+  <div class="hero-meta">
+    <span>📅 最終更新: 2026-03-04</span>
+    <span>⏱️ 推定読了: 35分</span>
+    <span>🏷️ 初心者〜中級者向け</span>
+  </div>
+</header>
+
+<!-- ============================================================
+     TABLE OF CONTENTS
+     ============================================================ -->
+<nav class="toc" id="toc">
+  <div class="toc-title">目次</div>
+  <ol>
+    <li><a href="#s1">Codex（クラウド版）とは何か</a></li>
+    <li><a href="#s2">できること</a></li>
+    <li><a href="#s3">アーキテクチャ</a></li>
+    <li><a href="#s4">使い方（起動・GitHub連携・タスク指示）</a></li>
+    <li><a href="#s5">対応モデル</a></li>
+    <li><a href="#s6">料金・利用条件</a></li>
+    <li><a href="#s7">セキュリティとプライバシー</a></li>
+    <li><a href="#s8">ユースケース集 10選</a></li>
+    <li><a href="#s9">制限事項・注意点</a></li>
+    <li><a href="#s10">他ツールとの比較</a></li>
+    <li><a href="#s11">始め方ステップバイステップ</a></li>
+    <li><a href="#s12">参考リンク・公式ドキュメント</a></li>
+  </ol>
+</nav>
+
+<!-- ============================================================
+     SECTION 1 — OVERVIEW
+     ============================================================ -->
+<section class="section" id="s1">
+  <div class="section-label">Section 01 — Overview</div>
+  <h2 class="section-title"><span class="num">01</span>Codex（クラウド版）とは何か</h2>
+
+  <div class="prose">
+    <p>OpenAI Codex（コーデックス）は、2025年5月にリリースされたクラウドベースのソフトウェアエンジニアリングエージェントです。ChatGPTのインターフェースからアクセスでき、GitHub上のリポジトリと連携して、コードの生成・バグ修正・テスト実行・プルリクエスト（PR）作成など、ソフトウェア開発に関わる幅広いタスクを自律的に実行します。</p>
+
+    <p>従来のAIコーディングアシスタントが「ユーザーの指示にリアルタイムで応答する対話型」だったのに対し、Codexは<strong>非同期型の自律エージェント</strong>として設計されています。つまり、タスクを指示したらバックグラウンドで処理が進み、完了後に結果をレビューするワークフローです。これは「同僚にタスクを委任する」感覚に近いものです。</p>
+
+    <p>2025年5月の初期リリース以降、Codexは急速に進化しています。2026年2月にはデスクトップアプリ「Codex App」が登場し、複数のエージェントを並列に管理するマルチエージェントワークフローが可能になりました。また、最新のGPT-5.3-Codexモデルにより、コーディングだけでなくコンピュータ操作全般を含む幅広いタスクに対応するエージェントへと進化しています。</p>
+  </div>
+
+  <h3 style="margin:28px 0 16px;font-size:1.05rem;font-weight:700;">Codex Cloud と Codex CLI の違い</h3>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>比較項目</th><th>Codex Cloud（クラウド版）</th><th>Codex CLI（ターミナル版）</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>実行環境</strong></td><td>OpenAI管理のクラウドサンドボックス</td><td>ローカルマシン上のターミナル</td></tr>
+        <tr><td><strong>アクセス方法</strong></td><td>ChatGPT Web / Codex App / IDE拡張</td><td>ターミナルコマンド <code>codex</code></td></tr>
+        <tr><td><strong>並列タスク</strong></td><td>複数タスクを同時実行可能</td><td>基本的に1タスクずつ</td></tr>
+        <tr><td><strong>GitHub連携</strong></td><td>PR自動作成・コードレビュー対応</td><td>ローカルgit操作</td></tr>
+        <tr><td><strong>処理モード</strong></td><td>非同期（バックグラウンド）</td><td>インタラクティブ（リアルタイム）</td></tr>
+        <tr><td><strong>ネットワーク</strong></td><td>デフォルトOFF、設定で有効化可</td><td>デフォルトOFF、設定で有効化可</td></tr>
+        <tr><td><strong>最適な用途</strong></td><td>大きなタスクの委任・並列処理</td><td>即座のペアプログラミング</td></tr>
+        <tr><td><strong>オープンソース</strong></td><td>いいえ</td><td>はい（GitHub公開）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout info">
+    <span class="callout-icon">💡</span>
+    <div>本ガイドでは主に<strong>Codex Cloud（クラウド版）</strong>を対象に解説しますが、Codex AppやCLIとの関連性にも随時触れます。2026年2月以降、これらすべてが統一されたCodexエコシステムとして連携しています。</div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 2 — CAPABILITIES
+     ============================================================ -->
+<section class="section" id="s2">
+  <div class="section-label">Section 02 — Capabilities</div>
+  <h2 class="section-title"><span class="num">02</span>できること</h2>
+
+  <div class="prose">
+    <p>Codexは「AIに開発タスクを丸ごと委任する」ためのエージェントです。単なるコード補完ではなく、リポジトリ全体を理解した上で、ファイルの読み書き・コマンド実行・テスト・PR作成まで一貫して行います。</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h4>🔨 コード生成・機能実装</h4>
+      <p>自然言語で「ユーザー認証のAPIエンドポイントを作って」と指示すると、適切なファイルを作成・編集し、必要なインポートや設定ファイルの変更まで含めて実装します。マルチファイルにまたがる変更も自律的に処理します。</p>
+    </div>
+    <div class="card">
+      <h4>🐛 バグ修正・デバッグ</h4>
+      <p>「このテストが失敗する原因を特定して修正して」と依頼すると、テストを実行し、エラーログを分析し、根本原因を特定して修正パッチを作成します。修正後にテストを再実行して成功を確認するところまで自動で行います。</p>
+    </div>
+    <div class="card">
+      <h4>🔀 プルリクエスト作成</h4>
+      <p>タスク完了後、変更をコミットし、GitHub上にPRを自動作成できます。PRには変更内容の説明や関連するテスト結果が含まれ、人間のレビュアーがすぐに確認できる状態になります。</p>
+    </div>
+    <div class="card">
+      <h4>🧪 テスト作成・実行</h4>
+      <p>既存コードに対するユニットテスト・統合テストの作成、テストカバレッジの向上、テストの実行と結果の分析を行います。テストが失敗した場合は自動で修正を試みます。</p>
+    </div>
+    <div class="card">
+      <h4>📖 コードベース質問応答</h4>
+      <p>「Ask」モードで「このプロジェクトの認証フローはどうなっている？」と質問すると、リポジトリ全体を分析して回答します。新規参入メンバーのオンボーディングに非常に有効です。</p>
+    </div>
+    <div class="card">
+      <h4>♻️ リファクタリング</h4>
+      <p>コードの構造改善、命名の統一、重複コードの除去、関数の分割・統合など、大規模なリファクタリングタスクを自律的に実行します。プロジェクトのコーディング規約に沿った形で行われます。</p>
+    </div>
+    <div class="card">
+      <h4>📝 ドキュメント生成</h4>
+      <p>関数やクラスのドキュメントコメント作成、README.mdの更新、APIドキュメントの生成など、コードに付随するドキュメント作成を自動化します。</p>
+    </div>
+    <div class="card">
+      <h4>🔍 コードレビュー</h4>
+      <p>GitHub上のPRに <code>@codex</code> をタグ付けすることで、自動コードレビューを実行できます。バグの可能性、パフォーマンス問題、セキュリティリスクなどを指摘します。</p>
+    </div>
+    <div class="card">
+      <h4>🎨 フロントエンド開発</h4>
+      <p>GPT-5.3-Codexでは、ウェブサイト・ゲーム・アプリのUIを自然言語指示から構築できます。画像生成スキルと組み合わせることで、デザインアセットの作成も可能です。</p>
+    </div>
+    <div class="card">
+      <h4>🔧 Skills による拡張タスク</h4>
+      <p>Codex Appの「Skills」機能により、Figmaデザインの実装、Linear/Slackとの連携、Cloudflare/Vercelへのデプロイ、スプレッドシート・PDF作成など、コード生成を超えた業務を実行できます。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 3 — ARCHITECTURE
+     ============================================================ -->
+<section class="section" id="s3">
+  <div class="section-label">Section 03 — Architecture</div>
+  <h2 class="section-title"><span class="num">03</span>アーキテクチャ</h2>
+
+  <div class="prose">
+    <p>Codexの設計思想を理解することは、効果的に活用するための鍵です。Codexは「安全で隔離された環境内で、コードを自律的に読み・書き・実行する」ことを核としたアーキテクチャを採用しています。</p>
+  </div>
+
+  <h3 style="margin:28px 0 16px;font-size:1.05rem;font-weight:700;">タスク実行フロー</h3>
+
+  <div class="flow">
+    <div class="flow-step">ユーザーがタスク指示</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">サンドボックス起動<br><small style="color:var(--text-tertiary)">リポジトリ読込</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">セットアップフェーズ<br><small style="color:var(--text-tertiary)">依存関係インストール</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">エージェントフェーズ<br><small style="color:var(--text-tertiary)">コード読み書き＋実行</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">結果をコミット</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">ユーザーがレビュー<br><small style="color:var(--text-tertiary)">PR作成 or 修正依頼</small></div>
+  </div>
+
+  <div class="card">
+    <h4>🏗️ サンドボックス環境</h4>
+    <p>各タスクはOpenAIが管理するクラウド上の<strong>隔離されたコンテナ</strong>内で実行されます。このコンテナにはユーザーのGitHubリポジトリが事前にロードされ、独立した開発環境として機能します。重要な設計上の特徴として、エージェントフェーズではデフォルトでインターネットアクセスが無効化されます。これにより、外部からの悪意ある命令注入（プロンプトインジェクション）のリスクを低減しています。</p>
+    <p>サンドボックスは<strong>2段階のランタイムモデル</strong>で動作します。まず「セットアップフェーズ」で、ネットワーク接続を許可して依存関係のインストールなどを実行します。その後の「エージェントフェーズ」ではネットワークを遮断し、リポジトリ内のコードとプリインストールされた依存関係のみを使って作業を行います。</p>
+  </div>
+
+  <div class="card">
+    <h4>📂 マルチファイル操作</h4>
+    <p>Codexはリポジトリ全体にアクセスできるため、複数のファイルにまたがる変更を一貫して行えます。例えば、APIのエンドポイントを追加する場合、ルーティングファイル、コントローラー、モデル、テストファイル、さらにドキュメントまで、関連するすべてのファイルを同時に変更します。各タスクは独立したサンドボックスで実行されるため、複数の変更が競合することはありません。</p>
+  </div>
+
+  <div class="card">
+    <h4>🔄 自律実行ループ</h4>
+    <p>Codexの中核は「エージェントループ」です。モデルが次のアクション（ファイル読み込み、コード編集、コマンド実行など）を決定し、実行結果を確認し、次のアクションを決定する、というサイクルを繰り返します。テストが失敗した場合は原因を分析して修正を試み、成功するまでイテレーションを続けます。タスクの複雑さに応じて、完了までに1分〜30分程度かかります。</p>
+  </div>
+
+  <div class="card">
+    <h4>🌿 Worktree による並列安全性（Codex App）</h4>
+    <p>2026年2月にリリースされたCodex Appでは、Gitのworktree機能を内蔵しています。複数のエージェントが同じリポジトリ上で作業する場合、それぞれが独立したコードのコピー上で動作するため、互いの変更が競合しません。異なるアプローチを並行して試すことも安全に行えます。</p>
+  </div>
+
+  <div class="card">
+    <h4>📋 AGENTS.md によるカスタマイズ</h4>
+    <p>リポジトリに <code>AGENTS.md</code> というファイルを配置することで、Codexにプロジェクト固有の指示を与えられます。テストの実行コマンド、コーディング規約、プロジェクト構造の説明、避けるべきパターンなどを記述します。これはREADME.mdのような自然言語ファイルで、Codexが作業前に自動的に読み取ります。</p>
+<pre class="code-block"># AGENTS.md の例
+
+## プロジェクト概要
+React + TypeScript のフロントエンドアプリケーション
+
+## テストコマンド
+npm run test        # ユニットテスト
+npm run test:e2e    # E2Eテスト
+npm run lint        # ESLint
+
+## コーディング規約
+- 関数コンポーネントとhooksを使用
+- CSS ModulesではなくTailwind CSSを使用
+- 型定義は明示的に記述（any禁止）
+- テストはVitest + Testing Libraryで記述
+
+## ディレクトリ構造
+src/
+  components/   # UIコンポーネント
+  hooks/        # カスタムフック
+  services/     # API通信層
+  types/        # TypeScript型定義
+  utils/        # ユーティリティ関数</pre>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 4 — HOW TO USE
+     ============================================================ -->
+<section class="section" id="s4">
+  <div class="section-label">Section 04 — How to Use</div>
+  <h2 class="section-title"><span class="num">04</span>使い方</h2>
+
+  <div class="prose">
+    <p>Codex Cloudを使う方法は複数ありますが、最も基本的なのはChatGPTのWebインターフェースからの操作です。2026年3月現在、Codex App（デスクトップアプリ）、IDE拡張、GitHub上からの直接操作も可能になっています。</p>
+  </div>
+
+  <h3 style="margin:28px 0 16px;font-size:1.05rem;font-weight:700;">ChatGPTからの起動方法</h3>
+
+  <div class="steps">
+    <div class="step-item">
+      <div class="step-num"></div>
+      <div class="step-body">
+        <h4>Codexにアクセス</h4>
+        <p><a href="https://chatgpt.com/codex" target="_blank">chatgpt.com/codex</a> にアクセスするか、ChatGPTのサイドバーから「Codex」を選択します。初回はGitHubアカウントの連携が求められます。</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num"></div>
+      <div class="step-body">
+        <h4>リポジトリを選択</h4>
+        <p>連携したGitHubアカウントからリポジトリを選択します。Codexはそのリポジトリのコード全体をサンドボックスにロードします。</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num"></div>
+      <div class="step-body">
+        <h4>タスクを入力</h4>
+        <p>プロンプト欄にタスク内容を自然言語で記述します。コーディングタスクの場合は「Code」ボタン、コードベースに関する質問は「Ask」ボタンを押します。</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num"></div>
+      <div class="step-body">
+        <h4>進捗をリアルタイム監視</h4>
+        <p>Codexの作業状況はリアルタイムで表示されます。ターミナルログ、編集中のファイル、テスト結果などを確認できます。GPT-5.3-Codexでは作業中にリアルタイムで会話・フィードバックも可能です。</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num"></div>
+      <div class="step-body">
+        <h4>結果をレビュー</h4>
+        <p>タスク完了後、変更されたファイルのdiff、テスト結果、ターミナルログを確認します。問題がなければ「Open Pull Request」でGitHubにPRを作成するか、ローカル環境に変更を取り込みます。</p>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="margin:28px 0 16px;font-size:1.05rem;font-weight:700;">GitHub連携</h3>
+
+  <div class="prose">
+    <p>Codexは GitHub と深く統合されています。PR上で <code>@codex</code> をメンションすることで、Codexにコードレビューやタスク実行を依頼できます。IssueからCodexにタスクを割り当てることも可能です。リポジトリの自動レビュー設定を有効にすると、新しいPRに対して自動的にCodexレビューが実行されます。</p>
+  </div>
+
+  <h3 style="margin:28px 0 16px;font-size:1.05rem;font-weight:700;">効果的なタスク指示のコツ</h3>
+
+  <div class="grid-2">
+    <div class="card">
+      <h4>✅ 良い指示の例</h4>
+      <p>「src/api/users.ts に GET /users/:id エンドポイントを追加して。Prisma ORMでユーザーを取得し、存在しない場合は404を返す。ユニットテストも作成して。」</p>
+      <p style="margin-top:8px"><span class="tag green">具体的</span><span class="tag green">スコープ明確</span><span class="tag green">テスト指定</span></p>
+    </div>
+    <div class="card">
+      <h4>❌ 避けるべき指示の例</h4>
+      <p>「アプリをもっと良くして。」</p>
+      <p style="margin-top:8px"><span class="tag red">曖昧</span><span class="tag red">スコープ不明</span><span class="tag red">成功基準なし</span></p>
+    </div>
+  </div>
+
+  <div class="callout">
+    <span class="callout-icon">💡</span>
+    <div><strong>プロのコツ：</strong>複数の小さなタスクに分割して並列実行すると、1つの大きなタスクを投げるよりも成功率が高くなります。「リファクタリング」「テスト追加」「ドキュメント更新」を別々のタスクとして同時に走らせましょう。</div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 5 — MODELS
+     ============================================================ -->
+<section class="section" id="s5">
+  <div class="section-label">Section 05 — Models</div>
+  <h2 class="section-title"><span class="num">05</span>対応モデル</h2>
+
+  <div class="prose">
+    <p>Codexは専用に最適化されたモデルで動作します。初期リリース時は <code>codex-1</code>（o3ベース）でしたが、その後複数回のモデルアップデートを経て、2026年2月には最新の <code>GPT-5.3-Codex</code> に到達しています。</p>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>モデル名</th><th>リリース時期</th><th>ベース</th><th>特徴</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>codex-1</strong></td>
+          <td>2025年5月</td>
+          <td>o3 最適化版</td>
+          <td>初代Codexモデル。RL（強化学習）で実世界のコーディングタスクに最適化。SWE-Bench Verifiedで高スコア。</td>
+        </tr>
+        <tr>
+          <td><strong>codex-mini-latest</strong></td>
+          <td>2025年5月</td>
+          <td>o4-mini 最適化版</td>
+          <td>Codex CLI向けの軽量モデル。低レイテンシのコード Q&A・編集に特化。定期的にスナップショット更新。</td>
+        </tr>
+        <tr>
+          <td><strong>GPT-5-Codex</strong></td>
+          <td>2025年後半</td>
+          <td>GPT-5</td>
+          <td>GPT-5ベースのCodex特化モデル。コンテキスト理解と多言語対応が向上。</td>
+        </tr>
+        <tr>
+          <td><strong>GPT-5.1-Codex-Max</strong></td>
+          <td>2025年11月</td>
+          <td>GPT-5.1</td>
+          <td>大規模リポジトリ対応。長時間タスクの安定性向上。</td>
+        </tr>
+        <tr>
+          <td><strong>GPT-5.1-Codex-Mini</strong></td>
+          <td>2025年後半</td>
+          <td>GPT-5.1 小型版</td>
+          <td>ローカルタスク用軽量モデル。使用量制限を約4倍に延長可能。</td>
+        </tr>
+        <tr>
+          <td><strong>GPT-5.2-Codex</strong></td>
+          <td>2025年12月中旬</td>
+          <td>GPT-5.2</td>
+          <td>リリース後にCodex利用者が倍増。推論能力とコード品質が大幅向上。</td>
+        </tr>
+        <tr>
+          <td><strong>GPT-5.3-Codex</strong> <span class="tag green">最新</span></td>
+          <td>2026年2月5日</td>
+          <td>GPT-5.3</td>
+          <td>最も高性能なCodexモデル。SWE-Bench Pro/Terminal-Bench 2.0でSOTA。25%高速化。リアルタイム対話対応。自己改良能力（自身のトレーニングとデプロイにCodexを使用）。サイバーセキュリティ「高能力」分類。</td>
+        </tr>
+        <tr>
+          <td><strong>GPT-5.3-Codex-Spark</strong> <span class="tag yellow">Preview</span></td>
+          <td>2026年2月12日</td>
+          <td>GPT-5.3 高速版</td>
+          <td>15倍高速な生成速度。128kコンテキスト。Pro限定リサーチプレビュー。低レイテンシ特化ハードウェアで動作。</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout info">
+    <span class="callout-icon">📊</span>
+    <div>
+      <strong>GPT-5.3-Codex のベンチマーク成績:</strong><br>
+      SWE-Bench Pro: <strong>56.8%</strong> / Terminal-Bench 2.0: <strong>77.3%</strong> / OSWorld-Verified: <strong>64.7%</strong>（人間の平均は約72%） / GDPval: <strong>70.9%</strong> / Cybersecurity CTF: <strong>77.6%</strong>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 6 — PRICING
+     ============================================================ -->
+<section class="section" id="s6">
+  <div class="section-label">Section 06 — Pricing</div>
+  <h2 class="section-title"><span class="num">06</span>料金・利用条件</h2>
+
+  <div class="prose">
+    <p>Codexの利用はChatGPTサブスクリプションに含まれており、追加の契約は不要です。ただし、プランによって使用量上限が異なります。2026年3月現在、期間限定でFree/Goプランでも無料で利用可能であり、有料プランでは2倍のレート制限が適用されています。</p>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>プラン</th><th>月額料金</th><th>ローカルメッセージ / 5時間</th><th>クラウドタスク / 5時間</th><th>コードレビュー / 週</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Free / Go</strong><br><span class="tag yellow">期間限定</span></td>
+          <td>無料</td>
+          <td colspan="3" style="text-align:center">期間限定で利用可能（制限あり）</td>
+        </tr>
+        <tr>
+          <td><strong>Plus</strong></td>
+          <td>$20/月</td>
+          <td>45〜225</td>
+          <td>10〜60</td>
+          <td>10〜25</td>
+        </tr>
+        <tr>
+          <td><strong>Pro</strong></td>
+          <td>$200/月</td>
+          <td>300〜1,500</td>
+          <td>50〜400</td>
+          <td>100〜250</td>
+        </tr>
+        <tr>
+          <td><strong>Business</strong></td>
+          <td>$25/ユーザー/月</td>
+          <td>45〜225</td>
+          <td>10〜60</td>
+          <td>10〜25</td>
+        </tr>
+        <tr>
+          <td><strong>Enterprise / Edu</strong></td>
+          <td>要相談</td>
+          <td colspan="3" style="text-align:center">固定制限なし（クレジットでスケール）</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="prose">
+    <p>使用量の幅が大きいのは、タスクのサイズと複雑さによって消費量が異なるためです。小さなスクリプトは使用量のほんの一部ですが、大きなコードベースや長時間タスクでは1メッセージあたりの消費が多くなります。</p>
+  </div>
+
+  <h3 style="margin:28px 0 16px;font-size:1.05rem;font-weight:700;">クレジットシステム</h3>
+
+  <div class="prose">
+    <p>使用量上限に達した場合、追加クレジットを購入して利用を継続できます。平均的なクレジット消費量は以下のとおりです。</p>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>タスク種別</th><th>単位</th><th>GPT-5.3-Codex</th><th>GPT-5.1-Codex-Mini</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>ローカルタスク</td><td>1メッセージ</td><td>〜5 クレジット</td><td>〜1 クレジット</td></tr>
+        <tr><td>クラウドタスク</td><td>1メッセージ</td><td>〜25 クレジット</td><td>非対応</td></tr>
+        <tr><td>コードレビュー</td><td>1 PR</td><td>〜25 クレジット</td><td>非対応</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <span class="callout-icon">💡</span>
+    <div><strong>節約のコツ：</strong>GPT-5.1-Codex-Miniをルーティンタスクに使うと使用量を約4倍延長できます。AGENTS.mdのサイズを適切に管理し、不要なMCPサーバーを無効にすることでも消費を抑えられます。</div>
+  </div>
+
+  <h3 style="margin:28px 0 16px;font-size:1.05rem;font-weight:700;">プラン別の特徴</h3>
+
+  <div class="grid-2">
+    <div class="card">
+      <h4>Plus — $20/月</h4>
+      <p>週に数回の集中コーディングセッションに最適。最新モデル（GPT-5.3-Codex）へのアクセス、Web/CLI/IDE/iOS対応、GitHub連携やSlack統合などクラウド機能込み。</p>
+    </div>
+    <div class="card">
+      <h4>Pro — $200/月</h4>
+      <p>日常的なフルタイム開発向け。Plusの全機能に加え、優先処理、GPT-5.3-Codex-Spark（リサーチプレビュー）、6倍の使用量上限、10倍のコードレビュー回数。</p>
+    </div>
+    <div class="card">
+      <h4>Business — $25/ユーザー/月</h4>
+      <p>スタートアップ・成長企業向け。Plusの全機能に加え、大型VMによる高速クラウドタスク、SAML SSO、MFA、管理コンソール。ビジネスデータはデフォルトでトレーニング不使用。</p>
+    </div>
+    <div class="card">
+      <h4>Enterprise / Edu — 要相談</h4>
+      <p>組織全体でのCodex展開。Businessの全機能に加え、優先処理、SCIM/EKM対応、RBAC、監査ログ、Compliance API、データ保持・データレジデンシー制御。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 7 — SECURITY
+     ============================================================ -->
+<section class="section" id="s7">
+  <div class="section-label">Section 07 — Security &amp; Privacy</div>
+  <h2 class="section-title"><span class="num">07</span>セキュリティとプライバシー</h2>
+
+  <div class="prose">
+    <p>企業でAIコーディングツールを採用する際、最大の懸念事項はセキュリティとプライバシーです。Codexはこれらの懸念に対して多層的なアプローチを取っています。</p>
+  </div>
+
+  <div class="card">
+    <h4>🔒 サンドボックス隔離</h4>
+    <p>Codex Cloudの各タスクは、OpenAIが管理する<strong>隔離されたコンテナ</strong>内で実行されます。ホストシステムや無関係なデータへのアクセスは完全にブロックされます。2段階のランタイムモデルにより、セットアップ時に設定されたシークレット（APIキーなど）はエージェントフェーズ開始前に削除されます。</p>
+  </div>
+
+  <div class="card">
+    <h4>🌐 ネットワーク隔離</h4>
+    <p>エージェントフェーズではデフォルトでインターネットアクセスが無効です。エージェントは明示的に提供されたGitHubリポジトリのコードと、セットアップスクリプトで事前インストールされた依存関係のみを利用できます。外部Webサイト、API、その他のサービスへのアクセスはできません。ユーザーが環境設定でインターネットアクセスを有効化することも可能ですが、プロンプトインジェクションのリスクが増加します。</p>
+  </div>
+
+  <div class="card">
+    <h4>🛡️ コード学習ポリシー</h4>
+    <p>OpenAIのビジネスデータに関するポリシーとして、<strong>Business/Enterprise プランではデフォルトでユーザーのビジネスデータをモデルのトレーニングに使用しません</strong>。個人プラン（Free/Plus/Pro）では、設定によりオプトアウトが可能です。Enterprise向けにはデータ保持期間のカスタマイズやゼロデータ保持ポリシーも選択できます。</p>
+  </div>
+
+  <div class="card">
+    <h4>✅ 検証可能性（Verifiability）</h4>
+    <p>Codexは実行したすべてのアクションの証跡を提供します。ターミナルログ、テスト出力、ファイル変更のdiffなど、各ステップを人間が追跡・検証できます。不確実な場合やテスト失敗時は、Codexが明示的にその旨を報告し、ユーザーが判断できるようにします。</p>
+  </div>
+
+  <div class="card">
+    <h4>🚫 悪用防止</h4>
+    <p>Codexはマルウェア開発などの悪意ある用途を識別して拒否するよう訓練されています。一方で、カーネルエンジニアリングなどの正当なセキュリティ関連タスクは区別して許可します。GPT-5.3-Codexはサイバーセキュリティ能力が「高」に分類されており、一部の高リスクリクエストは自動的に前世代モデルにルーティングされる安全機構が導入されています。</p>
+  </div>
+
+  <div class="card">
+    <h4>📊 監査とモニタリング（Enterprise）</h4>
+    <p>Enterprise向けにはOpenTelemetry（OTel）ベースのモニタリング、Compliance API による監査ログ、RBAC によるアクセス制御が提供されます。テレメトリはデフォルトOFFで、明示的に有効化する必要があります。プロンプト内容はデフォルトで秘匿化されます。</p>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>セキュリティ機能</th><th>Codex Cloud</th><th>Codex CLI / IDE拡張</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>サンドボックス</td><td>OpenAI管理コンテナ</td><td>OS レベル（macOS: Seatbelt / Linux: Landlock+seccomp）</td></tr>
+        <tr><td>ネットワーク</td><td>デフォルトOFF、設定で有効化</td><td>デフォルトOFF、設定で有効化</td></tr>
+        <tr><td>ファイルアクセス</td><td>リポジトリ内のみ</td><td>ワークスペース内のみ（.git等は読み取り専用保護）</td></tr>
+        <tr><td>承認ポリシー</td><td>N/A（自動）</td><td>on-request / untrusted / never から選択</td></tr>
+        <tr><td>データ学習</td><td>Business/Enterprise: 不使用</td><td>API経由: 不使用</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 8 — USE CASES
+     ============================================================ -->
+<section class="section" id="s8">
+  <div class="section-label">Section 08 — Use Cases</div>
+  <h2 class="section-title"><span class="num">08</span>ユースケース集 10選</h2>
+
+  <div class="prose">
+    <p>Codexは幅広い開発タスクに活用できます。以下は実際の企業やチームでの活用例を含む代表的なユースケースです。</p>
+  </div>
+
+  <div class="card">
+    <h4>① テストカバレッジの向上</h4>
+    <p>既存のコードベースに対してユニットテストを一括生成します。Superhuman社では、テストカバレッジの改善と統合テストの失敗修正にCodexを活用しています。「src/services/ 配下の全ファイルに対して、エッジケースを含むユニットテストを作成して」といった指示で、複数ファイルのテストを並列生成できます。</p>
+    <div class="meter"><div class="meter-fill" style="width:92%"></div></div>
+    <small style="color:var(--text-tertiary)">効果: テスト作成工数 80〜90% 削減</small>
+  </div>
+
+  <div class="card">
+    <h4>② 大規模リファクタリング</h4>
+    <p>Temporal社では、大規模コードベースのリファクタリングにCodexを活用しています。例えば「deprecated APIの呼び出しをすべて新しいAPIに置き換える」「コールバックベースのコードをasync/awaitに変換する」といったリポジトリ全体にわたる変更を、複数エージェントで並列実行できます。</p>
+    <div class="meter"><div class="meter-fill" style="width:85%"></div></div>
+    <small style="color:var(--text-tertiary)">効果: リファクタリング工期 60〜80% 短縮</small>
+  </div>
+
+  <div class="card">
+    <h4>③ 新機能の実装スキャフォールド</h4>
+    <p>新しい機能の骨格（ルーティング、コントローラー、モデル、テスト、型定義など）をCodexに生成させ、細部は人間が仕上げるワークフロー。Codexが「80%の基盤」を作り、開発者が「残り20%の品質」を担保します。</p>
+    <div class="meter"><div class="meter-fill" style="width:80%"></div></div>
+    <small style="color:var(--text-tertiary)">効果: 実装開始までの時間を 70% 短縮</small>
+  </div>
+
+  <div class="card">
+    <h4>④ オンコール問題のトリアージ</h4>
+    <p>OpenAI社内では、エンジニアが朝一番にCodexにオンコール問題のトリアージを依頼するワークフローが定着しています。エラーログの分析、影響範囲の特定、修正パッチの提案まで、コンテキストスイッチを最小化しながらバグを処理できます。</p>
+    <div class="meter"><div class="meter-fill" style="width:75%"></div>
+</body>
+</html>
