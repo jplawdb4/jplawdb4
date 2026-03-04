@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code（クロードコード）包括的体系マップ — SVG図解</title>
+<style>
+body { margin: 0; padding: 20px; background: #f5f5f5; display: flex; justify-content: center; }
+.container { max-width: 1400px; width: 100%; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; }
+svg { width: 100%; height: auto; display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 2520" font-family="'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif">
+  <defs>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.1"/>
+    </filter>
+    <linearGradient id="headerGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1a237e"/>
+      <stop offset="50%" stop-color="#283593"/>
+      <stop offset="100%" stop-color="#1565c0"/>
+    </linearGradient>
+    <linearGradient id="engineGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0d47a1"/>
+      <stop offset="100%" stop-color="#1565c0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1400" height="2520" fill="#f5f6fa" rx="0"/>
+
+  <!-- ===== HEADER ===== -->
+  <rect x="0" y="0" width="1400" height="72" fill="url(#headerGrad)"/>
+  <text x="700" y="32" text-anchor="middle" fill="#fff" font-size="26" font-weight="bold">Claude Code 体系マップ</text>
+  <text x="700" y="56" text-anchor="middle" fill="#b3c6e7" font-size="12">Anthropic のエージェント型コーディングツール ─ CLI / IDE / Desktop / Web で統一体験を提供</text>
+
+  <!-- ===== SECTION 1: ARCHITECTURE ===== -->
+  <rect x="15" y="84" width="1370" height="258" rx="10" fill="#e3f2fd" stroke="#1976d2" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="15" y="84" width="1370" height="28" rx="10" fill="#1565c0"/>
+  <rect x="15" y="100" width="1370" height="12" fill="#1565c0"/>
+  <text x="700" y="102" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">1. 基本アーキテクチャ — 5つのサーフェスが共通エンジンに接続</text>
+
+  <!-- 5 surfaces -->
+  <g transform="translate(40, 124)">
+    <!-- Terminal -->
+    <rect x="0" y="0" width="240" height="56" rx="8" fill="#fff" stroke="#1976d2" stroke-width="1.2"/>
+    <text x="120" y="20" text-anchor="middle" fill="#1565c0" font-size="12" font-weight="bold">Terminal CLI（メイン）</text>
+    <text x="120" y="35" text-anchor="middle" fill="#555" font-size="9.5">フル機能CLI。ファイル編集、コマンド実行</text>
+    <text x="120" y="48" text-anchor="middle" fill="#777" font-size="8.5">curl -fsSL https://claude.ai/install.sh | bash</text>
+    <!-- VS Code -->
+    <rect x="260" y="0" width="200" height="56" rx="8" fill="#fff" stroke="#1976d2" stroke-width="1.2"/>
+    <text x="360" y="20" text-anchor="middle" fill="#1565c0" font-size="12" font-weight="bold">VS Code / Cursor</text>
+    <text x="360" y="35" text-anchor="middle" fill="#555" font-size="9.5">インラインdiff、@メンション</text>
+    <text x="360" y="48" text-anchor="middle" fill="#777" font-size="8.5">プラン確認、会話履歴</text>
+    <!-- JetBrains -->
+    <rect x="480" y="0" width="200" height="56" rx="8" fill="#fff" stroke="#1976d2" stroke-width="1.2"/>
+    <text x="580" y="20" text-anchor="middle" fill="#1565c0" font-size="12" font-weight="bold">JetBrains Plugin</text>
+    <text x="580" y="35" text-anchor="middle" fill="#555" font-size="9.5">IntelliJ, PyCharm, WebStorm</text>
+    <text x="580" y="48" text-anchor="middle" fill="#777" font-size="8.5">diff表示、選択コンテキスト共有</text>
+    <!-- Desktop -->
+    <rect x="700" y="0" width="200" height="56" rx="8" fill="#fff" stroke="#1976d2" stroke-width="1.2"/>
+    <text x="800" y="20" text-anchor="middle" fill="#1565c0" font-size="12" font-weight="bold">Desktop App</text>
+    <text x="800" y="35" text-anchor="middle" fill="#555" font-size="9.5">スタンドアロン。複数セッション</text>
+    <text x="800" y="48" text-anchor="middle" fill="#777" font-size="8.5">macOS / Windows 対応</text>
+    <!-- Web -->
+    <rect x="920" y="0" width="200" height="56" rx="8" fill="#fff" stroke="#1976d2" stroke-width="1.2"/>
+    <text x="1020" y="20" text-anchor="middle" fill="#1565c0" font-size="12" font-weight="bold">Web (claude.ai/code)</text>
+    <text x="1020" y="35" text-anchor="middle" fill="#555" font-size="9.5">ブラウザ上・iOSアプリ</text>
+    <text x="1020" y="48" text-anchor="middle" fill="#777" font-size="8.5">ローカル環境不要、並列タスク</text>
+
+    <!-- Connection arrows to engine -->
+    <line x1="120" y1="56" x2="120" y2="86" stroke="#1976d2" stroke-width="1" stroke-dasharray="3,2"/>
+    <line x1="360" y1="56" x2="360" y2="86" stroke="#1976d2" stroke-width="1" stroke-dasharray="3,2"/>
+    <line x1="580" y1="56" x2="580" y2="86" stroke="#1976d2" stroke-width="1" stroke-dasharray="3,2"/>
+    <line x1="800" y1="56" x2="800" y2="86" stroke="#1976d2" stroke-width="1" stroke-dasharray="3,2"/>
+    <line x1="1020" y1="56" x2="1020" y2="86" stroke="#1976d2" stroke-width="1" stroke-dasharray="3,2"/>
+
+    <!-- Engine -->
+    <rect x="140" y="86" width="840" height="52" rx="10" fill="url(#engineGrad)" stroke="#0d47a1" stroke-width="1.5"/>
+    <text x="560" y="108" text-anchor="middle" fill="#fff" font-size="15" font-weight="bold">Claude Code Engine（共通基盤）</text>
+    <text x="560" y="126" text-anchor="middle" fill="#bbdefb" font-size="10">CLAUDE.md / settings.json / MCP / Skills / Hooks — 全サーフェスで共有</text>
+
+    <!-- Supported models -->
+    <rect x="1020" y="86" width="280" height="52" rx="8" fill="#e8eaf6" stroke="#3f51b5" stroke-width="1"/>
+    <text x="1160" y="104" text-anchor="middle" fill="#283593" font-size="11" font-weight="bold">対応モデル</text>
+    <text x="1160" y="120" text-anchor="middle" fill="#555" font-size="9.5">Opus 4.6 / Sonnet 4.6 / Haiku + Bedrock / Vertex AI</text>
+
+    <!-- Key capabilities row -->
+    <rect x="0" y="152" width="1300" height="70" rx="8" fill="#fff" stroke="#90caf9" stroke-width="0.8"/>
+    <text x="650" y="170" text-anchor="middle" fill="#1565c0" font-size="11" font-weight="bold">主要能力：コードベース理解 → マルチファイル編集 → コマンド実行 → テスト → PR作成 → CI/CD統合</text>
+    <text x="168" y="192" text-anchor="middle" fill="#333" font-size="9.5">ファイル読み書き・検索</text>
+    <text x="415" y="192" text-anchor="middle" fill="#333" font-size="9.5">シェルコマンド実行</text>
+    <text x="635" y="192" text-anchor="middle" fill="#333" font-size="9.5">Extended Thinking</text>
+    <text x="865" y="192" text-anchor="middle" fill="#333" font-size="9.5">Git操作・ブランチ管理</text>
+    <text x="1105" y="192" text-anchor="middle" fill="#333" font-size="9.5">Web検索・取得</text>
+    <text x="168" y="210" text-anchor="middle" fill="#888" font-size="8.5">Read/Write/Edit/Glob/Grep</text>
+    <text x="415" y="210" text-anchor="middle" fill="#888" font-size="8.5">Bash (background対応)</text>
+    <text x="635" y="210" text-anchor="middle" fill="#888" font-size="8.5">Adaptive Reasoning (Opus 4.6)</text>
+    <text x="865" y="210" text-anchor="middle" fill="#888" font-size="8.5">Worktree並列セッション</text>
+    <text x="1105" y="210" text-anchor="middle" fill="#888" font-size="8.5">WebFetch / WebSearch</text>
+  </g>
+
+  <!-- ===== SECTION 2: THREE COLUMNS ===== -->
+
+  <!-- Column 1: Core Tools & Permissions (Blue) -->
+  <g transform="translate(15, 355)">
+    <rect x="0" y="0" width="440" height="700" rx="10" fill="#e3f2fd" stroke="#1976d2" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="440" height="26" rx="10" fill="#1565c0"/>
+    <rect x="0" y="14" width="440" height="12" fill="#1565c0"/>
+    <text x="220" y="18" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">2. コアツール群 ＆ 権限モデル</text>
+
+    <!-- Tools -->
+    <text x="15" y="50" fill="#0d47a1" font-size="12" font-weight="bold">内蔵ツール一覧</text>
+    <rect x="10" y="58" width="420" height="195" rx="6" fill="#fff" stroke="#90caf9" stroke-width="0.8"/>
+
+    <text x="20" y="76" fill="#1565c0" font-size="10" font-weight="bold">ファイル操作</text>
+    <text x="20" y="90" fill="#333" font-size="9.5">Read — ファイル内容読み取り（offset/limit指定可）</text>
+    <text x="20" y="103" fill="#333" font-size="9.5">Write — ファイル作成・上書き</text>
+    <text x="20" y="116" fill="#333" font-size="9.5">Edit — 文字列置換による部分編集（replace_all対応）</text>
+    <text x="20" y="129" fill="#333" font-size="9.5">Glob — パターンマッチでファイル検索</text>
+    <text x="20" y="142" fill="#333" font-size="9.5">Grep — 正規表現でファイル内容検索</text>
+
+    <text x="230" y="76" fill="#1565c0" font-size="10" font-weight="bold">実行・エージェント</text>
+    <text x="230" y="90" fill="#333" font-size="9.5">Bash — シェルコマンド（bg対応）</text>
+    <text x="230" y="103" fill="#333" font-size="9.5">Agent — サブエージェント起動</text>
+
+    <text x="230" y="123" fill="#1565c0" font-size="10" font-weight="bold">Web・その他</text>
+    <text x="230" y="137" fill="#333" font-size="9.5">WebFetch — URL取得・処理</text>
+    <text x="230" y="150" fill="#333" font-size="9.5">WebSearch — Web検索</text>
+
+    <text x="20" y="165" fill="#1565c0" font-size="10" font-weight="bold">拡張ツール</text>
+    <text x="20" y="179" fill="#333" font-size="9.5">MCPTools — MCP経由の外部ツール</text>
+    <text x="20" y="192" fill="#333" font-size="9.5">MCPSearch — 大量MCP時の動的検索</text>
+    <text x="230" y="179" fill="#333" font-size="9.5">Notebook* — ノートブック操作</text>
+    <text x="230" y="192" fill="#333" font-size="9.5">Skill — スキル呼び出し</text>
+    <text x="20" y="210" fill="#888" font-size="8.5">※Notebook系ツールはJupyterなど特定環境で利用</text>
+    <text x="20" y="222" fill="#888" font-size="8.5">※AskUserQuestion — ユーザーへの質問（Plan Modeで使用）</text>
+    <text x="20" y="244" fill="#888" font-size="8.5">※TaskList — Agent Teams用共有タスクリスト操作</text>
+
+    <!-- Permission Model -->
+    <text x="15" y="270" fill="#0d47a1" font-size="12" font-weight="bold">権限モデル（Permission Model）</text>
+    <rect x="10" y="278" width="420" height="150" rx="6" fill="#fff" stroke="#90caf9" stroke-width="0.8"/>
+
+    <text x="20" y="296" fill="#1565c0" font-size="10" font-weight="bold">Permission Modes（5モード）</text>
+    <rect x="20" y="302" width="76" height="18" rx="4" fill="#c8e6c9"/>
+    <text x="58" y="315" text-anchor="middle" fill="#2e7d32" font-size="8.5" font-weight="bold">default</text>
+    <rect x="100" y="302" width="82" height="18" rx="4" fill="#fff9c4"/>
+    <text x="141" y="315" text-anchor="middle" fill="#f57f17" font-size="8.5" font-weight="bold">acceptEdits</text>
+    <rect x="186" y="302" width="52" height="18" rx="4" fill="#bbdefb"/>
+    <text x="212" y="315" text-anchor="middle" fill="#1565c0" font-size="8.5" font-weight="bold">plan</text>
+    <rect x="242" y="302" width="62" height="18" rx="4" fill="#ffe0b2"/>
+    <text x="273" y="315" text-anchor="middle" fill="#e65100" font-size="8.5" font-weight="bold">dontAsk</text>
+    <rect x="308" y="302" width="110" height="18" rx="4" fill="#ffcdd2"/>
+    <text x="363" y="315" text-anchor="middle" fill="#c62828" font-size="8.5" font-weight="bold">bypassPermissions</text>
+
+    <text x="20" y="340" fill="#1565c0" font-size="10" font-weight="bold">Permission Rules</text>
+    <text x="20" y="354" fill="#333" font-size="9.5">allow — 自動許可（例: Bash(npm run *)）</text>
+    <text x="20" y="367" fill="#333" font-size="9.5">ask — 確認プロンプト表示</text>
+    <text x="20" y="380" fill="#333" font-size="9.5">deny — 拒否（例: Read(./.env), WebFetch）</text>
+    <text x="20" y="395" fill="#888" font-size="8.5">評価順: deny → ask → allow（最初にマッチしたルールが適用）</text>
+    <text x="20" y="408" fill="#888" font-size="8.5">ワイルドカード対応: Bash(git diff *), Read(./secrets/**)</text>
+    <text x="20" y="421" fill="#888" font-size="8.5">MCP用: mcp__server__tool, WebFetch(domain:example.com)</text>
+
+    <!-- Sandbox -->
+    <text x="15" y="446" fill="#0d47a1" font-size="12" font-weight="bold">サンドボックス（Sandbox）</text>
+    <rect x="10" y="454" width="420" height="112" rx="6" fill="#fff" stroke="#90caf9" stroke-width="0.8"/>
+    <text x="20" y="472" fill="#333" font-size="9.5">OS レベルのファイルシステム・ネットワーク分離</text>
+    <text x="20" y="487" fill="#333" font-size="9.5">sandbox.enabled: true で有効化（macOS / Linux / WSL2）</text>
+    <text x="20" y="502" fill="#333" font-size="9.5">filesystem.allowWrite / denyWrite / denyRead — パス制御</text>
+    <text x="20" y="517" fill="#333" font-size="9.5">network.allowedDomains — ドメインベースの通信制御</text>
+    <text x="20" y="532" fill="#333" font-size="9.5">excludedCommands — サンドボックス外で実行するコマンド</text>
+    <text x="20" y="547" fill="#333" font-size="9.5">autoAllowBashIfSandboxed: true — サンドボックス内は自動許可</text>
+    <text x="20" y="560" fill="#888" font-size="8.5">※Docker環境向けの弱いサンドボックスも利用可（セキュリティ低下）</text>
+
+    <!-- Managed Settings -->
+    <text x="15" y="585" fill="#0d47a1" font-size="12" font-weight="bold">エンタープライズ管理</text>
+    <rect x="10" y="593" width="420" height="96" rx="6" fill="#fff" stroke="#90caf9" stroke-width="0.8"/>
+    <text x="20" y="611" fill="#333" font-size="9.5">Managed Settings — サーバー/MDM/ファイルベースで配布</text>
+    <text x="20" y="626" fill="#333" font-size="9.5">managed-settings.json — 最高優先度、ユーザー上書き不可</text>
+    <text x="20" y="641" fill="#333" font-size="9.5">managed-mcp.json — 組織全体のMCPサーバー管理</text>
+    <text x="20" y="656" fill="#333" font-size="9.5">Managed CLAUDE.md — 全ユーザー適用の組織ポリシー</text>
+    <text x="20" y="671" fill="#333" font-size="9.5">disableBypassPermissionsMode — 危険モード無効化</text>
+    <text x="20" y="684" fill="#888" font-size="8.5">macOS: plist / Linux: /etc/claude-code/ / Win: レジストリ</text>
+  </g>
+
+  <!-- Column 2: Development Workflows (Blue) -->
+  <g transform="translate(475, 355)">
+    <rect x="0" y="0" width="440" height="700" rx="10" fill="#e3f2fd" stroke="#1976d2" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="440" height="26" rx="10" fill="#1565c0"/>
+    <rect x="0" y="14" width="440" height="12" fill="#1565c0"/>
+    <text x="220" y="18" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">3. 開発ワークフロー</text>
+
+    <!-- Workflow items -->
+    <text x="15" y="50" fill="#0d47a1" font-size="12" font-weight="bold">日常の開発タスク</text>
+    <rect x="10" y="58" width="420" height="248" rx="6" fill="#fff" stroke="#90caf9" stroke-width="0.8"/>
+
+    <rect x="18" y="66" width="195" height="52" rx="5" fill="#e8f5e9" stroke="#81c784" stroke-width="0.8"/>
+    <text x="116" y="82" text-anchor="middle" fill="#2e7d32" font-size="10" font-weight="bold">コードベース探索</text>
+    <text x="116" y="96" text-anchor="middle" fill="#555" font-size="8.5">構造理解、関連コード検索</text>
+    <text x="116" y="108" text-anchor="middle" fill="#555" font-size="8.5">「このプロジェクトの構造を教えて」</text>
+
+    <rect x="220" y="66" width="195" height="52" rx="5" fill="#fce4ec" stroke="#e57373" stroke-width="0.8"/>
+    <text x="318" y="82" text-anchor="middle" fill="#c62828" font-size="10" font-weight="bold">バグ修正・デバッグ</text>
+    <text x="318" y="96" text-anchor="middle" fill="#555" font-size="8.5">エラー解析、根本原因特定</text>
+    <text x="318" y="108" text-anchor="middle" fill="#555" font-size="8.5">「このエラーを修正して」</text>
+
+    <rect x="18" y="124" width="195" height="52" rx="5" fill="#e8eaf6" stroke="#9fa8da" stroke-width="0.8"/>
+    <text x="116" y="140" text-anchor="middle" fill="#283593" font-size="10" font-weight="bold">リファクタリング</text>
+    <text x="116" y="154" text-anchor="middle" fill="#555" font-size="8.5">モダンパターンへの移行</text>
+    <text x="116" y="166" text-anchor="middle" fill="#555" font-size="8.5">型安全性向上、コード整理</text>
+
+    <rect x="220" y="124" width="195" height="52" rx="5" fill="#fff8e1" stroke="#ffd54f" stroke-width="0.8"/>
+    <text x="318" y="140" text-anchor="middle" fill="#f57f17" font-size="10" font-weight="bold">テスト作成・実行</text>
+    <text x="318" y="154" text-anchor="middle" fill="#555" font-size="8.5">既存パターンに従ったテスト生成</text>
+    <text x="318" y="166" text-anchor="middle" fill="#555" font-size="8.5">エッジケース、カバレッジ分析</text>
+
+    <rect x="18" y="182" width="195" height="52" rx="5" fill="#e0f2f1" stroke="#80cbc4" stroke-width="0.8"/>
+    <text x="116" y="198" text-anchor="middle" fill="#00695c" font-size="10" font-weight="bold">PR作成・コードレビュー</text>
+    <text x="116" y="212" text-anchor="middle" fill="#555" font-size="8.5">create a pr / /commit-push-pr</text>
+    <text x="116" y="224" text-anchor="middle" fill="#555" font-size="8.5">自動PR作成+Slack通知</text>
+
+    <rect x="220" y="182" width="195" height="52" rx="5" fill="#f3e5f5" stroke="#ce93d8" stroke-width="0.8"/>
+    <text x="318" y="198" text-anchor="middle" fill="#7b1fa2" font-size="10" font-weight="bold">ドキュメント生成</text>
+    <text x="318" y="212" text-anchor="middle" fill="#555" font-size="8.5">README、APIドキュメント</text>
+    <text x="318" y="224" text-anchor="middle" fill="#555" font-size="8.5">コメント追加、変更ログ</text>
+
+    <text x="18" y="255" fill="#888" font-size="8.5">画像分析（ドラッグ&amp;ドロップ）、ファイル参照（@パス）、Unix パイプ連携</text>
+    <text x="18" y="268" fill="#888" font-size="8.5">出力形式: --output-format json/text/stream-json | -p でヘッドレスモード</text>
+    <text x="18" y="281" fill="#888" font-size="8.5">パイプ入出力: cat error.txt | claude -p 'explain' > output.txt</text>
+    <text x="18" y="294" fill="#888" font-size="8.5">lintスクリプト統合: "lint:claude": "claude -p 'review changes vs main'"</text>
+
+    <!-- Plan Mode & Thinking -->
+    <text x="15" y="325" fill="#0d47a1" font-size="12" font-weight="bold">Plan Mode ＆ Extended Thinking</text>
+    <rect x="10" y="333" width="420" height="105" rx="6" fill="#fff" stroke="#90caf9" stroke-width="0.8"/>
+    <text x="20" y="351" fill="#1565c0" font-size="10" font-weight="bold">Plan Mode（Shift+Tab で切替）</text>
+    <text x="20" y="365" fill="#333" font-size="9.5">読み取り専用で安全にコードベースを分析・計画策定</text>
+    <text x="20" y="378" fill="#333" font-size="9.5">claude --permission-mode plan で起動</text>
+    <text x="20" y="395" fill="#1565c0" font-size="10" font-weight="bold">Extended Thinking（デフォルト有効）</text>
+    <text x="20" y="409" fill="#333" font-size="9.5">Opus 4.6: Adaptive Reasoning（effort level: low/medium/high）</text>
+    <text x="20" y="422" fill="#333" font-size="9.5">他モデル: 固定予算（最大31,999トークン）| Option+T で切替</text>
+    <text x="20" y="435" fill="#888" font-size="8.5">Ctrl+O: verbose mode で思考過程表示</text>
+
+    <!-- Git Integration -->
+    <text x="15" y="458" fill="#0d47a1" font-size="12" font-weight="bold">Git統合 ＆ 並列作業</text>
+    <rect x="10" y="466" width="420" height="105" rx="6" fill="#fff" stroke="#90caf9" stroke-width="0.8"/>
+    <text x="20" y="484" fill="#1565c0" font-size="10" font-weight="bold">Git Worktrees（並列セッション）</text>
+    <text x="20" y="498" fill="#333" font-size="9.5">claude --worktree feature-auth — 分離されたブランチで作業</text>
+    <text x="20" y="511" fill="#333" font-size="9.5">サブエージェントも isolation: worktree で分離可能</text>
+    <text x="20" y="524" fill="#333" font-size="9.5">変更なし → 自動クリーンアップ / 変更あり → 保持確認</text>
+    <text x="20" y="540" fill="#1565c0" font-size="10" font-weight="bold">セッション管理</text>
+    <text x="20" y="554" fill="#333" font-size="9.5">--continue / --resume / --from-pr 123 / /resume ピッカー</text>
+    <text x="20" y="567" fill="#888" font-size="8.5">セッション名付け、ブランチフィルター、フォークセッション</text>
+
+    <!-- Headless & Automation -->
+    <text x="15" y="592" fill="#0d47a1" font-size="12" font-weight="bold">自動化 ＆ CI/CD連携</text>
+    <rect x="10" y="600" width="420" height="90" rx="6" fill="#fff" stroke="#90caf9" stroke-width="0.8"/>
+    <text x="20" y="618" fill="#333" font-size="9.5">ヘッドレスモード: claude -p "prompt" — スクリプト統合</text>
+    <text x="20" y="633" fill="#333" font-size="9.5">GitHub Actions: @claude メンションでPR自動作成・レビュー</text>
+    <text x="20" y="648" fill="#333" font-size="9.5">GitLab CI/CD: パイプライン統合</text>
+    <text x="20" y="663" fill="#333" font-size="9.5">Slack連携: バグ報告→PR自動化</text>
+    <text x="20" y="678" fill="#333" font-size="9.5">Chrome拡張: ライブWebアプリデバッグ</text>
+    <text x="20" y="688" fill="#888" font-size="8.5">Remote Control: モバイルからセッション継続</text>
+  </g>
+
+  <!-- Column 3: Settings & Customization (Orange) -->
+  <g transform="translate(935, 355)">
+    <rect x="0" y="0" width="445" height="700" rx="10" fill="#fff3e0" stroke="#ef6c00" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="445" height="26" rx="10" fill="#e65100"/>
+    <rect x="0" y="14" width="445" height="12" fill="#e65100"/>
+    <text x="222" y="18" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">4. 設定 ＆ カスタマイズ</text>
+
+    <!-- CLAUDE.md -->
+    <text x="15" y="50" fill="#bf360c" font-size="12" font-weight="bold">CLAUDE.md — 永続的な指示ファイル</text>
+    <rect x="10" y="58" width="425" height="172" rx="6" fill="#fff" stroke="#ffcc80" stroke-width="0.8"/>
+
+    <rect x="18" y="66" width="95" height="40" rx="5" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="0.8"/>
+    <text x="66" y="82" text-anchor="middle" fill="#2e7d32" font-size="9" font-weight="bold">Project</text>
+    <text x="66" y="96" text-anchor="middle" fill="#555" font-size="7.5">./CLAUDE.md</text>
+
+    <rect x="120" y="66" width="95" height="40" rx="5" fill="#e3f2fd" stroke="#90caf9" stroke-width="0.8"/>
+    <text x="168" y="82" text-anchor="middle" fill="#1565c0" font-size="9" font-weight="bold">User</text>
+    <text x="168" y="96" text-anchor="middle" fill="#555" font-size="7.5">~/.claude/CLAUDE.md</text>
+
+    <rect x="222" y="66" width="95" height="40" rx="5" fill="#fff8e1" stroke="#ffe082" stroke-width="0.8"/>
+    <text x="270" y="82" text-anchor="middle" fill="#f57f17" font-size="9" font-weight="bold">Local</text>
+    <text x="270" y="96" text-anchor="middle" fill="#555" font-size="7.5">./CLAUDE.local.md</text>
+
+    <rect x="324" y="66" width="95" height="40" rx="5" fill="#ffebee" stroke="#ef9a9a" stroke-width="0.8"/>
+    <text x="372" y="82" text-anchor="middle" fill="#c62828" font-size="9" font-weight="bold">Managed</text>
+    <text x="372" y="96" text-anchor="middle" fill="#555" font-size="7.5">システムパス</text>
+
+    <text x="20" y="122" fill="#333" font-size="9.5">@path/to/import — 外部ファイルインポート（最大5階層）</text>
+    <text x="20" y="136" fill="#333" font-size="9.5">推奨: 200行以内、Markdown構造、具体的な指示</text>
+    <text x="20" y="150" fill="#333" font-size="9.5">.claude/rules/ — トピック別ルールファイル（パス特定可）</text>
+    <text x="20" y="164" fill="#333" font-size="9.5">paths: ["src/api/**/*.ts"] — ファイルパターンで条件適用</text>
+    <text x="20" y="178" fill="#333" font-size="9.5">claudeMdExcludes — モノレポで不要なファイルを除外</text>
+    <text x="20" y="192" fill="#888" font-size="8.5">サブディレクトリの CLAUDE.md はオンデマンドロード</text>
+    <text x="20" y="206" fill="#888" font-size="8.5">/compact 後も CLAUDE.md は再読み込みされ保持される</text>
+    <text x="20" y="220" fill="#888" font-size="8.5">--add-dir + CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1</text>
+
+    <!-- Auto Memory -->
+    <text x="15" y="248" fill="#bf360c" font-size="12" font-weight="bold">Auto Memory — 自動学習メモリ</text>
+    <rect x="10" y="256" width="425" height="110" rx="6" fill="#fff" stroke="#ffcc80" stroke-width="0.8"/>
+    <text x="20" y="274" fill="#333" font-size="9.5">Claude が自動で学習メモを保存（ビルドコマンド、デバッグ知見等）</text>
+    <text x="20" y="289" fill="#333" font-size="9.5">保存先: ~/.claude/projects/&lt;project&gt;/memory/MEMORY.md</text>
+    <text x="20" y="304" fill="#333" font-size="9.5">先頭200行がセッション開始時にロード</text>
+    <text x="20" y="319" fill="#333" font-size="9.5">トピックファイル（debugging.md 等）はオンデマンド読み取り</text>
+    <text x="20" y="334" fill="#333" font-size="9.5">サブエージェントも独自メモリ持続可能（user/project/local）</text>
+    <text x="20" y="349" fill="#888" font-size="8.5">/memory コマンドで閲覧・編集 | autoMemoryEnabled で有効/無効</text>
+    <text x="20" y="360" fill="#888" font-size="8.5">プレーンMarkdown — いつでも手動編集・削除可能</text>
+
+    <!-- Skills -->
+    <text x="15" y="387" fill="#bf360c" font-size="12" font-weight="bold">Skills — 再利用可能なワークフロー</text>
+    <rect x="10" y="395" width="425" height="175" rx="6" fill="#fff" stroke="#ffcc80" stroke-width="0.8"/>
+    <text x="20" y="413" fill="#e65100" font-size="10" font-weight="bold">SKILL.md（YAML frontmatter + Markdown指示）</text>
+    <text x="20" y="427" fill="#333" font-size="9.5">/skill-name で手動呼び出し or Claude が自動ロード</text>
+    <text x="20" y="441" fill="#333" font-size="9.5">$ARGUMENTS — 引数置換 | $0, $1 — インデックスアクセス</text>
+    <text x="20" y="455" fill="#333" font-size="9.5">context: fork — サブエージェントで分離実行</text>
+    <text x="20" y="469" fill="#333" font-size="9.5">!`command` — 動的コンテキスト注入（前処理実行）</text>
+    <text x="20" y="483" fill="#333" font-size="9.5">allowed-tools — スキル固有のツール制限</text>
+    <text x="20" y="497" fill="#333" font-size="9.5">disable-model-invocation: true — 手動専用スキル</text>
+
+    <text x="20" y="515" fill="#e65100" font-size="10" font-weight="bold">Bundled Skills（組み込み）</text>
+    <rect x="20" y="521" width="100" height="18" rx="4" fill="#e8f5e9"/>
+    <text x="70" y="534" text-anchor="middle" fill="#2e7d32" font-size="9" font-weight="bold">/simplify</text>
+    <rect x="126" y="521" width="75" height="18" rx="4" fill="#e3f2fd"/>
+    <text x="164" y="534" text-anchor="middle" fill="#1565c0" font-size="9" font-weight="bold">/batch</text>
+    <rect x="207" y="521" width="75" height="18" rx="4" fill="#fce4ec"/>
+    <text x="245" y="534" text-anchor="middle" fill="#c62828" font-size="9" font-weight="bold">/debug</text>
+    <rect x="288" y="521" width="125" height="18" rx="4" fill="#f3e5f5"/>
+    <text x="350" y="534" text-anchor="middle" fill="#7b1fa2" font-size="9" font-weight="bold">/commit-push-pr</text>
+    <text x="20" y="556" fill="#888" font-size="8.5">Agent Skills 標準（agentskills.io）準拠 — 複数AIツールで共有可能</text>
+    <text x="20" y="567" fill="#888" font-size="8.5">スコープ: Enterprise &gt; Personal &gt; Project &gt; Plugin</text>
+
+    <!-- settings.json -->
+    <text x="15" y="594" fill="#bf360c" font-size="12" font-weight="bold">settings.json — 動作設定</text>
+    <rect x="10" y="602" width="425" height="90" rx="6" fill="#fff" stroke="#ffcc80" stroke-width="0.8"/>
+    <text x="20" y="620" fill="#333" font-size="9.5">スコープ階層: Managed &gt; CLI引数 &gt; Local &gt; Project &gt; User</text>
+    <text x="20" y="634" fill="#333" font-size="9.5">permissions — ツール許可/拒否ルール、デフォルトモード</text>
+    <text x="20" y="648" fill="#333" font-size="9.5">hooks — ライフサイクルフック設定</text>
+    <text x="20" y="662" fill="#333" font-size="9.5">env — 環境変数、model — デフォルトモデル</text>
+    <text x="20" y="676" fill="#333" font-size="9.5">sandbox — サンドボックス設定、attribution — Git帰属</text>
+    <text x="20" y="688" fill="#888" font-size="8.5">$schema 対応 — VS Codeで自動補完・バリデーション</text>
+  </g>
+
+  <!-- ===== SECTION 3: TWO COLUMNS (Ecosystem + Advanced) ===== -->
+
+  <!-- Left: Ecosystem (Green) -->
+  <g transform="translate(15, 1075)">
+    <rect x="0" y="0" width="670" height="680" rx="10" fill="#e8f5e9" stroke="#388e3c" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="670" height="26" rx="10" fill="#2e7d32"/>
+    <rect x="0" y="14" width="670" height="12" fill="#2e7d32"/>
+    <text x="335" y="18" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">5. エコシステム — MCP / プラグイン / 外部連携</text>
+
+    <!-- MCP -->
+    <text x="15" y="50" fill="#1b5e20" font-size="12" font-weight="bold">MCP（Model Context Protocol）— 外部ツール統合</text>
+    <rect x="10" y="58" width="650" height="260" rx="6" fill="#fff" stroke="#a5d6a7" stroke-width="0.8"/>
+
+    <text x="20" y="76" fill="#2e7d32" font-size="10" font-weight="bold">接続方法（3トランスポート）</text>
+    <rect x="20" y="82" width="95" height="20" rx="4" fill="#bbdefb"/>
+    <text x="68" y="96" text-anchor="middle" fill="#1565c0" font-size="9" font-weight="bold">HTTP（推奨）</text>
+    <rect x="122" y="82" width="65" height="20" rx="4" fill="#c8e6c9"/>
+    <text x="155" y="96" text-anchor="middle" fill="#2e7d32" font-size="9" font-weight="bold">SSE</text>
+    <rect x="194" y="82" width="65" height="20" rx="4" fill="#fff9c4"/>
+    <text x="227" y="96" text-anchor="middle" fill="#f57f17" font-size="9" font-weight="bold">stdio</text>
+
+    <text x="290" y="76" fill="#2e7d32" font-size="10" font-weight="bold">スコープ</text>
+    <rect x="290" y="82" width="70" height="20" rx="4" fill="#e8eaf6"/>
+    <text x="325" y="96" text-anchor="middle" fill="#283593" font-size="9">Local</text>
+    <rect x="366" y="82" width="72" height="20" rx="4" fill="#e8eaf6"/>
+    <text x="402" y="96" text-anchor="middle" fill="#283593" font-size="9">Project</text>
+    <rect x="444" y="82" width="62" height="20" rx="4" fill="#e8eaf6"/>
+    <text x="475" y="96" text-anchor="middle" fill="#283593" font-size="9">User</text>
+
+    <text x="535" y="76" fill="#2e7d32" font-size="10" font-weight="bold">認証</text>
+    <text x="535" y="96" fill="#555" font-size="9">OAuth 2.0</text>
+    <text x="605" y="96" fill="#555" font-size="9">Bearer</text>
+
+    <text x="20" y="120" fill="#2e7d32" font-size="10" font-weight="bold">人気MCPサーバー</text>
+    <g font-size="9" fill="#333">
+      <rect x="20" y="126" width="88" height="18" rx="3" fill="#f5f5f5" stroke="#ccc" stroke-width="0.5"/>
+      <text x="64" y="139" text-anchor="middle">GitHub</text>
+      <rect x="114" y="126" width="70" height="18" rx="3" fill="#f5f5f5" stroke="#ccc" stroke-width="0.5"/>
+      <text x="149" y="139" text-anchor="middle">Sentry</text>
+      <rect x="190" y="126" width="62" height="18" rx="3" fill="#f5f5f5" stroke="#ccc" stroke-width="0.5"/>
+      <text x="221" y="139" text-anchor="middle">Slack</text>
+      <rect x="258" y="126" width="85" height="18" rx="3" fill="#f5f5f5" stroke="#ccc" stroke-width="0.5"/>
+      <text x="301" y="139" text-anchor="middle">PostgreSQL</text>
+      <rect x="349" y="126" width="66" height="18" rx="3" fill="#f5f5f5" stroke="#ccc" stroke-width="0.5"/>
+      <text x="382" y="139" text-anchor="middle">Notion</text>
+      <rect x="421" y="126" width="72" height="18" rx="3" fill="#f5f5f5" stroke="#ccc" stroke-width="0.5"/>
+      <text x="457" y="139" text-anchor="middle">Airtable</text>
+      <rect x="499" y="126" width="60" height="18" rx="3" fill="#f5f5f5" stroke="#ccc" stroke-width="0.5"/>
+      <text x="529" y="139" text-anchor="middle">Figma</text>
+      <rect x="565" y="126" width="78" height="18" rx="3" fill="#f5f5f5" stroke="#ccc" stroke-width="0.5"/>
+      <text x="604" y="139" text-anchor="middle">Asana</text>
+
+      <rect x="20" y="148" width="65" height="18" rx="3" fill="#f5f5f5" stroke="#ccc" stroke-width="0.5"/>
+      <text x="53" y="161" text-anchor="middle">Stripe</text>
+      <rect x="91" y="148" width="72" height="18" rx="3" fill="#f5f5f5" stroke="#ccc" stroke-width="0.5"/>
+      <text x="127" y="161" text-anchor="middle">HubSpot</text>
+      <rect x="169" y="148" width="62" height="18" rx="3" fill="#f5f5f5" stroke="#ccc" stroke-width="0.5"/>
+      <text x="200" y="161" text-anchor="middle">Gmail</text>
+      <rect x="237" y="148" width="65" height="18" rx="3" fill="#f5f5f5" stroke="#ccc" stroke-width="0.5"/>
+      <text x="270" y="161" text-anchor="middle">PayPal</text>
+      <rect x="308" y="148" width="88" height="18" rx="3" fill="#f5f5f5" stroke="#ccc" stroke-width="0.5"/>
+      <text x="352" y="161" text-anchor="middle">Filesystem</text>
+      <rect x="402" y="148" width="72" height="18" rx="3" fill="#f5f5f5" stroke="#ccc" stroke-width="0.5"/>
+      <text x="438" y="161" text-anchor="middle">Memory</text>
+      <rect x="480" y="148" width="80" height="18" rx="3" fill="#f5f5f5" stroke="#ccc" stroke-width="0.5"/>
+      <text x="520" y="161" text-anchor="middle">100以上...</text>
+    </g>
+
+    <text x="20" y="184" fill="#2e7d32" font-size="10" font-weight="bold">高度な機能</text>
+    <text x="20" y="198" fill="#333" font-size="9.5">Tool Search — MCPツールが多い時に動的ロード（10%閾値）</text>
+    <text x="20" y="212" fill="#333" font-size="9.5">Resources — @メンションでMCPリソース参照</text>
+    <text x="20" y="226" fill="#333" font-size="9.5">Prompts — MCPプロンプトをコマンドとして実行</text>
+    <text x="20" y="240" fill="#333" font-size="9.5">list_changed — サーバーのツール動的更新通知対応</text>
+    <text x="20" y="254" fill="#333" font-size="9.5">.mcp.json — プロジェクト共有設定（環境変数展開対応）</text>
+    <text x="20" y="268" fill="#333" font-size="9.5">claude mcp serve — Claude Code自体をMCPサーバーとして起動</text>
+    <text x="340" y="198" fill="#333" font-size="9.5">MAX_MCP_OUTPUT_TOKENS（デフォルト25,000）</text>
+    <text x="340" y="212" fill="#333" font-size="9.5">claude mcp add / list / get / remove</text>
+    <text x="340" y="226" fill="#333" font-size="9.5">claude mcp reset-project-choices</text>
+    <text x="340" y="240" fill="#333" font-size="9.5">Claude Desktop からインポート可能</text>
+    <text x="340" y="254" fill="#333" font-size="9.5">Claude.ai MCPサーバー自動利用</text>
+    <text x="340" y="268" fill="#888" font-size="8.5">Managed: managed-mcp.json / 許可・拒否リスト</text>
+    <text x="20" y="285" fill="#888" font-size="8.5">出力警告: 10,000トークン超で警告 | Bedrock / Vertex AI 経由も対応</text>
+    <text x="20" y="298" fill="#888" font-size="8.5">※ プラグインもMCPサーバーをバンドル配布可能（自動起動）</text>
+    <text x="20" y="311" fill="#888" font-size="8.5">serverName / serverCommand / serverUrl ベースの許可・拒否ポリシー</text>
+
+    <!-- Plugins -->
+    <text x="15" y="338" fill="#1b5e20" font-size="12" font-weight="bold">プラグイン — 拡張パッケージシステム</text>
+    <rect x="10" y="346" width="650" height="138" rx="6" fill="#fff" stroke="#a5d6a7" stroke-width="0.8"/>
+    <text x="20" y="364" fill="#2e7d32" font-size="10" font-weight="bold">プラグイン構成要素</text>
+    <rect x="20" y="370" width="72" height="18" rx="4" fill="#e3f2fd"/>
+    <text x="56" y="383" text-anchor="middle" fill="#1565c0" font-size="9">Skills</text>
+    <rect x="98" y="370" width="72" height="18" rx="4" fill="#f3e5f5"/>
+    <text x="134" y="383" text-anchor="middle" fill="#7b1fa2" font-size="9">Agents</text>
+    <rect x="176" y="370" width="72" height="18" rx="4" fill="#fff3e0"/>
+    <text x="212" y="383" text-anchor="middle" fill="#e65100" font-size="9">Hooks</text>
+    <rect x="254" y="370" width="95" height="18" rx="4" fill="#e8f5e9"/>
+    <text x="302" y="383" text-anchor="middle" fill="#2e7d32" font-size="9">MCP Servers</text>
+
+    <text x="20" y="404" fill="#333" font-size="9.5">マーケットプレイス: GitHub / Git / URL / npm / File / Directory ソース</text>
+    <text x="20" y="418" fill="#333" font-size="9.5">公式プラグイン: 50以上（typescript-lsp, security-guidance, playwright等）</text>
+    <text x="20" y="432" fill="#333" font-size="9.5">/plugin コマンドで管理 | enabledPlugins で有効/無効制御</text>
+    <text x="20" y="446" fill="#333" font-size="9.5">extraKnownMarketplaces — チーム共有マーケットプレイス</text>
+    <text x="20" y="460" fill="#333" font-size="9.5">strictKnownMarketplaces — 管理者によるマーケットプレイス制限</text>
+    <text x="20" y="474" fill="#888" font-size="8.5">コミュニティ: 9,000以上のプラグインがエコシステムに存在</text>
+    <text x="20" y="480" fill="#888" font-size="8.5"/>
+
+    <!-- CI/CD & Integrations -->
+    <text x="15" y="505" fill="#1b5e20" font-size="12" font-weight="bold">CI/CD ＆ 外部サービス連携</text>
+    <rect x="10" y="513" width="650" height="155" rx="6" fill="#fff" stroke="#a5d6a7" stroke-width="0.8"/>
+
+    <rect x="18" y="521" width="310" height="70" rx="5" fill="#f5f5f5" stroke="#ccc" stroke-width="0.8"/>
+    <text x="173" y="537" text-anchor="middle" fill="#2e7d32" font-size="10" font-weight="bold">GitHub Actions</text>
+    <text x="173" y="551" text-anchor="middle" fill="#333" font-size="9">@claude メンションでPR/Issue自動対応</text>
+    <text x="173" y="564" text-anchor="middle" fill="#333" font-size="9">anthropics/claude-code-action@v1</text>
+    <text x="173" y="577" text-anchor="middle" fill="#333" font-size="9">Bedrock / Vertex AI 対応 | /install-github-app</text>
+    <text x="173" y="588" text-anchor="middle" fill="#888" font-size="8">Skills呼び出し: prompt: "/review" | claude_args</text>
+
+    <rect x="336" y="521" width="310" height="70" rx="5" fill="#f5f5f5" stroke="#ccc" stroke-width="0.8"/>
+    <text x="491" y="537" text-anchor="middle" fill="#2e7d32" font-size="10" font-weight="bold">その他の連携</text>
+    <text x="491" y="551" text-anchor="middle" fill="#333" font-size="9">GitLab CI/CD — パイプライン統合</text>
+    <text x="491" y="564" text-anchor="middle" fill="#333" font-size="9">Slack — バグ報告→PR変換</text>
+    <text x="491" y="577" text-anchor="middle" fill="#333" font-size="9">Chrome — ライブWebアプリデバッグ</text>
+    <text x="491" y="588" text-anchor="middle" fill="#888" font-size="8">Remote Control — 別デバイスからセッション継続</text>
+
+    <text x="18" y="612" fill="#2e7d32" font-size="10" font-weight="bold">Agent SDK</text>
+    <text x="18" y="626" fill="#333" font-size="9.5">Claude Codeをプログラム的に実行 — 同じツール、エージェントループ、コンテキスト管理</text>
+    <text x="18" y="640" fill="#333" font-size="9.5">TypeScript / Python SDK | カスタムエージェントビルド | CI/CD統合</text>
+    <text x="18" y="654" fill="#888" font-size="8.5">platform.claude.com/docs/en/agent-sdk/overview</text>
+    <text x="18" y="665" fill="#888" font-size="8.5">ヘッドレスモード: claude -p "..." --output-format json | SDK連携でカスタムワークフロー構築</text>
+  </g>
+
+  <!-- Right: Advanced Features (Purple) -->
+  <g transform="translate(710, 1075)">
+    <rect x="0" y="0" width="675" height="680" rx="10" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="675" height="26" rx="10" fill="#6a1b9a"/>
+    <rect x="0" y="14" width="675" height="12" fill="#6a1b9a"/>
+    <text x="337" y="18" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">6. 高度な機能 — サブエージェント / Agent Teams / フック</text>
+
+    <!-- Subagents -->
+    <text x="15" y="50" fill="#4a148c" font-size="12" font-weight="bold">サブエージェント — タスク委任</text>
+    <rect x="10" y="58" width="655" height="232" rx="6" fill="#fff" stroke="#ce93d8" stroke-width="0.8"/>
+
+    <text x="20" y="76" fill="#7b1fa2" font-size="10" font-weight="bold">Built-in サブエージェント</text>
+    <rect x="20" y="82" width="145" height="36" rx="5" fill="#e3f2fd" stroke="#90caf9" stroke-width="0.8"/>
+    <text x="93" y="97" text-anchor="middle" fill="#1565c0" font-size="9.5" font-weight="bold">Explore</text>
+    <text x="93" y="112" text-anchor="middle" fill="#666" font-size="7.5">Haiku / 読取専用 / 高速探索</text>
+
+    <rect x="175" y="82" width="145" height="36" rx="5" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="0.8"/>
+    <text x="248" y="97" text-anchor="middle" fill="#2e7d32" font-size="9.5" font-weight="bold">Plan</text>
+    <text x="248" y="112" text-anchor="middle" fill="#666" font-size="7.5">継承モデル / 読取専用 / 計画策定</text>
+
+    <rect x="330" y="82" width="160" height="36" rx="5" fill="#fff3e0" stroke="#ffcc80" stroke-width="0.8"/>
+    <text x="410" y="97" text-anchor="middle" fill="#e65100" font-size="9.5" font-weight="bold">General-purpose</text>
+    <text x="410" y="112" text-anchor="middle" fill="#666" font-size="7.5">継承モデル / 全ツール / 複雑タスク</text>
+
+    <rect x="500" y="82" width="145" height="36" rx="5" fill="#fce4ec" stroke="#ef9a9a" stroke-width="0.8"/>
+    <text x="573" y="97" text-anchor="middle" fill="#c62828" font-size="9.5" font-weight="bold">Bash / Guide等</text>
+    <text x="573" y="112" text-anchor="middle" fill="#666" font-size="7.5">特定タスク用ヘルパー</text>
+
+    <text x="20" y="136" fill="#7b1fa2" font-size="10" font-weight="bold">カスタムサブエージェント</text>
+    <text x="20" y="150" fill="#333" font-size="9.5">.claude/agents/ (Project) / ~/.claude/agents/ (User) / --agents JSON (CLI)</text>
+    <text x="20" y="164" fill="#333" font-size="9.5">YAML frontmatter + Markdownプロンプト形式</text>
+
+    <text x="20" y="182" fill="#7b1fa2" font-size="10" font-weight="bold">設定フィールド</text>
+    <text x="20" y="196" fill="#333" font-size="9.5">tools / disallowedTools — ツールの許可/拒否リスト</text>
+    <text x="20" y="210" fill="#333" font-size="9.5">model — sonnet / opus / haiku / inherit</text>
+    <text x="20" y="224" fill="#333" font-size="9.5">permissionMode — 5モード設定可</text>
+    <text x="20" y="238" fill="#333" font-size="9.5">maxTurns — 最大ターン数制限</text>
+
+    <text x="340" y="182" fill="#7b1fa2" font-size="10" font-weight="bold">高度な設定</text>
+    <text x="340" y="196" fill="#333" font-size="9.5">memory — user/project/local スコープの永続メモリ</text>
+    <text x="340" y="210" fill="#333" font-size="9.5">hooks — PreToolUse等のライフサイクルフック</text>
+    <text x="340" y="224" fill="#333" font-size="9.5">skills — スキルプリロード</text>
+    <text x="340" y="238" fill="#333" font-size="9.5">isolation: worktree — Git Worktree分離実行</text>
+    <text x="340" y="252" fill="#333" font-size="9.5">background: true — バックグラウンド実行</text>
+    <text x="340" y="266" fill="#333" font-size="9.5">mcpServers — エージェント固有MCP</text>
+
+    <text x="20" y="256" fill="#888" font-size="8.5">前景（ブロッキング）/ 背景（並行）実行 | Ctrl+B で切替</text>
+    <text x="20" y="268" fill="#888" font-size="8.5">再開（resume）可能 | 自動コンパクション対応 | プラグインで配布可</text>
+    <text x="20" y="280" fill="#888" font-size="8.5">サブエージェントはさらにサブエージェントを起動不可（1階層）| Agent(type)で制限可</text>
+
+    <!-- Agent Teams -->
+    <text x="15" y="306" fill="#4a148c" font-size="12" font-weight="bold">Agent Teams — マルチエージェント協調（実験的機能）</text>
+    <rect x="10" y="314" width="655" height="180" rx="6" fill="#fff" stroke="#ce93d8" stroke-width="0.8"/>
+
+    <rect x="20" y="322" width="140" height="55" rx="6" fill="#ede7f6" stroke="#b39ddb" stroke-width="0.8"/>
+    <text x="90" y="340" text-anchor="middle" fill="#4a148c" font-size="10" font-weight="bold">Team Lead</text>
+    <text x="90" y="354" text-anchor="middle" fill="#555" font-size="8.5">メインセッション</text>
+    <text x="90" y="366" text-anchor="middle" fill="#555" font-size="8.5">タスク割当・統括</text>
+
+    <text x="172" y="352" fill="#7b1fa2" font-size="14">→</text>
+
+    <rect x="190" y="322" width="120" height="55" rx="6" fill="#f3e5f5" stroke="#ce93d8" stroke-width="0.8"/>
+    <text x="250" y="340" text-anchor="middle" fill="#7b1fa2" font-size="10" font-weight="bold">Teammate A</text>
+    <text x="250" y="354" text-anchor="middle" fill="#555" font-size="8.5">独立コンテキスト</text>
+    <text x="250" y="366" text-anchor="middle" fill="#555" font-size="8.5">セキュリティ担当</text>
+
+    <rect x="320" y="322" width="120" height="55" rx="6" fill="#f3e5f5" stroke="#ce93d8" stroke-width="0.8"/>
+    <text x="380" y="340" text-anchor="middle" fill="#7b1fa2" font-size="10" font-weight="bold">Teammate B</text>
+    <text x="380" y="354" text-anchor="middle" fill="#555" font-size="8.5">独立コンテキスト</text>
+    <text x="380" y="366" text-anchor="middle" fill="#555" font-size="8.5">パフォーマンス担当</text>
+
+    <rect x="450" y="322" width="120" height="55" rx="6" fill="#f3e5f5" stroke="#ce93d8" stroke-width="0.8"/>
+    <text x="510" y="340" text-anchor="middle" fill="#7b1fa2" font-size="10" font-weight="bold">Teammate C</text>
+    <text x="510" y="354" text-anchor="middle" fill="#555" font-size="8.5">独立コンテキスト</text>
+    <text x="510" y="366" text-anchor="middle" fill="#555" font-size="8.5">テスト検証担当</text>
+
+    <rect x="578" y="322" width="80" height="55" rx="6" fill="#e8eaf6" stroke="#9fa8da" stroke-width="0.5" stroke-dasharray="3,2"/>
+    <text x="618" y="348" text-anchor="middle" fill="#555" font-size="9">+ 追加</text>
+    <text x="618" y="362" text-anchor="middle" fill="#888" font-size="7.5">3〜5推奨</text>
+
+    <text x="20" y="396" fill="#7b1fa2" font-size="10" font-weight="bold">基盤コンポーネント</text>
+    <text x="20" y="410" fill="#333" font-size="9.5">共有タスクリスト — pending / in-progress / completed（依存関係対応）</text>
+    <text x="20" y="424" fill="#333" font-size="9.5">メールボックス — チームメイト間の直接メッセージング</text>
+    <text x="20" y="438" fill="#333" font-size="9.5">表示モード: in-process（Shift+↓で切替）/ split panes（tmux/iTerm2）</text>
+    <text x="20" y="452" fill="#333" font-size="9.5">プラン承認: チームメイトに計画承認を要求可能</text>
+    <text x="20" y="466" fill="#333" font-size="9.5">TeammateIdle / TaskCompleted フックで品質ゲート設定</text>
+    <text x="20" y="480" fill="#888" font-size="8.5">CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1 で有効化 | トークン消費が大幅増加</text>
+    <text x="20" y="492" fill="#888" font-size="8.5">制約: ネストチーム不可 / リード固定 / 1セッション1チーム / セッション再開でチームメイト消失</text>
+
+    <!-- Hooks -->
+    <text x="15" y="515" fill="#4a148c" font-size="12" font-weight="bold">フック（Hooks）— ライフサイクル自動化</text>
+    <rect x="10" y="523" width="655" height="148" rx="6" fill="#fff" stroke="#ce93d8" stroke-width="0.8"/>
+
+    <text x="20" y="541" fill="#7b1fa2" font-size="10" font-weight="bold">18イベント</text>
+    <g font-size="8" fill="#333">
+      <rect x="20" y="547" width="90" height="16" rx="3" fill="#e3f2fd"/>
+      <text x="65" y="559" text-anchor="middle">SessionStart</text>
+      <rect x="115" y="547" width="105" height="16" rx="3" fill="#e3f2fd"/>
+      <text x="168" y="559" text-anchor="middle">UserPromptSubmit</text>
+      <rect x="225" y="547" width="80" height="16" rx="3" fill="#e8f5e9"/>
+      <text x="265" y="559" text-anchor="middle">PreToolUse</text>
+      <rect x="310" y="547" width="105" height="16" rx="3" fill="#e8f5e9"/>
+      <text x="363" y="559" text-anchor="middle">PermissionRequest</text>
+      <rect x="420" y="547" width="82" height="16" rx="3" fill="#fff3e0"/>
+      <text x="461" y="559" text-anchor="middle">PostToolUse</text>
+      <rect x="507" y="547" width="145" height="16" rx="3" fill="#fff3e0"/>
+      <text x="580" y="559" text-anchor="middle">PostToolUseFailure</text>
+
+      <rect x="20" y="567" width="75" height="16" rx="3" fill="#fce4ec"/>
+      <text x="58" y="579" text-anchor="middle">Notification</text>
+      <rect x="100" y="567" width="90" height="16" rx="3" fill="#f3e5f5"/>
+      <text x="145" y="579" text-anchor="middle">SubagentStart</text>
+      <rect x="195" y="567" width="85" height="16" rx="3" fill="#f3e5f5"/>
+      <text x="238" y="579" text-anchor="middle">SubagentStop</text>
+      <rect x="285" y="567" width="45" height="16" rx="3" fill="#e3f2fd"/>
+      <text x="308" y="579" text-anchor="middle">Stop</text>
+      <rect x="335" y="567" width="90" height="16" rx="3" fill="#e3f2fd"/>
+      <text x="380" y="579" text-anchor="middle">TeammateIdle</text>
+      <rect x="430" y="567" width="95" height="16" rx="3" fill="#e8f5e9"/>
+      <text x="478" y="579" text-anchor="middle">TaskCompleted</text>
+      <rect x="530" y="567" width="85" height="16" rx="3" fill="#fff3e0"/>
+      <text x="573" y="579" text-anchor="middle">ConfigChange</text>
+
+      <rect x="20" y="587" width="100" height="16" rx="3" fill="#e8eaf6"/>
+      <text x="70" y="599" text-anchor="middle">WorktreeCreate</text>
+      <rect x="125" y="587" width="105" height="16" rx="3" fill="#e8eaf6"/>
+      <text x="178" y="599" text-anchor="middle">WorktreeRemove</text>
+      <rect x="235" y="587" width="80" height="16" rx="3" fill="#fff8e1"/>
+      <text x="275" y="599" text-anchor="middle">PreCompact</text>
+      <rect x="320" y="587" width="80" height="16" rx="3" fill="#fce4ec"/>
+      <text x="360" y="599" text-anchor="middle">SessionEnd</text>
+    </g>
+
+    <text x="20" y="622" fill="#7b1fa2" font-size="10" font-weight="bold">4つのハンドラ型</text>
+    <rect x="20" y="628" width="82" height="18" rx="4" fill="#e3f2fd"/>
+    <text x="61" y="641" text-anchor="middle" fill="#1565c0" font-size="9" font-weight="bold">Command</text>
+    <rect x="108" y="628" width="60" height="18" rx="4" fill="#e8f5e9"/>
+    <text x="138" y="641" text-anchor="middle" fill="#2e7d32" font-size="9" font-weight="bold">HTTP</text>
+    <rect x="174" y="628" width="65" height="18" rx="4" fill="#fff3e0"/>
+    <text x="207" y="641" text-anchor="middle" fill="#e65100" font-size="9" font-weight="bold">Prompt</text>
+    <rect x="245" y="628" width="62" height="18" rx="4" fill="#f3e5f5"/>
+    <text x="276" y="641" text-anchor="middle" fill="#7b1fa2" font-size="9" font-weight="bold">Agent</text>
+
+    <text x="325" y="641" fill="#333" font-size="9">Exit 0=許可 / Exit 2=ブロック / JSON出力で精密制御</text>
+    <text x="20" y="660" fill="#888" font-size="8.5">PreToolUseで allow/deny/ask 制御 | updatedInput でツール入力変更 | async 非同期実行</text>
+    <text x="20" y="672" fill="#888" font-size="8.5">設定場所: settings.json / スキルfrontmatter / エージェントfrontmatter / プラグイン hooks.json</text>
+  </g>
+
+  <!-- ===== SECTION 4: TWO COLUMNS (Pricing + Competition) ===== -->
+
+  <!-- Left: Pricing (Red) -->
+  <g transform="translate(15, 1775)">
+    <rect x="0" y="0" width="670" height="380" rx="10" fill="#ffebee" stroke="#d32f2f" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="670" height="26" rx="10" fill="#c62828"/>
+    <rect x="0" y="14" width="670" height="12" fill="#c62828"/>
+    <text x="335" y="18" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">7. 料金・プラン ＆ トークン消費</text>
+
+    <!-- Pricing table -->
+    <rect x="10" y="36" width="650" height="195" rx="6" fill="#fff" stroke="#ef9a9a" stroke-width="0.8"/>
+
+    <!-- Table header -->
+    <rect x="10" y="36" width="650" height="22" rx="6" fill="#d32f2f"/>
+    <rect x="10" y="48" width="650" height="10" fill="#d32f2f"/>
+    <text x="85" y="52" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">プラン</text>
+    <text x="200" y="52" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">月額</text>
+    <text x="340" y="52" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">使用量</text>
+    <text x="530" y="52" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">特徴</text>
+
+    <!-- Pro -->
+    <rect x="18" y="64" width="118" height="28" rx="4" fill="#e3f2fd"/>
+    <text x="77" y="82" text-anchor="middle" fill="#1565c0" font-size="11" font-weight="bold">Pro</text>
+    <text x="200" y="82" text-anchor="middle" fill="#333" font-size="11" font-weight="bold">$20</text>
+    <text x="340" y="78" text-anchor="middle" fill="#555" font-size="9.5">基本量</text>
+    <text x="340" y="90" text-anchor="middle" fill="#888" font-size="8">Claude Web/App と共有</text>
+    <text x="530" y="82" text-anchor="middle" fill="#555" font-size="9.5">Claude Code + Claude Web/Mobile 統合サブスクリプション</text>
+
+    <!-- Max 5x -->
+    <rect x="18" y="98" width="118" height="28" rx="4" fill="#fff3e0"/>
+    <text x="77" y="116" text-anchor="middle" fill="#e65100" font-size="11" font-weight="bold">Max 5x</text>
+    <text x="200" y="116" text-anchor="middle" fill="#333" font-size="11" font-weight="bold">$100</text>
+    <text x="340" y="112" text-anchor="middle" fill="#555" font-size="9.5">Pro の 5倍</text>
+    <text x="340" y="124" text-anchor="middle" fill="#888" font-size="8">コスパ最良との評判</text>
+    <text x="530" y="116" text-anchor="middle" fill="#555" font-size="9.5">ヘビーユーザー向け。APIより最大36倍安い場合も</text>
+
+    <!-- Max 20x -->
+    <rect x="18" y="132" width="118" height="28" rx="4" fill="#fce4ec"/>
+    <text x="77" y="150" text-anchor="middle" fill="#c62828" font-size="11" font-weight="bold">Max 20x</text>
+    <text x="200" y="150" text-anchor="middle" fill="#333" font-size="11" font-weight="bold">$200</text>
+    <text x="340" y="146" text-anchor="middle" fill="#555" font-size="9.5">Pro の 20倍</text>
+    <text x="340" y="158" text-anchor="middle" fill="#888" font-size="8">大量利用向け</text>
+    <text x="530" y="150" text-anchor="middle" fill="#555" font-size="9.5">プロフェッショナル・チーム向け最大プラン</text>
+
+    <!-- API -->
+    <rect x="18" y="166" width="118" height="28" rx="4" fill="#f3e5f5"/>
+    <text x="77" y="184" text-anchor="middle" fill="#7b1fa2" font-size="11" font-weight="bold">API 従量課金</text>
+    <text x="200" y="184" text-anchor="middle" fill="#333" font-size="10">トークン単位</text>
+    <text x="340" y="180" text-anchor="middle" fill="#555" font-size="9.5">Opus: $5/$25 per M</text>
+    <text x="340" y="192" text-anchor="middle" fill="#888" font-size="8">Sonnet: $3/$15 per M</text>
+    <text x="530" y="184" text-anchor="middle" fill="#555" font-size="9.5">Anthropic Console 課金 | 200K超で長文プレミアム</text>
+
+    <text x="15" y="252" fill="#c62828" font-size="11" font-weight="bold">重要注意点</text>
+    <rect x="10" y="258" width="650" height="113" rx="6" fill="#fff" stroke="#ef9a9a" stroke-width="0.8"/>
+    <text x="20" y="276" fill="#c62828" font-size="10" font-weight="bold">使用量制限</text>
+    <text x="20" y="291" fill="#333" font-size="9.5">Pro/Max: Claude Web/App と Claude Code で使用量を共有</text>
+    <text x="20" y="305" fill="#333" font-size="9.5">制限到達時: Pro → Max 移行 or API Credits / Max → API Credits</text>
+    <text x="20" y="319" fill="#333" font-size="9.5">API Credits の利用を防止するには ANTHROPIC_API_KEY 環境変数を削除</text>
+
+    <text x="340" y="276" fill="#c62828" font-size="10" font-weight="bold">トークン消費に注意</text>
+    <text x="340" y="291" fill="#333" font-size="9.5">Agent Teams: トークン消費が大幅増加</text>
+    <text x="340" y="305" fill="#333" font-size="9.5">MCP大量出力: MAX_MCP_OUTPUT_TOKENS で制御</text>
+    <text x="340" y="319" fill="#333" font-size="9.5">CLAUDE.md が大きいとコンテキスト消費増</text>
+
+    <text x="20" y="341" fill="#888" font-size="8.5">Auto-reload は Console で管理 | Team / Enterprise プランは別料金体系</text>
+    <text x="20" y="355" fill="#888" font-size="8.5">Effort Level（low/medium/high）でトークン使用量を調整可能 | /model でモデル切替</text>
+    <text x="20" y="367" fill="#888" font-size="8.5">Fast Mode (/fast) で低コストモデルに一時切替 | fastModePerSessionOptIn でセッション毎制御</text>
+  </g>
+
+  <!-- Right: Competition (Neutral/Multi) -->
+  <g transform="translate(710, 1775)">
+    <rect x="0" y="0" width="675" height="380" rx="10" fill="#eceff1" stroke="#607d8b" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="675" height="26" rx="10" fill="#455a64"/>
+    <rect x="0" y="14" width="675" height="12" fill="#455a64"/>
+    <text x="337" y="18" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">8. 競合比較 — 主要AIコーディングツール</text>
+
+    <rect x="10" y="36" width="655" height="332" rx="6" fill="#fff" stroke="#b0bec5" stroke-width="0.8"/>
+
+    <!-- Claude Code -->
+    <rect x="18" y="44" width="310" height="140" rx="6" fill="#e3f2fd" stroke="#1976d2" stroke-width="1"/>
+    <text x="173" y="62" text-anchor="middle" fill="#1565c0" font-size="12" font-weight="bold">Claude Code（Anthropic）</text>
+    <text x="28" y="78" fill="#333" font-size="9.5">タイプ: CLI / Terminal ファースト + IDE / Web</text>
+    <text x="28" y="92" fill="#333" font-size="9.5">強み: 最も深いエージェント機能、MCP標準</text>
+    <text x="28" y="106" fill="#333" font-size="9.5">Agent Teams / サブエージェント / フック</text>
+    <text x="28" y="120" fill="#333" font-size="9.5">大規模コードベース対応、並列Worktree</text>
+    <text x="28" y="134" fill="#333" font-size="9.5">CLAUDE.md / Skills / Auto Memory / プラグイン</text>
+    <text x="28" y="148" fill="#333" font-size="9.5">GitHub Actions / GitLab CI 完全統合</text>
+    <text x="28" y="162" fill="#333" font-size="9.5">Extended Thinking（Adaptive Reasoning）</text>
+    <text x="28" y="176" fill="#888" font-size="8.5">料金: Pro $20 / Max $100-200 / API従量課金</text>
+
+    <!-- Cursor -->
+    <rect x="338" y="44" width="310" height="140" rx="6" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="1"/>
+    <text x="493" y="62" text-anchor="middle" fill="#7b1fa2" font-size="12" font-weight="bold">Cursor</text>
+    <text x="348" y="78" fill="#333" font-size="9.5">タイプ: IDE（VS Code フォーク）</text>
+    <text x="348" y="92" fill="#333" font-size="9.5">強み: GUI操作、エディタ統合の完成度</text>
+    <text x="348" y="106" fill="#333" font-size="9.5">インライン編集、Tab補完、コンポーザー</text>
+    <text x="348" y="120" fill="#333" font-size="9.5">複数モデル対応（Claude含む）</text>
+    <text x="348" y="134" fill="#333" font-size="9.5">.cursorrules で指示カスタマイズ</text>
+    <text x="348" y="148" fill="#333" font-size="9.5">Agent モードで自動コード修正</text>
+    <text x="348" y="162" fill="#333" font-size="9.5">PR成功率39%向上（一部報告）</text>
+    <text x="348" y="176" fill="#888" font-size="8.5">料金: Pro $20 / Business $40</text>
+
+    <!-- GitHub Copilot -->
+    <rect x="18" y="192" width="310" height="120" rx="6" fill="#e8f5e9" stroke="#388e3c" stroke-width="1"/>
+    <text x="173" y="210" text-anchor="middle" fill="#2e7d32" font-size="12" font-weight="bold">GitHub Copilot</text>
+    <text x="28" y="226" fill="#333" font-size="9.5">タイプ: IDE拡張 + Agent（進化中）</text>
+    <text x="28" y="240" fill="#333" font-size="9.5">強み: GitHub完全統合、コード補完の先駆者</text>
+    <text x="28" y="254" fill="#333" font-size="9.5">Copilot Chat、Agent Mode 搭載</text>
+    <text x="28" y="268" fill="#333" font-size="9.5">VS Code ネイティブ統合</text>
+    <text x="28" y="282" fill="#333" font-size="9.5">PR要約・レビュー機能</text>
+    <text x="28" y="296" fill="#333" font-size="9.5">Claude Code + Copilot 併用可能</text>
+    <text x="28" y="307" fill="#888" font-size="8.5">料金: Individual $10 / Business $19</text>
+
+    <!-- Codex CLI -->
+    <rect x="338" y="192" width="310" height="120" rx="6" fill="#fff3e0" stroke="#ef6c00" stroke-width="1"/>
+    <text x="493" y="210" text-anchor="middle" fill="#e65100" font-size="12" font-weight="bold">OpenAI Codex CLI</text>
+    <text x="348" y="226" fill="#333" font-size="9.5">タイプ: CLI / ターミナル</text>
+    <text x="348" y="240" fill="#333" font-size="9.5">強み: サンドボックス環境、OpenAIモデル</text>
+    <text x="348" y="254" fill="#333" font-size="9.5">ファイル編集、スクリプト実行</text>
+    <text x="348" y="268" fill="#333" font-size="9.5">Claude Code の対抗として登場</text>
+    <text x="348" y="282" fill="#333" font-size="9.5">GPT-4o / o3 等のモデル使用</text>
+    <text x="348" y="296" fill="#333" font-size="9.5">オープンソース</text>
+    <text x="348" y="307" fill="#888" font-size="8.5">料金: API従量課金</text>
+
+    <!-- Summary -->
+    <text x="18" y="332" fill="#455a64" font-size="10" font-weight="bold">まとめ: </text>
+    <text x="68" y="332" fill="#333" font-size="9.5">Claude Code は CLI/エージェント特化で最も包括的。Cursor は GUI/IDE統合で操作性重視。Copilot は GitHub 密接統合。</text>
+    <text x="18" y="346" fill="#333" font-size="9.5">Codex CLI は OpenAI のCLI対抗。各ツールは共存可能（例: VS Code で Claude Code 拡張 + Cursor での利用）。</text>
+    <text x="18" y="360" fill="#888" font-size="8.5">Agent Skills 標準により、Skills/CLAUDE.md は Cursor / Copilot / Codex CLI 間でも共有可能になりつつある。</text>
+  </g>
+
+  <!-- ===== FOOTER ===== -->
+  <rect x="0" y="2168" width="1400" height="30" fill="#263238"/>
+  <text x="1380" y="2186" text-anchor="end" fill="#90a4ae" font-size="8.5">出典: Anthropic Claude Code Documentation (docs.anthropic.com/en/docs/claude-code) — 2026年3月時点 | 作成: Claude Opus 4.6</text>
+  <text x="20" y="2186" fill="#90a4ae" font-size="8.5">Claude Code 体系マップ v1.0 — 全8カテゴリ・100以上の機能を網羅</text>
+
+  <!-- Legend -->
+  <g transform="translate(380, 2170)">
+    <rect x="0" y="-2" width="12" height="10" rx="2" fill="#1565c0"/>
+    <text x="16" y="7" fill="#b0bec5" font-size="7.5">コア機能</text>
+    <rect x="70" y="-2" width="12" height="10" rx="2" fill="#e65100"/>
+    <text x="86" y="7" fill="#b0bec5" font-size="7.5">設定/カスタマイズ</text>
+    <rect x="165" y="-2" width="12" height="10" rx="2" fill="#2e7d32"/>
+    <text x="181" y="7" fill="#b0bec5" font-size="7.5">連携/エコシステム</text>
+    <rect x="268" y="-2" width="12" height="10" rx="2" fill="#6a1b9a"/>
+    <text x="284" y="7" fill="#b0bec5" font-size="7.5">高度な機能</text>
+    <rect x="345" y="-2" width="12" height="10" rx="2" fill="#c62828"/>
+    <text x="361" y="7" fill="#b0bec5" font-size="7.5">料金/注意点</text>
+    <rect x="420" y="-2" width="12" height="10" rx="2" fill="#455a64"/>
+    <text x="436" y="7" fill="#b0bec5" font-size="7.5">競合比較</text>
+  </g>
+</svg></div>
+</body>
+</html>
