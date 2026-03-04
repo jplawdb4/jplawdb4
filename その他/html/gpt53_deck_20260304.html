@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>GPT-5.3 Deep Dive — Consulting Deck</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700;900&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap');
+:root{--ink:#1A1D26;--blue:#1B3A6B;--blue2:#0D2240;--blue3:#2C5FA1;--blue4:#4A7FC7;--g1:#F7F8FA;--g2:#E8EBF0;--g3:#D1D5DE;--g4:#9BA3B5;--g5:#6B7489;--g6:#4A5168;--red:#C23B3B;--grn:#2E7D5B;--gold:#B8860B;--serif:'Source Serif 4',Georgia,serif;--sans:'Noto Sans JP','Helvetica Neue',sans-serif}*{margin:0;padding:0;box-sizing:border-box}body{font-family:var(--sans);background:var(--g1);color:var(--ink);-webkit-font-smoothing:antialiased}.s{width:1280px;min-height:720px;margin:40px auto;background:#fff;position:relative;overflow:hidden;box-shadow:0 2px 40px rgba(0,0,0,.08)}.s-head{padding:28px 56px 0;border-bottom:1px solid var(--g2)}.s-num{font-size:11px;color:var(--g4);letter-spacing:3px;text-transform:uppercase;margin-bottom:6px}.s-title{font-family:var(--serif);font-size:26px;font-weight:700;color:var(--blue2);letter-spacing:-.5px;margin-bottom:4px}.s-sub{font-size:12px;color:var(--g5);margin-bottom:16px}.s-body{padding:24px 56px 32px}.s-foot{position:absolute;bottom:0;left:0;right:0;padding:10px 56px;display:flex;justify-content:space-between;font-size:8px;color:var(--g4);border-top:.5px solid var(--g2)}.cover{display:flex;flex-direction:column;justify-content:center;padding:80px 100px;background:linear-gradient(135deg,var(--blue2),var(--blue)60%,var(--blue3));color:#fff;min-height:720px}.cover-line{width:60px;height:2px;background:var(--gold);margin-bottom:32px}.cover-tag{font-size:13px;font-weight:500;letter-spacing:4px;color:rgba(255,255,255,.55);margin-bottom:20px}.cover h1{font-family:var(--serif);font-size:52px;font-weight:900;line-height:1.2;letter-spacing:-1px}.cover h2{font-family:var(--serif);font-size:24px;font-weight:600;color:rgba(255,255,255,.72);margin-bottom:48px}.cover-bar{position:absolute;bottom:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--gold),var(--blue4),var(--gold))}.km{background:var(--blue2);color:#fff;padding:14px 24px;font-size:13px;line-height:1.7;margin-bottom:24px;border-left:4px solid var(--gold)}.km b{color:var(--gold)}.c2{display:grid;grid-template-columns:1fr 1fr;gap:32px}.c3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px}.sl{font-size:10px;font-weight:700;color:var(--blue);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1.5px solid var(--blue);display:inline-block}.t{width:100%;border-collapse:collapse;font-size:11px}.t th{background:var(--blue2);color:#fff;padding:8px 10px;font-weight:600;font-size:10px;text-align:left;letter-spacing:.5px}.t td{padding:7px 10px;border-bottom:.5px solid var(--g2);vertical-align:top}.t tr:nth-child(even) td{background:var(--g1)}.t .n{text-align:right;font-variant-numeric:tabular-nums;font-weight:500}.t .hi td{background:rgba(27,58,107,.1);font-weight:700;color:var(--blue)}.kpi{display:flex;gap:16px;margin-bottom:20px}.kpi>div{flex:1;border:1px solid var(--g2);padding:14px 16px;text-align:center}.kpi-l{font-size:9px;font-weight:600;color:var(--g4);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}.kpi-v{font-family:var(--serif);font-size:28px;font-weight:900;color:var(--blue)}.kpi-u{font-size:11px;font-weight:400;color:var(--g5)}.kpi-n{font-size:9px;color:var(--g4);margin-top:2px}.box{border:1px solid var(--g3);padding:14px 16px;margin-bottom:12px}.box-t{font-size:11px;font-weight:700;color:var(--blue);margin-bottom:6px}.box p{font-size:10px;color:var(--g6);line-height:1.6}.co{border-left:3px solid var(--blue);padding:10px 16px;background:var(--g1);font-size:10px;color:var(--g6);line-height:1.7;margin:12px 0}.tag{display:inline-block;font-size:8px;font-weight:700;padding:2px 6px;border-radius:2px;letter-spacing:.5px}.tag-b{background:var(--blue);color:#fff}.tag-r{background:var(--red);color:#fff}.tag-g{background:var(--grn);color:#fff}.tag-x{background:var(--g3);color:var(--ink)}.flow{display:flex;align-items:center;gap:0;margin-bottom:24px}.flow-s{flex:1;text-align:center;padding:12px 8px;border:1px solid var(--g3);background:#fff}.flow-s.on{background:var(--blue);border-color:var(--blue);color:#fff}.flow-n{font-family:var(--serif);font-size:18px;font-weight:900;color:var(--blue)}.flow-s.on .flow-n{color:#fff}.flow-t{font-weight:700;font-size:10px;color:var(--blue2)}.flow-s.on .flow-t{color:#fff}.flow-d{font-size:9px;color:var(--g5)}.flow-s.on .flow-d{color:rgba(255,255,255,.75)}.flow-a{width:24px;flex-shrink:0;text-align:center;color:var(--blue);font-size:16px}.bar{display:flex;flex-direction:column;gap:6px}.bar-r{display:flex;align-items:center;gap:8px}.bar-l{font-size:10px;font-weight:500;color:var(--g6);width:80px;text-align:right;flex-shrink:0}.bar-tk{flex:1;height:18px;background:var(--g1);border-radius:1px;position:relative}.bar-f{height:100%;border-radius:1px}.bar-v{font-size:9px;font-weight:700;position:absolute;right:-36px;top:50%;transform:translateY(-50%);color:var(--g6)}.mx{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:2px;border:1px solid var(--g3)}.mx>div{padding:16px;font-size:10px;line-height:1.6}.mx-t{font-size:11px;font-weight:700;margin-bottom:6px}.mx-h{display:flex;justify-content:center;gap:40%;font-size:10px;font-weight:700;color:var(--blue);margin-bottom:6px;text-align:center}.tl{padding-left:20px;border-left:2px solid var(--blue)}.tl-i{margin-bottom:14px;position:relative}.tl-i::before{content:'';width:8px;height:8px;background:var(--blue);border-radius:50%;position:absolute;left:-24px;top:4px}.tl-y{font-family:var(--serif);font-size:13px;font-weight:900;color:var(--blue)}.tl-x{font-size:10px;color:var(--g6);line-height:1.5}.p{font-size:11px;line-height:1.75;color:var(--g6)}.p b{color:var(--blue2)}.fn{font-size:8px;color:var(--g4);margin-top:16px;padding-top:8px;border-top:.5px solid var(--g2);line-height:1.6}
+</style>
+</head>
+<body>
+
+<!-- ========== SLIDE 1 : COVER ========== -->
+<div class="s cover">
+  <div class="cover-line"></div>
+  <div class="cover-tag">TECHNOLOGY DEEP DIVE — MARCH 2026</div>
+  <h1>GPT-5.3 エコシステム<br>完全解剖</h1>
+  <h2>GPT-5.3-Codex · GPT-5.3 Instant · Codex CLI 統合<br>技術仕様・ベンチマーク・料金・競合分析</h2>
+  <div style="margin-top:40px;display:flex;gap:16px;">
+    <span class="tag tag-b" style="font-size:10px;padding:5px 12px;">GPT-5.3-Codex — 2026.02.05</span>
+    <span class="tag tag-g" style="font-size:10px;padding:5px 12px;">GPT-5.3 Instant — 2026.03.02</span>
+    <span class="tag tag-x" style="font-size:10px;padding:5px 12px;">Codex-Spark (Cerebras) — 2026.02.12</span>
+  </div>
+  <div class="cover-bar"></div>
+</div>
+
+<!-- ========== SLIDE 2 : EXECUTIVE SUMMARY ========== -->
+<div class="s">
+  <div class="s-head">
+    <div class="s-num">SLIDE 02 / 08</div>
+    <div class="s-title">エグゼクティブサマリー</div>
+    <div class="s-sub">GPT-5.3 世代が意味するもの — 3 モデル・1 エコシステム</div>
+  </div>
+  <div class="s-body">
+    <div class="km">
+      <b>結論：</b>GPT-5.3 世代は「コーディング・エージェント」から「汎用コンピュータ操作エージェント」への転換点。SWE-Bench Pro 56.8%、Terminal-Bench 77.3%、OSWorld 64.7% の業界最高水準を達成し、Codex CLI / IDE / Cloud の統合により開発者ワークフローをエンド・ツー・エンドで刷新する。
+    </div>
+
+    <div class="kpi">
+      <div>
+        <div class="kpi-l">SWE-Bench Pro</div>
+        <div class="kpi-v">56.8%</div>
+        <div class="kpi-u">業界最高（xhigh）</div>
+        <div class="kpi-n">vs 5.2-Codex 56.4%</div>
+      </div>
+      <div>
+        <div class="kpi-l">Terminal-Bench 2.0</div>
+        <div class="kpi-v">77.3%</div>
+        <div class="kpi-u">+13.3pt 前世代比</div>
+        <div class="kpi-n">vs 5.2-Codex 64.0%</div>
+      </div>
+      <div>
+        <div class="kpi-l">OSWorld-Verified</div>
+        <div class="kpi-v">64.7%</div>
+        <div class="kpi-u">Human ≈72%</div>
+        <div class="kpi-n">vs 5.2-Codex 38.2%</div>
+      </div>
+      <div>
+        <div class="kpi-l">Cyber CTF</div>
+        <div class="kpi-v">77.6%</div>
+        <div class="kpi-u">High Capability 初認定</div>
+        <div class="kpi-n">vs 5.2 67.7%</div>
+      </div>
+      <div>
+        <div class="kpi-l">推論速度</div>
+        <div class="kpi-v">+25%</div>
+        <div class="kpi-u">前モデル対比</div>
+        <div class="kpi-n">NVIDIA GB200 NVL72</div>
+      </div>
+    </div>
+
+    <div class="c3">
+      <div class="box">
+        <div class="box-t">GPT-5.3-Codex <span class="tag tag-b">FLAGSHIP</span></div>
+        <p>最高性能エージェント型コーディングモデル。400K コンテキスト、128K 出力。SWE-Bench Pro/Terminal-Bench/OSWorld で SOTA。自らの学習・デプロイをデバッグした初のモデル。Codex App / CLI / IDE / Cloud で利用可。</p>
+      </div>
+      <div class="box">
+        <div class="box-t">GPT-5.3 Instant <span class="tag tag-g">CHAT</span></div>
+        <p>ChatGPT のデフォルトモデル（2026/3/2〜）。ハルシネーション率 −26.8%（Web 使用時）、不要な拒否の大幅削減、「cringe」トーンの改善。API は gpt-5.3-chat-latest で利用可能。GPT-5.2 Instant は 2026/6/3 に廃止。</p>
+      </div>
+      <div class="box">
+        <div class="box-t">GPT-5.3-Codex-Spark <span class="tag tag-x">PREVIEW</span></div>
+        <p>Cerebras WSE-3 上で動作する超低レイテンシモデル。1,000+ tok/s。128K コンテキスト、テキスト専用。SWE-Bench Pro で Codex 比大幅短縮の推論時間。ChatGPT Pro 限定リサーチプレビュー。</p>
+      </div>
+    </div>
+
+    <div class="co">
+      <b>GPT-5 シリーズ進化：</b>GPT-5（2025/8/7）→ GPT-5.1（2025/11/12）→ GPT-5.2（2025/12/11）→ <b>GPT-5.3-Codex（2026/2/5）</b> → Codex-Spark（2026/2/12）→ <b>GPT-5.3 Instant（2026/3/2）</b>。わずか 7 ヶ月で 4 世代の反復。
+    </div>
+
+    <div class="fn">出典: OpenAI "Introducing GPT-5.3-Codex" (2026/2/5), "GPT-5.3 Instant" (2026/3/2), "Introducing GPT-5.3-Codex-Spark" (2026/2/12), OpenAI System Card, developers.openai.com</div>
+  </div>
+  <div class="s-foot">
+    <span>CONFIDENTIAL — GPT-5.3 Deep Dive</span><span>2 / 8</span>
+  </div>
+</div>
+
+<!-- ========== SLIDE 3 : TECHNICAL SPECIFICATIONS ========== -->
+<div class="s">
+  <div class="s-head">
+    <div class="s-num">SLIDE 03 / 08</div>
+    <div class="s-title">技術仕様</div>
+    <div class="s-sub">GPT-5.3 モデルファミリー — アーキテクチャ・スペック・安全性</div>
+  </div>
+  <div class="s-body">
+    <div class="km">
+      <b>要点：</b>GPT-5.3-Codex は 400K コンテキスト / 128K 出力を備え、low〜xhigh の 4 段階推論 effort 設定、テキスト＋画像入力、構造化出力・関数呼び出し・ストリーミングに対応。NVIDIA GB200 NVL72 で共同設計され、25% 高速化。
+    </div>
+
+    <div class="c2">
+      <div>
+        <div class="sl">モデル仕様比較</div>
+        <table class="t">
+          <tr>
+            <th>仕様</th>
+            <th>5.3-Codex</th>
+            <th>5.3-Spark</th>
+            <th>5.3 Instant</th>
+          </tr>
+          <tr class="hi">
+            <td>コンテキスト</td>
+            <td class="n">400,000</td>
+            <td class="n">128,000</td>
+            <td class="n">400,000</td>
+          </tr>
+          <tr>
+            <td>最大出力</td>
+            <td class="n">128,000</td>
+            <td class="n">128,000</td>
+            <td class="n">128,000</td>
+          </tr>
+          <tr>
+            <td>入力モダリティ</td>
+            <td>テキスト + 画像</td>
+            <td>テキストのみ</td>
+            <td>テキスト + 画像</td>
+          </tr>
+          <tr>
+            <td>推論 Effort</td>
+            <td>low / med / high / xhigh</td>
+            <td>—</td>
+            <td>適応型</td>
+          </tr>
+          <tr>
+            <td>知識カットオフ</td>
+            <td>2025/8/31</td>
+            <td>2025/8/31</td>
+            <td>2025/8/31</td>
+          </tr>
+          <tr>
+            <td>構造化出力</td>
+            <td>✓</td>
+            <td>✓</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>関数呼び出し</td>
+            <td>✓</td>
+            <td>✓</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>ストリーミング</td>
+            <td>✓</td>
+            <td>✓ (WebSocket)</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>推論速度</td>
+            <td>+25% vs 5.2</td>
+            <td>1,000+ tok/s</td>
+            <td>標準</td>
+          </tr>
+          <tr>
+            <td>ハードウェア</td>
+            <td>NVIDIA GB200 NVL72</td>
+            <td>Cerebras WSE-3</td>
+            <td>NVIDIA GPU</td>
+          </tr>
+          <tr>
+            <td>利用可能プラン</td>
+            <td>Plus / Pro / Team / Biz</td>
+            <td>Pro のみ (Preview)</td>
+            <td>全プラン（Free 含む）</td>
+          </tr>
+        </table>
+      </div>
+      <div>
+        <div class="sl">安全性 & Preparedness Framework</div>
+        <table class="t">
+          <tr>
+            <th>評価領域</th>
+            <th>5.3-Codex</th>
+            <th>5.2-Codex</th>
+          </tr>
+          <tr class="hi">
+            <td>サイバーセキュリティ</td>
+            <td><span class="tag tag-r">HIGH</span></td>
+            <td><span class="tag tag-x">MEDIUM</span></td>
+          </tr>
+          <tr>
+            <td>生物学</td>
+            <td><span class="tag tag-r">HIGH</span></td>
+            <td><span class="tag tag-x">MEDIUM</span></td>
+          </tr>
+          <tr>
+            <td>化学</td>
+            <td><span class="tag tag-r">HIGH</span></td>
+            <td><span class="tag tag-x">MEDIUM</span></td>
+          </tr>
+          <tr>
+            <td>Cyber CTF</td>
+            <td class="n">77.6%</td>
+            <td class="n">67.4%</td>
+          </tr>
+        </table>
+        <div class="co" style="margin-top:16px;">
+          <b>初の "High Capability" サイバー認定。</b>緩和策として: ①安全性訓練 ②自動監視 ③高度機能への信頼アクセス (Trusted Access for Cyber) ④リスク検出時 GPT-5.2 への自動ルーティング ⑤Aardvark セキュリティエージェント (Private Beta) ⑥$10M サイバー防衛 API クレジット。
+        </div>
+
+        <div class="sl" style="margin-top:16px;">自己構築パラダイム</div>
+        <div class="box" style="margin-bottom:0;">
+          <div class="box-t">GPT-5.3-Codex は自らの開発を加速した初のモデル</div>
+          <p>学習デバッグ、デプロイ管理、テスト結果分析に早期バージョンを使用。データパイプライン構築、GPU クラスタの動的スケーリング、キャッシュヒット率低下の根本原因特定まで自律的に実行。OpenAI は「チームの仕事が根本的に変わった」と述べる。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="fn">出典: developers.openai.com/api/docs/models/gpt-5.3-codex, OpenAI GPT-5.3-Codex System Card (2026/2/5), Preparedness Framework</div>
+  </div>
+  <div class="s-foot">
+    <span>CONFIDENTIAL — GPT-5.3 Deep Dive</span><span>3 / 8</span>
+  </div>
+</div>
+
+<!-- ========== SLIDE 4 : CODEX CLI ========== -->
+<div class="s">
+  <div class="s-head">
+    <div class="s-num">SLIDE 04 / 08</div>
+    <div class="s-title">Codex CLI — ターミナル統合エージェント</div>
+    <div class="s-sub">ローカル実行・MCP・マルチエージェント・レビュー — 開発者ワークフローの中核</div>
+  </div>
+  <div class="s-body">
+    <div class="km">
+      <b>要点：</b>Codex CLI はローカルターミナルで動作するオープンソースコーディングエージェント。gpt-5.3-codex をデフォルトモデルに、ファイル読み書き・コマンド実行・MCP 連携・マルチエージェント・コードレビュー・Cloud 連携まで統合。
+    </div>
+
+    <div class="flow">
+      <div class="flow-s on">
+        <div class="flow-n">1</div>
+        <div class="flow-t">Interactive</div>
+        <div class="flow-d">codex コマンドで TUI 起動</div>
+      </div>
+      <div class="flow-a">→</div>
+      <div class="flow-s">
+        <div class="flow-n">2</div>
+        <div class="flow-t">Exec</div>
+        <div class="flow-d">codex exec で非対話自動化</div>
+      </div>
+      <div class="flow-a">→</div>
+      <div class="flow-s">
+        <div class="flow-n">3</div>
+        <div class="flow-t">Resume</div>
+        <div class="flow-d">codex resume で前回続行</div>
+      </div>
+      <div class="flow-a">→</div>
+      <div class="flow-s">
+        <div class="flow-n">4</div>
+        <div class="flow-t">Cloud</div>
+        <div class="flow-d">codex cloud exec でクラウド実行</div>
+      </div>
+      <div class="flow-a">→</div>
+      <div class="flow-s on">
+        <div class="flow-n">5</div>
+        <div class="flow-t">Review</div>
+        <div class="flow-d">/review で PR 前レビュー</div>
+      </div>
+    </div>
+
+    <div class="c2">
+      <div>
+        <div class="sl">コア機能</div>
+        <table class="t">
+          <tr>
+            <th>機能</th>
+            <th>説明</th>
+          </tr>
+          <tr>
+            <td><b>デフォルトモデル</b></td>
+            <td>gpt-5.3-codex（/model で切替可）。Spark は Pro ユーザー限定。</td>
+          </tr>
+          <tr>
+            <td><b>権限モード</b></td>
+            <td>Auto（デフォルト: WD 内自由）、Read-only（閲覧のみ）、Full Access（全権限）</td>
+          </tr>
+          <tr>
+            <td><b>画像入力</b></td>
+            <td>-i / --image でスクリーンショットや設計図を添付、PNG/JPEG 対応</td>
+          </tr>
+          <tr>
+            <td><b>Web 検索</b></td>
+            <td>デフォルトでキャッシュ検索、--search で live 検索、config で無効化可</td>
+          </tr>
+          <tr>
+            <td><b>セッション永続化</b></td>
+            <td>~/.codex/sessions/ にローカル保存。resume --last / --all で復帰</td>
+          </tr>
+          <tr>
+            <td><b>マルチエージェント</b></td>
+            <td>config.toml の [agents] セクションで並列タスク分散</td>
+          </tr>
+          <tr>
+            <td><b>MCP</b></td>
+            <td>STDIO / Streaming HTTP サーバーを config.toml で登録、自動起動</td>
+          </tr>
+          <tr>
+            <td><b>コードレビュー</b></td>
+            <td>/review: ブランチ差分 / 未コミット変更 / 特定コミット / カスタム指示</td>
+          </tr>
+          <tr>
+            <td><b>スラッシュコマンド</b></td>
+            <td>/review, /fork, /theme, /copy, /clear 等 + カスタムコマンド作成可</td>
+          </tr>
+          <tr>
+            <td><b>Cloud 連携</b></td>
+            <td>codex cloud exec でバックグラウンドタスク起動、--attempts で best-of-N</td>
+          </tr>
+        </table>
+      </div>
+      <div>
+        <div class="sl">Codex-Spark レイテンシ改善</div>
+        <div class="kpi" style="margin-bottom:12px;">
+          <div>
+            <div class="kpi-l">TOKEN/SEC</div>
+            <div class="kpi-v">1,000+</div>
+            <div class="kpi-u">Cerebras WSE-3</div>
+          </div>
+          <div>
+            <div class="kpi-l">RTT 削減</div>
+            <div class="kpi-v">−80%</div>
+            <div class="kpi-u">WebSocket 導入</div>
+          </div>
+          <div>
+            <div class="kpi-l">TTFT 削減</div>
+            <div class="kpi-v">−50%</div>
+            <div class="kpi-u">全モデル恩恵</div>
+          </div>
+        </div>
+
+        <div class="sl" style="margin-top:16px;">利用可能プラットフォーム</div>
+        <div class="c2" style="gap:12px;">
+          <div class="box" style="margin-bottom:0;">
+            <div class="box-t">Codex App (Web)</div>
+            <p>ブラウザからクラウド環境で長時間タスク実行。Steering 機能でリアルタイム対話。</p>
+          </div>
+          <div class="box" style="margin-bottom:0;">
+            <div class="box-t">Codex CLI (Terminal)</div>
+            <p>ローカルマシンで動作。codex / codex exec / codex cloud。オープンソース (GitHub)。</p>
+          </div>
+        </div>
+        <div class="c2" style="gap:12px;margin-top:12px;">
+          <div class="box" style="margin-bottom:0;">
+            <div class="box-t">IDE 拡張 (VS Code / Cursor / Windsurf)</div>
+            <p>エディタ内からコード編集・レビュー・タスク起動を直接実行。</p>
+          </div>
+          <div class="box" style="margin-bottom:0;">
+            <div class="box-t">GitHub 統合</div>
+            <p>PR レビュー、Issue トリアージ、CI 修正の自動化に対応。</p>
+          </div>
+        </div>
+
+        <div class="co" style="margin-top:14px;">
+          <b>開発者への影響：</b>Codex CLI は Claude Code の直接競合。gpt-5.3-codex のデフォルト化と 1,000+ tok/s の Spark により、リアルタイムコーディング体験が大幅に向上。MCP 連携で外部ツール統合も容易に。
+        </div>
+      </div>
+    </div>
+
+    <div class="fn">出典: developers.openai.com/codex/cli/features/, github.com/openai/codex, "Introducing GPT-5.3-Codex-Spark" (2026/2/12)</div>
+  </div>
+  <div class="s-foot">
+    <span>CONFIDENTIAL — GPT-5.3 Deep Dive</span><span>4 / 8</span>
+  </div>
+</div>
+
+<!-- ========== SLIDE 5 : BENCHMARKS ========== -->
+<div class="s">
+  <div class="s-head">
+    <div class="s-num">SLIDE 05 / 08</div>
+    <div class="s-title">ベンチマーク比較</div>
+    <div class="s-sub">GPT-5.3-Codex vs 前世代 — コーディング・エージェント・知識業務の定量評価</div>
+  </div>
+  <div class="s-body">
+    <div class="km">
+      <b>要点：</b>GPT-5.3-Codex は 6 つの主要ベンチマークすべてで前世代を上回り、特に Terminal-Bench 2.0（+13.3pt）と OSWorld（+26.5pt）で飛躍的進歩。トークン効率も大幅に改善。
+    </div>
+
+    <div class="c2">
+      <div>
+        <div class="sl">主要ベンチマーク (xhigh)</div>
+        <table class="t">
+          <tr>
+            <th>ベンチマーク</th>
+            <th>5.3-Codex</th>
+            <th>5.2-Codex</th>
+            <th>5.2</th>
+            <th>Δ vs 5.2-Codex</th>
+          </tr>
+          <tr class="hi">
+            <td>SWE-Bench Pro (Public)</td>
+            <td class="n">56.8%</td>
+            <td class="n">56.4%</td>
+            <td class="n">55.6%</td>
+            <td class="n">+0.4pt</td>
+          </tr>
+          <tr>
+            <td>Terminal-Bench 2.0</td>
+            <td class="n"><b>77.3%</b></td>
+            <td class="n">64.0%</td>
+            <td class="n">62.2%</td>
+            <td class="n" style="color:var(--grn);"><b>+13.3pt</b></td>
+          </tr>
+          <tr class="hi">
+            <td>OSWorld-Verified</td>
+            <td class="n"><b>64.7%</b></td>
+            <td class="n">38.2%</td>
+            <td class="n">37.9%</td>
+            <td class="n" style="color:var(--grn);"><b>+26.5pt</b></td>
+          </tr>
+          <tr>
+            <td>GDPval (wins or ties)</td>
+            <td class="n">70.9%</td>
+            <td class="n">—</td>
+            <td class="n">70.9%</td>
+            <td class="n">—</td>
+          </tr>
+          <tr class="hi">
+            <td>Cyber CTF</td>
+            <td class="n"><b>77.6%</b></td>
+            <td class="n">67.4%</td>
+            <td class="n">67.7%</td>
+            <td class="n" style="color:var(--grn);"><b>+10.2pt</b></td>
+          </tr>
+          <tr>
+            <td>SWE-Lancer IC Diamond</td>
+            <td class="n"><b>81.4%</b></td>
+            <td class="n">76.0%</td>
+            <td class="n">74.6%</td>
+            <td class="n" style="color:var(--grn);"><b>+5.4pt</b></td>
+          </tr>
+        </table>
+
+        <div class="co" style="margin-top:12px;">
+          <b>注目点：</b>OSWorld-Verified（人間 ≈72%）で 64.7% は、視覚デスクトップ操作タスクでの飛躍的進歩。コードを書くだけでなく「コンピュータを操作する」能力の成熟を示す。
+        </div>
+      </div>
+      <div>
+        <div class="sl">Terminal-Bench 2.0 — 視覚化</div>
+        <div class="bar" style="margin-bottom:20px;padding-right:40px;">
+          <div class="bar-r">
+            <div class="bar-l">5.3-Codex</div>
+            <div class="bar-tk"><div class="bar-f" style="width:77.3%;background:var(--blue);"></div><div class="bar-v">77.3%</div></div>
+          </div>
+          <div class="bar-r">
+            <div class="bar-l">5.2-Codex</div>
+            <div class="bar-tk"><div class="bar-f" style="width:64%;background:var(--blue3);"></div><div class="bar-v">64.0%</div></div>
+          </div>
+          <div class="bar-r">
+            <div class="bar-l">GPT-5.2</div>
+            <div class="bar-tk"><div class="bar-f" style="width:62.2%;background:var(--g4);"></div><div class="bar-v">62.2%</div></div>
+          </div>
+        </div>
+
+        <div class="sl">OSWorld-Verified — 視覚化</div>
+        <div class="bar" style="margin-bottom:20px;padding-right:40px;">
+          <div class="bar-r">
+            <div class="bar-l">Human</div>
+            <div class="bar-tk"><div class="bar-f" style="width:72%;background:var(--gold);"></div><div class="bar-v">≈72%</div></div>
+          </div>
+          <div class="bar-r">
+            <div class="bar-l">5.3-Codex</div>
+            <div class="bar-tk"><div class="bar-f" style="width:64.7%;background:var(--blue);"></div><div class="bar-v">64.7%</div></div>
+          </div>
+          <div class="bar-r">
+            <div class="bar-l">5.2-Codex</div>
+            <div class="bar-tk"><div class="bar-f" style="width:38.2%;background:var(--blue3);"></div><div class="bar-v">38.2%</div></div>
+          </div>
+        </div>
+
+        <div class="sl">GPT-5.3 Instant — 品質改善</div>
+        <div class="kpi" style="margin-bottom:0;">
+          <div>
+            <div class="kpi-l">ハルシネーション減少 (Web)</div>
+            <div class="kpi-v" style="font-size:22px;color:var(--grn);">−26.8%</div>
+            <div class="kpi-n">高リスクドメイン評価</div>
+          </div>
+          <div>
+            <div class="kpi-l">ハルシネーション減少 (内部)</div>
+            <div class="kpi-v" style="font-size:22px;color:var(--grn);">−19.7%</div>
+            <div class="kpi-n">Web 非使用時</div>
+          </div>
+          <div>
+            <div class="kpi-l">ユーザー報告エラー減少 (Web)</div>
+            <div class="kpi-v" style="font-size:22px;color:var(--grn);">−22.5%</div>
+            <div class="kpi-n">de-identified 会話評価</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fn">出典: OpenAI "Introducing GPT-5.3-Codex" Appendix (2026/2/5), "GPT-5.3 Instant" (2026/3/2). ベンチマーク数値はすべて xhigh effort 設定時。</div>
+  </div>
+  <div class="s-foot">
+    <span>CONFIDENTIAL — GPT-5.3 Deep Dive</span><span>5 / 8</span>
+  </div>
+</div>
+
+<!-- ========== SLIDE 6 : PRICING ========== -->
+<div class="s">
+  <div class="s-head">
+    <div class="s-num">SLIDE 06 / 08</div>
+    <div class="s-title">料金体系</div>
+    <div class="s-sub">API トークン単価 + ChatGPT サブスクリプション — GPT-5.3 世代</div>
+  </div>
+  <div class="s-body">
+    <div class="km">
+      <b>要点：</b>GPT-5.3-Codex / 5.3-Chat は入力 $1.75 / 出力 $14.00（/1M tok）で GPT-5.2 と同等。キャッシュ入力 $0.175 で 90% 割引。ChatGPT Plus $20/月で利用可、Pro $200/月で Spark アクセス。
+    </div>
+
+    <div class="c2">
+      <div>
+        <div class="sl">API 料金 — テキストトークン (per 1M)</div>
+        <table class="t">
+          <tr>
+            <th>モデル</th>
+            <th>入力</th>
+            <th>キャッシュ入力</th>
+            <th>出力</th>
+          </tr>
+          <tr class="hi">
+            <td><b>gpt-5.3-codex</b></td>
+            <td class="n">$1.75</td>
+            <td class="n">$0.175</td>
+            <td class="n">$14.00</td>
+          </tr>
+          <tr class="hi">
+            <td><b>gpt-5.3-chat-latest</b></td>
+            <td class="n">$1.75</td>
+            <td class="n">$0.175</td>
+            <td class="n">$14.00</td>
+          </tr>
+          <tr>
+            <td>gpt-5.2-codex</td>
+            <td class="n">$1.75</td>
+            <td class="n">$0.175</td>
+            <td class="n">$14.00</td>
+          </tr>
+          <tr>
+            <td>gpt-5.2</td>
+            <td class="n">$1.75</td>
+            <td class="n">$0.175</td>
+            <td class="n">$14.00</td>
+          </tr>
+          <tr>
+            <td>gpt-5.1</td>
+            <td class="n">$1.25</td>
+            <td class="n">$0.125</td>
+            <td class="n">$10.00</td>
+          </tr>
+          <tr>
+            <td>gpt-5</td>
+            <td class="n">$1.25</td>
+            <td class="n">$0.125</td>
+            <td class="n">$10.00</td>
+          </tr>
+          <tr>
+            <td>gpt-5-mini</td>
+            <td class="n">$0.25</td>
+            <td class="n">$0.025</td>
+            <td class="n">$2.00</td>
+          </tr>
+          <tr>
+            <td>gpt-5-nano</td>
+            <td class="n">$0.05</td>
+            <td class="n">$0.005</td>
+            <td class="n">$0.40</td>
+          </tr>
+          <tr>
+            <td>gpt-5.2-pro</td>
+            <td class="n">$21.00</td>
+            <td class="n">—</td>
+            <td class="n">$168.00</td>
+          </tr>
+          <tr>
+            <td>codex-mini-latest</td>
+            <td class="n">$1.50</td>
+            <td class="n">$0.375</td>
+            <td class="n">$6.00</td>
+          </tr>
+        </table>
+      </div>
+      <div>
+        <div class="sl">ChatGPT サブスクリプション</div>
+        <table class="t">
+          <tr>
+            <th>プラン</th>
+            <th>月額</th>
+            <th>GPT-5.3 アクセス</th>
+          </tr>
+          <tr>
+            <td>Free</td>
+            <td class="n">$0</td>
+            <td>5.3 Instant（制限付き）</td>
+          </tr>
+          <tr>
+            <td>Go</td>
+            <td class="n">$8</td>
+            <td>5.3 Instant</td>
+          </tr>
+          <tr class="hi">
+            <td><b>Plus</b></td>
+            <td class="n"><b>$20</b></td>
+            <td>5.3 Instant + Codex CLI/App</td>
+          </tr>
+          <tr class="hi">
+            <td><b>Pro</b></td>
+            <td class="n"><b>$200</b></td>
+            <td>全モデル + <b>Codex-Spark</b></td>
+          </tr>
+          <tr>
+            <td>Team</td>
+            <td class="n">$25-30/人</td>
+            <td>Codex CLI/App + 管理ツール</td>
+          </tr>
+          <tr>
+            <td>Business</td>
+            <td class="n">$25-30/人</td>
+            <td>全 Codex + SSO / 監査</td>
+          </tr>
+          <tr>
+            <td>Enterprise</td>
+            <td class="n">カスタム</td>
+            <td>全機能 + SLA + コンプライアンス</td>
+          </tr>
+        </table>
+
+        <div class="sl" style="margin-top:20px;">コストシミュレーション</div>
+        <div class="box">
+          <div class="box-t">10 人開発チーム — 月間利用想定</div>
+          <p>
+            <b>シナリオ A（ChatGPT Plus + Codex CLI）:</b> $20 × 10 = <b>$200/月</b>。ChatGPT 認証でトークン消費は月額に含まれる。<br>
+            <b>シナリオ B（API 直接利用）:</b> 1 人あたり 5M 入力 + 1M 出力/日 → ($1.75×5 + $14×1) × 30 × 10 = <b>$6,825/月</b>。キャッシュ活用で最大 70% 削減可。<br>
+            <b>シナリオ C（Pro + Spark）:</b> $200 × 10 = <b>$2,000/月</b>。リアルタイムコーディングが必要な場合。
+          </p>
+        </div>
+        <div class="co">
+          <b>価格据え置き戦略：</b>5.3-Codex / 5.3-Chat は 5.2 と同価格帯。性能向上＋速度25%改善を同一単価で提供する「無料アップグレード」戦略。5.1 以前の $1.25/$10 からは +40% の入力単価。
+        </div>
+      </div>
+    </div>
+
+    <div class="fn">出典: developers.openai.com/api/docs/pricing/ (2026/3/4 取得), chatgpt.com/pricing/, Azure OpenAI Service Pricing. 推論トークンは出力トークンとして課金。</div>
+  </div>
+  <div class="s-foot">
+    <span>CONFIDENTIAL — GPT-5.3 Deep Dive</span><span>6 / 8</span>
+  </div>
+</div>
+
+<!-- ========== SLIDE 7 : COMPETITIVE ANALYSIS ========== -->
+<div class="s">
+  <div class="s-head">
+    <div class="s-num">SLIDE 07 / 08</div>
+    <div class="s-title">競合分析</div>
+    <div class="s-sub">GPT-5.3-Codex vs Claude Opus 4.6 vs Gemini 3.1 Pro — 2026 年 3 月時点</div>
+  </div>
+  <div class="s-body">
+    <div class="km">
+      <b>要点：</b>GPT-5.3-Codex は Terminal-Bench と OSWorld でリード。Claude Opus 4.6 は SWE-Bench Verified（80.8%）とGPQA Diamond で優位。Gemini 3.1 Pro は MMLU-Pro と競技プログラミングで強い。領域ごとの使い分けが最適解。
+    </div>
+
+    <div class="sl">フラッグシップモデル比較マトリクス</div>
+    <table class="t">
+      <tr>
+        <th>項目</th>
+        <th>GPT-5.3-Codex <span class="tag tag-b">OpenAI</span></th>
+        <th>Claude Opus 4.6 <span class="tag tag-g">Anthropic</span></th>
+        <th>Gemini 3.1 Pro <span class="tag tag-x">Google</span></th>
+      </tr>
+      <tr>
+        <td><b>リリース日</b></td>
+        <td>2026/2/5</td>
+        <td>2026/1 (推定)</td>
+        <td>2026/2/19</td>
+      </tr>
+      <tr>
+        <td><b>コンテキスト</b></td>
+        <td class="n">400K</td>
+        <td class="n">1M</td>
+        <td class="n">2M</td>
+      </tr>
+      <tr>
+        <td><b>最大出力</b></td>
+        <td class="n">128K</td>
+        <td class="n">128K</td>
+        <td class="n">128K</td>
+      </tr>
+      <tr class="hi">
+        <td><b>SWE-Bench Verified</b></td>
+        <td class="n">—*</td>
+        <td class="n"><b>80.8%</b></td>
+        <td class="n">76.2%</td>
+      </tr>
+      <tr>
+        <td><b>SWE-Bench Pro</b></td>
+        <td class="n"><b>56.8%</b></td>
+        <td class="n">—</td>
+        <td class="n">—</td>
+      </tr>
+      <tr class="hi">
+        <td><b>Terminal-Bench 2.0</b></td>
+        <td class="n"><b>77.3%</b></td>
+        <td class="n">≈65%</td>
+        <td class="n">—</td>
+      </tr>
+      <tr>
+        <td><b>OSWorld-Verified</b></td>
+        <td class="n"><b>64.7%</b></td>
+        <td class="n">—</td>
+        <td class="n">—</td>
+      </tr>
+      <tr class="hi">
+        <td><b>HLE (w/ tools)</b></td>
+        <td class="n">—</td>
+        <td class="n"><b>53.1%</b></td>
+        <td class="n">—</td>
+      </tr>
+      <tr>
+        <td><b>入力単価 (/1M tok)</b></td>
+        <td class="n">$1.75</td>
+        <td class="n">$15.00</td>
+        <td class="n">$1.25</td>
+      </tr>
+      <tr>
+        <td><b>出力単価 (/1M tok)</b></td>
+        <td class="n">$14.00</td>
+        <td class="n">$75.00</td>
+        <td class="n">$10.00</td>
+      </tr>
+      <tr class="hi">
+        <td><b>トークン効率</b></td>
+        <td><b>最小トークン消費</b></td>
+        <td>1M コンテキスト活用</td>
+        <td>2M コンテキスト活用</td>
+      </tr>
+      <tr>
+        <td><b>CLI ツール</b></td>
+        <td>Codex CLI (OSS)</td>
+        <td>Claude Code</td>
+        <td>Gemini CLI</td>
+      </tr>
+      <tr>
+        <td><b>差別化要素</b></td>
+        <td>Codex エコシステム統合、Spark 超低レイテンシ、自己構築能力</td>
+        <td>推論深度、1M コンテキスト、Extended Thinking</td>
+        <td>2M コンテキスト、マルチモーダル統合、価格競争力</td>
+      </tr>
+    </table>
+
+    <div class="c3" style="margin-top:16px;">
+      <div class="box" style="margin-bottom:0;">
+        <div class="box-t" style="color:var(--blue);">GPT-5.3-Codex の優位性</div>
+        <p>ターミナル操作（Terminal-Bench +13pt）とコンピュータ操作（OSWorld +26pt）で圧倒。トークン効率が最も高く、Codex App/CLI/IDE/Cloud の統合エコシステムが最大の差別化。Spark による 1,000+ tok/s のリアルタイム体験は唯一無二。</p>
+      </div>
+      <div class="box" style="margin-bottom:0;">
+        <div class="box-t" style="color:var(--grn);">Claude Opus 4.6 の優位性</div>
+        <p>SWE-Bench Verified 80.8%、推論ベンチマーク（GPQA Diamond）でリード。1M コンテキストで大規模コードベース一括処理が可能。Extended Thinking による深い推論チェーン。Claude Code は成熟した CLI 体験を提供。</p>
+      </div>
+      <div class="box" style="margin-bottom:0;">
+        <div class="box-t" style="color:var(--g5);">Gemini 3.1 Pro の優位性</div>
+        <p>2M コンテキストは最大。入力 $1.25/1M で最安レベル。Google エコシステム（Vertex AI, Android Studio）との深い統合。競技プログラミングとアルゴリズム問題で特に強い。マルチモーダル（動画含む）対応。</p>
+      </div>
+    </div>
+
+    <div class="fn">出典: Morphllm, Entelligence.ai, Vals AI SWE-Bench Leaderboard, 各社公式ドキュメント (2026/2-3). *GPT-5.3 は SWE-Bench Pro を主要指標として使用。Opus 4.6 価格は Anthropic API 公式。推定値には ≈ を付記。</div>
+  </div>
+  <div class="s-foot">
+    <span>CONFIDENTIAL — GPT-5.3 Deep Dive</span><span>7 / 8</span>
+  </div>
+</div>
+
+<!-- ========== SLIDE 8 : OUTLOOK ========== -->
+<div class="s">
+  <div class="s-head">
+    <div class="s-num">SLIDE 08 / 08</div>
+    <div class="s-title">展望とレコメンデーション</div>
+    <div class="s-sub">GPT-5.3 エコシステムの今後 — ロードマップ・戦略的示唆・推奨アクション</div>
+  </div>
+  <div class="s-body">
+    <div class="km">
+      <b>結論：</b>GPT-5.3 は「コーディングエージェント→汎用コンピュータ操作エージェント」の転換を証明した。Codex エコシステム（CLI + Cloud + IDE + Spark）を軸に、開発組織は段階的導入を推奨。ただし、深い推論タスクには Claude Opus 4.6、大コンテキストには Gemini 3.1 Pro との使い分けが最適。
+    </div>
+
+    <div class="c2">
+      <div>
+        <div class="sl">OpenAI ロードマップ（推定）</div>
+        <div class="tl">
+          <div class="tl-i">
+            <div class="tl-y">2026 Q1 (現在)</div>
+            <div class="tl-x">GPT-5.3-Codex 一般提供、5.3 Instant 全ユーザー展開。Codex-Spark リサーチプレビュー（Pro 限定）。API アクセスは「準備中」。</div>
+          </div>
+          <div class="tl-i">
+            <div class="tl-y">2026 Q2</div>
+            <div class="tl-x">GPT-5.3-Codex API 正式リリース予想。Codex-Spark のアクセス拡大（Plus 以上）。Thinking / Pro 版 5.3 モデル追加。GPT-5.2 Instant 廃止（6/3）。</div>
+          </div>
+          <div class="tl-i">
+            <div class="tl-y">2026 H2</div>
+            <div class="tl-x">Spark ファミリー拡張（より大型モデル・長コンテキスト・マルチモーダル）。Cerebras 提携拡大による GPU+WSE ハイブリッド推論の標準化。</div>
+          </div>
+          <div class="tl-i">
+            <div class="tl-y">2026 末〜2027</div>
+            <div class="tl-x">Codex のデュアルモード完成（長時間推論 + リアルタイム対話を統合）。サブエージェント並列実行の自動化。GPT-6 系に向けた基盤技術の成熟。</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="sl">推奨アクション</div>
+        <div class="box">
+          <div class="box-t">1. Codex CLI 即時導入 <span class="tag tag-g">QUICK WIN</span></div>
+          <p>ChatGPT Plus ($20/月) で Codex CLI を全開発者に展開。gpt-5.3-codex がデフォルトで利用可。MCP 設定で社内ツールと接続し、コードレビュー・CI 修正を自動化。ROI は 40〜60 分/日/人の生産性向上（OpenAI 調査）。</p>
+        </div>
+        <div class="box">
+          <div class="box-t">2. マルチモデル戦略の確立 <span class="tag tag-b">STRATEGIC</span></div>
+          <p>GPT-5.3-Codex（ターミナル操作・アプリ構築）+ Claude Opus 4.6（深い推論・大規模コード理解）+ Gemini 3.1 Pro（長コンテキスト・低コスト分析）をタスクに応じて使い分け。API ゲートウェイでルーティング自動化を検討。</p>
+        </div>
+        <div class="box">
+          <div class="box-t">3. Spark プレビュー参加 <span class="tag tag-r">EVALUATE</span></div>
+          <p>リアルタイムコーディング要件が高いチームは Pro プランで Codex-Spark を評価。1,000+ tok/s の体験がワークフローを根本的に変える可能性。ただし 128K コンテキスト・テキスト専用の制約に注意。</p>
+        </div>
+        <div class="box">
+          <div class="box-t">4. セキュリティガバナンスの更新 <span class="tag tag-r">CRITICAL</span></div>
+          <p>GPT-5.3-Codex は初の「High Capability」サイバー認定モデル。社内ポリシーで Codex の権限モード（Auto / Read-only / Full Access）を標準化。セキュリティ研究には Trusted Access for Cyber 申請を検討。</p>
+        </div>
+
+        <div class="co" style="margin-top:12px;">
+          <b>市場インパクト：</b>7 ヶ月で GPT-5 → 5.3 の 4 世代反復は、OpenAI の「性能飽和の否定」を示す。Codex エコシステム（App + CLI + IDE + Cloud + Spark）の統合深度は競合を凌駕しつつあるが、Claude Code の推論品質と Gemini の価格競争力は無視できない。2026 年は「ベストモデル」ではなく「ベスト・モデル・ミックス」の時代。
+        </div>
+      </div>
+    </div>
+
+    <div class="fn">出典: OpenAI 公式発表 (2026/2-3), Morphllm Benchmark Analysis, Entelligence.ai, PCMag, The New Stack, Cerebras Blog, Reddit community reports. 本資料は 2026/3/4 時点の公開情報に基づく。</div>
+  </div>
+  <div class="s-foot">
+    <span>CONFIDENTIAL — GPT-5.3 Deep Dive</span><span>8 / 8</span>
+  </div>
+</div>
+
+</body>
+</html>
