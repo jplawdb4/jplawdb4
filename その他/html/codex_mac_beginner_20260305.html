@@ -1,0 +1,1817 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenAI Codex Mac版 デスクトップアプリ — 完全ガイド 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   CSS Custom Properties — Dark / Light
+   ============================================ */
+:root {
+  /* dark (default) */
+  --bg:           #0A0A0A;
+  --bg-card:      #16161A;
+  --bg-code:      #111113;
+  --border:       rgba(255,255,255,0.06);
+  --accent:       #5E6AD2;
+  --accent-end:   #8B5CF6;
+  --text:         #FAFAFA;
+  --text-sub:     #8A8A9A;
+  --text-aux:     #55556A;
+  --shadow-card:  0 0 0 1px rgba(255,255,255,0.06), 0 4px 24px rgba(0,0,0,0.4);
+  --shadow-hover: 0 0 0 1px rgba(94,106,210,0.25), 0 8px 32px rgba(0,0,0,0.55);
+  --table-head:   #1C1C22;
+  --table-row-alt:#12121A;
+  --table-border: rgba(255,255,255,0.05);
+  --tag-bg:       rgba(94,106,210,0.12);
+  --tag-text:     #A0A8F0;
+  --scrollbar-bg: #111113;
+  --scrollbar-fg: #2A2A35;
+  --kbd-bg:       #222230;
+  --kbd-border:   #3A3A50;
+}
+[data-theme="light"] {
+  --bg:           #F5F5F7;
+  --bg-card:      #FFFFFF;
+  --bg-code:      #F0F0F4;
+  --border:       rgba(0,0,0,0.08);
+  --text:         #1A1A2E;
+  --text-sub:     #5A5A6E;
+  --text-aux:     #8A8A9A;
+  --shadow-card:  0 0 0 1px rgba(0,0,0,0.06), 0 4px 24px rgba(0,0,0,0.08);
+  --shadow-hover: 0 0 0 1px rgba(94,106,210,0.25), 0 8px 32px rgba(0,0,0,0.12);
+  --table-head:   #EAEAF0;
+  --table-row-alt:#F8F8FC;
+  --table-border: rgba(0,0,0,0.06);
+  --tag-bg:       rgba(94,106,210,0.10);
+  --tag-text:     #4A54B0;
+  --scrollbar-bg: #E8E8EC;
+  --scrollbar-fg: #C0C0CC;
+  --kbd-bg:       #E2E2EA;
+  --kbd-border:   #CBCBD8;
+}
+
+/* ============================================
+   Global Reset & Base
+   ============================================ */
+*, *::before, *::after {
+  margin: 0; padding: 0; box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  scrollbar-color: var(--scrollbar-fg) var(--scrollbar-bg);
+}
+body {
+  font-family: 'Outfit', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+  transition: background .35s, color .35s;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-decoration: none; transition: opacity .2s; }
+a:hover { opacity: .8; text-decoration: underline; }
+img { max-width: 100%; display: block; }
+
+/* ============================================
+   Theme Toggle
+   ============================================ */
+.theme-toggle {
+  position: fixed;
+  top: 20px; right: 24px;
+  z-index: 9999;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--shadow-card);
+  transition: background .3s, border-color .3s, box-shadow .3s;
+}
+.theme-toggle:hover {
+  box-shadow: var(--shadow-hover);
+}
+.theme-toggle .icon-light,
+.theme-toggle .icon-dark { display: none; }
+[data-theme="dark"]  .theme-toggle .icon-light { display: inline; }
+[data-theme="light"] .theme-toggle .icon-dark  { display: inline; }
+
+/* ============================================
+   Layout
+   ============================================ */
+.wrapper {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 24px 120px;
+}
+
+/* ============================================
+   Hero
+   ============================================ */
+.hero {
+  text-align: center;
+  padding: 80px 0 56px;
+}
+.hero-eyebrow {
+  display: inline-block;
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+  background: var(--tag-bg);
+  padding: 6px 16px;
+  border-radius: 100px;
+}
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.2;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-end) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 16px;
+}
+.hero .subtitle {
+  font-size: 1.1rem;
+  color: var(--text-sub);
+  max-width: 640px;
+  margin: 0 auto 24px;
+  line-height: 1.7;
+}
+.hero .meta {
+  font-size: .82rem;
+  color: var(--text-aux);
+}
+
+/* ============================================
+   Table of Contents
+   ============================================ */
+.toc-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-card);
+  padding: 32px 36px;
+  margin-bottom: 48px;
+}
+.toc-card h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--text);
+}
+.toc-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 6px 24px;
+}
+.toc-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.toc-list a {
+  font-size: .92rem;
+  line-height: 2;
+  color: var(--text-sub);
+  transition: color .2s;
+}
+.toc-list a:hover { color: var(--accent); text-decoration: none; }
+.toc-num {
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--accent);
+  min-width: 22px;
+}
+
+/* ============================================
+   Section
+   ============================================ */
+.section {
+  margin-bottom: 56px;
+}
+.section-label {
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.section-title {
+  font-size: 1.55rem;
+  font-weight: 700;
+  line-height: 1.35;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-end));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================
+   Card
+   ============================================ */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-card);
+  padding: 32px 36px;
+  margin-bottom: 24px;
+  transition: box-shadow .3s;
+}
+.card:hover {
+  box-shadow: var(--shadow-hover);
+}
+.card h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+.card h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 20px 0 8px;
+  color: var(--text);
+}
+.card p, .card li {
+  font-size: .94rem;
+  color: var(--text-sub);
+  line-height: 1.85;
+}
+.card p {
+  margin-bottom: 14px;
+}
+.card p:last-child {
+  margin-bottom: 0;
+}
+.card ul, .card ol {
+  padding-left: 22px;
+  margin-bottom: 14px;
+}
+.card li {
+  margin-bottom: 6px;
+}
+
+/* ============================================
+   Code Block
+   ============================================ */
+.code-block {
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 18px 22px;
+  overflow-x: auto;
+  margin: 14px 0 18px;
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: .84rem;
+  line-height: 1.7;
+  color: var(--text-sub);
+  white-space: pre;
+}
+code {
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: .86em;
+  background: var(--bg-code);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--tag-text);
+}
+
+/* ============================================
+   Table
+   ============================================ */
+.table-wrap {
+  overflow-x: auto;
+  margin: 16px 0 20px;
+  border-radius: 8px;
+  border: 1px solid var(--table-border);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .88rem;
+}
+thead th {
+  background: var(--table-head);
+  color: var(--text);
+  font-weight: 600;
+  text-align: left;
+  padding: 12px 16px;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--table-border);
+}
+tbody td {
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--table-border);
+  color: var(--text-sub);
+  vertical-align: top;
+}
+tbody tr:nth-child(even) {
+  background: var(--table-row-alt);
+}
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ============================================
+   Tag / Badge
+   ============================================ */
+.tag {
+  display: inline-block;
+  font-size: .72rem;
+  font-weight: 600;
+  background: var(--tag-bg);
+  color: var(--tag-text);
+  padding: 3px 10px;
+  border-radius: 100px;
+  letter-spacing: .02em;
+}
+
+/* ============================================
+   Keyboard Shortcut
+   ============================================ */
+kbd {
+  display: inline-block;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: .78rem;
+  background: var(--kbd-bg);
+  border: 1px solid var(--kbd-border);
+  border-radius: 4px;
+  padding: 2px 7px;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* ============================================
+   Callout
+   ============================================ */
+.callout {
+  border-left: 3px solid var(--accent);
+  background: rgba(94,106,210,0.06);
+  padding: 16px 20px;
+  border-radius: 0 8px 8px 0;
+  margin: 16px 0;
+  font-size: .9rem;
+  color: var(--text-sub);
+}
+.callout strong {
+  color: var(--text);
+}
+.callout-warn {
+  border-left-color: #E5A100;
+  background: rgba(229,161,0,0.06);
+}
+.callout-warn strong {
+  color: #F0C040;
+}
+
+/* ============================================
+   Grid helpers
+   ============================================ */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+@media (max-width: 768px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .wrapper { padding: 24px 16px 80px; }
+  .card { padding: 24px 20px; }
+  .toc-card { padding: 24px 20px; }
+  .hero { padding: 48px 0 32px; }
+}
+
+/* ============================================
+   Step List
+   ============================================ */
+.steps { counter-reset: step; list-style: none; padding-left: 0; }
+.steps > li {
+  counter-increment: step;
+  position: relative;
+  padding-left: 48px;
+  margin-bottom: 24px;
+}
+.steps > li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0; top: 2px;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-end));
+  color: #fff;
+  font-weight: 700;
+  font-size: .85rem;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ============================================
+   Divider
+   ============================================ */
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 48px 0;
+}
+
+/* ============================================
+   Footer
+   ============================================ */
+.footer {
+  text-align: center;
+  padding: 32px 0;
+  font-size: .78rem;
+  color: var(--text-aux);
+}
+
+/* ============================================
+   Print
+   ============================================ */
+@media print {
+  .theme-toggle { display: none; }
+  body { background: #fff; color: #000; }
+}
+</style>
+</head>
+<body data-theme="dark">
+
+<!-- Theme Toggle -->
+<button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+  <span class="icon-light">☀️</span>
+  <span class="icon-dark">🌙</span>
+</button>
+
+<div class="wrapper">
+
+<!-- ============================================
+     HERO
+     ============================================ -->
+<header class="hero">
+  <span class="hero-eyebrow">Comprehensive Guide — 2026 Edition</span>
+  <h1>OpenAI Codex Mac版<br>デスクトップアプリ 完全ガイド</h1>
+  <p class="subtitle">2026年2月2日にリリースされた macOS ネイティブデスクトップアプリ「Codex」について、概要から実践的な使い方、料金、セキュリティ、Tips まで初心者にもわかりやすく徹底解説します。</p>
+  <p class="meta">最終更新: 2026年3月4日 ・ 情報ソース: OpenAI 公式ドキュメント、開発者ポータル、コミュニティ</p>
+</header>
+
+<!-- ============================================
+     TOC
+     ============================================ -->
+<nav class="toc-card" id="toc">
+  <h2>目次 — Table of Contents</h2>
+  <ol class="toc-list">
+    <li><span class="toc-num">01</span><a href="#sec01">Codex Mac版とは何か</a></li>
+    <li><span class="toc-num">02</span><a href="#sec02">システム要件・対応 macOS</a></li>
+    <li><span class="toc-num">03</span><a href="#sec03">インストール方法</a></li>
+    <li><span class="toc-num">04</span><a href="#sec04">主な機能と特徴</a></li>
+    <li><span class="toc-num">05</span><a href="#sec05">使い方ガイド</a></li>
+    <li><span class="toc-num">06</span><a href="#sec06">対応モデル</a></li>
+    <li><span class="toc-num">07</span><a href="#sec07">料金・利用条件</a></li>
+    <li><span class="toc-num">08</span><a href="#sec08">セキュリティ・プライバシー</a></li>
+    <li><span class="toc-num">09</span><a href="#sec09">ユースケース集</a></li>
+    <li><span class="toc-num">10</span><a href="#sec10">制限事項・既知の問題</a></li>
+    <li><span class="toc-num">11</span><a href="#sec11">CLI版・クラウド版・Mac版 徹底比較</a></li>
+    <li><span class="toc-num">12</span><a href="#sec12">Tips・ベストプラクティス</a></li>
+    <li><span class="toc-num">13</span><a href="#sec13">参考リンク・公式ドキュメント</a></li>
+  </ol>
+</nav>
+
+<!-- ============================================
+     SECTION 01
+     ============================================ -->
+<section class="section" id="sec01">
+  <p class="section-label">Section 01 — Overview</p>
+  <h2 class="section-title">Codex Mac版とは何か — 概要・位置づけ・CLI版/クラウド版との違い</h2>
+
+  <div class="card">
+    <h3>Codex Mac版アプリの概要</h3>
+    <p>OpenAI Codex Mac版デスクトップアプリ（以下「Codex App」）は、2026年2月2日にリリースされた macOS ネイティブのデスクトップアプリケーションです。OpenAI は公式にこれを「エージェントのためのコマンドセンター」と位置づけており、複数の AI コーディングエージェントを並列に管理・実行し、長時間にわたるタスクを協調的に処理するための専用インターフェースとして設計されています。</p>
+    <p>Codex は2025年4月にクラウドベースのコーディングエージェントとして初めてリリースされ、その後 CLI（コマンドラインインターフェース）版、IDE 拡張機能版が続きました。そして2026年2月、これらを統合的に管理するための「デスクトップアプリ」として Mac 版が登場しました。単なるラッパーではなく、マルチタスク管理、Worktree によるブランチ分離、Automations（自動化）、Skills（スキル）管理、統合ターミナル、差分レビューなど、デスクトップアプリならではの機能を豊富に備えています。</p>
+    <p>2026年3月4日時点では Windows 版もリリースされていますが、本ガイドでは Mac 版に焦点を当てて解説します。</p>
+  </div>
+
+  <div class="card">
+    <h3>CLI版・クラウド版・Mac版の位置づけの違い</h3>
+    <p>OpenAI の Codex エコシステムには現在、大きく3つの利用形態があります。それぞれの役割と特徴を理解しておくことが重要です。</p>
+
+    <h4>Codex CLI（ターミナル版）</h4>
+    <p>ターミナル上で動作するコマンドラインツールです。<code>codex</code> コマンドを使い、カレントディレクトリのコードに対してエージェントが読み取り・編集・コマンド実行を行います。オープンソースで公開されており、npm 経由でインストールできます。ローカルマシンのサンドボックス内で動作し、開発者がターミナルから離れずに作業できるのが特徴です。1つのセッションで1つのタスクを実行するシングルスレッド型のワークフローが基本となります。</p>
+
+    <h4>Codex Cloud（ChatGPT内クラウド版）</h4>
+    <p>ChatGPT のウェブインターフェースや iOS アプリから利用できるクラウドベースの Codex です。GitHub リポジトリと連携し、OpenAI が管理する隔離コンテナ内でエージェントが動作します。ローカル環境を汚さずにタスクを実行でき、自動コードレビューや Slack 連携などのクラウド専用機能が利用可能です。ただし、ローカルファイルに直接アクセスすることはできません。</p>
+
+    <h4>Codex App（Mac版デスクトップアプリ）</h4>
+    <p>今回解説するデスクトップアプリです。CLI の機能をベースにしつつ、GUI による直感的な操作、複数エージェントの並列管理、プロジェクトごとのスレッド整理、Git Worktree のネイティブサポート、差分レビュー機能、Automations（定期自動実行）、Skills の管理 UI、統合ターミナル、IDE 拡張との同期など、開発者の日常ワークフローを大幅に強化する機能を提供します。CLI と設定ファイルやセッション履歴を共有しているため、既存の CLI ユーザーはシームレスに移行できます。</p>
+
+    <div class="callout">
+      <strong>ポイント:</strong> Mac版アプリは CLI の上位互換ではなく、補完的なツールです。CLI のパワーユーザーは引き続きターミナルを使いつつ、複数エージェントの管理やレビュー・自動化のためにアプリを併用する、というワークフローが推奨されています。
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>なぜデスクトップアプリが必要だったのか</h3>
+    <p>OpenAI の公式ブログでは、既存の IDE やターミナルベースのツールは「複数のエージェントを並列で指示・監督・協調させる」という新しい開発スタイルをサポートするために設計されていない、という課題が述べられています。Codex リリース以降、開発者の働き方は根本的に変化し、モデルが複雑で長時間にわたるタスクを端から端まで処理できるようになった結果、「エージェントに何ができるか」ではなく「どうやって複数のエージェントをスケールして管理するか」が中心的な課題になりました。</p>
+    <p>Codex App はこの課題に対する回答として設計されており、プロジェクトごとにスレッドを整理し、エージェントの変更を差分で確認し、コメントを付けてフィードバックし、必要に応じてエディタで手動修正を行い、さらにバックグラウンドで自動化タスクを走らせる ——  こうした統合的なエージェント管理体験を提供しています。</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ============================================
+     SECTION 02
+     ============================================ -->
+<section class="section" id="sec02">
+  <p class="section-label">Section 02 — System Requirements</p>
+  <h2 class="section-title">システム要件・対応 macOS バージョン</h2>
+
+  <div class="card">
+    <h3>ハードウェア・ソフトウェア要件</h3>
+    <p>Codex Mac版デスクトップアプリを使用するには、以下の要件を満たす Mac が必要です。</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>項目</th>
+            <th>要件</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>チップ</td>
+            <td><strong>Apple Silicon（M1 / M2 / M3 / M4 以降）</strong>が必須。Intel Mac は非対応。</td>
+          </tr>
+          <tr>
+            <td>macOS バージョン</td>
+            <td>macOS 14 (Sonoma) 以降を推奨。</td>
+          </tr>
+          <tr>
+            <td>ダウンロードサイズ</td>
+            <td>約 25.4 MB（DMG インストーラー）</td>
+          </tr>
+          <tr>
+            <td>アカウント</td>
+            <td>ChatGPT アカウント（無料〜Pro）または OpenAI API キー</td>
+          </tr>
+          <tr>
+            <td>ネットワーク</td>
+            <td>初回サインイン時にインターネット接続が必要。タスク実行中は API との通信が発生。</td>
+          </tr>
+          <tr>
+            <td>ストレージ</td>
+            <td>アプリ本体は小さいが、Worktree やセッションログで追加容量が必要になる場合あり。</td>
+          </tr>
+          <tr>
+            <td>Git</td>
+            <td>Worktree 機能を使うには Git がインストールされている必要がある（Xcode CLT で標準提供）。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout-warn callout">
+      <strong>Intel Mac は非対応:</strong> Codex App は Apple Silicon 専用です。Intel Mac ユーザーはコミュニティ製の非公式変換スクリプトが GitHub 上に存在しますが、公式にはサポートされていません。Intel Mac では CLI 版または Cloud 版を利用してください。
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ============================================
+     SECTION 03
+     ============================================ -->
+<section class="section" id="sec03">
+  <p class="section-label">Section 03 — Installation</p>
+  <h2 class="section-title">インストール方法（ダウンロード・セットアップ手順）</h2>
+
+  <div class="card">
+    <h3>GUI によるインストール（推奨）</h3>
+    <ol class="steps">
+      <li>
+        <strong>公式サイトから DMG をダウンロード</strong>
+        <p>ブラウザで <a href="https://developers.openai.com/codex/app/" target="_blank">developers.openai.com/codex/app/</a> にアクセスし、「Download for macOS」ボタンをクリックします。約 25 MB の DMG ファイルがダウンロードされます。</p>
+      </li>
+      <li>
+        <strong>DMG を開いてインストール</strong>
+        <p>ダウンロードした <code>Codex.dmg</code> をダブルクリックして開き、表示される Codex アイコンを <code>/Applications</code> フォルダにドラッグ&ドロップします。標準的な Mac アプリのインストール手順と同じです。</p>
+      </li>
+      <li>
+        <strong>アプリを起動してサインイン</strong>
+        <p>Launchpad や Spotlight（<kbd>⌘</kbd> + <kbd>Space</kbd> → 「Codex」と入力）からアプリを起動します。初回起動時にサインイン画面が表示されるので、ChatGPT アカウントまたは OpenAI API キーでログインします。</p>
+      </li>
+      <li>
+        <strong>プロジェクトを選択</strong>
+        <p>サインイン後、作業対象のプロジェクトフォルダを選択します。過去に CLI や IDE 拡張で使用したプロジェクトがある場合、自動的に表示されます。</p>
+      </li>
+      <li>
+        <strong>最初のメッセージを送信</strong>
+        <p>プロジェクトを選択し「Local」モードが選ばれていることを確認したら、テキスト入力欄にタスクや質問を入力して送信します。これで Codex がローカルマシン上でエージェントとして動作を開始します。</p>
+      </li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>CLI 経由でのインストール</h3>
+    <p>既に Codex CLI がインストールされている場合、ターミナルから以下のコマンドでデスクトップアプリを起動することもできます。</p>
+    <div class="code-block">codex app</div>
+    <p>このコマンドは、Codex App がインストールされていればそれを起動し、未インストールの場合はダウンロードページへの案内を表示します。CLI と App は設定ファイル（<code>~/.codex/config.toml</code>）やセッション履歴を共有しているため、CLI で設定した内容がアプリにも反映されます。</p>
+  </div>
+
+  <div class="card">
+    <h3>サインイン方法の選択</h3>
+    <p>Codex App では2種類のサインイン方法が用意されています。</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>方法</th>
+            <th>特徴</th>
+            <th>利用可能な機能</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>ChatGPT アカウント</strong></td>
+            <td>通常の ChatGPT ログイン（Google / Apple / メール等）を使用</td>
+            <td>すべての機能（ローカル、クラウド、コードレビュー、Slack 連携等）</td>
+          </tr>
+          <tr>
+            <td><strong>OpenAI API キー</strong></td>
+            <td>API キーを入力してログイン</td>
+            <td>ローカルタスクのみ。Cloud スレッドやクラウド連携機能は利用不可。API 従量課金。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>一般的な開発者には ChatGPT アカウントでのサインインが推奨されます。API キーでのサインインは、CI/CD パイプラインでの自動化や、組織の共有環境での利用に適しています。</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ============================================
+     SECTION 04
+     ============================================ -->
+<section class="section" id="sec04">
+  <p class="section-label">Section 04 — Features</p>
+  <h2 class="section-title">主な機能と特徴</h2>
+
+  <div class="card">
+    <h3>マルチプロジェクト・マルチスレッド管理</h3>
+    <p>Codex App の最大の特徴は、複数のプロジェクトとスレッドを1つのウィンドウで管理できることです。サイドバーにはプロジェクトが一覧表示され、各プロジェクトの下に複数のスレッド（会話）が並びます。エージェントは各スレッドで独立して動作するため、「バグ修正」「新機能の実装」「リファクタリング」など複数のタスクを同時に進行させることが可能です。</p>
+    <p>スレッドを開始する際には、以下の3つのモードから選択できます。</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>モード</th>
+            <th>動作</th>
+            <th>用途</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Local</strong></td>
+            <td>現在のプロジェクトディレクトリで直接作業</td>
+            <td>日常的な開発タスク、すぐにコードを反映したい場合</td>
+          </tr>
+          <tr>
+            <td><strong>Worktree</strong></td>
+            <td>Git Worktree を作成し、分離された環境で作業</td>
+            <td>実験的な変更、並列タスク、メインの作業を邪魔しない場合</td>
+          </tr>
+          <tr>
+            <td><strong>Cloud</strong></td>
+            <td>設定済みのクラウド環境でリモート実行</td>
+            <td>ローカルリソースを使いたくない場合、重い処理</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Git Worktree ネイティブサポート</h3>
+    <p>Worktree は Codex App の中核的な機能のひとつです。Git の Worktree 機能を活用し、同じリポジトリの複数の独立したチェックアウトを作成して、複数のエージェントが互いに干渉することなく並列で作業できるようにします。</p>
+    <p>各 Worktree は <code>$CODEX_HOME/worktrees</code>（デフォルトでは <code>~/.codex/worktrees</code>）配下に作成され、デタッチド HEAD 状態で開始されます。これにより、ブランチを汚さずに作業を進められます。作業が完了したら「Create branch here」ボタンでブランチを作成し、コミット・プッシュ・プルリクエストの作成まで App 内で完結できます。</p>
+    <p>また、Handoff 機能を使えば、Worktree で作成したスレッドを Local に移動したり、その逆に Local のスレッドを Worktree に退避させたりすることが可能です。Codex が Git 操作を安全に処理してくれるため、手動でのブランチ管理の煩雑さから解放されます。</p>
+  </div>
+
+  <div class="card">
+    <h3>統合差分レビュー（Diff Pane）</h3>
+    <p>App には差分レビューペインが組み込まれており、エージェントが行った変更を Git diff 形式で確認できます。変更の確認にとどまらず、差分にインラインコメントを追加して Codex にフィードバックしたり、特定のチャンクやファイル単位でステージ/リバートしたり、コミット・プッシュ・PR 作成までアプリ内で完結させることが可能です。</p>
+    <p>差分表示は「すべての変更」「ステージ済み」「最後のターンの変更のみ」などのフィルターで切り替えられるため、エージェントの変更だけを効率的にレビューできます。</p>
+  </div>
+
+  <div class="card">
+    <h3>統合ターミナル</h3>
+    <p>各スレッドにはビルトインのターミナルが付属しており、<kbd>⌘</kbd> + <kbd>J</kbd> で表示を切り替えられます。ターミナルは現在のプロジェクトまたは Worktree のディレクトリにスコープされているため、<code>git status</code>、<code>npm test</code>、<code>npm start</code> などのコマンドをアプリを離れずに実行できます。変更の検証、開発サーバーの起動、スクリプトの実行などに活用できます。</p>
+  </div>
+
+  <div class="card">
+    <h3>Skills（スキル）</h3>
+    <p>Skills は Codex の機能をコード生成以外に拡張するための仕組みです。指示書、リソース、スクリプトをバンドルしたパッケージで、Codex がツールに接続し、ワークフローを実行し、チームの好みに応じてタスクを完了できるようにします。</p>
+    <p>App にはスキルの作成・管理用の専用インターフェースがあり、作成したスキルは App、CLI、IDE 拡張のすべてで利用可能です。また、リポジトリにチェックインすることでチーム全体で共有できます。</p>
+    <p>OpenAI が公式に提供しているスキルの例を以下に示します。</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>スキル</th>
+            <th>機能</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Figma Implement Design</strong></td>
+            <td>Figma からデザインコンテキスト・アセット・スクリーンショットを取得し、1:1 のビジュアル忠実度で UI コードに変換</td>
+          </tr>
+          <tr>
+            <td><strong>Linear</strong></td>
+            <td>バグのトリアージ、リリース追跡、チームのワークロード管理</td>
+          </tr>
+          <tr>
+            <td><strong>Cloudflare / Netlify / Vercel Deploy</strong></td>
+            <td>Web アプリを各種クラウドホストにデプロイ</td>
+          </tr>
+          <tr>
+            <td><strong>Image Generation</strong></td>
+            <td>GPT Image を使用して画像を生成・編集（Web サイト、UI モックアップ、ゲームアセット等）</td>
+          </tr>
+          <tr>
+            <td><strong>OpenAI Docs</strong></td>
+            <td>OpenAI API の最新ドキュメントを参照しながら開発</td>
+          </tr>
+          <tr>
+            <td><strong>PDF / Spreadsheet / Doc</strong></td>
+            <td>PDF、スプレッドシート、Word ファイルの読み取り・作成・編集</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>スキルの呼び出しはコンポーザーで <code>$skill-name</code> と入力するか、スラッシュコマンド一覧から選択して行います。</p>
+  </div>
+
+  <div class="card">
+    <h3>Automations（自動化）</h3>
+    <p>Automations は、定期的なスケジュールで Codex にバックグラウンドタスクを実行させる機能です。指示文とオプションのスキルを組み合わせ、定義したスケジュールに基づいて自動的に実行されます。完了した結果はトリアージキュー（受信トレイ）に表示され、確認が必要なものだけをレビューできます。</p>
+    <p>Git リポジトリでは各 Automation が専用のバックグラウンド Worktree 上で動作するため、メインのチェックアウトに影響を与えません。活用例としては、日次のイシュートリアージ、CI 失敗の検出とサマリー生成、リリースブリーフの自動作成、バグの定期チェック、新しいスキルの自動生成などがあります。</p>
+    <div class="callout">
+      <strong>注意:</strong> Automations はローカルの Codex App 上で実行されるため、App が起動していて、対象プロジェクトがディスク上に存在している必要があります。
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>IDE 拡張との同期</h3>
+    <p>VS Code、Cursor、Windsurf などの IDE にインストールした Codex IDE Extension と App は、同じプロジェクトで作業している場合に自動的に同期します。同期すると、App のコンポーザーに「IDE context」オプションが表示され、IDE で現在表示しているファイルをコンテキストとして参照できます。また、App で実行中のスレッドを IDE Extension 側から確認したり、その逆も可能です。</p>
+  </div>
+
+  <div class="card">
+    <h3>MCP（Model Context Protocol）サポート</h3>
+    <p>Codex App は MCP をサポートしており、外部サービスへの接続を追加できます。App、CLI、IDE Extension で MCP 設定を共有しているため、一度設定すればすべての環境で利用可能です。App の設定画面からおすすめのサーバーを有効化したり、新しいサーバーを追加したりできます。</p>
+  </div>
+
+  <div class="card">
+    <h3>音声入力・ポップアウトウィンドウ・その他の機能</h3>
+    <p>コンポーザーが表示されている状態で <kbd>Ctrl</kbd> + <kbd>M</kbd> を長押しすると音声入力が起動し、話した内容が自動的にテキストに変換されます。変換後のテキストを編集してから送信することもできます。</p>
+    <p>アクティブなスレッドを別ウィンドウにポップアウトして、ブラウザやエディタの近くに配置することも可能です。フロントエンド開発で、ブラウザプレビューを見ながら Codex と対話するのに最適です。「常に最前面に表示」オプションもあります。</p>
+    <p>その他、画像のドラッグ&ドロップによるコンテキスト追加、タスク完了時のデスクトップ通知、エージェント実行中のスリープ防止機能、パーソナリティの切り替え（<code>/personality</code> コマンド：簡潔な実務的スタイルまたは会話的で共感的なスタイル）なども搭載されています。</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ============================================
+     SECTION 05
+     ============================================ -->
+<section class="section" id="sec05">
+  <p class="section-label">Section 05 — Usage Guide</p>
+  <h2 class="section-title">使い方ガイド（起動〜基本操作〜タスク実行の流れ）</h2>
+
+  <div class="card">
+    <h3>Step by Step: 最初のタスクを実行する</h3>
+    <ol class="steps">
+      <li>
+        <strong>App を起動してプロジェクトを追加する</strong>
+        <p>Codex App を起動し、サイドバーの「Add new project」ボタン（または <kbd>⌘</kbd> + <kbd>O</kbd>）をクリックして、作業したいプロジェクトフォルダを選択します。Git リポジトリのルートディレクトリを選ぶのが一般的です。モノレポの場合は、個別のパッケージやアプリごとに分けてプロジェクトを追加することが推奨されます。</p>
+      </li>
+      <li>
+        <strong>新しいスレッドを作成する</strong>
+        <p><kbd>⌘</kbd> + <kbd>N</kbd> で新しいスレッドを作成します。コンポーザーの下部で「Local」「Worktree」「Cloud」からモードを選択します。初心者はまず「Local」を選びましょう。</p>
+      </li>
+      <li>
+        <strong>タスクを入力して送信する</strong>
+        <p>コンポーザーにタスクの説明を入力します。例えば「このプロジェクトの README を日本語に翻訳して」「ユニットテストを追加して」「このバグを修正して」などです。Enter キーで送信すると、エージェントが作業を開始します。</p>
+      </li>
+      <li>
+        <strong>エージェントの作業を監視する</strong>
+        <p>エージェントはファイルの読み取り、コードの編集、コマンドの実行などを行います。承認が必要な操作（ネットワークアクセスやサンドボックス外への書き込みなど）が発生した場合、確認ダイアログが表示されます。「Approve once」（一度だけ許可）や「Approve for this session」（セッション中許可）などのオプションから選択します。</p>
+      </li>
+      <li>
+        <strong>差分を確認してコミットする</strong>
+        <p>エージェントの作業が完了したら、<kbd>⌘</kbd> + <kbd>⌥</kbd> + <kbd>B</kbd> で差分パネルを表示し、変更内容を確認します。問題がなければステージしてコミット、必要に応じてプッシュや PR 作成まで App 内で行えます。</p>
+      </li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>キーボードショートカット一覧</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>カテゴリ</th>
+            <th>アクション</th>
+            <th>ショートカット</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td rowspan="11">全般</td>
+            <td>コマンドメニュー</td>
+            <td><kbd>⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> / <kbd>⌘</kbd> + <kbd>K</kbd></td>
+          </tr>
+          <tr>
+            <td>設定</td>
+            <td><kbd>⌘</kbd> + <kbd>,</kbd></td>
+          </tr>
+          <tr>
+            <td>フォルダを開く</td>
+            <td><kbd>⌘</kbd> + <kbd>O</kbd></td>
+          </tr>
+          <tr>
+            <td>戻る</td>
+            <td><kbd>⌘</kbd> + <kbd>[</kbd></td>
+          </tr>
+          <tr>
+            <td>進む</td>
+            <td><kbd>⌘</kbd> + <kbd>]</kbd></td>
+          </tr>
+          <tr>
+            <td>フォントサイズ拡大</td>
+            <td><kbd>⌘</kbd> + <kbd>+</kbd></td>
+          </tr>
+          <tr>
+            <td>フォントサイズ縮小</td>
+            <td><kbd>⌘</kbd> + <kbd>-</kbd></td>
+          </tr>
+          <tr>
+            <td>サイドバー表示切替</td>
+            <td><kbd>⌘</kbd> + <kbd>B</kbd></td>
+          </tr>
+          <tr>
+            <td>差分パネル表示切替</td>
+            <td><kbd>⌘</kbd> + <kbd>⌥</kbd> + <kbd>B</kbd></td>
+          </tr>
+          <tr>
+            <td>ターミナル表示切替</td>
+            <td><kbd>⌘</kbd> + <kbd>J</kbd></td>
+          </tr>
+          <tr>
+            <td>ターミナルクリア</td>
+            <td><kbd>⌃</kbd> + <kbd>L</kbd></td>
+          </tr>
+          <tr>
+            <td rowspan="5">スレッド</td>
+            <td>新しいスレッド</td>
+            <td><kbd>⌘</kbd> + <kbd>N</kbd> / <kbd>⌘</kbd> + <kbd>⇧</kbd> + <kbd>O</kbd></td>
+          </tr>
+          <tr>
+            <td>スレッド内検索</td>
+            <td><kbd>⌘</kbd> + <kbd>F</kbd></td>
+          </tr>
+          <tr>
+            <td>前のスレッド</td>
+            <td><kbd>⌘</kbd> + <kbd>⇧</kbd> + <kbd>[</kbd></td>
+          </tr>
+          <tr>
+            <td>次のスレッド</td>
+            <td><kbd>⌘</kbd> + <kbd>⇧</kbd> + <kbd>]</kbd></td>
+          </tr>
+          <tr>
+            <td>音声入力</td>
+            <td><kbd>⌃</kbd> + <kbd>M</kbd></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>スラッシュコマンド</h3>
+    <p>コンポーザーに <code>/</code> を入力すると、利用可能なスラッシュコマンドの一覧が表示されます。</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>コマンド</th>
+            <th>説明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>/feedback</code></td>
+            <td>フィードバックダイアログを開き、オプションでログを含めて送信</td>
+          </tr>
+          <tr>
+            <td><code>/mcp</code></td>
+            <td>接続済み MCP サーバーのステータスを表示</td>
+          </tr>
+          <tr>
+            <td><code>/plan-mode</code></td>
+            <td>マルチステップの計画モードを切り替え</td>
+          </tr>
+          <tr>
+            <td><code>/review</code></td>
+            <td>コードレビューモードを開始（未コミットの変更をレビュー、ベースブランチとの比較）</td>
+          </tr>
+          <tr>
+            <td><code>/status</code></td>
+            <td>スレッド ID、コンテキスト使用量、レートリミットを表示</td>
+          </tr>
+          <tr>
+            <td><code>/personality</code></td>
+            <td>エージェントのパーソナリティを切り替え（簡潔 vs 会話的）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>ローカル環境設定（Local Environments）</h3>
+    <p>ローカル環境設定を使うと、Worktree 作成時のセットアップスクリプトやプロジェクトでよく使うアクションを定義できます。設定は App の設定画面から行い、プロジェクトルートの <code>.codex</code> フォルダ内に保存されます。Git リポジトリにチェックインすればチームで共有できます。</p>
+    <p>セットアップスクリプトの例（TypeScript プロジェクトの場合）:</p>
+    <div class="code-block">npm install
+npm run build</div>
+    <p>アクションの例（開発サーバーの起動）:</p>
+    <div class="code-block">npm start</div>
+    <p>アクションを定義すると、App のトップバーにショートカットボタンとして表示され、ワンクリックで実行できるようになります。</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ============================================
+     SECTION 06
+     ============================================ -->
+<section class="section" id="sec06">
+  <p class="section-label">Section 06 — Models</p>
+  <h2 class="section-title">対応モデル</h2>
+
+  <div class="card">
+    <h3>Codex App で利用可能なモデル一覧</h3>
+    <p>Codex App は、OpenAI の Codex 専用モデルを中心に複数のモデルに対応しています。モデルの選択はスレッド作成時やコンポーザーで行えます。2026年3月時点での主要モデルは以下の通りです。</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>モデル</th>
+            <th>特徴</th>
+            <th>App</th>
+            <th>CLI</th>
+            <th>Cloud</th>
+            <th>API</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>GPT-5.3-Codex</strong> <span class="tag">推奨</span></td>
+            <td>最も高性能なエージェント型コーディングモデル。フロンティアレベルのコーディング性能に加え、推論力と専門知識が強化。</td>
+            <td>✅</td>
+            <td>✅</td>
+            <td>✅</td>
+            <td>✅</td>
+          </tr>
+          <tr>
+            <td><strong>GPT-5.3-Codex-Spark</strong> <span class="tag">Pro限定</span></td>
+            <td>ほぼ瞬時のリアルタイムコーディングに最適化されたテキスト専用リサーチプレビューモデル。</td>
+            <td>✅</td>
+            <td>✅</td>
+            <td>✅</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>GPT-5.2-Codex</strong></td>
+            <td>実世界のエンジニアリングに向けた高度なコーディングモデル。GPT-5.3-Codex の前世代。</td>
+            <td>✅</td>
+            <td>✅</td>
+            <td>✅</td>
+            <td>✅</td>
+          </tr>
+          <tr>
+            <td><strong>GPT-5.2</strong></td>
+            <td>業界・ドメイン横断の汎用エージェントモデル。</td>
+            <td>✅</td>
+            <td>✅</td>
+            <td>✅</td>
+            <td>✅</td>
+          </tr>
+          <tr>
+            <td><strong>GPT-5.1-Codex-Max</strong></td>
+            <td>長時間エージェント型コーディングタスクに最適化。</td>
+            <td>✅</td>
+            <td>✅</td>
+            <td>✅</td>
+            <td>✅</td>
+          </tr>
+          <tr>
+            <td><strong>GPT-5.1-Codex-Mini</strong></td>
+            <td>コスト効率に優れた軽量モデル。使用量上限が最大 4倍に。</td>
+            <td>✅</td>
+            <td>✅</td>
+            <td>—</td>
+            <td>✅</td>
+          </tr>
+          <tr>
+            <td><strong>GPT-5.1</strong></td>
+            <td>コーディングとエージェントタスクに適した汎用モデル。</td>
+            <td>✅</td>
+            <td>✅</td>
+            <td>✅</td>
+            <td>✅</td>
+          </tr>
+          <tr>
+            <td><strong>GPT-5-Codex</strong></td>
+            <td>長時間エージェント型コーディングタスク向けにチューニングされた GPT-5 のバリアント。</td>
+            <td>✅</td>
+            <td>✅</td>
+            <td>✅</td>
+            <td>✅</td>
+          </tr>
+          <tr>
+            <td><strong>GPT-5</strong></td>
+            <td>推論モデル。コーディングおよびエージェントタスクに適用可能。</td>
+            <td>✅</td>
+            <td>✅</td>
+            <td>✅</td>
+            <td>✅</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <strong>レガシーモデルについて:</strong> 以前の codex-1（o3 / o4-mini ベース）は <code>codex-latest</code> / <code>codex-mini-latest</code> として利用可能でしたが、現在は GPT-5 系列のモデルに置き換えられています。CLI の <code>--model</code> フラグや App のモデル選択で明示的に切り替えることができます。
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>モデルの切り替え方法</h3>
+    <p>Codex App 内でモデルを変更するには、スレッドのコンポーザー付近にあるモデル選択メニューを使用します。CLI では <code>/model</code> コマンドを使ってアクティブなスレッドのモデルを変更するか、起動時に <code>codex -m gpt-5.3-codex</code> のように指定します。</p>
+    <p>デフォルトモデルは <code>~/.codex/config.toml</code> で設定できます。</p>
+    <div class="code-block">model = "gpt-5.3-codex"</div>
+    <p>Cloud タスクのモデルは現時点では変更できません（自動的に推奨モデルが使用されます）。</p>
+  </div>
+
+  <div class="card">
+    <h3>サードパーティモデルの利用</h3>
+    <p>Codex は Chat Completions API または Responses API をサポートする任意のモデルやプロバイダーを指定することも可能です。ただし、Chat Completions API のサポートは非推奨となっており、将来のリリースで削除される予定です。最高のパフォーマンスを得るためには、上記リストのモデルの使用が推奨されます。</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ============================================
+     SECTION 07
+     ============================================ -->
+<section class="section" id="sec07">
+  <p class="section-label">Section 07 — Pricing</p>
+  <h2 class="section-title">料金・利用条件</h2>
+
+  <div class="card">
+    <h3>ChatGPT サブスクリプションプラン</h3>
+    <p>Codex App は ChatGPT のサブスクリプションに含まれており、追加のアプリ購入費用はかかりません。プランごとの使用量上限は以下の通りです。</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>プラン</th>
+            <th>ローカルメッセージ / 5h</th>
+            <th>クラウドタスク / 5h</th>
+            <th>コードレビュー / 週</th>
+            <th>月額</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Free / Go</strong></td>
+            <td colspan="3">期間限定で利用可能</td>
+            <td>$0 / $20</td>
+          </tr>
+          <tr>
+            <td><strong>Plus</strong></td>
+            <td>45–225</td>
+            <td>10–60</td>
+            <td>10–25</td>
+            <td>$20</td>
+          </tr>
+          <tr>
+            <td><strong>Pro</strong></td>
+            <td>300–1,500</td>
+            <td>50–400</td>
+            <td>100–250</td>
+            <td>$200</td>
+          </tr>
+          <tr>
+            <td><strong>Business</strong></td>
+            <td>45–225</td>
+            <td>10–60</td>
+            <td>10–25</td>
+            <td>$25 /人</td>
+          </tr>
+          <tr>
+            <td><strong>Enterprise / Edu</strong></td>
+            <td colspan="3">固定上限なし（クレジットに応じてスケール）</td>
+            <td>要問合せ</td>
+          </tr>
+          <tr>
+            <td><strong>API Key</strong></td>
+            <td colspan="3">API 従量課金</td>
+            <td>使用量ベース</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>上限は5時間のスライディングウィンドウで計算され、ローカルメッセージとクラウドタスクは共有の枠からカウントされます。メッセージあたりの消費量はタスクのサイズと複雑さ、必要なコンテキスト量によって変動します。小さなスクリプトの修正と大規模なコードベースでの長時間タスクでは、消費量に大きな差があります。</p>
+
+    <div class="callout">
+      <strong>期間限定 2x リミット:</strong> 2026年2月のアプリリリースを記念して、すべての有料プランで Codex のレートリミットが2倍に増量されています。終了日は未定です。
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>クレジットシステム</h3>
+    <p>サブスクリプションの使用量上限に達した場合、追加のクレジットを購入して作業を継続できます。クレジットの消費量はモデルと機能によって異なります。</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>機能</th>
+            <th>単位</th>
+            <th>GPT-5.3-Codex / 5.2-Codex</th>
+            <th>GPT-5.1-Codex-Mini</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>ローカルタスク</td>
+            <td>1 メッセージ</td>
+            <td>〜5 クレジット</td>
+            <td>〜1 クレジット</td>
+          </tr>
+          <tr>
+            <td>クラウドタスク</td>
+            <td>1 メッセージ</td>
+            <td>〜25 クレジット</td>
+            <td>利用不可</td>
+          </tr>
+          <tr>
+            <td>コードレビュー</td>
+            <td>1 PR</td>
+            <td>〜25 クレジット</td>
+            <td>利用不可</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>日常的なタスクには GPT-5.1-Codex-Mini を使うことで、使用量上限をおおよそ4倍に延ばすことができます。</p>
+  </div>
+
+  <div class="card">
+    <h3>Pro プランのメリット</h3>
+    <p>Pro プラン（$200/月）は Codex をフルタイム開発に活用する開発者向けです。Plus プランの全機能に加え、リクエストの優先処理、GPT-5.3-Codex-Spark（リサーチプレビュー）へのアクセス、ローカル・クラウドタスクの使用量上限が6倍、コードレビューの上限が10倍に増量されます。大量のタスクを日常的に処理する開発者にとって、クレジットを追加購入するよりもコストパフォーマンスが高い場合があります。</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ============================================
+     SECTION 08
+     ============================================ -->
+<section class="section" id="sec08">
+  <p class="section-label">Section 08 — Security &amp; Privacy</p>
+  <h2 class="section-title">セキュリティ・プライバシー</h2>
+
+  <div class="card">
+    <h3>ローカル実行のセキュリティモデル</h3>
+    <p>Codex App はオープンソースのシステムレベルサンドボックスを使用しており、CLI と同じセキュリティアーキテクチャを採用しています。セキュリティは「サンドボックスモード」と「承認ポリシー」の2層で構成されています。</p>
+
+    <h4>サンドボックスモード</h4>
+    <p>macOS では <strong>Seatbelt ポリシー</strong>が使用され、<code>sandbox-exec</code> を介してコマンドが実行されます。デフォルトでは、エージェントは作業中のフォルダまたはブランチ内のファイル編集と、キャッシュされたWeb検索のみに制限されます。ネットワークアクセスはデフォルトで無効です。</p>
+
+    <h4>承認ポリシー</h4>
+    <p>エージェントがサンドボックスの範囲外のアクション（ネットワークアクセス、ワークスペース外への書き込み、信頼されていないコマンドの実行など）を行おうとした場合、ユーザーに承認を求めるダイアログが表示されます。承認のスコープは「一度だけ」「このセッション中」などから選択できます。</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>プリセット</th>
+            <th>フラグ（CLI 相当）</th>
+            <th>動作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Auto（デフォルト）</strong></td>
+            <td><code>--full-auto</code></td>
+            <td>ワークスペース内のファイル読み書き・コマンド実行を自動実行。外部への書き込みやネットワークアクセスは承認が必要。</td>
+          </tr>
+          <tr>
+            <td><strong>Read-only</strong></td>
+            <td><code>--sandbox read-only</code></td>
+            <td>ファイルの読み取りのみ。編集・コマンド・ネットワークはすべて承認が必要。</td>
+          </tr>
+          <tr>
+            <td><strong>Untrusted</strong></td>
+            <td><code>--ask-for-approval untrusted</code></td>
+            <td>ファイルの読み書きは自動。信頼されていないコマンドの実行時に承認を要求。</td>
+          </tr>
+          <tr>
+            <td><strong>Full Access（危険）</strong></td>
+            <td><code>--yolo</code></td>
+            <td>サンドボックスなし・承認なし。非推奨。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>保護されるパスとデータ</h3>
+    <p>ワークスペース書き込みモード（デフォルト）であっても、以下のパスは読み取り専用として保護されます。</p>
+    <ul>
+      <li><code>&lt;workspace&gt;/.git</code> — Git メタデータディレクトリ</li>
+      <li><code>&lt;workspace&gt;/.agents</code> — エージェント設定ディレクトリ</li>
+      <li><code>&lt;workspace&gt;/.codex</code> — Codex 設定ディレクトリ</li>
+    </ul>
+    <p>また、macOS のセキュリティ機能により、Music、Downloads、Desktop などのシステムディレクトリにアクセスする際には macOS 標準の許可ダイアログが表示されます。</p>
+  </div>
+
+  <div class="card">
+    <h3>Web 検索とプロンプトインジェクション対策</h3>
+    <p>Codex は Web 検索ツールを標準搭載していますが、デフォルトでは<strong>キャッシュモード</strong>（OpenAI が管理するインデックスからの事前索引済み結果）が使用されます。これにより、ライブ Web コンテンツからのプロンプトインジェクションリスクを軽減しています。ライブ検索が必要な場合は設定で <code>web_search = "live"</code> に変更できますが、その場合は追加のリスクがある点を理解した上で使用してください。</p>
+  </div>
+
+  <div class="card">
+    <h3>テレメトリ（OTel）と監査</h3>
+    <p>Codex は OpenTelemetry（OTel）によるオプトインモニタリングをサポートしています。デフォルトではテレメトリ送信は無効で、<code>config.toml</code> の <code>[otel]</code> セクションで明示的に有効化する必要があります。有効化すると、会話、API リクエスト、ツール承認の判断、ツールの実行結果などの構造化イベントが記録されます。Enterprise プランではコンプライアンス API を通じた監査ログや使用状況の監視が可能です。</p>
+
+    <div class="callout-warn callout">
+      <strong>プライバシーに関する注意:</strong> <code>log_user_prompt = false</code>（デフォルト）を維持し、プロンプト内容の記録はポリシーが明示的に許可する場合のみ有効化してください。プロンプトにはソースコードや機密データが含まれる可能性があります。
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Enterprise 向けセキュリティ機能</h3>
+    <p>Enterprise プランでは、管理者が SAML SSO、MFA、SCIM、暗号化キー管理（EKM）、ドメイン検証、RBAC（ロールベースアクセス制御）、データ保持・データ居住地ポリシーなどを設定できます。管理者による管理設定（<code>requirements.toml</code>）を使って、ワークスペース全体のサンドボックスモードや承認ポリシーを強制することも可能です。また、Business プラン以上ではデフォルトでビジネスデータがモデルの学習に使用されません。</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ============================================
+     SECTION 09
+     ============================================ -->
+<section class="section" id="sec09">
+  <p class="section-label">Section 09 — Use Cases</p>
+  <h2 class="section-title">ユースケース集（Mac 開発者向け活用シーン）</h2>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>バグ修正の並列処理</h3>
+      <p>複数のバグレポートに対して、それぞれ個別の Worktree スレッドを作成し、エージェントに並行して修正を依頼します。各修正は独立した環境で行われるため、互いに干渉しません。修正が完了したら差分をレビューし、問題なければブランチを作成して PR を提出します。1人の開発者が同時に5つ以上のバグ修正を進行管理できるようになります。</p>
+    </div>
+
+    <div class="card">
+      <h3>Figma デザインの実装</h3>
+      <p>Figma Implement Design スキルを使い、Figma のデザインを UI コードに変換します。デザイナーから受け取ったモックアップの URL を指定するだけで、コンポーネントの構造、スタイリング、レスポンシブ対応まで自動的に実装されます。ポップアウトウィンドウでブラウザプレビューを並べながら微調整も可能です。</p>
+    </div>
+
+    <div class="card">
+      <h3>日次の自動レポート</h3>
+      <p>Automations を設定して、毎朝リポジトリの過去24時間のコミットを分析し、ワークストリームごとのエグゼクティブブリーフを自動生成します。PR リンクやレビューコメントも含めた Markdown レポートが受信トレイに届きます。チームリーダーやプロジェクトマネージャーにとって強力な情報集約ツールです。</p>
+    </div>
+
+    <div class="card">
+      <h3>テスト自動生成</h3>
+      <p>「このプロジェクトのすべての関数にユニットテストを追加して」と指示するだけで、エージェントがコードベースを分析し、テストファイルを自動生成します。生成されたテストは統合ターミナルですぐに実行して検証でき、不足があればフィードバックして追加させられます。</p>
+    </div>
+
+    <div class="card">
+      <h3>CI 失敗の自動トリアージ</h3>
+      <p>Automations とスキルを組み合わせ、CI/CD パイプラインの失敗を定期的にチェックし、失敗原因の分析と修正案の提案を自動化します。OpenAI 社内では、この種の自動化を実際に運用しているとのことです。</p>
+    </div>
+
+    <div class="card">
+      <h3>リファクタリング</h3>
+      <p>大規模なリファクタリングタスクを Worktree で安全に実行します。「このモジュールを TypeScript に移行して」「このクラスの責務を分離して」といった指示を複数のスレッドに分割し、並列で進行させることが可能です。7百万トークン以上を使用した長時間タスクも実行されています。</p>
+    </div>
+
+    <div class="card">
+      <h3>Web アプリのデプロイ</h3>
+      <p>Cloudflare、Netlify、Vercel、Render などのデプロイスキルを使い、開発したWebアプリのデプロイまでをCodex内で完結させます。デプロイの設定、ビルド、公開までをエージェントが処理します。</p>
+    </div>
+
+    <div class="card">
+      <h3>ゲーム開発</h3>
+      <p>OpenAI のブログでは、Image Generation スキルと Web Game Development スキルを組み合わせ、レーシングゲーム（複数のレーサー、8つのマップ、アイテム機能付き）を1つの初期プロンプトだけで構築した事例が紹介されています。エージェントがデザイナー、開発者、QA テスターの役割を担い、7百万トークン以上を使用して完成させました。</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ============================================
+     SECTION 10
+     ============================================ -->
+<section class="section" id="sec10">
+  <p class="section-label">Section 10 — Limitations</p>
+  <h2 class="section-title">制限事項・既知の問題・注意点</h2>
+
+  <div class="card">
+    <h3>プラットフォームの制限</h3>
+    <ul>
+      <li><strong>Intel Mac 非対応:</strong> Codex App は Apple Silicon 専用です。M1 以降のチップが必要で、Intel Mac では動作しません。Intel Mac ユーザーは CLI 版または Cloud 版を利用してください。</li>
+      <li><strong>Linux 非対応（App として）:</strong> デスクトップアプリは macOS と Windows のみです。Linux では CLI 版を使用します。ただし、コミュニティによる非公式な Linux 上での DMG 実行の報告もあります。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Worktree に関する注意点</h3>
+    <ul>
+      <li><strong>Git リポジトリが必要:</strong> Worktree 機能は Git リポジトリ内のプロジェクトでのみ利用可能です。</li>
+      <li><strong>ブランチの排他制御:</strong> Git の制約により、同一ブランチを複数の Worktree で同時にチェックアウトすることはできません。Worktree でブランチを作成した場合、そのブランチは Local でチェックアウトできなくなります。Handoff 機能で安全に移動してください。</li>
+      <li><strong>ディスク容量:</strong> 各 Worktree はリポジトリのファイル、依存関係、ビルドキャッシュの独立したコピーを持つため、ディスク容量を大量に消費する可能性があります。デフォルトで最新15個の Worktree が保持され、古いものは自動削除されます。</li>
+      <li><strong>.gitignore のファイル:</strong> Handoff 時に <code>.gitignore</code> に記載されたファイルは移動されません。</li>
+      <li><strong>依存関係のセットアップ:</strong> Worktree は Git にコミットされたファイルのみを継承するため、<code>node_modules</code> などの依存関係は含まれません。Local Environment のセットアップスクリプトで <code>npm install</code> などを定義する必要があります。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Automations に関する注意点</h3>
+    <ul>
+      <li><strong>App の起動が必要:</strong> Automations はローカルで実行されるため、Codex App が起動していなければ動作しません（クラウドベースのトリガーは今後サポート予定）。</li>
+      <li><strong>Worktree の蓄積:</strong> 頻繁な Automation は大量の Worktree を生成します。不要な実行結果はアーカイブし、必要なもの以外はピン留めしないようにしましょう。</li>
+      <li><strong>サンドボックス設定:</strong> Automations はデフォルトのサンドボックス設定で実行されます。Read-only モードではファイル変更・ネットワークアクセスが失敗するため、適切なモードに設定する必要があります。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>その他の既知の問題</h3>
+    <ul>
+      <li><strong>レビューパネルの表示:</strong> Git リポジトリ内のプロジェクトでは、Codex が編集していない変更もレビューパネルに表示されることがあります。「Last turn changes」ビューに切り替えることで、最新のターンの変更のみを表示できます。</li>
+      <li><strong>Apple Music へのアクセス要求:</strong> タスクによってはファイルシステムの探索が必要になり、macOS が Music、Downloads、Desktop などのフォルダへのアクセス許可を求めるダイアログを表示することがあります。</li>
+      <li><strong>CLI と App のバージョン差:</strong> App と CLI は同じ Codex エージェントを使用していますが、内部バージョンが異なる場合があり、一部の実験的機能が CLI でのみ先行提供されることがあります。</li>
+      <li><strong>API キーでの機能制限:</strong> API キーでサインインした場合、Cloud スレッド、GitHub コードレビュー、Slack 連携などのクラウドベース機能は利用できません。</li>
+      <li><strong>Cloud タスクのモデル固定:</strong> Cloud タスクで使用されるモデルは現時点では変更できません。</li>
+      <li><strong>スレッドのスタック:</strong> まれにスレッドが停止することがあります。その場合は、承認待ちがないか確認し、ターミナルで基本コマンドを実行してみてください。解決しない場合は新しいスレッドを作成します。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>ログとトラブルシューティング</h3>
+    <p>問題が発生した場合、以下の場所にログが保存されています。</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ログの種類</th>
+            <th>場所</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>App ログ（macOS）</td>
+            <td><code>~/Library/Logs/com.openai.codex/YYYY/MM/DD</code></td>
+          </tr>
+          <tr>
+            <td>セッション記録</td>
+            <td><code>~/.codex/sessions</code></td>
+          </tr>
+          <tr>
+            <td>アーカイブ済みセッション</td>
+            <td><code>~/.codex/archived_sessions</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>フィードバックを送信するには、コンポーザーに <code>/feedback</code> と入力します。既存のセッションを共有することもできます。GitHub の <a href="https://github.com/openai/codex/issues" target="_blank">openai/codex リポジトリ</a>で既知のイシューを確認したり、新しいイシューを報告したりすることもできます。</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ============================================
+     SECTION 11
+     ============================================ -->
+<section class="section" id="sec11">
+  <p class="section-label">Section 11 — Comparison</p>
+  <h2 class="section-title">CLI版・クラウド版・Mac版の3つを徹底比較</h2>
+
+  <div class="card">
+    <h3>3つの Codex を比較する</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>比較項目</th>
+            <th>Codex App（Mac版）</th>
+            <th>Codex CLI</th>
+            <th>Codex Cloud（ChatGPT内）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>インターフェース</strong></td>
+            <td>GUI デスクトップアプリ</td>
+            <td>ターミナル（TUI）</td>
+            <td>Web / iOS アプリ</td>
+          </tr>
+          <tr>
+            <td><strong>実行環境</strong></td>
+            <td>ローカルマシン（＋Cloud オプション）</td>
+            <td>ローカルマシン</td>
+            <td>OpenAI のクラウドコンテナ</td>
+          </tr>
+          <tr>
+            <td><strong>対応 OS</strong></td>
+            <td>macOS (Apple Silicon), Windows</td>
+            <td>macOS, Linux, Windows</td>
+            <td>ブラウザ（全 OS）、iOS</td>
+          </tr>
+          <tr>
+            <td><strong>並列タスク</strong></td>
+            <td>複数スレッドを GUI で同時管理</td>
+            <td>複数ターミナルタブで擬似的に可能</td>
+            <td>複数タスクを Web UI で管理</td>
+          </tr>
+          <tr>
+            <td><strong>Worktree サポート</strong></td>
+            <td>ネイティブ対応（GUI 操作、Handoff）</td>
+            <td>手動で Git Worktree を管理</td>
+            <td>N/A（隔離コンテナ内で動作）</td>
+          </tr>
+          <tr>
+            <td><strong>差分レビュー</strong></td>
+            <td>ビルトインの Diff Pane（インラインコメント、ステージ/リバート）</td>
+            <td>ターミナル上で <code>git diff</code></td>
+            <td>Web UI で差分表示、PR として提出</td>
+          </tr>
+          <tr>
+            <td><strong>Automations</strong></td>
+            <td>対応（ローカル実行、スケジュール設定）</td>
+            <td>非対応（スクリプトで代替可能）</td>
+            <td>非対応（クラウドトリガーは今後予定）</td>
+          </tr>
+          <tr>
+            <td><strong>Skills 管理 UI</strong></td>
+            <td>対応（作成・管理・探索の専用画面）</td>
+            <td>コマンドラインから利用</td>
+            <td>Web UI から利用</td>
+          </tr>
+          <tr>
+            <td><strong>統合ターミナル</strong></td>
+            <td>ビルトイン（スレッドごと）</td>
+            <td>ターミナル自体が環境</td>
+            <td>N/A</td>
+          </tr>
+          <tr>
+            <td><strong>IDE 連携</strong></td>
+            <td>IDE Extension と自動同期</td>
+            <td>IDE Extension と設定共有</td>
+            <td>GitHub 連携</td>
+          </tr>
+          <tr>
+            <td><strong>MCP サポート</strong></td>
+            <td>対応</td>
+            <td>対応</td>
+            <td>一部対応</td>
+          </tr>
+          <tr>
+            <td><strong>音声入力</strong></td>
+            <td>対応（<kbd>Ctrl</kbd>+<kbd>M</kbd>）</td>
+            <td>対応（スペースバー長押し）</td>
+            <td>ChatGPT の音声機能</td>
+          </tr>
+          <tr>
+            <td><strong>画像入力</strong></td>
+            <td>ドラッグ&ドロップ</td>
+            <td>ファイル指定 / ペースト</td>
+            <td>アップロード</td>
+          </tr>
+          <tr>
+            <td><strong>サンドボックス</strong></td>
+            <td>Seatbelt（macOS）/ ネイティブ（Windows）</td>
+            <td>Seatbelt（macOS）/ Landlock+seccomp（Linux）</td>
+            <td>隔離コンテナ（OpenAI 管理）</td>
+          </tr>
+          <tr>
+            <td><strong>GitHub コードレビュー</strong></td>
+            <td>ChatGPT ログインで利用可能</td>
+            <td>ChatGPT ログインで利用可能</td>
+            <td>対応（自動レビュー設定可能）</td>
+          </tr>
+          <tr>
+            <td><strong>Slack 連携</strong></td>
+            <td>ChatGPT ログインで利用可能</td>
+            <td>ChatGPT ログインで利用可能</td>
+            <td>対応</td>
+          </tr>
+          <tr>
+            <td><strong>オフライン利用</strong></td>
+            <td>不可（API 通信が必要）</td>
+            <td>不可（API 通信が必要）</td>
+            <td>不可</td>
+          </tr>
+          <tr>
+            <td><strong>オープンソース</strong></td>
+            <td>エージェント部分は OSS</td>
+            <td>完全 OSS</td>
+            <td>非 OSS</td>
+          </tr>
+          <tr>
+            <td><strong>おすすめユーザー</strong></td>
+            <td>複数タスクを並列管理したい開発者、GUI 派、チームリード</td>
+            <td>ターミナル愛用者、シンプルなタスク、CI/CD</td>
+            <td>環境構築不要で試したい人、非技術者</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>どれを選ぶべきか？</h3>
+    <p>3つの Codex はそれぞれ補完的な役割を持っており、多くの開発者は複数を併用しています。設定やセッション履歴は共有されるため、状況に応じて最適なインターフェースを使い分けることが推奨されます。</p>
+    <p>Mac 開発者で複数のタスクを日常的に並列処理するなら、Codex App がメインツールとして最適です。ターミナルでの素早い操作が必要なシーンでは CLI を、外出先やローカル環境がない状況では Cloud を活用するのが良いでしょう。</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ============================================
+     SECTION 12
+     ============================================ -->
+<section class="section" id="sec12">
+  <p class="section-label">Section 12 — Tips &amp; Best Practices</p>
+  <h2 class="section-title">Tips・ベストプラクティス</h2>
+
+  <div class="card">
+    <h3>プロンプトの書き方</h3>
+    <p>Codex は明確で具体的な指示に最もよく反応します。OpenAI の公式ドキュメントでは「Codex をチームメイトのように扱い、明示的なコンテキストと明確な『完了の定義』を与える」ことが推奨されています。</p>
+    <ul>
+      <li><strong>タスクを具体的に記述する:</strong> 「コードを改善して」ではなく「この関数のエラーハンドリングを追加し、try-catch ブロックでラップして、エラー時にはログ出力する」のように明確に書きます。</li>
+      <li><strong>コンテキストを適切に提供する:</strong> 関連するファイルパスやディレクトリを明示し、プロジェクトの構造を理解させます。画像のドラッグ&ドロップやスキルの活用も効果的です。</li>
+      <li><strong>完了条件を明示する:</strong> 「テストが通ること」「リントエラーがないこと」「既存の API と互換性があること」など、完了と見なす条件を明記します。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>AGENTS.md を活用する</h3>
+    <p><code>AGENTS.md</code> ファイルはプロジェクトのルートやサブディレクトリに配置する設定ファイルで、Codex に対してプロジェクト固有の指示やコーディング規約を伝えるために使います。大規模プロジェクトでは、ルートに全体的な指示を書き、サブディレクトリにはそのモジュール固有の指示をネストさせることで、コンテキスト量を制御できます。</p>
+    <div class="callout">
+      <strong>使用量を節約するコツ:</strong> <code>AGENTS.md</code> のサイズが大きすぎると、各メッセージで消費されるコンテキスト量が増加します。必要最小限の情報に絞り、詳細はサブディレクトリのファイルに分散させましょう。
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>モデルの使い分け</h3>
+    <p>日常的なルーティンタスク（軽微な修正、フォーマット変更、簡単なテスト追加など）には <strong>GPT-5.1-Codex-Mini</strong> を使用し、使用量上限をおよそ4倍に延ばしましょう。複雑なアーキテクチャ変更やマルチファイルのリファクタリングなど、高度な推論が必要なタスクには <strong>GPT-5.3-Codex</strong> を使います。Pro ユーザーはリアルタイムのペアプログラミングに <strong>GPT-5.3-Codex-Spark</strong> を活用できます。</p>
+  </div>
+
+  <div class="card">
+    <h3>Git ワークフローのベストプラクティス</h3>
+    <ul>
+      <li><strong>フィーチャーブランチで作業する:</strong> <code>git status</code> がクリーンな状態で Codex にタスクを委任すると、変更の分離とリバートが容易になります。</li>
+      <li><strong>こまめにコミットする:</strong> 小さなインクリメントでコミットすることで、問題が発生した場合のロールバックが簡単になります。</li>
+      <li><strong>Codex の変更を PR として扱う:</strong> 対象を絞った検証を実行し、差分をレビューし、コミットメッセージに判断の根拠を記録します。</li>
+      <li><strong>Worktree を活用する:</strong> 実験的な変更は Worktree で行い、メインの作業環境を汚さないようにしましょう。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>MCP サーバーの管理</h3>
+    <p>追加する MCP サーバーごとにメッセージのコンテキスト量が増加し、使用量の消費が早くなります。使用していない MCP サーバーは無効化しておき、必要な時だけ有効にしましょう。</p>
+  </div>
+
+  <div class="card">
+    <h3>Automations を段階的に導入する</h3>
+    <p>新しい Automation を設定する前に、まず通常のスレッドでプロンプトを手動テストし、期待通りの結果が得られることを確認してください。スケジュール実行を開始したら、最初の数回の出力を注意深くレビューし、プロンプトや頻度を調整します。不要になった Automation の実行結果はアーカイブして、Worktree の蓄積を防ぎましょう。</p>
+  </div>
+
+  <div class="card">
+    <h3>パフォーマンスの最適化</h3>
+    <ul>
+      <li><strong>スリープ防止を活用する:</strong> 長時間タスクを実行する場合、設定で「Prevent sleep while running」を有効にして、Mac のスリープによるタスクの中断を防ぎます。</li>
+      <li><strong>通知を活用する:</strong> App がバックグラウンドにある時にタスク完了や承認要求の通知を受け取れるようにしておくと、他の作業に集中しながら効率的にエージェントを管理できます。</li>
+      <li><strong>ポップアウトウィンドウを活用する:</strong> フロントエンド開発では、スレッドをポップアウトしてブラウザの横に配置し、「常に最前面」にしておくとワークフローが快適になります。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>スキルを自動的に改善する</h3>
+    <p>Automations の高度な活用として、過去のセッションを分析して既存スキルの改善や新スキルの自動生成を行うことができます。以下のようなプロンプトで Automation を設定します。</p>
+    <div class="code-block">過去24時間の ~/.codex/sessions ファイルをスキャンし、
+特定のスキルの使用で問題があった場合はスキルを更新してください。
+頻繁に行っている作業で、スキルとして保存すべきものがあれば
+新しいスキルを作成してください。
+更新が必要な場合のみ変更してください。</div>
+    <p>このように、Codex 自身にスキルのメンテナンスを委任することで、チームのワークフローを継続的に改善できます。</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ============================================
+     SECTION 13
+     ============================================ -->
+<section class="section" id="sec13">
+  <p class="section-label">Section 13 — References</p>
+  <h2 class="section-title">参考リンク・公式ドキュメント</h2>
+
+  <div class="card">
+    <h3>公式リソース</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>リソース</th>
+            <th>URL</th>
+            <th>説明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Codex App 紹介ページ</td>
+            <td><a href="https://openai.com/index/introducing-the-codex-app/" target="_blank">openai.com/index/introducing-the-codex-app/</a></td>
+            <td>公式アナウンスブログ記事</td>
+          </tr>
+          <tr>
+            <td>Codex App ドキュメント</td>
+            <td><a href="https://developers.openai.com/codex/app/" target="_blank">developers.openai.com/codex/app/</a></td>
+            <td>開発者向け公式ドキュメント（ダウンロード含む）</td>
+          </tr>
+          <tr>
+            <td>Codex App 機能一覧</td>
+            <td><a href="https://developers.openai.com/codex/app/features" target="_blank">developers.openai.com/codex/app/features</a></td>
+            <td>全機能の詳細解説</td>
+          </tr>
+          <tr>
+            <td>Codex クイックスタート</td>
+            <td><a href="https://developers.openai.com/codex/quickstart/" target="_blank">developers.openai.com/codex/quickstart/</a></td>
+            <td>セットアップの最短手順</td>
+          </tr>
+          <tr>
+            <td>Codex 料金</td>
+            <td><a href="https://developers.openai.com/codex/pricing/" target="_blank">developers.openai.com/codex/pricing/</a></td>
+            <td>プラン・使用量上限・クレジットの詳細</td>
+          </tr>
+          <tr>
+            <td>Codex モデル一覧</td>
+            <td><a href="https://developers.openai.com/codex/models/" target="_blank">developers.openai.com/codex/models/</a></td>
+            <td>利用可能なモデルと選択方法</td>
+          </tr>
+          <tr>
+            <td>Codex セキュリティ</td>
+            <td><a href="https://developers.openai.com/codex/security" target="_blank">developers.openai.com/codex/security</a></td>
+            <td>サンドボックス・承認ポリシーの詳細</td>
+          </tr>
+          <tr>
+            <td>Codex ワークフロー</td>
+            <td><a href="https://developers.openai.com/codex/workflows/" target="_blank">developers.openai.com/codex/workflows/</a></td>
+            <td>ワークフロー例とベストプラクティス</td>
+          </tr>
+          <tr>
+            <td>Codex Worktrees</td>
+            <td><a href="https://developers.openai.com/codex/app/worktrees" target="_blank">developers.openai.com/codex/app/worktrees</a></td>
+            <td>Worktree の詳細ドキュメント</td>
+          </tr>
+          <tr>
+            <td>Codex Automations</td>
+            <td><a href="https://developers.openai.com/codex/app/automations/" target="_blank">developers.openai.com/codex/app/automations/</a></td>
+            <td>Automations の設定と活用</td>
+          </tr>
+          <tr>
+            <td>Codex Skills</td>
+            <td><a href="https://developers.openai.com/codex/skills" target="_blank">developers.openai.com/codex/skills</a></td>
+            <td>Skills の作成と管理</td>
+          </tr>
+          <tr>
+            <td>Codex トラブルシューティング</td>
+            <td><a href="https://developers.openai.com/codex/app/troubleshooting/" target="_blank">developers.openai.com/codex/app/troubleshooting/</a></td>
+            <td>FAQ と一般的な問題の解決</td>
+          </tr>
+          <tr>
+            <td>Codex GitHub リポジトリ</td>
+            <td><a href="https://github.com/openai/codex" target="_blank">github.com/openai/codex</a></td>
+            <td>OSS リポジトリ（イシュー報告、ソースコード）</td>
+          </tr>
+          <tr>
+            <td>Skills リポジトリ</td>
+            <td><a href="https://github.com/openai/skills" target="_blank">github.com/openai/skills</a></td>
+            <td>公式スキルのオープンソースリポジトリ</td>
+          </tr>
+          <tr>
+            <td>Agent Skills Hub</td>
+            <td><a href="https://agentskills.io/home" target="_blank">agentskills.io/home</a></td>
+            <td>スキルのディスカバリーハブ</td>
+          </tr>
+          <tr>
+            <td>GPT-5.3-Codex 紹介</td>
+            <td><a href="https://openai.com/index/introducing-gpt-5-3-codex/" target="_blank">openai.com/index/introducing-gpt-5-3-codex/</a></td>
+            <td>最新モデルの紹介ブログ</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>コミュニティリソース</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>リソース</th>
+            <th>URL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Reddit r/codex</td>
+            <td><a href="https://www.reddit.com/r/codex/" target="_blank">reddit.com/r/codex/</a></td>
+          </tr>
+          <tr>
+            <td>OpenAI Community Forum — Tips and Tricks for using Codex</td>
+            <td><a href="https://community.openai.com/t/tips-and-tricks-for-using-codex/1373143" target="_blank">community.openai.com</a></td>
+          </tr>
+          <tr>
+            <td>Codecademy — Codex App for macOS ガイド</td>
+            <td><a href="https://www.codecademy.com/article/open-ai-codex-app-for-mac-os" target="_blank">codecademy.com</a></td>
+          </tr>
+          <tr>
+            <td>Verdent AI — macOS Setup Guide</td>
+            <td><a href="https://www.verdent.ai/guides/codex-app-download-install-macos" target="_blank">verdent.ai</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     FOOTER
+     ============================================ -->
+<footer class="footer">
+  <p>本ガイドは 2026年3月4日時点の公開情報に基づいています。最新情報は <a href="https://developers.openai.com/codex/" target="_blank">OpenAI 開発者ポータル</a> をご確認ください。</p>
+  <p style="margin-top: 8px;">Compiled with care. Not affiliated with OpenAI.</p>
+</footer>
+
+</div><!-- .wrapper -->
+
+<!-- ============================================
+     SCRIPTS
+     ============================================ -->
+<script>
+(function(){
+  const toggle = document.getElementById('themeToggle');
+  const html = document.body;
+  // check stored preference
+  const stored = localStorage.getItem('codex-guide-theme');
+  if (stored) html.setAttribute('data-theme', stored);
+
+  toggle.addEventListener('click', function(){
+    const current = html.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('codex-guide-theme', next);
+  });
+})();
+</script>
+
+</body>
+</html>
