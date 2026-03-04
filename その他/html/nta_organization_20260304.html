@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>国税庁の組織構造 — 構造分析スライド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+  background: #f5f5f5; padding: 20px; line-height: 1.6;
+}
+.page {
+  background: white; width: 297mm; min-height: 210mm;
+  margin: 0 auto 30px; padding: 15mm;
+  box-shadow: 0 4px 20px rgba(0,0,0,.15);
+  page-break-after: always;
+  position: relative;
+}
+.page-number {
+  position: absolute; bottom: 8mm; right: 12mm;
+  font-size: 10px; color: #a0aec0;
+}
+h1 {
+  font-size: 22px; color: #1a365d;
+  border-bottom: 3px solid #2b6cb0;
+  padding-bottom: 10px; margin-bottom: 20px;
+}
+h2 {
+  font-size: 16px; color: #2c5282;
+  margin: 20px 0 10px;
+  padding-left: 10px; border-left: 4px solid #4299e1;
+}
+h3 { font-size: 14px; color: #2d3748; margin: 12px 0 6px; }
+p { font-size: 12px; color: #4a5568; margin: 6px 0; }
+.subtitle { font-size: 13px; color: #718096; margin-top: -14px; margin-bottom: 18px; }
+.fig-container { display: flex; justify-content: center; margin: 16px 0; }
+svg { max-width: 100%; height: auto; }
+.meta-box {
+  background: #faf5ff; border: 1px solid #9f7aea;
+  border-radius: 8px; padding: 15px; margin: 15px 0;
+}
+.meta-box h3 { color: #553c9a; font-size: 14px; margin-bottom: 10px; }
+.warning-box {
+  background: #fff5f5; border: 2px solid #e53e3e;
+  border-radius: 8px; padding: 15px; margin: 15px 0;
+}
+.warning-box h3 { color: #c53030; font-size: 14px; }
+.insight-box {
+  background: #f0fff4; border: 1px solid #38a169;
+  border-radius: 8px; padding: 15px; margin: 15px 0;
+}
+.insight-box h3 { color: #276749; font-size: 14px; margin-bottom: 10px; }
+.note-box {
+  background: #ebf8ff; border: 1px solid #4299e1;
+  border-radius: 8px; padding: 15px; margin: 15px 0;
+}
+.note-box h3 { color: #2b6cb0; font-size: 14px; margin-bottom: 10px; }
+table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 11px; }
+th, td { border: 1px solid #cbd5e0; padding: 6px 10px; text-align: left; }
+th { background: #edf2f7; color: #2d3748; font-weight: bold; }
+.two-col { display: flex; gap: 20px; }
+.two-col > div { flex: 1; }
+ul { font-size: 12px; color: #4a5568; margin-left: 18px; }
+li { margin: 3px 0; }
+.tag {
+  display: inline-block; padding: 2px 8px; border-radius: 4px;
+  font-size: 10px; font-weight: bold; margin: 2px;
+}
+.tag-blue { background: #ebf8ff; color: #2b6cb0; }
+.tag-green { background: #f0fff4; color: #276749; }
+.tag-orange { background: #fffaf0; color: #c05621; }
+.tag-purple { background: #faf5ff; color: #553c9a; }
+.tag-red { background: #fff5f5; color: #c53030; }
+@media print {
+  body { background: white; padding: 0; }
+  .page { box-shadow: none; margin: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== PAGE 1: 全体構造 ==================== -->
+<div class="page">
+  <h1>国税庁の組織構造 — 全体俯瞰</h1>
+  <p class="subtitle">財務省外局としての国税庁と、全国56,018人の税務行政ピラミッド（令和7年度）</p>
+
+  <div class="fig-container">
+    <svg width="750" height="420" viewBox="0 0 750 420">
+      <!-- 背景グラデーション -->
+      <defs>
+        <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#2b6cb0" stop-opacity="0.08"/>
+          <stop offset="100%" stop-color="#2b6cb0" stop-opacity="0.02"/>
+        </linearGradient>
+        <marker id="arr" viewBox="0 0 10 10" refX="10" refY="5"
+                markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 Z" fill="#4a5568"/>
+        </marker>
+      </defs>
+      <rect x="0" y="0" width="750" height="420" fill="url(#g1)" rx="8"/>
+
+      <!-- Level 0: 財務省 -->
+      <rect x="275" y="12" width="200" height="36" rx="6" fill="#edf2f7" stroke="#a0aec0" stroke-width="1.5"/>
+      <text x="375" y="35" text-anchor="middle" font-size="14" fill="#4a5568" font-weight="bold">財務省</text>
+      <text x="485" y="30" font-size="9" fill="#a0aec0">（本省）</text>
+      <line x1="375" y1="48" x2="375" y2="68" stroke="#4a5568" stroke-width="1.5" marker-end="url(#arr)"/>
+
+      <!-- Level 1: 国税庁 -->
+      <rect x="250" y="68" width="250" height="44" rx="8" fill="#2b6cb0" stroke="#1a365d" stroke-width="2"/>
+      <text x="375" y="87" text-anchor="middle" font-size="16" fill="white" font-weight="bold">国税庁</text>
+      <text x="375" y="103" text-anchor="middle" font-size="10" fill="#bee3f8">定員 1,135人　長官・次長</text>
+
+      <!-- 横の機関 -->
+      <!-- 左: 国税審議会 -->
+      <rect x="30" y="72" width="140" height="36" rx="6" fill="#faf5ff" stroke="#9f7aea" stroke-width="1.5"/>
+      <text x="100" y="95" text-anchor="middle" font-size="11" fill="#553c9a" font-weight="bold">国税審議会</text>
+      <line x1="170" y1="90" x2="250" y2="90" stroke="#9f7aea" stroke-width="1" stroke-dasharray="4,3"/>
+
+      <!-- 右: 税務大学校 -->
+      <rect x="580" y="55" width="140" height="36" rx="6" fill="#fffff0" stroke="#d69e2e" stroke-width="1.5"/>
+      <text x="650" y="72" text-anchor="middle" font-size="11" fill="#744210" font-weight="bold">税務大学校</text>
+      <text x="650" y="84" text-anchor="middle" font-size="9" fill="#a0aec0">329人</text>
+      <line x1="500" y1="85" x2="580" y2="73" stroke="#d69e2e" stroke-width="1" stroke-dasharray="4,3"/>
+
+      <!-- 右下: 国税不服審判所 -->
+      <rect x="580" y="100" width="140" height="36" rx="6" fill="#fff5f5" stroke="#e53e3e" stroke-width="1.5"/>
+      <text x="650" y="117" text-anchor="middle" font-size="11" fill="#c53030" font-weight="bold">国税不服審判所</text>
+      <text x="650" y="129" text-anchor="middle" font-size="9" fill="#a0aec0">464人</text>
+      <line x1="500" y1="98" x2="580" y2="118" stroke="#e53e3e" stroke-width="1" stroke-dasharray="4,3"/>
+
+      <!-- Level 1.5: 内部部局 -->
+      <line x1="375" y1="112" x2="375" y2="135" stroke="#4a5568" stroke-width="1.5" marker-end="url(#arr)"/>
+      <line x1="140" y1="150" x2="610" y2="150" stroke="#4a5568" stroke-width="1"/>
+      <line x1="140" y1="150" x2="140" y2="160" stroke="#4a5568" stroke-width="1"/>
+      <line x1="315" y1="150" x2="315" y2="160" stroke="#4a5568" stroke-width="1"/>
+      <line x1="435" y1="150" x2="435" y2="160" stroke="#4a5568" stroke-width="1"/>
+      <line x1="610" y1="150" x2="610" y2="160" stroke="#4a5568" stroke-width="1"/>
+
+      <!-- 4部局 -->
+      <rect x="70" y="160" width="140" height="36" rx="6" fill="#ebf8ff" stroke="#4299e1" stroke-width="1.5"/>
+      <text x="140" y="183" text-anchor="middle" font-size="12" fill="#2b6cb0" font-weight="bold">長官官房</text>
+
+      <rect x="245" y="160" width="140" height="36" rx="6" fill="#ebf8ff" stroke="#4299e1" stroke-width="1.5"/>
+      <text x="315" y="183" text-anchor="middle" font-size="12" fill="#2b6cb0" font-weight="bold">課税部</text>
+
+      <rect x="365" y="160" width="140" height="36" rx="6" fill="#ebf8ff" stroke="#4299e1" stroke-width="1.5"/>
+      <text x="435" y="183" text-anchor="middle" font-size="12" fill="#2b6cb0" font-weight="bold">徴収部</text>
+
+      <rect x="540" y="160" width="140" height="36" rx="6" fill="#ebf8ff" stroke="#4299e1" stroke-width="1.5"/>
+      <text x="610" y="183" text-anchor="middle" font-size="12" fill="#2b6cb0" font-weight="bold">調査査察部</text>
+
+      <!-- Level 2: 国税局 -->
+      <line x1="375" y1="196" x2="375" y2="220" stroke="#4a5568" stroke-width="2" marker-end="url(#arr)"/>
+      <rect x="125" y="225" width="500" height="55" rx="8" fill="#f0fff4" stroke="#38a169" stroke-width="2"/>
+      <text x="375" y="247" text-anchor="middle" font-size="14" fill="#276749" font-weight="bold">国税局（11局）＋ 沖縄国税事務所</text>
+      <text x="375" y="268" text-anchor="middle" font-size="10" fill="#38a169">
+        札幌｜仙台｜関東信越｜東京｜金沢｜名古屋｜大阪｜広島｜高松｜福岡｜熊本｜沖縄
+      </text>
+      <text x="635" y="247" font-size="10" fill="#a0aec0">定員 17,724人</text>
+
+      <!-- Level 3: 税務署 -->
+      <line x1="375" y1="280" x2="375" y2="305" stroke="#4a5568" stroke-width="2" marker-end="url(#arr)"/>
+      <rect x="75" y="310" width="600" height="50" rx="8" fill="#fffaf0" stroke="#dd6b20" stroke-width="2"/>
+      <text x="375" y="335" text-anchor="middle" font-size="16" fill="#c05621" font-weight="bold">税務署（全国524署）</text>
+      <text x="375" y="352" text-anchor="middle" font-size="11" fill="#dd6b20">定員 36,366人 — 納税者と直接対面する最前線</text>
+
+      <!-- 凡例 -->
+      <rect x="20" y="380" width="710" height="32" rx="4" fill="#f7fafc"/>
+      <text x="35" y="400" font-size="10" fill="#718096">
+        ■ 指揮命令系統（実線矢印）　--- 附属・諮問関係（点線）
+        色: 青=本庁内部部局　緑=地方支分部局　橙=現場機関　紫=審議会　赤=準司法機関　黄=教育機関
+      </text>
+    </svg>
+  </div>
+
+  <div class="note-box">
+    <h3>構造の特徴</h3>
+    <p>国税庁は<strong>財務省の外局</strong>であり、税制の企画立案（財務省主税局）と税務執行（国税庁）が制度的に分離されている。
+    56,018人の定員のうち<strong>96.5%</strong>が国税局・税務署に配置される典型的な「現場重視型」行政組織。</p>
+  </div>
+  <span class="page-number">1 / 6</span>
+</div>
+
+<!-- ==================== PAGE 2: 本庁内部部局 ==================== -->
+<div class="page">
+  <h1>国税庁本庁の内部部局</h1>
+  <p class="subtitle">長官官房 + 3部の機能分担と各課室</p>
+
+  <div class="fig-container">
+    <svg width="740" height="340" viewBox="0 0 740 340">
+      <defs>
+        <linearGradient id="g2" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#ebf8ff"/>
+          <stop offset="100%" stop-color="#faf5ff"/>
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="740" height="340" fill="#fafafa" rx="8"/>
+
+      <!-- 長官 -->
+      <rect x="310" y="8" width="120" height="30" rx="15" fill="#1a365d"/>
+      <text x="370" y="28" text-anchor="middle" font-size="13" fill="white" font-weight="bold">国税庁長官</text>
+      <line x1="370" y1="38" x2="370" y2="50" stroke="#1a365d" stroke-width="2"/>
+      <!-- 次長 -->
+      <rect x="320" y="50" width="100" height="24" rx="12" fill="#2b6cb0"/>
+      <text x="370" y="66" text-anchor="middle" font-size="11" fill="white" font-weight="bold">次長</text>
+      <line x1="370" y1="74" x2="370" y2="90" stroke="#2b6cb0" stroke-width="1.5"/>
+
+      <!-- 横線 -->
+      <line x1="95" y1="90" x2="645" y2="90" stroke="#4a5568" stroke-width="1.5"/>
+
+      <!-- 長官官房 -->
+      <line x1="95" y1="90" x2="95" y2="105" stroke="#4a5568" stroke-width="1.5"/>
+      <rect x="20" y="105" width="150" height="30" rx="6" fill="#2b6cb0"/>
+      <text x="95" y="125" text-anchor="middle" font-size="13" fill="white" font-weight="bold">長官官房</text>
+      <!-- 官房の課 -->
+      <rect x="10" y="145" width="170" height="185" rx="6" fill="#ebf8ff" stroke="#bee3f8" stroke-width="1"/>
+      <text x="95" y="164" text-anchor="middle" font-size="10" fill="#2c5282" font-weight="bold">総務課</text>
+      <text x="95" y="180" text-anchor="middle" font-size="10" fill="#2c5282" font-weight="bold">人事課</text>
+      <text x="95" y="196" text-anchor="middle" font-size="10" fill="#2c5282" font-weight="bold">企画課</text>
+      <text x="95" y="212" text-anchor="middle" font-size="10" fill="#2c5282" font-weight="bold">国際業務課</text>
+      <line x1="25" y1="222" x2="165" y2="222" stroke="#bee3f8"/>
+      <text x="95" y="238" text-anchor="middle" font-size="9" fill="#4a5568">審議官（2名）</text>
+      <text x="95" y="253" text-anchor="middle" font-size="9" fill="#4a5568">首席監察官</text>
+      <text x="95" y="268" text-anchor="middle" font-size="9" fill="#4a5568">広報広聴官</text>
+      <text x="95" y="283" text-anchor="middle" font-size="9" fill="#4a5568">税務相談官</text>
+      <text x="95" y="298" text-anchor="middle" font-size="9" fill="#4a5568">厚生管理官</text>
+      <text x="95" y="313" text-anchor="middle" font-size="9" fill="#4a5568">参事官</text>
+
+      <!-- 課税部 -->
+      <line x1="280" y1="90" x2="280" y2="105" stroke="#4a5568" stroke-width="1.5"/>
+      <rect x="205" y="105" width="150" height="30" rx="6" fill="#38a169"/>
+      <text x="280" y="125" text-anchor="middle" font-size="13" fill="white" font-weight="bold">課税部</text>
+      <rect x="195" y="145" width="170" height="185" rx="6" fill="#f0fff4" stroke="#c6f6d5" stroke-width="1"/>
+      <text x="280" y="164" text-anchor="middle" font-size="10" fill="#276749" font-weight="bold">課税総括課</text>
+      <text x="280" y="180" text-anchor="middle" font-size="10" fill="#276749" font-weight="bold">個人課税課</text>
+      <text x="280" y="196" text-anchor="middle" font-size="10" fill="#276749" font-weight="bold">法人課税課</text>
+      <text x="280" y="212" text-anchor="middle" font-size="10" fill="#276749" font-weight="bold">資産課税課</text>
+      <text x="280" y="228" text-anchor="middle" font-size="10" fill="#276749" font-weight="bold">消費税室</text>
+      <text x="280" y="244" text-anchor="middle" font-size="10" fill="#276749" font-weight="bold">酒税課</text>
+      <line x1="210" y1="254" x2="350" y2="254" stroke="#c6f6d5"/>
+      <text x="280" y="270" text-anchor="middle" font-size="9" fill="#4a5568">審理室</text>
+      <text x="280" y="285" text-anchor="middle" font-size="9" fill="#4a5568">資産評価企画官</text>
+      <text x="280" y="300" text-anchor="middle" font-size="9" fill="#4a5568">鑑定企画官</text>
+
+      <!-- 徴収部 -->
+      <line x1="460" y1="90" x2="460" y2="105" stroke="#4a5568" stroke-width="1.5"/>
+      <rect x="385" y="105" width="150" height="30" rx="6" fill="#dd6b20"/>
+      <text x="460" y="125" text-anchor="middle" font-size="13" fill="white" font-weight="bold">徴収部</text>
+      <rect x="385" y="145" width="150" height="80" rx="6" fill="#fffaf0" stroke="#feebc8" stroke-width="1"/>
+      <text x="460" y="168" text-anchor="middle" font-size="10" fill="#c05621" font-weight="bold">管理運営課</text>
+      <text x="460" y="188" text-anchor="middle" font-size="10" fill="#c05621" font-weight="bold">徴収課</text>
+      <text x="460" y="208" text-anchor="middle" font-size="9" fill="#4a5568">国税債権管理官</text>
+
+      <!-- 調査査察部 -->
+      <line x1="645" y1="90" x2="645" y2="105" stroke="#4a5568" stroke-width="1.5"/>
+      <rect x="570" y="105" width="150" height="30" rx="6" fill="#e53e3e"/>
+      <text x="645" y="125" text-anchor="middle" font-size="13" fill="white" font-weight="bold">調査査察部</text>
+      <rect x="570" y="145" width="150" height="80" rx="6" fill="#fff5f5" stroke="#fed7d7" stroke-width="1"/>
+      <text x="645" y="168" text-anchor="middle" font-size="10" fill="#c53030" font-weight="bold">調査課</text>
+      <text x="645" y="188" text-anchor="middle" font-size="10" fill="#c53030" font-weight="bold">査察課</text>
+      <text x="645" y="208" text-anchor="middle" font-size="9" fill="#4a5568">（マルサ）</text>
+    </svg>
+  </div>
+
+  <div class="two-col">
+    <div class="insight-box">
+      <h3>機能分担の論理</h3>
+      <ul>
+        <li><strong>長官官房</strong>: 組織横断の管理・企画（ヒト・カネ・情報・国際）</li>
+        <li><strong>課税部</strong>: 税目ごとの法令解釈・事務指針策定（最大部門）</li>
+        <li><strong>徴収部</strong>: 申告後の管理・滞納処分</li>
+        <li><strong>調査査察部</strong>: 大口・悪質事案の調査と告発</li>
+      </ul>
+    </div>
+    <div class="meta-box">
+      <h3>注目ポイント</h3>
+      <p>課税部には<strong>「審理室」</strong>がある。法令解釈通達の審査・統一を担う部署で、税務訴訟で国側の法的論拠を支える。
+      課税と徴収の分離は「賦課→徴収」という税務プロセスをそのまま組織化したもの。</p>
+    </div>
+  </div>
+  <span class="page-number">2 / 6</span>
+</div>
+
+<!-- ==================== PAGE 3: 国税局の管轄 ==================== -->
+<div class="page">
+  <h1>地方支分部局 — 11国税局＋沖縄国税事務所</h1>
+  <p class="subtitle">広域管轄と国税局の内部組織</p>
+
+  <div class="fig-container">
+    <svg width="720" height="300" viewBox="0 0 720 300">
+      <rect x="0" y="0" width="720" height="300" fill="#fafafa" rx="8"/>
+
+      <!-- 日本地図を簡略化した管轄エリア図 -->
+      <!-- 北海道 -->
+      <rect x="580" y="10" width="120" height="40" rx="6" fill="#ebf8ff" stroke="#4299e1" stroke-width="1.5"/>
+      <text x="640" y="28" text-anchor="middle" font-size="11" fill="#2b6cb0" font-weight="bold">札幌国税局</text>
+      <text x="640" y="42" text-anchor="middle" font-size="8" fill="#718096">北海道</text>
+
+      <!-- 東北 -->
+      <rect x="580" y="58" width="120" height="40" rx="6" fill="#ebf8ff" stroke="#4299e1" stroke-width="1.5"/>
+      <text x="640" y="76" text-anchor="middle" font-size="11" fill="#2b6cb0" font-weight="bold">仙台国税局</text>
+      <text x="640" y="90" text-anchor="middle" font-size="8" fill="#718096">青森・岩手・宮城・秋田・山形・福島</text>
+
+      <!-- 関東信越 -->
+      <rect x="380" y="10" width="180" height="40" rx="6" fill="#f0fff4" stroke="#38a169" stroke-width="1.5"/>
+      <text x="470" y="28" text-anchor="middle" font-size="11" fill="#276749" font-weight="bold">関東信越国税局</text>
+      <text x="470" y="42" text-anchor="middle" font-size="8" fill="#718096">茨城・栃木・群馬・埼玉・新潟・長野</text>
+
+      <!-- 東京 -->
+      <rect x="380" y="58" width="180" height="40" rx="6" fill="#fffaf0" stroke="#dd6b20" stroke-width="2"/>
+      <text x="470" y="76" text-anchor="middle" font-size="12" fill="#c05621" font-weight="bold">東京国税局 ★最大</text>
+      <text x="470" y="90" text-anchor="middle" font-size="8" fill="#718096">千葉・東京・神奈川・山梨</text>
+
+      <!-- 金沢 -->
+      <rect x="380" y="106" width="180" height="40" rx="6" fill="#ebf8ff" stroke="#4299e1" stroke-width="1.5"/>
+      <text x="470" y="124" text-anchor="middle" font-size="11" fill="#2b6cb0" font-weight="bold">金沢国税局</text>
+      <text x="470" y="138" text-anchor="middle" font-size="8" fill="#718096">富山・石川・福井</text>
+
+      <!-- 名古屋 -->
+      <rect x="380" y="154" width="180" height="40" rx="6" fill="#f0fff4" stroke="#38a169" stroke-width="1.5"/>
+      <text x="470" y="172" text-anchor="middle" font-size="11" fill="#276749" font-weight="bold">名古屋国税局</text>
+      <text x="470" y="186" text-anchor="middle" font-size="8" fill="#718096">岐阜・静岡・愛知・三重</text>
+
+      <!-- 大阪 -->
+      <rect x="380" y="202" width="180" height="40" rx="6" fill="#fffaf0" stroke="#dd6b20" stroke-width="2"/>
+      <text x="470" y="220" text-anchor="middle" font-size="12" fill="#c05621" font-weight="bold">大阪国税局 ★第2位</text>
+      <text x="470" y="234" text-anchor="middle" font-size="8" fill="#718096">滋賀・京都・大阪・兵庫・奈良・和歌山</text>
+
+      <!-- 広島 -->
+      <rect x="180" y="106" width="180" height="40" rx="6" fill="#ebf8ff" stroke="#4299e1" stroke-width="1.5"/>
+      <text x="270" y="124" text-anchor="middle" font-size="11" fill="#2b6cb0" font-weight="bold">広島国税局</text>
+      <text x="270" y="138" text-anchor="middle" font-size="8" fill="#718096">鳥取・島根・岡山・広島・山口</text>
+
+      <!-- 高松 -->
+      <rect x="180" y="154" width="180" height="40" rx="6" fill="#ebf8ff" stroke="#4299e1" stroke-width="1.5"/>
+      <text x="270" y="172" text-anchor="middle" font-size="11" fill="#2b6cb0" font-weight="bold">高松国税局</text>
+      <text x="270" y="186" text-anchor="middle" font-size="8" fill="#718096">徳島・香川・愛媛・高知</text>
+
+      <!-- 福岡 -->
+      <rect x="20" y="106" width="140" height="40" rx="6" fill="#f0fff4" stroke="#38a169" stroke-width="1.5"/>
+      <text x="90" y="124" text-anchor="middle" font-size="11" fill="#276749" font-weight="bold">福岡国税局</text>
+      <text x="90" y="138" text-anchor="middle" font-size="8" fill="#718096">福岡・佐賀・長崎</text>
+
+      <!-- 熊本 -->
+      <rect x="20" y="154" width="140" height="40" rx="6" fill="#ebf8ff" stroke="#4299e1" stroke-width="1.5"/>
+      <text x="90" y="172" text-anchor="middle" font-size="11" fill="#2b6cb0" font-weight="bold">熊本国税局</text>
+      <text x="90" y="186" text-anchor="middle" font-size="8" fill="#718096">熊本・大分・宮崎・鹿児島</text>
+
+      <!-- 沖縄 -->
+      <rect x="20" y="202" width="140" height="40" rx="6" fill="#faf5ff" stroke="#9f7aea" stroke-width="1.5"/>
+      <text x="90" y="220" text-anchor="middle" font-size="11" fill="#553c9a" font-weight="bold">沖縄国税事務所</text>
+      <text x="90" y="234" text-anchor="middle" font-size="8" fill="#718096">沖縄（国税局ではなく事務所）</text>
+
+      <!-- 国税局の内部組織 -->
+      <rect x="20" y="255" width="680" height="38" rx="6" fill="#edf2f7" stroke="#a0aec0"/>
+      <text x="30" y="278" font-size="11" fill="#2d3748" font-weight="bold">国税局の内部組織（大規模局）:</text>
+      <text x="250" y="278" font-size="10" fill="#4a5568">
+        総務部 ｜ 課税第一部 ｜ 課税第二部 ｜ 徴収部 ｜ 調査部 ｜ 査察部
+      </text>
+    </svg>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <h2>規模による違い</h2>
+      <table>
+        <tr><th>規模</th><th>国税局</th><th>特徴</th></tr>
+        <tr><td><span class="tag tag-orange">大規模</span></td><td>東京・大阪・名古屋</td><td>課税第一部・第二部に分化、調査部と査察部が独立</td></tr>
+        <tr><td><span class="tag tag-blue">中規模</span></td><td>札幌・仙台・関東信越・広島・福岡</td><td>課税部は1部、調査査察部が合同</td></tr>
+        <tr><td><span class="tag tag-green">小規模</span></td><td>金沢・高松・熊本</td><td>部が少なく課単位で運営</td></tr>
+        <tr><td><span class="tag tag-purple">特殊</span></td><td>沖縄</td><td>「国税局」ではなく「国税事務所」</td></tr>
+      </table>
+    </div>
+    <div class="meta-box">
+      <h3>沖縄の特殊性</h3>
+      <p>沖縄は1972年の本土復帰まで米国統治下にあり、復帰後も「国税事務所」として設置された。
+      他の11局とは異なり、国税庁長官の直轄扱い。歴史的経緯がそのまま組織形態に残っている。</p>
+    </div>
+  </div>
+  <span class="page-number">3 / 6</span>
+</div>
+
+<!-- ==================== PAGE 4: 税務署の内部組織 ==================== -->
+<div class="page">
+  <h1>税務署の内部組織と職階構造</h1>
+  <p class="subtitle">全国524署・36,366人 — 納税者と直接向き合う最前線</p>
+
+  <div class="fig-container">
+    <svg width="720" height="320" viewBox="0 0 720 320">
+      <rect x="0" y="0" width="720" height="320" fill="#fafafa" rx="8"/>
+
+      <!-- 署長 -->
+      <rect x="300" y="10" width="120" height="34" rx="17" fill="#1a365d"/>
+      <text x="360" y="32" text-anchor="middle" font-size="13" fill="white" font-weight="bold">署長</text>
+
+      <line x1="360" y1="44" x2="360" y2="56" stroke="#1a365d" stroke-width="2"/>
+
+      <!-- 副署長 -->
+      <rect x="300" y="56" width="120" height="28" rx="14" fill="#2b6cb0"/>
+      <text x="360" y="75" text-anchor="middle" font-size="11" fill="white" font-weight="bold">副署長</text>
+
+      <line x1="360" y1="84" x2="360" y2="98" stroke="#2b6cb0" stroke-width="1.5"/>
+      <line x1="60" y1="98" x2="660" y2="98" stroke="#4a5568" stroke-width="1.5"/>
+
+      <!-- 6部門 -->
+      <!-- 総務課 -->
+      <line x1="60" y1="98" x2="60" y2="112" stroke="#4a5568"/>
+      <rect x="10" y="112" width="100" height="28" rx="6" fill="#edf2f7" stroke="#a0aec0"/>
+      <text x="60" y="131" text-anchor="middle" font-size="10" fill="#2d3748" font-weight="bold">総務課</text>
+      <rect x="10" y="148" width="100" height="60" rx="4" fill="#f7fafc"/>
+      <text x="60" y="164" text-anchor="middle" font-size="8" fill="#718096">庶務・会計</text>
+      <text x="60" y="178" text-anchor="middle" font-size="8" fill="#718096">人事・広報</text>
+      <text x="60" y="192" text-anchor="middle" font-size="8" fill="#718096">納税証明</text>
+
+      <!-- 管理運営 -->
+      <line x1="180" y1="98" x2="180" y2="112" stroke="#4a5568"/>
+      <rect x="125" y="112" width="110" height="28" rx="6" fill="#fffaf0" stroke="#dd6b20"/>
+      <text x="180" y="131" text-anchor="middle" font-size="10" fill="#c05621" font-weight="bold">管理運営部門</text>
+      <rect x="125" y="148" width="110" height="60" rx="4" fill="#fffaf0"/>
+      <text x="180" y="164" text-anchor="middle" font-size="8" fill="#718096">申告書受付</text>
+      <text x="180" y="178" text-anchor="middle" font-size="8" fill="#718096">還付処理</text>
+      <text x="180" y="192" text-anchor="middle" font-size="8" fill="#718096">納税管理</text>
+
+      <!-- 個人課税 -->
+      <line x1="310" y1="98" x2="310" y2="112" stroke="#4a5568"/>
+      <rect x="255" y="112" width="110" height="28" rx="6" fill="#f0fff4" stroke="#38a169" stroke-width="1.5"/>
+      <text x="310" y="131" text-anchor="middle" font-size="10" fill="#276749" font-weight="bold">個人課税部門</text>
+      <rect x="255" y="148" width="110" height="60" rx="4" fill="#f0fff4"/>
+      <text x="310" y="164" text-anchor="middle" font-size="8" fill="#718096">所得税調査</text>
+      <text x="310" y="178" text-anchor="middle" font-size="8" fill="#718096">消費税（個人）</text>
+      <text x="310" y="192" text-anchor="middle" font-size="8" fill="#718096">確定申告指導</text>
+
+      <!-- 資産課税 -->
+      <line x1="420" y1="98" x2="420" y2="112" stroke="#4a5568"/>
+      <rect x="365" y="112" width="110" height="28" rx="6" fill="#faf5ff" stroke="#9f7aea" stroke-width="1.5"/>
+      <text x="420" y="131" text-anchor="middle" font-size="10" fill="#553c9a" font-weight="bold">資産課税部門</text>
+      <rect x="365" y="148" width="110" height="60" rx="4" fill="#faf5ff"/>
+      <text x="420" y="164" text-anchor="middle" font-size="8" fill="#718096">相続税・贈与税</text>
+      <text x="420" y="178" text-anchor="middle" font-size="8" fill="#718096">譲渡所得</text>
+      <text x="420" y="192" text-anchor="middle" font-size="8" fill="#718096">財産評価</text>
+
+      <!-- 法人課税 -->
+      <line x1="540" y1="98" x2="540" y2="112" stroke="#4a5568"/>
+      <rect x="485" y="112" width="110" height="28" rx="6" fill="#ebf8ff" stroke="#4299e1" stroke-width="1.5"/>
+      <text x="540" y="131" text-anchor="middle" font-size="10" fill="#2b6cb0" font-weight="bold">法人課税部門</text>
+      <rect x="485" y="148" width="110" height="60" rx="4" fill="#ebf8ff"/>
+      <text x="540" y="164" text-anchor="middle" font-size="8" fill="#718096">法人税調査</text>
+      <text x="540" y="178" text-anchor="middle" font-size="8" fill="#718096">消費税（法人）</text>
+      <text x="540" y="192" text-anchor="middle" font-size="8" fill="#718096">源泉所得税</text>
+
+      <!-- 徴収部門 -->
+      <line x1="660" y1="98" x2="660" y2="112" stroke="#4a5568"/>
+      <rect x="605" y="112" width="110" height="28" rx="6" fill="#fff5f5" stroke="#e53e3e" stroke-width="1.5"/>
+      <text x="660" y="131" text-anchor="middle" font-size="10" fill="#c53030" font-weight="bold">徴収部門</text>
+      <rect x="605" y="148" width="110" height="60" rx="4" fill="#fff5f5"/>
+      <text x="660" y="164" text-anchor="middle" font-size="8" fill="#718096">滞納整理</text>
+      <text x="660" y="178" text-anchor="middle" font-size="8" fill="#718096">差押・公売</text>
+      <text x="660" y="192" text-anchor="middle" font-size="8" fill="#718096">換価・配当</text>
+
+      <!-- 職階ピラミッド -->
+      <text x="100" y="232" font-size="12" fill="#1a365d" font-weight="bold">各部門の職階構造:</text>
+
+      <polygon points="360,240 250,310 470,310" fill="#ebf8ff" stroke="#4299e1" stroke-width="1"/>
+      <line x1="285" y1="290" x2="435" y2="290" stroke="#4299e1" stroke-dasharray="3,2"/>
+      <line x1="308" y1="272" x2="412" y2="272" stroke="#4299e1" stroke-dasharray="3,2"/>
+      <line x1="335" y1="255" x2="385" y2="255" stroke="#4299e1" stroke-dasharray="3,2"/>
+
+      <text x="360" y="250" text-anchor="middle" font-size="9" fill="#1a365d" font-weight="bold">統括官</text>
+      <text x="360" y="268" text-anchor="middle" font-size="9" fill="#2c5282">上席国税調査官</text>
+      <text x="360" y="286" text-anchor="middle" font-size="9" fill="#4a5568">国税調査官</text>
+      <text x="360" y="304" text-anchor="middle" font-size="9" fill="#718096">国税専門官 / 財務事務官</text>
+
+      <text x="490" y="252" font-size="8" fill="#718096">← 部門の長（管理職）</text>
+      <text x="490" y="270" font-size="8" fill="#718096">← 実務の中核</text>
+      <text x="490" y="288" font-size="8" fill="#718096">← 調査・徴収の実行者</text>
+      <text x="490" y="306" font-size="8" fill="#718096">← 若手・事務担当</text>
+    </svg>
+  </div>
+
+  <div class="insight-box">
+    <h3>税務署の組織原理</h3>
+    <p>税務署は<strong>税目別の縦割り</strong>（個人・法人・資産）と<strong>プロセス別の横割り</strong>（申告管理→課税→徴収）の
+    マトリクス構造になっている。「統括国税調査官」（通称「統括官」「トッカン」）が各部門の実質的リーダー。
+    納税者が「税務調査に来た」と言うとき、対面しているのは通常「国税調査官」クラス。</p>
+  </div>
+  <span class="page-number">4 / 6</span>
+</div>
+
+<!-- ==================== PAGE 5: 人員配置と規模 ==================== -->
+<div class="page">
+  <h1>人員配置の構造 — 56,018人のリソース分布</h1>
+  <p class="subtitle">令和7年度定員ベース。現場集中型の行政組織</p>
+
+  <div class="fig-container">
+    <svg width="700" height="260" viewBox="0 0 700 260">
+      <rect x="0" y="0" width="700" height="260" fill="#fafafa" rx="8"/>
+
+      <text x="350" y="25" text-anchor="middle" font-size="14" fill="#1a365d" font-weight="bold">定員構成比（令和7年3月）</text>
+
+      <!-- 棒グラフ（横） -->
+      <!-- 税務署: 36,366 / 56,018 = 64.9% -->
+      <text x="120" y="60" text-anchor="end" font-size="11" fill="#2d3748">税務署</text>
+      <rect x="130" y="46" width="454" height="22" rx="4" fill="#dd6b20"/>
+      <text x="590" y="62" font-size="10" fill="#c05621" font-weight="bold">36,366人（64.9%）</text>
+
+      <!-- 国税局: 17,724 / 56,018 = 31.6% -->
+      <text x="120" y="95" text-anchor="end" font-size="11" fill="#2d3748">国税局</text>
+      <rect x="130" y="81" width="221" height="22" rx="4" fill="#38a169"/>
+      <text x="356" y="97" font-size="10" fill="#276749" font-weight="bold">17,724人（31.6%）</text>
+
+      <!-- 国税庁: 1,135 / 56,018 = 2.0% -->
+      <text x="120" y="130" text-anchor="end" font-size="11" fill="#2d3748">国税庁本庁</text>
+      <rect x="130" y="116" width="14" height="22" rx="4" fill="#2b6cb0"/>
+      <text x="150" y="132" font-size="10" fill="#2b6cb0" font-weight="bold">1,135人（2.0%）</text>
+
+      <!-- 不服審判所: 464 / 56,018 = 0.8% -->
+      <text x="120" y="165" text-anchor="end" font-size="11" fill="#2d3748">不服審判所</text>
+      <rect x="130" y="151" width="6" height="22" rx="3" fill="#e53e3e"/>
+      <text x="142" y="167" font-size="10" fill="#c53030" font-weight="bold">464人（0.8%）</text>
+
+      <!-- 税務大学校: 329 / 56,018 = 0.6% -->
+      <text x="120" y="200" text-anchor="end" font-size="11" fill="#2d3748">税務大学校</text>
+      <rect x="130" y="186" width="4" height="22" rx="2" fill="#d69e2e"/>
+      <text x="140" y="202" font-size="10" fill="#744210" font-weight="bold">329人（0.6%）</text>
+
+      <!-- サマリーライン -->
+      <line x1="130" y1="225" x2="584" y2="225" stroke="#2b6cb0" stroke-width="2"/>
+      <text x="130" y="245" font-size="11" fill="#1a365d" font-weight="bold">合計: 56,018人</text>
+      <text x="350" y="245" font-size="11" fill="#4a5568">
+        現場（税務署＋国税局）に 96.5% が配置 → 典型的な「逆ピラミッド型リソース配分」
+      </text>
+    </svg>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <h2>附属機関の役割</h2>
+      <table>
+        <tr><th>機関</th><th>人員</th><th>機能</th></tr>
+        <tr>
+          <td><span class="tag tag-red">国税不服審判所</span></td>
+          <td>464人</td>
+          <td>納税者の不服申立てを審理する<strong>準司法機関</strong>。国税庁から独立した判断を行う建前</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-orange">税務大学校</span></td>
+          <td>329人</td>
+          <td>職員研修（普通科・本科・専科・研究科）。和光市に本校、各地に地方研修所</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-purple">国税審議会</span></td>
+          <td>—</td>
+          <td>酒類分科会・税理士分科会・不服審査分科会の3分科会</td>
+        </tr>
+      </table>
+    </div>
+    <div class="warning-box">
+      <h3>構造的な論点</h3>
+      <p><strong>国税不服審判所の独立性問題</strong>: 組織上は国税庁の「特別の機関」であり、
+      審判官の多くが国税庁からの出向者。制度的に独立を謳いながら、人事面では課税庁と一体という
+      構造的矛盾が指摘されている。納税者の権利救済機関としての実効性に疑問符。</p>
+    </div>
+  </div>
+  <span class="page-number">5 / 6</span>
+</div>
+
+<!-- ==================== PAGE 6: 隠れた軸とメタ考察 ==================== -->
+<div class="page">
+  <h1>隠れた軸 — 国税組織の深層構造</h1>
+  <p class="subtitle">表面的な組織図の裏にある構造的論点</p>
+
+  <div class="fig-container">
+    <svg width="700" height="220" viewBox="0 0 700 220">
+      <rect x="0" y="0" width="700" height="220" fill="#fafafa" rx="8"/>
+
+      <text x="350" y="22" text-anchor="middle" font-size="13" fill="#1a365d" font-weight="bold">対立軸マッピング: 国税組織に内在する3つの緊張</text>
+
+      <!-- 軸1: 政策立案 vs 執行 -->
+      <line x1="50" y1="55" x2="650" y2="55" stroke="#2b6cb0" stroke-width="2"/>
+      <circle cx="50" cy="55" r="5" fill="#2b6cb0"/>
+      <circle cx="650" cy="55" r="5" fill="#2b6cb0"/>
+      <text x="50" y="46" text-anchor="middle" font-size="10" fill="#2b6cb0" font-weight="bold">政策立案</text>
+      <text x="650" y="46" text-anchor="middle" font-size="10" fill="#2b6cb0" font-weight="bold">現場執行</text>
+      <!-- マーカー -->
+      <rect x="60" y="60" width="50" height="16" rx="3" fill="#faf5ff" stroke="#9f7aea"/>
+      <text x="85" y="72" text-anchor="middle" font-size="8" fill="#553c9a">財務省主税局</text>
+      <rect x="140" y="60" width="50" height="16" rx="3" fill="#ebf8ff" stroke="#4299e1"/>
+      <text x="165" y="72" text-anchor="middle" font-size="8" fill="#2b6cb0">国税庁本庁</text>
+      <rect x="360" y="60" width="50" height="16" rx="3" fill="#f0fff4" stroke="#38a169"/>
+      <text x="385" y="72" text-anchor="middle" font-size="8" fill="#276749">国税局</text>
+      <rect x="560" y="60" width="60" height="16" rx="3" fill="#fffaf0" stroke="#dd6b20"/>
+      <text x="590" y="72" text-anchor="middle" font-size="8" fill="#c05621">税務署</text>
+
+      <!-- 軸2: 課税権 vs 納税者権利 -->
+      <line x1="50" y1="115" x2="650" y2="115" stroke="#e53e3e" stroke-width="2"/>
+      <circle cx="50" cy="115" r="5" fill="#e53e3e"/>
+      <circle cx="650" cy="115" r="5" fill="#e53e3e"/>
+      <text x="50" y="106" text-anchor="middle" font-size="10" fill="#c53030" font-weight="bold">課税権の行使</text>
+      <text x="650" y="106" text-anchor="middle" font-size="10" fill="#c53030" font-weight="bold">納税者の権利保護</text>
+      <rect x="100" y="120" width="60" height="16" rx="3" fill="#fff5f5" stroke="#e53e3e"/>
+      <text x="130" y="132" text-anchor="middle" font-size="8" fill="#c53030">調査査察部</text>
+      <rect x="250" y="120" width="60" height="16" rx="3" fill="#fffaf0" stroke="#dd6b20"/>
+      <text x="280" y="132" text-anchor="middle" font-size="8" fill="#c05621">課税部門</text>
+      <rect x="470" y="120" width="60" height="16" rx="3" fill="#faf5ff" stroke="#9f7aea"/>
+      <text x="500" y="132" text-anchor="middle" font-size="8" fill="#553c9a">税務相談官</text>
+      <rect x="570" y="120" width="60" height="16" rx="3" fill="#f0fff4" stroke="#38a169"/>
+      <text x="600" y="132" text-anchor="middle" font-size="8" fill="#276749">不服審判所</text>
+
+      <!-- 軸3: 統一性 vs 現場裁量 -->
+      <line x1="50" y1="175" x2="650" y2="175" stroke="#38a169" stroke-width="2"/>
+      <circle cx="50" cy="175" r="5" fill="#38a169"/>
+      <circle cx="650" cy="175" r="5" fill="#38a169"/>
+      <text x="50" y="166" text-anchor="middle" font-size="10" fill="#276749" font-weight="bold">全国統一基準</text>
+      <text x="650" y="166" text-anchor="middle" font-size="10" fill="#276749" font-weight="bold">現場裁量</text>
+      <rect x="80" y="180" width="60" height="16" rx="3" fill="#ebf8ff" stroke="#4299e1"/>
+      <text x="110" y="192" text-anchor="middle" font-size="8" fill="#2b6cb0">法令解釈通達</text>
+      <rect x="200" y="180" width="60" height="16" rx="3" fill="#ebf8ff" stroke="#4299e1"/>
+      <text x="230" y="192" text-anchor="middle" font-size="8" fill="#2b6cb0">事務運営指針</text>
+      <rect x="420" y="180" width="60" height="16" rx="3" fill="#fffaf0" stroke="#dd6b20"/>
+      <text x="450" y="192" text-anchor="middle" font-size="8" fill="#c05621">調査選定</text>
+      <rect x="560" y="180" width="70" height="16" rx="3" fill="#fffaf0" stroke="#dd6b20"/>
+      <text x="595" y="192" text-anchor="middle" font-size="8" fill="#c05621">修正申告勧奨</text>
+
+      <text x="350" y="212" text-anchor="middle" font-size="9" fill="#718096">各軸上のマーカー位置は機能的な重心を示す（概念図）</text>
+    </svg>
+  </div>
+
+  <div class="two-col">
+    <div class="meta-box">
+      <h3>隠れた軸1: 「制度設計」と「執行」の断絶</h3>
+      <p>税制の設計は財務省主税局、執行は国税庁。しかし執行現場のフィードバックが制度設計に反映される
+      公式チャネルは限られている。税務大学校論叢が「現場からの声」として機能している側面がある。</p>
+    </div>
+    <div class="meta-box">
+      <h3>隠れた軸2: 通達行政の二面性</h3>
+      <p>通達は法的拘束力を持たないが、全国524署の統一運用を担保する事実上の法源。
+      「通達に書いていないケース」に遭遇した現場は、国税局→国税庁への照会を経て判断する。
+      この<strong>上意下達メカニズム</strong>が組織の統一性と硬直性を同時に生んでいる。</p>
+    </div>
+  </div>
+
+  <div class="insight-box">
+    <h3>メタ考察: この組織図が語らないもの</h3>
+    <ul>
+      <li><strong>国税OBネットワーク</strong>: 税理士業界への人材流出（天下り）は組織図に現れないが、税務行政の実効性に影響する非公式構造</li>
+      <li><strong>DX推進</strong>: e-Tax普及率の上昇は「管理運営部門」の役割を根本的に変えつつあるが、組織形態はまだ紙時代の延長線上</li>
+      <li><strong>国際課税の組織的位置</strong>: 移転価格・CFC税制等の国際課税は本庁「国際業務課」と各国税局に分散。
+      複雑化する国際課税に対し、組織の対応が追いついているかは構造的課題</li>
+    </ul>
+  </div>
+  <span class="page-number">6 / 6</span>
+</div>
+
+</body>
+</html>
