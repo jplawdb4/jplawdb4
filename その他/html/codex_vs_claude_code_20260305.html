@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenAI Codex vs Anthropic Claude Code — 徹底比較レポート 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0A0A0A;
+  --card: #16161A;
+  --border: rgba(255,255,255,0.06);
+  --accent: #5E6AD2;
+  --accent2: #8B5CF6;
+  --accent3: #3B82F6;
+  --text: #FAFAFA;
+  --text-secondary: #8A8A9A;
+  --text-tertiary: #55556A;
+  --code-bg: #111113;
+  --codex-color: #10B981;
+  --claude-color: #D97706;
+  --card-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 4px 24px rgba(0,0,0,0.4);
+  --radius: 12px;
+  --font-main: 'Outfit', 'Noto Sans JP', sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  --gradient-accent: linear-gradient(135deg, #5E6AD2, #8B5CF6);
+  --gradient-codex: linear-gradient(135deg, #10B981, #3B82F6);
+  --gradient-claude: linear-gradient(135deg, #D97706, #F59E0B);
+}
+
+[data-theme="light"] {
+  --bg: #F8F9FA;
+  --card: #FFFFFF;
+  --border: rgba(0,0,0,0.08);
+  --text: #1A1A2E;
+  --text-secondary: #555570;
+  --text-tertiary: #888898;
+  --code-bg: #F0F0F2;
+  --card-shadow: 0 0 0 1px rgba(0,0,0,0.06), 0 4px 24px rgba(0,0,0,0.08);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-main);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.3s, color 0.3s;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Theme Toggle */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: 10px 16px;
+  cursor: pointer;
+  color: var(--text);
+  font-family: var(--font-main);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: var(--card-shadow);
+  transition: all 0.3s;
+}
+.theme-toggle:hover { transform: scale(1.05); }
+.theme-toggle-icon { font-size: 18px; }
+
+/* TOC */
+.toc-wrapper {
+  position: fixed;
+  top: 80px;
+  left: 0;
+  width: 280px;
+  height: calc(100vh - 100px);
+  overflow-y: auto;
+  padding: 16px;
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: var(--text-tertiary) transparent;
+}
+.toc-wrapper::-webkit-scrollbar { width: 4px; }
+.toc-wrapper::-webkit-scrollbar-thumb { background: var(--text-tertiary); border-radius: 2px; }
+
+.toc-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-tertiary);
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.toc-list { list-style: none; }
+.toc-list li { margin-bottom: 2px; }
+.toc-list a {
+  color: var(--text-tertiary);
+  text-decoration: none;
+  font-size: 12.5px;
+  line-height: 1.6;
+  display: block;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border-left: 2px solid transparent;
+  transition: all 0.2s;
+}
+.toc-list a:hover {
+  color: var(--text);
+  background: rgba(94,106,210,0.08);
+  border-left-color: var(--accent);
+}
+.toc-part {
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-top: 12px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 4px 8px;
+}
+
+/* Main Content */
+.main-content {
+  margin-left: 280px;
+  padding: 60px 0 120px;
+}
+
+@media (max-width: 1024px) {
+  .toc-wrapper { display: none; }
+  .main-content { margin-left: 0; }
+}
+
+/* Mobile TOC */
+.mobile-toc-btn {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1001;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 22px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(94,106,210,0.4);
+}
+@media (max-width: 1024px) {
+  .mobile-toc-btn { display: flex; align-items: center; justify-content: center; }
+}
+
+.mobile-toc-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  z-index: 1002;
+  backdrop-filter: blur(4px);
+}
+.mobile-toc-overlay.active { display: block; }
+.mobile-toc-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 70vh;
+  background: var(--card);
+  border-radius: 20px 20px 0 0;
+  padding: 24px;
+  overflow-y: auto;
+  z-index: 1003;
+  display: none;
+}
+.mobile-toc-panel.active { display: block; }
+
+/* Hero */
+.hero {
+  padding: 80px 0 60px;
+  text-align: center;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(94,106,210,0.1);
+  border: 1px solid rgba(94,106,210,0.2);
+  padding: 6px 16px;
+  border-radius: 50px;
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 500;
+  margin-bottom: 24px;
+}
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, var(--text) 0%, var(--accent) 50%, var(--accent2) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero-sub {
+  font-size: 18px;
+  color: var(--text-secondary);
+  max-width: 700px;
+  margin: 0 auto 32px;
+  line-height: 1.7;
+}
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin-top: 40px;
+}
+.hero-stat {
+  text-align: center;
+}
+.hero-stat-value {
+  font-size: 28px;
+  font-weight: 800;
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero-stat-label {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+/* Sections */
+.section {
+  margin-bottom: 64px;
+}
+.section-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.section-title {
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 700;
+  margin-bottom: 24px;
+  line-height: 1.3;
+}
+.section-title .gradient {
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.part-divider {
+  text-align: center;
+  padding: 48px 0;
+  border-top: 1px solid var(--border);
+  margin-top: 48px;
+}
+.part-divider .part-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: var(--accent);
+  font-weight: 600;
+}
+.part-divider .part-title {
+  font-size: 28px;
+  font-weight: 800;
+  margin-top: 8px;
+}
+
+/* Cards */
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--card-shadow);
+  padding: 28px;
+  margin-bottom: 20px;
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+.card-icon.codex { background: rgba(16,185,129,0.15); color: var(--codex-color); }
+.card-icon.claude { background: rgba(217,119,6,0.15); color: var(--claude-color); }
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Prose */
+.prose { color: var(--text-secondary); line-height: 1.85; }
+.prose p { margin-bottom: 16px; }
+.prose strong { color: var(--text); font-weight: 600; }
+.prose h4 { color: var(--text); font-size: 17px; font-weight: 600; margin: 28px 0 12px; }
+
+/* Grid */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+@media (max-width: 768px) {
+  .grid-2 { grid-template-columns: 1fr; }
+}
+
+/* Comparison Bars */
+.compare-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.compare-label {
+  flex: 0 0 180px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+.compare-bars {
+  flex: 1;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.compare-bar {
+  height: 8px;
+  border-radius: 4px;
+  transition: width 0.5s;
+}
+.compare-bar.codex { background: var(--gradient-codex); }
+.compare-bar.claude { background: var(--gradient-claude); }
+.compare-score {
+  font-size: 12px;
+  font-weight: 600;
+  min-width: 30px;
+}
+
+/* Tables */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: var(--radius);
+  box-shadow: var(--card-shadow);
+  margin: 20px 0;
+  -webkit-overflow-scrolling: touch;
+}
+.table-wrapper table {
+  width: 100%;
+  min-width: 700px;
+  border-collapse: collapse;
+  background: var(--card);
+}
+.table-wrapper th {
+  background: rgba(94,106,210,0.08);
+  padding: 14px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+}
+.table-wrapper td {
+  padding: 12px 16px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+.table-wrapper tr:last-child td { border-bottom: none; }
+.table-wrapper tr:hover td { background: rgba(94,106,210,0.03); }
+
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 50px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.badge-codex { background: rgba(16,185,129,0.15); color: #10B981; }
+.badge-claude { background: rgba(217,119,6,0.15); color: #D97706; }
+.badge-both { background: rgba(94,106,210,0.15); color: #5E6AD2; }
+.badge-win { background: rgba(16,185,129,0.2); color: #10B981; }
+
+/* Code Blocks */
+.code-block {
+  background: var(--code-bg);
+  border-radius: var(--radius);
+  padding: 20px;
+  overflow-x: auto;
+  margin: 16px 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+.code-block .comment { color: var(--text-tertiary); }
+.code-block .keyword { color: #C084FC; }
+.code-block .string { color: #34D399; }
+.code-block .fn { color: #60A5FA; }
+
+/* Callout */
+.callout {
+  background: rgba(94,106,210,0.06);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 20px 24px;
+  margin: 20px 0;
+}
+.callout-title {
+  font-weight: 600;
+  color: var(--accent);
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+.callout p { color: var(--text-secondary); font-size: 14px; }
+
+/* Verdict box */
+.verdict-box {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--card-shadow);
+  padding: 28px;
+  margin: 24px 0;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+.verdict-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+.verdict-icon.codex { background: rgba(16,185,129,0.1); }
+.verdict-icon.claude { background: rgba(217,119,6,0.1); }
+.verdict-title { font-weight: 700; font-size: 16px; margin-bottom: 6px; }
+.verdict-text { color: var(--text-secondary); font-size: 14px; line-height: 1.7; }
+
+/* Timeline */
+.timeline { position: relative; padding-left: 32px; margin: 24px 0; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+.timeline-item { position: relative; margin-bottom: 24px; }
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -26px;
+  top: 8px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.timeline-date {
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.timeline-text { font-size: 14px; color: var(--text-secondary); }
+
+/* Quote */
+.quote-block {
+  border-left: 3px solid var(--text-tertiary);
+  padding: 16px 24px;
+  margin: 20px 0;
+  font-style: italic;
+  color: var(--text-secondary);
+  background: rgba(255,255,255,0.02);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.quote-attr { font-size: 12px; color: var(--text-tertiary); margin-top: 8px; font-style: normal; }
+
+/* Tags */
+.tag-group { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.tag {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 500;
+  background: rgba(94,106,210,0.1);
+  color: var(--accent);
+  border: 1px solid rgba(94,106,210,0.15);
+}
+
+/* Footer */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 48px 0;
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: 13px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--text-tertiary); border-radius: 3px; }
+
+/* Indicator badges */
+.ind { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+.ind-codex { background: var(--codex-color); }
+.ind-claude { background: var(--claude-color); }
+
+.vs-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 600;
+  background: rgba(94,106,210,0.08);
+  color: var(--accent);
+  margin: 4px 0;
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+.metric-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+  box-shadow: var(--card-shadow);
+}
+.metric-value {
+  font-size: 28px;
+  font-weight: 800;
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.metric-label {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+</style>
+</head>
+<body data-theme="dark">
+
+<!-- Theme Toggle -->
+<button class="theme-toggle" onclick="toggleTheme()" aria-label="テーマ切替">
+  <span class="theme-toggle-icon" id="theme-icon">🌙</span>
+  <span id="theme-label">Dark</span>
+</button>
+
+<!-- Mobile TOC Button -->
+<button class="mobile-toc-btn" onclick="toggleMobileToc()" aria-label="目次">☰</button>
+<div class="mobile-toc-overlay" id="mobile-overlay" onclick="toggleMobileToc()"></div>
+<div class="mobile-toc-panel" id="mobile-panel">
+  <div class="toc-title">目次 — Table of Contents</div>
+  <ul class="toc-list" id="mobile-toc-list"></ul>
+</div>
+
+<!-- Sidebar TOC -->
+<nav class="toc-wrapper" id="toc-sidebar">
+  <div class="toc-title">目次 — Contents</div>
+  <ul class="toc-list" id="toc-list">
+    <li class="toc-part">Part 1: 基礎比較</li>
+    <li><a href="#ch1">01 — 概要と歴史的経緯</a></li>
+    <li><a href="#ch2">02 — 設計思想の根本的違い</a></li>
+    <li><a href="#ch3">03 — 製品ラインナップ比較</a></li>
+    <li class="toc-part">Part 2: 技術的深掘り</li>
+    <li><a href="#ch4">04 — 基盤モデルの違い</a></li>
+    <li><a href="#ch5">05 — アーキテクチャ比較</a></li>
+    <li><a href="#ch6">06 — コンテキストウィンドウと記憶</a></li>
+    <li><a href="#ch7">07 — ツール統合</a></li>
+    <li class="toc-part">Part 3: 実践比較</li>
+    <li><a href="#ch8">08 — 開発ワークフロー比較</a></li>
+    <li><a href="#ch9">09 — 大規模リファクタリング</a></li>
+    <li><a href="#ch10">10 — デバッグ・テスト・CI/CD</a></li>
+    <li><a href="#ch11">11 — チーム開発・エージェント協調</a></li>
+    <li class="toc-part">Part 4: エコシステム・戦略</li>
+    <li><a href="#ch12">12 — 料金体系・コスト効率</a></li>
+    <li><a href="#ch13">13 — IDE統合・拡張性</a></li>
+    <li><a href="#ch14">14 — エコシステム・コミュニティ</a></li>
+    <li><a href="#ch15">15 — 将来展望</a></li>
+    <li class="toc-part">付録</li>
+    <li><a href="#appendix-table">機能別詳細比較表</a></li>
+    <li><a href="#appendix-usecase">ユースケース別推奨</a></li>
+    <li><a href="#appendix-reviews">ユーザー評価まとめ</a></li>
+  </ul>
+</nav>
+
+<!-- Main Content -->
+<main class="main-content">
+<div class="container">
+
+<!-- Hero Section -->
+<header class="hero">
+  <div class="hero-badge">◆ Deep Research Report — 2026年3月最新版</div>
+  <h1>OpenAI Codex vs<br>Anthropic Claude Code</h1>
+  <p class="hero-sub">2025〜2026年に急速進化するAIコーディングエージェントの二大巨頭。設計思想・アーキテクチャ・実践・エコシステムまで全15章で徹底比較する。</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-value">77.3%</div>
+      <div class="hero-stat-label">Codex Terminal-Bench 2.0</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-value">80.8%</div>
+      <div class="hero-stat-label">Claude SWE-bench Verified</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-value">135K/日</div>
+      <div class="hero-stat-label">Claude Code GitHub Commits</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-value">1,000+</div>
+      <div class="hero-stat-label">Codex-Spark tok/sec</div>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================ -->
+<!-- PART 1 -->
+<!-- ============================================================ -->
+
+<div class="part-divider">
+  <div class="part-label">Part 1</div>
+  <div class="part-title">基礎比較</div>
+</div>
+
+<!-- Chapter 1 -->
+<section class="section" id="ch1">
+  <div class="section-label">Chapter 01 — Overview & History</div>
+  <h2 class="section-title">両者の概要と<span class="gradient">歴史的経緯</span></h2>
+
+  <div class="prose">
+    <p>OpenAI CodexとAnthropic Claude Codeは、ともにAIを活用したコーディングエージェントとして、2025年から2026年にかけて開発者の日常ワークフローに不可欠なツールとなった。しかし、その誕生の背景と進化の軌跡は大きく異なる。両者の歴史を辿ることで、現在の設計思想の違いが浮き彫りになる。</p>
+
+    <h4>OpenAI Codexの歴史</h4>
+    <p>OpenAI Codexの起源は2021年に遡る。当初はGPT-3をベースに、GitHubの公開リポジトリで学習されたコード生成専用モデルとしてAPIで提供された。これはGitHub Copilotの基盤技術となり、AI支援コーディングの商業的成功を最初に証明したモデルであった。しかし2023年、OpenAIはCodex APIのアクセスを一時停止し、研究者からの反発を受けて学術用途のみ復活させた。2024年はCodexとして表立った動きは少なく、OpenAIのフォーカスはGPT-4、o1モデル系列へと移っていた。</p>
+    <p>大きな転換点は2025年4月、<strong>Codex CLI</strong>がオープンソースとして公開されたことである。TypeScriptで書かれた軽量なターミナルエージェントで、o3やo4-miniモデルを活用してローカル環境で動作した。続いて2025年5月16日、クラウドベースのCodexエージェントが<strong>codex-1</strong>（o3の最適化版）と共に発表された。各タスクが独立したクラウドサンドボックスで実行される非同期並列ワークフローが最大の特徴であった。</p>
+    <p>2025年後半、Codex CLIはTypeScriptからRustに完全書き直しされ、ゼロ依存のネイティブバイナリとなった。2025年12月にはGPT-5.2-Codexが登場し、コンテキストコンパクションや大規模コード変更の性能が向上。そして2026年2月5日、<strong>GPT-5.3-Codex</strong>が発表された。これはOpenAI史上初めて「自身の構築に関与した」モデルであり、自身のトレーニングのデバッグやデプロイメント管理を支援したという画期的な存在である。同日、macOS向けCodexデスクトップアプリが発表され、マルチエージェント管理のための統合インターフェースが提供された。</p>
+
+    <h4>Anthropic Claude Codeの歴史</h4>
+    <p>Anthropic Claude Codeの歴史はより新しい。Anthropic自体は2021年にOpenAIの元メンバーによって設立され、AIの安全性に重点を置いたアプローチで知られる。Claude（初代）は2023年に一般公開され、Claude 2、Claude 3（Haiku/Sonnet/Opus）と進化。コーディング能力は世代を重ねるごとに向上していた。</p>
+    <p><strong>Claude Code</strong>はコマンドラインツールとして2025年初頭に登場した。ターミナルから直接プロジェクトを操作できるエージェントとして設計され、ファイルの読み書き、コマンド実行、Git操作など包括的な開発支援を提供した。2025年5月時点でベータ版として公開され、VS Code拡張やJetBrainsプラグインも同時期にリリースされた。</p>
+    <p>2025年9月にはVS Codeネイティブ拡張のアップデートとチェックポイント機能が追加され、自律的な開発をより安全に行える仕組みが整った。2025年11月にはMCP（Model Context Protocol）による高度なツール統合が公式発表された。12月にはSlack統合がリリースされ、チャットスレッドから直接コーディングタスクを起動できるようになった。</p>
+    <p>2026年2月には<strong>Claude Opus 4.6</strong>が発表され、コンテキストウィンドウが最大1Mトークン（ベータ）に拡大。同時に<strong>Agent Teams</strong>（研究プレビュー）が実験的に導入され、複数のClaudeインスタンスが協調して作業するマルチエージェントオーケストレーションが可能になった。2026年2月28日時点でGitHubスター71,500、VS Code拡張のインストール数5.2M、1日あたり約135KのGitHubコミット（全公開コミットの約4%）を記録している。</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon codex">⚡</div>
+        <div class="card-title">OpenAI Codex タイムライン</div>
+      </div>
+      <div class="timeline">
+        <div class="timeline-item"><div class="timeline-date">2021年8月</div><div class="timeline-text">Codex API公開（GPT-3ベース）。GitHub Copilotの基盤技術に。</div></div>
+        <div class="timeline-item"><div class="timeline-date">2023年</div><div class="timeline-text">Codex API一時停止・学術用途で復活。</div></div>
+        <div class="timeline-item"><div class="timeline-date">2025年4月</div><div class="timeline-text">Codex CLI オープンソース公開（TypeScript版）。o3/o4-mini対応。</div></div>
+        <div class="timeline-item"><div class="timeline-date">2025年5月</div><div class="timeline-text">Codex Cloud（codex-1）発表。クラウドサンドボックスで非同期実行。</div></div>
+        <div class="timeline-item"><div class="timeline-date">2025年8月</div><div class="timeline-text">Codex IDE拡張（VS Code）発表。</div></div>
+        <div class="timeline-item"><div class="timeline-date">2025年後半</div><div class="timeline-text">Codex CLIをTypeScriptからRustに完全書き直し。</div></div>
+        <div class="timeline-item"><div class="timeline-date">2025年12月</div><div class="timeline-text">GPT-5.2-Codex リリース。Skills対応開始。</div></div>
+        <div class="timeline-item"><div class="timeline-date">2026年1月</div><div class="timeline-text">JetBrains IDE統合が正式公開。</div></div>
+        <div class="timeline-item"><div class="timeline-date">2026年2月2日</div><div class="timeline-text">Codex macOSデスクトップアプリ発表。マルチエージェント管理。</div></div>
+        <div class="timeline-item"><div class="timeline-date">2026年2月5日</div><div class="timeline-text">GPT-5.3-Codex 発表。SWE-Bench Pro 56.8%、Terminal-Bench 77.3%。</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon claude">◈</div>
+        <div class="card-title">Claude Code タイムライン</div>
+      </div>
+      <div class="timeline">
+        <div class="timeline-item"><div class="timeline-date">2023年</div><div class="timeline-text">Claude（初代）一般公開。コーディング支援機能は限定的。</div></div>
+        <div class="timeline-item"><div class="timeline-date">2024年</div><div class="timeline-text">Claude 3 (Haiku/Sonnet/Opus) 発表。コーディング性能が大幅向上。</div></div>
+        <div class="timeline-item"><div class="timeline-date">2025年初頭</div><div class="timeline-text">Claude Code CLI ベータ公開。ターミナルからのエージェント操作。</div></div>
+        <div class="timeline-item"><div class="timeline-date">2025年5月</div><div class="timeline-text">VS Code拡張・JetBrainsプラグイン リリース。</div></div>
+        <div class="timeline-item"><div class="timeline-date">2025年7月</div><div class="timeline-text">Hooks システム導入。カスタム自動化。</div></div>
+        <div class="timeline-item"><div class="timeline-date">2025年9月</div><div class="timeline-text">自律開発モードのアップグレード。チェックポイント機能追加。</div></div>
+        <div class="timeline-item"><div class="timeline-date">2025年11月</div><div class="timeline-text">MCP（Model Context Protocol）高度なツール統合発表。</div></div>
+        <div class="timeline-item"><div class="timeline-date">2025年12月</div><div class="timeline-text">Slack統合リリース。Agent SDK公開。</div></div>
+        <div class="timeline-item"><div class="timeline-date">2026年2月</div><div class="timeline-text">Claude Opus 4.6 発表。1Mトークンコンテキスト（ベータ）。Agent Teams 研究プレビュー。</div></div>
+        <div class="timeline-item"><div class="timeline-date">2026年2月</div><div class="timeline-text">GitHub Actions、GitLab CI/CD、Chrome統合。デスクトップアプリ公開。</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Chapter 2 -->
+<section class="section" id="ch2">
+  <div class="section-label">Chapter 02 — Design Philosophy</div>
+  <h2 class="section-title">設計思想の<span class="gradient">根本的違い</span></h2>
+
+  <div class="prose">
+    <p>OpenAI CodexとClaude Codeは、AIコーディングエージェントという同じカテゴリに属しながら、その設計思想において根本的に異なるアプローチを採用している。この違いは、両社の企業DNAそのものに由来する。</p>
+
+    <h4>OpenAI Codex：非同期委任（Async Delegation）</h4>
+    <p>OpenAIのCodexは「開発者が仕事を委任し、結果を確認する」という非同期ワークフローを中核に据えている。Codexのクラウドモードでは、各タスクが独立したサンドボックスコンテナで実行され、開発者はタスクを投げた後、他の作業を行い、完了したら差分をレビューする。これは「同僚への仕事の依頼」に近い体験を目指したものであり、OpenAIは「非同期マルチエージェントワークフローが、エンジニアが高品質なコードを生産するデファクト標準になる」と明言している。</p>
+    <p>この設計思想の背景には、OpenAIの「AGI（汎用人工知能）への最短経路」というミッションがある。Codexはコーディング支援を超え、GPT-5.3-Codexでは「コンピュータ上でのあらゆる作業を遂行できるエージェント」への進化を志向している。OSWorldベンチマーク（デスクトップ環境での生産性タスク）で64.7%を達成し、プレゼンテーション作成やスプレッドシート分析など、非コーディングタスクにも対応範囲を拡大している。</p>
+
+    <h4>Anthropic Claude Code：開発者協調（Developer-in-the-Loop）</h4>
+    <p>一方、Claude Codeは「開発者が常にループの中にいる」ことを重視する設計思想を持つ。ローカルマシンで動作し、開発者のプロジェクトディレクトリ内で直接ファイルを操作する。変更はリアルタイムで確認でき、承認を求めるプロンプトにより、エージェントの行動を開発者が常に監督できる。</p>
+    <p>Anthropicの企業DNAはAI安全性研究にあり、その思想はClaude Codeのあらゆる側面に反映されている。CLAUDE.mdによるプロジェクト固有の指示、Hooksシステムによる決定論的制御、権限の粒度の細かい管理など、「AIが何をしているかを開発者が常に把握・制御できる」仕組みが随所に組み込まれている。</p>
+
+    <h4>本質的な違い：分離 vs 統合</h4>
+    <p>両者の設計思想の本質的な違いは「分離（Isolation）」と「統合（Integration）」というキーワードに集約される。Codexはタスクをクラウドサンドボックスに<strong>分離</strong>し、安全性と並列性を確保する。Claude Codeは開発者の既存環境に<strong>統合</strong>し、文脈の深さとカスタマイズ性を確保する。Codexは「結果」を重視し、Claude Codeは「過程」を重視する。Codexはスループット最適化、Claude Codeは品質と予測可能性の最適化と言い換えることもできる。</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="verdict-box">
+      <div class="verdict-icon codex">⚡</div>
+      <div>
+        <div class="verdict-title">Codexの思想：「委任と並列」</div>
+        <div class="verdict-text">タスクを投げて放置し、結果をレビューする。複数タスクを同時実行。「同僚に仕事を頼む」感覚。クラウドサンドボックスによるセキュリティ分離。AGIに向けた汎用エージェントへの進化を志向。</div>
+      </div>
+    </div>
+    <div class="verdict-box">
+      <div class="verdict-icon claude">◈</div>
+      <div>
+        <div class="verdict-title">Claude Codeの思想：「協調と制御」</div>
+        <div class="verdict-text">開発者がループの中で対話しながら進める。ローカル実行で完全な文脈を保持。CLAUDE.md、Hooks、権限管理による細やかな制御。AI安全性を企業DNAとした信頼性重視の設計。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Chapter 3 -->
+<section class="section" id="ch3">
+  <div class="section-label">Chapter 03 — Product Lineup</div>
+  <h2 class="section-title">製品ラインナップ<span class="gradient">比較</span></h2>
+
+  <div class="prose">
+    <p>2026年3月時点で、両者のエコシステムは驚くほど多層的に展開されている。単なるCLIツールではなく、デスクトップアプリ、Web UI、IDE拡張、CI/CD統合、SDK、さらにはSlackやモバイルアプリまで、開発者のあらゆる接点をカバーする統合プラットフォームへと進化した。</p>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>接点</th>
+          <th>OpenAI Codex</th>
+          <th>Claude Code</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>CLI（ターミナル）</strong></td><td>Codex CLI（Rust製、Apache-2.0）。ローカルでコード読み書き・実行。GPT-5.3-Codex/GPT-5.1-Codex-Miniモデル。</td><td>Claude Code CLI。<code>curl -fsSL https://claude.ai/install.sh | bash</code>でインストール。Opus 4.6/Sonnet 4.6モデル。</td></tr>
+        <tr><td><strong>クラウド（Web）</strong></td><td>ChatGPT内のCodexサイドバー。クラウドサンドボックスで非同期実行。GitHub連携でPR作成。</td><td>claude.ai/code でブラウザから操作。ローカルセットアップ不要。長時間タスクの並列実行。iOSアプリ対応。</td></tr>
+        <tr><td><strong>デスクトップアプリ</strong></td><td>Codex App（macOS、2026年2月2日発表）。マルチプロジェクト・マルチエージェント管理。Skills・Automations機能。</td><td>Claude Code Desktop App（macOS/Windows）。ビジュアルdiffレビュー、複数セッション並列、クラウドセッション開始。</td></tr>
+        <tr><td><strong>VS Code拡張</strong></td><td>Codex IDE Extension。インラインdiff、チャット、コード操作。Cursor/Windsurf互換。4.9Mインストール。</td><td>Claude Code Extension。インラインdiff、@メンション、プラン レビュー。Cursor/Windsurf互換。5.2Mインストール。</td></tr>
+        <tr><td><strong>JetBrains</strong></td><td>JetBrains AI Chat内で統合（2026年1月GA）。IntelliJ, PyCharm, WebStorm等。</td><td>Claude Code Plugin（Beta）。Diff表示、セレクション共有。全JetBrains IDE対応。</td></tr>
+        <tr><td><strong>Xcode</strong></td><td>対応（Apple公式統合、2026年）</td><td>対応（Apple公式統合、2026年）</td></tr>
+        <tr><td><strong>GitHub統合</strong></td><td>GitHub PR作成、@Codexでコードレビュー、自動レビュー設定。</td><td>GitHub Actions。@claudeメンションでPR/Issue操作。</td></tr>
+        <tr><td><strong>Slack統合</strong></td><td>あり（Codex App/Cloud経由）</td><td>@Claudeメンションでコーディングタスク起動。Bug報告からPR作成。</td></tr>
+        <tr><td><strong>GitLab CI/CD</strong></td><td>限定的</td><td>公式GitLab CI/CD統合。</td></tr>
+        <tr><td><strong>SDK</strong></td><td>Responses API + codex-mini-latest。APIキーによる自動化。</td><td>Agent SDK（Python/TypeScript）。Claude Codeと同じツール・エージェントループを利用可能。</td></tr>
+        <tr><td><strong>モバイル</strong></td><td>ChatGPTアプリ経由（iOS/Android）</td><td>Claude iOSアプリ + Remote Control（QRスキャンでモバイルからセッション操作）。</td></tr>
+        <tr><td><strong>Chrome</strong></td><td>なし</td><td>Chrome統合。ライブWebアプリケーションのデバッグ。</td></tr>
+        <tr><td><strong>オープンソース</strong></td><td>Codex CLI: Apache-2.0。62,365 GitHub stars。365 contributors。553リリース。</td><td>Claude Code: プロプライエタリ。71,500 GitHub stars。51 contributors。複数リリース/日。</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PART 2 -->
+<!-- ============================================================ -->
+
+<div class="part-divider">
+  <div class="part-label">Part 2</div>
+  <div class="part-title">技術的深掘り</div>
+</div>
+
+<!-- Chapter 4 -->
+<section class="section" id="ch4">
+  <div class="section-label">Chapter 04 — Foundation Models</div>
+  <h2 class="section-title">基盤モデルの<span class="gradient">違い</span></h2>
+
+  <div class="prose">
+    <p>AIコーディングエージェントの能力は、その基盤となるLLMの性能に直結する。OpenAIとAnthropicは異なるモデルアーキテクチャと学習手法で競争しており、2026年3月時点のラインナップは以下の通りである。</p>
+
+    <h4>OpenAI Codexのモデル系列</h4>
+    <p>Codexの最上位モデルは<strong>GPT-5.3-Codex</strong>（2026年2月5日リリース）である。これはGPT-5.2-Codexのフロンティアコーディング性能とGPT-5.2の推論・専門知識能力を統合し、さらに25%高速化したモデルである。SWE-Bench Pro（公開）で56.8%、Terminal-Bench 2.0で77.3%、OSWorld-Verifiedで64.7%を達成。コンテキストウィンドウは400Kトークン（272K入力 + 128K出力）。APIの価格は入力$1.75/1Mトークン、出力$14.00/1Mトークンとされる。</p>
+    <p>日常的なタスク向けには<strong>GPT-5.1-Codex-Mini</strong>があり、レイテンシを抑えたQ&Aやコード編集に最適化されている。入力$1.50/1M、出力$6/1Mで、使用制限を約4倍に延長できる。さらにChatGPT Pro向けには研究プレビューとして<strong>GPT-5.3-Codex-Spark</strong>が提供されており、Cerebras WSE-3上で1,000+ tokens/secという驚異的な速度を実現している。</p>
+    <p>Codexモデルの特徴は、強化学習（RL）で実際のコーディングタスクに最適化されていることである。人間のコーディングスタイルやPRの好みに合わせたクリーンなパッチを生成し、テストが通るまで反復的に実行する能力を持つ。</p>
+
+    <h4>Anthropic Claude Codeのモデル系列</h4>
+    <p>Claude Codeの最上位モデルは<strong>Claude Opus 4.6</strong>（2026年2月リリース）である。SWE-bench Verifiedで80.8%、SWE-bench Proで59%（WarpGrep v2使用時は57.5%が別途報告）を達成。コンテキストウィンドウは最大1Mトークン（ベータ）で、コンパクション機能による実質的に無限の会話が可能。APIの価格は入力$5/1M、出力$25/1Mトークン。</p>
+    <p>コスト効率を重視する場合は<strong>Claude Sonnet 4.6</strong>が選択肢となる。SWE-bench Verifiedで79.6%と、Opus 4.6からわずか1.2%の差で、APIは入力$3/1M、出力$15/1Mと約半額である。Agent Teamsでワーカーエージェントにはこのモデルを使い、リードエージェントにのみOpus 4.6を使うというコスト最適化が実践されている。</p>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>ベンチマーク</th><th>GPT-5.3-Codex</th><th>Claude Opus 4.6</th><th>勝者</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>SWE-Bench Verified</td><td>—</td><td><strong>80.8%</strong></td><td><span class="badge badge-claude">Claude</span></td></tr>
+        <tr><td>SWE-Bench Pro</td><td>56.8%</td><td><strong>59.0%</strong></td><td><span class="badge badge-claude">Claude</span></td></tr>
+        <tr><td>Terminal-Bench 2.0</td><td><strong>77.3%</strong></td><td>65.4%</td><td><span class="badge badge-codex">Codex</span></td></tr>
+        <tr><td>OSWorld-Verified</td><td><strong>64.7%</strong></td><td>—</td><td><span class="badge badge-codex">Codex</span></td></tr>
+        <tr><td>SWE-Lancer IC Diamond</td><td><strong>81.4%</strong></td><td>—</td><td><span class="badge badge-codex">Codex</span></td></tr>
+        <tr><td>Cybersecurity CTF</td><td><strong>77.6%</strong></td><td>—</td><td><span class="badge badge-codex">Codex</span></td></tr>
+        <tr><td>コンテキストウィンドウ</td><td>400K</td><td><strong>1M（ベータ）</strong></td><td><span class="badge badge-claude">Claude</span></td></tr>
+        <tr><td>API入力コスト(/1Mtok)</td><td><strong>$1.75</strong></td><td>$5.00</td><td><span class="badge badge-codex">Codex</span></td></tr>
+        <tr><td>API出力コスト(/1Mtok)</td><td><strong>$14.00</strong></td><td>$25.00</td><td><span class="badge badge-codex">Codex</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">ベンチマークの解釈について</div>
+    <p>SWE-bench VerifiedではClaude Opus 4.6が圧倒的にリードしているが、SWE-bench ProではCodexが2.2%差に迫っている。Terminal-BenchではCodexが約12ポイントの大差をつけており、これはターミナル操作に特化した最適化の成果である。ベンチマーク結果は重要な指標だが、実際の開発体験はベンチマークだけでは測れない。コードの一貫性、指示への忠実さ、エラーリカバリ能力など、数値化されにくい要素も大きく影響する。</p>
+  </div>
+</section>
+
+<!-- Chapter 5 -->
+<section class="section" id="ch5">
+  <div class="section-label">Chapter 05 — Architecture</div>
+  <h2 class="section-title">アーキテクチャ比較：<span class="gradient">サンドボックスとセキュリティ</span></h2>
+
+  <div class="prose">
+    <p>AIエージェントにコード実行やファイル操作を許可する以上、サンドボックス設計とセキュリティモデルは極めて重要である。両者は根本的に異なるアーキテクチャを採用しており、そのトレードオフを理解することが実運用で不可欠となる。</p>
+
+    <h4>OpenAI Codex：二層セキュリティモデル</h4>
+    <p>Codexのセキュリティは<strong>サンドボックスモード</strong>と<strong>承認ポリシー</strong>の二層で構成される。クラウドモードでは、OpenAI管理の隔離コンテナ内でタスクが実行される。セットアップフェーズ（ネットワークアクセスあり、依存関係インストール可能）とエージェントフェーズ（デフォルトでオフライン）の二段階ランタイムモデルを採用し、セットアップ時に設定されたシークレットはエージェントフェーズ開始前に削除される。</p>
+    <p>ローカル（CLI/IDE拡張）では、OS レベルの機構でサンドボックスが実施される。macOSではSeatbeltポリシー（sandbox-exec）、LinuxではLandlock + seccomp（またはオプションでbwrap）、WindowsではWSL経由またはネイティブWindowsサンドボックスが使用される。デフォルトの<code>workspace-write</code>モードでは、ネットワークアクセスは無効、書き込み権限はアクティブなワークスペースに限定される。<code>.git</code>ディレクトリは読み取り専用として保護される。</p>
+    <p>承認ポリシーは柔軟に設定可能で、<code>--full-auto</code>（ワークスペース内は自動、外部は承認要求）から<code>--dangerously-bypass-approvals-and-sandbox</code>（通称<code>--yolo</code>：全アクセス）まで段階がある。また、OpenTelemetry（OTel）によるオプトイン監査ロギングがサポートされており、エンタープライズ環境でのコンプライアンスに対応する。</p>
+
+    <h4>Claude Code：ローカル実行＋権限管理</h4>
+    <p>Claude Codeはローカルマシンで動作し、開発者のファイルシステムとシェル環境に直接アクセスする。Codexのようなクラウドサンドボックスによる分離はなく、代わりに<strong>権限システム</strong>と<strong>承認プロンプト</strong>による制御を採用する。デフォルトでは、ファイル編集やコマンド実行の前に開発者の承認を求める。<code>--dangerously-skip-permissions</code>フラグで自動承認も可能だが、名前が示す通り注意が必要である。</p>
+    <p>Git worktreeによるエージェント分離がAgent Teamsで採用されており、各エージェントが独立したworktreeで作業することでファイルコンフリクトを防ぐ。Hooksシステムにより、ファイル書き込みやコマンド実行の前後にカスタムスクリプトを実行でき、決定論的な品質ゲートを設けることができる。</p>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>側面</th><th>OpenAI Codex</th><th>Claude Code</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>実行環境（クラウド）</strong></td><td>隔離コンテナ。ネットワーク分離。二段階ランタイム。</td><td>ブラウザ/Web版あり（クラウドサンドボックス）。</td></tr>
+        <tr><td><strong>実行環境（ローカル）</strong></td><td>OS レベルサンドボックス（Seatbelt/Landlock/seccomp）。</td><td>ローカルマシン直接実行。権限プロンプトによる制御。</td></tr>
+        <tr><td><strong>ネットワーク制御</strong></td><td>デフォルト無効。config.tomlで有効化可能。Web検索はキャッシュモード。</td><td>ローカルから直接実行のため制限なし（権限プロンプトで管理）。</td></tr>
+        <tr><td><strong>ファイルシステム保護</strong></td><td>.git、.agents、.codex ディレクトリは読み取り専用。</td><td>権限プロンプトによるフロー制御。</td></tr>
+        <tr><td><strong>承認モデル</strong></td><td>Auto / read-only / untrusted / 完全アクセスの段階。config.toml/プロファイルで設定。</td><td>デフォルト承認要求 / --dangerously-skip-permissions / Hooks。</td></tr>
+        <tr><td><strong>シークレット管理</strong></td><td>セットアップ時のみ利用可能。エージェントフェーズ前に削除。</td><td>環境変数として直接利用（ローカル実行のため）。</td></tr>
+        <tr><td><strong>監査ログ</strong></td><td>OpenTelemetry（OTel）。コンプライアンスAPI。</td><td>Hooks + ログファイル。</td></tr>
+        <tr><td><strong>エージェント分離</strong></td><td>クラウドコンテナ per タスク（完全分離）。</td><td>Git worktree per エージェント（ローカル分離）。</td></tr>
+        <tr><td><strong>セキュリティスキャン</strong></td><td>外部ツール（Snyk, Semgrep）必要。</td><td>Claude Code Security（脆弱性スキャン、2026年2月発表）。</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Chapter 6 -->
+<section class="section" id="ch6">
+  <div class="section-label">Chapter 06 — Context & Memory</div>
+  <h2 class="section-title">コンテキストウィンドウ・<span class="gradient">長期記憶・指示ファイル</span></h2>
+
+  <div class="prose">
+    <p>コンテキストウィンドウの管理は、AIコーディングエージェントの実用性を決定づける最重要要素の一つである。大規模なコードベースを扱う際、エージェントが「忘れる」ことは致命的な品質低下を招く。両者はこの課題に対して異なるアプローチを採用している。</p>
+
+    <h4>コンテキストウィンドウの比較</h4>
+    <p>GPT-5.3-Codexは400Kトークン（入力272K + 出力128K）のコンテキストウィンドウを提供する。Codexの特徴的なアプローチは<strong>diff-based forgetting（差分ベースの忘却）</strong>である。古いコンテキストを要約にコンパクションするのではなく、陳腐化したコンテキストを「差分」として除去し、変更デルタのみを保持する。これにより、要約ベースのアプローチよりもコードベースの構造的理解を維持できるとされる。</p>
+    <p>Claude Opus 4.6は最大1Mトークン（ベータ）のコンテキストウィンドウを持ち、Sonnet 4も1Mトークンに拡大されている。さらに<strong>コンパクション</strong>機能（サーバーサイドの自動コンテキスト要約）により、実質的に無限の会話が可能である。コンテキストがウィンドウの限界に近づくと、APIが自動的に古い部分を要約し、新しいメッセージのための空間を確保する。ただし、初期の指示が要約過程で失われる可能性があるため、重要な指示はCLAUDE.mdに記載することが推奨される。</p>
+
+    <h4>AGENTS.md vs CLAUDE.md</h4>
+    <p>両者ともリポジトリ内に配置するマークダウンファイルでエージェントに指示を与える仕組みを持つ。Codexの<strong>AGENTS.md</strong>は、コードベースのナビゲーション方法、テスト実行コマンド、プロジェクトの標準プラクティスを記述する。ネストして階層的に配置でき、サブディレクトリごとに異なる指示を設定可能。Claude Codeの<strong>CLAUDE.md</strong>は同様の役割を果たし、プロジェクト固有の指示、ワークフロー、コーディング規約、使用するMCPツール等を定義する。</p>
+    <p>両者の重要な違いは、Claude Codeには<strong>自動メモリ（Auto-memory）</strong>機能がある点である。セッション中に学習したプロジェクトの文脈を自動的に保存し、次のセッションで参照できる。MEMORY.mdファイルとしてローカルに保存され、Agent Teamsではチームメンバー間で共有可能な形式で管理される。</p>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>側面</th><th>OpenAI Codex</th><th>Claude Code</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>最大コンテキスト</strong></td><td>400K tokens</td><td>1M tokens（ベータ）</td></tr>
+        <tr><td><strong>メモリ管理</strong></td><td>Diff-based forgetting</td><td>コンパクション（自動要約）</td></tr>
+        <tr><td><strong>長期セッション安定性</strong></td><td>優秀（構造維持）</td><td>改善中（コンパクション後に劣化する場合あり）</td></tr>
+        <tr><td><strong>指示ファイル</strong></td><td>AGENTS.md（階層ネスト対応）</td><td>CLAUDE.md（プロジェクト/ユーザー/チーム階層）</td></tr>
+        <tr><td><strong>自動メモリ</strong></td><td>なし（AGENTS.mdは手動）</td><td>Auto-memory（MEMORY.md自動生成）</td></tr>
+        <tr><td><strong>Skills</strong></td><td>SKILL.md（agentskills.io標準）</td><td>Skills（カスタムエージェントスキル）</td></tr>
+        <tr><td><strong>セッション間の記憶</strong></td><td>AGENTS.md経由（手動）</td><td>CLAUDE.md + MEMORY.md + Settings</td></tr>
+        <tr><td><strong>無限会話</strong></td><td>非対応（400K制限内）</td><td>コンパクションによる実質無限対応</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Chapter 7 -->
+<section class="section" id="ch7">
+  <div class="section-label">Chapter 07 — Tool Integration</div>
+  <h2 class="section-title">ツール統合：<span class="gradient">MCP・bash・ファイル・Git</span></h2>
+
+  <div class="prose">
+    <p>AIコーディングエージェントの実用的な力は、どのようなツールとどの程度深く統合できるかに大きく依存する。ここでは、MCP（Model Context Protocol）、bash実行、ファイル操作、Git操作という4つの主要領域について両者の実装差異を分析する。</p>
+
+    <h4>MCP（Model Context Protocol）</h4>
+    <p>MCPはAnthropicが主導するオープンスタンダードであり、AIモデルを外部ツールに接続するためのプロトコルである。2025年11月に正式発表され、以降急速にエコシステムが拡大した。Claude Codeでは創設者としてのアドバンテージがあり、MCPは設計の中核に組み込まれている。設定ファイルやCLAUDE.md内でMCPサーバーを指定することで、データベース接続、API呼び出し、カスタムツール等をシームレスに統合できる。</p>
+    <p>CodexもMCPをサポートしている。config.toml内でMCPサーバーを設定可能で、@メンションによるMCPショートカットや、承認制御の統合など独自の工夫がある。ただし、MCPの追加はコンテキスト消費量を増やすため、不要なMCPサーバーを無効化することが推奨されている。</p>
+
+    <h4>bash実行とファイル操作</h4>
+    <p>Codexはローカルモードでサンドボックス内のbash実行をサポートし、テストハーネス、リンター、型チェッカーなどのコマンドを実行できる。クラウドモードでは各タスクのコンテナ内でコマンドが実行される。ファイル操作はread/write/patchの形式で行われ、パッチベースのワークフロー（git diff/git apply）が推奨される。</p>
+    <p>Claude Codeはローカルマシンのシェルに直接アクセスし、任意のコマンドを実行できる。ファイル操作はRead/Write/Editの形式で、インラインdiffによる変更提示が特徴的である。Hooksシステムにより、bash実行の前後にカスタムスクリプトを挟むことができ、リンティングやフォーマッティングの自動適用が可能。</p>
+
+    <h4>Git操作</h4>
+    <p>両者ともGit操作を深くサポートするが、アプローチが異なる。Codexはクラウドモードでリポジトリのスナップショットをコンテナに読み込み、作業完了後にコミットを作成してGitHub PRとして提出する。CLIモードではローカルGitリポジトリを直接操作するが、.gitディレクトリは読み取り専用として保護される。Claude CodeはローカルGitリポジトリとネイティブに統合し、ブランチ作成、コミット、PR作成を直接実行する。Agent Teamsでは各エージェントがGit worktreeで分離されて作業し、マージ時のコンフリクトを最小化する。</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PART 3 -->
+<!-- ============================================================ -->
+
+<div class="part-divider">
+  <div class="part-label">Part 3</div>
+  <div class="part-title">実践比較</div>
+</div>
+
+<!-- Chapter 8 -->
+<section class="section" id="ch8">
+  <div class="section-label">Chapter 08 — Development Workflow</div>
+  <h2 class="section-title">開発ワークフロー<span class="gradient">比較</span></h2>
+
+  <div class="prose">
+    <p>日常的なコーディングタスクにおける使い勝手は、ベンチマークスコアよりも開発者にとって重要な場合がある。ここでは典型的な開発シナリオにおける両者の体験を比較する。</p>
+
+    <h4>初期セットアップと立ち上がり</h4>
+    <p>Codex CLIはRust製のゼロ依存バイナリであり、インストールは極めてシンプルである。ChatGPTアカウントでサインインすれば自動的にAPIキーが設定される。AGENTS.mdがなくてもそこそこの結果を出す「箱出し」の良さが特徴で、設定なしでも実用的な出力を得られる。</p>
+    <p>Claude Codeも<code>curl -fsSL https://claude.ai/install.sh | bash</code>一行でインストール可能で、セットアップ自体は簡単である。しかし、Claude Codeの真の力は<strong>設定を詰めることで発揮される</strong>。CLAUDE.mdでプロジェクト固有の指示を記述し、Hooksでカスタム自動化を組み、MCPサーバーで外部ツールを統合する。この「設定税（Configuration Tax）」は初期投資が必要だが、プロジェクトが大きくなるほどリターンが大きい。</p>
+
+    <h4>日常的なコーディング体験</h4>
+    <p>Codexは「速さ」と「独立性」に秀でる。GPT-5.3-Codex-Sparkは1,000+ tok/secで応答し、タスクを投げてから結果が返るまでの体感が軽い。クラウドモードでは複数タスクを並列実行できるため、朝にタスクを一括投入し、コーヒーを飲みながら結果を待つワークフローが可能。しかし、同じプロンプトに対して結果がランブル（variability）する傾向があり、一貫性では課題がある。</p>
+    <p>Claude Codeは「深さ」と「一貫性」に秀でる。思考過程を可視化し（think out loud）、明確な理由付けとともにコードを生成する。同じプロンプトに対する出力の再現性が高く、「プランに忠実に従う」傾向がある。トークン消費量がCodexの3-4倍程度になることがあるが、これはより詳細な推論と説明を行うためである。ただし、使用制限に達するとタスクの途中で停止する「リミットウォール」が発生する場合がある。</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-icon codex">⚡</div><div class="card-title">Codexの日常ワークフロー</div></div>
+      <div class="prose">
+        <p><strong>強み：</strong>タスクを投げて放置、結果をレビュー。高速レスポンス。複数タスク並列実行。箱出しの良さ。</p>
+        <p><strong>弱み：</strong>出力のばらつき。プランからの逸脱。不必要な過剰エラーハンドリング。コードベースのスタイル無視。</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-icon claude">◈</div><div class="card-title">Claude Codeの日常ワークフロー</div></div>
+      <div class="prose">
+        <p><strong>強み：</strong>一貫した出力品質。プランへの忠実さ。詳細な推論過程。設定によるカスタマイズ性。</p>
+        <p><strong>弱み：</strong>トークン消費量が多い。使用制限への到達。設定に初期投資が必要。承認プロンプトの頻繁さ。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="quote-block">
+    「プロダクションコーディングでは、かなり厳密なプランを作成する。Codexはほとんどの場合プランから外れる。Claudeはプランに従う。」
+    <div class="quote-attr">— Hacker News コメントより</div>
+  </div>
+</section>
+
+<!-- Chapter 9 -->
+<section class="section" id="ch9">
+  <div class="section-label">Chapter 09 — Large-Scale Refactoring</div>
+  <h2 class="section-title">大規模リファクタリング・<span class="gradient">マルチファイル編集</span></h2>
+
+  <div class="prose">
+    <p>大規模なリファクタリングやマルチファイル編集は、AIコーディングエージェントの真価が問われる領域である。単一ファイルの修正とは異なり、コードベース全体の構造理解、一貫性の維持、副作用の予測が求められる。</p>
+
+    <h4>Codexのアプローチ</h4>
+    <p>Codexのクラウドモードは大規模リファクタリングに適した設計を持つ。リポジトリ全体がサンドボックスに読み込まれ、ファイルの読み書きとテスト実行が自由に行える。GPT-5.2-Codexでコンテキストコンパクションが導入されて以来、長時間の大規模変更が改善された。ただし、コンテキストスイッチ（複数ファイル間の行き来）で追跡を失う傾向があり、2000行を超えるファイルでもスムーズに処理できるが、40ファイルを横断するような変更では一貫性が低下する場合がある。</p>
+
+    <h4>Claude Codeのアプローチ</h4>
+    <p>Claude Codeの1Mトークンコンテキストは大規模リファクタリングで大きなアドバンテージとなる。さらに、Agent Teamsの「分割統治」アプローチが威力を発揮する。例えば、認証モジュールのリファクタリングをリードエージェントが計画し、フロントエンド、バックエンド、テストをそれぞれ別のエージェントが担当するワークフローが可能である。各エージェントはGit worktreeで分離されて作業するため、同時編集によるコンフリクトを回避できる。</p>
+    <p>実際の実績として、16個のClaudeエージェントがRustで100K行のCコンパイラを構築し、Linuxカーネル6.9をコンパイルした事例が報告されている（GCC tortureテストの99%パス率、API費用約$20K）。これはAgent Teamsが単なるCRUDスキャフォールディングではなく、真に複雑なエンジニアリングタスクに対応できることの証明である。</p>
+  </div>
+</section>
+
+<!-- Chapter 10 -->
+<section class="section" id="ch10">
+  <div class="section-label">Chapter 10 — Debug, Test & CI/CD</div>
+  <h2 class="section-title">デバッグ・テスト実行・<span class="gradient">CI/CD連携</span></h2>
+
+  <div class="prose">
+    <p>テスト実行とCI/CDパイプラインとの統合は、エンタープライズ開発において特に重要な領域である。</p>
+
+    <h4>テスト実行</h4>
+    <p>Codexはcodex-1の強化学習において「テストが通るまで反復的に実行する」能力が特に強化されている。AGENTS.mdに記述されたテストコマンドを自動的に実行し、テスト失敗時は修正を試みてから再実行するループを組む。GPT-5.3-Codexでは、テスト失敗の根本原因分析も改善された。</p>
+    <p>Claude CodeもCLAUDE.mdに記述されたテストコマンドを実行し、テスト結果に基づいてコードを修正する。Hooksシステムの<code>TaskCompleted</code>イベントにテスト実行スクリプトを設定することで、タスク完了前に自動的にテストを実行し、失敗した場合はフィードバックを返して再作業させることができる。</p>
+
+    <h4>CI/CD統合</h4>
+    <p>Codexは<code>--sandbox read-only --ask-for-approval never</code>モードでCI環境での非対話的実行をサポートする。APIキーベースの認証でCI/CDパイプラインに組み込み可能。GitHub統合では自動コードレビュー機能が提供され、@CodexタグでPRレビューをトリガーできる。</p>
+    <p>Claude CodeはGitHub Actionsとの公式統合を提供し、<code>@claude</code>メンションでPRやIssueに対してAIを操作できる。GitLab CI/CDとの統合も公式サポートされている。Slack統合により、バグ報告をSlackスレッドから直接PRに変換するワークフローも実現できる。</p>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>CI/CD機能</th><th>OpenAI Codex</th><th>Claude Code</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>GitHub PR自動レビュー</strong></td><td>@Codexタグ / 自動設定</td><td>@claudeメンション / GitHub Actions</td></tr>
+        <tr><td><strong>GitHub Actions</strong></td><td>対応（GA）</td><td>公式統合</td></tr>
+        <tr><td><strong>GitLab CI/CD</strong></td><td>限定的</td><td>公式統合</td></tr>
+        <tr><td><strong>CI非対話モード</strong></td><td><code>--sandbox read-only -a never</code></td><td><code>--print</code>モード / 非対話実行</td></tr>
+        <tr><td><strong>自動テスト実行</strong></td><td>RLで最適化された反復テスト</td><td>Hooks（TaskCompleted）による自動テスト</td></tr>
+        <tr><td><strong>Slack連携</strong></td><td>あり</td><td>@Claudeでコーディングタスク起動</td></tr>
+        <tr><td><strong>コンプライアンスAPI</strong></td><td>あり（監査ログ、OTel）</td><td>限定的</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Chapter 11 -->
+<section class="section" id="ch11">
+  <div class="section-label">Chapter 11 — Team Dev & Agent Coordination</div>
+  <h2 class="section-title">チーム開発・<span class="gradient">エージェント協調</span></h2>
+
+  <div class="prose">
+    <p>2026年2月に両者がマルチエージェントワークフローをサポートしたことは、AIコーディングエージェントの歴史における転換点である。「タスクごとに専用のコンテキストウィンドウを持つ」というプリミティブが、エージェントプログラミングの最初の永続的な基盤として確立されつつある。</p>
+
+    <h4>Codex App：プロジェクトベースのマルチエージェント</h4>
+    <p>2026年2月2日に発表されたCodex macOSアプリは「エージェントのためのコマンドセンター」として設計されている。開発者はプロジェクトごとにタスクを整理し、複数のエージェントを並列に実行できる。各エージェントは独立したクラウドサンドボックスで動作し、互いのコンテキストを汚染しない。Skills（再利用可能な指示パッケージ）とAutomations（自動化ルール）により、定型的なワークフローを効率化できる。</p>
+    <p>ただし、Codexのマルチエージェントは本質的に「独立並列」であり、エージェント間の通信やタスク依存関係の管理は限定的である。各エージェントは独立して作業し、結果を開発者が統合する。</p>
+
+    <h4>Claude Code Agent Teams：協調型マルチエージェント</h4>
+    <p>Claude CodeのAgent Teamsはより深い協調モデルを提供する。リードセッションがチームを統括し、タスクの割り当て、進捗監視、結果の統合を行う。チームメイトは独立したコンテキストウィンドウを持ちながら、以下の機能で連携する：</p>
+    <p>共有タスクリストには依存関係の追跡機能があり、前提タスクが完了するまでブロックされるタスクを自動管理する。ダイレクトメッセージングにより、チームメイト同士が直接情報を交換できる。ブロードキャスト機能で全チームメイトに一斉通知も可能。タスクのクレームにはファイルロックが使用され、複数エージェントが同一タスクを取り合う競合を防止する。</p>
+    <p>さらに、リードエージェントによる<strong>プラン承認</strong>の仕組みがあり、チームメイトの実装計画をリードがレビュー・承認してから作業を開始させることで、品質を担保する。Hooksの<code>TeammateIdle</code>や<code>TaskCompleted</code>イベントでカスタム品質ゲートを設けることも可能である。</p>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>側面</th><th>Codex（2026年2月）</th><th>Claude Code（2026年2月）</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>モデル</strong></td><td>独立並列エージェント</td><td>協調型Agent Teams</td></tr>
+        <tr><td><strong>分離</strong></td><td>クラウドサンドボックス per タスク</td><td>Git worktree per エージェント</td></tr>
+        <tr><td><strong>タスク管理</strong></td><td>手動切り替え</td><td>共有タスクリスト（依存関係追跡）</td></tr>
+        <tr><td><strong>エージェント間通信</strong></td><td>なし</td><td>ダイレクトメッセージ + ブロードキャスト</td></tr>
+        <tr><td><strong>プラン承認</strong></td><td>なし</td><td>リードによるプラン承認 / 却下</td></tr>
+        <tr><td><strong>表示モード</strong></td><td>プロジェクト別スレッド</td><td>インプロセス / tmux分割ペイン</td></tr>
+        <tr><td><strong>推奨チームサイズ</strong></td><td>制限なし（各タスク独立）</td><td>3-5エージェント</td></tr>
+        <tr><td><strong>セッション再開</strong></td><td>独立のため不要</td><td>制限あり（/resumeでチームメイト復元不可）</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PART 4 -->
+<!-- ============================================================ -->
+
+<div class="part-divider">
+  <div class="part-label">Part 4</div>
+  <div class="part-title">エコシステム・戦略</div>
+</div>
+
+<!-- Chapter 12 -->
+<section class="section" id="ch12">
+  <div class="section-label">Chapter 12 — Pricing & Cost</div>
+  <h2 class="section-title">料金体系・<span class="gradient">コスト効率</span>の徹底比較</h2>
+
+  <div class="prose">
+    <p>料金体系は両者の利用判断において最も現実的な要素の一つである。2026年3月時点の料金を徹底的に比較する。</p>
+
+    <h4>サブスクリプション比較</h4>
+    <p>OpenAIは3つのサブスクリプション階層を提供している。<strong>ChatGPT Go</strong>（$8/月）は限定的なCodex利用が可能な新しいエントリーティア。<strong>ChatGPT Plus</strong>（$20/月）は5時間あたり45-225ローカルメッセージ、10-60クラウドタスク、週10-25コードレビュー。<strong>ChatGPT Pro</strong>（$200/月）は5時間あたり300-1,500ローカルメッセージ、50-400クラウドタスク、週100-250コードレビュー。Enterprise/Eduプランは別途。使用制限を超えた場合はクレジットを購入して延長可能。</p>
+    <p>Anthropicは3つの主要プランを提供している。<strong>Claude Pro</strong>（$20/月、年額$17/月）は標準的な使用制限。<strong>Claude Max 5x</strong>（$100/月）はProの5倍の使用量。<strong>Claude Max 20x</strong>（$200/月）はProの20倍の使用量。Team（$30/ユーザー/月）およびEnterpriseプランも利用可能。</p>
+    <p>重要な違いとして、Codexの$8 Goティアは軽量なCodex利用に最適な低コストオプションであり、Claude Code側に対応するティアは存在しない。一方、Claude Maxの$100/月ティアは、Codexの$20 Plusと$200 Proの中間を埋めるオプションとして有用である。</p>
+
+    <h4>トークンエコノミクスの現実</h4>
+    <p>ベンチマークテストで判明した重要なデータとして、同一タスクにおいてClaude CodeはCodexの約3-4倍のトークンを消費する傾向がある。例えばFigmaプラグイン構築ではCodex 1,499,455トークンに対しClaude 6,232,242トークン（4.2倍）、スケジューラアプリではCodex 72,579に対しClaude 234,772トークン（3.2倍）。これはClaude Codeがより詳細な推論と説明を行うためであるが、API直接利用時のコスト差は顕著になる。</p>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>プラン</th><th>月額</th><th>Codex使用量</th><th>Claude Code使用量</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>エントリー</td><td><span class="badge badge-codex">$8</span> / <span class="badge badge-claude">N/A</span></td><td>ChatGPT Go: 限定利用</td><td>対応プランなし</td></tr>
+        <tr><td>スタンダード</td><td><span class="badge badge-both">$20</span></td><td>Plus: 45-225 msg/5hr</td><td>Pro: 標準制限</td></tr>
+        <tr><td>ミドル</td><td><span class="badge badge-codex">N/A</span> / <span class="badge badge-claude">$100</span></td><td>対応プランなし</td><td>Max 5x: Proの5倍</td></tr>
+        <tr><td>プレミアム</td><td><span class="badge badge-both">$200</span></td><td>Pro: 300-1,500 msg/5hr</td><td>Max 20x: Proの20倍</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>APIモデル</th><th>入力 (/1M tok)</th><th>出力 (/1M tok)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="ind ind-codex"></span>GPT-5.3-Codex</td><td>$1.75</td><td>$14.00</td></tr>
+        <tr><td><span class="ind ind-codex"></span>GPT-5.1-Codex-Mini</td><td>$1.50</td><td>$6.00</td></tr>
+        <tr><td><span class="ind ind-codex"></span>GPT-5-Codex</td><td>$1.25</td><td>$10.00</td></tr>
+        <tr><td><span class="ind ind-claude"></span>Claude Opus 4.6</td><td>$5.00</td><td>$25.00</td></tr>
+        <tr><td><span class="ind ind-claude"></span>Claude Sonnet 4.6</td><td>$3.00</td><td>$15.00</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">コスト最適化のヒント</div>
+    <p>Claude CodeではAgent Teamsのワーカーエージェントに<strong>Sonnet 4.6</strong>を使用し、リードにのみOpus 4.6を使うことでコストを大幅削減できる。Sonnet 4.6はSWE-bench VerifiedでOpusの1.2%差に迫る性能を約半額で提供する。CodexではGPT-5.1-Codex-Miniを日常タスクに使用することで使用制限を約4倍に延長可能。</p>
+  </div>
+</section>
+
+<!-- Chapter 13 -->
+<section class="section" id="ch13">
+  <div class="section-label">Chapter 13 — IDE Integration</div>
+  <h2 class="section-title">IDE統合・<span class="gradient">拡張性</span></h2>
+
+  <div class="prose">
+    <p>2026年のAIコーディングエージェントはIDE統合なしでは語れない。VS Code、JetBrains、Xcode、さらにはNeovimまで、開発者がコードを書く場所すべてにエージェントが浸透している。</p>
+
+    <h4>VS Code</h4>
+    <p>両者ともVS Code拡張を提供し、Cursor、Windsurf等のフォークにも対応する。Claude Code Extension（5.2Mインストール、4.0/5評価）はインラインdiff表示、@メンション、プランレビュー、会話履歴をエディタ内で提供する。Codex IDE Extension（4.9Mインストール、3.4/5評価）も同様の機能を備えるが、VS Code評価ではClaude Codeが0.6ポイント上回っている。2026年2月5日にはVS Codeが公式に「マルチエージェント開発のホーム」を宣言し、Claude、Codex、GitHub Copilotを並行して利用できる環境が整った。</p>
+
+    <h4>JetBrains</h4>
+    <p>Codexは2026年1月にJetBrains AIチャット内でネイティブ統合を達成（GA）。JetBrains AI サブスクリプション、ChatGPTアカウント、またはOpenAI APIキーで利用可能。Claude CodeはJetBrainsプラグイン（Beta）として提供され、Diff表示とセレクション共有機能を備える。IntelliJ IDEA、PyCharm、WebStorm、その他すべてのJetBrains IDEに対応。</p>
+
+    <h4>Xcode</h4>
+    <p>2026年にAppleが公式にClaude CodeとOpenAI Codexの両方をXcodeに統合した。ワンクリックでインストール可能で、自動更新に対応。Appleはトークン使用量とツール呼び出しを最適化し、最良の結果を得られるよう調整している。</p>
+
+    <h4>Neovim</h4>
+    <p>Claude Codeについては<code>coder/claudecode.nvim</code>というサードパーティプラグインが存在し、VS Code/JetBrains拡張のプロトコルをリバースエンジニアリングして構築された。tmuxやGhosttyペインとの統合ワークフローも確立されている。Codex CLIはターミナルネイティブのため、tmux分割でのNeovim併用が自然なワークフローとなる。</p>
+  </div>
+</section>
+
+<!-- Chapter 14 -->
+<section class="section" id="ch14">
+  <div class="section-label">Chapter 14 — Ecosystem & Community</div>
+  <h2 class="section-title">エコシステム・<span class="gradient">コミュニティ</span></h2>
+
+  <div class="prose">
+    <p>AIコーディングエージェントの価値は、ツール単体の能力だけでなく、周囲のエコシステムとコミュニティの厚さにも依存する。</p>
+
+    <h4>オープンソースとコントリビューション</h4>
+    <p>Codex CLIはApache-2.0ライセンスで完全にオープンソースであり、365名のコントリビューターが参加し、10ヶ月間で553リリース（平均1.8/日）を達成している。Rust移行後はコミュニティの技術的貢献がさらに活発化した。一方、Claude Codeはプロプライエタリ製品であるが、51名のコントリビューターによるIssueトラッカーとフィードバックは活発で、1日に複数回のリリースを行う。基盤モデルは両者ともプロプライエタリである。</p>
+
+    <h4>Agent Skills エコシステム</h4>
+    <p>2025年末から「Agent Skills」というオープンスタンダードが急速に普及した。SKILL.mdファイルとしてパッケージ化された再利用可能な指示セットで、Claude Code、OpenAI Codex、Gemini CLI、その他の互換ツール間で共有できる。agentskills.ioを中心としたコミュニティが形成され、Web開発、テスト、デプロイメントなど様々なスキルが公開されている。</p>
+
+    <h4>MCP エコシステム</h4>
+    <p>MCPはAnthropicが主導するオープンスタンダードとして、急速にエコシステムが拡大している。データベース接続、API統合、監視ツール、ブラウザ操作など、多数のMCPサーバーがコミュニティによって開発されている。WarpGrep v2のようなMCPサーバーはClaude Code、Codex、Cursor等で横断的に使用可能で、SWE-bench Proスコアを49.8%から57.5%に向上させた事例もある。</p>
+
+    <h4>コミュニティの規模</h4>
+    <p>GitHubスターではClaude Codeが71,500でリード、Codexが62,365で追う。VS Codeマーケットプレイスではそれぞれ5.2M、4.9Mインストール。Reddit上ではr/ClaudeAIおよびr/ClaudeCodeが活発で、Codex関連はr/codexとr/ChatGPTCodingが主要コミュニティ。開発者の日常会話ではClaude Code支持者が「一貫性と品質」を、Codex支持者が「速度と並列性」をそれぞれ高く評価する傾向がある。</p>
+  </div>
+
+  <div class="metric-grid">
+    <div class="metric-card">
+      <div class="metric-value">71.5K</div>
+      <div class="metric-label">Claude Code GitHub Stars</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">62.4K</div>
+      <div class="metric-label">Codex GitHub Stars</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">5.2M</div>
+      <div class="metric-label">Claude VS Code Installs</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">4.9M</div>
+      <div class="metric-label">Codex VS Code Installs</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">135K/日</div>
+      <div class="metric-label">Claude Code Commits</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">365</div>
+      <div class="metric-label">Codex Contributors</div>
+    </div>
+  </div>
+</section>
+
+<!-- Chapter 15 -->
+<section class="section" id="ch15">
+  <div class="section-label">Chapter 15 — Future Outlook</div>
+  <h2 class="section-title">将来展望 — <span class="gradient">両者はどこに向かうのか</span></h2>
+
+  <div class="prose">
+    <p>2026年3月時点で、AIコーディングエージェント市場は年間数十億ドル規模に成長しており、OpenAIとAnthropicの両社はこの領域を主要な成長ベクトルと位置づけている。Anthropicの評価額は$380Bに達し、ARRは$14Bを記録。OpenAIはCodexを非Nvidiaハードウェア（Cerebras WSE-3）に展開し始めている。両者の戦略的方向性を展望する。</p>
+
+    <h4>OpenAI Codexの方向性</h4>
+    <p>OpenAIはCodexを「コーディングエージェント」から「汎用コンピュータ操作エージェント」へと進化させようとしている。GPT-5.3-CodexがOSWorldで64.7%を達成したことは、プレゼンテーション作成、スプレッドシート分析、デスクトップ操作など、コーディング以外の知的作業への展開を示唆する。「リアルタイムペアリング」と「タスク委任」の2つのモードの収束が計画されており、IDEからCI、イシュートラッカーまで、開発者のあらゆるツールとの深い統合が目指されている。</p>
+    <p>サイバーセキュリティも重要な戦略軸である。GPT-5.3-Codexは初めて「サイバーセキュリティ高能力」に分類され、脆弱性発見能力が大幅に向上した。$10Mのサイバー防御API クレジットプログラムやAardvarkセキュリティ研究エージェントの開発は、セキュリティ分野での優位性確立を目指す動きである。</p>
+
+    <h4>Claude Codeの方向性</h4>
+    <p>Anthropicは「開発者のワークフローのあらゆる接点にClaude Codeを埋め込む」戦略を加速している。ターミナル、VS Code、JetBrains、デスクトップ、Web、Slack、GitHub Actions、GitLab CI/CD、Chrome、iOSアプリ、Remote Controlと、すでにほぼ全方位をカバーしている。Agent Teams（研究プレビュー）の正式リリースとさらなる機能拡充が予想される。</p>
+    <p>Agent SDKの提供は特に重要な動きである。Claude Codeと同じツール・エージェントループをPythonやTypeScriptから利用可能にすることで、開発者が独自のAIコーディングエージェントを構築できるプラットフォームとしての位置づけを強化している。SemiAnalysisの分析では、Claude Codeのコミット数は2026年末までに全公開GitHubコミットの20%以上に達すると予測されている。</p>
+
+    <h4>収束と分化</h4>
+    <p>METR（AI Agent Task Horizon）のデータによると、AIエージェントのタスクホライズンは4-7ヶ月ごとに倍増しており、2019年の1分間から2026年には複数時間のタスクに対応するまでに成長した。この指数関数的な成長が続く限り、両者の能力は急速に向上し続ける。</p>
+    <p>今後の競争軸は、単純なコード生成能力から、マルチエージェントオーケストレーション、自律的なプロジェクト管理、セキュリティ、コスト効率、そしてエンタープライズガバナンスへとシフトすると予測される。両者は現在異なるアーキテクチャを採用しているが、機能面での収束は不可避である。最終的に勝者を決めるのは、開発者エクスペリエンスの質と、エコシステムの深さであろう。</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- APPENDICES -->
+<!-- ============================================================ -->
+
+<div class="part-divider">
+  <div class="part-label">Appendix</div>
+  <div class="part-title">付録</div>
+</div>
+
+<!-- Appendix: Comparison Table -->
+<section class="section" id="appendix-table">
+  <div class="section-label">Appendix A — Feature Comparison Table</div>
+</body>
+</html>
