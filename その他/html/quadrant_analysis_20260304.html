@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4象限分析：売上変化率 × 営業利益率変化幅</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', 'Hiragino Sans', 'Meiryo', sans-serif;
+    background: #f0f4f8;
+    color: #1a1a2e;
+    line-height: 1.6;
+    padding: 16px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  h1 {
+    text-align: center;
+    font-size: 1.3rem;
+    color: #fff;
+    background: linear-gradient(135deg, #1a237e, #283593);
+    padding: 20px 16px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+  }
+  h1 small { display: block; font-size: 0.75rem; font-weight: normal; opacity: 0.8; margin-top: 4px; }
+  .card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .chart-container {
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  .legend {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 16px 0;
+  }
+  .legend-item {
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+  }
+  .q1 { background: #e8f5e9; border-left: 4px solid #2e7d32; }
+  .q2 { background: #e3f2fd; border-left: 4px solid #1565c0; }
+  .q3 { background: #fce4ec; border-left: 4px solid #c62828; }
+  .q4 { background: #fff3e0; border-left: 4px solid #e65100; }
+  .legend-title { font-weight: bold; margin-bottom: 2px; }
+  .legend-desc { color: #666; font-size: 0.8rem; }
+
+  .tooltip {
+    position: absolute;
+    background: rgba(0,0,0,0.85);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    pointer-events: none;
+    display: none;
+    z-index: 10;
+    white-space: nowrap;
+  }
+
+  .stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    margin: 12px 0;
+  }
+  .stats-table th {
+    background: #1a237e;
+    color: #fff;
+    padding: 8px 10px;
+    text-align: left;
+  }
+  .stats-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  .stats-table tr:nth-child(even) td { background: #f8f9ff; }
+
+  .insight {
+    background: #ede7f6;
+    border-left: 4px solid #5e35b1;
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    margin: 12px 0;
+    font-size: 0.9rem;
+  }
+  .insight::before { content: "🔍 "; }
+
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .filter-btn {
+    padding: 6px 14px;
+    border: 2px solid #ccc;
+    border-radius: 20px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+  }
+  .filter-btn:hover { border-color: #1a237e; }
+  .filter-btn.active { background: #1a237e; color: #fff; border-color: #1a237e; }
+
+  h2 {
+    font-size: 1.1rem;
+    color: #1a237e;
+    border-left: 5px solid #283593;
+    padding-left: 12px;
+    margin: 24px 0 12px;
+  }
+
+  @media (max-width: 600px) {
+    .legend { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<h1>
+  4象限分析：企業変化の可視化
+  <small>横軸=売上高変化率 / 縦軸=営業利益率の変化幅（サンプル100社）</small>
+</h1>
+
+<div class="card">
+  <h2>散布図</h2>
+
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterQuadrant('all')">全社</button>
+    <button class="filter-btn" onclick="filterQuadrant('q1')" style="color:#2e7d32">攻めの成功</button>
+    <button class="filter-btn" onclick="filterQuadrant('q2')" style="color:#1565c0">守りの改革</button>
+    <button class="filter-btn" onclick="filterQuadrant('q3')" style="color:#c62828">衰退</button>
+    <button class="filter-btn" onclick="filterQuadrant('q4')" style="color:#e65100">安売り拡大</button>
+  </div>
+
+  <div class="chart-container">
+    <svg id="chart" viewBox="0 0 700 500" xmlns="http://www.w3.org/2000/svg">
+      <!-- Background quadrants -->
+      <rect x="100" y="50" width="275" height="200" fill="#e3f2fd" opacity="0.3"/>
+      <rect x="375" y="50" width="275" height="200" fill="#e8f5e9" opacity="0.3"/>
+      <rect x="100" y="250" width="275" height="200" fill="#fce4ec" opacity="0.3"/>
+      <rect x="375" y="250" width="275" height="200" fill="#fff3e0" opacity="0.3"/>
+
+      <!-- Quadrant labels -->
+      <text x="200" y="80" text-anchor="middle" font-size="13" font-weight="bold" fill="#1565c0" opacity="0.6">守りの改革</text>
+      <text x="200" y="96" text-anchor="middle" font-size="10" fill="#1565c0" opacity="0.5">売上↓ 利益率↑</text>
+      <text x="530" y="80" text-anchor="middle" font-size="13" font-weight="bold" fill="#2e7d32" opacity="0.6">攻めの成功</text>
+      <text x="530" y="96" text-anchor="middle" font-size="10" fill="#2e7d32" opacity="0.5">売上↑ 利益率↑</text>
+      <text x="200" y="430" text-anchor="middle" font-size="13" font-weight="bold" fill="#c62828" opacity="0.6">衰退</text>
+      <text x="200" y="446" text-anchor="middle" font-size="10" fill="#c62828" opacity="0.5">売上↓ 利益率↓</text>
+      <text x="530" y="430" text-anchor="middle" font-size="13" font-weight="bold" fill="#e65100" opacity="0.6">安売り拡大</text>
+      <text x="530" y="446" text-anchor="middle" font-size="10" fill="#e65100" opacity="0.5">売上↑ 利益率↓</text>
+
+      <!-- Axes -->
+      <line x1="100" y1="250" x2="650" y2="250" stroke="#333" stroke-width="2"/>
+      <line x1="375" y1="50" x2="375" y2="450" stroke="#333" stroke-width="2"/>
+
+      <!-- Axis arrows -->
+      <polygon points="650,250 640,245 640,255" fill="#333"/>
+      <polygon points="375,50 370,60 380,60" fill="#333"/>
+
+      <!-- Axis labels -->
+      <text x="650" y="275" text-anchor="end" font-size="12" fill="#333">売上高変化率 →</text>
+      <text x="105" y="275" text-anchor="start" font-size="12" fill="#333">← 売上高変化率</text>
+      <text x="390" y="65" font-size="12" fill="#333">営業利益率 改善 ↑</text>
+      <text x="390" y="445" font-size="12" fill="#333">営業利益率 悪化 ↓</text>
+
+      <!-- Grid lines -->
+      <line x1="100" y1="150" x2="650" y2="150" stroke="#ddd" stroke-width="0.5" stroke-dasharray="4"/>
+      <line x1="100" y1="350" x2="650" y2="350" stroke="#ddd" stroke-width="0.5" stroke-dasharray="4"/>
+      <line x1="237" y1="50" x2="237" y2="450" stroke="#ddd" stroke-width="0.5" stroke-dasharray="4"/>
+      <line x1="512" y1="50" x2="512" y2="450" stroke="#ddd" stroke-width="0.5" stroke-dasharray="4"/>
+
+      <!-- Scale labels -->
+      <text x="95" y="155" text-anchor="end" font-size="10" fill="#888">+5pt</text>
+      <text x="95" y="255" text-anchor="end" font-size="10" fill="#888">0</text>
+      <text x="95" y="355" text-anchor="end" font-size="10" fill="#888">-5pt</text>
+      <text x="237" y="465" text-anchor="middle" font-size="10" fill="#888">-20%</text>
+      <text x="375" y="465" text-anchor="middle" font-size="10" fill="#888">0%</text>
+      <text x="512" y="465" text-anchor="middle" font-size="10" fill="#888">+20%</text>
+      <text x="650" y="465" text-anchor="middle" font-size="10" fill="#888">+40%</text>
+
+      <!-- Data points will be added by JS -->
+      <g id="dataPoints"></g>
+    </svg>
+    <div class="tooltip" id="tooltip"></div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item q1">
+      <div class="legend-title">右上：攻めの成功</div>
+      <div class="legend-desc">売上も利益率も向上。理想的成長</div>
+    </div>
+    <div class="legend-item q2">
+      <div class="legend-title">左上：守りの改革</div>
+      <div class="legend-desc">売上減だが利益率改善。選択と集中</div>
+    </div>
+    <div class="legend-item q3">
+      <div class="legend-title">左下：衰退</div>
+      <div class="legend-desc">両方悪化。構造的問題の可能性</div>
+    </div>
+    <div class="legend-item q4">
+      <div class="legend-title">右下：安売り拡大</div>
+      <div class="legend-desc">売上増だが利益率悪化。危険な成長</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>象限別の企業数</h2>
+  <table class="stats-table" id="statsTable">
+    <tr><th>象限</th><th>企業数</th><th>割合</th><th>注目企業</th></tr>
+  </table>
+
+  <div class="insight" id="insightText"></div>
+</div>
+
+<div class="card">
+  <h2>注目企業リスト（変化が大きい上位10社）</h2>
+  <table class="stats-table" id="topTable">
+    <tr><th>#</th><th>企業名</th><th>売上変化率</th><th>利益率変化</th><th>象限</th></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h2>あなたのデータでやる方法</h2>
+  <p style="margin-bottom:12px;">このサンプルと同じ散布図を自分のデータで作る手順：</p>
+  <ol style="padding-left:20px; line-height:2;">
+    <li>ピボットテーブルから<strong>値のみ貼り付け</strong>で分析シートを作る</li>
+    <li>売上高変化率（4期÷1期 - 1）の列を追加</li>
+    <li>営業利益率の変化幅（4期の利益率 - 1期の利益率）の列を追加</li>
+    <li>この2列を選択 → <strong>挿入</strong> → <strong>散布図</strong></li>
+    <li>横軸・縦軸にゼロ線を追加（書式設定で軸の交点を0に）</li>
+    <li>データラベルに企業名を表示</li>
+  </ol>
+  <div class="insight">Excelの散布図なら、点をクリックするだけで企業名と数値が確認できます</div>
+</div>
+
+<div style="text-align:center; margin-top:30px; padding:16px; color:#888; font-size:0.8rem;">
+  4象限分析サンプル | Generated: 2026-03-04
+</div>
+
+<script>
+// Generate 100 sample companies with realistic data
+const industries = ['製造','IT','小売','建設','食品','医薬','不動産','運輸','化学','サービス'];
+const companyNames = [];
+const data = [];
+
+// Seed-based pseudo-random
+let seed = 42;
+function rand() {
+  seed = (seed * 16807 + 0) % 2147483647;
+  return seed / 2147483647;
+}
+function randNorm(mean, std) {
+  const u1 = rand(), u2 = rand();
+  return mean + std * Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+}
+
+for (let i = 0; i < 100; i++) {
+  const ind = industries[Math.floor(rand() * industries.length)];
+  const name = ind + String.fromCharCode(65 + Math.floor(rand()*26)) + String.fromCharCode(65 + Math.floor(rand()*26)) + '社';
+  companyNames.push(name);
+
+  // Generate realistic change rates
+  // Sales change rate: mean 5%, std 20%
+  const salesChange = randNorm(0.05, 0.18);
+  // Profit margin change: correlated with sales but with noise
+  const marginChange = randNorm(0.005, 0.035) + salesChange * 0.05 + randNorm(0, 0.02);
+
+  let quadrant;
+  if (salesChange >= 0 && marginChange >= 0) quadrant = 'q1';
+  else if (salesChange < 0 && marginChange >= 0) quadrant = 'q2';
+  else if (salesChange < 0 && marginChange < 0) quadrant = 'q3';
+  else quadrant = 'q4';
+
+  data.push({
+    name: name,
+    industry: ind,
+    salesChange: salesChange,
+    marginChange: marginChange,
+    quadrant: quadrant,
+    distance: Math.sqrt(salesChange * salesChange + marginChange * marginChange)
+  });
+}
+
+const colors = { q1: '#2e7d32', q2: '#1565c0', q3: '#c62828', q4: '#e65100' };
+const qNames = { q1: '攻めの成功', q2: '守りの改革', q3: '衰退', q4: '安売り拡大' };
+
+// Scale functions
+function scaleX(val) {
+  // -40% to +40% mapped to 100 to 650
+  return 375 + val * (275 / 0.4);
+}
+function scaleY(val) {
+  // -10pt to +10pt mapped to 450 to 50
+  return 250 - val * (200 / 0.1);
+}
+
+// Draw points
+const svg = document.getElementById('dataPoints');
+const tooltip = document.getElementById('tooltip');
+const chartContainer = document.querySelector('.chart-container');
+
+data.forEach((d, i) => {
+  const cx = Math.max(105, Math.min(645, scaleX(d.salesChange)));
+  const cy = Math.max(55, Math.min(445, scaleY(d.marginChange)));
+
+  const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  circle.setAttribute('cx', cx);
+  circle.setAttribute('cy', cy);
+  circle.setAttribute('r', d.distance > 0.25 ? 6 : 4.5);
+  circle.setAttribute('fill', colors[d.quadrant]);
+  circle.setAttribute('opacity', '0.7');
+  circle.setAttribute('stroke', '#fff');
+  circle.setAttribute('stroke-width', '1');
+  circle.setAttribute('data-quadrant', d.quadrant);
+  circle.setAttribute('data-index', i);
+  circle.style.cursor = 'pointer';
+  circle.style.transition = 'opacity 0.3s, r 0.2s';
+
+  circle.addEventListener('mouseenter', (e) => {
+    circle.setAttribute('r', 8);
+    circle.setAttribute('opacity', '1');
+    tooltip.style.display = 'block';
+    tooltip.innerHTML = `<strong>${d.name}</strong><br>売上変化率: ${(d.salesChange*100).toFixed(1)}%<br>利益率変化: ${(d.marginChange*100).toFixed(1)}pt<br>象限: ${qNames[d.quadrant]}`;
+  });
+  circle.addEventListener('mousemove', (e) => {
+    const rect = chartContainer.getBoundingClientRect();
+    tooltip.style.left = (e.clientX - rect.left + 15) + 'px';
+    tooltip.style.top = (e.clientY - rect.top - 10) + 'px';
+  });
+  circle.addEventListener('mouseleave', () => {
+    circle.setAttribute('r', d.distance > 0.25 ? 6 : 4.5);
+    circle.setAttribute('opacity', '0.7');
+    tooltip.style.display = 'none';
+  });
+
+  // Touch support
+  circle.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    const rect = chartContainer.getBoundingClientRect();
+    circle.setAttribute('r', 8);
+    circle.setAttribute('opacity', '1');
+    tooltip.style.display = 'block';
+    tooltip.innerHTML = `<strong>${d.name}</strong><br>売上変化率: ${(d.salesChange*100).toFixed(1)}%<br>利益率変化: ${(d.marginChange*100).toFixed(1)}pt<br>象限: ${qNames[d.quadrant]}`;
+    tooltip.style.left = (touch.clientX - rect.left + 15) + 'px';
+    tooltip.style.top = (touch.clientY - rect.top - 10) + 'px';
+  });
+
+  svg.appendChild(circle);
+
+  // Add labels for extreme points
+  if (d.distance > 0.3) {
+    const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    label.setAttribute('x', cx + 8);
+    label.setAttribute('y', cy - 8);
+    label.setAttribute('font-size', '9');
+    label.setAttribute('fill', colors[d.quadrant]);
+    label.setAttribute('data-quadrant', d.quadrant);
+    label.textContent = d.name;
+    svg.appendChild(label);
+  }
+});
+
+// Stats table
+const counts = { q1: 0, q2: 0, q3: 0, q4: 0 };
+const notable = { q1: null, q2: null, q3: null, q4: null };
+data.forEach(d => {
+  counts[d.quadrant]++;
+  if (!notable[d.quadrant] || d.distance > notable[d.quadrant].distance) {
+    notable[d.quadrant] = d;
+  }
+});
+
+const statsTable = document.getElementById('statsTable');
+['q1','q2','q3','q4'].forEach(q => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td><span style="color:${colors[q]};font-weight:bold">${qNames[q]}</span></td>
+    <td>${counts[q]}社</td>
+    <td>${counts[q]}%</td>
+    <td>${notable[q] ? notable[q].name : '-'}</td>`;
+  statsTable.appendChild(tr);
+});
+
+// Insight
+const maxQ = Object.keys(counts).reduce((a,b) => counts[a] > counts[b] ? a : b);
+document.getElementById('insightText').textContent =
+  `100社中、最も多いのは「${qNames[maxQ]}」の${counts[maxQ]}社。全体として${maxQ === 'q1' ? '好調な市場環境' : maxQ === 'q3' ? '厳しい市場環境' : maxQ === 'q4' ? '価格競争が激化している市場' : '効率化が進む市場'}が読み取れます。外れ値（中心から遠い点）の企業ほど、個別の要因分析が有効です。`;
+
+// Top 10 table
+const sorted = [...data].sort((a,b) => b.distance - a.distance).slice(0, 10);
+const topTable = document.getElementById('topTable');
+sorted.forEach((d, i) => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${i+1}</td>
+    <td>${d.name}</td>
+    <td>${(d.salesChange*100).toFixed(1)}%</td>
+    <td>${(d.marginChange*100).toFixed(1)}pt</td>
+    <td><span style="color:${colors[d.quadrant]};font-weight:bold">${qNames[d.quadrant]}</span></td>`;
+  topTable.appendChild(tr);
+});
+
+// Filter function
+function filterQuadrant(q) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+
+  document.querySelectorAll('#dataPoints circle, #dataPoints text').forEach(el => {
+    if (q === 'all' || el.getAttribute('data-quadrant') === q) {
+      el.style.opacity = '';
+      el.style.display = '';
+    } else {
+      el.style.opacity = '0.08';
+    }
+  });
+}
+
+// Touch close tooltip
+document.addEventListener('touchstart', (e) => {
+  if (!e.target.closest('circle')) {
+    tooltip.style.display = 'none';
+    document.querySelectorAll('#dataPoints circle').forEach(c => {
+      const d = data[c.getAttribute('data-index')];
+      if (d) c.setAttribute('r', d.distance > 0.25 ? 6 : 4.5);
+      c.setAttribute('opacity', '0.7');
+    });
+  }
+});
+</script>
+
+</body>
+</html>
