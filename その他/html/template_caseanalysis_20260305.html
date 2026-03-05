@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>【テンプレートC】判例分析：デンソー事件（最判平成29年10月24日）</title>
+<style>
+  :root {
+    --bg: #f8f9fa; --card: #ffffff; --border: #dee2e6;
+    --accent: #2c5282; --accent-light: #ebf4ff;
+    --text: #2d3748; --text-light: #718096;
+    --green: #276749; --green-light: #f0fff4;
+    --red: #c53030; --red-light: #fff5f5;
+    --orange: #c05621; --orange-light: #fffaf0;
+    --purple: #553c9a; --purple-light: #faf5ff;
+    --yellow-mark: #fefcbf; --blue-mark: #bee3f8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Meiryo", sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.75;
+    padding: 1rem; max-width: 960px; margin: 0 auto;
+  }
+  h1 { font-size: 1.4rem; color: var(--accent); border-bottom: 3px solid var(--accent); padding-bottom: 0.5rem; margin-bottom: 1.5rem; }
+  h2 { font-size: 1.15rem; color: var(--accent); margin: 2rem 0 0.8rem; padding: 0.4rem 0.8rem; background: var(--accent-light); border-left: 4px solid var(--accent); border-radius: 0 4px 4px 0; }
+  h3 { font-size: 1.05rem; color: var(--text); margin: 1.2rem 0 0.5rem; padding-left: 0.5rem; border-left: 3px solid var(--border); }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem; margin: 0.8rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .card-green { border-left: 4px solid var(--green); }
+  .card-red { border-left: 4px solid var(--red); }
+  .card-orange { border-left: 4px solid var(--orange); }
+  .card-purple { border-left: 4px solid var(--purple); }
+  .card-accent { border-left: 4px solid var(--accent); }
+  table { width: 100%; border-collapse: collapse; margin: 0.8rem 0; font-size: 0.9rem; }
+  th, td { border: 1px solid var(--border); padding: 0.5rem 0.7rem; text-align: left; vertical-align: top; }
+  th { background: var(--accent); color: white; font-weight: 600; }
+  tr:nth-child(even) { background: #f7fafc; }
+  .mark { background: var(--yellow-mark); padding: 1px 4px; border-radius: 2px; }
+  .ref { font-size: 0.82rem; color: var(--text-light); margin-top: 0.3rem; }
+  .important { background: var(--orange-light); border: 1px solid #fbd38d; border-radius: 6px; padding: 0.8rem 1rem; margin: 0.8rem 0; }
+  .important strong { color: var(--orange); }
+  .conclusion { background: var(--green-light); border: 2px solid var(--green); border-radius: 8px; padding: 1.2rem; margin: 1rem 0; }
+  .conclusion strong { color: var(--green); }
+  .section-num { display: inline-block; background: var(--accent); color: white; width: 1.6rem; height: 1.6rem; text-align: center; line-height: 1.6rem; border-radius: 50%; font-size: 0.85rem; font-weight: 700; margin-right: 0.3rem; vertical-align: middle; }
+  blockquote { background: #f0f4f8; border-left: 3px solid var(--accent); padding: 0.8rem 1rem; margin: 0.8rem 0; font-size: 0.93rem; }
+
+  /* ===== テンプレートC固有: 判例分析レイアウト ===== */
+  .case-header { background: linear-gradient(135deg, var(--accent), #1a365d); color: white; border-radius: 8px; padding: 1.2rem; margin-bottom: 1.5rem; }
+  .case-header .court { font-size: 0.85rem; opacity: 0.8; }
+  .case-header .title { font-size: 1.2rem; font-weight: 700; margin: 0.3rem 0; }
+  .case-header .meta { font-size: 0.85rem; opacity: 0.8; }
+  .flow-step { display: flex; align-items: flex-start; margin: 0.8rem 0; }
+  .flow-num { flex-shrink: 0; width: 2.2rem; height: 2.2rem; background: var(--accent); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; margin-right: 0.8rem; margin-top: 0.2rem; }
+  .flow-content { flex: 1; }
+  .party-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0.5rem; align-items: center; margin: 1rem 0; }
+  .party-box { background: var(--card); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+  .party-box.plaintiff { border-color: var(--red); }
+  .party-box.defendant { border-color: var(--accent); }
+  .party-label { font-size: 0.8rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .vs-mark { font-size: 1.5rem; font-weight: 700; color: var(--text-light); }
+  .timeline { border-left: 3px solid var(--accent); margin-left: 1rem; padding-left: 1.2rem; }
+  .timeline-item { margin: 1rem 0; position: relative; }
+  .timeline-item::before { content: ''; position: absolute; left: -1.55rem; top: 0.5rem; width: 0.7rem; height: 0.7rem; background: var(--accent); border-radius: 50%; }
+  .timeline-item.win::before { background: var(--green); }
+  .timeline-item.lose::before { background: var(--red); }
+  .tag { display: inline-block; font-size: 0.75rem; padding: 2px 8px; border-radius: 12px; font-weight: 600; margin-right: 4px; }
+  .tag-win { background: var(--green-light); color: var(--green); }
+  .tag-lose { background: var(--red-light); color: var(--red); }
+  .tag-key { background: var(--accent-light); color: var(--accent); }
+  @media (max-width: 640px) {
+    body { padding: 0.5rem; }
+    h1 { font-size: 1.2rem; }
+    .party-grid { grid-template-columns: 1fr; }
+    .vs-mark { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<h1>判例分析：デンソー事件</h1>
+
+<!-- ===== 事件概要ヘッダー ===== -->
+<div class="case-header">
+  <div class="court">最高裁判所第三小法廷</div>
+  <div class="title">株式会社デンソー vs 国（名古屋南税務署長）</div>
+  <div class="meta">平成29年10月24日判決 ｜ 平成28年(行ヒ)第304号 ｜ CFC税制・事業基準（主たる事業の判定）</div>
+</div>
+
+<!-- ===== 当事者 ===== -->
+<h2><span class="section-num">1</span> 当事者関係</h2>
+
+<div class="party-grid">
+  <div class="party-box plaintiff">
+    <div class="party-label" style="color:var(--red);">原告（上告人）</div>
+    <strong>株式会社デンソー</strong>
+    <div style="font-size:0.85rem; color:var(--text-light); margin-top:0.3rem;">日本・内国法人（自動車部品製造）</div>
+  </div>
+  <div class="vs-mark">VS</div>
+  <div class="party-box defendant">
+    <div class="party-label" style="color:var(--accent);">被告（被上告人）</div>
+    <strong>国（名古屋南税務署長）</strong>
+    <div style="font-size:0.85rem; color:var(--text-light); margin-top:0.3rem;">更正処分の取消しを求める</div>
+  </div>
+</div>
+
+<div class="card card-accent">
+<p><strong>外国関係会社：</strong>デンソーシンガポール（DNS） ── シンガポール法人（100%子会社）。地域統括会社として東南アジアの事業統括を行いつつ、グループ会社株式を保有。</p>
+</div>
+
+<!-- ===== 事実関係 ===== -->
+<h2><span class="section-num">2</span> 事実関係</h2>
+
+<div class="flow-step">
+  <div class="flow-num">1</div>
+  <div class="flow-content">
+    <strong>DNSの事業内容</strong>：シンガポールに実体ある事務所を有し、役員・従業員が常駐。東南アジア地域の事業統括、技術支援、マーケティング支援等を実施。
+  </div>
+</div>
+<div class="flow-step">
+  <div class="flow-num">2</div>
+  <div class="flow-content">
+    <strong>所得構成</strong>：グループ会社株式からの<span class="mark">配当所得が所得全体の大部分</span>を占める。他方、統括業務からの役務提供収入も存在。
+  </div>
+</div>
+<div class="flow-step">
+  <div class="flow-num">3</div>
+  <div class="flow-content">
+    <strong>課税庁の主張</strong>：DNSの「主たる事業」は「株式の保有」であり、事業基準を満たさない → CFC合算課税を適用。
+  </div>
+</div>
+<div class="flow-step">
+  <div class="flow-num">4</div>
+  <div class="flow-content">
+    <strong>納税者の主張</strong>：DNSの「主たる事業」は「地域統括業務」であり、株式保有は統括業務に付随するもの → 事業基準を充足。
+  </div>
+</div>
+
+<!-- ===== 争点 ===== -->
+<h2><span class="section-num">3</span> 争点</h2>
+
+<div class="card card-orange">
+<p><strong>争点：</strong>特定外国子会社等の「主たる事業」（措法66条の6③一）の判定において、<span class="mark">所得金額の多寡のみで判定すべきか</span>、それとも<span class="mark">事業活動の実質を総合的に考慮すべきか</span>。</p>
+</div>
+
+<!-- ===== 審級の経過 ===== -->
+<h2><span class="section-num">4</span> 審級の経過</h2>
+
+<div class="timeline">
+  <div class="timeline-item lose">
+    <strong>名古屋地裁</strong>（第一審）<span class="tag tag-lose">納税者敗訴</span>
+    <p>DNSの所得金額の大部分が株式配当であることから、「主たる事業」は「株式の保有」と判定。事業基準不充足。</p>
+  </div>
+  <div class="timeline-item win">
+    <strong>名古屋高裁</strong>（控訴審）<span class="tag tag-win">納税者勝訴</span>
+    <p>所得金額の多寡のみではなく、事業活動の具体的内容、従業員の活動状況、事業の目的等を総合的に考慮。「主たる事業」は地域統括業務と判定。</p>
+  </div>
+  <div class="timeline-item win">
+    <strong>最高裁</strong>（上告審）<span class="tag tag-win">納税者勝訴（確定）</span>
+    <p>上告棄却・不受理。高裁判決を維持。</p>
+  </div>
+</div>
+
+<!-- ===== 判旨 ===== -->
+<h2><span class="section-num">5</span> 判旨（名古屋高裁・最高裁維持）</h2>
+
+<div class="card card-green">
+<blockquote>
+たとえ株式の配当による所得金額が大きいとしても、株式保有以外の実体的な事業活動が現実に行われており、当該事業活動に相応の経営資源が投入されている場合には、事業基準を満たすと解することが、CFC税制の趣旨に適う。
+</blockquote>
+
+<h3>判断の枠組み</h3>
+<table>
+  <tr><th style="width:25%">考慮要素</th><th>本件での認定</th></tr>
+  <tr><td>事業活動の具体的内容</td><td>東南アジア地域の統括、技術支援、マーケティング</td></tr>
+  <tr><td>従業員の活動状況</td><td>シンガポールに常駐する役職員が統括業務に従事</td></tr>
+  <tr><td>固定施設</td><td>シンガポールに実体ある事務所</td></tr>
+  <tr><td>経営資源の投入</td><td>統括業務に相応の人的・物的資源</td></tr>
+  <tr><td>事業の目的</td><td>株式保有は統括業務の手段であり目的ではない</td></tr>
+</table>
+</div>
+
+<!-- ===== 先例・関連判例 ===== -->
+<h2><span class="section-num">6</span> 関連判例との位置づけ</h2>
+
+<table>
+  <tr><th>判例</th><th>「主たる事業」の判定手法</th><th>本判決との関係</th></tr>
+  <tr>
+    <td>来料加工事件</td>
+    <td>事業の「実質」から判定するが、目的論的解釈による適用除外は否定</td>
+    <td><span class="tag tag-key">対照的</span> 本判決は趣旨を積極的に勘案</td>
+  </tr>
+  <tr>
+    <td>みずほ事件</td>
+    <td>文理解釈を優先</td>
+    <td><span class="tag tag-key">対照的</span> 本判決は実質的判断を採用</td>
+  </tr>
+  <tr>
+    <td>安宅木材事件</td>
+    <td>管理支配基準は「業種と無関係」</td>
+    <td><span class="tag tag-key">補完的</span> 別の基準だが形式的判定を採用</td>
+  </tr>
+</table>
+
+<!-- ===== 評釈・学説の反応 ===== -->
+<h2><span class="section-num">7</span> 評釈・学説の反応</h2>
+
+<div class="card card-purple">
+<h3>肯定的評価</h3>
+<p>今村優太は、本判決がCFC税制の趣旨・目的を踏まえた判定を行った点を評価し、来料加工事件判決との「対照的」な位置づけを指摘する。統括会社の事業実態を正当に評価した点で、オーバーインクルージョンの防止に資すると評価。</p>
+
+<h3>批判的評価</h3>
+<p>増田英敏の立場からは、所得金額という客観的指標を離れた実質的判定は、予測可能性を損なうとの批判が可能。「主たる事業」の判定基準が不明確化し、納税者にとっての法的安定性が後退する懸念がある。</p>
+</div>
+
+<!-- ===== 射程と意義 ===== -->
+<h2><span class="section-num">8</span> 射程と意義</h2>
+
+<div class="conclusion">
+<strong>本判決の意義：</strong>
+<p>デンソー事件は、CFC税制の事業基準における「主たる事業」の判定において、<strong>所得金額の多寡のみではなく事業活動の実質を総合的に考慮すべき</strong>との判断を示した重要判例である。</p>
+<p style="margin-top:0.5rem;"><strong>射程の限界：</strong>本判決の射程は、「株式保有以外の実体的な事業活動が現実に行われている」場合に限定される。純粋な持株会社で事業実体がない場合には及ばないと解される。</p>
+<p style="margin-top:0.5rem;"><strong>立法への影響：</strong>H29年度改正で統括会社の事業基準判定が法令上明確化されたが、本判決の趣旨（実質的判定アプローチ）は改正後の「経済活動基準」の解釈にも影響を及ぼし得る。</p>
+</div>
+
+<p style="text-align:center; color:var(--text-light); font-size:0.85rem; margin-top:2rem;">2026-03-05</p>
+
+</body>
+</html>
