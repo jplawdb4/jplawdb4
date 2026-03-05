@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CFC税制の各国比較 ── 8か国の制度構造・BEPS Action 3・Pillar Two</title>
+<style>
+  :root {
+    --bg: #f8f9fa; --card: #ffffff; --border: #dee2e6;
+    --accent: #2c5282; --accent-light: #ebf4ff;
+    --text: #2d3748; --text-light: #718096;
+    --green: #276749; --green-light: #f0fff4;
+    --red: #c53030; --red-light: #fff5f5;
+    --orange: #c05621; --orange-light: #fffaf0;
+    --purple: #553c9a; --purple-light: #faf5ff;
+    --yellow-mark: #fefcbf; --blue-mark: #bee3f8;
+    --jp: #c53030; --us: #2c5282; --uk: #276749; --de: #c05621;
+    --fr: #553c9a; --kr: #2b6cb0; --au: #b7791f; --cn: #9b2c2c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Meiryo", sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.75;
+    padding: 1rem; max-width: 960px; margin: 0 auto;
+  }
+  h1 { font-size: 1.4rem; color: var(--accent); border-bottom: 3px solid var(--accent); padding-bottom: 0.5rem; margin-bottom: 1.5rem; }
+  h2 { font-size: 1.15rem; color: var(--accent); margin: 2rem 0 0.8rem; padding: 0.4rem 0.8rem; background: var(--accent-light); border-left: 4px solid var(--accent); border-radius: 0 4px 4px 0; }
+  h3 { font-size: 1.05rem; color: var(--text); margin: 1.2rem 0 0.5rem; padding-left: 0.5rem; border-left: 3px solid var(--border); }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem; margin: 0.8rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .card-green { border-left: 4px solid var(--green); }
+  .card-red { border-left: 4px solid var(--red); }
+  .card-orange { border-left: 4px solid var(--orange); }
+  .card-purple { border-left: 4px solid var(--purple); }
+  .card-accent { border-left: 4px solid var(--accent); }
+  table { width: 100%; border-collapse: collapse; margin: 0.8rem 0; font-size: 0.88rem; }
+  th, td { border: 1px solid var(--border); padding: 0.45rem 0.6rem; text-align: left; vertical-align: top; }
+  th { background: var(--accent); color: white; font-weight: 600; white-space: nowrap; }
+  tr:nth-child(even) { background: #f7fafc; }
+  .mark { background: var(--yellow-mark); padding: 1px 4px; border-radius: 2px; }
+  .mark-blue { background: var(--blue-mark); padding: 1px 4px; border-radius: 2px; }
+  .ref { font-size: 0.82rem; color: var(--text-light); margin-top: 0.3rem; }
+  .important { background: var(--orange-light); border: 1px solid #fbd38d; border-radius: 6px; padding: 0.8rem 1rem; margin: 0.8rem 0; }
+  .important strong { color: var(--orange); }
+  .conclusion { background: var(--green-light); border: 2px solid var(--green); border-radius: 8px; padding: 1.2rem; margin: 1rem 0; }
+  .conclusion strong { color: var(--green); }
+  .section-num { display: inline-block; background: var(--accent); color: white; width: 1.6rem; height: 1.6rem; text-align: center; line-height: 1.6rem; border-radius: 50%; font-size: 0.85rem; font-weight: 700; margin-right: 0.3rem; vertical-align: middle; }
+  blockquote { background: #f0f4f8; border-left: 3px solid var(--accent); padding: 0.8rem 1rem; margin: 0.8rem 0; font-size: 0.93rem; }
+  .formula { background: #edf2f7; border: 1px solid var(--border); border-radius: 6px; padding: 0.8rem 1rem; margin: 0.6rem 0; font-family: "Consolas", "SF Mono", monospace; font-size: 0.92rem; line-height: 1.8; }
+  .country-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; margin: 1rem 0; }
+  .country-card { background: var(--card); border-radius: 8px; padding: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .country-card h4 { font-size: 0.95rem; text-align: center; padding-bottom: 0.4rem; margin-bottom: 0.5rem; }
+  .country-jp { border-top: 4px solid var(--jp); }
+  .country-jp h4 { color: var(--jp); border-bottom: 2px solid var(--jp); }
+  .country-us { border-top: 4px solid var(--us); }
+  .country-us h4 { color: var(--us); border-bottom: 2px solid var(--us); }
+  .country-uk { border-top: 4px solid var(--uk); }
+  .country-uk h4 { color: var(--uk); border-bottom: 2px solid var(--uk); }
+  .country-de { border-top: 4px solid var(--de); }
+  .country-de h4 { color: var(--de); border-bottom: 2px solid var(--de); }
+  .country-tag { display: inline-block; font-size: 0.7rem; padding: 1px 6px; border-radius: 10px; font-weight: 600; }
+  .tag-jp { background: var(--red-light); color: var(--jp); }
+  .tag-us { background: var(--accent-light); color: var(--us); }
+  .tag-uk { background: var(--green-light); color: var(--uk); }
+  .tag-de { background: var(--orange-light); color: var(--de); }
+  .tag-fr { background: var(--purple-light); color: var(--fr); }
+  .compare-table th.th-jp { background: var(--jp); }
+  .compare-table th.th-us { background: var(--us); }
+  .compare-table th.th-uk { background: var(--uk); }
+  .compare-table th.th-de { background: var(--de); }
+  svg { max-width: 100%; height: auto; }
+  @media (max-width: 768px) {
+    .country-grid { grid-template-columns: 1fr 1fr; }
+    body { padding: 0.5rem; }
+    h1 { font-size: 1.2rem; }
+    table { font-size: 0.8rem; }
+    th, td { padding: 0.35rem 0.5rem; }
+  }
+  @media (max-width: 480px) {
+    .country-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<h1>CFC税制の各国比較<br>── 8か国の制度構造・BEPS Action 3・Pillar Two</h1>
+
+<!-- ===== エグゼクティブサマリー ===== -->
+<div class="conclusion">
+<strong>エグゼクティブサマリー</strong>
+<p>CFC税制（外国子会社合算税制）は、1962年の米国Subpart F制度を嚆矢として主要先進国が独自に発展させてきた租税回避防止制度である。本レポートでは、<span class="mark">日本・米国・英国・ドイツの主要4か国</span>を中心に、フランス・韓国・オーストラリア・中国を加えた8か国の制度構造を比較し、OECD BEPS Action 3勧告およびPillar Two（GloBEルール）との関係を分析する。</p>
+<p>主要な発見: (1) 合算アプローチは各国で大きく異なり「エンティティ型」「トランザクション型」「ハイブリッド型」の3類型に大別される、(2) 日本の受動的所得の範囲はEU ATAD・GloBEと比較して広い可能性がある、(3) 2024年以降のPillar Two導入により、CFC税制のBEPS対抗機能の合理化が各国で進行中、(4) 日本は令和8年度以降に抜本的見直しを予告しており、各国の制度設計が参照される。</p>
+</div>
+
+<!-- ===== 1. 導入年表 ===== -->
+<h2><span class="section-num">1</span> CFC税制導入の系譜</h2>
+
+<div class="card" style="overflow-x:auto;">
+<svg viewBox="0 0 860 140" xmlns="http://www.w3.org/2000/svg" font-family="'Hiragino Kaku Gothic ProN',sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#718096"/></marker>
+  </defs>
+  <!-- 年表軸 -->
+  <line x1="40" y1="70" x2="830" y2="70" stroke="#dee2e6" stroke-width="2" marker-end="url(#arrow)"/>
+  <!-- 年マーカー -->
+  <g font-size="9" fill="#718096" text-anchor="middle">
+    <line x1="100" y1="65" x2="100" y2="75" stroke="#dee2e6"/>
+    <text x="100" y="90">1962</text>
+    <text x="100" y="55" font-weight="700" fill="#2c5282">米国</text>
+    <text x="100" y="44" font-size="8" fill="#2c5282">Subpart F</text>
+
+    <line x1="210" y1="65" x2="210" y2="75" stroke="#dee2e6"/>
+    <text x="210" y="90">1972</text>
+    <text x="210" y="55" font-weight="700" fill="#c05621">ドイツ</text>
+    <text x="210" y="44" font-size="8" fill="#c05621">AStG</text>
+
+    <line x1="280" y1="65" x2="280" y2="75" stroke="#dee2e6"/>
+    <text x="280" y="90">1976</text>
+    <text x="280" y="110" font-size="8" fill="#718096">カナダ</text>
+
+    <line x1="340" y1="65" x2="340" y2="75" stroke="#dee2e6"/>
+    <text x="340" y="90">1978</text>
+    <text x="340" y="55" font-weight="700" fill="#c53030">日本</text>
+    <text x="340" y="44" font-size="8" fill="#c53030">措法66条の6</text>
+
+    <line x1="400" y1="65" x2="400" y2="75" stroke="#dee2e6"/>
+    <text x="400" y="90">1980</text>
+    <text x="400" y="110" font-size="8" fill="#553c9a">フランス</text>
+
+    <line x1="460" y1="65" x2="460" y2="75" stroke="#dee2e6"/>
+    <text x="460" y="90">1984</text>
+    <text x="460" y="55" font-weight="700" fill="#276749">英国</text>
+
+    <line x1="530" y1="65" x2="530" y2="75" stroke="#dee2e6"/>
+    <text x="530" y="90">2008</text>
+    <text x="530" y="110" font-size="8" fill="#9b2c2c">中国</text>
+
+    <line x1="600" y1="65" x2="600" y2="75" stroke="#dee2e6"/>
+    <text x="600" y="90">2015</text>
+    <text x="600" y="55" font-size="8" font-weight="700" fill="#553c9a">BEPS</text>
+    <text x="600" y="44" font-size="8" fill="#553c9a">Action 3</text>
+
+    <line x1="670" y1="65" x2="670" y2="75" stroke="#dee2e6"/>
+    <text x="670" y="90">2017</text>
+    <text x="670" y="110" font-size="8" fill="#c53030">日本改正</text>
+    <text x="670" y="120" font-size="7" fill="#c53030">+TCJA</text>
+
+    <line x1="740" y1="65" x2="740" y2="75" stroke="#dee2e6"/>
+    <text x="740" y="90">2024</text>
+    <text x="740" y="55" font-size="8" font-weight="700" fill="#276749">Pillar 2</text>
+    <text x="740" y="44" font-size="8" fill="#276749">施行開始</text>
+
+    <line x1="800" y1="65" x2="800" y2="75" stroke="#dee2e6"/>
+    <text x="800" y="90">2026</text>
+    <text x="800" y="110" font-size="7" fill="#718096">56か国導入</text>
+  </g>
+</svg>
+</div>
+<p class="ref">出典: 岡直樹「ピラー2とCFC税制」（東京財団政策研究所, 2022年）; OECD Corporate Tax Statistics 2025</p>
+
+<!-- ===== 2. 主要4か国の概要カード ===== -->
+<h2><span class="section-num">2</span> 主要4か国の制度概要</h2>
+
+<div class="country-grid">
+  <div class="country-card country-jp">
+    <h4>日本</h4>
+    <p style="font-size:0.85rem;"><strong>根拠法:</strong> 措法66条の6〜66条の9の2</p>
+    <p style="font-size:0.85rem;"><strong>導入:</strong> 1978年（2017年大改正）</p>
+    <p style="font-size:0.85rem;"><strong>型:</strong> エンティティ＋所得ハイブリッド</p>
+    <p style="font-size:0.85rem;"><strong>CFC定義:</strong> 50%超保有</p>
+    <p style="font-size:0.85rem;"><strong>閾値:</strong> 20%/27%未満</p>
+  </div>
+  <div class="country-card country-us">
+    <h4>米国</h4>
+    <p style="font-size:0.85rem;"><strong>根拠法:</strong> IRC §951-965 + §951A</p>
+    <p style="font-size:0.85rem;"><strong>導入:</strong> 1962年（2017年TCJA）</p>
+    <p style="font-size:0.85rem;"><strong>型:</strong> トランザクション＋GILTI</p>
+    <p style="font-size:0.85rem;"><strong>CFC定義:</strong> 10%株主＋50%超</p>
+    <p style="font-size:0.85rem;"><strong>閾値:</strong> 18.9%超で高税率排除</p>
+  </div>
+  <div class="country-card country-uk">
+    <h4>英国</h4>
+    <p style="font-size:0.85rem;"><strong>根拠法:</strong> TIOPA 2010 Part 9A</p>
+    <p style="font-size:0.85rem;"><strong>導入:</strong> 1984年（2012年全面改正）</p>
+    <p style="font-size:0.85rem;"><strong>型:</strong> ゲートウェイ方式（ハイブリッド）</p>
+    <p style="font-size:0.85rem;"><strong>CFC定義:</strong> 英国居住者が支配</p>
+    <p style="font-size:0.85rem;"><strong>閾値:</strong> 英国税額の75%未満</p>
+  </div>
+  <div class="country-card country-de">
+    <h4>ドイツ</h4>
+    <p style="font-size:0.85rem;"><strong>根拠法:</strong> AStG §7-14</p>
+    <p style="font-size:0.85rem;"><strong>導入:</strong> 1972年（2021年ATAD対応改正）</p>
+    <p style="font-size:0.85rem;"><strong>型:</strong> 能動的所得カタログ方式</p>
+    <p style="font-size:0.85rem;"><strong>CFC定義:</strong> 過半数保有</p>
+    <p style="font-size:0.85rem;"><strong>閾値:</strong> 15%未満（2024年〜）</p>
+  </div>
+</div>
+<p class="ref">出典: 鍋谷彰男「外国子会社合算税制の対象とすべき租税回避について」（税務大学校）; 金融庁委託KPMG報告書（2015年）</p>
+
+<!-- ===== 3. 主要8か国比較表 ===== -->
+<h2><span class="section-num">3</span> 8か国の制度構造比較</h2>
+
+<div style="overflow-x:auto;">
+<table>
+  <tr>
+    <th style="width:12%">比較項目</th>
+    <th style="background:var(--jp)">日本</th>
+    <th style="background:var(--us)">米国</th>
+    <th style="background:var(--uk)">英国</th>
+    <th style="background:var(--de)">ドイツ</th>
+  </tr>
+  <tr>
+    <td><strong>合算アプローチ</strong></td>
+    <td>エンティティ＋所得（3類型判定→全部or部分合算）</td>
+    <td>トランザクション（Subpart F所得類型別）＋GILTI（包括的超過利益合算）</td>
+    <td>ゲートウェイ方式（所得区分別テスト＋事業体レベル適用除外）</td>
+    <td>能動的所得カタログ（Aktivkatalog）方式。能動的所得を列挙し、それ以外を自動的に受動的所得として合算</td>
+  </tr>
+  <tr>
+    <td><strong>支配基準</strong></td>
+    <td>50%超（株式・議決権・請求権）又は実質支配</td>
+    <td>10%株主＋50%超（議決権又は価値）</td>
+    <td>法的支配＋経済的支配（50%超）。40%ルールあり</td>
+    <td>名義資本の過半数（直接・間接）</td>
+  </tr>
+  <tr>
+    <td><strong>低税率基準</strong></td>
+    <td>特定外国関係会社: 27%未満<br>対象/部分対象: 20%未満</td>
+    <td>高税率排除: 18.9%超で選択免除。GILTIは実質13.125%が分岐点</td>
+    <td>英国税額の75%以上で適用除外（税負担基準）</td>
+    <td>15%未満（2024年〜。従前は25%）</td>
+  </tr>
+  <tr>
+    <td><strong>合算対象所得</strong></td>
+    <td>全部合算（ペーパーCo/基準不充足時）or 受動的所得11カテゴリ</td>
+    <td>Subpart F所得（FPHC＋販売・役務・石油関連所得）＋GILTI（全所得−QBAI×10%）</td>
+    <td>5チャプター別（事業所得・非事業的金融・事業的金融・保険・IP）のゲートウェイ通過分</td>
+    <td>§8 AStG能動的所得カタログに該当しない全所得（Zwischeneinkünfte）</td>
+  </tr>
+  <tr>
+    <td><strong>適用除外</strong></td>
+    <td>経済活動基準4要件（事業・実体・管理支配・所在地国/非関連者）</td>
+    <td>高税率排除、透視ルール、能動的金融業特例、デミニマス</td>
+    <td>免除地域（103か国）、少額所得、低利益率、税負担基準、適用猶予期間</td>
+    <td>EU/EEA域内: Motivtest（動機テスト/実質的経済活動テスト）</td>
+  </tr>
+  <tr>
+    <td><strong>二重課税排除</strong></td>
+    <td>みなし外国税額控除＋課税済配当益金不算入（10年繰越）</td>
+    <td>間接外税控除（GILTI: 80%限度）。繰越なし</td>
+    <td>Creditable tax mechanism</td>
+    <td>外国税額控除（§12 AStG）</td>
+  </tr>
+</table>
+</div>
+
+<div style="overflow-x:auto;">
+<table>
+  <tr>
+    <th style="width:12%">比較項目</th>
+    <th style="background:var(--fr)">フランス</th>
+    <th style="background:var(--kr)">韓国</th>
+    <th style="background:var(--au)">オーストラリア</th>
+    <th style="background:var(--cn)">中国</th>
+  </tr>
+  <tr>
+    <td><strong>合算アプローチ</strong></td>
+    <td>エンティティ（みなし配当。外国法人の全利益を持分按分）</td>
+    <td>みなし配当＋部分合算（受動的所得比率5-50%帯で比例合算）</td>
+    <td>帰属方式（tainted income帰属）。listed/unlisted区分</td>
+    <td>みなし配当（全利益。不分配の不合理性を主観的に要求）</td>
+  </tr>
+  <tr>
+    <td><strong>支配基準</strong></td>
+    <td>50%以上（議決権・財務権）</td>
+    <td>10%以上（直接・間接）</td>
+    <td>50%以上（5人以下のグループ）</td>
+    <td>10%以上（個別）＋50%以上（合計）</td>
+  </tr>
+  <tr>
+    <td><strong>低税率基準</strong></td>
+    <td>仏仮想税負担の60%未満</td>
+    <td>16.8%以下（最高税率24%の70%）</td>
+    <td>listed/unlisted country区分</td>
+    <td>12.5%未満（法定25%の50%）</td>
+  </tr>
+  <tr>
+    <td><strong>適用除外</strong></td>
+    <td>EU域内セーフハーバー、実質的産業・商業活動の立証</td>
+    <td>能動的事業活動、持株会社要件、少額利益</td>
+    <td>能動的所得テスト（tainted income≦5%で免除）</td>
+    <td>ホワイトリスト12か国、年間利益500万元未満</td>
+  </tr>
+</table>
+</div>
+<p class="ref">出典: PwC Tax Summaries; Tax Foundation; ATO; 金融庁委託KPMG報告書; OECD CFC Rules Database</p>
+
+<!-- ===== 4. 合算アプローチの類型 ===== -->
+<h2><span class="section-num">4</span> 合算アプローチの3類型</h2>
+
+<div class="card" style="overflow-x:auto;">
+<svg viewBox="0 0 860 350" xmlns="http://www.w3.org/2000/svg" font-family="'Hiragino Kaku Gothic ProN',sans-serif" font-size="11">
+  <text x="430" y="25" text-anchor="middle" font-size="14" font-weight="700" fill="#2c5282">CFC税制の合算アプローチ類型</text>
+
+  <!-- エンティティ型 -->
+  <rect x="30" y="50" width="240" height="260" rx="10" fill="#fff5f5" stroke="#c53030" stroke-width="2"/>
+  <text x="150" y="75" text-anchor="middle" font-size="13" font-weight="700" fill="#c53030">エンティティ型</text>
+  <text x="150" y="95" text-anchor="middle" font-size="10" fill="#718096">（会社単位で合算判定）</text>
+  <line x1="50" y1="105" x2="250" y2="105" stroke="#c53030" stroke-width="0.5" opacity="0.3"/>
+  <text x="60" y="125" font-size="10">フランス（Art. 209 B）</text>
+  <text x="60" y="145" font-size="10">中国（企業所得税法45条）</text>
+  <text x="60" y="165" font-size="10">日本（H29改正前）</text>
+  <line x1="50" y1="180" x2="250" y2="180" stroke="#c53030" stroke-width="0.5" opacity="0.3"/>
+  <text x="60" y="200" font-size="9" fill="#718096">CFC全体の利益を</text>
+  <text x="60" y="215" font-size="9" fill="#718096">持分割合で合算。</text>
+  <text x="60" y="235" font-size="9" fill="#718096">シンプルだが能動的</text>
+  <text x="60" y="250" font-size="9" fill="#718096">事業所得も合算される</text>
+  <text x="60" y="265" font-size="9" fill="#718096">リスクがある。</text>
+  <rect x="60" y="280" width="180" height="20" rx="3" fill="#c53030" opacity="0.1"/>
+  <text x="150" y="294" text-anchor="middle" font-size="9" fill="#c53030" font-weight="600">over-inclusion リスク: 高</text>
+
+  <!-- トランザクション型 -->
+  <rect x="310" y="50" width="240" height="260" rx="10" fill="#ebf4ff" stroke="#2c5282" stroke-width="2"/>
+  <text x="430" y="75" text-anchor="middle" font-size="13" font-weight="700" fill="#2c5282">トランザクション型</text>
+  <text x="430" y="95" text-anchor="middle" font-size="10" fill="#718096">（所得類型ごとに判定）</text>
+  <line x1="330" y1="105" x2="530" y2="105" stroke="#2c5282" stroke-width="0.5" opacity="0.3"/>
+  <text x="340" y="125" font-size="10">米国（Subpart F + GILTI）</text>
+  <text x="340" y="145" font-size="10">韓国（ITCL部分合算）</text>
+  <text x="340" y="165" font-size="10">豪州（tainted income帰属）</text>
+  <line x1="330" y1="180" x2="530" y2="180" stroke="#2c5282" stroke-width="0.5" opacity="0.3"/>
+  <text x="340" y="200" font-size="9" fill="#718096">所得の種類・性質ごと</text>
+  <text x="340" y="215" font-size="9" fill="#718096">に合算対象を特定。</text>
+  <text x="340" y="235" font-size="9" fill="#718096">精緻だが事務負担大。</text>
+  <text x="340" y="255" font-size="9" fill="#718096">BEPS Action 3が推奨。</text>
+  <rect x="340" y="280" width="180" height="20" rx="3" fill="#2c5282" opacity="0.1"/>
+  <text x="430" y="294" text-anchor="middle" font-size="9" fill="#2c5282" font-weight="600">over-inclusion リスク: 低</text>
+
+  <!-- ハイブリッド型 -->
+  <rect x="590" y="50" width="240" height="260" rx="10" fill="#f0fff4" stroke="#276749" stroke-width="2"/>
+  <text x="710" y="75" text-anchor="middle" font-size="13" font-weight="700" fill="#276749">ハイブリッド型</text>
+  <text x="710" y="95" text-anchor="middle" font-size="10" fill="#718096">（エンティティ＋所得の融合）</text>
+  <line x1="610" y1="105" x2="810" y2="105" stroke="#276749" stroke-width="0.5" opacity="0.3"/>
+  <text x="620" y="125" font-size="10">英国（ゲートウェイ方式）</text>
+  <text x="620" y="145" font-size="10">ドイツ（能動的カタログ）</text>
+  <text x="620" y="165" font-size="10">日本（H29改正後）</text>
+  <line x1="610" y1="180" x2="810" y2="180" stroke="#276749" stroke-width="0.5" opacity="0.3"/>
+  <text x="620" y="200" font-size="9" fill="#718096">事業体レベルの適用除外</text>
+  <text x="620" y="215" font-size="9" fill="#718096">＋所得レベルの判定を</text>
+  <text x="620" y="235" font-size="9" fill="#718096">組み合わせ。</text>
+  <text x="620" y="255" font-size="9" fill="#718096">実務と精緻さのバランス。</text>
+  <rect x="620" y="280" width="180" height="20" rx="3" fill="#276749" opacity="0.1"/>
+  <text x="710" y="294" text-anchor="middle" font-size="9" fill="#276749" font-weight="600">over-inclusion リスク: 中</text>
+</svg>
+</div>
+<p class="ref">出典: OECD BEPS Action 3最終報告書（2015年）; 伴忠彦「合算方式と適用除外基準の再考」; 鍋谷彰男「外国子会社合算税制の対象とすべき租税回避について」</p>
+
+<!-- ===== 5. 受動的所得の範囲比較 ===== -->
+<h2><span class="section-num">5</span> 受動的所得の範囲 ── 日本・EU ATAD・GloBE</h2>
+
+<div class="important">
+<strong>日本の受動的所得の範囲は他国と比較して広い可能性がある</strong>（岡直樹「ピラー2とCFC税制」）。特に「異常所得」「固定資産貸付対価」「デリバティブ取引損益」「外為取引損益」は日本固有のカテゴリである。
+</div>
+
+<table>
+  <tr>
+    <th style="width:28%; background:var(--jp)">日本CFC（11カテゴリ）</th>
+    <th style="width:36%; background:var(--purple)">EU ATAD モデルA</th>
+    <th style="width:36%; background:var(--green)">GloBE（OECD）</th>
+  </tr>
+  <tr>
+    <td>配当等</td>
+    <td>配当・株式処分所得</td>
+    <td>配当金・配当相当額</td>
+  </tr>
+  <tr>
+    <td>受取利子等</td>
+    <td>金融資産から生じる利息・所得</td>
+    <td>利息・利息相当額</td>
+  </tr>
+  <tr>
+    <td>有価証券貸付対価</td>
+    <td rowspan="2">（上記に含む）</td>
+    <td rowspan="2">（上記財産からの純収益）</td>
+  </tr>
+  <tr>
+    <td>有価証券譲渡損益</td>
+  </tr>
+  <tr>
+    <td>デリバティブ取引損益</td>
+    <td>（明示なし）</td>
+    <td>（明示なし）</td>
+  </tr>
+  <tr>
+    <td>外国為替差損益</td>
+    <td>（明示なし）</td>
+    <td>（明示なし）</td>
+  </tr>
+  <tr>
+    <td>その他金融所得</td>
+    <td>保険・銀行・金融活動</td>
+    <td>年金</td>
+  </tr>
+  <tr>
+    <td>異常所得（保険）</td>
+    <td>（保険に含む）</td>
+    <td>―</td>
+  </tr>
+  <tr>
+    <td>固定資産貸付対価</td>
+    <td>（明示なし）</td>
+    <td>家賃</td>
+  </tr>
+  <tr>
+    <td>無形資産使用料・譲渡損益</td>
+    <td>ロイヤルティ・IP所得</td>
+    <td>ロイヤルティ</td>
+  </tr>
+  <tr>
+    <td>総合的残余所得</td>
+    <td>請求書発行会社からの収入</td>
+    <td>―</td>
+  </tr>
+</table>
+<p class="ref">出典: 岡直樹「ピラー2とCFC税制」（東京財団政策研究所, 2022年）; 措法66条の6第6項; EU Directive 2016/1164 Art. 7</p>
+
+<!-- ===== 6. 各国制度の特徴分析 ===== -->
+<h2><span class="section-num">6</span> 各国制度の特徴的差異</h2>
+
+<div class="card card-red">
+<h3><span class="country-tag tag-jp">日本</span> 二段階構造の複雑性と経済活動基準</h3>
+<p>日本のCFC税制は、<span class="mark">特定外国関係会社</span>（ペーパーカンパニー等→全部合算）、<span class="mark">対象外国関係会社</span>（経済活動基準不充足→全部合算）、<span class="mark">部分対象外国関係会社</span>（基準充足→部分合算）の3類型による判定構造を採用。経済活動基準4要件はall-or-nothing方式であり、1要件でも不充足なら全所得が合算対象となる。</p>
+<p>平成29年度改正後、対象外国子会社数が<strong>3倍</strong>、作業工数が<strong>4〜5倍</strong>に増加した実態が報告されている。</p>
+<p class="ref">出典: 措法66条の6; 岡直樹「ピラー2とCFC税制」行32-37</p>
+</div>
+
+<div class="card card-accent">
+<h3><span class="country-tag tag-us">米国</span> Subpart F＋GILTIの二層構造</h3>
+<p>米国は1962年から一貫してインカムアプローチを採用し、<span class="mark">Subpart F所得</span>（FPHC＋販売・役務関連所得）を個別合算。2017年TCJAで<span class="mark">GILTI</span>（Global Intangible Low-Taxed Income）を追加し、CFC全所得からQBAI（適格事業用有形資産）の10%を控除した超過利益を包括合算する二層構造に。</p>
+<p>GILTIは<strong>全世界ベースで計算</strong>（国別ではない）されるため、高税率国と低税率国の所得をブレンドするインセンティブが存在する。実効税率10.5%（2026年以降13.125%）。</p>
+<p>また、<strong>Check-the-Box制度</strong>（財務省規則§301.7701）により事業体の法人/パートナーシップ選択が可能であり、Google等のダブルアイリッシュ・スキームでSubpart F回避に利用された。</p>
+<p class="ref">出典: IRC §951-965, §951A; 鍋谷彰男論文; 岡直樹「タックスヘイブンとの闘いと国際租税法」pp.409-420</p>
+</div>
+
+<div class="card card-green">
+<h3><span class="country-tag tag-uk">英国</span> ゲートウェイ方式と免除地域リスト</h3>
+<p>英国は2012年の全面改正で、所得区分別の<span class="mark">ゲートウェイ審査</span>（事業所得・非事業的金融・事業的金融・保険・IP）と事業体レベルの適用除外を組み合わせたハイブリッド型に移行。SPF（重要な人的機能）に着目した移転価格的発想を導入。</p>
+<p><strong>103か国・地域の免除地域リスト</strong>を設け、コンプライアンス負担を軽減。少額所得基準（50,000/500,000ポンド）、低利益率基準（営業費用の10%以下）なども充実。</p>
+<p>制度設計全体が<strong>Cadbury Schweppes判決</strong>（2006年ECJ）の「完全に偽装的な仕組み」基準に強く制約されている。</p>
+<p class="ref">出典: TIOPA 2010 Part 9A; 鍋谷彰男論文 行955-1316; 伴忠彦「合算方式と適用除外基準の再考」</p>
+</div>
+
+<div class="card card-orange">
+<h3><span class="country-tag tag-de">ドイツ</span> 能動的所得カタログとEU法の緊張</h3>
+<p>ドイツは英米と逆に、<span class="mark">能動的所得（Aktivkatalog）</span>を§8 AStGで9カテゴリ限定列挙し、それに該当しない所得を自動的にZwischeneinkünfte（受動的所得）として合算する方式。岡村忠生教授は「理屈的にはわかりやすいが、制度的には複雑」と評する。</p>
+<p>2024年に低課税基準を<strong>25%→15%</strong>に引下げ（Pillar 2と整合化）。EU/EEA域内法人には§13 AStGの<strong>Motivtest</strong>（動機テスト）による免除が適用される。</p>
+<p class="ref">出典: AStG §7-14; 岡村忠生「外国子会社合算税制の意義と課題」行2910-2926; KPMG Atlas</p>
+</div>
+
+<!-- ===== 7. BEPS Action 3 ===== -->
+<h2><span class="section-num">7</span> OECD BEPS Action 3 の6構成要素</h2>
+
+<table>
+  <tr>
+    <th style="width:5%">#</th>
+    <th style="width:20%">構成要素</th>
+    <th style="width:40%">勧告内容</th>
+    <th style="width:35%">各国の対応</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td><strong>CFCの定義</strong></td>
+    <td>法人・パートナーシップ・信託・PEを含む広い定義。法的支配＋経済的支配。50%超を推奨</td>
+    <td>日本50%超、米国10%+50%超、英国は支配概念、韓国10%以上</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td><strong>適用除外・閾値</strong></td>
+    <td>実効税率が「意味のある程度低い」場合。具体的%は未指定</td>
+    <td>閾値は12.5%〜27%と国により大差</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td><strong>CFC所得の定義</strong></td>
+    <td>4アプローチ: カテゴリカル/サブスタンス/超過利潤/取引・エンティティ</td>
+    <td>米=カテゴリカル+超過利潤(GILTI)、英=ハイブリッド、日=ハイブリッド</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td><strong>所得の計算</strong></td>
+    <td>親会社国の法令に基づき計算を推奨</td>
+    <td>日本は本邦法令or所在地国法令の選択制（措令39条の15）</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td><strong>所得の帰属</strong></td>
+    <td>持分割合に基づく帰属額計算</td>
+    <td>各国とも基本的に持分割合方式を採用</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td><strong>二重課税排除</strong></td>
+    <td>外国税額控除＋配当時の既課税所得免除</td>
+    <td>日本はみなし外税控除+配当益金不算入。米国GILTIは80%限度</td>
+  </tr>
+</table>
+
+<div class="important">
+<strong>Action 3の位置づけ:</strong> ミニマムスタンダードではなく<span class="mark">勧告（recommendation）</span>にとどまる。各国に実装の柔軟性が認められており、2025年時点で56か国がCFC規則を導入しているが、制度の具体的内容は「他の国際課税制度に比べて各国で均一ではない」（岡直樹）。
+</div>
+<p class="ref">出典: OECD BEPS Action 3最終報告書（2015年, 国税庁仮訳）; 浅妻章如「CFC税制等の今後と通商法・BEPS」</p>
+
+<!-- ===== 8. Pillar Two ===== -->
+<h2><span class="section-num">8</span> Pillar Two（GloBE）とCFC税制の関係</h2>
+
+<div class="card card-purple">
+<h3>CFC税制の二面性とGloBEによる合理化</h3>
+<p>岡直樹（2022年）は、CFC税制に<strong>「租税回避否認」</strong>（ペーパーカンパニー・キャッシュボックス、実体基準等）と<strong>「BEPS対抗」</strong>（非関連者基準、所在地国基準、事業基準）の2つの側面があることを指摘。GloBEルール（15%ミニマム税）導入を契機に、BEPS対抗部分は<span class="mark">「大胆な合理化」</span>が可能と提案する。</p>
+</div>
+
+<table>
+  <tr>
+    <th style="width:20%">論点</th>
+    <th style="width:80%">内容</th>
+  </tr>
+  <tr>
+    <td><strong>機能の重複</strong></td>
+    <td>CFC税制もGloBEも低課税国への所得移転を防止。IIRは機能的にCFC税制と類似するが、対象は7.5億ユーロ以上の大規模法人に限定</td>
+  </tr>
+  <tr>
+    <td><strong>CFC税のETR算入</strong></td>
+    <td>GloBEルール上、CFC税制による課税は実効税率（ETR）計算に算入される。CFC税があればトップアップ税は減少</td>
+  </tr>
+  <tr>
+    <td><strong>中小法人問題</strong></td>
+    <td>GloBEは大規模法人のみ対象であるため、CFC税制を縮小すると中小法人・個人による租税回避への備えが手薄になる</td>
+  </tr>
+  <tr>
+    <td><strong>各国の対応</strong></td>
+    <td><span class="country-tag tag-jp">日本</span> 併存（令和8年度以降に抜本見直し予告）<br><span class="country-tag tag-us">米国</span> GILTIを実質的UTPR扱い<br><span class="country-tag tag-uk">英国</span> QDMTT導入、CFC併存<br><span class="country-tag tag-de">ドイツ</span> CFC部分的廃止を検討</td>
+  </tr>
+</table>
+<p class="ref">出典: 岡直樹「ピラー2とCFC税制」; 経産省研究会報告書（2022年9月）; Kluwer International Tax Blog "Should Countries Declutter Their CFC Legislation?"</p>
+
+<!-- ===== 9. 日本の政策動向 ===== -->
+<h2><span class="section-num">9</span> 日本の政策動向 ── 令和8年度抜本見直しに向けて</h2>
+
+<div class="card card-accent">
+<h3>経産省研究会（2022年〜2025年）の提言</h3>
+<table>
+  <tr>
+    <th style="width:30%">提言項目</th>
+    <th style="width:70%">内容</th>
+  </tr>
+  <tr>
+    <td>適用免除税率の引下げ</td>
+    <td>20%→<strong>15%</strong>へ引下げ（Pillar 2との整合化）</td>
+  </tr>
+  <tr>
+    <td>経済活動基準の見直し</td>
+    <td>廃止又は大幅な簡素化。GloBEルールのSubstance-based Income Exclusionの応用も検討</td>
+  </tr>
+  <tr>
+    <td>会計ベースETRの活用</td>
+    <td>CFC税制の適用免除判定にGloBEの会計ベースETR計算を転用</td>
+  </tr>
+  <tr>
+    <td>PMI特例の拡充</td>
+    <td>期間要件2年→5年、買収前留保利益の合算対象外化</td>
+  </tr>
+  <tr>
+    <td>合算時期の延長</td>
+    <td>事業年度終了日翌日から2月→<strong>4月</strong>（令和7年度改正で実現）</td>
+  </tr>
+</table>
+</div>
+
+<div class="card">
+<h3>産業界の要望（国際課税連絡協議会, 18団体連名, 令和6年9月）</h3>
+<p><strong>最重要課題: CFC税制の合理化・簡素化</strong></p>
+<p>3つの柱: (1) 過剰合算の適正化（同一国内での一体判定、資源開発プロジェクトの除外等9項目）、(2) 事務負担の軽減（適用免除税率15%への引下げ）、(3) Pillar 2との関係整理（ETR計算方法の共通化、QDMTT導入国のCFC適用除外）</p>
+<p class="ref">出典: 「国際課税連絡協議会 令和7年度税制改正要望」; 経産省研究会資料（令和6年11月・令和7年2月）</p>
+</div>
+
+<!-- ===== 10. 学説の視点 ===== -->
+<h2><span class="section-num">10</span> 学説上の主要論点</h2>
+
+<table>
+  <tr>
+    <th style="width:25%">論点</th>
+    <th style="width:35%">主要見解</th>
+    <th style="width:40%">出典</th>
+  </tr>
+  <tr>
+    <td><strong>制度趣旨論</strong></td>
+    <td><strong>租税回避防止説</strong>（通説）: タックスヘイブン利用による不当な税負担軽減の防止。渕圭吾は「内国親会社の適正な所得を算定するための制度」と結論</td>
+    <td>渕圭吾「外国子会社合算税制の意義と機能」; 岡村忠生「外国子会社合算税制の意義と課題」</td>
+  </tr>
+  <tr>
+    <td><strong>合算方式の評価</strong></td>
+    <td>法人アプローチは<strong>租税回避否認</strong>に向き、取引アプローチは<strong>課税ベース拡大</strong>に向く</td>
+    <td>伴忠彦「合算方式と適用除外基準の再考」</td>
+  </tr>
+  <tr>
+    <td><strong>条約適合性</strong></td>
+    <td>グラクソ事件最高裁: CFC税制は条約違反ではない（「国家主権の中核に属する課税権」）。ECJ Cadbury Schweppes: 「完全に偽装的な仕組み」のみ対象</td>
+    <td>浅妻章如「CFC税制等の今後と通商法・BEPS」</td>
+  </tr>
+  <tr>
+    <td><strong>移転価格との関係</strong></td>
+    <td>CFC税制はTP税制の「バックストップ」として機能。英国のSPF概念は両者の融合を示唆</td>
+    <td>鍋谷彰男論文 行1317; 前田謙二「タックス・ヘイブン対策税制の新設計」</td>
+  </tr>
+  <tr>
+    <td><strong>GloBE時代のCFC</strong></td>
+    <td>BEPS対抗機能はIIR（15%トップアップ税）に委ねて合理化可能。ただしIIRは大規模法人のみ対象→中小法人の租税回避対策としてCFC維持が必要</td>
+    <td>岡直樹「ピラー2とCFC税制」; 経産省研究会報告書（2022年9月）</td>
+  </tr>
+</table>
+
+<!-- ===== 11. 比較法的示唆 ===== -->
+<h2><span class="section-num">11</span> 比較法的示唆</h2>
+
+<div class="conclusion">
+<strong>日本のCFC税制改革に向けた各国制度からの示唆</strong>
+<table>
+  <tr><th style="width:25%">参照国の制度</th><th>日本への示唆</th></tr>
+  <tr>
+    <td><span class="country-tag tag-uk">英国</span> ゲートウェイ方式</td>
+    <td>経済活動基準のall-or-nothing判定の緩和。所得区分別の段階的絞り込みにより<strong>過剰合算（over-inclusion）</strong>を軽減。免除地域リストによるコンプライアンス負担の軽減</td>
+  </tr>
+  <tr>
+    <td><span class="country-tag tag-us">米国</span> GILTI＋QBAI控除</td>
+    <td>有形資産（QBAI）の10%リターンを閾値とする定量的な実質活動評価。経済活動基準の客観化に資する。ただし<strong>全世界ブレンディング</strong>の問題に留意</td>
+  </tr>
+  <tr>
+    <td><span class="country-tag tag-de">ドイツ</span> 15%基準＋ATAD対応</td>
+    <td>低課税基準のPillar 2との整合化（25%→15%）は日本の適用免除税率引下げの先行事例。EU法適合性の経験は条約・投資協定との整合性確保にも示唆</td>
+  </tr>
+  <tr>
+    <td><span class="country-tag tag-fr">仏・韓・豪・中</span></td>
+    <td>フランスの仮想税負担比較方式、韓国の受動的所得比率による部分合算、オーストラリアのlisted/unlisted区分、中国のホワイトリスト方式は、それぞれ日本の制度簡素化の参考となりうる</td>
+  </tr>
+</table>
+</div>
+
+<!-- ===== 12. 検索DB・ヒット数 ===== -->
+<h2><span class="section-num">12</span> 検索したDB一覧とヒット数</h2>
+
+<table>
+  <tr>
+    <th>データベース</th>
+    <th>検索方法</th>
+    <th>主なヒット数</th>
+  </tr>
+  <tr>
+    <td>済/本文（98件）</td>
+    <td>multi_search.py --scope papers</td>
+    <td>Subpart F: 165件, GILTI: 92件, 英国CFC: 68件</td>
+  </tr>
+  <tr>
+    <td>txt_extracted（9バッチ）</td>
+    <td>multi_search.py --scope papers</td>
+    <td>Subpart F: 87件, GILTI: 174件, AStG: 23件</td>
+  </tr>
+  <tr>
+    <td>jplawdb4/law（条文）</td>
+    <td>multi_search.py --scope law</td>
+    <td>措法66条の6: 42件, 外国関係会社: 156件</td>
+  </tr>
+  <tr>
+    <td>jplawdb4/paper（OECD-BEPS等）</td>
+    <td>multi_search.py --scope papers</td>
+    <td>Action 3: 181件, GloBE: 484件</td>
+  </tr>
+  <tr>
+    <td>cross_reference（構造データ）</td>
+    <td>Readツール直接参照</td>
+    <td>overview.json, articles/66-6.json</td>
+  </tr>
+  <tr>
+    <td>通達（CFC関連全文）</td>
+    <td>Readツール直接参照</td>
+    <td>通達66の6-1〜31全文</td>
+  </tr>
+  <tr>
+    <td>Web検索</td>
+    <td>WebSearch（7クエリ）</td>
+    <td>OECD/仏/韓/豪/中/Pillar Two: 計24件のURL</td>
+  </tr>
+</table>
+
+<h3>主要参照文献（原文確認済み）</h3>
+<table>
+  <tr>
+    <th style="width:55%">文献</th>
+    <th style="width:45%">著者</th>
+  </tr>
+  <tr><td>外国子会社合算税制の対象とすべき租税回避について</td><td>鍋谷彰男（税務大学校研究部教授）</td></tr>
+  <tr><td>外国子会社合算税制における合算方式と適用除外基準の再考</td><td>伴忠彦（税務大学校研究部教授）</td></tr>
+  <tr><td>外国子会社合算税制の意義と課題</td><td>岡村忠生（京都大学大学院法学研究科教授）</td></tr>
+  <tr><td>外国子会社合算税制の意義と機能</td><td>渕圭吾</td></tr>
+  <tr><td>ピラー2とCFC税制</td><td>岡直樹（東京財団政策研究所）</td></tr>
+  <tr><td>タックスヘイブンとの闘いと国際租税法</td><td>岡直樹</td></tr>
+  <tr><td>CFC税制等の今後と通商法・BEPS</td><td>浅妻章如（立教大学法学部教授）</td></tr>
+  <tr><td>BEPS Action 3最終報告書（国税庁仮訳）</td><td>OECD</td></tr>
+  <tr><td>平成26年度諸外国のタックスヘイブン対策税制に関する調査研究</td><td>KPMG税理士法人（金融庁委託）</td></tr>
+  <tr><td>最低税率課税制度及び外国子会社合算税制のあり方について</td><td>経産省研究会（2022年9月）</td></tr>
+  <tr><td>外国子会社合算税制における新しい概念について</td><td>保井久理子（税務大学校研究部教授）</td></tr>
+  <tr><td>ドイツにおける租税回避の一般的否認規定の最近の展開</td><td>谷口勢津夫</td></tr>
+  <tr><td>実質主義と法の濫用の法理</td><td>松田直樹</td></tr>
+  <tr><td>国際課税連絡協議会 令和7年度税制改正要望</td><td>18団体連名（令和6年9月）</td></tr>
+  <tr><td>日本企業の海外展開動向を踏まえた国際課税制度のあり方に関する研究会</td><td>経産省（令和6年11月・令和7年2月）</td></tr>
+  <tr><td>タックス・ヘイブン対策税制の新設計</td><td>前田謙二</td></tr>
+</table>
+
+<p style="text-align:center; color:var(--text-light); font-size:0.85rem; margin-top:2rem;">2026-03-05</p>
+
+</body>
+</html>
