@@ -456,6 +456,44 @@ hr.sep {
 .quiz-reset{margin-left:auto;padding:8px 18px;background:none;border:1px solid var(--border,rgba(255,255,255,.2));border-radius:8px;color:var(--text,#e2e8f0);cursor:pointer;font-size:.82rem;transition:background .15s}
 .quiz-reset:hover{background:rgba(255,255,255,.06)}
 .law-link{color:var(--accent,#4f9cf9);text-decoration:none;border-bottom:1px dotted rgba(79,156,249,.5);font-weight:500;padding:0 2px;transition:background .15s,border-color .15s;}.law-link:hover{border-bottom-color:var(--accent,#4f9cf9);background:rgba(79,156,249,.09);border-radius:3px;}
+
+/* ===== Scroll Progress Bar ===== */
+#scroll-prog-bar {
+  position: fixed; top: 0; left: 0; z-index: 9999;
+  height: 3px; width: 0%;
+  background: var(--accent, #5E6AD2);
+  transition: width .1s linear;
+  pointer-events: none;
+}
+
+/* ===== Lesson Complete Button ===== */
+.lnav-done-row {
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border, rgba(255,255,255,0.08));
+}
+.lnav-done-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 24px;
+  border: 1.5px solid var(--accent, #5E6AD2);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--accent, #5E6AD2);
+  font-size: .88rem; font-weight: 600;
+  cursor: pointer;
+  transition: background .2s, color .2s;
+}
+.lnav-done-btn:hover {
+  background: var(--accent, #5E6AD2);
+  color: #fff;
+}
+.lnav-done-btn.done {
+  background: var(--accent, #5E6AD2);
+  color: #fff;
+  border-color: var(--accent, #5E6AD2);
+}
+.lnav-done-btn .done-icon { font-size: 1.1em; }
 </style>
 <link rel="stylesheet" href="theme.css">
 </head>
@@ -1519,5 +1557,81 @@ hr.sep {
   });
 })();
 </script>
+
+<script>
+(function() {
+  var LID = '12';          // このレッスンの番号
+  var PROG_KEY = 'jtl-intl-prog';  // インデックスと共通キー
+
+  /* ─ LocalStorage helpers ─ */
+  function getDone() {
+    try { return new Set(JSON.parse(localStorage.getItem(PROG_KEY)) || []); }
+    catch(e) { return new Set(); }
+  }
+  function saveDone(s) {
+    try { localStorage.setItem(PROG_KEY, JSON.stringify([...s])); } catch(e) {}
+  }
+  function markDone(done) {
+    done.add(LID); saveDone(done);
+  }
+  function toggleDoneLesson() {
+    var done = getDone();
+    if (done.has(LID)) { done.delete(LID); } else { markDone(done); }
+    saveDone(done);
+    refreshBtn();
+  }
+
+  /* ─ Button state ─ */
+  function refreshBtn() {
+    var btn = document.getElementById('lesson-done-btn');
+    if (!btn) return;
+    var done = getDone().has(LID);
+    btn.classList.toggle('done', done);
+    btn.innerHTML = done
+      ? '<span class="done-icon">✓</span> 完了済み（クリックで解除）'
+      : '<span class="done-icon">○</span> このレッスンを完了にする';
+  }
+
+  /* ─ Scroll progress bar ─ */
+  function onScroll() {
+    var bar = document.getElementById('scroll-prog-bar');
+    if (!bar) return;
+    var scrolled = window.scrollY || document.documentElement.scrollTop;
+    var total = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (total > 0 ? Math.min(100, scrolled / total * 100) : 0) + '%';
+
+    /* 90% スクロールで自動完了 */
+    if (total > 0 && scrolled / total >= 0.9) {
+      var done = getDone();
+      if (!done.has(LID)) { markDone(done); refreshBtn(); }
+    }
+  }
+
+  /* ─ Init ─ */
+  document.addEventListener('DOMContentLoaded', function() {
+    /* progress bar element */
+    var bar = document.createElement('div');
+    bar.id = 'scroll-prog-bar';
+    document.body.insertBefore(bar, document.body.firstChild);
+
+    /* done button */
+    var btn = document.createElement('button');
+    btn.id = 'lesson-done-btn';
+    btn.className = 'lnav-done-btn';
+    btn.onclick = toggleDoneLesson;
+    var row = document.createElement('div');
+    row.className = 'lnav-done-row';
+    row.appendChild(btn);
+
+    var nav = document.querySelector('.lesson-nav .lnav-inner');
+    if (nav) { nav.parentNode.appendChild(row); }
+
+    refreshBtn();
+    onScroll();
+    window.addEventListener('scroll', onScroll, {passive: true});
+  });
+})();
+</script>
+
 </body>
 </html>
