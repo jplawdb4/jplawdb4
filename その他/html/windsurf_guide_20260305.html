@@ -1,0 +1,1871 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Windsurf 完全ガイド — AI コーディングの新時代</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-primary: #0A0A0A;
+    --bg-card: #16161A;
+    --bg-card-hover: #1C1C22;
+    --border-color: rgba(255,255,255,0.06);
+    --border-hover: rgba(255,255,255,0.12);
+    --accent: #5E6AD2;
+    --accent-light: #7B85E8;
+    --accent-dim: rgba(94,106,210,0.15);
+    --accent-glow: rgba(94,106,210,0.3);
+    --text-primary: #FAFAFA;
+    --text-secondary: #8A8A9A;
+    --text-tertiary: #55556A;
+    --success: #34D399;
+    --warning: #FBBF24;
+    --danger: #F87171;
+    --info: #60A5FA;
+    --gradient-1: linear-gradient(135deg, #5E6AD2 0%, #8B5CF6 100%);
+    --gradient-2: linear-gradient(135deg, #0A0A0A 0%, #16161A 100%);
+    --font-main: 'Outfit', 'Noto Sans JP', sans-serif;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --radius-lg: 16px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.3);
+    --shadow-lg: 0 8px 48px rgba(0,0,0,0.5);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  [data-theme="light"] {
+    --bg-primary: #F5F5F7;
+    --bg-card: #FFFFFF;
+    --bg-card-hover: #F0F0F5;
+    --border-color: rgba(0,0,0,0.08);
+    --border-hover: rgba(0,0,0,0.15);
+    --text-primary: #1A1A2E;
+    --text-secondary: #6B6B80;
+    --text-tertiary: #9999AA;
+    --accent-dim: rgba(94,106,210,0.08);
+    --accent-glow: rgba(94,106,210,0.15);
+    --gradient-2: linear-gradient(135deg, #F5F5F7 0%, #FFFFFF 100%);
+    --shadow: 0 4px 24px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 48px rgba(0,0,0,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+  }
+
+  body {
+    font-family: var(--font-main);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.8;
+    transition: var(--transition);
+    overflow-x: hidden;
+  }
+
+  /* ===== Scrollbar ===== */
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg-primary); }
+  ::-webkit-scrollbar-thumb { background: var(--text-tertiary); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+  /* ===== Header ===== */
+  .site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-color);
+    transition: var(--transition);
+  }
+  [data-theme="light"] .site-header {
+    background: rgba(245,245,247,0.85);
+  }
+
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--gradient-1);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #fff;
+  }
+
+  .header-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .theme-toggle {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: var(--transition);
+  }
+  .theme-toggle:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  .toc-toggle {
+    display: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: var(--transition);
+  }
+
+  /* ===== Layout ===== */
+  .layout {
+    display: flex;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-top: 64px;
+    min-height: 100vh;
+  }
+
+  /* ===== Sidebar / TOC ===== */
+  .sidebar {
+    position: sticky;
+    top: 64px;
+    width: 280px;
+    min-width: 280px;
+    height: calc(100vh - 64px);
+    overflow-y: auto;
+    padding: 24px 16px;
+    border-right: 1px solid var(--border-color);
+    transition: var(--transition);
+  }
+
+  .sidebar-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-tertiary);
+    padding: 0 12px;
+    margin-bottom: 12px;
+  }
+
+  .toc-list {
+    list-style: none;
+  }
+
+  .toc-list li a {
+    display: block;
+    padding: 8px 12px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 400;
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+    line-height: 1.5;
+  }
+  .toc-list li a:hover,
+  .toc-list li a.active {
+    color: var(--accent-light);
+    background: var(--accent-dim);
+  }
+  .toc-list li a .toc-num {
+    color: var(--text-tertiary);
+    font-size: 0.75rem;
+    margin-right: 6px;
+    font-weight: 600;
+  }
+
+  /* ===== Main Content ===== */
+  .main-content {
+    flex: 1;
+    min-width: 0;
+    padding: 48px 48px 120px;
+  }
+
+  /* ===== Hero ===== */
+  .hero {
+    text-align: center;
+    padding: 60px 0 48px;
+    position: relative;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border-radius: 100px;
+    background: var(--accent-dim);
+    border: 1px solid rgba(94,106,210,0.2);
+    color: var(--accent-light);
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+  .hero-badge .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse-dot 2s infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .hero h1 {
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    line-height: 1.15;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-light) 50%, var(--text-primary) 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 4s ease-in-out infinite;
+  }
+  @keyframes shimmer {
+    0%, 100% { background-position: 0% center; }
+    50% { background-position: 200% center; }
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    max-width: 640px;
+    margin: 0 auto 32px;
+    line-height: 1.7;
+  }
+
+  .hero-meta {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 24px;
+    color: var(--text-tertiary);
+    font-size: 0.82rem;
+  }
+  .hero-meta span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ===== Section ===== */
+  .section {
+    margin-bottom: 64px;
+    scroll-margin-top: 80px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .section-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--accent-dim);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+
+  .section-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+
+  /* ===== Cards ===== */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 20px;
+    transition: var(--transition);
+  }
+  .card:hover {
+    border-color: var(--border-hover);
+    background: var(--bg-card-hover);
+  }
+
+  .card h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+  }
+
+  .card h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--accent-light);
+  }
+
+  .card p, .card li {
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+    line-height: 1.8;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .card-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+  }
+
+  .mini-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 22px;
+    transition: var(--transition);
+  }
+  .mini-card:hover {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+  }
+  .mini-card .mc-icon {
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+  }
+  .mini-card h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+  }
+  .mini-card p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* ===== Prose ===== */
+  .prose {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.9;
+  }
+  .prose p {
+    margin-bottom: 16px;
+  }
+  .prose strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+  .prose a {
+    color: var(--accent-light);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: var(--transition);
+  }
+  .prose a:hover {
+    border-bottom-color: var(--accent-light);
+  }
+
+  /* ===== Timeline ===== */
+  .timeline {
+    position: relative;
+    padding-left: 32px;
+    margin: 24px 0;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 4px;
+    bottom: 4px;
+    width: 2px;
+    background: var(--border-color);
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 24px;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -28px;
+    top: 8px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg-primary);
+  }
+  .timeline-item .tl-date {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .timeline-item .tl-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+  .timeline-item .tl-desc {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* ===== Table ===== */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 20px 0;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+  thead {
+    background: var(--accent-dim);
+  }
+  th {
+    padding: 14px 16px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--accent-light);
+    border-bottom: 1px solid var(--border-color);
+    white-space: nowrap;
+  }
+  td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    vertical-align: top;
+  }
+  tr:last-child td {
+    border-bottom: none;
+  }
+  tr:hover td {
+    background: var(--bg-card-hover);
+  }
+  .check { color: var(--success); }
+  .cross { color: var(--danger); }
+  .partial { color: var(--warning); }
+
+  /* ===== Tags ===== */
+  .tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .tag-accent {
+    background: var(--accent-dim);
+    color: var(--accent-light);
+  }
+  .tag-success {
+    background: rgba(52,211,153,0.12);
+    color: var(--success);
+  }
+  .tag-warning {
+    background: rgba(251,191,36,0.12);
+    color: var(--warning);
+  }
+  .tag-danger {
+    background: rgba(248,113,113,0.12);
+    color: var(--danger);
+  }
+
+  /* ===== Callout ===== */
+  .callout {
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin: 20px 0;
+    border-left: 3px solid;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+  .callout-info {
+    background: rgba(96,165,250,0.06);
+    border-color: var(--info);
+  }
+  .callout-warning {
+    background: rgba(251,191,36,0.06);
+    border-color: var(--warning);
+  }
+  .callout-tip {
+    background: rgba(52,211,153,0.06);
+    border-color: var(--success);
+  }
+  .callout strong {
+    color: var(--text-primary);
+  }
+
+  /* ===== Code ===== */
+  .code-block {
+    background: #0D0D12;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 16px 20px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.83rem;
+    color: #C4C4D8;
+    overflow-x: auto;
+    margin: 16px 0;
+    line-height: 1.7;
+  }
+  [data-theme="light"] .code-block {
+    background: #F4F4F8;
+    color: #3A3A5C;
+  }
+  .code-block .cmd { color: var(--success); }
+  .code-block .comment { color: var(--text-tertiary); }
+  .code-block .str { color: #FBBF24; }
+
+  /* ===== Step Blocks ===== */
+  .steps {
+    counter-reset: step-counter;
+  }
+  .step {
+    counter-increment: step-counter;
+    position: relative;
+    padding: 24px 28px 24px 72px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+    transition: var(--transition);
+  }
+  .step:hover {
+    border-color: var(--border-hover);
+  }
+  .step::before {
+    content: counter(step-counter);
+    position: absolute;
+    left: 24px;
+    top: 24px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--gradient-1);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .step h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+  .step p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  /* ===== Footer ===== */
+  .site-footer {
+    text-align: center;
+    padding: 48px 24px;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-tertiary);
+    font-size: 0.82rem;
+  }
+
+  /* ===== Link List ===== */
+  .link-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .link-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: var(--transition);
+  }
+  .link-item:hover {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+  }
+  .link-item .li-icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+  .link-item .li-text {
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+  .link-item .li-url {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    word-break: break-all;
+  }
+
+  /* ===== Architecture Diagram ===== */
+  .arch-diagram {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 24px 0;
+    font-size: 0.82rem;
+  }
+  .arch-row {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+    flex-wrap: wrap;
+  }
+  .arch-box {
+    flex: 1;
+    min-width: 120px;
+    padding: 14px 16px;
+    border-radius: var(--radius-sm);
+    text-align: center;
+    font-weight: 600;
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
+  }
+  .arch-box:hover { border-color: var(--accent); }
+  .arch-box.accent-bg { background: var(--accent-dim); color: var(--accent-light); }
+  .arch-box.card-bg { background: var(--bg-card); color: var(--text-primary); }
+  .arch-box small { display: block; font-weight: 400; color: var(--text-tertiary); font-size: 0.75rem; margin-top: 4px; }
+  .arch-arrow {
+    text-align: center;
+    color: var(--text-tertiary);
+    font-size: 1.2rem;
+    padding: 4px 0;
+  }
+
+  /* ===== Pricing Card ===== */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+  }
+  .pricing-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    text-align: center;
+    transition: var(--transition);
+    position: relative;
+  }
+  .pricing-card.featured {
+    border-color: var(--accent);
+    box-shadow: 0 0 30px var(--accent-glow);
+  }
+  .pricing-card.featured::after {
+    content: '人気';
+    position: absolute;
+    top: -10px;
+    right: 16px;
+    background: var(--gradient-1);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 6px;
+  }
+  .pricing-card h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+  .pricing-card .price {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .pricing-card .price-period {
+    font-size: 0.78rem;
+    color: var(--text-tertiary);
+    margin-bottom: 16px;
+  }
+  .pricing-card .feature-list {
+    text-align: left;
+    list-style: none;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+  }
+  .pricing-card .feature-list li {
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+  .pricing-card .feature-list li:last-child { border-bottom: none; }
+  .pricing-card .feature-list li::before {
+    content: '✓ ';
+    color: var(--success);
+    font-weight: 700;
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 1024px) {
+    .sidebar { display: none; }
+    .sidebar.show {
+      display: block;
+      position: fixed;
+      top: 64px;
+      left: 0;
+      width: 300px;
+      height: calc(100vh - 64px);
+      z-index: 999;
+      background: var(--bg-primary);
+      box-shadow: var(--shadow-lg);
+    }
+    .toc-toggle { display: flex; }
+    .main-content { padding: 32px 20px 100px; }
+  }
+
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 1.8rem; }
+    .hero-sub { font-size: 0.95rem; }
+    .card { padding: 20px; }
+    .card-grid, .card-grid-3 {
+      grid-template-columns: 1fr;
+    }
+    .pricing-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .arch-row {
+      flex-direction: column;
+    }
+    table { font-size: 0.78rem; }
+    th, td { padding: 10px 12px; }
+    .step { padding-left: 60px; }
+  }
+
+  @media (max-width: 400px) {
+    .pricing-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body data-theme="dark">
+
+<!-- ===== HEADER ===== -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <div class="logo-icon">W</div>
+      <span>Windsurf Guide</span>
+    </a>
+    <div class="header-nav">
+      <button class="toc-toggle" onclick="toggleSidebar()" aria-label="目次を開く">☰</button>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="テーマ切り替え" id="themeBtn">🌙</button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== LAYOUT ===== -->
+<div class="layout">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-title">目次 — Contents</div>
+    <ul class="toc-list">
+      <li><a href="#sec1"><span class="toc-num">01</span> Windsurfとは</a></li>
+      <li><a href="#sec2"><span class="toc-num">02</span> 主な機能</a></li>
+      <li><a href="#sec3"><span class="toc-num">03</span> アーキテクチャ</a></li>
+      <li><a href="#sec4"><span class="toc-num">04</span> 対応モデルとAIエンジン</a></li>
+      <li><a href="#sec5"><span class="toc-num">05</span> 料金体系</a></li>
+      <li><a href="#sec6"><span class="toc-num">06</span> 買収劇と今後の方向性</a></li>
+      <li><a href="#sec7"><span class="toc-num">07</span> セキュリティ・プライバシー</a></li>
+      <li><a href="#sec8"><span class="toc-num">08</span> ユースケース集</a></li>
+      <li><a href="#sec9"><span class="toc-num">09</span> 制限事項・注意点</a></li>
+      <li><a href="#sec10"><span class="toc-num">10</span> 他ツール比較</a></li>
+      <li><a href="#sec11"><span class="toc-num">11</span> 始め方ガイド</a></li>
+      <li><a href="#sec12"><span class="toc-num">12</span> Tips・参考リンク</a></li>
+    </ul>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <main class="main-content">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-badge"><span class="dot"></span> 2026年3月 最新版</div>
+      <h1>Windsurf 完全ガイド<br>AI コーディングの新時代</h1>
+      <p class="hero-sub">旧Codeium → OpenAI $3B買収交渉 → Google人材引き抜き → Cognition買収。激動の歴史を歩むAI IDEの全貌を、初心者にもわかりやすく包括的に解説します。</p>
+      <div class="hero-meta">
+        <span>📅 2026年3月5日</span>
+        <span>📖 包括リサーチ</span>
+        <span>⏱ 読了 約40分</span>
+        <span>🏢 現在 Cognition 傘下</span>
+      </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- SECTION 1: Windsurfとは -->
+    <!-- ============================================ -->
+    <section class="section" id="sec1">
+      <div class="section-header">
+        <div class="section-num">01</div>
+        <h2>Windsurfとは — 概要・経緯・買収の背景</h2>
+      </div>
+
+      <div class="prose">
+        <p><strong>Windsurf</strong>は、AI技術を中核に据えた「エージェンティックIDE（Agentic IDE）」です。単なるコード補完ツールではなく、AIがコードベース全体を理解し、開発者と協働しながら複数ステップのタスクを自律的に遂行できる、次世代の統合開発環境として設計されています。2024年11月に「世界初のエージェンティックIDE」として発表され、わずか数ヶ月で100万人以上の開発者に利用されるまでに急成長しました。</p>
+
+        <p>Windsurfの最大の特徴は、<strong>「Flows」</strong>と呼ばれる概念にあります。これは従来のAIアシスタント（コパイロット型）と自律型エージェントの長所を融合したもので、AIが開発者の意図やリアルタイムの操作を理解しながら、文脈に沿った提案・コード編集・コマンド実行を行います。開発者は常にループの中にいながらも、反復的な作業をAIに任せることができるため、「風に乗ってコーディングする」ような滑らかな体験が得られます。これがWindsurf（ウィンドサーフ）という名前の由来でもあります。</p>
+
+        <p>2026年3月現在、Windsurfは<strong>Cognition</strong>（自律型AIソフトウェアエンジニア「Devin」の開発元）の傘下にあり、独立したプロダクトとして運営を継続しています。Cognitionは Windsurf の IP、プロダクト、商標、ブランド、そしてユーザーベースを取得し、Devin と Windsurf の二本柱でAIコーディング領域をリードする構えです。</p>
+      </div>
+
+      <h3 style="color: var(--text-primary); font-size: 1.15rem; margin: 32px 0 16px;">歴史タイムライン</h3>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="tl-date">2021年6月</div>
+          <div class="tl-title">Exafunction 創業</div>
+          <div class="tl-desc">MIT卒業生の Varun Mohan と Douglas Chen が GPU最適化プラットフォーム「Exafunction」を創業。機械学習ワークロードのGPU最適化を行うインフラスタートアップとしてスタートしました。</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-date">2022年10月</div>
+          <div class="tl-title">Codeium へピボット</div>
+          <div class="tl-desc">GPT系モデルの台頭を受け、わずか48時間でAIコーディングアシスタント「Codeium」へ事業転換。無料のAIコード補完ツールとして40以上の言語と20以上のIDEに対応し、急速にユーザーを獲得しました。</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-date">2024年4月</div>
+          <div class="tl-title">評価額 $1.25B でシリーズC調達</div>
+          <div class="tl-desc">Kleiner Perkins、Greenoaks Capital などから $150M を調達。ユニコーン企業となり、エンタープライズ展開を加速しました。</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-date">2024年11月</div>
+          <div class="tl-title">Windsurf Editor ローンチ</div>
+          <div class="tl-desc">Codeiumから名称変更し、VS Code をフォークした「世界初のエージェンティックIDE」Windsurf Editor をリリース。AI エージェント Cascade を搭載し、4ヶ月で100万ユーザーを突破しました。</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-date">2025年4月</div>
+          <div class="tl-title">OpenAI が $3B での買収交渉開始</div>
+          <div class="tl-desc">OpenAIがWindsurfを約30億ドルで買収する交渉を開始。これはOpenAI史上最大の買収案件となるはずでしたが、Microsoft との軋轢やフィット感への懸念が浮上しました。</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-date">2025年5月</div>
+          <div class="tl-title">SWE-1 モデルファミリー発表</div>
+          <div class="tl-desc">ソフトウェアエンジニアリング全般に最適化された自社開発モデル「SWE-1」を発表。コード生成だけでなく、設計・テスト・デプロイまでカバーする初のSWE特化モデルとして注目を集めました。</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-date">2025年7月11日</div>
+          <div class="tl-title">OpenAI 買収破談 / Google が CEO を獲得</div>
+          <div class="tl-desc">OpenAIとの$3B買収交渉が決裂。同日、Google が共同創業者兼CEOの Varun Mohan と主要エンジニアを引き抜き、$2.4B のライセンス料と人材獲得費を支払いました。Mohan は Google DeepMind に参加。</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-date">2025年7月14日</div>
+          <div class="tl-title">Cognition（Devin）による買収発表</div>
+          <div class="tl-desc">Devinを開発するCognition AIがWindsurfの買収を発表。IP、プロダクト、商標、ユーザーベース、そしてGoogleに引き抜かれなかった残りの社員を取得。Jeff Wang が新CEOとして就任しました。</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-date">2025年10月</div>
+          <div class="tl-title">SWE-1.5 モデル発表</div>
+          <div class="tl-desc">Cognition傘下で初のメジャーモデルリリース。Cerebrasとの連携により最大950 tok/sの推論速度を実現し、Claude 4.5レベルの性能を13倍の速度で達成したと発表しました。</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-date">2026年1月〜現在</div>
+          <div class="tl-title">Cognition 傘下で独立運営継続</div>
+          <div class="tl-desc">Windsurf は独立したプロダクトとして運営を継続。CognizantなどのSIとのパートナーシップも拡大し、Devinとの統合を段階的に進めています。</div>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <strong>📌 ポイント：</strong> 当初「OpenAI が買収」と報道されましたが、実際にはMicrosoft との利害対立や統合方針への懸念から破談となりました。最終的に Google が人材とテクノロジーライセンスを取得し、Cognition が事業とプロダクトを引き継ぐという、AI 業界でも前例のない「分割獲得」が行われました。ユーザーにとって質問者の前提（OpenAIが買収）は厳密には正確ではありませんが、一時的に大きく報道された事実があります。
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECTION 2: 主な機能 -->
+    <!-- ============================================ -->
+    <section class="section" id="sec2">
+      <div class="section-header">
+        <div class="section-num">02</div>
+        <h2>主な機能 — Flows・Cascade・AI補完・エージェントモード</h2>
+      </div>
+
+      <div class="prose">
+        <p>Windsurfは単なるコードエディタではなく、AIを最深部に統合した「AIネイティブIDE」です。その機能は大きく分けて、パッシブ体験（自動補完系）、インストラクティブ体験（チャット・コマンド系）、エージェンティック体験（Cascade系）の3層で構成されています。それぞれが連携し、開発者がフロー状態を維持できるよう設計されています。</p>
+      </div>
+
+      <div class="card-grid" style="margin-top: 24px;">
+        <div class="mini-card">
+          <div class="mc-icon">🌊</div>
+          <h4>Flows（フロー）</h4>
+          <p>WindsurfのAI哲学の中核概念。コパイロット型（人間主導）とエージェント型（AI主導）のハイブリッドアプローチ。AIが開発者のリアルタイム操作（エディット、ターミナル操作、クリップボード、ブラウザ操作）を認識し、文脈に応じて適切な介入度合いを自動調整します。開発者は指示を出すだけで、AIが適切な粒度で作業を引き受けます。</p>
+        </div>
+        <div class="mini-card">
+          <div class="mc-icon">⚡</div>
+          <h4>Cascade（カスケード）</h4>
+          <p>Windsurfの中核AIエージェント。Code モードとChat モードの2つの動作モードを持ちます。Code モードではコードベースの直接編集が可能で、Chat モードではコードに関する質問や一般的なプログラミング原則の解説に最適化されています。マルチステップの推論とツール呼び出しを交互に行う真のエージェント動作を実現します。</p>
+        </div>
+        <div class="mini-card">
+          <div class="mc-icon">📝</div>
+          <h4>Windsurf Tab / Supercomplete</h4>
+          <p>キーストロークごとにAIが次のコードを予測するパッシブな補完機能。Supercompleteは単なる挿入だけでなく、削除や編集の差分（diff）も提案できる高度なモードです。ターミナルの出力やテスト結果からもコンテキストを取得し、より精度の高い補完を実現します。Tab一つでインポート文の追加やカーソルジャンプも可能です。</p>
+        </div>
+        <div class="mini-card">
+          <div class="mc-icon">🧠</div>
+          <h4>Memories（メモリー）</h4>
+          <p>開発者の好み、プロジェクトの慣例、コーディングスタイルなどをAIが学習・記憶する機能。Cascade との会話中に「これを覚えておいて」と指示するか、設定画面から直接登録できます。プロジェクト固有のメモリーとグローバルメモリーを使い分けることで、AIの出力品質が飛躍的に向上します。</p>
+        </div>
+        <div class="mini-card">
+          <div class="mc-icon">📋</div>
+          <h4>Rules（ルール）</h4>
+          <p>プロジェクトに適用するコーディング規約やAIの振る舞いを定義する機能。.windsurfrules ファイルや設定UIから定義可能。「TypeScript では常に strict モードを使用」「コンポーネントは function 宣言で書く」といった指示を永続的に適用できます。ワークスペース単位、グローバル単位での設定が可能です。</p>
+        </div>
+        <div class="mini-card">
+          <div class="mc-icon">🔄</div>
+          <h4>Workflows（ワークフロー）</h4>
+          <p>複数のステップからなる構造化されたタスクシーケンスを定義する機能。ルールがプロンプトレベルの指示であるのに対し、ワークフローはタスク全体のフローを制御します。「新しいAPIエンドポイントを作る→テストを書く→ドキュメントを更新する」のような一連の作業を自動化できます。</p>
+        </div>
+      </div>
+
+      <h3 style="color: var(--text-primary); font-size: 1.1rem; margin: 32px 0 16px;">Cascade の詳細機能</h3>
+
+      <div class="card">
+        <div class="card-grid" style="gap: 24px;">
+          <div>
+            <h4>ツール呼び出し（Tool Calling）</h4>
+            <p>Cascade は Search、Analyze、Web Search、MCP（Model Context Protocol）、ターミナルなど多彩なツールを自在に使い分けます。必要なパッケージの検出・インストールも自動で行います。「プロジェクトをどうやって実行するの？」と聞くだけで、依存関係のインストールからサーバー起動まで自動対応します。</p>
+          </div>
+          <div>
+            <h4>計画とTodoリスト</h4>
+            <p>複雑なタスクでは、専門の計画エージェントがバックグラウンドで長期プランを継続的に改善します。選択したモデルがプランに基づいて短期的なアクションを実行し、Todoリストで進捗を追跡。会話中に計画の変更を指示することも可能です。</p>
+          </div>
+          <div>
+            <h4>チェックポイントとリバート</h4>
+            <p>Cascade が行った変更はいつでもリバート可能。名前付きチェックポイントを作成して、プロジェクトの特定の状態に素早く戻ることができます。実験的な変更を安全に試せる「セーフティネット」として機能します。</p>
+          </div>
+          <div>
+            <h4>リアルタイム認識</h4>
+            <p>Windsurf独自の機能。開発者のリアルタイムの操作（ファイル編集、ターミナル操作、クリップボードの内容）をAIが自動的に認識するため、いちいちコンテキストを説明する必要がありません。「続けて」と指示するだけで、直前の作業の文脈を引き継いで動作します。</p>
+          </div>
+          <div>
+            <h4>音声入力</h4>
+            <p>音声で Cascade に指示を出すことが可能。現在は音声→テキスト変換による入力をサポートしており、ハンズフリーでの操作を実現します。</p>
+          </div>
+          <div>
+            <h4>同時実行 Cascade</h4>
+            <p>複数の Cascade セッションを同時に実行可能。異なるタスクを並列で進められます。同じファイルを編集する可能性がある場合は、Git worktree 機能と組み合わせて安全に隔離できます。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>その他の便利機能</h3>
+        <div class="card-grid" style="margin-top: 16px;">
+          <div>
+            <h4>Previews（プレビュー）</h4>
+            <p>フロントエンド開発中にブラウザプレビューをIDE内で直接表示。Cascade はプレビューの内容も認識してフィードバックに活用します。変更がリアルタイムで反映されます。</p>
+          </div>
+          <div>
+            <h4>Deploys（デプロイ）</h4>
+            <p>Teams プランでは、管理者が設定した Netlify アカウントへ直接デプロイ可能。開発からデプロイまでをIDE内で完結できます。</p>
+          </div>
+          <div>
+            <h4>Linter 統合</h4>
+            <p>Cascade が生成したコードに対してリントエラーを自動修正。デフォルトで有効化されており、リント修正にはクレジットが消費されません。コード品質を維持しながらAI生成を活用できます。</p>
+          </div>
+          <div>
+            <h4>.codeiumignore</h4>
+            <p>Cascade に見せたくないファイルやディレクトリを .gitignore と同じ形式で指定可能。エンタープライズ向けにはグローバルな .codeiumignore もサポートし、全リポジトリ横断で制御できます。</p>
+          </div>
+          <div>
+            <h4>@メンション機能</h4>
+            <p>過去の会話を @メンションで参照可能。Cascade が過去の会話から最も関連性の高い情報を自動取得し、文脈として活用します。チーム内での会話共有機能もあります。</p>
+          </div>
+          <div>
+            <h4>Fast Context</h4>
+            <p>独自の swe-grep モデルを使用した高速なコンテキスト検索。大規模なモノレポでもミリ秒単位で関連コードを取得し、Cascade の応答品質を大幅に向上させます。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECTION 3: アーキテクチャ -->
+    <!-- ============================================ -->
+    <section class="section" id="sec3">
+      <div class="section-header">
+        <div class="section-num">03</div>
+        <h2>アーキテクチャ — VS Code Fork・独自AI統合</h2>
+      </div>
+
+      <div class="prose">
+        <p>Windsurf Editorは、Microsoft が公開している<strong>Visual Studio Code（VS Code）のオープンソースコードベースをフォーク</strong>して構築されています。そのため、VS Code ユーザーにとっては馴染み深いUIとキーバインドをそのまま利用でき、学習コストが極めて低く抑えられています。拡張機能は Open VSX Registry を通じてインストール可能で、VS Code のエコシステムの恩恵を受けられます。</p>
+
+        <p>Windsurf は上流の microsoft/vscode リポジトリを定期的にマージし、セキュリティパッチが公開された場合は即座にチェリーピックして新バージョンをリリースする体制をとっています。そのため、VS Code の最新機能やセキュリティ修正が迅速に反映されます。</p>
+
+        <p>AIの統合は単なるプラグインとしてではなく、エディタのコア部分に深く組み込まれています。キーストロークごとのリクエスト処理、リアルタイムのコンテキスト構築、エージェントのツール呼び出しなど、あらゆるレイヤーでAIが動作しています。この「AI ネイティブ」なアーキテクチャが、単なる VS Code + AI プラグインとは根本的に異なる体験を提供する理由です。</p>
+      </div>
+
+      <h3 style="color: var(--text-primary); font-size: 1.1rem; margin: 28px 0 16px;">システムアーキテクチャ図</h3>
+
+      <div class="arch-diagram">
+        <div class="arch-row">
+          <div class="arch-box accent-bg" style="flex: 1;">
+            🖥️ Windsurf Editor（VS Code Fork）<small>Mac / Windows / Linux 対応</small>
+          </div>
+        </div>
+        <div class="arch-arrow">↕</div>
+        <div class="arch-row">
+          <div class="arch-box card-bg">Windsurf Tab<small>パッシブ補完</small></div>
+          <div class="arch-box card-bg">Cascade Agent<small>エージェンティック</small></div>
+          <div class="arch-box card-bg">Context Engine<small>コード理解</small></div>
+        </div>
+        <div class="arch-arrow">↕</div>
+        <div class="arch-row">
+          <div class="arch-box card-bg">ローカルインデックス<small>AST ベース</small></div>
+          <div class="arch-box card-bg">Fast Context<small>swe-grep</small></div>
+          <div class="arch-box card-bg">Memories & Rules<small>パーソナライゼーション</small></div>
+        </div>
+        <div class="arch-arrow">↕ TLS暗号化通信</div>
+        <div class="arch-row">
+          <div class="arch-box accent-bg" style="flex: 1;">
+            ☁️ Windsurf Cloud / Hybrid Infrastructure（GCP, Crusoe, Modal, Oracle Cloud）
+          </div>
+        </div>
+        <div class="arch-arrow">↕</div>
+        <div class="arch-row">
+          <div class="arch-box card-bg">SWE-1.5<small>自社モデル</small></div>
+          <div class="arch-box card-bg">Claude 4<small>Anthropic</small></div>
+          <div class="arch-box card-bg">GPT-4.1<small>OpenAI</small></div>
+          <div class="arch-box card-bg">Gemini<small>Google</small></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>コードベースインデックス</h3>
+        <p>Windsurf のインデックスは<strong>抽象構文木（AST）ベース</strong>で構築されています。ファイル単位やナイーブなチャンクではなく、関数・メソッド・クラスなどのセマンティックなブロック単位でインデックスを生成するため、大規模なエンタープライズコードでも精度の高いコンテキスト検索が可能です。ローカルインデックスではクライアントマシン上でASTを生成し、各チャンクの埋め込みベクトルをサーバーで計算して、ローカルのベクトルストアに格納します。リモートインデックスでは、ローカルに収まりきらない大規模リポジトリや、現在IDEで開いていないリポジトリのコンテキストも活用できます。</p>
+      </div>
+
+      <div class="card">
+        <h3>デプロイメントオプション</h3>
+        <div class="card-grid" style="margin-top: 12px;">
+          <div>
+            <h4>☁️ Cloud</h4>
+            <p>個人プラン、Teams、Enterprise Cloud。AIリクエストはWindsurfが管理するサーバー（GCP）で処理。Teams/Enterprise はデフォルトでゼロデータ保持。US、EU（フランクフルト）、FedRAMP High（AWS GovCloud）から選択可能。</p>
+          </div>
+          <div>
+            <h4>🔄 Hybrid</h4>
+            <p>最も人気のエンタープライズ構成。データ保持が必要な機能は顧客テナント内のDockerコンテナで実行、推論はWindsurfクラウドで処理。Cloudflare Tunnelで安全に接続。コード片がWindsurf側に保持されることはありません。</p>
+          </div>
+          <div>
+            <h4>🏢 Self-hosted</h4>
+            <p>全コンピュートとデータ保持が顧客のGPU対応テナント内で完結。Docker ComposeまたはHelm Chartで展開。AWS Bedrock、Azure OpenAI等の顧客のプライベートLLMエンドポイントに接続可能。ただし、Windsurf EditorやCascadeの一部先端機能は利用不可。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECTION 4: 対応モデル -->
+    <!-- ============================================ -->
+    <section class="section" id="sec4">
+      <div class="section-header">
+        <div class="section-num">04</div>
+        <h2>対応モデルとAIエンジン</h2>
+      </div>
+
+      <div class="prose">
+        <p>Windsurfはマルチモデルアーキテクチャを採用しており、用途やタスクに応じて最適なモデルを選択できます。Cascade の入力ボックス下にあるドロップダウンメニューからモデルを切り替えることが可能です。自社開発のSWEモデルファミリーに加え、主要なAI企業のモデルも利用できます。</p>
+      </div>
+
+      <div class="card">
+        <h3>自社開発 SWE モデルファミリー</h3>
+        <div class="table-wrap" style="margin-top: 16px;">
+          <table>
+            <thead>
+              <tr>
+                <th>モデル</th>
+                <th>用途</th>
+                <th>性能</th>
+                <th>速度</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>SWE-1.5</strong></td>
+                <td>エージェンティックコーディング（最強）</td>
+                <td>Claude 4.5レベルの近SOTA性能</td>
+                <td>最大 950 tok/s（Cerebras連携）</td>
+              </tr>
+              <tr>
+                <td><strong>SWE-1</strong></td>
+                <td>エージェンティックコーディング（初代）</td>
+                <td>Claude 3.5 Sonnet レベル</td>
+                <td>コスト効率に優れる</td>
+              </tr>
+              <tr>
+                <td><strong>SWE-1-mini</strong></td>
+                <td>Windsurf Tab の補完</td>
+                <td>リアルタイムレイテンシに最適化</td>
+                <td>超低遅延</td>
+              </tr>
+              <tr>
+                <td><strong>swe-grep</strong></td>
+                <td>コンテキスト検索（Fast Context）</td>
+                <td>コード検索に特化</td>
+                <td>ミリ秒単位</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin-top: 12px;">SWE-1.5 は数千億パラメータ規模のフロンティアモデルで、Cognition が Cerebras と提携して超高速推論を実現しています。SWE-Bench Pro ベンチマークでは近 SOTA の性能を達成し、速度面では Haiku 4.5 の6倍、Sonnet 4.5 の13倍とされています。ソフトウェアエンジニアリングのワークフロー全体（設計、コーディング、テスト、デバッグ、デプロイ）に最適化された、コード生成に留まらないモデルです。</p>
+      </div>
+
+      <div class="card">
+        <h3>サードパーティモデル</h3>
+        <div class="table-wrap" style="margin-top: 16px;">
+          <table>
+            <thead>
+              <tr>
+                <th>プロバイダー</th>
+                <th>利用可能モデル</th>
+                <th>BYOK対応</th>
+                <th>ZDR契約</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Anthropic</strong></td>
+                <td>Claude 4 Sonnet, Claude 4 Sonnet (Thinking), Claude 4 Opus, Claude 4 Opus (Thinking)</td>
+                <td><span class="check">✓ 対応</span></td>
+                <td><span class="check">✓</span></td>
+              </tr>
+              <tr>
+                <td><strong>OpenAI</strong></td>
+                <td>GPT-4.1 系</td>
+                <td>—</td>
+                <td><span class="check">✓</span></td>
+              </tr>
+              <tr>
+                <td><strong>Google</strong></td>
+                <td>Gemini 系（Vertex API 経由）</td>
+                <td>—</td>
+                <td><span class="check">✓</span></td>
+              </tr>
+              <tr>
+                <td><strong>xAI</strong></td>
+                <td>Grok 系</td>
+                <td>—</td>
+                <td><span class="check">✓</span></td>
+              </tr>
+              <tr>
+                <td><strong>DeepSeek</strong></td>
+                <td>DeepSeek 系（Fireworks 経由）</td>
+                <td>—</td>
+                <td><span class="check">✓</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin-top: 12px;"><strong>BYOK（Bring Your Own Key）</strong>機能により、自分のAPIキーを使って特定のモデル（現時点では Claude 4 Sonnet / Opus 系）を利用可能です。これによりクレジット消費を抑えたり、独自の利用制限で運用したりできます。Enterprise 管理者は特定のモデルプロバイダーの利用を組織全体で無効化することも可能です。</p>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECTION 5: 料金体系 -->
+    <!-- ============================================ -->
+    <section class="section" id="sec5">
+      <div class="section-header">
+        <div class="section-num">05</div>
+        <h2>料金体系 — Free / Pro / Teams / Enterprise</h2>
+      </div>
+
+      <div class="prose">
+        <p>Windsurf は2025年4月に料金体系を大幅に簡素化しました。従来の「Flow Action クレジット」を廃止し、統一された「プロンプトクレジット」制に移行。モデルごとにクレジット消費量は異なりますが、全体的にシンプルでわかりやすい構造になっています。Freeプランでは無制限のTab補完（Autocomplete）が利用可能で、有料モデルの低速利用枠も付属しています。</p>
+      </div>
+
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <h4>Free</h4>
+          <div class="price">$0</div>
+          <div class="price-period">無料</div>
+          <ul class="feature-list">
+            <li>25 クレジット/月</li>
+            <li>無制限 Tab 補完</li>
+            <li>Cascade Chat/Code</li>
+            <li>0クレジットモデル利用可</li>
+            <li>ローカルインデックス</li>
+            <li>Previews</li>
+          </ul>
+        </div>
+        <div class="pricing-card featured">
+          <h4>Pro</h4>
+          <div class="price">$15</div>
+          <div class="price-period">/月</div>
+          <ul class="feature-list">
+            <li>500 クレジット/月</li>
+            <li>追加 250 クレジット $10</li>
+            <li>全プレミアムモデル</li>
+            <li>Fast Context</li>
+            <li>SWE-1.5 モデル</li>
+            <li>Deploys</li>
+            <li>無制限 Previews</li>
+          </ul>
+        </div>
+        <div class="pricing-card">
+          <h4>Teams</h4>
+          <div class="price">$30</div>
+          <div class="price-period">/ユーザー/月</div>
+          <ul class="feature-list">
+            <li>500 クレジット/ユーザー/月</li>
+            <li>Pro の全機能</li>
+            <li>一元管理ビリング</li>
+            <li>管理ダッシュボード</li>
+            <li>優先サポート</li>
+            <li>ナレッジベース</li>
+            <li>チーム Deploys</li>
+          </ul>
+        </div>
+        <div class="pricing-card">
+          <h4>Enterprise</h4>
+          <div class="price">$60〜</div>
+          <div class="price-period">/ユーザー/月（要相談）</div>
+          <ul class="feature-list">
+            <li>1,000 クレジット/ユーザー/月</li>
+            <li>Teams の全機能</li>
+            <li>SSO + アクセス制御</li>
+            <li>RBAC（ロールベースアクセス制御）</li>
+            <li>Hybrid / Self-hosted 選択可</li>
+            <li>ボリュームディスカウント</li>
+            <li>専任アカウントマネージャー</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <strong>💡 お得な情報：</strong> 学生向けにPro プランの割引があります。また、友人を有料プランに紹介すると、250 クレジットがボーナスとして付与されます。Free プランでもクレジットが尽きた後、0クレジットモデル（SWE-1系の一部）や無制限の Tab 補完は引き続き利用可能です。
+      </div>
+
+      <div class="card">
+        <h3>競合との価格比較</h3>
+        <div class="table-wrap" style="margin-top: 12px;">
+          <table>
+            <thead>
+              <tr>
+                <th>ツール</th>
+                <th>無料プラン</th>
+                <th>個人有料</th>
+                <th>チーム</th>
+                <th>備考</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Windsurf</strong></td>
+                <td>$0（25クレジット）</td>
+                <td>$15/月</td>
+                <td>$30/ユーザー/月</td>
+                <td>500クレジット制、追加購入可</td>
+              </tr>
+              <tr>
+                <td><strong>Cursor</strong></td>
+                <td>$0（制限あり）</td>
+                <td>$20/月</td>
+                <td>$40/ユーザー/月</td>
+                <td>500リクエスト、超過後低速</td>
+              </tr>
+              <tr>
+                <td><strong>GitHub Copilot</strong></td>
+                <td>$0（制限あり）</td>
+                <td>$10/月</td>
+                <td>$19/ユーザー/月</td>
+                <td>VS Code 内プラグイン</td>
+              </tr>
+              <tr>
+                <td><strong>Claude Code</strong></td>
+                <td>なし</td>
+                <td>API従量課金</td>
+                <td>API従量課金</td>
+                <td>Max プラン $100/月〜$200/月も</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECTION 6: 買収後の変化と今後 -->
+    <!-- ============================================ -->
+    <section class="section" id="sec6">
+      <div class="section-header">
+        <div class="section-num">06</div>
+        <h2>買収劇の全貌と今後の方向性</h2>
+      </div>
+
+      <div class="prose">
+        <p>Windsurf を巡る2025年の買収劇は、AI 業界で最もドラマチックな出来事の一つでした。その全貌を時系列で整理し、今後の方向性を考察します。</p>
+      </div>
+
+      <div class="card">
+        <h3>OpenAI $3B 買収交渉とその破綻</h3>
+        <p>2025年4月、OpenAI が Windsurf を約30億ドルで買収する交渉に入ったと CNBC が報道しました。これは Windsurf の年間経常収益（ARR）の約30倍という高い評価額で、OpenAI がモデルメーカーから開発者ツールプラットフォームへ進出する戦略的意図が明確でした。しかし、この取引は複数の要因で破綻しました。</p>
+        <p style="margin-top: 12px;">第一に、<strong>Microsoft との利害対立</strong>です。Microsoft は OpenAI に累計 $13B を投資する最大の投資家であると同時に、GitHub Copilot という競合するAIコーディングツールを持っています。Windsurf の買収は Copilot と直接競合することを意味し、Microsoft 側に大きな懸念を生みました。</p>
+        <p style="margin-top: 12px;">第二に、<strong>Windsurf チーム側の懸念</strong>です。コーディングアシスタントが OpenAI の巨大組織の中でどのようにフィットするか、プロダクトの独立性が維持されるかについて、Windsurf の経営陣が懸念を表明したと報じられています。</p>
+      </div>
+
+      <div class="card">
+        <h3>Google による人材獲得（$2.4B）</h3>
+        <p>OpenAI との交渉が決裂した2025年7月11日、Google が Windsurf の共同創業者兼CEO Varun Mohan と複数の主要エンジニアを引き抜きました。これは「逆アクハイヤー（reverse acquihire）」と呼ばれる手法で、Google は会社自体を買収するのではなく、テクノロジーのライセンスと人材獲得に対して $2.4B を支払いました。Mohan は Google DeepMind に参加し、AIコーディング関連のプロジェクトに従事しています。</p>
+      </div>
+
+      <div class="card">
+        <h3>Cognition による買収と現在の体制</h3>
+        <p>Google への人材流出からわずか3日後の2025年7月14日、自律型AIエンジニア「Devin」を開発する Cognition AI が Windsurf の買収を発表しました。Cognition は Windsurf の IP、プロダクト、商標、ブランド、ユーザーベース、そして Google に引き抜かれなかった従業員を取得しました。Jeff Wang が新CEOに就任し、Windsurf は独立したプロダクトとして運営を継続しています。</p>
+        <p style="margin-top: 12px;">Cognition はその後2025年9月に $400M の資金調達を実施し、Windsurf + Devin の二本柱戦略に強い支持を集めています。Devin が完全自律型のバックグラウンドエージェントとして位置付けられるのに対し、Windsurf は開発者と協働する「コラボレーティブエージェント」として差別化されています。</p>
+      </div>
+
+      <div class="card">
+        <h3>今後の方向性</h3>
+        <div class="card-grid" style="margin-top: 12px;">
+          <div>
+            <h4>Devin との統合</h4>
+            <p>Cognition は Windsurf の独自技術を Cognition の製品群に段階的に統合する方針です。将来的には、Windsurf IDE 内から Devin のタスクを起動したり、Devin が作成したコードを Windsurf で即座にレビュー・編集したりといったシームレスな連携が期待されます。</p>
+          </div>
+          <div>
+            <h4>エンタープライズ展開の加速</h4>
+            <p>Cognizant との戦略的パートナーシップ（2026年1月発表）に見られるように、大企業向けの展開を加速しています。Devin によるバッチ処理 + Windsurf による対話的開発のコンビネーションは、エンタープライズの大規模開発に最適化されています。</p>
+          </div>
+          <div>
+            <h4>SWE モデルの進化</h4>
+            <p>SWE-1 → SWE-1.5 の進化に続き、さらなるモデル改良が進行中と見られます。ソフトウェアエンジニアリング全般に特化したモデルは、汎用モデルに対する明確な差別化ポイントです。</p>
+          </div>
+          <div>
+            <h4>MCP エコシステム</h4>
+            <p>Model Context Protocol（MCP）への対応により、外部ツールとの連携が拡大しています。データベース、API、CI/CD パイプライン等の外部システムとの統合がますます充実する方向です。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-warning">
+        <strong>⚠️ 注意：</strong> 買収劇の余波として、一部の従業員がレイオフやバイアウトの対象となったことが報じられています。また、元CEOの Mohan が Google に移ったことで、長期的な製品ビジョンに変化が生じる可能性があります。ただし、2026年3月現在、Windsurf は活発にアップデートされ続けており、Cognition による投資も継続しています。
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECTION 7: セキュリティ・プライバシー -->
+    <!-- ============================================ -->
+    <section class="section" id="sec7">
+      <div class="section-header">
+        <div class="section-num">07</div>
+        <h2>セキュリティ・プライバシー</h2>
+      </div>
+
+      <div class="prose">
+        <p>AIコーディングツールにとって、セキュリティとプライバシーは最も重要な懸念事項の一つです。Windsurfは開発者のコードが知的財産であることを深く認識し、業界でも最高水準のセキュリティ体制を構築しています。Fortune 500企業を含む数千社がWindsurfを企業全体で導入している実績は、その信頼性の証といえます。</p>
+      </div>
+
+      <div class="card-grid">
+        <div class="mini-card">
+          <div class="mc-icon">🔒</div>
+          <h4>SOC 2 Type II 認証</h4>
+          <p>第三者監査によるSOC 2 Type II認証を取得。年次のペネトレーションテストも実施しています（最終: 2025年2月13日）。セキュリティ開発プロセスと運用管理の信頼性が保証されています。</p>
+        </div>
+        <div class="mini-card">
+          <div class="mc-icon">🏛️</div>
+          <h4>FedRAMP High 認定</h4>
+          <p>米国連邦政府機関向けの最も厳格なセキュリティ認定。コードレビュープロセス、MDM、ゼロトラストVPN、OWASP ASVS Level 1 準拠、災害復旧計画など、SOC 2を超える開発実践が求められます。</p>
+        </div>
+        <div class="mini-card">
+          <div class="mc-icon">🏥</div>
+          <h4>HIPAA コンプライアンス</h4>
+          <p>医療機関向けにHIPAA準拠のプラットフォームを維持。大規模な導入に対しては Business Associate Agreement（BAA）も締結可能です。</p>
+        </div>
+        <div class="mini-card">
+          <div class="mc-icon">🚫</div>
+          <h4>ゼロデータ保持（ZDR）</h4>
+          <p>Teams/Enterprise プランではデフォルトでZDRが有効。コードやコード由来のデータがサーバーやサブプロセッサに平文で保存されることは一切ありません。個人プランでも任意でZDRを有効化可能。ZDR有効ユーザーのデータは学習にも使用されません。</p>
+        </div>
+        <div class="mini-card">
+          <div class="mc-icon">🔐</div>
+          <h4>SSO / アクセス制御</h4>
+          <p>Enterprise プランでは SAML ベースの SSO（Microsoft Entra、Okta、Google Workspaces 等）に対応。RBAC（ロールベースアクセス制御）により、ユーザーの権限を細かく管理できます。</p>
+        </div>
+        <div class="mini-card">
+          <div class="mc-icon">📋</div>
+          <h4>帰属・ライセンスフィルタリング</h4>
+          <p>生成されたコードが非寛容ライセンスのコードに類似する場合、自動的に検出してユーザーに表示しません。Jaccard編集距離を用いたファジーマッチングで、ナイーブな文字列マッチングよりも堅牢な検出を実現。Enterprise向けにはIPインデムニティ条項も提供。</p>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 20px;">
+        <h3>データフローの透明性</h3>
+        <p>Windsurfはデータの流れについて極めて詳細な情報公開を行っています。リクエスト時にはコンテキストとして関連コードスニペット、最近のエディタ操作、会話履歴、ユーザー指定のシグナル（ルール、メモリー等）の組み合わせが送信されます。重要なのは、<strong>単一のリクエストにコードベース全体が含まれることはない</strong>という点です。先読みパーソナライゼーションのための埋め込み計算でも、コードはクライアント側でASTに分割され、個別のスニペットとして送信されます。</p>
+        <p style="margin-top: 12px;">全データは <strong>TLS で暗号化</strong> されて転送されます。サブプロセッサとしては GCP、Crusoe、Modal、Oracle Cloud、Palantir（FedRAMP）、AWS、OpenAI、Anthropic、Google Vertex、xAI、Fireworks（DeepSeek）を利用しており、主要な推論プロバイダーとはゼロデータ保持契約を締結しています。Enterprise管理者は特定のプロバイダーの利用を組織レベルで無効化できます。</p>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECTION 8: ユースケース -->
+    <!-- ============================================ -->
+    <section class="section" id="sec8">
+      <div class="section-header">
+        <div class="section-num">08</div>
+        <h2>ユースケース集 — 10選</h2>
+      </div>
+
+      <div class="card-grid">
+        <div class="mini-card">
+          <div class="mc-icon">🚀</div>
+          <h4>1. フルスタックアプリの高速プロトタイピング</h4>
+          <p>Cascade に「React + Express + PostgreSQL で Todo アプリを作って」と指示するだけで、プロジェクト構造の生成、依存関係のインストール、コード生成、DB設定まで一気に対応。Previews でリアルタイム確認し、Deploys で即座に公開可能。アイデアから動くプロトタイプまで数十分で到達できます。</p>
+        </div>
+        <div class="mini-card">
+          <div class="mc-icon">🐛</div>
+          <h4>2. 複雑なバグの調査と修正</h4>
+          <p>エラーメッセージをハイライトして「Explain and Fix」をクリックするだけ。Cascade はスタックトレースを解析し、関連するコードを横断的に調査して原因を特定。テストケースの追加まで含めて修正を提案します。Problems パネルから直接送信する機能も便利です。</p>
+        </div>
+        <div class="mini-card">
+          <div class="mc-icon">♻️</div>
+          <h4>3. レガシーコードのリファクタリング</h4>
+          <p>「このファイルを TypeScript に変換して型を追加して」「クラスコンポーネントを関数コンポーネントに書き換えて」といった大規模なリファクタリングを安全に実行。チェックポイント機能で変更前の状態にいつでも戻れるため、実験的なリファクタリングも安心です。</p>
+        </div>
+        <div class="mini-card">
+          <div class="mc-icon">📝</div>
+          <h4>4. テストコードの自動生成</h4>
+          <p>「このモジュールの単体テストを Jest で書いて。エッジケースも含めて」と指示すれば、既存コードの構造を理解した上で網羅的なテストケースを生成。カバレッジ率の向上に劇的な効果があります。</p>
+        </div>
+        <div class="mini-card">
+          <div class="mc-icon">📚</div>
+          <h4>5. API ドキュメントの自動生成</h4>
+          <p>コードベースを解析して OpenAPI Spec、JSDoc コメント、README の自動生成が可能。Rules にドキュメントスタイルを定義しておけば、一貫したフォーマットで生成されます。</p>
+        </div>
+        <div class="mini-card">
+          <div class="mc-icon">🎓</div>
+          <h4>6. 新技術・新フレームワークの学習</h4>
+          <p>Chat モードで「Next.js の App Router の仕組みを教えて」と聞いたり、「このプロジェクトに Prisma ORM を導入して」と指示してハンズオンで学べます。Web Search 機能で最新ドキュメントも参照可能です。</p>
+        </div>
+        <div class="mini-card">
+          <div class="mc-icon">🔄</div>
+          <h4>7. コードレビュー支援</h4>
+          <p>変更差分を Cascade に渡して「このPRのコードレビューをして。セキュリティの観点も含めて」と依頼。パフォーマンス問題、セキュリティ脆弱性、ベストプラクティスからの逸脱を指摘してくれます。</p>
+        </div>
+        <div class="mini-card">
+          <div class="mc-icon">🏗️</div>
+          <h4>8. インフラ構成の生成</h4>
+          <p>Dockerfile、docker-compose.yml、Kubernetes マニフェスト、Terraform ファイルの生成を支援。ターミナル統合により、生成した設定をその場で検証・適用できます。</p>
+        </div>
+        <div class="mini-card">
+          <div class="mc-icon">🌍</div>
+          <h4>9. 国際化（i18n）対応</h4>
+          <p>「このアプリを日本語に対応させて。i18next を使って」と指示すると、翻訳ファイルの構造生成、コード中のハードコードされた文字列の置換、ロケール切り替え機能の実装まで一括対応。</p>
+        </div>
+        <div class="mini-card">
+          <div class="mc-icon">📊</div>
+          <h4>10. データ分析スクリプトの作成</h4>
+          <p>「この CSV ファイルを読み込んで、売上の月次推移をグラフ化する Python スクリプトを書いて」といったデータ処理タスクもお手の物。Pandas、Matplotlib 等のライブラリを自動的に活用します。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECTION 9: 制限事項 -->
+    <!-- ============================================ -->
+    <section class="section" id="sec9">
+      <div class="section-header">
+        <div class="section-num">09</div>
+        <h2>制限事項・注意点</h2>
+      </div>
+
+      <div class="card">
+        <h3>クレジットシステムの制約</h3>
+        <p>Windsurf のクレジットシステムは、使用するモデルによって消費量が異なります。SWE-1.5 や Claude 4 Opus のようなハイエンドモデルを多用すると、月間クレジットがすぐに枯渇する可能性があります。特に Free プランの25クレジットは、本格的な開発にはまず足りません。Pro プランの500クレジットも、大規模プロジェクトで Cascade を多用すると月半ばで消化してしまうことがあります。追加クレジットは $10/250クレジットで購入可能ですが、ヘビーユースの場合はコストが嵩みます。</p>
+      </div>
+
+      <div class="card">
+        <h3>VS Code 拡張機能の互換性</h3>
+        <p>Windsurf は VS Code のフォークですが、Microsoft の公式 VS Code Marketplace ではなく<strong>Open VSX Registry</strong> を使用します。そのため、一部の VS Code 拡張機能（特に Microsoft 独自のもの、例えば Remote - SSH、Live Share の一部バージョンなど）が利用できないか、動作が異なる場合があります。多くの主要な拡張機能は Open VSX にも登録されていますが、事前に確認が必要です。</p>
+      </div>
+
+      <div class="card">
+        <h3>Self-hosted の機能制限</h3>
+        <p>Enterprise Self-hosted デプロイメントでは、最大限のセキュリティが確保される代わりに、Windsurf Editor 自体や Cascade の一部先端機能が利用できません。主に IDE プラグイン（JetBrains、VS Code プラグイン等）経由でのAutocomplete/Chat機能に限定されます。最先端のエージェンティック体験を求める場合は、Hybrid デプロイが推奨されます。</p>
+      </div>
+
+      <div class="card">
+        <h3>AI 生成コードの品質</h3>
+        <p>あらゆるAIコーディングツールに共通する注意点ですが、AI が生成するコードは必ずしも正確ではありません。特に複雑なビジネスロジック、パフォーマンスクリティカルなコード、セキュリティに関わるコードについては、人間による慎重なレビューが不可欠です。Windsurf の Cascade は「コラボレーティブエージェント」として設計されており、ファイル編集は即座にコミットされず、明示的な承認が必要ですが、それでも盲目的にAcceptすることは避けるべきです。</p>
+      </div>
+
+      <div class="card">
+        <h3>組織的な不確実性</h3>
+        <p>2025年の買収劇で CEO と主要エンジニアが Google に移籍し、残りの組織が Cognition に吸収されるという激動を経験しています。新体制下での長期的なプロダクトロードマップにはある程度の不確実性があります。一方で、SWE-1.5 のリリースや Cognizant とのパートナーシップなど、積極的な動きも続いています。選定にあたっては、この組織変動リスクも考慮する必要があります。</p>
+      </div>
+
+      <div class="card">
+        <h3>その他の注意点</h3>
+        <div class="card-grid" style="margin-top: 12px;">
+          <div>
+            <h4>ネットワーク依存</h4>
+            <p>AI機能はクラウド接続が必須（Self-hosted除く）。オフライン環境ではAI支援が受けられません。エディタ自体はオフラインでも動作しますが、Windsurf を使う意義の大半が失われます。</p>
+          </div>
+          <div>
+            <h4>コンテキストウィンドウの限界</h4>
+            <p>非常に大きなファイルや極めて長い会話では、コンテキストウィンドウの制限に達することがあります。Cascade は定期的に会話を要約・チェックポイントしてこの問題を軽減しますが、完全ではありません。</p>
+          </div>
+          <div>
+            <h4>言語サポートの差</h4>
+            <p>Python、TypeScript/JavaScript、Go 等の主要言語では極めて高い品質ですが、マイナー言語やドメイン固有言語（DSL）では補完精度が低下することがあります。</p>
+          </div>
+          <div>
+            <h4>ターミナルコマンドの安全性</h4>
+            <p>Cascade はデフォルトでターミナルコマンドの実行前に承認を求めますが、自動実行モード（Auto-run）を有効にすると、予期しないコマンドが実行されるリスクがあります。Teams/Enterprise ではこのモードは利用不可です。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECTION 10: 他ツール比較 -->
+    <!-- ============================================ -->
+    <section class="section" id="sec10">
+      <div class="section-header">
+        <div class="section-num">10</div>
+        <h2>他ツール比較 — Codex, Claude Code, Copilot, Cursor 等</h2>
+      </div>
+
+      <div class="prose">
+        <p>2026年のAIコーディングツール市場は空前の活況を呈しています。各ツールにはそれぞれ明確な強みと弱みがあり、開発者のワークフローや優先事項に応じて最適な選択が異なります。ここでは主要ツールとの詳細な比較を行います。</p>
+      </div>
+
+      <div class="table-wrap" style="margin-top: 20px;">
+        <table>
+          <thead>
+            <tr>
+              <th>項目</th>
+              <th>Windsurf</th>
+              <th>Cursor</th>
+              <th>GitHub Copilot</th>
+              <th>Claude Code</th>
+              <th>OpenAI Codex</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>タイプ</strong></td>
+              <td>スタンドアロンIDE</td>
+              <td>スタンドアロンIDE</td>
+              <td>VS Codeプラグイン</td>
+              <td>CLI ツール</td>
+              <td>クラウドエージェント + CLI</td>
+            </tr>
+            <tr>
+              <td><strong>基盤</strong></td>
+              <td>VS Code Fork</td>
+              <td>VS Code Fork</td>
+              <td>VS Code ネイティブ</td>
+              <td>ターミナル</td>
+              <td>Web + CLI</td>
+            </tr>
+            <tr>
+              <td><strong>運営</strong></td>
+              <td>Cognition</td>
+              <td>Anysphere</td>
+              <td>Microsoft / GitHub</td>
+              <td>Anthropic</td>
+              <td>OpenAI</td>
+            </tr>
+            <tr>
+              <td><strong>エージェント能力</strong></td>
+              <td><span class="check">◎ Cascade</span></td>
+              <td><span class="check">◎ Composer</span></td>
+              <td><span class="partial">○ Agent Mode</span></td>
+              <td><span class="check">◎ 自律型</span></td>
+              <td><span class="check">◎ 非同期自律型</span></td>
+            </tr>
+            <tr>
+              <td><strong>自社モデル</strong></td>
+              <td><span class="check">✓ SWE-1.5</span></td>
+              <td><span class="check">✓ Composer-1</span></td>
+              <td><span class="cross">✗</span></td>
+              <td><span class="check">✓ Claude系</span></td>
+              <td><span class="check">✓ codex-1</span></td>
+            </tr>
+            <tr>
+              <td><strong>マルチモデル</strong></td>
+              <td><span class="check">✓</span></td>
+              <td><span class="check">✓</span></td>
+              <td><span class="partial">△ 限定的</span></td>
+              <td><span class="cross">✗ Claude のみ</span></td>
+              <td><span class="cross">✗ OpenAI のみ</span></td>
+            </tr>
+            <tr>
+              <td><strong>コード補完</strong></td>
+              <td><span class="check">◎ Supercomplete</span></td>
+              <td><span class="check">◎ Tab</span></td>
+              <td><span class="check">◎ Inline</span></td>
+              <td><span class="cross">✗</span></td>
+              <td><span class="cross">✗</span></td>
+            </tr>
+            <tr>
+              <td><strong>コンテキスト検索</strong></td>
+              <td><span class="check">◎ Fast Context</span></td>
+              <td><span class="check">○</span></td>
+              <td><span class="partial">○</span></td>
+              <td><span class="check">◎ 巨大CW</span></td>
+              <td><span class="check">○ サンドボックス</span></td>
+            </tr>
+            <tr>
+              <td><strong>個人月額</strong></td>
+              <td>$15</td>
+              <td>$20</td>
+              <td>$10</td>
+              <td>API従量 / Max $100〜</td>
+              <td>API従量 / Pro $200</td>
+            </tr>
+            <tr>
+              <td><strong>無料プラン</strong></td>
+              <td><span class="check">✓ 25クレジット</span></td>
+              <td><span class="check">✓ 制限あり</span></td>
+              <td><span class="check">✓ 制限あり</span></td>
+              <td><span class="cross">✗</span></td>
+              <td><span class="cross">✗</span></td>
+            </tr>
+            <tr>
+              <td><strong>FedRAMP</strong></td>
+              <td><span class="check">✓ High</span></td>
+              <td><span class="cross">✗</span></td>
+              <td><span class="partial">△ GitHub のみ</span></td>
+              <td><span class="cross">✗</span></td>
+              <td><span class="cross">✗</span></td>
+            </tr>
+            <tr>
+              <td><strong>プラットフォーム</strong></td>
+              <td>Mac/Win/Linux</td>
+              <td>Mac/Win/Linux</td>
+              <td>VS Code / JetBrains等</td>
+              <td>ターミナル（全OS）</td>
+              <td>Web + CLI</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card" style="margin-top: 24px;">
+        <h3>各ツールの特徴まとめ</h3>
+
+        <h4 style="margin-top: 16px;">Windsurf</h4>
+        <p>エージェンティック IDE の先駆者。Cascade のリアルタイム認識や Flows の概念は独自性が高く、AI と開発者の協働体験が最も洗練されています。SWE-1.5 の高速推論と自社モデル戦略、FedRAMP High 認定によるエンタープライズ対応力が強み。Cognition 傘下で Devin との将来的な統合にも期待が持てます。価格面でも Cursor より $5 安い $15/月と競争力があります。一方、組織変動による不確実性は考慮すべき点です。</p>
+
+        <h4 style="margin-top: 16px;">Cursor</h4>
+        <p>Windsurf の最大の競合。同じく VS Code フォークのスタンドアロン IDE で、Composer というエージェント機能や独自モデル Composer-1 を持ちます。過去の会話の参照機能や、コードベース横断のコンテキスト理解に強み。$20/月と Windsurf より高めですが、安定した独立企業としての信頼性があります。小〜中規模プロジェクトでの体験が特に評価されています。</p>
+
+        <h4 style="margin-top: 16px;">GitHub Copilot</h4>
+        <p>Microsoft / GitHub が提供する最大手のAIコーディングアシスタント。VS Code にネイティブ統合され、最も広いIDE対応（VS Code, JetBrains, Visual Studio, Neovim 等）を誇ります。$10/月と最も安価で、GitHub エコシステム（Issues, PRs, Actions）との統合が最大の強み。Agent Mode も追加されましたが、Windsurf や Cursor のエージェント能力にはまだ及ばないとの評価が多いです。既存のワークフローを大きく変えたくない開発者に最適です。</p>
+
+        <h4 style="margin-top: 16px;">Claude Code</h4>
+        <p>Anthropic が提供するターミナルネイティブのコーディングエージェント。最大のコンテキストウィンドウ、SWE-bench での最高スコア、Claude モデルの高い推論能力が最大の強み。IDE ではなくターミナルで動作するため、既存のエディタ（VS Code, Neovim 等）と併用する形になります。API 従量課金が基本で、予測不能なコストが欠点。Max プラン（$100〜$200/月）で定額利用も可能。本当に困難な問題に取り組む上級開発者に向いています。</p>
+
+        <h4 style="margin-top: 16px;">OpenAI Codex</h4>
+        <p>OpenAI が提供するコーディングエージェント。ローカル CLI と クラウドベースの非同期タスク実行の両方をサポートする点が特徴。クラウドモードではサンドボックス環境で非同期にタスクを実行し、結果を後から確認できます。オープンソースの CLI ツールもあり、コミュニティの貢献を受けやすい構造です。GPT-5 や codex-1 モデルとの統合が強み。</p>
+      </div>
+
+      <div class="callout callout-tip">
+        <strong>💡 選択のポイント：</strong> エージェンティック IDE を求めるなら Windsurf か Cursor。コストを最小限に抑えたいなら GitHub Copilot。最高の推論能力を求めるなら Claude Code。非同期タスク実行が重要なら OpenAI Codex。エンタープライズのコンプライアンス要件が厳格なら、FedRAMP High を持つ Windsurf が唯一の選択肢です。
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECTION 11: 始め方ガイド -->
+    <!-- ============================================ -->
+    <section class="section" id="sec11">
+      <div class="section-header">
+        <div class="section-num">11</div>
+        <h2>始め方ガイド — インストールから初回利用まで</h2>
+      </div>
+
+      <div class="prose">
+        <p>Windsurf は Mac、Windows、Linux に対応しています。VS Code を使ったことがある方なら、ほぼ同じ操作感で即座に利用開始できます。以下のステップで、AIコーディングの世界へ飛び込みましょう。</p>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <h4>Windsurf をダウンロード</h4>
+          <p><a href="https://windsurf.com/editor" target="_blank" style="color: var(--accent-light);">windsurf.com/editor</a> にアクセスし、お使いの OS に対応するインストーラーをダウンロードします。Mac（Apple Silicon / Intel）、Windows（64bit）、Linux（.deb / .rpm / tar.gz）が用意されています。ダウンロードしたインストーラーを実行するだけでインストールが完了します。</p>
+        </div>
+        <div class="step">
+          <h4>アカウント作成・ログイン</h4>
+          <p>初回起動時にサインインを求められます。メールアドレス、Google アカウント、GitHub アカウントのいずれかでサインアップ可能です。Free プランで開始され、25クレジットが付与されます。</p>
+        </div>
+        <div class="step">
+          <h4>VS Code の設定をインポート（任意）</h4>
+          <p>既存の VS Code ユーザーは、設定、拡張機能、キーバインドをインポートできます。オンボーディングフローで案内されるので、指示に従って操作してください。テーマ、フォント、お気に入りの拡張機能がそのまま使えます。</p>
+        </div>
+        <div class="step">
+          <h4>プロジェクトフォルダを開く</h4>
+          <p>「Open Folder」から既存のプロジェクトを開くか、Cascade を使って新しいプロジェクトをゼロから生成できます。フォルダを開くと、バックグラウンドでローカルインデックスの構築が開始されます。</p>
+        </div>
+        <div class="step">
+          <h4>Cascade を開いてみよう</h4>
+          <p><strong>Cmd+L</strong>（Mac）/ <strong>Ctrl+L</strong>（Windows/Linux）を押すか、右上のCascadeアイコンをクリックします。まずは Chat モードで「このプロジェクトの構造を教えて」と聞いてみましょう。AI がプロジェクトを分析して説明してくれます。</p>
+        </div>
+        <div class="step">
+          <h4>Code モードでコードを書いてもらう</h4>
+          <p>Cascade のモードを「Code」に切り替えて、「ユーザー認証機能を追加して」「このコンポーネントにローディング状態を追加して」のように指示します。AI が計画を立て、ファイルを作成・編集します。変更は自動的には適用されず、「Accept」ボタンで承認する必要があります。</p>
+        </div>
+        <div class="step">
+          <h4>Tab 補完を体験する</h4>
+          <p>通常のコーディング中に、グレーのテキストで補完候補が自動表示されます。Tab キーで受け入れ、Esc でスキップ。Supercomplete モードでは、カーソル周辺に挿入・削除の差分が小さなウィンドウで表示されます。設定から Autocomplete と Supercomplete を切り替えられます。</p>
+        </div>
+        <div class="step">
+          <h4>Rules と Memories を設定する</h4>
+          <p>Cascade 右上のカスタマイゼーションアイコンから、ルールとメモリーを設定します。「TypeScript で strict モードを常に使う」「コメントは日本語で書く」のようなルールを追加すると、AIの出力が一貫性を持つようになります。プロジェクトの .windsurfrules ファイルに記述することもできます。</p>
+        </div>
+        <div class="step">
+          <h4>モデルを選択する</h4>
+          <p>Cascade の入力ボックス下のドロップダウンからモデルを選択します。Free プランでは 0クレジットのモデル（SWE-1系の一部）が無制限に使えます。Pro プランなら SWE-1.5、Claude 4 Sonnet、GPT-4.1 などのプレミアムモデルも利用可能です。タスクの複雑さに応じてモデルを使い分けましょう。</p>
+        </div>
+        <div class="step">
+          <h4>プレビューとデプロイ</h4>
+          <p>フロントエンド開発なら、Previews 機能で IDE 内にブラウザプレビューを表示。変更がリアルタイムで反映されます。Teams プランなら Deploys 機能で Netlify への直接デプロイも可能。開発からデプロイまで IDE を離れる必要がありません。</p>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <strong>🔧 既存 IDE ユーザーへ：</strong> Windsurf は IDE プラグインとしても利用可能です。JetBrains（IntelliJ, PyCharm, WebStorm 等）、VS Code、Visual Studio、Vim/NeoVim、Jupyter、Chrome でプラグインが提供されています。<a href="https://docs.windsurf.com/plugins/getting-started" target="_blank" style="color: var(--accent-light);">docs.windsurf.com/plugins</a> からインストールできますが、Cascade のフルエージェント機能は Windsurf Editor でのみ利用可能です。
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECTION 12: Tips・参考リンク -->
+    <!-- ============================================ -->
+    <section class="section" id="sec12">
+      <div class="section-header">
+        <div class="section-num">12</div>
+        <h2>Tips・参考リンク</h2>
+      </div>
+
+      <div class="card">
+        <h3>生産性を最大化する10のTips</h3>
+        <div class="card-grid" style="margin-top: 16px;">
+          <div>
+            <h4>1. ルールを先に書く</h4>
+            <p>プロジェクト開始時に .windsurfrules を作成し、使用言語、フレームワーク、コーディング規約、ディレクトリ構造の慣例を記述しておくと、AIの出力品質が格段に向上します。</p>
+          </div>
+          <div>
+            <h4>2. メモリーを活用する</h4>
+            <p>「このプロジェクトでは Supabase を使っている」「APIのベースURLは /api/v2」のような情報をメモリーに登録。毎回説明する手間が省け、AIの応答が正確になります。</p>
+          </div>
+          <div>
+            <h4>3. チェックポイントをこまめに作る</h4>
+            <p>大きな変更の前には名前付きチェックポイントを作成。実験的な変更を気軽に試せて、うまくいかなければ一瞬で元に戻せます。</p>
+          </div>
+          <div>
+            <h4>4. @メンションで文脈を引き継ぐ</h4>
+            <p>過去の会話で解決した内容を新しい会話で参照したい時は @mention を使用。Cascade が過去の文脈から最も関連性の高い情報を自動抽出します。</p>
+          </div>
+          <div>
+            <h4>5. モデルを使い分ける</h4>
+            <p>簡単な質問やコード補完には SWE-1.5（高速・低コスト）、複雑な設計やリファクタリングには Claude 4 Sonnet/Opus（高精度）を使い分けることで、クレジットを効率的に消費できます。</p>
+          </div>
+          <div>
+            <h4>6. Queued Messages を活用</h4>
+            <p>Cascade が作業中でも次のメッセージをキューに入れられます。「完了したら次はテストを書いて」のように先回りして指示を出すと、待ち時間が減少します。</p>
+          </div>
+          <div>
+            <h4>7. .codeiumignore を設定する</h4>
+            <p>node_modules、ビルド出力、大きなデータファイルなど、AIに見せる必要のないファイルを除外。インデックスの精度向上とノイズ削減に効果的です。</p>
+          </div>
+          <div>
+            <h4>8. 同時 Cascade を活用する</h4>
+            <p>フロントエンドとバックエンドの作業を別々の Cascade で並行して進められます。Git worktree と組み合わせると、ファイル競合も回避できます。</p>
+          </div>
+          <div>
+            <h4>9. Web Search を有効活用</h4>
+            <p>最新のライブラリドキュメントや API 仕様が必要な場合、Cascade の Web Search 機能を使えば、知識のカットオフを超えた最新情報を取得してコードに反映できます。</p>
+          </div>
+          <div>
+            <h4>10. Workflows で反復作業を自動化</h4>
+            <p>よくある一連の作業（コンポーネント作成→テスト作成→Storybook記述など）をワークフローとして定義。次回から同じ構造のタスクをワンコマンドで実行できます。</p>
+          </div>
+        </div>
+      </div>
+</body>
+</html>

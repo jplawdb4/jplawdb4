@@ -1,0 +1,1934 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cursor 完全ガイド — AI搭載コードエディタの全て</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0A0A0A;
+  --bg-card: #16161A;
+  --bg-card-hover: #1C1C22;
+  --bg-elevated: #1E1E24;
+  --border: rgba(255,255,255,0.06);
+  --border-hover: rgba(255,255,255,0.12);
+  --accent: #5E6AD2;
+  --accent-light: #7B85E8;
+  --accent-dark: #4A54B8;
+  --accent-glow: rgba(94,106,210,0.15);
+  --accent-glow-strong: rgba(94,106,210,0.3);
+  --text-primary: #FAFAFA;
+  --text-secondary: #8A8A9A;
+  --text-tertiary: #55556A;
+  --text-accent: #5E6AD2;
+  --success: #34D399;
+  --warning: #FBBF24;
+  --error: #F87171;
+  --info: #60A5FA;
+  --gradient-accent: linear-gradient(135deg, #5E6AD2, #7B85E8);
+  --gradient-hero: linear-gradient(180deg, rgba(94,106,210,0.08) 0%, transparent 60%);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.2);
+  --shadow-hover: 0 4px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(94,106,210,0.1);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 16px;
+  --font-main: 'Outfit', 'Noto Sans JP', sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  --transition: 0.2s ease;
+}
+
+[data-theme="light"] {
+  --bg-primary: #F8F8FA;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F0F0F5;
+  --bg-elevated: #EBEBF0;
+  --border: rgba(0,0,0,0.08);
+  --border-hover: rgba(0,0,0,0.15);
+  --text-primary: #1A1A2E;
+  --text-secondary: #6B6B80;
+  --text-tertiary: #9595A8;
+  --accent-glow: rgba(94,106,210,0.08);
+  --accent-glow-strong: rgba(94,106,210,0.15);
+  --gradient-hero: linear-gradient(180deg, rgba(94,106,210,0.05) 0%, transparent 60%);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+  --shadow-hover: 0 4px 24px rgba(0,0,0,0.08), 0 0 0 1px rgba(94,106,210,0.15);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-main);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.8;
+  min-height: 100vh;
+  transition: background var(--transition), color var(--transition);
+}
+
+::selection {
+  background: var(--accent);
+  color: white;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--text-tertiary);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+a {
+  color: var(--accent-light);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ===== Theme Toggle ===== */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  transition: all var(--transition);
+  box-shadow: var(--shadow-card);
+}
+.theme-toggle:hover {
+  border-color: var(--accent);
+  transform: scale(1.1);
+  box-shadow: var(--shadow-hover);
+}
+
+/* ===== Back to Top ===== */
+.back-to-top {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all var(--transition);
+}
+.back-to-top.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.back-to-top:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ===== Header / Hero ===== */
+.hero {
+  padding: 100px 0 60px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 400px;
+  background: var(--gradient-hero);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: var(--accent-glow);
+  border: 1px solid rgba(94,106,210,0.2);
+  border-radius: 100px;
+  font-size: 0.8rem;
+  color: var(--accent-light);
+  font-weight: 500;
+  margin-bottom: 24px;
+  letter-spacing: 0.05em;
+}
+.hero h1 {
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 16px;
+  letter-spacing: -0.03em;
+}
+.hero h1 .accent-text {
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero .subtitle {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  color: var(--text-secondary);
+  max-width: 700px;
+  margin: 0 auto 32px;
+  font-weight: 400;
+  line-height: 1.7;
+}
+.hero-meta {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+  color: var(--text-tertiary);
+  font-size: 0.85rem;
+}
+.hero-meta span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== TOC ===== */
+.toc-section {
+  padding: 40px 0;
+}
+.toc-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 36px 40px;
+  box-shadow: var(--shadow-card);
+}
+.toc-card h2 {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.toc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 8px;
+}
+.toc-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition);
+  color: var(--text-primary);
+  font-size: 0.92rem;
+  font-weight: 400;
+}
+.toc-item:hover {
+  background: var(--accent-glow);
+  text-decoration: none;
+  color: var(--accent-light);
+}
+.toc-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--accent-glow);
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ===== Section Styling ===== */
+.section {
+  padding: 60px 0;
+}
+.section-anchor {
+  scroll-margin-top: 80px;
+}
+.section-header {
+  margin-bottom: 36px;
+}
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  color: var(--accent);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 10px;
+}
+.section-title {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+.section-desc {
+  margin-top: 12px;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  max-width: 800px;
+}
+
+/* ===== Cards ===== */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow-card);
+  transition: all var(--transition);
+}
+.card:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-hover);
+}
+.card-grid {
+  display: grid;
+  gap: 16px;
+}
+.card-grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+.card-grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+.card-grid-4 {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+.card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: var(--accent-glow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+.card h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.card p, .card-body {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+/* ===== Prose ===== */
+.prose {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.85;
+}
+.prose p {
+  margin-bottom: 16px;
+}
+.prose strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+.prose h3 {
+  color: var(--text-primary);
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-top: 32px;
+  margin-bottom: 12px;
+}
+
+/* ===== Code Block ===== */
+.code-block {
+  background: #111114;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 20px 24px;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.7;
+  overflow-x: auto;
+  color: #C9D1D9;
+  margin: 16px 0;
+  position: relative;
+}
+[data-theme="light"] .code-block {
+  background: #F4F4F8;
+  color: #383850;
+  border-color: rgba(0,0,0,0.08);
+}
+.code-block .comment { color: #6A737D; }
+.code-block .keyword { color: #C678DD; }
+.code-block .string { color: #98C379; }
+.code-block .property { color: #E5C07B; }
+.code-block .value { color: #61AFEF; }
+
+/* ===== Tables ===== */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  margin: 20px 0;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+thead {
+  background: var(--bg-elevated);
+}
+th {
+  padding: 14px 18px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+td {
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+tr:last-child td {
+  border-bottom: none;
+}
+tr:hover td {
+  background: var(--accent-glow);
+}
+
+/* ===== Tags / Badges ===== */
+.tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.tag-accent { background: var(--accent-glow); color: var(--accent-light); }
+.tag-success { background: rgba(52,211,153,0.12); color: #34D399; }
+.tag-warning { background: rgba(251,191,36,0.12); color: #FBBF24; }
+.tag-error { background: rgba(248,113,113,0.12); color: #F87171; }
+.tag-info { background: rgba(96,165,250,0.12); color: #60A5FA; }
+
+/* ===== Pricing Cards ===== */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+.pricing-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  text-align: center;
+  transition: all var(--transition);
+  position: relative;
+}
+.pricing-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+.pricing-card.recommended {
+  border-color: var(--accent);
+  box-shadow: 0 0 30px var(--accent-glow-strong);
+}
+.pricing-card.recommended::before {
+  content: 'おすすめ';
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 3px 14px;
+  background: var(--gradient-accent);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border-radius: 100px;
+  letter-spacing: 0.06em;
+}
+.pricing-name {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.pricing-price {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+.pricing-price .currency { font-size: 1rem; font-weight: 500; }
+.pricing-price .period { font-size: 0.8rem; font-weight: 400; color: var(--text-tertiary); }
+.pricing-features {
+  text-align: left;
+  margin-top: 18px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 2.2;
+}
+.pricing-features .check {
+  color: var(--success);
+  margin-right: 6px;
+  font-weight: 700;
+}
+
+/* ===== Feature Highlight ===== */
+.feature-highlight {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+  margin: 24px 0;
+}
+@media (max-width: 768px) {
+  .feature-highlight { grid-template-columns: 1fr; }
+}
+
+/* ===== Callout ===== */
+.callout {
+  border-left: 3px solid var(--accent);
+  background: var(--accent-glow);
+  padding: 18px 24px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin: 20px 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+.callout strong { color: var(--text-primary); }
+.callout.callout-warning {
+  border-left-color: var(--warning);
+  background: rgba(251,191,36,0.06);
+}
+.callout.callout-success {
+  border-left-color: var(--success);
+  background: rgba(52,211,153,0.06);
+}
+.callout.callout-error {
+  border-left-color: var(--error);
+  background: rgba(248,113,113,0.06);
+}
+
+/* ===== Timeline ===== */
+.timeline {
+  position: relative;
+  padding-left: 32px;
+  margin: 20px 0;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: var(--border);
+}
+.timeline-item {
+  position: relative;
+  padding-bottom: 24px;
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -26px;
+  top: 8px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg-primary);
+}
+.timeline-date {
+  font-size: 0.78rem;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.timeline-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.timeline-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* ===== Steps ===== */
+.steps {
+  counter-reset: step;
+  margin: 24px 0;
+}
+.step {
+  counter-increment: step;
+  display: flex;
+  gap: 18px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+}
+.step:last-child { border-bottom: none; }
+.step::before {
+  content: counter(step);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--accent-glow);
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.step-content h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.step-content p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+
+/* ===== Kbd ===== */
+kbd {
+  display: inline-block;
+  padding: 2px 8px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+/* ===== Usecase Grid ===== */
+.usecase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+.usecase-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  transition: all var(--transition);
+}
+.usecase-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-hover);
+}
+.usecase-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--gradient-accent);
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+.usecase-card h4 {
+  font-size: 0.98rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.usecase-card p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* ===== Divider ===== */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 48px 0;
+}
+
+/* ===== Footer ===== */
+.footer {
+  padding: 48px 0 32px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: 0.82rem;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .hero { padding: 70px 0 40px; }
+  .toc-card { padding: 24px; }
+  .toc-grid { grid-template-columns: 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .hero-meta { gap: 16px; }
+  .section { padding: 40px 0; }
+  .card { padding: 20px; }
+  table { font-size: 0.8rem; }
+  th, td { padding: 10px 12px; }
+}
+
+@media (max-width: 480px) {
+  .container { padding: 0 16px; }
+  .hero h1 { font-size: 1.8rem; }
+}
+
+/* ===== Print ===== */
+@media print {
+  .theme-toggle, .back-to-top { display: none !important; }
+  body { background: white; color: black; }
+  .card, .pricing-card, .toc-card { border: 1px solid #ccc; box-shadow: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Theme Toggle -->
+<button class="theme-toggle" onclick="toggleTheme()" aria-label="テーマ切り替え" title="ライト/ダーク切り替え">
+  <span id="themeIcon">☀️</span>
+</button>
+
+<!-- Back to Top -->
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="トップへ戻る">↑</button>
+
+<!-- ===== Hero ===== -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">📘 2025–2026年最新版 完全ガイド</div>
+    <h1>
+      <span class="accent-text">Cursor</span> 完全ガイド<br>
+      AI搭載コードエディタの全て
+    </h1>
+    <p class="subtitle">
+      VS Code forkから始まり、年間売上10億ドル・評価額293億ドルに到達した
+      AIネイティブコードエディタ「Cursor」を初心者向けに徹底解説
+    </p>
+    <div class="hero-meta">
+      <span>✏️ 最終更新: 2026年3月</span>
+      <span>📖 全12章構成</span>
+      <span>⏱ 読了目安: 約40分</span>
+    </div>
+  </div>
+</header>
+
+<!-- ===== TOC ===== -->
+<nav class="toc-section">
+  <div class="container">
+    <div class="toc-card">
+      <h2>目次 — Table of Contents</h2>
+      <div class="toc-grid">
+        <a href="#sec1" class="toc-item"><span class="toc-num">01</span>Cursorとは — 概要・歴史・会社</a>
+        <a href="#sec2" class="toc-item"><span class="toc-num">02</span>主な機能（Tab・Chat・Agent・Cmd+K）</a>
+        <a href="#sec3" class="toc-item"><span class="toc-num">03</span>アーキテクチャ</a>
+        <a href="#sec4" class="toc-item"><span class="toc-num">04</span>対応モデル一覧</a>
+        <a href="#sec5" class="toc-item"><span class="toc-num">05</span>料金体系</a>
+        <a href="#sec6" class="toc-item"><span class="toc-num">06</span>VS Codeとの違い・移行方法</a>
+        <a href="#sec7" class="toc-item"><span class="toc-num">07</span>.cursorrules・プロジェクト設定</a>
+        <a href="#sec8" class="toc-item"><span class="toc-num">08</span>セキュリティ・プライバシー</a>
+        <a href="#sec9" class="toc-item"><span class="toc-num">09</span>ユースケース集（10選）</a>
+        <a href="#sec10" class="toc-item"><span class="toc-num">10</span>他ツール比較</a>
+        <a href="#sec11" class="toc-item"><span class="toc-num">11</span>始め方ガイド</a>
+        <a href="#sec12" class="toc-item"><span class="toc-num">12</span>Tips・注意点・参考リンク</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================================================ -->
+<!-- SECTION 1: Cursorとは -->
+<!-- ============================================================ -->
+<section class="section" id="sec1">
+  <div class="container section-anchor">
+    <div class="section-header">
+      <div class="section-label">Section 01</div>
+      <h2 class="section-title">Cursorとは — 概要・Anysphere社・VS Code forkの経緯</h2>
+      <p class="section-desc">AIをコードエディタの中核に据え、ソフトウェア開発の在り方を根本から変えようとするプロダクト</p>
+    </div>
+
+    <div class="prose">
+      <p>
+        <strong>Cursor</strong>は、Anysphere, Inc.が開発・提供するAI搭載のコードエディタです。Microsoftのオープンソースエディタ<strong>Visual Studio Code（VS Code）</strong>をフォークし、AIによるコード補完、チャットベースの質問応答、マルチファイル編集、エージェントモードなど、AI機能をエディタの根幹に組み込んだ"AIネイティブIDE"として設計されています。単なる拡張機能の追加ではなく、エディタそのものの動作にAIを統合しているため、VS Codeの拡張機能では実現困難なレベルの深い統合を実現している点が最大の特徴です。
+      </p>
+
+      <h3>Anysphere社について</h3>
+      <p>
+        Anysphereは、2022年に<strong>MIT（マサチューセッツ工科大学）</strong>の卒業生4名—Michael Truell、Sualeh Asif、Arvid Lunnemark、Aman Sanger—によって設立されたサンフランシスコ拠点のAIスタートアップです。当初は「応用AIリサーチラボ」として始動し、その後CursorをメインプロダクトとしてAIコーディングツール市場を牽引する存在に成長しました。
+      </p>
+      <p>
+        驚異的な成長スピードもAnysphereの特筆すべき点です。2024年12月にThrive Capital主導で1億500万ドルのシリーズBを調達し評価額は26億ドル。2025年5月にはさらに9億ドルを調達して評価額99億ドルに。そして2025年11月にはシリーズDで23億ドルを調達し、評価額は<strong>293億ドル</strong>（約4兆円超）に到達しました。年間経常収益（ARR）は<strong>10億ドルを超え</strong>、SaaS史上最速クラスの成長とも評されています。創業者4名全員がビリオネアとなったことでも話題を呼びました。
+      </p>
+
+      <h3>VS Code Forkの経緯と意義</h3>
+      <p>
+        なぜCursorはVS Codeをフォークしたのでしょうか。その理由は「AIをエディタの拡張機能ではなく、エディタ体験そのものに統合する」というビジョンにあります。VS Codeは世界で最も使われているコードエディタであり、その拡張性と豊富なエコシステムは比類なき強みです。しかし、拡張機能APIの制約から、AIによるインライン編集の提案、マルチファイルの同時編集、タブ補完の高度なカーソル予測といった機能を拡張機能だけで実現するのは困難でした。
+      </p>
+      <p>
+        Cursorはこの問題をフォークによって解決し、エディタのレンダリングエンジンやエディタコアに直接手を加えることで、AIのコード提案をシームレスに表示・適用できるようにしました。同時に、VS Codeのコアリリースを定期的にマージ（通常は2回に1回のメインラインリリース）しており、VS Codeの安定性とセキュリティパッチの恩恵も受けることができます。VS Codeの拡張機能もそのまま使えるため、既存のワークフローをほぼ維持したまま移行できる点もユーザーにとっての大きなメリットです。
+      </p>
+    </div>
+
+    <div class="callout" style="margin-top:24px;">
+      <strong>ポイント:</strong> CursorはVS Codeの「上位互換」であり、VS Codeユーザーは既存の設定・拡張機能・キーバインドをワンクリックでインポートできます。VS Codeの使い方を知っていれば、Cursorの基本操作は即日マスターできます。
+    </div>
+
+    <!-- Timeline -->
+    <h3 style="margin-top:32px; margin-bottom:18px; font-size:1.1rem; font-weight:600;">Anysphere / Cursorの年表</h3>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-date">2022年</div>
+        <div class="timeline-title">Anysphere設立</div>
+        <div class="timeline-desc">MIT卒業生4名がサンフランシスコで創業。応用AIリサーチラボとして活動を開始。OpenAI Startup Fundなどから初期資金を調達。</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">2023年初頭</div>
+        <div class="timeline-title">Cursor初期バージョン公開</div>
+        <div class="timeline-desc">VS Code forkベースのAIコードエディタとして初期バージョンをリリース。開発者コミュニティで話題に。</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">2024年8月</div>
+        <div class="timeline-title">シリーズA — 6,000万ドル調達</div>
+        <div class="timeline-desc">a16z主導。Claude 3.5 Sonnetの統合でコード生成品質が大幅向上。ユーザー数が急成長。</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">2024年12月</div>
+        <div class="timeline-title">シリーズB — 1億500万ドル調達（評価額26億ドル）</div>
+        <div class="timeline-desc">Thrive Capital主導。ARRが1億ドルを突破し、有料ユーザー数が急増。</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">2025年5月</div>
+        <div class="timeline-title">シリーズC — 9億ドル調達（評価額99億ドル）</div>
+        <div class="timeline-desc">Thrive Capital、a16z、Accel共同主導。開発者市場での支配的ポジションを確立。</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">2025年6月</div>
+        <div class="timeline-title">Cursor v1.0リリース</div>
+        <div class="timeline-desc">BugBot（PR自動レビュー）、Background Agent、ワンクリックMCPインストール、Jupyterサポートなどの機能を搭載。</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">2025年10月</div>
+        <div class="timeline-title">Cursor 2.0リリース — Composerモデル発表</div>
+        <div class="timeline-desc">独自のエージェントモデル「Composer」を発表。マルチエージェント、ボイスモード、新Agent Viewを搭載。</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">2025年11月</div>
+        <div class="timeline-title">シリーズD — 23億ドル調達（評価額293億ドル）</div>
+        <div class="timeline-desc">ARR10億ドル超を達成。累計資金調達額は35億ドルに。創業者4名がビリオネアに。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container"><div class="divider"></div></div>
+
+<!-- ============================================================ -->
+<!-- SECTION 2: 主な機能 -->
+<!-- ============================================================ -->
+<section class="section" id="sec2">
+  <div class="container section-anchor">
+    <div class="section-header">
+      <div class="section-label">Section 02</div>
+      <h2 class="section-title">主な機能 — Tab補完・Chat・Agent・Cmd+K</h2>
+      <p class="section-desc">Cursorの5大AI機能を詳しく解説。コードを書くすべての瞬間にAIが寄り添います。</p>
+    </div>
+
+    <!-- Feature 1: Tab -->
+    <div class="card" style="margin-bottom:16px;">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+        <div class="card-icon">⇥</div>
+        <div>
+          <h3 style="margin-bottom:2px;">Tab補完（Cursor Tab）</h3>
+          <span class="tag tag-accent">最頻使用機能</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <p>
+          Cursor Tabは「ステロイドを打ったオートコンプリート」と呼ばれる、Cursorの核心機能です。従来のIntelliSenseのような単純なトークン補完ではなく、直近の編集履歴、周辺のコードコンテキスト、Linterエラー、さらにはカーソル位置の意図まで読み取り、複数行にわたるコード補完を<kbd>Tab</kbd>キー一発で適用できます。
+        </p>
+        <p style="margin-top:10px;">
+          特筆すべきは<strong>「次の編集位置の予測」</strong>機能です。Tabで補完を確定した後、次にカーソルが移動すべき場所をAIが予測し、再度<kbd>Tab</kbd>を押すだけで次の編集箇所へジャンプします。これにより、複数箇所の関連する修正を連続的に行えます。タイプ中にリアルタイムでゴースト表示されるサジェストは、<kbd>Tab</kbd>で採用、<kbd>Esc</kbd>で却下でき、使えば使うほど開発者の意図を学習して精度が向上していきます。Cursor Tab専用の軽量モデルが使われており、キーストロークごとにリクエストが送信されるため応答速度は極めて高速です。
+        </p>
+      </div>
+    </div>
+
+    <!-- Feature 2: Chat -->
+    <div class="card" style="margin-bottom:16px;">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+        <div class="card-icon">💬</div>
+        <div>
+          <h3 style="margin-bottom:2px;">Chat（AIチャット）</h3>
+          <span class="tag tag-info">ショートカット: <kbd>Cmd+L</kbd></span>
+        </div>
+      </div>
+      <div class="card-body">
+        <p>
+          サイドパネルで開くAIチャットは、コードに関する質問、説明、デバッグ支援など汎用的な対話に使えます。現在開いているファイルやカーソル位置のコードが自動的にコンテキストとして含まれるため、「この関数は何をしている？」「このエラーの原因は？」といった質問にコードベース固有の文脈で回答してくれます。
+        </p>
+        <p style="margin-top:10px;">
+          <code>@</code>記号を使ったコンテキスト参照も強力で、<code>@file</code>で特定ファイル、<code>@folder</code>でフォルダ、<code>@web</code>でWeb検索、<code>@docs</code>でドキュメント、<code>@codebase</code>でコードベース全体の意味検索を指示できます。チャットで提案されたコードは「Apply」ボタンひとつでエディタに反映可能です。
+        </p>
+      </div>
+    </div>
+
+    <!-- Feature 3: Agent Mode -->
+    <div class="card" style="margin-bottom:16px;">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+        <div class="card-icon">🤖</div>
+        <div>
+          <h3 style="margin-bottom:2px;">Agent Mode（エージェントモード）</h3>
+          <span class="tag tag-success">Cursor 2.0の中核</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <p>
+          Agentは、複雑なコーディングタスクを自律的に遂行するCursorの最も強力な機能です。<kbd>Cmd+I</kbd>でサイドペインから起動でき、エージェントが自動でコードベースを探索し、複数ファイルを同時に編集し、ターミナルコマンドを実行し、Linterエラーを検知して修正するという一連の流れを自動で行います。
+        </p>
+        <p style="margin-top:10px;">
+          Cursor 2.0では<strong>マルチエージェント機能</strong>が導入され、複数のエージェントを並列で動かして異なるタスクを同時進行させることが可能になりました。さらに<strong>Background Agent</strong>機能により、開発者がエディタを閉じている間もクラウド上でエージェントが作業を続け、完了後にPull Requestとして結果を受け取れます。
+        </p>
+        <p style="margin-top:10px;">
+          エージェントの動作にはAgent Mode、Ask Mode、Manual Modeなど複数のモードがあり、Agent Modeがデフォルトです。Agent Modeでは自律的にファイルを探索・編集し、Ask Modeでは読み取り専用で質問に回答し、Manual Modeでは明示的に指示されたファイルのみを編集します。さらにDebug Modeでは、エラーが発生したファイルやスタックトレースに基づいてデバッグを自動化します。
+        </p>
+      </div>
+    </div>
+
+    <!-- Feature 4: Composer Model -->
+    <div class="card" style="margin-bottom:16px;">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+        <div class="card-icon">🎵</div>
+        <div>
+          <h3 style="margin-bottom:2px;">Composerモデル（独自AIモデル）</h3>
+          <span class="tag tag-warning">Cursor 2.0新機能</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <p>
+          Cursor 2.0で発表された<strong>Composerモデル</strong>は、Anysphereが独自に開発したソフトウェアエンジニアリング特化のAIモデルです。強化学習（RL）を用いて実際のコードベース内でトレーニングされたMixture-of-Experts（MoE）アーキテクチャで、同等の知能を持つモデルと比較して<strong>4倍高速</strong>に動作し、ほとんどのターンを30秒以内に完了させます。
+        </p>
+        <p style="margin-top:10px;">
+          Auto選択時にCursorのAgentモードで使用される場合は無制限で利用でき、フロンティアモデルの使用量を節約できるため、コスト効率にも優れています。Composerは低レイテンシーでのエージェントコーディングに最適化されており、マルチステップのコーディングタスクにおいて高い信頼性を発揮します。
+        </p>
+      </div>
+    </div>
+
+    <!-- Feature 5: Cmd+K -->
+    <div class="card" style="margin-bottom:16px;">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+        <div class="card-icon">✏️</div>
+        <div>
+          <h3 style="margin-bottom:2px;">Cmd+K（インライン編集）</h3>
+          <span class="tag tag-info">ショートカット: <kbd>Cmd+K</kbd> / <kbd>Ctrl+K</kbd></span>
+        </div>
+      </div>
+      <div class="card-body">
+        <p>
+          <kbd>Cmd+K</kbd>はファイル内でのピンポイントなコード生成・編集のための機能です。コードを選択した状態で<kbd>Cmd+K</kbd>を押すと、インラインのプロンプトバーが表示され、「この関数をTypeScriptに変換して」「エラーハンドリングを追加して」といった自然言語の指示でコードを直接編集できます。
+        </p>
+        <p style="margin-top:10px;">
+          選択なしで<kbd>Cmd+K</kbd>を使えば、カーソル位置に新しいコードを生成します。また、ターミナル内で<kbd>Cmd+K</kbd>を使うと、自然言語からターミナルコマンドを生成することもできます。例えば「ポート3000を使っているプロセスを終了して」と入力すれば、適切なコマンド（<code>lsof -ti:3000 | xargs kill</code>など）を提案してくれます。<kbd>Cmd+Shift+Enter</kbd>でファイル全体の編集も可能になりました。
+        </p>
+      </div>
+    </div>
+
+    <!-- Feature 6: Additional Features -->
+    <h3 style="margin-top:32px; margin-bottom:18px; font-size:1.1rem; font-weight:600;">その他の注目機能</h3>
+    <div class="card-grid card-grid-3">
+      <div class="card">
+        <h3>🔍 BugBot</h3>
+        <p class="card-body">GitHubと連携し、Pull Requestを自動レビュー。潜在的なバグや問題を検出してPR上にコメントとして報告。v1.0で導入。</p>
+      </div>
+      <div class="card">
+        <h3>🌐 内蔵ブラウザ</h3>
+        <p class="card-body">Cursor 2.0で追加された内蔵ブラウザ。Webアプリの表示結果をエディタ内で確認しながら、AIに「このUIを修正して」と指示可能。</p>
+      </div>
+      <div class="card">
+        <h3>🎙️ ボイスモード</h3>
+        <p class="card-body">音声で指示を出してコードを生成・編集。ハンズフリーでのペアプログラミング体験を実現。</p>
+      </div>
+      <div class="card">
+        <h3>🔌 MCP統合</h3>
+        <p class="card-body">Model Context Protocol（MCP）に対応。ワンクリックでMCPサーバーをインストールし、外部ツールやAPIとAIを連携。</p>
+      </div>
+      <div class="card">
+        <h3>📝 Memories</h3>
+        <p class="card-body">プロジェクト固有のコンテキスト（アーキテクチャ決定やコーディング規約など）をAIが記憶し、一貫したコード生成に活用。</p>
+      </div>
+      <div class="card">
+        <h3>📓 Jupyter対応</h3>
+        <p class="card-body">Jupyterノートブック内でもAI機能を利用可能。データサイエンスやML開発のワークフローをサポート。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container"><div class="divider"></div></div>
+
+<!-- ============================================================ -->
+<!-- SECTION 3: アーキテクチャ -->
+<!-- ============================================================ -->
+<section class="section" id="sec3">
+  <div class="container section-anchor">
+    <div class="section-header">
+      <div class="section-label">Section 03</div>
+      <h2 class="section-title">アーキテクチャ — VS Code fork、独自拡張、モデル切替</h2>
+      <p class="section-desc">Cursorがどのように構築され、AIリクエストがどう処理されるかを技術的に解説します。</p>
+    </div>
+
+    <div class="prose">
+      <h3>VS Code Fork構成</h3>
+      <p>
+        CursorはMicrosoftがオープンソースとして公開しているVS Code（<code>microsoft/vscode</code>リポジトリ）をフォークして構築されています。VS Codeの<strong>Electron</strong>ベースのデスクトップアプリケーション構造をそのまま活用しつつ、エディタコア（Monaco Editor部分）やサイドパネル、ステータスバーなどのUI層にAI機能を直接組み込んでいます。VS Codeの2回に1回のメインラインリリースのタイミングでアップストリームをマージしており、セキュリティパッチについてはhigh-severityなものを即座にcherry-pickして独立リリースする体制をとっています。
+      </p>
+
+      <h3>AI機能のアーキテクチャ</h3>
+      <p>
+        Cursorの全AI機能は、クライアント（Electronアプリ）からAnysphereのAWS上のバックエンドサーバーにリクエストを送信する形で動作します。サーバー側でプロンプト構築が行われた後、適切なモデルプロバイダー（OpenAI、Anthropic、Google、xAIなど）にリクエストがルーティングされます。カスタムモデル（Tab補完用モデルやComposerモデル）はFireworks AI、Baseten、Togetherなどの推論プロバイダーでホスティングされています。
+      </p>
+      <p>
+        重要なのは、ユーザーが独自のAPIキーを設定した場合でも、リクエストは必ずAnysphereのAWSインフラを経由するという点です。これはプロンプト構築やカスタムモデルの利用がサーバーサイドで行われるためです。現時点ではセルフホスト型のサーバーデプロイオプションは提供されていません。
+      </p>
+
+      <h3>コードベースインデクシング</h3>
+      <p>
+        Cursorには<strong>セマンティックインデクシング</strong>機能があり、プロジェクト内の全コードをベクトル化してインデックスします。仕組みとしては、ファイルのMerkleツリーを計算してハッシュの差分のみをサーバーにアップロードし、サーバー側でチャンク化・エンベディングを行います。エンベディングはTurbopuffer（Google Cloud上のベクトルDB）に保存されますが、Privacy Modeユーザーの場合はプレーンテキストコードはサーバー上に一切保存されません。ファイルパスは暗号化（難読化）された形で保存されます。10分ごとに差分チェックが行われ、変更のあったファイルのみ再インデックスされます。
+      </p>
+
+      <h3>モデル切替の仕組み</h3>
+      <p>
+        Cursorでは、Chatやエージェントで使用するAIモデルをドロップダウンから簡単に切り替えられます。「Auto」を選択すると、Cursorが容量とタスクの性質に基づいて最適なフロンティアモデルを自動選択します。Auto使用時は無制限にリクエストが送れるため（Proプラン以上）、コスト効率を優先する場合はAutoが推奨されます。特定のモデル（例: Claude Sonnet 4、GPT-4o）を指定した場合は、月次の使用量クレジットを消費します。
+      </p>
+    </div>
+
+    <!-- Architecture Diagram -->
+    <div class="card" style="margin-top:24px; text-align:center; padding:32px;">
+      <h3 style="margin-bottom:20px;">Cursorのリクエストフロー概要</h3>
+      <div style="font-family: var(--font-mono); font-size:0.78rem; color: var(--text-secondary); line-height:2.2; text-align:left; max-width:600px; margin:0 auto;">
+        <div style="color:var(--accent-light);">┌─────────────────────┐</div>
+        <div style="color:var(--accent-light);">│   Cursor Client     │  ← Electron (VS Code fork)</div>
+        <div style="color:var(--accent-light);">│   (Desktop App)     │</div>
+        <div style="color:var(--accent-light);">└────────┬────────────┘</div>
+        <div>         │ コード・コンテキスト送信</div>
+        <div>         ▼</div>
+        <div style="color:var(--warning);">┌─────────────────────┐</div>
+        <div style="color:var(--warning);">│   Anysphere Server  │  ← AWS (US主要 / EU・SGリージョン)</div>
+        <div style="color:var(--warning);">│   (プロンプト構築)   │     Privacy Mode: 並列インフラで分離</div>
+        <div style="color:var(--warning);">└────────┬────────────┘</div>
+        <div>         │ モデルルーティング</div>
+        <div>    ┌────┼────┬────┬────┐</div>
+        <div>    ▼    ▼    ▼    ▼    ▼</div>
+        <div style="color:var(--success);">  OpenAI  Anthropic  Google  xAI  Fireworks/Baseten</div>
+        <div style="color:var(--text-tertiary);">  (GPT)   (Claude)  (Gemini)(Grok) (カスタムモデル)</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="container"><div class="divider"></div></div>
+
+<!-- ============================================================ -->
+<!-- SECTION 4: 対応モデル -->
+<!-- ============================================================ -->
+<section class="section" id="sec4">
+  <div class="container section-anchor">
+    <div class="section-header">
+      <div class="section-label">Section 04</div>
+      <h2 class="section-title">対応モデル一覧</h2>
+      <p class="section-desc">Cursorで使えるフロンティアモデルとカスタムモデルを網羅的に整理します。</p>
+    </div>
+
+    <div class="prose">
+      <p>
+        Cursorは複数のAIプロバイダーのモデルに対応しており、タスクや好みに応じて自由に切り替えられます。「Auto」を選択すると、Cursorが容量とタスクに応じて最適なモデルを自動選択し、この場合は使用量の制限なく（Proプラン以上で）利用できます。特定のモデルを指定する場合は月次クレジットを消費します。以下は2026年3月時点で確認されている対応モデルの一覧です（最新情報はCursorの公式ドキュメントをご確認ください）。
+      </p>
+    </div>
+
+    <div class="table-wrapper" style="margin-top:20px;">
+      <table>
+        <thead>
+          <tr>
+            <th>プロバイダー</th>
+            <th>モデル名</th>
+            <th>特徴・用途</th>
+            <th>備考</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td rowspan="4"><strong>Anthropic</strong></td>
+            <td>Claude Opus 4.5</td>
+            <td>最高精度の推論。複雑なアーキテクチャ設計やリファクタリングに</td>
+            <td>使用コスト高</td>
+          </tr>
+          <tr>
+            <td>Claude Sonnet 4</td>
+            <td>コーディング特化で速度と品質のバランスが優秀</td>
+            <td>人気モデル</td>
+          </tr>
+          <tr>
+            <td>Claude Sonnet 3.5</td>
+            <td>軽量で高速。日常的なコード補完やレビューに</td>
+            <td>安定した定番</td>
+          </tr>
+          <tr>
+            <td>Claude Haiku系</td>
+            <td>超高速・低コスト。簡単なタスクに最適</td>
+            <td>Tab用にも利用</td>
+          </tr>
+          <tr>
+            <td rowspan="4"><strong>OpenAI</strong></td>
+            <td>GPT-5.2 / GPT-5.1 Codex</td>
+            <td>最新世代。長文コンテキストと高度な推論</td>
+            <td>Thinking対応</td>
+          </tr>
+          <tr>
+            <td>GPT-4o</td>
+            <td>マルチモーダル対応。画像からのUI生成にも</td>
+            <td>汎用性高い</td>
+          </tr>
+          <tr>
+            <td>GPT-4.1</td>
+            <td>コーディング精度向上版。コスト効率良好</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>o1-pro / o3系</td>
+            <td>推論特化型。複雑なアルゴリズム設計に</td>
+            <td>使用コスト高</td>
+          </tr>
+          <tr>
+            <td rowspan="3"><strong>Google</strong></td>
+            <td>Gemini 3 Pro</td>
+            <td>超大コンテキストウィンドウ。大規模コードベース解析に</td>
+            <td>最新世代</td>
+          </tr>
+          <tr>
+            <td>Gemini 3 Flash</td>
+            <td>高速・低コスト。日常的なコーディングに</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Gemini 2.5 Pro</td>
+            <td>前世代だが安定。コスト効率が良い</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><strong>xAI</strong></td>
+            <td>Grok系</td>
+            <td>xAI提供のモデル。Zero data retention対応</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td rowspan="2"><strong>Cursor独自</strong></td>
+            <td>Composer</td>
+            <td>エージェントコーディング特化。MoEアーキテクチャ、4倍高速</td>
+            <td>Auto時に使用</td>
+          </tr>
+          <tr>
+            <td>cursor-small (Tab用)</td>
+            <td>Tab補完専用の軽量高速モデル</td>
+            <td>常時稼働</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout" style="margin-top:20px;">
+      <strong>Auto選択のメリット:</strong> 「Auto」を選ぶとCursorが最適なモデルを自動ルーティングし、Proプラン以上ではTabとAutoが無制限で使えます。特定モデルを指定する場合のみ月次クレジット（$20相当/Pro）を消費します。Proプランの$20クレジットはSonnet 4で約225リクエスト、Geminiで約550リクエスト、GPT-4.1で約650リクエスト相当です。
+    </div>
+  </div>
+</section>
+
+<div class="container"><div class="divider"></div></div>
+
+<!-- ============================================================ -->
+<!-- SECTION 5: 料金体系 -->
+<!-- ============================================================ -->
+<section class="section" id="sec5">
+  <div class="container section-anchor">
+    <div class="section-header">
+      <div class="section-label">Section 05</div>
+      <h2 class="section-title">料金体系 — Hobby / Pro / Pro+ / Ultra / Teams / Enterprise</h2>
+      <p class="section-desc">2025年6月の料金改定後の最新プラン構成。API従量課金ベースに移行しています。</p>
+    </div>
+
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pricing-name">Hobby</div>
+        <div class="pricing-price"><span class="currency">$</span>0<span class="period"> / 月</span></div>
+        <div class="pricing-features">
+          <div><span class="check">✓</span>クレジットカード不要</div>
+          <div><span class="check">✓</span>Agentリクエスト 制限あり</div>
+          <div><span class="check">✓</span>Tab補完 制限あり</div>
+          <div><span class="check">✓</span>2週間のPro体験版</div>
+        </div>
+      </div>
+
+      <div class="pricing-card">
+        <div class="pricing-name">Pro</div>
+        <div class="pricing-price"><span class="currency">$</span>20<span class="period"> / 月</span></div>
+        <div class="pricing-features">
+          <div><span class="check">✓</span>Tab補完 無制限</div>
+          <div><span class="check">✓</span>Auto選択時 無制限</div>
+          <div><span class="check">✓</span>$20/月 フロンティアモデルクレジット</div>
+          <div><span class="check">✓</span>Cloud Agents</div>
+          <div><span class="check">✓</span>最大コンテキストウィンドウ</div>
+          <div><span class="check">✓</span>追加使用量を実費で購入可</div>
+        </div>
+      </div>
+
+      <div class="pricing-card recommended">
+        <div class="pricing-name">Pro+</div>
+        <div class="pricing-price"><span class="currency">$</span>60<span class="period"> / 月</span></div>
+        <div class="pricing-features">
+          <div><span class="check">✓</span>Proの全機能</div>
+          <div><span class="check">✓</span>3倍の使用量クレジット</div>
+          <div><span class="check">✓</span>OpenAI/Claude/Gemini全モデル</div>
+        </div>
+      </div>
+
+      <div class="pricing-card">
+        <div class="pricing-name">Ultra</div>
+        <div class="pricing-price"><span class="currency">$</span>200<span class="period"> / 月</span></div>
+        <div class="pricing-features">
+          <div><span class="check">✓</span>Proの全機能</div>
+          <div><span class="check">✓</span>20倍の使用量クレジット</div>
+          <div><span class="check">✓</span>新機能への優先アクセス</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:32px; margin-bottom:18px; font-size:1.05rem; font-weight:600;">ビジネス向けプラン</h3>
+    <div class="card-grid card-grid-2">
+      <div class="card">
+        <h3>Teams — $40 / ユーザー / 月</h3>
+        <div class="card-body">
+          Proの全機能に加え、共有チャット・コマンド・ルール、チーム一括請求、使用量分析レポート、組織全体のPrivacy Mode管理、ロールベースのアクセス制御（RBAC）、SAML/OIDC SSO認証に対応。チーム開発のための管理機能が充実しています。
+        </div>
+      </div>
+      <div class="card">
+        <h3>Enterprise — カスタム料金</h3>
+        <div class="card-body">
+          Teamsの全機能に加え、使用量のプーリング、請求書/PO払い、SCIMシート管理、AIコードトラッキングAPI・監査ログ、詳細な管理者・モデル制御、優先サポート・アカウントマネジメントが含まれます。大規模組織向けのカスタムプランです。
+        </div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:32px; margin-bottom:18px; font-size:1.05rem; font-weight:600;">BugBot アドオン</h3>
+    <div class="prose">
+      <p>
+        BugBotは別料金のアドオンとして提供されています。無料版では月間のコードレビュー回数に制限がありますが、Pro版（$40/ユーザー/月）ではPR200件/月まで無制限レビューが可能です。Teams版（同$40/ユーザー/月）では全PRへの無制限レビューと分析ダッシュボードが利用できます。
+      </p>
+    </div>
+
+    <div class="callout callout-warning" style="margin-top:20px;">
+      <strong>料金改定の経緯（2025年6月）:</strong> Cursorは2025年6月にリクエスト回数ベースの料金体系からAPIトークン使用量ベースに移行しました。当初の説明が不十分で混乱を招いたため、同年7月に改めて詳細な説明と予期しない課金への返金対応を発表しています。Proプランの$20クレジットで大多数のユーザーは使い切らない量が含まれていますが、重い使用をする場合はPro+やUltraの検討が推奨されます。
+    </div>
+  </div>
+</section>
+
+<div class="container"><div class="divider"></div></div>
+
+<!-- ============================================================ -->
+<!-- SECTION 6: VS Codeとの違い・移行方法 -->
+<!-- ============================================================ -->
+<section class="section" id="sec6">
+  <div class="container section-anchor">
+    <div class="section-header">
+      <div class="section-label">Section 06</div>
+      <h2 class="section-title">VS Codeとの違い・移行方法</h2>
+      <p class="section-desc">VS Codeユーザーが知っておくべき違いと、スムーズな移行手順を解説します。</p>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>比較項目</th>
+            <th>VS Code</th>
+            <th>Cursor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>ベース</strong></td>
+            <td>Microsoft公式オープンソース</td>
+            <td>VS Codeのフォーク + AI統合</td>
+          </tr>
+          <tr>
+            <td><strong>AI機能</strong></td>
+            <td>Copilot等の拡張機能で追加</td>
+            <td>エディタコアに直接統合</td>
+          </tr>
+          <tr>
+            <td><strong>Tab補完</strong></td>
+            <td>IntelliSense + Copilot補完</td>
+            <td>独自モデルによる複数行予測・位置ジャンプ</td>
+          </tr>
+          <tr>
+            <td><strong>エージェント</strong></td>
+            <td>Copilot Agent（拡張機能）</td>
+            <td>ネイティブAgent Mode + Background Agent</td>
+          </tr>
+          <tr>
+            <td><strong>マルチファイル編集</strong></td>
+            <td>Copilot Editsで一部対応</td>
+            <td>Agent/Composerがネイティブで自律編集</td>
+          </tr>
+          <tr>
+            <td><strong>モデル選択</strong></td>
+            <td>Copilotモデルに限定</td>
+            <td>Claude/GPT/Gemini/Grok/独自モデルを自由選択</td>
+          </tr>
+          <tr>
+            <td><strong>コンテキスト参照</strong></td>
+            <td>ワークスペースのインデックス</td>
+            <td>@codebase/@file/@web/@docs等の柔軟な参照</td>
+          </tr>
+          <tr>
+            <td><strong>拡張機能</strong></td>
+            <td>VS Code Marketplace（署名検証あり）</td>
+            <td>互換マーケットプレイス（署名検証はデフォルトOFF）</td>
+          </tr>
+          <tr>
+            <td><strong>Workspace Trust</strong></td>
+            <td>デフォルトON</td>
+            <td>デフォルトOFF（手動で有効化可能）</td>
+          </tr>
+          <tr>
+            <td><strong>価格</strong></td>
+            <td>無料（Copilotは$10～/月）</td>
+            <td>Hobby無料 / Pro $20/月～</td>
+          </tr>
+          <tr>
+            <td><strong>プライバシー</strong></td>
+            <td>ローカルメインだがCopilot利用時は送信</td>
+            <td>Privacy Mode（コード非保存保証）あり</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:32px; margin-bottom:18px; font-size:1.1rem; font-weight:600;">VS Codeからの移行手順</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-content">
+          <h4>Cursorのダウンロードとインストール</h4>
+          <p><a href="https://cursor.com" target="_blank" rel="noopener">cursor.com</a>からmacOS / Windows / Linux向けのインストーラーをダウンロードし、通常のアプリケーションとしてインストールします。VS Codeと並行して使用可能です。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-content">
+          <h4>VS Code設定のインポート</h4>
+          <p>初回起動時に「VS Code Import」を促すダイアログが表示されます。あるいは、設定画面の「VS Code Import」セクションから「Import」ボタンをクリック。拡張機能、テーマ、設定、キーバインドが一括で移行されます。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-content">
+          <h4>アカウント作成・サインイン</h4>
+          <p>GitHubまたはGoogleアカウントでサインインします。Hobbyプランは無料で、2週間のPro体験版も付属します。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-content">
+          <h4>AI機能の動作確認</h4>
+          <p>適当なプロジェクトを開き、コードを書いてTab補完が動くか確認します。<kbd>Cmd+L</kbd>でチャット、<kbd>Cmd+I</kbd>でエージェントを試してみましょう。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-content">
+          <h4>（任意）Privacy Modeの設定</h4>
+          <p>企業利用やプライベートプロジェクトの場合は、Settings → Cursor Settings → Privacy ModeをONにします。コードが学習データに使われない保証が得られます。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-success">
+      <strong>移行のハードル:</strong> 「移行は驚くほど簡単だった。全ての拡張機能がそのまま動作した」という声が多数。VS Codeのキーバインドもそのまま使えるため、操作感の違和感はほぼありません。唯一、拡張機能の署名検証がデフォルトOFFなので、セキュリティに敏感な場合は<code>extensions.verifySignature</code>を<code>true</code>に設定することを推奨します。
+    </div>
+  </div>
+</section>
+
+<div class="container"><div class="divider"></div></div>
+
+<!-- ============================================================ -->
+<!-- SECTION 7: .cursorrules -->
+<!-- ============================================================ -->
+<section class="section" id="sec7">
+  <div class="container section-anchor">
+    <div class="section-header">
+      <div class="section-label">Section 07</div>
+      <h2 class="section-title">.cursorrules・プロジェクト設定のベストプラクティス</h2>
+      <p class="section-desc">AIの出力品質を劇的に向上させるプロジェクト固有のルール設定方法</p>
+    </div>
+
+    <div class="prose">
+      <p>
+        Cursorの出力品質を最大化する最も効果的な方法のひとつが、<strong>Cursor Rules</strong>の活用です。ルールはAIにプロジェクト固有の文脈—使用技術、コーディング規約、アーキテクチャ方針—を伝え、一貫した高品質なコード生成を可能にします。
+      </p>
+
+      <h3>ルールの種類と配置</h3>
+      <p>
+        Cursor v0.45以降、ルールシステムが大幅に刷新されました。従来のプロジェクトルート直下に<code>.cursorrules</code>ファイルを置く方式に加え、<code>.cursor/rules/</code>ディレクトリ内に複数のルールファイルを配置する新方式が導入されています。新方式では用途ごとにルールを分割し、それぞれに適用条件（グロブパターンなど）を設定できます。
+      </p>
+      <p>
+        ルールには大きく3つのスコープがあります。<strong>Project Rules</strong>は<code>.cursor/rules/</code>に配置しGit管理してチームで共有するルール、<strong>User Rules</strong>はSettings画面で個人設定するグローバルルール（全プロジェクト共通）、<strong>Auto-attached Rules</strong>はファイルパターンに応じて自動適用されるルールです。
+      </p>
+    </div>
+
+    <div class="code-block" style="margin:20px 0;">
+<span class="comment"># プロジェクト構造の例</span>
+my-project/
+├── <span class="property">.cursor/</span>
+│   └── <span class="property">rules/</span>
+│       ├── <span class="string">general.mdc</span>        <span class="comment"># 全体的なコーディング規約</span>
+│       ├── <span class="string">react.mdc</span>          <span class="comment"># React特有のルール (*.tsx に自動適用)</span>
+│       ├── <span class="string">api.mdc</span>            <span class="comment"># API開発ルール (src/api/** に自動適用)</span>
+│       └── <span class="string">testing.mdc</span>        <span class="comment"># テストルール (*.test.* に自動適用)</span>
+├── <span class="property">.cursorignore</span>             <span class="comment"># AIに送信しないファイルを指定</span>
+├── src/
+└── ...
+    </div>
+
+    <div class="code-block">
+<span class="comment"># .cursor/rules/general.mdc の例</span>
+<span class="comment"># description: プロジェクト全体の規約</span>
+<span class="comment"># globs: **/*</span>
+
+<span class="keyword">## プロジェクト概要</span>
+<span class="string">これはNext.js 15 + TypeScript + Tailwind CSSで構築されたWebアプリケーションです。</span>
+
+<span class="keyword">## コーディング規約</span>
+<span class="string">- TypeScriptのstrictモードを使用する</span>
+<span class="string">- 関数コンポーネントとReact Hooksを使用する（クラスコンポーネント禁止）</span>
+<span class="string">- 変数名・関数名はcamelCase、コンポーネント名はPascalCase</span>
+<span class="string">- CSSはTailwind CSSのユーティリティクラスで記述（カスタムCSS最小限）</span>
+<span class="string">- エラーハンドリングは必ずtry-catchで行い、ユーザーへの適切なフィードバックを含める</span>
+
+<span class="keyword">## アーキテクチャ</span>
+<span class="string">- App Routerを使用（pages/は使わない）</span>
+<span class="string">- Server Componentsをデフォルトとし、必要な場合のみ'use client'を付与</span>
+<span class="string">- データフェッチにはServer Actionsを優先使用</span>
+
+<span class="keyword">## 禁止事項</span>
+<span class="string">- anyの使用禁止（必ず具体的な型を定義する）</span>
+<span class="string">- console.logのcommit禁止（デバッグにはloggerユーティリティを使用）</span>
+<span class="string">- マジックナンバー禁止（定数として定義する）</span>
+    </div>
+
+    <h3 style="margin-top:32px; margin-bottom:18px; font-size:1.05rem; font-weight:600;">ベストプラクティス一覧</h3>
+
+    <div class="card-grid card-grid-2">
+      <div class="card">
+        <h3>🎯 焦点を絞る</h3>
+        <p class="card-body">ルールは短く、具体的で、実行可能なものにします。あまりに多くのルールを詰め込むとモデルのパフォーマンスが低下します。1ファイルあたり500行以内を目安に。</p>
+      </div>
+      <div class="card">
+        <h3>📂 関心ごとに分離する</h3>
+        <p class="card-body">フロントエンド、バックエンド、テストなど、関心領域ごとにルールファイルを分け、globsで適用範囲を限定します。全ファイルに適用するルールは最小限に。</p>
+      </div>
+      <div class="card">
+        <h3>✅ 正例と負例を示す</h3>
+        <p class="card-body">「こう書いてほしい」「こう書いてほしくない」の両方の具体例をコードで示すと、AIの理解が格段に向上します。</p>
+      </div>
+      <div class="card">
+        <h3>🔄 .cursorignoreを活用する</h3>
+        <p class="card-body">node_modules、.env、機密ファイル、大規模バイナリなどを.cursorignoreに追加し、AIに送信されるコンテキストを整理します。.gitignoreのフォーマットと同じです。</p>
+      </div>
+      <div class="card">
+        <h3>📖 PRDを活用する</h3>
+        <p class="card-body">プロジェクトの要件定義書（PRD）を.cursor/rules/やプロジェクトルートに配置しておくと、AIがプロダクトの文脈を理解した上でコードを生成します。</p>
+      </div>
+      <div class="card">
+        <h3>🔧 Gitで管理・共有する</h3>
+        <p class="card-body">.cursor/rules/はGitに含めてチーム全体で共有します。コードレビューの際にルールの改善も議論しましょう。</p>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:20px;">
+      <strong>参考リソース:</strong> <a href="https://github.com/PatrickJS/awesome-cursorrules" target="_blank" rel="noopener">awesome-cursorrules</a>（GitHub）には各フレームワーク・言語向けのルールテンプレートが多数公開されています。また<a href="https://cursorrules.org" target="_blank" rel="noopener">cursorrules.org</a>にもガイドと例があります。
+    </div>
+  </div>
+</section>
+
+<div class="container"><div class="divider"></div></div>
+
+<!-- ============================================================ -->
+<!-- SECTION 8: セキュリティ・プライバシー -->
+<!-- ============================================================ -->
+<section class="section" id="sec8">
+  <div class="container section-anchor">
+    <div class="section-header">
+      <div class="section-label">Section 08</div>
+      <h2 class="section-title">セキュリティ・プライバシー</h2>
+      <p class="section-desc">Privacy Mode、SOC 2認証、データ処理の仕組みを詳しく解説します。</p>
+    </div>
+
+    <div class="prose">
+      <h3>Privacy Modeの保証</h3>
+      <p>
+        Cursorの<strong>Privacy Mode</strong>は、コードデータがモデルプロバイダーに保存されたり、学習に使用されたりしないことを保証する機能です。設定画面またはチーム管理者がONにでき、全プランで利用可能（Hobbyプランでも可）。チームプランの場合はデフォルトで強制有効化されます。Cursorユーザーの<strong>50%以上</strong>がPrivacy Modeを有効にしているとのことです。
+      </p>
+      <p>
+        Privacy Modeの実装は技術的にも堅牢です。各リクエストには<code>x-ghost-mode</code>ヘッダーが含まれ、バックエンドのプロキシがこのヘッダーに基づいてリクエストをPrivacy Mode専用レプリカとそれ以外のレプリカに振り分けます。Privacy Mode用レプリカではすべてのログ関数がデフォルトでno-op（何もしない）になっており、コードデータが誤ってログに記録されることを防止しています。バックグラウンドタスク用のキューとワーカーも同様に並列化されています。
+      </p>
+      <p>
+        ヘッダーが欠落した場合のデフォルトはPrivacy Mode ON。チーム強制設定のチェックはクライアント側で5分ごと、サーバー側でもホットパスで行われ、キャッシュミス時もPrivacy Mode前提で処理されます。つまり、チームに参加してから最大5分以内にPrivacy Modeが保証される設計です。
+      </p>
+
+      <h3>SOC 2 Type II認証とセキュリティ体制</h3>
+      <p>
+        Cursorは<strong>SOC 2 Type II認証</strong>を取得済みで、詳細なレポートは<a href="https://trust.cursor.com" target="_blank" rel="noopener">trust.cursor.com</a>からリクエストできます。また、定期的な（少なくとも年1回の）第三者ペネトレーションテストを実施しています。インフラストラクチャのアクセスは最小権限原則に基づき割り当てられ、AWSへのアクセスには多要素認証が強制されています。
+      </p>
+
+      <h3>データフローとサブプロセッサー</h3>
+      <p>
+        CursorのAIリクエストは必ずAWS上のAnysphereサーバーを経由します。主要インフラはAWS（US）に配置され、一部のレイテンシー重要サービスがEUとシンガポールにあります。コードデータを参照するサブプロセッサーには、Cloudflare（リバースプロキシ）、Azure・GCP（補助インフラ）、Fireworks・Baseten・Together（カスタムモデル推論）、OpenAI・Anthropic・Google Vertex・xAI（フロンティアモデル推論）があり、全プロバイダーとZero Data Retention契約を締結しています（Privacy Modeユーザー対象）。中国にインフラはなく、中国企業をサブプロセッサーとしても使用していないとのことです。
+      </p>
+    </div>
+
+    <div class="card-grid card-grid-2" style="margin-top:24px;">
+      <div class="card">
+        <h3>🔒 .cursorignoreファイル</h3>
+        <div class="card-body">
+          <p>特定のファイルやディレクトリをCursorのサーバーに送信させないためのファイルです。.gitignoreと同じ構文で記述します。機密情報（.env、秘密鍵、顧客データなど）や送信不要なファイル（バイナリ、ビルド成果物など）を指定しましょう。</p>
+          <div class="code-block" style="margin-top:12px;">
+<span class="comment"># .cursorignore の例</span>
+.env*
+*.pem
+*.key
+secrets/
+customer-data/
+*.sqlite
+dist/
+build/
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>⚠️ セキュリティ上の注意点</h3>
+        <div class="card-body">
+          <p><strong>Workspace Trust</strong>がデフォルトOFF — 信頼できないフォルダを開く際は手動で有効化を検討してください。<strong>拡張機能の署名検証</strong>もデフォルトOFF — セキュリティ重視の場合は<code>extensions.verifySignature: true</code>を設定してください（ただし現時点では毎回警告が表示されます）。また、エンベディングの逆変換による情報漏洩リスクは完全にはゼロではありませんが、現実的な攻撃は困難とされています。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-warning" style="margin-top:20px;">
+      <strong>アカウント削除:</strong> 設定ダッシュボードからいつでもアカウント削除が可能で、30日以内にすべてのデータ（インデックス済みコードベース含む）が完全に削除されます。ただし、Privacy ModeがOFFの期間中にデータが学習に使用された場合、既存の訓練済みモデルは即座に再訓練されませんが、将来のモデル訓練からは除外されます。
+    </div>
+  </div>
+</section>
+
+<div class="container"><div class="divider"></div></div>
+
+<!-- ============================================================ -->
+<!-- SECTION 9: ユースケース集 -->
+<!-- ============================================================ -->
+<section class="section" id="sec9">
+  <div class="container section-anchor">
+    <div class="section-header">
+      <div class="section-label">Section 09</div>
+      <h2 class="section-title">ユースケース集（10選）</h2>
+      <p class="section-desc">Cursorが特に威力を発揮する10の実践的なシナリオを紹介します。</p>
+    </div>
+
+    <div class="usecase-grid">
+      <div class="usecase-card">
+        <div class="usecase-num">01</div>
+        <h4>新規プロジェクトのスキャフォールディング</h4>
+        <p>「Next.js 15 + TypeScript + Tailwind CSSで認証付きSaaSのボイラープレートを作って」とAgentに指示するだけで、ディレクトリ構造、設定ファイル、基本コンポーネントが一式生成されます。PRDファイルをコンテキストに含めれば、プロダクト要件に沿った構造で出力してくれます。</p>
+      </div>
+      <div class="usecase-card">
+        <div class="usecase-num">02</div>
+        <h4>レガシーコードのリファクタリング</h4>
+        <p>古いJavaScript（ES5）やjQueryベースのコードをモダンなReactやTypeScriptに変換。Agentが複数ファイルを横断して依存関係を追跡しながらリファクタリングします。型定義の自動生成やテストの追加も同時に指示可能。</p>
+      </div>
+      <div class="usecase-card">
+        <div class="usecase-num">03</div>
+        <h4>バグの調査と修正</h4>
+        <p>エラーメッセージやスタックトレースをチャットに貼り付けると、原因の特定から修正コードの提案まで一気に行います。Debug Modeではエラー発生ファイルに基づいた自動修正も。Linterエラーの自動修正もTabでそのまま適用できます。</p>
+      </div>
+      <div class="usecase-card">
+        <div class="usecase-num">04</div>
+        <h4>テストコードの自動生成</h4>
+        <p>既存の関数やコンポーネントを選択し、Cmd+KまたはAgentで「単体テストを書いて」と指示。Jest、Vitest、Pytestなどのフレームワークに合わせたテストコードが生成されます。カバレッジの向上や境界値テストの追加にも対応。</p>
+      </div>
+      <div class="usecase-card">
+        <div class="usecase-num">05</div>
+        <h4>API設計とバックエンド実装</h4>
+        <p>OpenAPIスキーマやPrismaモデルをコンテキストに含め、RESTful APIやGraphQLリゾルバーを一括生成。バリデーション、エラーハンドリング、認証ミドルウェアも含めた実用的なコードが得られます。</p>
+      </div>
+      <div class="usecase-card">
+        <div class="usecase-num">06</div>
+        <h4>UIコンポーネントの高速プロトタイピング</h4>
+        <p>デザインの説明（またはスクリーンショットをGPT-4oに送信）からReact/Vue/Svelteコンポーネントを生成。Tailwind CSSやshadcn/uiを使ったスタイリング指示も自然言語で可能。内蔵ブラウザで即座にプレビュー。</p>
+      </div>
+      <div class="usecase-card">
+        <div class="usecase-num">07</div>
+        <h4>ドキュメント・コメントの自動生成</h4>
+        <p>既存コードからJSDoc、docstring、READMEを自動生成。@codebaseを使えばプロジェクト全体を理解した上で、アーキテクチャ概要やAPI仕様書も作成してくれます。</p>
+      </div>
+      <div class="usecase-card">
+        <div class="usecase-num">08</div>
+        <h4>コードレビューの補助</h4>
+        <p>差分をチャットに投げ込み「この変更をレビューして」と依頼すると、潜在的なバグ、パフォーマンス問題、セキュリティリスクを指摘。BugBotを使えばPRの自動レビューも可能です。</p>
+      </div>
+      <div class="usecase-card">
+        <div class="usecase-num">09</div>
+        <h4>新技術・ライブラリの学習</h4>
+        <p>@docsでライブラリの公式ドキュメントを参照しつつ、「このライブラリの使い方をサンプルコード付きで教えて」と質問。未知のフレームワークやAPIを使ったコードも、文脈に沿った正確なサンプルが得られます。</p>
+      </div>
+      <div class="usecase-card">
+        <div class="usecase-num">10</div>
+        <h4>データベースマイグレーション・スキーマ変更</h4>
+        <p>既存のスキーマ定義を読み取り、マイグレーションファイルの生成、シードデータの作成、関連するモデルやリポジトリコードの更新を一括で処理。Prisma、TypeORM、Drizzleなど主要ORMに対応。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container"><div class="divider"></div></div>
+
+<!-- ============================================================ -->
+<!-- SECTION 10: 他ツール比較 -->
+<!-- ============================================================ -->
+<section class="section" id="sec10">
+  <div class="container section-anchor">
+    <div class="section-header">
+      <div class="section-label">Section 10</div>
+      <h2 class="section-title">他ツール比較 — Copilot, Claude Code, Windsurf, Codex等</h2>
+      <p class="section-desc">主要なAIコーディングツールとの機能・特徴の比較表</p>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>比較項目</th>
+            <th>Cursor</th>
+            <th>GitHub Copilot</th>
+            <th>Claude Code</th>
+            <th>Windsurf</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>形態</strong></td>
+            <td>スタンドアロンIDE（VS Code fork）</td>
+            <td>VS Code/JetBrains拡張機能</td>
+            <td>CLIツール（エディタ非依存）</td>
+            <td>スタンドアロンIDE（VS Code fork）</td>
+          </tr>
+          <tr>
+            <td><strong>開発元</strong></td>
+            <td>Anysphere</td>
+            <td>GitHub / Microsoft</td>
+            <td>Anthropic</td>
+            <td>Codeium → OpenAI傘下</td>
+          </tr>
+          <tr>
+            <td><strong>ベースエディタ</strong></td>
+            <td>VS Code fork</td>
+            <td>VS Code / JetBrains内蔵</td>
+            <td>ターミナル（任意エディタと併用）</td>
+            <td>VS Code fork</td>
+          </tr>
+          <tr>
+            <td><strong>AIモデル</strong></td>
+            <td>Claude / GPT / Gemini / Grok / 独自</td>
+            <td>GPT-4o / Claude（限定的）</td>
+            <td>Claude専用（Opus / Sonnet）</td>
+            <td>GPT / Claude / 独自</td>
+          </tr>
+          <tr>
+            <td><strong>Tab補完</strong></td>
+            <td>独自モデルで高精度・位置予測</td>
+            <td>Copilot補完（高品質）</td>
+            <td>なし（CLIのため）</td>
+            <td>Supercomplete（独自モデル）</td>
+          </tr>
+          <tr>
+            <td><strong>エージェント</strong></td>
+            <td>Agent Mode + Background Agent</td>
+            <td>Copilot Agent（VS Code内蔵）</td>
+            <td>CLIエージェント（自律実行）</td>
+            <td>Cascade（エージェント）</td>
+          </tr>
+          <tr>
+            <td><strong>マルチファイル編集</strong></td>
+            <td>✅ Agent/Composerで自律的に</td>
+            <td>✅ Copilot Edits</td>
+            <td>✅ ファイル操作コマンド</td>
+            <td>✅ Cascadeで対応</td>
+          </tr>
+          <tr>
+            <td><strong>コンテキスト参照</strong></td>
+            <td>@file/@codebase/@web/@docs等</td>
+            <td>#file / ワークスペース参照</td>
+            <td>コードベース自動解析</td>
+            <td>@file / コードベースインデックス</td>
+          </tr>
+          <tr>
+            <td><strong>個人向け料金</strong></td>
+            <td>無料 / $20 / $60 / $200</td>
+            <td>無料 / $10 / $39</td>
+            <td>Max ($100/月～) / Pro ($20/月)</td>
+            <td>無料 / $15 / $60</td>
+          </tr>
+          <tr>
+            <td><strong>強み</strong></td>
+            <td>IDE統合の深さ、モデル選択の自由度、Tab精度</td>
+            <td>GitHub連携、VS Code親和性、低価格</td>
+            <td>大規模リファクタ、CLI操作、エディタ自由</td>
+            <td>Cascade のフロー体験、UI洗練</td>
+          </tr>
+          <tr>
+            <td><strong>弱み</strong></td>
+            <td>料金がやや高い、VS Codeから独立</td>
+            <td>モデル選択が限定的、エージェント発展途上</td>
+            <td>GUI無し、Tab補完なし</td>
+            <td>OpenAI買収で今後不透明</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:32px; margin-bottom:18px; font-size:1.05rem; font-weight:600;">その他の注目ツール</h3>
+    <div class="card-grid card-grid-3">
+      <div class="card">
+        <h3>OpenAI Codex CLI</h3>
+        <p class="card-body">OpenAIが提供するターミナルベースのAIコーディングツール。GPTモデルを活用し、Claude Codeのような自律的コード生成が可能。オープンソースで提供。</p>
+      </div>
+      <div class="card">
+        <h3>Cline / Roo Code</h3>
+        <p class="card-body">VS Code拡張機能として動作するAIエージェント。任意のAIモデルを接続可能で、ファイル操作やターミナル実行を自律的に行う。オープンソース。</p>
+      </div>
+      <div class="card">
+        <h3>Aider</h3>
+        <p class="card-body">ターミナルベースのAIペアプログラミングツール。Git統合が強力で、変更を自動でコミットする機能が特徴。オープンソースで無料（API費用は別途）。</p>
+      </div>
+      <div class="card">
+        <h3>JetBrains AI</h3>
+        <p class="card-body">IntelliJ IDEA、PyCharmなどJetBrains IDEに統合されるAIアシスタント。JetBrains独自のコード解析エンジンとの深い連携が強み。</p>
+      </div>
+      <div class="card">
+        <h3>Amazon Q Developer</h3>
+        <p class="card-body">AWS開発に特化したAIアシスタント。VS CodeやJetBrainsに統合。AWSサービスとの連携やセキュリティスキャンに強み。</p>
+      </div>
+      <div class="card">
+        <h3>Gemini Code Assist</h3>
+        <p class="card-body">Googleが提供するAIコーディング支援ツール。VS Code / JetBrainsに統合。Geminiの大コンテキストウィンドウが特徴。</p>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:20px;">
+      <strong>選択のポイント:</strong> IDE統合の深さとモデル選択の自由度を重視するなら<strong>Cursor</strong>。VS Code/JetBrainsを離れたくないなら<strong>Copilot</strong>。CLI操作でエディタに依存しない自律的開発なら<strong>Claude Code</strong>。最終的には、実際のワークフローに合うかどうかを無料プランで試すのが最良のアプローチです。
+    </div>
+  </div>
+</section>
+
+<div class="container"><div class="divider"></div></div>
+
+<!-- ============================================================ -->
+<!-- SECTION 11: 始め方ガイド -->
+<!-- ============================================================ -->
+<section class="section" id="sec11">
+  <div class="container section-anchor">
+    <div class="section-header">
+      <div class="section-label">Section 11</div>
+      <h2 class="section-title">始め方ガイド — ゼロからCursorを使い始める</h2>
+      <p class="section-desc">ダウンロードから最初のAIコーディング体験までを丁寧にガイドします。</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-content">
+          <h4>Cursorのダウンロードとインストール</h4>
+          <p>
+            <a href="https://cursor.com" target="_blank" rel="noopener">cursor.com</a>にアクセスし、お使いのOS（macOS / Windows / Linux）に対応したインストーラーをダウンロードします。macOSの場合は.dmgをダウンロードしてApplicationsフォルダにドラッグ、Windowsは.exeを実行、Linuxは.AppImageまたは.debパッケージを利用します。インストール後に起動すれば初回セットアップウィザードが始まります。
+          </p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-content">
+          <h4>初回セットアップ — テーマとキーバインド</h4>
+          <p>
+            初回起動時にエディタのテーマ（Dark/Light）とキーバインドスタイルの選択画面が表示されます。VS Codeから移行する場合は「VS Code」キーバインドを選択します。Vim、Emacs、Sublime Textなど他のエディタのキーバインドも選べます。
+          </p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-content">
+          <h4>VS Codeの設定をインポート（オプション）</h4>
+          <p>
+            VS Codeを使っていた場合、「Import VS Code Settings」を選択すると拡張機能、テーマ、設定、キーバインドがすべてインポートされます。後からでも Settings → VS Code Import から実行できます。
+          </p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-content">
+          <h4>アカウント作成とサインイン</h4>
+          <p>
+            GitHub、Google、またはメールアドレスでアカウントを作成します。Hobbyプランは無料で、クレジットカードの登録は不要です。新規ユーザーには2週間のPro体験版が付属するので、全機能を試すことができます。
+          </p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-content">
+          <h4>プロジェクトを開いて最初のAI体験</h4>
+          <p>
+            File → Open Folder でプロジェクトフォルダを開きます（または<kbd>Cmd+O</kbd>）。コードベースのインデクシングが自動で開始されます（Settings → Indexing で状況を確認可能）。任意のファイルを開いてコードを書き始めると、Tab補完が自動的に提案を表示します。<kbd>Tab</kbd>で採用、<kbd>Esc</kbd>で却下です。
+          </p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-content">
+          <h4>チャットを使ってみる</h4>
+          <p>
+            <kbd>Cmd+L</kbd>（Mac）または<kbd>Ctrl+L</kbd>（Windows/Linux）でサイドパネルのチャットが開きます。「このファイルの概要を説明して」「ここにエラーハンドリングを追加するにはどうすればいい？」などと質問してみましょう。コードの選択状態やカーソル位置が自動的にコンテキストに含まれます。
+          </p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-content">
+          <h4>Agentモードを使ってみる</h4>
+          <p>
+            <kbd>Cmd+I</kbd>（Mac）でエージェントパネルを開き、「ログイン機能を実装して」「READMEを作成して」などタスクを指示します。エージェントがコードベースを探索し、必要なファイルを作成・編集し、ターミナルコマンドも実行します。提案された変更はdiff表示されるので、「Accept」で採用します。
+          </p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-content">
+          <h4>Cmd+Kでインライン編集を試す</h4>
+          <p>
+            コードを選択して<kbd>Cmd+K</kbd>を押し、「TypeScriptに変換して」「この関数をasync/awaitに書き換えて」などと入力してみましょう。選択範囲が直接編集されます。ターミナル内で<kbd>Cmd+K</kbd>を使うと、自然言語からシェルコマンドが生成されます。
+          </p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-content">
+          <h4>.cursorrules を設定する</h4>
+          <p>
+            プロジェクトに合わせた<code>.cursor/rules/</code>ディレクトリを作成し、コーディング規約や技術スタックの情報を記述します。これによりAIの出力品質が劇的に向上します。まずは簡単なルールから始めて、使いながら洗練していきましょう。
+          </p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-content">
+          <h4>より深く使いこなす</h4>
+          <p>
+            <code>@codebase</code>でプロジェクト全体に質問、<code>@web</code>でWeb検索、<code>@docs</code>でドキュメント参照、<code>@file</code>で特定ファイルを明示参照、といった@コマンドを活用しましょう。モデルの切り替えも試して、タスクに最適なモデルを見つけていきます。
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:32px; margin-bottom:18px; font-size:1.1rem; font-weight:600;">主要ショートカットキー一覧</h3>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>ショートカット（Mac）</th>
+            <th>ショートカット（Win/Linux）</th>
+            <th>機能</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><kbd>Tab</kbd></td><td><kbd>Tab</kbd></td><td>AI補完の採用</td></tr>
+          <tr><td><kbd>Esc</kbd></td><td><kbd>Esc</kbd></td><td>AI補完の却下</td></tr>
+          <tr><td><kbd>Cmd+L</kbd></td><td><kbd>Ctrl+L</kbd></td><td>AIチャットを開く</td></tr>
+          <tr><td><kbd>Cmd+I</kbd></td><td><kbd>Ctrl+I</kbd></td><td>Agentパネルを開く</td></tr>
+          <tr><td><kbd>Cmd+K</kbd></td><td><kbd>Ctrl+K</kbd></td><td>インライン編集 / コード生成</td></tr>
+          <tr><td><kbd>Cmd+Shift+Enter</kbd></td><td><kbd>Ctrl+Shift+Enter</kbd></td><td>ファイル全体の編集（Cmd+K内）</td></tr>
+          <tr><td><kbd>Cmd+.</kbd></td><td><kbd>Ctrl+.</kbd></td><td>クイックアクション</td></tr>
+          <tr><td><kbd>@</kbd>（チャット内）</td><td><kbd>@</kbd>（チャット内）</td><td>コンテキスト参照（file/codebase/web/docs）</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="container"><div class="divider"></div></div>
+
+<!-- ============================================================ -->
+<!-- SECTION 12: Tips・注意点・参考リンク -->
+<!-- ============================================================ -->
+<section class="section" id="sec12">
+  <div class="container section-anchor">
+    <div class="section-header">
+      <div class="section-label">Section 12</div>
+      <h2 class="section-title">Tips・注意点・参考リンク</h2>
+      <p class="section-desc">Cursorを最大限に活かすためのTipsと、知っておくべき注意点をまとめます。</p>
+    </div>
+
+    <h3 style="margin-bottom:18px; font-size:1.1rem; font-weight:600;">効果的に使うためのTips</h3>
+    <div class="card-grid card-grid-2">
+      <div class="card">
+        <h3>💡 明確で具体的な指示を出す</h3>
+        <p class="card-body">「これを改善して」ではなく「この関数にzodによる入力バリデーションとカスタムエラーメッセージを追加して」のように具体的に。技術スタック、使いたいライブラリ、期待する出力形式を明示するほど品質が向上します。</p>
+      </div>
+</body>
+</html>

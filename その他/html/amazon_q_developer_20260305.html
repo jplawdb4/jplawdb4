@@ -1,0 +1,2091 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon Q Developer 完全ガイド 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0A0A0A;
+            --bg-card: #16161A;
+            --bg-card-hover: #1C1C22;
+            --bg-code: #111114;
+            --border: rgba(255,255,255,0.06);
+            --border-hover: rgba(255,255,255,0.12);
+            --accent: #5E6AD2;
+            --accent-light: #7B85E8;
+            --accent-dim: rgba(94,106,210,0.15);
+            --accent-glow: rgba(94,106,210,0.25);
+            --text-primary: #FAFAFA;
+            --text-secondary: #8A8A9A;
+            --text-tertiary: #55556A;
+            --success: #3ECF8E;
+            --warning: #F5A623;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --aws-orange: #FF9900;
+            --gradient-accent: linear-gradient(135deg, #5E6AD2 0%, #7B85E8 50%, #A78BFA 100%);
+            --gradient-card: linear-gradient(145deg, rgba(22,22,26,1) 0%, rgba(18,18,22,1) 100%);
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+            --shadow-lg: 0 8px 30px rgba(0,0,0,0.5);
+            --shadow-accent: 0 4px 20px rgba(94,106,210,0.2);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+        }
+
+        .light-mode {
+            --bg-primary: #F8F9FA;
+            --bg-card: #FFFFFF;
+            --bg-card-hover: #F0F1F3;
+            --bg-code: #F4F4F6;
+            --border: rgba(0,0,0,0.08);
+            --border-hover: rgba(0,0,0,0.15);
+            --accent: #4F5AC5;
+            --accent-light: #6670D8;
+            --accent-dim: rgba(79,90,197,0.08);
+            --accent-glow: rgba(79,90,197,0.15);
+            --text-primary: #1A1A2E;
+            --text-secondary: #5A5A6E;
+            --text-tertiary: #8A8A9A;
+            --gradient-card: linear-gradient(145deg, #FFFFFF 0%, #F8F9FA 100%);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 30px rgba(0,0,0,0.1);
+            --shadow-accent: 0 4px 20px rgba(79,90,197,0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Outfit', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            transition: background-color 0.4s ease, color 0.4s ease;
+            overflow-x: hidden;
+        }
+
+        /* ===== Scrollbar ===== */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--text-tertiary);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+        /* ===== Theme Toggle ===== */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 8px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+            box-shadow: var(--shadow-accent);
+        }
+        .theme-toggle .icon { font-size: 1.1rem; }
+
+        /* ===== TOC Toggle ===== */
+        .toc-toggle {
+            position: fixed;
+            top: 20px;
+            right: 140px;
+            z-index: 1000;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 8px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+        }
+        .toc-toggle:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+        }
+
+        /* ===== Hero Section ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 60px 20px;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 30% 50%, rgba(94,106,210,0.08) 0%, transparent 50%),
+                        radial-gradient(ellipse at 70% 50%, rgba(255,153,0,0.05) 0%, transparent 50%);
+            animation: heroGlow 12s ease-in-out infinite alternate;
+        }
+        @keyframes heroGlow {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(-3%, 2%) scale(1.05); }
+        }
+        .hero-content {
+            text-align: center;
+            max-width: 900px;
+            position: relative;
+            z-index: 1;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--accent-dim);
+            border: 1px solid rgba(94,106,210,0.3);
+            color: var(--accent-light);
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 24px;
+            letter-spacing: 0.5px;
+        }
+        .hero-badge .dot {
+            width: 6px; height: 6px;
+            background: var(--accent-light);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%,100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            letter-spacing: -0.03em;
+        }
+        .hero h1 .gradient-text {
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero h1 .aws-text {
+            color: var(--aws-orange);
+            -webkit-text-fill-color: var(--aws-orange);
+        }
+        .hero-description {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 680px;
+            margin: 0 auto 40px;
+            line-height: 1.8;
+        }
+        .hero-meta {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+            color: var(--text-tertiary);
+            font-size: 0.85rem;
+        }
+        .hero-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ===== Container ===== */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ===== Section ===== */
+        .section {
+            padding: 80px 0;
+            border-top: 1px solid var(--border);
+        }
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+        .section-label .num {
+            background: var(--accent-dim);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+        }
+        .section h2 {
+            font-size: clamp(1.8rem, 3vw, 2.4rem);
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+            line-height: 1.3;
+        }
+        .section-lead {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            max-width: 750px;
+            line-height: 1.8;
+        }
+
+        /* ===== Card ===== */
+        .card {
+            background: var(--gradient-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-md);
+        }
+        .card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card h3 .icon {
+            font-size: 1.4rem;
+        }
+        .card p {
+            color: var(--text-secondary);
+            line-height: 1.85;
+            margin-bottom: 12px;
+        }
+        .card p:last-child { margin-bottom: 0; }
+
+        /* ===== Grid ===== */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        @media (max-width: 900px) {
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (min-width: 901px) and (max-width: 1100px) {
+            .grid-3 { grid-template-columns: repeat(2, 1fr); }
+            .grid-4 { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        /* ===== Feature Card ===== */
+        .feature-card {
+            background: var(--gradient-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 28px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: var(--gradient-accent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .feature-card:hover::before { opacity: 1; }
+        .feature-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .feature-card .icon-box {
+            width: 44px; height: 44px;
+            background: var(--accent-dim);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            margin-bottom: 16px;
+        }
+        .feature-card h4 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+            line-height: 1.7;
+        }
+
+        /* ===== Table ===== */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            margin: 24px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.92rem;
+        }
+        thead {
+            background: var(--accent-dim);
+        }
+        thead th {
+            padding: 14px 20px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+            font-size: 0.85rem;
+            letter-spacing: 0.3px;
+        }
+        tbody td {
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+            vertical-align: top;
+            line-height: 1.7;
+        }
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr:hover {
+            background: rgba(94,106,210,0.03);
+        }
+        tbody tr td:first-child {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* ===== Tag / Badge ===== */
+        .tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 50px;
+            font-size: 0.72rem;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+        .tag-accent {
+            background: var(--accent-dim);
+            color: var(--accent-light);
+            border: 1px solid rgba(94,106,210,0.2);
+        }
+        .tag-success {
+            background: rgba(62,207,142,0.1);
+            color: #3ECF8E;
+            border: 1px solid rgba(62,207,142,0.2);
+        }
+        .tag-warning {
+            background: rgba(245,166,35,0.1);
+            color: #F5A623;
+            border: 1px solid rgba(245,166,35,0.2);
+        }
+        .tag-danger {
+            background: rgba(239,68,68,0.1);
+            color: #EF4444;
+            border: 1px solid rgba(239,68,68,0.2);
+        }
+        .tag-info {
+            background: rgba(59,130,246,0.1);
+            color: #3B82F6;
+            border: 1px solid rgba(59,130,246,0.2);
+        }
+        .tag-aws {
+            background: rgba(255,153,0,0.1);
+            color: #FF9900;
+            border: 1px solid rgba(255,153,0,0.2);
+        }
+
+        /* ===== Timeline ===== */
+        .timeline {
+            position: relative;
+            padding-left: 36px;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 12px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--accent), var(--accent-dim));
+            border-radius: 2px;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 32px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 8px;
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px var(--accent-dim);
+        }
+        .timeline-item .year {
+            font-size: 0.8rem;
+            color: var(--accent-light);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .timeline-item h4 {
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+        }
+        .timeline-item p {
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+            line-height: 1.7;
+        }
+
+        /* ===== Code Block ===== */
+        .code-block {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 20px 24px;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.85rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+        .code-block .comment { color: var(--text-tertiary); }
+        .code-block .keyword { color: var(--accent-light); }
+        .code-block .string { color: var(--success); }
+        .code-block .func { color: var(--warning); }
+
+        /* ===== Callout ===== */
+        .callout {
+            border-radius: var(--radius-md);
+            padding: 20px 24px;
+            margin: 20px 0;
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+        .callout .callout-icon {
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .callout-info {
+            background: rgba(59,130,246,0.06);
+            border: 1px solid rgba(59,130,246,0.15);
+            color: var(--text-secondary);
+        }
+        .callout-warning {
+            background: rgba(245,166,35,0.06);
+            border: 1px solid rgba(245,166,35,0.15);
+            color: var(--text-secondary);
+        }
+        .callout-success {
+            background: rgba(62,207,142,0.06);
+            border: 1px solid rgba(62,207,142,0.15);
+            color: var(--text-secondary);
+        }
+        .callout-tip {
+            background: var(--accent-dim);
+            border: 1px solid rgba(94,106,210,0.2);
+            color: var(--text-secondary);
+        }
+
+        /* ===== Stat Box ===== */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin: 24px 0;
+        }
+        .stat-box {
+            background: var(--gradient-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            text-align: center;
+        }
+        .stat-box .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+        }
+        .stat-box .stat-label {
+            font-size: 0.82rem;
+            color: var(--text-tertiary);
+        }
+        @media (max-width: 700px) {
+            .stat-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        /* ===== Usecase Card ===== */
+        .usecase-card {
+            background: var(--gradient-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            display: flex;
+            gap: 16px;
+            transition: all 0.3s ease;
+        }
+        .usecase-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-1px);
+        }
+        .usecase-card .num-circle {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            background: var(--accent-dim);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent-light);
+        }
+        .usecase-card h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .usecase-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ===== Comparison Highlight ===== */
+        .compare-winner {
+            background: rgba(62,207,142,0.08);
+        }
+
+        /* ===== Link Card ===== */
+        .link-card {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            background: var(--gradient-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 20px 24px;
+            transition: all 0.3s ease;
+        }
+        .link-card:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-accent);
+            transform: translateY(-2px);
+        }
+        .link-card .link-url {
+            color: var(--accent-light);
+            font-size: 0.82rem;
+            word-break: break-all;
+        }
+        .link-card h4 {
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+        .link-card p {
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+        }
+
+        /* ===== Diagram ===== */
+        .arch-diagram {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            margin: 24px 0;
+            text-align: center;
+            overflow-x: auto;
+        }
+        .arch-diagram .layer {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .arch-diagram .layer-label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-tertiary);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .arch-diagram .box {
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1px solid var(--border);
+        }
+        .arch-diagram .box-accent {
+            background: var(--accent-dim);
+            color: var(--accent-light);
+            border-color: rgba(94,106,210,0.3);
+        }
+        .arch-diagram .box-aws {
+            background: rgba(255,153,0,0.08);
+            color: var(--aws-orange);
+            border-color: rgba(255,153,0,0.25);
+        }
+        .arch-diagram .box-neutral {
+            background: rgba(255,255,255,0.03);
+            color: var(--text-secondary);
+        }
+        .arch-diagram .connector {
+            font-size: 1.2rem;
+            color: var(--text-tertiary);
+            margin: 8px 0;
+        }
+
+        /* ===== Pricing Card ===== */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+        .pricing-card {
+            background: var(--gradient-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 36px;
+            position: relative;
+            overflow: hidden;
+        }
+        .pricing-card.featured {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-accent);
+        }
+        .pricing-card.featured::before {
+            content: 'おすすめ';
+            position: absolute;
+            top: 16px; right: -28px;
+            background: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 4px 36px;
+            transform: rotate(45deg);
+        }
+        .pricing-card .plan-name {
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .pricing-card .price {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+        .pricing-card .price-sub {
+            color: var(--text-tertiary);
+            font-size: 0.85rem;
+            margin-bottom: 24px;
+        }
+        .pricing-card .feature-list {
+            list-style: none;
+        }
+        .pricing-card .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .pricing-card .feature-list li:last-child { border-bottom: none; }
+        .pricing-card .check { color: var(--success); }
+        .pricing-card .cross { color: var(--text-tertiary); }
+
+        @media (max-width: 700px) {
+            .pricing-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ===== Flow Diagram ===== */
+        .flow-steps {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 24px 0;
+        }
+        .flow-step {
+            background: var(--accent-dim);
+            border: 1px solid rgba(94,106,210,0.2);
+            border-radius: var(--radius-sm);
+            padding: 10px 18px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--accent-light);
+        }
+        .flow-arrow {
+            color: var(--text-tertiary);
+            font-size: 1.2rem;
+        }
+
+        /* ===== TOC ===== */
+        .toc-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100vh;
+            background: var(--bg-card);
+            border-left: 1px solid var(--border);
+            z-index: 999;
+            padding: 80px 28px 40px;
+            overflow-y: auto;
+            transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .toc-panel.open { right: 0; }
+        .toc-panel h3 {
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-tertiary);
+            margin-bottom: 20px;
+        }
+        .toc-panel a {
+            display: block;
+            padding: 8px 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.88rem;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s;
+            margin-bottom: 2px;
+        }
+        .toc-panel a:hover {
+            color: var(--text-primary);
+            background: var(--accent-dim);
+        }
+        .toc-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 998;
+        }
+        .toc-overlay.open { display: block; }
+
+        /* ===== Footer ===== */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 40px 0;
+            text-align: center;
+            color: var(--text-tertiary);
+            font-size: 0.85rem;
+        }
+        footer a {
+            color: var(--accent-light);
+            text-decoration: none;
+        }
+
+        /* ===== Prose ===== */
+        .prose {
+            color: var(--text-secondary);
+            line-height: 1.9;
+            font-size: 0.95rem;
+        }
+        .prose p {
+            margin-bottom: 16px;
+        }
+        .prose strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        .prose a {
+            color: var(--accent-light);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(94,106,210,0.3);
+        }
+        .prose a:hover {
+            border-bottom-color: var(--accent-light);
+        }
+
+        /* ===== Misc ===== */
+        .mb-0 { margin-bottom: 0; }
+        .mb-8 { margin-bottom: 8px; }
+        .mb-16 { margin-bottom: 16px; }
+        .mb-24 { margin-bottom: 24px; }
+        .mb-32 { margin-bottom: 32px; }
+        .mt-16 { margin-top: 16px; }
+        .mt-24 { margin-top: 24px; }
+        .mt-32 { margin-top: 32px; }
+
+        .text-accent { color: var(--accent-light); }
+        .text-secondary { color: var(--text-secondary); }
+        .text-sm { font-size: 0.85rem; }
+        .fw-600 { font-weight: 600; }
+        .border-top { border-top: 1px solid var(--border); padding-top: 24px; margin-top: 24px; }
+
+        .pill-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 32px 0;
+        }
+
+        .sub-heading {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            margin-top: 28px;
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Theme Toggle -->
+<button class="theme-toggle" onclick="toggleTheme()" aria-label="テーマ切り替え">
+    <span class="icon" id="themeIcon">🌙</span>
+    <span id="themeLabel">ダーク</span>
+</button>
+
+<!-- TOC Toggle -->
+<button class="toc-toggle" onclick="toggleTOC()" aria-label="目次">
+    📑 目次
+</button>
+
+<!-- TOC Panel -->
+<div class="toc-overlay" id="tocOverlay" onclick="toggleTOC()"></div>
+<nav class="toc-panel" id="tocPanel">
+    <h3>目次</h3>
+    <a href="#section1">01 — Amazon Q Developerとは</a>
+    <a href="#section2">02 — 主な機能</a>
+    <a href="#section3">03 — アーキテクチャ</a>
+    <a href="#section4">04 — 対応IDE</a>
+    <a href="#section5">05 — 料金体系</a>
+    <a href="#section6">06 — AWS特化機能</a>
+    <a href="#section7">07 — セキュリティスキャン</a>
+    <a href="#section8">08 — 変換機能</a>
+    <a href="#section9">09 — ユースケース集</a>
+    <a href="#section10">10 — 制限事項・注意点</a>
+    <a href="#section11">11 — 他ツール比較</a>
+    <a href="#section12">12 — 始め方ガイド</a>
+</nav>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+    <div class="hero-content">
+        <div class="hero-badge">
+            <span class="dot"></span>
+            AWS公式 AIコーディングアシスタント
+        </div>
+        <h1>
+            <span class="gradient-text">Amazon Q Developer</span><br>
+            完全ガイド <span class="aws-text">2026</span>
+        </h1>
+        <p class="hero-description">
+            AWSが提供する次世代AI開発アシスタント「Amazon Q Developer」の全機能・アーキテクチャ・料金・ユースケースを
+            初心者にもわかりやすく徹底解説する包括的リファレンスドキュメントです。
+        </p>
+        <div class="hero-meta">
+            <span>📅 最終更新: 2026年3月</span>
+            <span>📖 全12章構成</span>
+            <span>🏷️ 初心者〜中級者向け</span>
+        </div>
+    </div>
+</header>
+
+<!-- ===== SECTION 1: Amazon Q Developerとは ===== -->
+<section class="section" id="section1">
+    <div class="container">
+        <div class="section-label"><span class="num">01</span> OVERVIEW</div>
+        <h2>Amazon Q Developerとは</h2>
+        <p class="section-lead">
+            CodeWhispererから進化したAWS公式のAIコーディングアシスタント。
+            ソフトウェア開発ライフサイクル全体をカバーする統合AI基盤です。
+        </p>
+
+        <div class="card">
+            <h3><span class="icon">🎯</span> 概要</h3>
+            <div class="prose">
+                <p>
+                    <strong>Amazon Q Developer</strong>は、AWSが提供する生成AI搭載の開発アシスタントです。コードの記述、デバッグ、テスト、セキュリティスキャン、レガシーアプリケーションのアップグレードまで、ソフトウェア開発ライフサイクル（SDLC）全体をAIで支援します。IDE内でのコード補完やチャットはもちろん、AWSコンソール上でのトラブルシューティング、コマンドラインでのエージェント操作まで、あらゆるタッチポイントで開発者を助けるプラットフォームです。
+                </p>
+                <p>
+                    2024年4月30日、従来の<strong>Amazon CodeWhisperer</strong>がAmazon Q Developerへとリブランドされ、コード補完機能に加えて、チャット、エージェント、コード変換、セキュリティスキャンなど多数の新機能が統合されました。これはAWSが「AIファースト」の開発者体験を実現するための戦略的な大型刷新であり、単なる名称変更ではなく、製品の能力が大幅に拡張されたことを意味します。
+                </p>
+                <p>
+                    Amazon Q Developerは<strong>Amazon Bedrock</strong>上に構築されており、高い安全性と責任あるAI利用の管理機能を継承しています。25以上のプログラミング言語に対応し、Python、Java、JavaScript、TypeScript、C#、Go、Rust、PHP、Ruby、Kotlin、C、C++、Shell、SQL、Scala、JSON、YAML、HCLなどをサポートします。
+                </p>
+            </div>
+        </div>
+
+        <div class="sub-heading">CodeWhispererからの進化の歴史</div>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="year">2022年 — 誕生</div>
+                <h4>Amazon CodeWhisperer プレビュー開始</h4>
+                <p>AWSがAIコード生成サービスとして「Amazon CodeWhisperer」をプレビューリリース。リアルタイムのコード補完を中核機能として、GitHub Copilotに対抗するAWS公式ツールとして登場しました。</p>
+            </div>
+            <div class="timeline-item">
+                <div class="year">2023年4月 — 一般提供</div>
+                <h4>CodeWhisperer GA + 個人向け無料化</h4>
+                <p>一般提供（GA）が開始され、個人開発者向けに無料で利用可能になりました。セキュリティスキャン機能やリファレンストラッキング機能も追加。VS CodeとJetBrains IDEへの対応が強化されました。</p>
+            </div>
+            <div class="timeline-item">
+                <div class="year">2024年4月 — 大型進化</div>
+                <h4>Amazon Q Developerへリブランド</h4>
+                <p>CodeWhispererの全機能がAmazon Q Developerへ統合されました。チャット機能、エージェント機能（/dev）、コード変換機能（/transform）、ドキュメント生成、コードレビューなど大幅な機能拡張が実施されました。同時に、Amazon Qファミリー（Q Business、Q Developer等）の一部として位置づけられました。</p>
+            </div>
+            <div class="timeline-item">
+                <div class="year">2024年12月 — re:Invent</div>
+                <h4>エージェント機能の大幅強化</h4>
+                <p>re:Invent 2024にて、ドキュメント生成、コードレビュー、ユニットテスト自動生成などの新しいエージェント機能が発表。Amazon Q Developerの「エージェント指向」開発が加速しました。</p>
+            </div>
+            <div class="timeline-item">
+                <div class="year">2025年3月〜 — CLI強化</div>
+                <h4>CLIエージェント・MCP対応</h4>
+                <p>コマンドラインでのエージェント体験が刷新され、自然言語での指示からファイルの読み書き、AWSリソースのクエリ、コード生成が可能になりました。4月にはModel Context Protocol（MCP）対応も発表。</p>
+            </div>
+            <div class="timeline-item">
+                <div class="year">2025年5月〜 — アジェンティック</div>
+                <h4>IDE内アジェンティック体験の全面展開</h4>
+                <p>VS Code、JetBrains、Visual StudioでのフルAgenticコーディング体験が提供開始。自然言語からの機能実装、マルチファイル変更、テスト自動実行など、開発者が「指示するだけ」で成果物が生成される新しい開発パラダイムが実現しました。</p>
+            </div>
+            <div class="timeline-item">
+                <div class="year">2025年12月 — re:Invent 2025</div>
+                <h4>クラウド開発の全面AI化</h4>
+                <p>re:Invent 2025にて、コスト管理機能の強化、アーキテクチャ設計支援、CloudWatchログ・メトリクスの自動分析、Kiro IDEとの連携などが発表されました。Amazon Q Developerは開発だけでなく、運用・監視・最適化までカバーする総合AIプラットフォームへと進化しています。</p>
+            </div>
+        </div>
+
+        <div class="stat-grid">
+            <div class="stat-box">
+                <div class="stat-value">25+</div>
+                <div class="stat-label">対応プログラミング言語</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">$260M</div>
+                <div class="stat-label">Amazon社内での節約額<br>(2024年8月時点)</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">50%</div>
+                <div class="stat-label">コード提案受入率<br>(NAB報告)</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">5+</div>
+                <div class="stat-label">対応IDE数</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== SECTION 2: 主な機能 ===== -->
+<section class="section" id="section2">
+    <div class="container">
+        <div class="section-label"><span class="num">02</span> FEATURES</div>
+        <h2>主な機能</h2>
+        <p class="section-lead">
+            コード補完からエージェント開発まで、SDLCのあらゆるフェーズをカバーする5大機能群を解説します。
+        </p>
+
+        <div class="grid-3">
+            <div class="feature-card">
+                <div class="icon-box">✍️</div>
+                <h4>インラインコード補完</h4>
+                <p>リアルタイムでコードスニペットから関数全体まで生成。25以上の言語に対応し、既存コードとコメントの文脈を理解して最適な提案を行います。BT Groupは37%、NABは50%のコード受入率を報告しています。</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-box">💬</div>
+                <h4>AIチャット</h4>
+                <p>IDE内やCLI、AWSコンソールで自然言語の質問に回答。プログラムロジックの解説、バグの特定、AWSサービスのベストプラクティス相談など、コンテキストを理解した対話が可能です。多言語（日本語含む）対応。</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-box">🤖</div>
+                <h4>エージェント（Agentic Coding）</h4>
+                <p>自然言語のプロンプトから、ステップバイステップの実装計画を自動生成。コードの作成・テスト・APIインテグレーションを一括実行し、マルチファイルにまたがる機能実装を数分で完了します。</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-box">🛡️</div>
+                <h4>セキュリティスキャン</h4>
+                <p>SAST（静的アプリケーションセキュリティテスト）によりコード内の脆弱性を検出。SQLインジェクション、リソースリーク、シークレット漏洩、暗号化の不備などを自動的にスキャンし、修正提案まで行います。</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-box">🔄</div>
+                <h4>コード変換（Transform）</h4>
+                <p>JavaアプリケーションのJDKバージョンアップグレード（Java 8/11 → 17/21）や.NETアプリのWindows→Linux移植をAIエージェントが自動実行。依存関係の更新、非推奨API対応、ビルド確認まで自律的に行います。</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-box">📝</div>
+                <h4>コードレビュー & ドキュメント生成</h4>
+                <p>コードの品質問題（論理エラー、アンチパターン、コード重複）を自動レビュー。データフロー図を含むドキュメントを自動生成し、READMEの更新もQ Developerに依頼できます。</p>
+            </div>
+        </div>
+
+        <div class="card mt-24">
+            <h3><span class="icon">🧪</span> ユニットテスト自動生成</h3>
+            <div class="prose">
+                <p>
+                    Amazon Q Developerはコードの選択範囲やプロジェクト全体に対してユニットテストを自動生成します。テストフレームワーク（JUnit、pytest、Jest等）に準拠したテストコードを作成し、エッジケースやモック設定も含めた実用的なテストを提供します。「このメソッドのテストを書いて」と依頼するだけで、IDE内にテストコードが即座に生成されます。
+                </p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">🖥️</span> Console-to-Code</h3>
+            <div class="prose">
+                <p>
+                    AWSコンソール上で行った操作をキャプチャし、それをCloudFormation、CDK、AWS CLIなどの再利用可能なコードに変換する機能です。プロトタイピングから本番デプロイメントへの移行を高速化します。コンソールでの試行錯誤をそのまま本番用のInfrastructure as Code（IaC）に転換できるため、手動設定からコードベースの運用への移行が容易になります。
+                </p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">🔗</span> MCP（Model Context Protocol）対応</h3>
+            <div class="prose">
+                <p>
+                    2025年4月よりCLIで、6月よりIDE プラグインでMCPサポートが追加されました。MCPはAIモデルが外部ツール、データソース、APIにセキュアにアクセスするためのオープンプロトコルです。これにより、Amazon Q Developerはデータベーススキーマの理解、外部サービスとの連携、プロジェクト固有のコンテキスト取得が可能になり、より精度の高いコード生成やアドバイスが実現します。
+                </p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">⚙️</span> カスタマイズ機能</h3>
+            <div class="prose">
+                <p>
+                    Amazon Q Developerは、組織の内部ライブラリ、API、ベストプラクティス、アーキテクチャパターンを学習させることで、より関連性の高いコード推奨とチャット応答を生成できます。Pro Tierではこのカスタマイズ機能を活用でき、社内のコードベースに合わせた提案が可能です。対応言語はPython、Java、JavaScript、TypeScript、C#、C++で、チームの生産性向上に直結します。さらに「Rules」機能により、コーディング標準やベストプラクティスを定義し、Q Developerのコンテキストとして自動適用させることもできます。
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== SECTION 3: アーキテクチャ ===== -->
+<section class="section" id="section3">
+    <div class="container">
+        <div class="section-label"><span class="num">03</span> ARCHITECTURE</div>
+        <h2>アーキテクチャ</h2>
+        <p class="section-lead">
+            Amazon Bedrock基盤の上に構築された、エンタープライズグレードのAI開発プラットフォーム。
+        </p>
+
+        <div class="arch-diagram">
+            <div class="layer-label">ユーザーインターフェース層</div>
+            <div class="layer">
+                <div class="box box-accent">VS Code 拡張</div>
+                <div class="box box-accent">JetBrains Plugin</div>
+                <div class="box box-accent">Visual Studio</div>
+                <div class="box box-accent">Eclipse (Preview)</div>
+                <div class="box box-accent">CLI / Terminal</div>
+                <div class="box box-accent">AWS Console</div>
+            </div>
+            <div class="connector">↕️</div>
+            <div class="layer-label">Amazon Q Developer サービス層</div>
+            <div class="layer">
+                <div class="box box-aws">コード補完エンジン</div>
+                <div class="box box-aws">チャット / Q&A</div>
+                <div class="box box-aws">エージェント (Agentic)</div>
+                <div class="box box-aws">セキュリティスキャン</div>
+                <div class="box box-aws">コード変換 (Transform)</div>
+            </div>
+            <div class="connector">↕️</div>
+            <div class="layer-label">基盤モデル層</div>
+            <div class="layer">
+                <div class="box box-aws">Amazon Bedrock</div>
+                <div class="box box-neutral">Claude モデル (Anthropic)</div>
+                <div class="box box-neutral">AWS独自トレーニングモデル</div>
+            </div>
+            <div class="connector">↕️</div>
+            <div class="layer-label">AWSサービス連携層</div>
+            <div class="layer">
+                <div class="box box-neutral">IAM / Identity Center</div>
+                <div class="box box-neutral">CloudWatch</div>
+                <div class="box box-neutral">CodeGuru Detector</div>
+                <div class="box box-neutral">S3 / Lambda / etc.</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">🧠</span> Amazon Bedrock 基盤</h3>
+            <div class="prose">
+                <p>
+                    Amazon Q Developerは<strong>Amazon Bedrock</strong>上に構築されています。Bedrockは、AWSが提供するフルマネージドの基盤モデル（FM）プラットフォームであり、Anthropic、Meta、Amazon自社製モデルなど多数のFMをAPI経由で利用可能にするサービスです。Q Developerはこの基盤を活用することで、エンタープライズ級のセキュリティ、データプライバシー、スケーラビリティを実現しています。
+                </p>
+                <p>
+                    Bedrock上に構築されているため、自動的に悪用検出メカニズムが組み込まれており、安全性、セキュリティ、責任あるAI利用が確保されています。ユーザーのコードがモデルのトレーニングに利用されることはなく（Pro Tierでは自動的にオプトアウト）、データの機密性が保護されます。
+                </p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">🔬</span> 使用モデルについて</h3>
+            <div class="prose">
+                <p>
+                    Amazon Q Developerの料金ページには「Access latest Claude models（最新のClaudeモデルにアクセス）」と明記されており、Anthropic社のClaudeモデルが中核的な推論エンジンとして活用されていることがわかります。ただしAWSは、Q Developer内部で使用される具体的なモデル構成の詳細を完全には公開していません。コード補完、セキュリティスキャン、コード変換などの各機能では、それぞれに最適化されたモデルやパイプラインが使い分けられていると考えられます。
+                </p>
+                <p>
+                    また、AWSはCodeGuruの技術を継承したセキュリティ検出器ライブラリを保有しており、セキュリティスキャン機能ではこれらの特化型検出エンジンと生成AIの組み合わせによる高精度な脆弱性検出が実現されています。
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== SECTION 4: 対応IDE ===== -->
+<section class="section" id="section4">
+    <div class="container">
+        <div class="section-label"><span class="num">04</span> IDE SUPPORT</div>
+        <h2>対応IDE・プラットフォーム</h2>
+        <p class="section-lead">
+            主要IDEからコマンドライン、AWSコンソールまで、開発者が使うあらゆる場所で利用可能。
+        </p>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>プラットフォーム</th>
+                        <th>対応バージョン</th>
+                        <th>コード補完</th>
+                        <th>チャット</th>
+                        <th>エージェント</th>
+                        <th>セキュリティスキャン</th>
+                        <th>変換</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>VS Code</strong></td>
+                        <td>1.85.0以上</td>
+                        <td><span class="tag tag-success">✓ 全機能</span></td>
+                        <td><span class="tag tag-success">✓ 全機能</span></td>
+                        <td><span class="tag tag-success">✓ 全機能</span></td>
+                        <td><span class="tag tag-success">✓ 全機能</span></td>
+                        <td><span class="tag tag-success">✓ 全機能</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>JetBrains</strong><br><span class="text-sm text-secondary">IntelliJ, PyCharm等</span></td>
+                        <td>2024.3以上</td>
+                        <td><span class="tag tag-success">✓ 全機能</span></td>
+                        <td><span class="tag tag-success">✓ 全機能</span></td>
+                        <td><span class="tag tag-success">✓ 全機能</span></td>
+                        <td><span class="tag tag-success">✓ 全機能</span></td>
+                        <td><span class="tag tag-success">✓ 全機能</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Visual Studio</strong><br><span class="text-sm text-secondary">Windows版のみ</span></td>
+                        <td>2022 v17.7以上</td>
+                        <td><span class="tag tag-success">✓ 全機能</span></td>
+                        <td><span class="tag tag-success">✓ 全機能</span></td>
+                        <td><span class="tag tag-success">✓ 全機能</span></td>
+                        <td><span class="tag tag-success">✓ 全機能</span></td>
+                        <td><span class="tag tag-warning">△ .NETのみ</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Eclipse</strong></td>
+                        <td>プレビュー版</td>
+                        <td><span class="tag tag-success">✓</span></td>
+                        <td><span class="tag tag-warning">△ 限定的</span></td>
+                        <td><span class="tag tag-danger">✗</span></td>
+                        <td><span class="tag tag-warning">△ 限定的</span></td>
+                        <td><span class="tag tag-danger">✗</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>CLI / Terminal</strong></td>
+                        <td>最新バージョン</td>
+                        <td><span class="tag tag-success">✓ 補完</span></td>
+                        <td><span class="tag tag-success">✓ 全機能</span></td>
+                        <td><span class="tag tag-success">✓ 全機能</span></td>
+                        <td><span class="tag tag-danger">✗</span></td>
+                        <td><span class="tag tag-success">✓ Java</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>AWS Console</strong></td>
+                        <td>Webブラウザ</td>
+                        <td><span class="tag tag-danger">✗</span></td>
+                        <td><span class="tag tag-success">✓ Q&A</span></td>
+                        <td><span class="tag tag-danger">✗</span></td>
+                        <td><span class="tag tag-danger">✗</span></td>
+                        <td><span class="tag tag-danger">✗</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>GitHub</strong><br><span class="text-sm text-secondary">コードレビュー</span></td>
+                        <td>GitHub App連携</td>
+                        <td><span class="tag tag-danger">✗</span></td>
+                        <td><span class="tag tag-danger">✗</span></td>
+                        <td><span class="tag tag-success">✓ PR対応</span></td>
+                        <td><span class="tag tag-success">✓ PR時</span></td>
+                        <td><span class="tag tag-danger">✗</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card mt-24">
+            <h3><span class="icon">⌨️</span> CLIエージェントの特徴</h3>
+            <div class="prose">
+                <p>
+                    Amazon Q Developer CLIは、ターミナルに直接AIアシスタントを統合するツールです。主な機能として、<strong>コマンド自動補完</strong>（コマンドやオプションのインテリジェントな提案）、<strong>自然言語→bashコマンド変換</strong>（「S3の全バケットを一覧して」などの日本語や英語の指示をコマンドに変換）、<strong>エージェント機能</strong>（ファイルの読み書き、AWSリソースへのクエリ、コードの生成を自然な対話で実行）があります。
+                </p>
+                <p>
+                    2025年7月には<strong>カスタムエージェント</strong>機能が追加され、プロジェクト固有のタスクやワークフローに最適化したエージェント設定を作成し、チームメンバーと共有できるようになりました。MCP対応により、外部データソースやツールとの連携もCLIから直接行えます。
+                </p>
+            </div>
+        </div>
+
+        <div class="callout callout-info">
+            <span class="callout-icon">💡</span>
+            <div>
+                <strong>対応プログラミング言語一覧:</strong> C, C++, C#, Dart, Go, Java, JavaScript, Kotlin, PHP, Python, Ruby, Rust, Scala, Shell, SQL, Swift, TypeScript, JSON, YAML, HCL など25以上の言語に対応しています。
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== SECTION 5: 料金体系 ===== -->
+<section class="section" id="section5">
+    <div class="container">
+        <div class="section-label"><span class="num">05</span> PRICING</div>
+        <h2>料金体系</h2>
+        <p class="section-lead">
+            永続的な無料枠と、より多くの機能を解放するPro Tier。個人からエンタープライズまで対応。
+        </p>
+
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="plan-name">Free Tier</div>
+                <div class="price">$0</div>
+                <div class="price-sub">永続的に無料</div>
+                <ul class="feature-list">
+                    <li><span class="check">✓</span> 月50回のエージェントリクエスト（Q&A + Agentic Coding）</li>
+                    <li><span class="check">✓</span> 最新Claudeモデルへのアクセス</li>
+                    <li><span class="check">✓</span> IDE・CLIで利用可能</li>
+                    <li><span class="check">✓</span> セキュリティスキャン</li>
+                    <li><span class="check">✓</span> リファレンストラッキング</li>
+                    <li><span class="check">✓</span> パブリックコード提案の抑制</li>
+                    <li><span class="check">✓</span> Java変換: 月1,000行</li>
+                    <li><span class="check">✓</span> AWSコンソール Q&A・エラー診断</li>
+                    <li><span class="cross">✗</span> IP補償（IP Indemnity）なし</li>
+                    <li><span class="cross">✗</span> 管理ダッシュボードなし</li>
+                    <li><span class="text-sm text-secondary">データ収集: オプトアウト可能</span></li>
+                    <li><span class="text-sm text-secondary">Builder IDユーザー向け</span></li>
+                </ul>
+            </div>
+            <div class="pricing-card featured">
+                <div class="plan-name">Pro Tier</div>
+                <div class="price">$19<span style="font-size:1rem;font-weight:400;color:var(--text-tertiary)">/月/ユーザー</span></div>
+                <div class="price-sub">利用量拡大 + エンタープライズ機能</div>
+                <ul class="feature-list">
+                    <li><span class="check">✓</span> エージェントリクエスト上限の大幅拡大</li>
+                    <li><span class="check">✓</span> 最新Claudeモデルへのアクセス</li>
+                    <li><span class="check">✓</span> IDE・CLIで利用可能</li>
+                    <li><span class="check">✓</span> セキュリティスキャン</li>
+                    <li><span class="check">✓</span> リファレンストラッキング</li>
+                    <li><span class="check">✓</span> パブリックコード提案の抑制</li>
+                    <li><span class="check">✓</span> Java変換: 月4,000行/ユーザー（プール型）</li>
+                    <li><span class="check">✓</span> .NET変換の拡張利用</li>
+                    <li><span class="check">✓</span> <strong>IP補償（IP Indemnity）あり</strong></li>
+                    <li><span class="check">✓</span> <strong>IAM Identity Center + 管理ダッシュボード</strong></li>
+                    <li><span class="text-sm text-secondary">データ収集: 自動オプトアウト</span></li>
+                    <li><span class="text-sm text-secondary">超過分: $0.003/行（Java変換）</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card mt-24">
+            <h3><span class="icon">💰</span> 料金の詳細・注意点</h3>
+            <div class="prose">
+                <p>
+                    <strong>アクティベーション方式:</strong> Pro Tierは「サインインしただけ」では課金されません。エージェントコーディングのプラン生成依頼、コード変換の実行、コード補完の利用など、実際にQ Developerの機能を使用した時点でサブスクリプションが有効化されます。初月は日割り計算され、以降は月額$19が自動更新されます。
+                </p>
+                <p>
+                    <strong>Java変換の課金体系:</strong> Pro Tierでは月4,000行/ユーザー分が含まれ、これはAWSペイヤーアカウントレベルでプール集計されます。例えば10ユーザーのPro契約なら月40,000行までが含まれ、超過分は$0.003/行の従量課金となります。途中停止やエラー終了した変換、コメントや空行は課金対象外です。
+                </p>
+                <p>
+                    <strong>月途中のキャンセル:</strong> 月途中でサブスクリプションをキャンセルした場合、その月分は全額課金されます。キャンセル即座にアクセス権が失われるため、月末でのキャンセルが推奨されます。
+                </p>
+                <p>
+                    <strong>Builder IDからのアップグレード:</strong> 2025年6月より、Builder IDユーザーもPro Tierへアップグレード可能になりました。ただし、Builder IDでPro Tierにアップグレードした場合は、管理ダッシュボード機能は利用できません。管理機能が必要な場合はIAM Identity Centerでのサインアップが必要です。
+                </p>
+            </div>
+        </div>
+
+        <div class="callout callout-tip">
+            <span class="callout-icon">🎯</span>
+            <div>
+                <strong>個人開発者へのおすすめ:</strong> まずはFree Tierで月50回のエージェントリクエストを試し、価値を感じたらPro Tierへのアップグレードを検討しましょう。AWS利用がメインの開発者にとっては、$19/月は十分にペイする投資です。
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== SECTION 6: AWS特化機能 ===== -->
+<section class="section" id="section6">
+    <div class="container">
+        <div class="section-label"><span class="num">06</span> AWS INTEGRATION</div>
+        <h2>AWS特化機能</h2>
+        <p class="section-lead">
+            Lambda、CloudFormation、CDKなど、AWSサービスとの深い統合がQ Developerの最大の差別化ポイントです。
+        </p>
+
+        <div class="grid-2">
+            <div class="feature-card">
+                <div class="icon-box">⚡</div>
+                <h4>Lambda関数生成</h4>
+                <p>自然言語の説明からLambda関数のコードを自動生成。イベントソース設定、権限設定、エラーハンドリングまで含めた実用的なコードをIDE内で作成します。Python、Node.js、Java、Go等に対応。</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-box">📋</div>
+                <h4>CloudFormation支援</h4>
+                <p>CloudFormationテンプレート（YAML/JSON）の生成・修正をAIで支援。リソース定義、パラメータ設計、出力設定を自然言語で指示してテンプレートを作成できます。カスタムリソースの作成支援も可能です。</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-box">🏗️</div>
+                <h4>CDK（Cloud Development Kit）支援</h4>
+                <p>TypeScript、Python等でのCDKコンストラクト生成を支援。CDKテストの自動生成、CDK v1→v2マイグレーション、3階層Webアプリケーションのインフラ構築までAIでサポートします。</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-box">🔍</div>
+                <h4>AWSコンソールエラー診断</h4>
+                <p>AWSコンソール上でエラーが発生した際、Q Developerが自動的にエラーを分析し、権限不足、設定ミス、サービス制限などの根本原因と解決策を提示します。全AWSコマーシャルリージョンで利用可能。</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-box">💸</div>
+                <h4>コスト管理・最適化</h4>
+                <p>AWSのコスト分析をQ Developerが支援。自然言語でサービス料金の詳細やワークロードコストの見積もりを取得でき、コスト最適化の推奨事項も提供されます（2025年10-11月に大幅強化）。</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-box">📊</div>
+                <h4>CloudWatch / ログ分析</h4>
+                <p>CloudWatchのログ、メトリクス、ダッシュボードを自動分析し、パフォーマンスの問題やエラーの原因を特定します。ECSタスクやEC2インスタンスのトラブルシューティングにも対応。</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-box">🌐</div>
+                <h4>ネットワークセキュリティ分析</h4>
+                <p>WAFやネットワーク設定のセキュリティ分析をAIで実行。セキュリティインサイトの提供と具体的な修正オプションを提示し、クラウドインフラの防御強化を支援します。</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-box">🎨</div>
+                <h4>ホワイトボード→クラウド変換</h4>
+                <p>MCP＋Bedrock Data Automationを活用して、ホワイトボードに描いたアーキテクチャ図を実際のクラウドインフラコードに変換。構想から実装までの時間を劇的に短縮します。</p>
+            </div>
+        </div>
+
+        <div class="card mt-24">
+            <h3><span class="icon">🔄</span> Console-to-Code ワークフロー</h3>
+            <div class="flow-steps">
+                <div class="flow-step">AWS Console操作</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">Q Developerがキャプチャ</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">IaCコード生成</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">レビュー・調整</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">本番デプロイ</div>
+            </div>
+            <div class="prose">
+                <p>
+                    Console-to-Code機能により、AWSコンソールでの手動操作を自動的にCloudFormation、CDK、AWS CLIコードに変換できます。これは、プロトタイピング段階ではコンソールを使い、本番環境ではIaCで管理するというワークフローを大幅に効率化します。コンソールでの「やってみる」段階を、すぐに再現可能なコードに落とし込めるため、開発→運用のギャップを埋めます。
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== SECTION 7: セキュリティスキャン ===== -->
+<section class="section" id="section7">
+    <div class="container">
+        <div class="section-label"><span class="num">07</span> SECURITY</div>
+        <h2>セキュリティスキャン・脆弱性検出</h2>
+        <p class="section-lead">
+            SAST、シークレット検出、IaCスキャンを統合したコードセキュリティプラットフォーム。
+        </p>
+
+        <div class="card">
+            <h3><span class="icon">🔐</span> セキュリティスキャンの全体像</h3>
+            <div class="prose">
+                <p>
+                    Amazon Q Developerのセキュリティスキャン機能は、開発ライフサイクルの複数段階でコードのセキュリティを検証する包括的なソリューションです。<strong>SAST（静的アプリケーションセキュリティテスト）</strong>によるソースコード内の脆弱性検出、<strong>シークレット検出</strong>によるハードコードされた認証情報やAPIキーの発見、<strong>IaC（Infrastructure as Code）スキャン</strong>によるCloudFormation・Terraform等のセキュリティ設定検証の3つの柱で構成されています。
+                </p>
+                <p>
+                    これらの検出機能の背後には、Amazon CodeGuru Reviewerから継承された<strong>検出器ライブラリ（Detector Library）</strong>があり、数百種類のセキュリティパターンとコード品質パターンが登録されています。生成AIの推論能力とルールベースの検出器を組み合わせることで、高い精度と網羅性を実現しています。
+                </p>
+            </div>
+        </div>
+
+        <div class="sub-heading">検出可能な脆弱性カテゴリ</div>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>カテゴリ</th>
+                        <th>検出例</th>
+                        <th>深刻度</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>インジェクション攻撃</td>
+                        <td>SQLインジェクション、コマンドインジェクション、XSS、LDAPインジェクション</td>
+                        <td><span class="tag tag-danger">Critical / High</span></td>
+                    </tr>
+                    <tr>
+                        <td>認証・認可の問題</td>
+                        <td>ハードコードされた資格情報、不適切なアクセス制御、セッション管理の不備</td>
+                        <td><span class="tag tag-danger">Critical</span></td>
+                    </tr>
+                    <tr>
+                        <td>暗号化の不備</td>
+                        <td>弱い暗号アルゴリズム、不適切なキー管理、平文でのデータ送信</td>
+                        <td><span class="tag tag-warning">High</span></td>
+                    </tr>
+                    <tr>
+                        <td>リソース管理</td>
+                        <td>リソースリーク、ファイルハンドルの未クローズ、メモリリーク</td>
+                        <td><span class="tag tag-warning">Medium</span></td>
+                    </tr>
+                    <tr>
+                        <td>シークレット漏洩</td>
+                        <td>APIキー、パスワード、AWS認証情報、トークンのハードコード</td>
+                        <td><span class="tag tag-danger">Critical</span></td>
+                    </tr>
+                    <tr>
+                        <td>IaC設定ミス</td>
+                        <td>S3バケットの公開設定、セキュリティグループの過剰許可、暗号化未設定</td>
+                        <td><span class="tag tag-warning">High</span></td>
+                    </tr>
+                    <tr>
+                        <td>データ検証</td>
+                        <td>入力値の未検証、パストラバーサル、不正なデシリアライゼーション</td>
+                        <td><span class="tag tag-warning">High</span></td>
+                    </tr>
+                    <tr>
+                        <td>コード品質</td>
+                        <td>論理エラー、アンチパターン、コード重複、デッドコード</td>
+                        <td><span class="tag tag-info">Low / Medium</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card mt-24">
+            <h3><span class="icon">🔄</span> スキャンワークフロー</h3>
+            <div class="flow-steps">
+                <div class="flow-step">コード記述 / PR作成</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">Q Developer スキャン実行</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">脆弱性検出 & 分類</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">修正提案の表示</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">ワンクリック修正適用</div>
+            </div>
+            <div class="prose">
+                <p>
+                    セキュリティスキャンは、IDE内でオンデマンドまたはコードレビュー時に実行できます。検出された脆弱性には深刻度レベルが付与され、多くの場合は具体的な修正コードが提案されます。GitHub連携時にはPull Request作成時にも自動スキャンが実行されるため、セキュリティ問題をコードレビュー段階で発見・修正できます。Amazon Inspectorとの連携により、デプロイ後の実行時脆弱性スキャンも統合的に管理可能です。
+                </p>
+            </div>
+        </div>
+
+        <div class="callout callout-warning">
+            <span class="callout-icon">⚠️</span>
+            <div>
+                <strong>注意:</strong> Q Developerのセキュリティスキャンは強力ですが、本番環境への適用前には専用のセキュリティ監査ツール（Amazon Inspector、Snyk、Checkmarx等）との併用が推奨されます。AIベースの検出は100%の網羅性を保証するものではありません。
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== SECTION 8: 変換機能 ===== -->
+<section class="section" id="section8">
+    <div class="container">
+        <div class="section-label"><span class="num">08</span> TRANSFORM</div>
+        <h2>Java / .NET アップグレード変換機能</h2>
+        <p class="section-lead">
+            レガシーアプリケーションの近代化をAIエージェントが自動実行。数日の作業を数時間に短縮。
+        </p>
+
+        <div class="grid-2">
+            <div class="card">
+                <h3><span class="icon">☕</span> Java アップグレード</h3>
+                <div class="prose">
+                    <p>
+                        Amazon Q Developerのコード変換機能は、Javaアプリケーションのバージョンアップグレードを自動化します。<strong>Java 8 → 17/21</strong>、<strong>Java 11 → 17/21</strong> のアップグレードに対応し、非推奨API の置き換え、ライブラリ・フレームワーク・依存関係の更新、ビルド確認、テスト実行まで自律的に行います。
+                    </p>
+                    <p>
+                        2025年6月には<strong>Selective Transformation</strong>機能がCLI（Linux/macOS）でプレビュー開始。特定のサードパーティ依存関係のみを選択的にアップグレードするきめ細かい制御が可能になりました。また、<strong>組み込みSQL変換</strong>にも対応し、データベースアクセス層の近代化も支援します。
+                    </p>
+                </div>
+            </div>
+            <div class="card">
+                <h3><span class="icon">🔷</span> .NET ポーティング</h3>
+                <div class="prose">
+                    <p>
+                        .NETアプリケーションのWindows→Linux移植を最大<strong>4倍高速化</strong>する変換機能です。.NET Framework から .NET（クロスプラットフォーム対応版）への移行を支援し、Windows固有のAPIの置換、ファイルパスの正規化、プラットフォーム依存コードの変換を自動実行します。
+                    </p>
+                    <p>
+                        変換完了後には、変更ファイル数、更新パッケージ数、変更API数などの変換サマリーが提供され、Linux互換性の検証に役立つ情報が得られます。
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="sub-heading">Java変換の詳細フロー</div>
+        <div class="flow-steps">
+            <div class="flow-step">ソースコード分析</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-step">変換計画の提案</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-step">ユーザー確認</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-step">コード変換実行</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-step">ビルド & テスト</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-step">エラー修正の反復</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-step">差分レビュー</div>
+        </div>
+
+        <div class="table-wrapper mt-24">
+            <table>
+                <thead>
+                    <tr>
+                        <th>変換タイプ</th>
+                        <th>ソース</th>
+                        <th>ターゲット</th>
+                        <th>対応IDE</th>
+                        <th>Tier</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Java JDK アップグレード</td>
+                        <td>Java 8, 11</td>
+                        <td>Java 17, 21</td>
+                        <td>VS Code, JetBrains, CLI</td>
+                        <td><span class="tag tag-success">Free / Pro</span></td>
+                    </tr>
+                    <tr>
+                        <td>Java 依存関係アップグレード</td>
+                        <td>旧バージョン</td>
+                        <td>最新バージョン</td>
+                        <td>VS Code, JetBrains, CLI</td>
+                        <td><span class="tag tag-success">Free / Pro</span></td>
+                    </tr>
+                    <tr>
+                        <td>Java 選択的変換（Preview）</td>
+                        <td>指定した依存関係</td>
+                        <td>指定バージョン</td>
+                        <td>CLI (Linux/macOS)</td>
+                        <td><span class="tag tag-accent">Pro推奨</span></td>
+                    </tr>
+                    <tr>
+                        <td>組み込みSQL変換</td>
+                        <td>レガシーSQL</td>
+                        <td>最新SQL構文</td>
+                        <td>VS Code, JetBrains</td>
+                        <td><span class="tag tag-success">Free / Pro</span></td>
+                    </tr>
+                    <tr>
+                        <td>.NET ポーティング</td>
+                        <td>.NET Framework</td>
+                        <td>.NET (Cross-platform)</td>
+                        <td>Visual Studio</td>
+                        <td><span class="tag tag-success">Free / Pro</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout callout-success mt-24">
+            <span class="callout-icon">🏆</span>
+            <div>
+                <strong>Amazon社内での実績:</strong> Amazon Q Developerのコード変換機能は、Amazon社内で1,000以上のアプリケーションのJavaアップグレードに使用され、累計で<strong>$260M（2.6億ドル）以上のコスト削減</strong>を達成したと報告されています（2024年8月時点）。手動で数日かかるアップグレード作業を数時間に短縮した事例が多数あります。
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== SECTION 9: ユースケース ===== -->
+<section class="section" id="section9">
+    <div class="container">
+        <div class="section-label"><span class="num">09</span> USE CASES</div>
+        <h2>ユースケース集（10選）</h2>
+        <p class="section-lead">
+            開発の効率化からインフラ管理まで、Amazon Q Developerの実践的な活用シナリオ。
+        </p>
+
+        <div class="grid-2">
+            <div class="usecase-card">
+                <div class="num-circle">1</div>
+                <div>
+                    <h4>新機能の高速実装</h4>
+                    <p>「SMS配信確認通知システムを作成して」のような自然言語プロンプトから、エージェントが既存コードベースを分析し、マルチファイルの実装計画→コード生成→テストを一括実行。スプリント内の作業時間を大幅短縮。</p>
+                </div>
+            </div>
+            <div class="usecase-card">
+                <div class="num-circle">2</div>
+                <div>
+                    <h4>レガシーJavaアプリの近代化</h4>
+                    <p>Java 8で書かれた大規模アプリケーションをJava 21にアップグレード。Spring Bootの依存関係更新、非推奨APIの置き換え、テスト確認まで自動化し、手動なら数週間かかる作業を数時間で完了。</p>
+                </div>
+            </div>
+            <div class="usecase-card">
+                <div class="num-circle">3</div>
+                <div>
+                    <h4>サーバーレスアプリ構築</h4>
+                    <p>Lambda + API Gateway + DynamoDB のサーバーレスアーキテクチャをQ Developerに指示して構築。CDKによるインフラ定義、Lambda関数コード、APIルーティング設定を一括生成。</p>
+                </div>
+            </div>
+            <div class="usecase-card">
+                <div class="num-circle">4</div>
+                <div>
+                    <h4>新規プロジェクトへのオンボーディング</h4>
+                    <p>ドキュメントが不十分な大規模コードベースに参加した際、Q Developerにプログラムロジックの説明、関数の使い方、データフロー図の生成を依頼。理解に数週間かかる内容を数時間でキャッチアップ。</p>
+                </div>
+            </div>
+            <div class="usecase-card">
+                <div class="num-circle">5</div>
+                <div>
+                    <h4>セキュリティ監査の自動化</h4>
+                    <p>CI/CDパイプラインにQ Developerのセキュリティスキャンを統合。PRごとに脆弱性を自動検出し、SQLインジェクションやシークレット漏洩をコードレビュー段階でブロック。</p>
+                </div>
+            </div>
+            <div class="usecase-card">
+                <div class="num-circle">6</div>
+                <div>
+                    <h4>AWSインフラのトラブルシューティング</h4>
+                    <p>ECSタスクの起動失敗、Lambdaのタイムアウト、S3アクセス拒否などのAWSエラーをQ Developerがリアルタイム診断。CloudWatchログの分析と具体的な修正手順を即座に提示。</p>
+                </div>
+            </div>
+            <div class="usecase-card">
+                <div class="num-circle">7</div>
+                <div>
+                    <h4>ユニットテストの一括生成</h4>
+                    <p>テストカバレッジが低い既存プロジェクトに対し、Q Developerにテスト生成を依頼。正常系・異常系・境界値のテストケースをフレームワークに準拠した形式で自動生成し、品質向上を加速。</p>
+                </div>
+            </div>
+            <div class="usecase-card">
+                <div class="num-circle">8</div>
+                <div>
+                    <h4>IaCテンプレートの生成・最適化</h4>
+                    <p>「高可用性のWebアプリインフラを構築するCDKコードを生成して」と依頼し、ALB+ECS+RDSの3層アーキテクチャ定義を自動生成。既存テンプレートの最適化やコスト削減提案も可能。</p>
+                </div>
+            </div>
+            <div class="usecase-card">
+                <div class="num-circle">9</div>
+                <div>
+                    <h4>AWSコスト最適化</h4>
+                    <p>Q Developerに「先月のコスト内訳を教えて」「EC2のコスト最適化案は？」と質問し、コスト分析レポートと具体的な削減策（リザーブドインスタンス移行、不要リソース特定等）を取得。</p>
+                </div>
+            </div>
+            <div class="usecase-card">
+                <div class="num-circle">10</div>
+                <div>
+                    <h4>CLI作業の自動化</h4>
+                    <p>「本番環境のログを直近1時間分取得してエラーを集計して」のような自然言語指示をCLIエージェントが解釈し、awsコマンドの組み立て→実行→結果の整形まで自動実行。シェルスクリプト不要。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== SECTION 10: 制限事項 ===== -->
+<section class="section" id="section10">
+    <div class="container">
+        <div class="section-label"><span class="num">10</span> LIMITATIONS</div>
+        <h2>制限事項・注意点</h2>
+        <p class="section-lead">
+            導入前に知っておくべき制約、利用上限、既知の制限事項をまとめます。
+        </p>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>カテゴリ</th>
+                        <th>制限内容</th>
+                        <th>対象Tier</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>エージェントリクエスト</td>
+                        <td>Free Tier: 月50回まで（Q&Aチャット+Agentic Coding合計）。Pro Tierも上限あり（具体的数値は変動）。IDE・CLI両方の利用がカウント対象。</td>
+                        <td><span class="tag tag-success">Free</span> <span class="tag tag-accent">Pro</span></td>
+                    </tr>
+                    <tr>
+                        <td>Java変換 行数制限</td>
+                        <td>Free: 月1,000行。Pro: 月4,000行/ユーザー（アカウントレベルでプール）。超過分は$0.003/行。</td>
+                        <td><span class="tag tag-success">Free</span> <span class="tag tag-accent">Pro</span></td>
+                    </tr>
+                    <tr>
+                        <td>IDE無料枠の制約</td>
+                        <td>IDEでのFree Tier利用はBuilder IDユーザーのみ。IAMユーザーの場合、Free Tier制限はアカウントレベルで適用。</td>
+                        <td><span class="tag tag-success">Free</span></td>
+                    </tr>
+                    <tr>
+                        <td>Visual Studio対応</td>
+                        <td>Windows版のVisual Studio 2022（v17.7以上）のみ対応。Visual Studio for Macや旧バージョンは非対応。</td>
+                        <td><span class="tag tag-info">全Tier</span></td>
+                    </tr>
+                    <tr>
+                        <td>Eclipse対応</td>
+                        <td>プレビュー版であり、機能が限定的（エージェント機能、変換機能は未対応）。</td>
+                        <td><span class="tag tag-info">全Tier</span></td>
+                    </tr>
+                    <tr>
+                        <td>言語サポートの差異</td>
+                        <td>インライン補完は25+言語対応だが、セキュリティスキャンやコードレビューの対応言語は限定的。変換機能はJavaと.NETのみ。</td>
+                        <td><span class="tag tag-info">全Tier</span></td>
+                    </tr>
+                    <tr>
+                        <td>カスタマイズ対応言語</td>
+                        <td>内部コードベースでのカスタマイズはPython、Java、JavaScript、TypeScript、C#、C++のみ対応。</td>
+                        <td><span class="tag tag-accent">Pro</span></td>
+                    </tr>
+                    <tr>
+                        <td>AIの精度限界</td>
+                        <td>生成AIベースのため、不正確なコードや非最適な提案がなされる場合あり。特に複雑なビジネスロジックではレビューが必須。</td>
+                        <td><span class="tag tag-info">全Tier</span></td>
+                    </tr>
+                    <tr>
+                        <td>IP補償</td>
+                        <td>Free Tierには知的財産（IP）補償なし。企業利用でIP保護が必要な場合はPro Tier必須。</td>
+                        <td><span class="tag tag-success">Free</span></td>
+                    </tr>
+                    <tr>
+                        <td>管理機能</td>
+                        <td>ユーザー・ポリシー管理のダッシュボードはPro Tier（IAM Identity Center経由）のみ。Builder IDでのPro Tierでは利用不可。</td>
+                        <td><span class="tag tag-accent">Pro</span></td>
+                    </tr>
+                    <tr>
+                        <td>データプライバシー</td>
+                        <td>Free Tierではデータ収集のオプトアウトは可能だが手動設定が必要。Pro Tierは自動オプトアウト。</td>
+                        <td><span class="tag tag-success">Free</span></td>
+                    </tr>
+                    <tr>
+                        <td>リージョン制約</td>
+                        <td>一部の機能は特定のAWSリージョンでのみ利用可能な場合あり。コンソールエラー診断は全コマーシャルリージョン対応済み。</td>
+                        <td><span class="tag tag-info">全Tier</span></td>
+                    </tr>
+                    <tr>
+                        <td>GitHub連携の制約</td>
+                        <td>ブランチ保護ルールが設定されたリポジトリではPR作成に制限がある場合あり。</td>
+                        <td><span class="tag tag-info">全Tier</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout callout-warning mt-24">
+            <span class="callout-icon">⚠️</span>
+            <div>
+                <strong>利用上限の動的調整:</strong> AWSは、リージョン要因、支払い履歴、不正利用の検出、クォータ増加リクエストの承認に基づいて、アカウントの利用上限を動的に変更する場合があります。想定外の制限に遭遇した場合は、AWSサポートまたはサービスクォータページを確認してください。
+            </div>
+        </div>
+
+        <div class="callout callout-info">
+            <span class="callout-icon">💡</span>
+            <div>
+                <strong>生成コードの取り扱い:</strong> Q Developerが生成したコードは、必ずレビューしてからプロダクションに適用してください。「リファレンストラッキング」機能により、既存のオープンソースコードに類似した提案には出典情報が付与されますが、ライセンス遵守の最終判断は開発者の責任です。
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== SECTION 11: 他ツール比較 ===== -->
+<section class="section" id="section11">
+    <div class="container">
+        <div class="section-label"><span class="num">11</span> COMPARISON</div>
+        <h2>他ツール比較</h2>
+        <p class="section-lead">
+            GitHub Copilot、Cursor、Claude Code、OpenAI Codex、Clineなど主要AI開発ツールとの比較表。
+        </p>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>項目</th>
+                        <th>Amazon Q Developer</th>
+                        <th>GitHub Copilot</th>
+                        <th>Cursor</th>
+                        <th>Claude Code</th>
+                        <th>OpenAI Codex</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>提供元</td>
+                        <td>AWS (Amazon)</td>
+                        <td>GitHub (Microsoft)</td>
+                        <td>Anysphere</td>
+                        <td>Anthropic</td>
+                        <td>OpenAI</td>
+                    </tr>
+                    <tr>
+                        <td>料金（個人向け）</td>
+                        <td><strong>無料枠あり</strong> / Pro $19/月</td>
+                        <td>$10/月（Individual）</td>
+                        <td>$20/月（Pro）</td>
+                        <td>Claude Max利用 / API従量</td>
+                        <td>ChatGPT Plus内 / API従量</td>
+                    </tr>
+                    <tr>
+                        <td>基盤モデル</td>
+                        <td>Bedrock（Claude等）</td>
+                        <td>GPT-4系 / Claude</td>
+                        <td>GPT-4 / Claude / 選択可</td>
+                        <td>Claude (Opus/Sonnet)</td>
+                        <td>codex-1 / GPT系</td>
+                    </tr>
+                    <tr>
+                        <td>コード補完</td>
+                        <td><span class="tag tag-success">✓ 優秀</span></td>
+                        <td><span class="tag tag-success">✓ 最速</span></td>
+                        <td><span class="tag tag-success">✓ 優秀</span></td>
+                        <td><span class="tag tag-warning">△ CLIベース</span></td>
+                        <td><span class="tag tag-warning">△ CLIベース</span></td>
+                    </tr>
+                    <tr>
+                        <td>エージェント機能</td>
+                        <td><span class="tag tag-success">✓ IDE + CLI</span></td>
+                        <td><span class="tag tag-success">✓ Workspace</span></td>
+                        <td><span class="tag tag-success">✓ Composer</span></td>
+                        <td><span class="tag tag-success">✓ ターミナル</span></td>
+                        <td><span class="tag tag-success">✓ Cloud + CLI</span></td>
+                    </tr>
+                    <tr>
+                        <td>AWS統合</td>
+                        <td class="compare-winner"><span class="tag tag-success">◎ ネイティブ</span></td>
+                        <td><span class="tag tag-warning">△ 基本的</span></td>
+                        <td><span class="tag tag-warning">△ 基本的</span></td>
+                        <td><span class="tag tag-warning">△ 基本的</span></td>
+                        <td><span class="tag tag-warning">△ 基本的</span></td>
+                    </tr>
+                    <tr>
+                        <td>セキュリティスキャン</td>
+                        <td class="compare-winner"><span class="tag tag-success">◎ SAST + IaC</span></td>
+                        <td><span class="tag tag-info">○ Code Scanning</span></td>
+                        <td><span class="tag tag-danger">✗</span></td>
+                        <td><span class="tag tag-danger">✗</span></td>
+                        <td><span class="tag tag-danger">✗</span></td>
+                    </tr>
+                    <tr>
+                        <td>コード変換</td>
+                        <td class="compare-winner"><span class="tag tag-success">◎ Java + .NET</span></td>
+                        <td><span class="tag tag-danger">✗</span></td>
+                        <td><span class="tag tag-danger">✗</span></td>
+                        <td><span class="tag tag-danger">✗</span></td>
+                        <td><span class="tag tag-danger">✗</span></td>
+                    </tr>
+                    <tr>
+                        <td>コンソール/GUI統合</td>
+                        <td class="compare-winner"><span class="tag tag-success">◎ AWS Console</span></td>
+                        <td><span class="tag tag-info">○ GitHub</span></td>
+                        <td><span class="tag tag-success">✓ 独自IDE</span></td>
+                        <td><span class="tag tag-danger">✗</span></td>
+                        <td><span class="tag tag-success">✓ Codex App</span></td>
+                    </tr>
+                    <tr>
+                        <td>MCP対応</td>
+                        <td><span class="tag tag-success">✓</span></td>
+                        <td><span class="tag tag-success">✓</span></td>
+                        <td><span class="tag tag-success">✓</span></td>
+                        <td><span class="tag tag-success">✓</span></td>
+                        <td><span class="tag tag-success">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td>対応IDE</td>
+                        <td>VS Code, JetBrains, VS, Eclipse, CLI</td>
+                        <td>VS Code, JetBrains, VS, Neovim等</td>
+                        <td>Cursor独自IDE（VS Code fork）</td>
+                        <td>ターミナル（IDE非依存）</td>
+                        <td>Codex App / CLI</td>
+                    </tr>
+                    <tr>
+                        <td>IP補償</td>
+                        <td><span class="tag tag-success">✓ Pro</span></td>
+                        <td><span class="tag tag-success">✓ Business+</span></td>
+                        <td><span class="tag tag-danger">✗</span></td>
+                        <td><span class="tag tag-danger">✗</span></td>
+                        <td><span class="tag tag-danger">✗</span></td>
+                    </tr>
+                    <tr>
+                        <td>最適な用途</td>
+                        <td><strong>AWS中心の開発 / エンタープライズ</strong></td>
+                        <td><strong>GitHub連携の一般開発</strong></td>
+                        <td><strong>フロントエンド / 高速プロトタイプ</strong></td>
+                        <td><strong>複雑なリファクタリング / 大規模変更</strong></td>
+                        <td><strong>並列タスク / OpenAIエコシステム</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card mt-24">
+            <h3><span class="icon">🔍</span> 比較のポイント</h3>
+            <div class="prose">
+                <p>
+                    <strong>AWSエコシステムの開発者には、Amazon Q Developerが最適です。</strong>AWS サービスとのネイティブ統合（コンソールエラー診断、CloudWatch分析、コスト管理、Console-to-Code）は他のツールでは実現できない独自の価値であり、AWS上でアプリケーションを構築・運用するチームにとって生産性を大きく向上させます。
+                </p>
+                <p>
+                    <strong>GitHub Copilot</strong>は最も広く普及しているAIコーディングアシスタントで、インライン補完の速度と精度に定評があります。GitHubとの密接な連携がメリットですが、クラウド特化の機能はQ Developerに比べて限定的です。
+                </p>
+                <p>
+                    <strong>Cursor</strong>はVS Codeをフォークした独自IDEであり、マルチファイル編集やComposer機能でのUI/UX体験に優れています。フロントエンド開発やラピッドプロトタイピングにおいて高い評価を得ていますが、クラウドインフラ管理やセキュリティスキャンの機能は持ちません。
+                </p>
+                <p>
+                    <strong>Claude Code</strong>はAnthropicのCLIベースのコーディングエージェントで、複雑なコードベースの理解と大規模なリファクタリングに強みがあります。IDE非依存でターミナルから直接操作でき、深い推論能力でコード品質の高い成果物を生成します。
+                </p>
+                <p>
+                    <strong>OpenAI Codex</strong>はクラウドベースのソフトウェアエンジニアリングエージェントで、複数タスクの並列実行が可能です。2026年2月にはmacOS用のCodex Appもリリースされ、エコシステムが拡大しています。
+                </p>
+                <p>
+                    各ツールは異なる強みを持つため、プロジェクトの技術スタック、チームの開発ワークフロー、クラウドプラットフォームの選択に応じて最適なツールが変わります。複数のツールを併用するチームも増えています。
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== SECTION 12: 始め方ガイド ===== -->
+<section class="section" id="section12">
+    <div class="container">
+        <div class="section-label"><span class="num">12</span> GETTING STARTED</div>
+        <h2>始め方ガイド・参考リンク</h2>
+        <p class="section-lead">
+            今日からAmazon Q Developerを使い始めるためのステップバイステップガイド。
+        </p>
+
+        <div class="card">
+            <h3><span class="icon">🚀</span> VS Codeでの始め方（5ステップ）</h3>
+            <div class="prose">
+                <p>
+                    <strong>ステップ1:</strong> VS Codeの拡張機能マーケットプレイスで「Amazon Q」を検索し、AWS公式の「Amazon Q」拡張機能をインストールします。これはAWS Toolkitの一部として提供されています。
+                </p>
+                <p>
+                    <strong>ステップ2:</strong> インストール後、サイドバーにAmazon Qのアイコンが表示されます。クリックして「Use for Free」または「Sign in」を選択します。無料で始める場合は、AWS Builder IDを作成します（メールアドレスだけで登録可能、AWSアカウント不要）。
+                </p>
+                <p>
+                    <strong>ステップ3:</strong> 認証が完了すると、即座にインラインコード補完が有効になります。コードを書き始めると、グレーのゴースト表示で補完候補が表示されます。Tabキーで受け入れ、Escキーで拒否します。
+                </p>
+                <p>
+                    <strong>ステップ4:</strong> サイドバーのチャットパネルからQ Developerに質問できます。「この関数を最適化して」「S3にファイルをアップロードするLambda関数を書いて」など、自然言語で指示を出しましょう。日本語での質問にも対応しています。
+                </p>
+                <p>
+                    <strong>ステップ5:</strong> エージェント機能を試すには、チャットで「/dev」と入力し、実装したい機能を自然言語で説明します。Q Developerが実装計画を提案し、承認するとコードの生成・変更を自動実行します。
+                </p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">⌨️</span> CLIでの始め方</h3>
+            <div class="prose">
+                <p>
+                    <strong>macOS:</strong> <code>brew install amazon-q</code> でインストールできます。インストール後、<code>q login</code> でBuilder IDまたはIAM Identity Centerで認証を行います。
+                </p>
+                <p>
+                    <strong>Linux:</strong> 公式サイトからインストーラをダウンロードするか、パッケージマネージャ経由でインストールします。
+                </p>
+                <p>
+                    認証後は、ターミナルで自動補完が有効になります。<code>q chat</code> でチャットモード、<code>q</code> でインタラクティブなエージェントセッションを開始できます。「AWSのS3バケット一覧を表示して」のような自然言語での指示が可能です。
+                </p>
+            </div>
+        </div>
+</body>
+</html>

@@ -1,0 +1,2094 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub Copilot & Copilot Workspace 完全ガイド 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0A0A0A;
+  --bg-card: #16161A;
+  --bg-card-hover: #1C1C22;
+  --border: rgba(255,255,255,0.06);
+  --border-hover: rgba(255,255,255,0.12);
+  --accent: #5E6AD2;
+  --accent-light: #7B85E8;
+  --accent-dark: #4A54B8;
+  --accent-glow: rgba(94,106,210,0.15);
+  --accent-glow-strong: rgba(94,106,210,0.3);
+  --text-primary: #FAFAFA;
+  --text-secondary: #8A8A9A;
+  --text-tertiary: #55556A;
+  --success: #3ECF8E;
+  --warning: #F5A623;
+  --danger: #E5484D;
+  --info: #52A8FF;
+  --gradient-accent: linear-gradient(135deg, #5E6AD2, #7B85E8);
+  --gradient-card: linear-gradient(135deg, rgba(94,106,210,0.08), rgba(94,106,210,0.02));
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
+  --shadow-glow: 0 0 40px rgba(94,106,210,0.15);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --font-en: 'Outfit', sans-serif;
+  --font-jp: 'Noto Sans JP', sans-serif;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.light-mode {
+  --bg-primary: #F8F8FA;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F0F0F5;
+  --border: rgba(0,0,0,0.08);
+  --border-hover: rgba(0,0,0,0.15);
+  --text-primary: #1A1A2E;
+  --text-secondary: #5A5A6E;
+  --text-tertiary: #8A8A9A;
+  --accent-glow: rgba(94,106,210,0.08);
+  --accent-glow-strong: rgba(94,106,210,0.15);
+  --gradient-card: linear-gradient(135deg, rgba(94,106,210,0.05), rgba(94,106,210,0.01));
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+  --shadow-glow: 0 0 40px rgba(94,106,210,0.08);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-jp);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.8;
+  transition: var(--transition);
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--text-tertiary);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+a {
+  color: var(--accent-light);
+  text-decoration: none;
+  transition: var(--transition);
+}
+a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ── Theme Toggle ── */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: 8px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-family: var(--font-en);
+  font-weight: 500;
+  transition: var(--transition);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-md);
+}
+.theme-toggle:hover {
+  border-color: var(--accent);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-glow);
+}
+.theme-toggle .icon {
+  font-size: 1.1rem;
+}
+
+/* ── TOC (Floating) ── */
+.toc-toggle {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1001;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-family: var(--font-en);
+  font-weight: 500;
+  transition: var(--transition);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.toc-toggle:hover {
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+
+.toc-panel {
+  position: fixed;
+  top: 0;
+  left: -380px;
+  width: 360px;
+  height: 100vh;
+  background: var(--bg-card);
+  border-right: 1px solid var(--border);
+  z-index: 1000;
+  padding: 80px 24px 24px;
+  overflow-y: auto;
+  transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(20px);
+}
+.toc-panel.open {
+  left: 0;
+  box-shadow: var(--shadow-lg);
+}
+.toc-panel h3 {
+  font-family: var(--font-en);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-tertiary);
+  margin-bottom: 16px;
+}
+.toc-panel a {
+  display: block;
+  padding: 10px 14px;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+  border-left: 2px solid transparent;
+  margin-bottom: 2px;
+}
+.toc-panel a:hover {
+  color: var(--text-primary);
+  background: var(--accent-glow);
+  border-left-color: var(--accent);
+  text-decoration: none;
+}
+.toc-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition);
+}
+.toc-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ── Hero Section ── */
+.hero {
+  padding: 140px 0 80px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, var(--accent-glow-strong) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent-glow);
+  border: 1px solid rgba(94,106,210,0.2);
+  border-radius: 50px;
+  padding: 6px 18px;
+  font-size: 0.8rem;
+  font-family: var(--font-en);
+  font-weight: 500;
+  color: var(--accent-light);
+  margin-bottom: 32px;
+  letter-spacing: 1px;
+}
+.hero h1 {
+  font-family: var(--font-en);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-light) 50%, var(--text-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+}
+.hero .subtitle {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: var(--text-secondary);
+  max-width: 700px;
+  margin: 0 auto 40px;
+  font-weight: 400;
+}
+.hero-meta {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+  font-family: var(--font-en);
+}
+.hero-meta span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── Section ── */
+.section {
+  padding: 80px 0;
+  position: relative;
+}
+.section-header {
+  margin-bottom: 48px;
+}
+.section-number {
+  display: inline-block;
+  font-family: var(--font-en);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+  padding: 4px 12px;
+  background: var(--accent-glow);
+  border-radius: 4px;
+}
+.section h2 {
+  font-family: var(--font-en);
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+.section .section-desc {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 680px;
+}
+.section-divider {
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+  margin: 0;
+}
+
+/* ── Card ── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.card:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-md);
+}
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: var(--transition);
+}
+.card:hover::before {
+  opacity: 0.5;
+}
+.card h3 {
+  font-family: var(--font-en);
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+.card p {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  line-height: 1.8;
+}
+
+/* ── Grid Systems ── */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 1024px) {
+  .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .container { padding: 0 16px; }
+  .hero { padding: 120px 0 60px; }
+  .section { padding: 60px 0; }
+  .card { padding: 24px; }
+  .toc-panel { width: 300px; }
+}
+
+/* ── Timeline ── */
+.timeline {
+  position: relative;
+  padding-left: 40px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 14px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--accent), var(--text-tertiary), transparent);
+}
+.timeline-item {
+  position: relative;
+  margin-bottom: 32px;
+  padding-left: 20px;
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -30px;
+  top: 8px;
+  width: 10px;
+  height: 10px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--accent-glow-strong);
+}
+.timeline-date {
+  font-family: var(--font-en);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+.timeline-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.timeline-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* ── Tables ── */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  margin: 24px 0;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+thead {
+  background: var(--accent-glow);
+}
+th {
+  padding: 14px 18px;
+  text-align: left;
+  font-family: var(--font-en);
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: 0.5px;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+td {
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+tr:last-child td {
+  border-bottom: none;
+}
+tr:hover td {
+  background: var(--accent-glow);
+}
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 50px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  font-family: var(--font-en);
+  letter-spacing: 0.5px;
+}
+.badge-yes {
+  background: rgba(62,207,142,0.12);
+  color: var(--success);
+}
+.badge-no {
+  background: rgba(229,72,77,0.1);
+  color: var(--danger);
+}
+.badge-limited {
+  background: rgba(245,166,35,0.12);
+  color: var(--warning);
+}
+.badge-preview {
+  background: rgba(82,168,255,0.12);
+  color: var(--info);
+}
+.badge-accent {
+  background: var(--accent-glow);
+  color: var(--accent-light);
+}
+
+/* ── Tags ── */
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+.tag {
+  display: inline-block;
+  padding: 4px 12px;
+  background: var(--accent-glow);
+  border: 1px solid rgba(94,106,210,0.15);
+  border-radius: 50px;
+  font-size: 0.78rem;
+  font-family: var(--font-en);
+  font-weight: 500;
+  color: var(--accent-light);
+}
+
+/* ── Feature Cards ── */
+.feature-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-glow);
+  border: 1px solid rgba(94,106,210,0.15);
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
+  font-size: 1.4rem;
+}
+
+/* ── Pricing Cards ── */
+.pricing-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 36px;
+  transition: var(--transition);
+  position: relative;
+}
+.pricing-card.featured {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-glow);
+}
+.pricing-card.featured::before {
+  content: 'POPULAR';
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--gradient-accent);
+  color: #fff;
+  font-family: var(--font-en);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  padding: 4px 16px;
+  border-radius: 50px;
+}
+.pricing-name {
+  font-family: var(--font-en);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.pricing-price {
+  font-family: var(--font-en);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 12px 0;
+}
+.pricing-price span {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+.pricing-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  min-height: 44px;
+}
+.pricing-features {
+  list-style: none;
+}
+.pricing-features li {
+  padding: 8px 0;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.pricing-features li:last-child {
+  border-bottom: none;
+}
+.pricing-features .check {
+  color: var(--success);
+  font-weight: bold;
+  flex-shrink: 0;
+}
+.pricing-features .cross {
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+/* ── Usecase Cards ── */
+.usecase-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  transition: var(--transition);
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.usecase-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.usecase-num {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-glow);
+  border: 1px solid rgba(94,106,210,0.15);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-en);
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--accent-light);
+}
+
+/* ── Callout ── */
+.callout {
+  background: var(--accent-glow);
+  border: 1px solid rgba(94,106,210,0.15);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-sm);
+  padding: 20px 24px;
+  margin: 24px 0;
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+}
+.callout strong {
+  color: var(--text-primary);
+}
+.callout-warn {
+  background: rgba(245,166,35,0.08);
+  border-left-color: var(--warning);
+}
+.callout-success {
+  background: rgba(62,207,142,0.08);
+  border-left-color: var(--success);
+}
+
+/* ── Comparison Bar ── */
+.compare-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+}
+.compare-bar-label {
+  width: 120px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+.compare-bar-track {
+  flex: 1;
+  height: 8px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.compare-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 1s ease;
+}
+.light-mode .compare-bar-track {
+  background: rgba(0,0,0,0.06);
+}
+
+/* ── Prose ── */
+.prose {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.9;
+}
+.prose p {
+  margin-bottom: 18px;
+}
+.prose strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+.prose h4 {
+  font-family: var(--font-en);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 32px 0 12px;
+}
+.prose code {
+  background: var(--accent-glow);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: var(--accent-light);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+.prose pre {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  overflow-x: auto;
+  margin: 16px 0;
+}
+.prose pre code {
+  background: none;
+  padding: 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+/* ── Steps ── */
+.steps {
+  counter-reset: step;
+}
+.step {
+  counter-increment: step;
+  position: relative;
+  padding-left: 64px;
+  margin-bottom: 32px;
+  min-height: 48px;
+}
+.step::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-glow);
+  border: 1px solid rgba(94,106,210,0.2);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-en);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--accent-light);
+}
+.step h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.step p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* ── Footer ── */
+.footer {
+  padding: 60px 0 40px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+.footer p {
+  color: var(--text-tertiary);
+  font-size: 0.82rem;
+  line-height: 1.8;
+}
+.footer a {
+  color: var(--accent-light);
+}
+
+/* ── Animations ── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-in {
+  animation: fadeInUp 0.6s ease forwards;
+  opacity: 0;
+}
+</style>
+</head>
+<body>
+
+<!-- Theme Toggle -->
+<button class="theme-toggle" onclick="toggleTheme()" aria-label="テーマ切り替え">
+  <span class="icon" id="themeIcon">☾</span>
+  <span id="themeLabel">Light</span>
+</button>
+
+<!-- TOC Toggle -->
+<button class="toc-toggle" onclick="toggleToc()" aria-label="目次">
+  ☰ <span>目次</span>
+</button>
+
+<!-- TOC Overlay -->
+<div class="toc-overlay" id="tocOverlay" onclick="toggleToc()"></div>
+
+<!-- TOC Panel -->
+<nav class="toc-panel" id="tocPanel">
+  <h3>Table of Contents</h3>
+  <a href="#sec1" onclick="toggleToc()">01 — GitHub Copilotとは</a>
+  <a href="#sec2" onclick="toggleToc()">02 — Copilot Workspaceとは</a>
+  <a href="#sec3" onclick="toggleToc()">03 — 主な機能</a>
+  <a href="#sec4" onclick="toggleToc()">04 — 対応エディタ・IDE</a>
+  <a href="#sec5" onclick="toggleToc()">05 — 料金体系</a>
+  <a href="#sec6" onclick="toggleToc()">06 — 基盤モデル</a>
+  <a href="#sec7" onclick="toggleToc()">07 — Copilot Agentモード</a>
+  <a href="#sec8" onclick="toggleToc()">08 — セキュリティ・プライバシー</a>
+  <a href="#sec9" onclick="toggleToc()">09 — ユースケース集</a>
+  <a href="#sec10" onclick="toggleToc()">10 — 他ツール比較</a>
+  <a href="#sec11" onclick="toggleToc()">11 — 始め方ガイド</a>
+  <a href="#sec12" onclick="toggleToc()">12 — Tips・注意点・参考リンク</a>
+</nav>
+
+<!-- Hero -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">✦ COMPREHENSIVE GUIDE — 2026 EDITION</div>
+    <h1>GitHub Copilot<br>&amp; Copilot Workspace</h1>
+    <p class="subtitle">
+      AIペアプログラマーから自律型コーディングエージェントへ。<br>
+      GitHub Copilotのすべてを、初心者にもわかりやすく徹底解説します。
+    </p>
+    <div class="hero-meta">
+      <span>📅 2026年3月5日 更新</span>
+      <span>📖 全12章構成</span>
+      <span>⏱ 約30分で読破</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ============================================= -->
+<!-- SECTION 1: GitHub Copilotとは -->
+<!-- ============================================= -->
+<div class="section-divider"></div>
+<section class="section" id="sec1">
+<div class="container">
+  <div class="section-header">
+    <div class="section-number">Section 01</div>
+    <h2>GitHub Copilotとは</h2>
+    <p class="section-desc">概要・歴史・バージョン推移</p>
+  </div>
+
+  <div class="prose">
+    <p>
+      <strong>GitHub Copilot</strong>は、GitHub・OpenAI・Microsoftが共同開発したAI駆動のコーディングアシスタントです。コードエディタ上でリアルタイムにコード補完を行うだけでなく、チャットによる質問応答、ターミナルからの操作、プルリクエストの自動生成まで、ソフトウェア開発ライフサイクル全体をカバーする包括的なAIプラットフォームへと進化しました。GitHub公式の発表によれば、Copilotを使用する開発者はコーディングの生産性が最大55%向上し、75%が仕事への満足度が高いと報告しています。個人開発者からフォーチュン500企業まで、数百万のユーザーと数万の企業顧客を持つ、世界で最も広く採用されているAI開発ツールです。
+    </p>
+
+    <h4>GitHub Copilotの根幹思想</h4>
+    <p>
+      Copilotは「開発者を置き換える」ためのツールではなく、「開発者をより効率的にする」ためのツールとして設計されています。開発者がボイラープレート（定型コード）や単純作業に費やす時間を削減し、問題解決やコラボレーションといった創造的な活動に集中できるようにすることが目的です。GitHubのプラットフォームにネイティブ統合されている点が他のAIコーディングツールとの大きな差別化要因であり、Issue、Pull Request、Code Review、Actions、そしてGitHub.com上のチャットまで、開発ワークフロー全体でAIが活躍します。
+    </p>
+  </div>
+
+  <h4 style="font-family:var(--font-en);font-weight:600;margin:40px 0 20px;color:var(--text-primary)">History &amp; Timeline</h4>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-date">2021年6月</div>
+      <div class="timeline-title">テクニカルプレビュー公開</div>
+      <div class="timeline-desc">GitHubとOpenAIが共同で、OpenAI Codex（GPT-3ベース）を搭載したAIペアプログラマーとしてCopilotを発表。VS Code向け拡張機能として限定公開されました。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2021年10月</div>
+      <div class="timeline-title">JetBrains・Neovim対応</div>
+      <div class="timeline-desc">JetBrains IDEsおよびNeovim向けプラグインをリリースし、対応エディタを拡大。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2022年6月</div>
+      <div class="timeline-title">一般公開（GA）</div>
+      <div class="timeline-desc">Copilot for Individuals を正式リリース。月額$10 / 年額$100で一般提供開始。学生・教育者・OSS maintainerは無料。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2023年2月</div>
+      <div class="timeline-title">Copilot for Business</div>
+      <div class="timeline-desc">組織向けプラン（$19/ユーザー/月）を発表。ライセンス管理、ポリシー管理、IP補償が追加。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2023年3月</div>
+      <div class="timeline-title">Copilot X 構想発表</div>
+      <div class="timeline-desc">GPT-4を搭載したCopilot Chat、Pull Requestサマリー、CLIなどの次世代機能群「Copilot X」のビジョンを発表。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2023年11月</div>
+      <div class="timeline-title">Copilot Chat 正式提供</div>
+      <div class="timeline-desc">VS CodeおよびJetBrains IDEsでCopilot Chat（GPT-4ベース）が一般利用可能に。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2024年2月</div>
+      <div class="timeline-title">Copilot Enterprise リリース</div>
+      <div class="timeline-desc">$39/ユーザー/月のEnterpriseプランを提供開始。組織コードベースのインデックス化によるカスタマイズ、GitHub.com統合チャットなどを搭載。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2024年4月</div>
+      <div class="timeline-title">Copilot Workspace 発表</div>
+      <div class="timeline-desc">GitHub Nextの研究プロジェクトとして、自然言語でタスク駆動開発ができる「Copilot Workspace」をテクニカルプレビューとして発表。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2024年10月</div>
+      <div class="timeline-title">マルチモデル化</div>
+      <div class="timeline-desc">Anthropic Claude 3.5 Sonnet、Google Gemini、OpenAI GPT-4o / o1-preview など複数モデルの選択をサポート開始。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2024年12月</div>
+      <div class="timeline-title">Copilot Free 提供開始</div>
+      <div class="timeline-desc">無料プラン「Copilot Free」を発表。月2,000補完・50チャットの制限付きで個人開発者に提供。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2025年2月</div>
+      <div class="timeline-title">Agent Mode 発表</div>
+      <div class="timeline-desc">VS Code上で自律的にマルチステップ・マルチファイル編集を行う「Agent Mode」をプレビューリリース。同時に「Next Edit Suggestions」も発表。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2025年5月</div>
+      <div class="timeline-title">Copilot Workspace テクニカルプレビュー終了</div>
+      <div class="timeline-desc">Copilot Workspace のテクニカルプレビューが終了。その機能の多くは Copilot Coding Agent やAgent Modeに統合。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2025年6月〜</div>
+      <div class="timeline-title">Copilot Coding Agent GA</div>
+      <div class="timeline-desc">Issueを割り当てるだけでCopilotが自律的にコードを書き、PRを作成する「Coding Agent」が一般利用可能に。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2025年9月</div>
+      <div class="timeline-title">MCP (Model Context Protocol) 移行</div>
+      <div class="timeline-desc">GitHub App ベースの Copilot Extensions を非推奨とし、MCP サーバーによるユニバーサルなエージェント統合標準に移行。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2026年2月</div>
+      <div class="timeline-title">Claude Sonnet 4.6 対応</div>
+      <div class="timeline-desc">Anthropic の最新エージェント特化モデル Claude Sonnet 4.6 が GitHub Copilot で GA 提供開始。GPT-5.1-Codex 系モデルも追加。</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>まとめ：</strong> GitHub Copilotは2021年の「コード補完ツール」から、2026年現在は「マルチモデル対応の自律型AI開発プラットフォーム」へと大きく進化しました。単なるオートコンプリートを超え、Issue管理からPR作成、コードレビューまで開発ライフサイクル全体をAIがサポートします。
+  </div>
+</div>
+</section>
+
+<!-- ============================================= -->
+<!-- SECTION 2: Copilot Workspaceとは -->
+<!-- ============================================= -->
+<div class="section-divider"></div>
+<section class="section" id="sec2">
+<div class="container">
+  <div class="section-header">
+    <div class="section-number">Section 02</div>
+    <h2>Copilot Workspaceとは</h2>
+    <p class="section-desc">概要・Copilotとの関係・現在のステータス</p>
+  </div>
+
+  <div class="prose">
+    <p>
+      <strong>Copilot Workspace</strong>は、GitHub Nextチーム（GitHubの研究開発部門）が2024年4月に発表した、タスク駆動型のAI開発環境です。従来のCopilotが「エディタ内でのコード補完」に焦点を当てていたのに対し、Copilot Workspaceは「自然言語でタスクを記述し、AIが計画（Plan）を立て、複数ファイルにまたがるコード変更を生成し、テスト・実行・PR作成まで行う」という、より高次元のワークフローを提供しました。
+    </p>
+
+    <h4>Copilot Workspaceの基本フロー</h4>
+    <p>
+      Copilot Workspaceは以下のような段階的なフローで動作します。まず、開発者がIssueやPR、または自由テキストでタスクを入力します。次に、Workspace はコードベースを読み取り、「現在の状態」と「望ましい状態」を箇条書きにした<strong>仕様（Specification）</strong>を自動生成します。開発者はこの仕様を自由に編集・修正できます。仕様が確定すると、Workspace は具体的な<strong>計画（Plan）</strong>を策定し、どのファイルをどう変更するかをリストアップします。この計画も編集可能です。最後に、計画に基づいてコード変更（diff）が生成され、開発者がレビューした上でCodespaceでテスト実行したり、ワンクリックでPRを作成したりできる仕組みでした。
+    </p>
+
+    <h4>Copilot Workspace vs Copilot Chat vs Agent Mode</h4>
+    <p>
+      Copilot（インライン補完）が「数行のコード提案」、Copilot Chatが「対話的な質問応答」を担うのに対し、Copilot Workspaceは「複数ファイルにまたがる構造化されたタスク実行」を実現するものでした。各段階で開発者が自然言語で介入（ステアリング）できる「操縦可能性（Steerability）」が大きな特徴で、AIが生成するコード量が増えても正確性と制御性を保てる設計思想でした。
+    </p>
+
+    <h4>現在のステータス</h4>
+    <p>
+      Copilot Workspace のテクニカルプレビューは <strong>2025年5月30日に終了</strong>しました。しかし、その核心的なコンセプト — 自然言語によるタスク駆動開発、自律的な計画策定と実行、マルチファイル編集 — は、現在の<strong>Copilot Agent Mode</strong>（VS Code等のIDE内）や<strong>Copilot Coding Agent</strong>（GitHub.com上でIssueからPRを自動生成）に継承・統合されています。つまりCopilot Workspaceは「実験的プロダクト」としては終了しましたが、その思想は現在のCopilotエコシステム全体に浸透しています。
+    </p>
+  </div>
+
+  <div class="callout callout-warn">
+    <strong>注意：</strong> Copilot Workspace と、Copilot Chat で使える <code>@workspace</code> コマンド（ワークスペース内のコードベース全体をコンテキストとして質問する機能）は別物です。名前は似ていますが、前者はGitHub Nextの独立プロダクト、後者はCopilot Chatの機能の一つです。
+  </div>
+
+  <div class="grid-2" style="margin-top:32px">
+    <div class="card">
+      <h3>💡 Copilot Workspaceの遺産</h3>
+      <p>Workspaceが提示した「仕様→計画→実装→テスト→PR」の段階的フローは、現在のCopilot Coding Agentに直接反映されています。Issueを割り当てるだけで、Agentが自律的にこのフローを実行しPRを作成します。</p>
+    </div>
+    <div class="card">
+      <h3>🔀 Copilot Spacesとの関係</h3>
+      <p>2025年後半に登場した<strong>Copilot Spaces</strong>は、コード・ドキュメント・仕様書などをSpace（空間）にまとめ、Copilotのコンテキストとして利用する新機能で、Workspaceの「コンテキスト管理」の思想を引き継いでいます。</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============================================= -->
+<!-- SECTION 3: 主な機能 -->
+<!-- ============================================= -->
+<div class="section-divider"></div>
+<section class="section" id="sec3">
+<div class="container">
+  <div class="section-header">
+    <div class="section-number">Section 03</div>
+    <h2>主な機能</h2>
+    <p class="section-desc">コード補完・チャット・CLI・エージェントモード・コードレビュー</p>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="feature-icon">⚡</div>
+      <h3>Inline Suggestions</h3>
+      <p>エディタでコードを入力すると、リアルタイムで行単位・関数単位のコード補完を提案。コメントや関数名から意図を推測し、適切なコードを生成します。VS Code、Visual Studio、JetBrains、Xcode、Neovim、Eclipse、Azure Data Studioに対応。</p>
+      <div class="tag-list">
+        <span class="tag">Autocomplete</span>
+        <span class="tag">Multi-language</span>
+        <span class="tag">Real-time</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="feature-icon">💬</div>
+      <h3>Copilot Chat</h3>
+      <p>エディタ内やGitHub.com、モバイルアプリで利用できるAIチャット。コードの説明、バグの特定、リファクタリング提案、テスト生成、ドキュメント作成などを自然言語で依頼できます。<code>@workspace</code>でコードベース全体をコンテキストに含められます。</p>
+      <div class="tag-list">
+        <span class="tag">IDE / Web / Mobile</span>
+        <span class="tag">Context-Aware</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="feature-icon">▶</div>
+      <h3>Copilot CLI</h3>
+      <p>ターミナルから直接Copilotを使用できるコマンドラインツール。シェルコマンドの提案、質問応答、ローカルファイルの変更、GitHub.comとの連携（PRの一覧表示やIssue作成等）が可能。コーディングエージェントへのタスク委任もCLIから行えます。</p>
+      <div class="tag-list">
+        <span class="tag">Terminal</span>
+        <span class="tag">Shell Commands</span>
+        <span class="tag">Programmatic Mode</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="feature-icon">🤖</div>
+      <h3>Agent Mode</h3>
+      <p>IDE内で高レベルなプロンプトを入力すると、Copilotが自律的に計画を立て、必要なファイルを特定し、コード変更とターミナルコマンドを実行。エラーが発生した場合はエラーを分析して自動修正を試みます。MCP (Model Context Protocol) サーバーとの連携も可能。</p>
+      <div class="tag-list">
+        <span class="tag">Autonomous</span>
+        <span class="tag">Multi-step</span>
+        <span class="tag">MCP</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="feature-icon">🔍</div>
+      <h3>Code Review</h3>
+      <p>Pull Requestに対してAIがコードレビューを実施。セキュリティリスク、パフォーマンス問題、コーディングベストプラクティスの観点から提案を生成。GitHub.com上でのPRレビューと、エディタ内でのファイルdiffレビューの両方をサポートします。</p>
+      <div class="tag-list">
+        <span class="tag">PR Review</span>
+        <span class="tag">Security</span>
+        <span class="tag">Best Practices</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="feature-icon">📋</div>
+      <h3>PR Summaries</h3>
+      <p>Pull Requestの変更内容をAIが自動要約。どのファイルにどのような変更が加えられたか、レビュアーが注目すべきポイントは何かを自然言語で説明します。レビュープロセスの効率化に大きく貢献します。</p>
+      <div class="tag-list">
+        <span class="tag">Auto-Summary</span>
+        <span class="tag">Review Focus</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="feature-icon">🧩</div>
+      <h3>Copilot Coding Agent</h3>
+      <p>GitHub IssueをCopilotに割り当てるだけで、エージェントが自律的にVM上でコードを書き、テストを実行し、PRを作成してレビューを依頼。GitHub Actionsベースの安全な環境で動作します。サードパーティエージェント（Claude、OpenAI Codex等）との連携も可能。</p>
+      <div class="tag-list">
+        <span class="tag">Issue → PR</span>
+        <span class="tag">Autonomous</span>
+        <span class="tag">3rd Party Agents</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="feature-icon">📂</div>
+      <h3>Copilot Spaces</h3>
+      <p>コード、ドキュメント、仕様書、メモなどを「Space」にまとめ、Copilotの応答を特定のタスクに最適化するためのコンテキスト管理機能。チームメンバーとSpaceを共有して、一貫性のあるAI支援を受けることができます。</p>
+      <div class="tag-list">
+        <span class="tag">Context</span>
+        <span class="tag">Shared</span>
+        <span class="tag">Organization</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="feature-icon">✨</div>
+      <h3>Next Edit Suggestions</h3>
+      <p>次にどの箇所を編集する可能性が高いかをAIが予測し、その箇所に移動してコード補完を提案。従来のインライン補完が「現在のカーソル位置」に限定されていたのに対し、コードベース全体を見据えた先読み編集支援を実現します。VS Code、Xcode、Eclipseで利用可能（パブリックプレビュー）。</p>
+      <div class="tag-list">
+        <span class="tag">Predictive</span>
+        <span class="tag">Preview</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-success" style="margin-top:32px">
+    <strong>GitHub Spark（パブリックプレビュー）：</strong> 自然言語プロンプトでフルスタックアプリケーションをビルド・デプロイする新機能も登場。GitHubプラットフォームとシームレスに統合し、プロトタイピングからデプロイまでを実現します。
+  </div>
+</div>
+</section>
+
+<!-- ============================================= -->
+<!-- SECTION 4: 対応エディタ・IDE -->
+<!-- ============================================= -->
+<div class="section-divider"></div>
+<section class="section" id="sec4">
+<div class="container">
+  <div class="section-header">
+    <div class="section-number">Section 04</div>
+    <h2>対応エディタ・IDE</h2>
+    <p class="section-desc">VS Code, Visual Studio, JetBrains, Neovim, Xcode, Eclipse等</p>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>エディタ / IDE</th>
+          <th>Inline Suggestions</th>
+          <th>Copilot Chat</th>
+          <th>Agent Mode</th>
+          <th>Edit Mode</th>
+          <th>Next Edit Suggestions</th>
+          <th>備考</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>VS Code</strong></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td>最も機能が充実。全モデル対応</td>
+        </tr>
+        <tr>
+          <td><strong>Visual Studio</strong></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-no">—</span></td>
+          <td>17.13以降でEdits対応</td>
+        </tr>
+        <tr>
+          <td><strong>JetBrains IDEs</strong></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-no">—</span></td>
+          <td>IntelliJ, PyCharm, WebStorm等</td>
+        </tr>
+        <tr>
+          <td><strong>Xcode</strong></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-no">—</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td>macOS / iOS開発向け</td>
+        </tr>
+        <tr>
+          <td><strong>Eclipse</strong></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-no">—</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td>Java / エンタープライズ向け</td>
+        </tr>
+        <tr>
+          <td><strong>Vim / Neovim</strong></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-no">—</span></td>
+          <td><span class="badge badge-no">—</span></td>
+          <td><span class="badge badge-no">—</span></td>
+          <td><span class="badge badge-no">—</span></td>
+          <td>インライン補完のみ</td>
+        </tr>
+        <tr>
+          <td><strong>Azure Data Studio</strong></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-no">—</span></td>
+          <td><span class="badge badge-no">—</span></td>
+          <td><span class="badge badge-no">—</span></td>
+          <td><span class="badge badge-no">—</span></td>
+          <td>SQL / データ分析向け</td>
+        </tr>
+        <tr>
+          <td><strong>GitHub.com</strong></td>
+          <td><span class="badge badge-no">—</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-no">—</span></td>
+          <td><span class="badge badge-no">—</span></td>
+          <td><span class="badge badge-no">—</span></td>
+          <td>Web上でChatとCoding Agent</td>
+        </tr>
+        <tr>
+          <td><strong>GitHub Mobile</strong></td>
+          <td><span class="badge badge-no">—</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-no">—</span></td>
+          <td><span class="badge badge-no">—</span></td>
+          <td><span class="badge badge-no">—</span></td>
+          <td>iOS / Android</td>
+        </tr>
+        <tr>
+          <td><strong>Terminal (CLI)</strong></td>
+          <td><span class="badge badge-no">—</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-no">—</span></td>
+          <td><span class="badge badge-no">—</span></td>
+          <td>GitHub CLI / Windows Terminal</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="prose" style="margin-top:24px">
+    <p>
+      VS Codeが最も機能が充実しており、全てのモードおよび最新モデルに対応しています。JetBrains IDEsはIntelliJ IDEA、PyCharm、WebStorm、PhpStorm、GoLand、RubyMine、CLionなど、JetBrainsのIDE群全体で利用可能です。GitHub Copilotはパブリックリポジトリに存在するすべてのプログラミング言語で動作しますが、JavaScript、TypeScript、Python、Java、C#、Go、Rust、Ruby などの代表的な言語で最高品質のサジェストを提供します。
+    </p>
+  </div>
+</div>
+</section>
+
+<!-- ============================================= -->
+<!-- SECTION 5: 料金体系 -->
+<!-- ============================================= -->
+<div class="section-divider"></div>
+<section class="section" id="sec5">
+<div class="container">
+  <div class="section-header">
+    <div class="section-number">Section 05</div>
+    <h2>料金体系</h2>
+    <p class="section-desc">Free / Pro / Pro+ / Business / Enterprise — 5つのプラン</p>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:40px">
+    <div class="pricing-card">
+      <div class="pricing-name">Free</div>
+      <div class="pricing-price">$0<span> /月</span></div>
+      <div class="pricing-desc">個人開発者向け。Copilotを無料で試せるエントリープラン。</div>
+      <ul class="pricing-features">
+        <li><span class="check">✓</span> コード補完：月2,000回</li>
+        <li><span class="check">✓</span> プレミアムリクエスト：月50回</li>
+        <li><span class="check">✓</span> Agent Mode (GPT-5 mini)：月50回</li>
+        <li><span class="check">✓</span> Copilot Spaces</li>
+        <li><span class="check">✓</span> MCP サーバー統合</li>
+        <li><span class="cross">✗</span> Copilot CLI</li>
+        <li><span class="cross">✗</span> Code Review</li>
+        <li><span class="cross">✗</span> Coding Agent</li>
+        <li><span class="cross">✗</span> IP補償</li>
+      </ul>
+    </div>
+    <div class="pricing-card featured">
+      <div class="pricing-name">Pro</div>
+      <div class="pricing-price">$10<span> /月 ($100/年)</span></div>
+      <div class="pricing-desc">個人開発者向け。無制限の補完と全機能アクセス。</div>
+      <ul class="pricing-features">
+        <li><span class="check">✓</span> コード補完：<strong>無制限</strong></li>
+        <li><span class="check">✓</span> プレミアムリクエスト：月300回</li>
+        <li><span class="check">✓</span> Agent Mode：<strong>無制限</strong></li>
+        <li><span class="check">✓</span> Copilot CLI</li>
+        <li><span class="check">✓</span> Code Review (PR + Diff)</li>
+        <li><span class="check">✓</span> Coding Agent (Issue → PR)</li>
+        <li><span class="check">✓</span> Java / .NET モダナイゼーション</li>
+        <li><span class="cross">✗</span> サードパーティエージェント</li>
+        <li><span class="cross">✗</span> IP補償</li>
+      </ul>
+    </div>
+    <div class="pricing-card">
+      <div class="pricing-name">Pro+</div>
+      <div class="pricing-price">$39<span> /月 ($390/年)</span></div>
+      <div class="pricing-desc">パワーユーザー向け。全モデル・高リクエスト上限。</div>
+      <ul class="pricing-features">
+        <li><span class="check">✓</span> コード補完：<strong>無制限</strong></li>
+        <li><span class="check">✓</span> プレミアムリクエスト：月<strong>1,500</strong>回</li>
+        <li><span class="check">✓</span> Agent Mode：<strong>無制限</strong></li>
+        <li><span class="check">✓</span> <strong>全AIモデル</strong>アクセス</li>
+        <li><span class="check">✓</span> サードパーティエージェント連携</li>
+        <li><span class="check">✓</span> Copilot CLI</li>
+        <li><span class="check">✓</span> Code Review</li>
+        <li><span class="check">✓</span> Coding Agent</li>
+        <li><span class="cross">✗</span> IP補償</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="pricing-card">
+      <div class="pricing-name">Business</div>
+      <div class="pricing-price">$19<span> /ユーザー/月</span></div>
+      <div class="pricing-desc">チーム・組織向け。集中管理とポリシー制御。</div>
+      <ul class="pricing-features">
+        <li><span class="check">✓</span> Proの全機能</li>
+        <li><span class="check">✓</span> 組織レベルのライセンス管理</li>
+        <li><span class="check">✓</span> ポリシー管理</li>
+        <li><span class="check">✓</span> IP補償（知的財産保護）</li>
+        <li><span class="check">✓</span> Coding Agent</li>
+        <li><span class="check">✓</span> 利用データ分析</li>
+        <li><span class="check">✓</span> 監査ログ</li>
+        <li><span class="check">✓</span> ファイル除外設定</li>
+      </ul>
+    </div>
+    <div class="pricing-card">
+      <div class="pricing-name">Enterprise</div>
+      <div class="pricing-price">$39<span> /ユーザー/月</span></div>
+      <div class="pricing-desc">大規模企業向け。Businessの全機能+高度なカスタマイズ。</div>
+      <ul class="pricing-features">
+        <li><span class="check">✓</span> Businessの全機能</li>
+        <li><span class="check">✓</span> GitHub.com統合チャット</li>
+        <li><span class="check">✓</span> コードベースインデックス化</li>
+        <li><span class="check">✓</span> カスタムモデルによる補完</li>
+        <li><span class="check">✓</span> 組織ナレッジベース連携</li>
+        <li><span class="check">✓</span> SAML SSO認証</li>
+        <li><span class="check">✓</span> エンタープライズセキュリティ</li>
+        <li><span class="check">✓</span> 組織ごとにプラン割り当て可</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:32px">
+    <strong>プレミアムリクエストとは：</strong> Chat、Agent Mode、Code Review、Coding Agent、Copilot CLIの利用には「プレミアムリクエスト」が消費されます。使用するモデルによって消費量が異なり（モデル乗数制）、高性能モデルほど1回あたりの消費量が多くなります。追加リクエストは$0.04/回で購入可能です。学生・教育者・人気OSSメンテナーはCopilot Proに無料アクセスが可能です。
+  </div>
+</div>
+</section>
+
+<!-- ============================================= -->
+<!-- SECTION 6: 基盤モデル -->
+<!-- ============================================= -->
+<div class="section-divider"></div>
+<section class="section" id="sec6">
+<div class="container">
+  <div class="section-header">
+    <div class="section-number">Section 06</div>
+    <h2>基盤モデル</h2>
+    <p class="section-desc">GPT, Claude, Gemini — マルチモデル対応のAIプラットフォーム</p>
+  </div>
+
+  <div class="prose">
+    <p>
+      GitHub Copilotは2024年10月に「マルチモデル対応」を発表し、OpenAIモデルだけでなく、Anthropic Claude、Google Geminiなど複数のAIプロバイダーのモデルを選択できるようになりました。ユーザーは「Auto」モードでCopilotに最適モデルを自動選択させるか、タスクに応じて手動でモデルを切り替えることができます。各モデルにはプレミアムリクエストの「乗数（Multiplier）」が設定されており、高性能モデルほど1リクエストあたりの消費が多くなります。
+    </p>
+  </div>
+
+  <div class="table-wrapper" style="margin-top:24px">
+    <table>
+      <thead>
+        <tr>
+          <th>プロバイダー</th>
+          <th>モデル名</th>
+          <th>特徴</th>
+          <th>最適な用途</th>
+          <th>ステータス</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>OpenAI</strong></td>
+          <td>GPT-4o</td>
+          <td>汎用的、高速、バランスが良い</td>
+          <td>日常的なChat、一般的なコーディング</td>
+          <td><span class="badge badge-yes">GA</span></td>
+        </tr>
+        <tr>
+          <td><strong>OpenAI</strong></td>
+          <td>GPT-5 mini</td>
+          <td>軽量・高速、Agent Mode デフォルト</td>
+          <td>Agent Mode、高速な補完</td>
+          <td><span class="badge badge-yes">GA</span></td>
+        </tr>
+        <tr>
+          <td><strong>OpenAI</strong></td>
+          <td>GPT-5</td>
+          <td>高度な推論、深い分析力</td>
+          <td>複雑な設計、アーキテクチャ検討</td>
+          <td><span class="badge badge-yes">GA</span></td>
+        </tr>
+        <tr>
+          <td><strong>OpenAI</strong></td>
+          <td>GPT-5-Codex</td>
+          <td>コーディング特化の最新モデル</td>
+          <td>大規模なコード生成</td>
+          <td><span class="badge badge-yes">GA</span></td>
+        </tr>
+        <tr>
+          <td><strong>OpenAI</strong></td>
+          <td>GPT-5.1-Codex / Mini</td>
+          <td>Codex系の最新バージョン</td>
+          <td>高精度なコード生成・補完</td>
+          <td><span class="badge badge-yes">GA</span></td>
+        </tr>
+        <tr>
+          <td><strong>OpenAI</strong></td>
+          <td>o3-mini</td>
+          <td>推論特化、ステップバイステップ</td>
+          <td>アルゴリズム、数学的推論</td>
+          <td><span class="badge badge-yes">GA</span></td>
+        </tr>
+        <tr>
+          <td><strong>Anthropic</strong></td>
+          <td>Claude 3.5 Sonnet</td>
+          <td>コーディング精度が高い</td>
+          <td>高品質コード生成、複雑なロジック</td>
+          <td><span class="badge badge-yes">GA</span></td>
+        </tr>
+        <tr>
+          <td><strong>Anthropic</strong></td>
+          <td>Claude 3.7 Sonnet</td>
+          <td>拡張思考能力、エージェント向け</td>
+          <td>Agent Mode、複雑なリファクタリング</td>
+          <td><span class="badge badge-yes">GA</span></td>
+        </tr>
+        <tr>
+          <td><strong>Anthropic</strong></td>
+          <td>Claude Sonnet 4.5</td>
+          <td>最新世代、総合力が高い</td>
+          <td>汎用コーディング全般</td>
+          <td><span class="badge badge-yes">GA</span></td>
+        </tr>
+        <tr>
+          <td><strong>Anthropic</strong></td>
+          <td>Claude Sonnet 4.6</td>
+          <td>エージェント特化、検索操作に強い</td>
+          <td>自律的エージェントタスク</td>
+          <td><span class="badge badge-yes">GA (New)</span></td>
+        </tr>
+        <tr>
+          <td><strong>Anthropic</strong></td>
+          <td>Haiku 4.5</td>
+          <td>軽量・超高速、コスト効率良</td>
+          <td>シンプルなタスク、高速応答</td>
+          <td><span class="badge badge-yes">GA</span></td>
+        </tr>
+        <tr>
+          <td><strong>Google</strong></td>
+          <td>Gemini 2.0 Flash</td>
+          <td>高速、マルチモーダル対応</td>
+          <td>画像+コードのタスク</td>
+          <td><span class="badge badge-yes">GA</span></td>
+        </tr>
+        <tr>
+          <td><strong>Google</strong></td>
+          <td>Gemini 2.5 Pro</td>
+          <td>高精度、長文コンテキスト</td>
+          <td>複雑な分析、大規模コードベース</td>
+          <td><span class="badge badge-yes">GA</span></td>
+        </tr>
+        <tr>
+          <td><strong>xAI</strong></td>
+          <td>Grok Code Fast</td>
+          <td>高速バグ修正に優れる</td>
+          <td>デバッグ、迅速な修正</td>
+          <td><span class="badge badge-preview">Preview</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout" style="margin-top:24px">
+    <strong>Auto モード：</strong> VS Codeなどのサポート対象IDEでは、「Auto」を選択するとCopilotがタスクの内容とモデルの可用性に基づいて最適なモデルを自動選択します。特にこだわりがない場合は Auto モードの使用が推奨されます。手動でモデルを切り替えたい場合は、Chatパネルのモデルセレクタから変更できます。
+  </div>
+</div>
+</section>
+
+<!-- ============================================= -->
+<!-- SECTION 7: Copilot Agentモード -->
+<!-- ============================================= -->
+<div class="section-divider"></div>
+<section class="section" id="sec7">
+<div class="container">
+  <div class="section-header">
+    <div class="section-number">Section 07</div>
+    <h2>Copilot Agentモード</h2>
+    <p class="section-desc">自律実行、マルチファイル編集、Coding Agent</p>
+  </div>
+
+  <div class="prose">
+    <p>
+      GitHub Copilotの「エージェント」機能は大きく分けて2つの形態があります。IDE内で動作する<strong>Agent Mode</strong>と、GitHub.com上で動作する<strong>Copilot Coding Agent</strong>です。いずれもCopilotが自律的にタスクを計画・実行する点で共通していますが、動作環境とユースケースが異なります。
+    </p>
+  </div>
+
+  <div class="grid-2" style="margin-top:32px">
+    <div class="card">
+      <h3>🎯 Agent Mode（IDE内）</h3>
+      <div class="prose" style="margin-top:12px">
+        <p>
+          VS Code、Visual Studio、JetBrains、Xcode、Eclipseのエディタ内で利用できるモードです。ハイレベルなプロンプト（例：「認証機能を追加して」「このクラスをリファクタリングして」）を入力すると、Copilotが以下を自律的に実行します。
+        </p>
+        <p>
+          まず、タスクに必要なステップを計画します。次に、変更が必要なファイルを自動的に特定し、コード変更を生成します。ターミナルコマンド（npm install、テスト実行等）の実行も提案し、エラーが発生した場合は分析して自動修正を試みます。MCP（Model Context Protocol）サーバーとの連携により、外部ツールやデータソースとの統合も可能です。
+        </p>
+        <p>
+          Agent Modeは「Ask（質問）」「Edit（編集）」と並ぶ3つのCopilot Chatモードの一つで、タスクが複雑でマルチステップの反復が必要な場合に最適です。
+        </p>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🤖 Copilot Coding Agent（GitHub.com）</h3>
+      <div class="prose" style="margin-top:12px">
+        <p>
+          GitHub.com上で動作する完全自律型のエージェントです。Issueを作成してCopilotに割り当てるか、Copilot Chatから「PRを作成して」と依頼すると、エージェントが以下のフローを自動実行します。
+        </p>
+        <p>
+          GitHub Actionsベースのセキュアな仮想マシン（VM）が起動し、リポジトリをクローンして環境をセットアップします。Issueの内容を分析し、実装計画を策定した上でコードを書き、テストを実行。すべてが成功したらPull Requestを自動作成し、開発者にレビューを依頼します。
+        </p>
+        <p>
+          Pro+プランでは<strong>サードパーティエージェント</strong>（Anthropic Claude、OpenAI Codex等）にタスクを委任することも可能です。エージェントの進行状況はGitHub.comのエージェントパネルやIDE内からリアルタイムで追跡できます。
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <h4 style="font-family:var(--font-en);font-weight:600;margin:40px 0 20px;color:var(--text-primary)">Ask vs Edit vs Agent — 3つのモードの使い分け</h4>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>観点</th>
+          <th>Ask Mode</th>
+          <th>Edit Mode</th>
+          <th>Agent Mode</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>目的</strong></td>
+          <td>質問・説明・学習</td>
+          <td>指定ファイルの直接編集</td>
+          <td>複雑なタスクの自律実行</td>
+        </tr>
+        <tr>
+          <td><strong>ファイル選択</strong></td>
+          <td>ユーザーが任意指定</td>
+          <td>ユーザーが明示的に選択</td>
+          <td>Copilotが自動決定</td>
+        </tr>
+        <tr>
+          <td><strong>コード変更</strong></td>
+          <td>直接変更しない</td>
+          <td>選択ファイルに変更提案</td>
+          <td>複数ファイルを自動変更</td>
+        </tr>
+        <tr>
+          <td><strong>ターミナル実行</strong></td>
+          <td>なし</td>
+          <td>なし</td>
+          <td>コマンド提案・実行</td>
+        </tr>
+        <tr>
+          <td><strong>反復・エラー修正</strong></td>
+          <td>手動</td>
+          <td>手動</td>
+          <td>自動で反復修正</td>
+        </tr>
+        <tr>
+          <td><strong>MCP統合</strong></td>
+          <td>なし</td>
+          <td>なし</td>
+          <td>あり</td>
+        </tr>
+        <tr>
+          <td><strong>最適な場面</strong></td>
+          <td>「このコードは何をしている？」</td>
+          <td>「この3ファイルに型を追加して」</td>
+          <td>「OAuth認証を実装して」</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout" style="margin-top:24px">
+    <strong>MCP (Model Context Protocol) とは：</strong> 2025年9月、GitHubはCopilot Extensions（GitHub Appベース）を非推奨とし、MCP サーバーへの移行を発表しました。MCPはAIエージェントが外部サービスやツールと連携するためのユニバーサル標準プロトコルで、一度MCPサーバーを構築すれば、GitHub CopilotだけでなくあらゆるMCP互換エージェントから利用できます。
+  </div>
+</div>
+</section>
+
+<!-- ============================================= -->
+<!-- SECTION 8: セキュリティ・プライバシー -->
+<!-- ============================================= -->
+<div class="section-divider"></div>
+<section class="section" id="sec8">
+<div class="container">
+  <div class="section-header">
+    <div class="section-number">Section 08</div>
+    <h2>セキュリティ・プライバシー・知的財産保護</h2>
+    <p class="section-desc">データ取り扱い・IP補償・コンプライアンス</p>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:32px">
+    <div class="card">
+      <h3>🔒 データプライバシー</h3>
+      <div class="prose" style="margin-top:12px">
+        <p>
+          <strong>Business / Enterprise プランでは、ユーザーのコードデータはモデルの学習（トレーニング）に使用されません。</strong>これはGitHubのデータ保護契約（DPA）で明文化されています。IDEでのChat・コード補完におけるプロンプトとサジェストは、Business/Enterpriseではデフォルトで保持されません（ただしGitHub.comやモバイルでのChatは、スレッド履歴を活用するため一定期間保持されます）。Freeプラン・Proプランについては、GitHubプライバシーステートメントに準拠しますが、データはデフォルトでトレーニングから除外されます。
+        </p>
+      </div>
+    </div>
+    <div class="card">
+      <h3>⚖️ 知的財産（IP）補償</h3>
+      <div class="prose" style="margin-top:12px">
+        <p>
+          <strong>Business および Enterprise プランには IP補償（Intellectual Property Indemnification）が含まれます。</strong>万が一、Copilotが生成した未修正のコードが著作権侵害を主張された場合、GitHubが法的責任を負います。Copilotのモデルは公開コードで学習していますが、「コピー＆ペースト」ではなく確率的にコードを生成するため、既存コードと一致する可能性は1%未満（GitHub調べ）です。パブリックコードとの一致を検出する「コードリファレンスフィルター」も提供されています。
+        </p>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🛡️ セキュリティ対策</h3>
+      <div class="prose" style="margin-top:12px">
+        <p>
+          すべてのプロンプトと出力は、有害・攻撃的・トピック外のコンテンツフィルターを通過します。ハードコードされた認証情報、SQLインジェクション、パスインジェクションなどの脆弱なコードパターンを検出してブロックまたは警告するフィルターも搭載。さらに、GitHub Advanced Securityの<strong>Copilot Autofix</strong>と連携すれば、既存コードの脆弱性を自動修正する提案も受けられます。Coding Agentは、GitHub Actionsのセキュアなサンドボックス環境で動作し、外部への不正アクセスを防止しています。
+        </p>
+      </div>
+    </div>
+    <div class="card">
+      <h3>📋 コンプライアンス</h3>
+      <div class="prose" style="margin-top:12px">
+        <p>
+          GDPRおよびその他のデータ保護法に準拠。GitHubとの間でデータ保護契約（DPA）を締結可能です。Enterprise プランではSAML SSOによる認証、監査ログによるアクティビティ追跡、特定ファイルのCopilotからの除外設定、プレビュー機能やモデルへのアクセス制御ポリシーなど、組織のガバナンス要件に対応するための管理機能が充実しています。ネットワークファイアウォールでCopilotへのアクセスを明示的に許可/ブロックすることも可能です。
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>セキュリティ項目</th>
+          <th>Free</th>
+          <th>Pro / Pro+</th>
+          <th>Business</th>
+          <th>Enterprise</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>データ学習への不使用</td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>公開コードフィルター</td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>コンテンツフィルター</td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>IP補償</td>
+          <td><span class="badge badge-no">✗</span></td>
+          <td><span class="badge badge-no">✗</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>ポリシー管理</td>
+          <td><span class="badge badge-no">✗</span></td>
+          <td><span class="badge badge-no">✗</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>監査ログ</td>
+          <td><span class="badge badge-no">✗</span></td>
+          <td><span class="badge badge-no">✗</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>SAML SSO</td>
+          <td><span class="badge badge-no">✗</span></td>
+          <td><span class="badge badge-no">✗</span></td>
+          <td><span class="badge badge-no">✗</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>ファイル除外設定</td>
+          <td><span class="badge badge-no">✗</span></td>
+          <td><span class="badge badge-no">✗</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</section>
+
+<!-- ============================================= -->
+<!-- SECTION 9: ユースケース集 -->
+<!-- ============================================= -->
+<div class="section-divider"></div>
+<section class="section" id="sec9">
+<div class="container">
+  <div class="section-header">
+    <div class="section-number">Section 09</div>
+    <h2>ユースケース集</h2>
+    <p class="section-desc">GitHub Copilot の活用例 10選</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="usecase-card">
+      <div class="usecase-num">01</div>
+      <div>
+        <h3 style="font-size:1rem;font-weight:600;margin-bottom:6px;color:var(--text-primary)">ボイラープレートコードの自動生成</h3>
+        <p style="font-size:0.88rem;color:var(--text-secondary)">API エンドポイント、CRUD操作、データモデルなどの定型コードをコメントや関数名から瞬時に生成。新しいプロジェクトの初期セットアップ時間を大幅に短縮します。</p>
+      </div>
+    </div>
+    <div class="usecase-card">
+      <div class="usecase-num">02</div>
+      <div>
+        <h3 style="font-size:1rem;font-weight:600;margin-bottom:6px;color:var(--text-primary)">ユニットテストの自動作成</h3>
+        <p style="font-size:0.88rem;color:var(--text-secondary)">既存の関数やクラスからテストケースを自動生成。エッジケースの網羅、モックの作成、テストフレームワーク（Jest、pytest、JUnit等）に合わせたコード生成が可能です。</p>
+      </div>
+    </div>
+    <div class="usecase-card">
+      <div class="usecase-num">03</div>
+      <div>
+        <h3 style="font-size:1rem;font-weight:600;margin-bottom:6px;color:var(--text-primary)">レガシーコードの理解とリファクタリング</h3>
+        <p style="font-size:0.88rem;color:var(--text-secondary)">Copilot Chatで「このコードは何をしている？」と質問してレガシーコードを解読。Agent Modeでモダンなパターンへの書き換えを自動実行し、コメントやドキュメントも同時に生成します。</p>
+      </div>
+    </div>
+    <div class="usecase-card">
+      <div class="usecase-num">04</div>
+      <div>
+        <h3 style="font-size:1rem;font-weight:600;margin-bottom:6px;color:var(--text-primary)">バグ修正の効率化</h3>
+        <p style="font-size:0.88rem;color:var(--text-secondary)">エラーメッセージやスタックトレースをCopilot Chatに貼り付けて原因分析を依頼。Coding AgentにバグのIssueを割り当てれば、修正コードとPRを自動で作成してくれます。</p>
+      </div>
+    </div>
+    <div class="usecase-card">
+      <div class="usecase-num">05</div>
+      <div>
+        <h3 style="font-size:1rem;font-weight:600;margin-bottom:6px;color:var(--text-primary)">新しい言語・フレームワークの学習</h3>
+        <p style="font-size:0.88rem;color:var(--text-secondary)">Copilot Chatに「Rustでこの機能をどう書く？」「Next.jsのApp Routerの使い方は？」と質問しながらコーディング。実際のプロジェクトの中で新しい技術を学べます。</p>
+      </div>
+    </div>
+    <div class="usecase-card">
+      <div class="usecase-num">06</div>
+      <div>
+        <h3 style="font-size:1rem;font-weight:600;margin-bottom:6px;color:var(--text-primary)">Pull Requestのレビュー効率化</h3>
+        <p style="font-size:0.88rem;color:var(--text-secondary)">Copilot Code ReviewでPRの変更点をAIが自動レビュー。PRサマリーで変更概要を即座に把握。レビュアーは本質的なロジックの検証に集中できるようになります。</p>
+      </div>
+    </div>
+    <div class="usecase-card">
+      <div class="usecase-num">07</div>
+      <div>
+        <h3 style="font-size:1rem;font-weight:600;margin-bottom:6px;color:var(--text-primary)">ドキュメント・コメントの自動生成</h3>
+        <p style="font-size:0.88rem;color:var(--text-secondary)">関数やクラスのJSDoc / docstring / XMLDocコメントを自動生成。READMEの作成、APIドキュメントの整備など、後回しにされがちなドキュメント作業を効率化します。</p>
+      </div>
+    </div>
+    <div class="usecase-card">
+      <div class="usecase-num">08</div>
+      <div>
+        <h3 style="font-size:1rem;font-weight:600;margin-bottom:6px;color:var(--text-primary)">データベースクエリ・SQL作成</h3>
+        <p style="font-size:0.88rem;color:var(--text-secondary)">「月次売上の集計を地域別にクロス集計して」などの自然言語からSQLクエリを生成。ORMの定義やマイグレーションファイルの作成も補助します。</p>
+      </div>
+    </div>
+    <div class="usecase-card">
+      <div class="usecase-num">09</div>
+      <div>
+        <h3 style="font-size:1rem;font-weight:600;margin-bottom:6px;color:var(--text-primary)">CI/CDパイプラインの構築</h3>
+        <p style="font-size:0.88rem;color:var(--text-secondary)">GitHub ActionsのワークフローYAML、Dockerfile、Terraform設定などのインフラコードの生成と最適化。Agent Modeで既存パイプラインの改善も自動化できます。</p>
+      </div>
+    </div>
+    <div class="usecase-card">
+      <div class="usecase-num">10</div>
+      <div>
+        <h3 style="font-size:1rem;font-weight:600;margin-bottom:6px;color:var(--text-primary)">アプリケーションのモダナイゼーション</h3>
+        <p style="font-size:0.88rem;color:var(--text-secondary)">Java / .NET アプリケーションのモダナイゼーション機能を使い、古いフレームワークからの移行を支援。例：Java EE → Spring Boot、.NET Framework → .NET 8 への移行をAIがガイドします。</p>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============================================= -->
+<!-- SECTION 10: 他ツール比較 -->
+<!-- ============================================= -->
+<div class="section-divider"></div>
+<section class="section" id="sec10">
+<div class="container">
+  <div class="section-header">
+    <div class="section-number">Section 10</div>
+    <h2>他ツール比較</h2>
+    <p class="section-desc">Copilot vs Cursor vs Claude Code vs Devin vs Codex</p>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>項目</th>
+          <th>GitHub Copilot</th>
+          <th>Cursor</th>
+          <th>Claude Code</th>
+          <th>Devin</th>
+          <th>OpenAI Codex (Agent)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>種別</strong></td>
+          <td>IDE拡張 + プラットフォーム</td>
+          <td>AI特化IDE</td>
+          <td>CLI エージェント</td>
+          <td>自律型AIエンジニア</td>
+          <td>クラウドエージェント</td>
+        </tr>
+        <tr>
+          <td><strong>開発元</strong></td>
+          <td>GitHub / Microsoft</td>
+          <td>Anysphere</td>
+          <td>Anthropic</td>
+          <td>Cognition</td>
+          <td>OpenAI</td>
+        </tr>
+        <tr>
+          <td><strong>基盤モデル</strong></td>
+          <td>マルチモデル (GPT, Claude, Gemini等)</td>
+          <td>Claude, GPT, 独自モデル</td>
+          <td>Claude (Sonnet/Opus)</td>
+          <td>独自モデル</td>
+          <td>GPT系モデル</td>
+        </tr>
+        <tr>
+          <td><strong>インライン補完</strong></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-no">✗</span></td>
+          <td><span class="badge badge-no">✗</span></td>
+          <td><span class="badge badge-no">✗</span></td>
+        </tr>
+        <tr>
+          <td><strong>AIチャット</strong></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓ (CLI)</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+        </tr>
+        <tr>
+          <td><strong>マルチファイル編集</strong></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+        </tr>
+        <tr>
+          <td><strong>自律型エージェント</strong></td>
+          <td><span class="badge badge-yes">✓ (Coding Agent)</span></td>
+          <td><span class="badge badge-limited">△ (Background Agent)</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓ (完全自律)</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+        </tr>
+        <tr>
+          <td><strong>GitHub連携</strong></td>
+          <td><span class="badge badge-yes">✓ (ネイティブ)</span></td>
+          <td><span class="badge badge-limited">△</span></td>
+          <td><span class="badge badge-limited">△ (CLI連携)</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-yes">✓</span></td>
+        </tr>
+        <tr>
+          <td><strong>コードレビュー</strong></td>
+          <td><span class="badge badge-yes">✓</span></td>
+          <td><span class="badge badge-no">✗</span></td>
+          <td><span class="badge badge-no">✗</span></td>
+          <td><span class="badge badge-no">✗</span></td>
+          <td><span class="badge badge-no">✗</span></td>
+        </tr>
+        <tr>
+          <td><strong>価格（個人最安）</strong></td>
+          <td>$0〜$39/月</td>
+          <td>$0〜$40/月</td>
+          <td>API従量課金 (Max $100〜$200/月)</td>
+          <td>$500/月〜</td>
+          <td>ChatGPT Plus/Pro課金内</td>
+        </tr>
+        <tr>
+          <td><strong>対応エディタ</strong></td>
+          <td>VS Code, VS, JetBrains, Xcode等</td>
+          <td>Cursor IDE (VS Codeフォーク)</td>
+          <td>ターミナル（エディタ不問）</td>
+          <td>Webブラウザ</td>
+          <td>Webブラウザ / ChatGPT内</td>
+        </tr>
+        <tr>
+          <td><strong>最大の強み</strong></td>
+          <td>GitHubとの深い統合、幅広い対応</td>
+          <td>エディタUXの洗練、Composer</td>
+          <td>大規模コンテキスト、CLIの柔軟性</td>
+          <td>完全自律E2E開発</td>
+          <td>OpenAIエコシステム統合</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="prose" style="margin-top:32px">
+    <h4>各ツールのポジショニング</h4>
+    <p>
+      <strong>GitHub Copilot</strong>は「最も広い対応範囲」が強みです。VS Code、JetBrains、Xcodeなど主要エディタすべてに対応し、コード補完からAgent、コードレビュー、Issue管理まで開発ライフサイクル全体をカバーします。GitHubとのネイティブ統合は他ツールにない独自の価値です。
+    </p>
+    <p>
+      <strong>Cursor</strong>は「エディタUXの極限最適化」に焦点を当てたAI特化IDE（VS Codeフォーク）です。Composerによるプロジェクト全体を見据えたコード生成、マルチファイル編集のUIが洗練されており、「IDE内ですべて完結したい」開発者に支持されています。
+    </p>
+    <p>
+      <strong>Claude Code</strong>はAnthropicが提供するCLIベースのエージェントで、ターミナルから直接コードベースを読み書きできます。Claudeの大規模コンテキストウィンドウを活かし、レガシーシステムの理解やリポジトリ横断の変更に強みがあります。エディタに依存しないため、既存のワークフローに柔軟に組み込めます。
+    </p>
+    <p>
+      <strong>Devin</strong>はCognition社が開発した「自律型AIソフトウェアエンジニア」で、要件定義からデプロイまでをエンドツーエンドで実行することを目指しています。ブラウザベースで動作し、ジュニアエンジニアレベルのタスクを完全自律で処理できますが、月額$500〜と高価格帯です。
+    </p>
+    <p>
+      <strong>OpenAI Codex (Agent)</strong>は、OpenAIが提供するクラウドベースのコーディングエージェントで、ChatGPTやAPI経由でアクセスできます。GitHub連携にも対応し、サンドボックス環境でコードを実行できます。
+    </p>
+  </div>
+
+  <h4 style="font-family:var(--font-en);font-weight:600;margin:40px 0 20px;color:var(--text-primary)">ツール選択の指針</h4>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>GitHub Copilotを選ぶべき場合</h3>
+      <p>GitHubをメインで使っている、複数のIDEを使い分けている、チーム全体でのAI導入を検討している、Issue→PRの自動化ワークフローが欲しい、エンタープライズ級のセキュリティ・IP補償が必要。</p>
+    </div>
+    <div class="card">
+      <h3>Cursorを選ぶべき場合</h3>
+      <p>VS Codeベースの環境で最高のAI体験が欲しい、プロジェクト全体を考慮したコード生成を重視する、マルチファイル編集のUI/UXを重視する、AI特化エディタに切り替えても良い。</p>
+    </div>
+    <div class="card">
+      <h3>Claude Codeを選ぶべき場合</h3>
+      <p>ターミナル中心のワークフロー、大規模なコードベースの理解・リファクタリング、エディタに縛られたくない、Claudeモデルの品質を最大限に活かしたい。</p>
+    </div>
+    <div class="card">
+      <h3>Devinを選ぶべき場合</h3>
+      <p>完全自律のE2E開発を求めている、ジュニアエンジニアの代替を検討している、コスト面での制約が少ない、高度な自律タスクの実験をしたい。</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============================================= -->
+<!-- SECTION 11: 始め方ガイド -->
+<!-- ============================================= -->
+<div class="section-divider"></div>
+<section class="section" id="sec11">
+<div class="container">
+  <div class="section-header">
+    <div class="section-number">Section 11</div>
+    <h2>始め方ガイド</h2>
+    <p class="section-desc">ゼロから始めるGitHub Copilotセットアップ</p>
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <h4>GitHubアカウントの準備</h4>
+      <p>まだアカウントがない場合は <a href="https://github.com/signup" target="_blank">github.com/signup</a> から無料アカウントを作成します。既にアカウントがある場合はサインインしてください。学生の場合は <a href="https://education.github.com" target="_blank">GitHub Education</a> で学生認証を行うと、Copilot Proが無料で利用可能です。</p>
+    </div>
+    <div class="step">
+      <h4>プランの選択と有効化</h4>
+      <p><a href="https://github.com/features/copilot/plans" target="_blank">github.com/features/copilot/plans</a> にアクセスし、プランを選択します。まずはFreeプランで試すか、30日間の無料トライアル付きのProプランがおすすめです。サインアップ後、GitHubの設定画面でCopilotが有効になっていることを確認してください。</p>
+    </div>
+    <div class="step">
+      <h4>VS Codeへの拡張機能インストール</h4>
+      <p>VS Codeを開き、拡張機能マーケットプレイスで「GitHub Copilot」を検索してインストールします。「GitHub Copilot Chat」拡張機能も自動的にインストールされます。インストール後、VS Code右下のCopilotアイコンからGitHubアカウントでサインインします。</p>
+    </div>
+    <div class="step">
+      <h4>初回のインライン補完を試す</h4>
+      <p>任意のファイルを開き、コメントで意図を書いてみましょう。例えば、Pythonファイルで <code># フィボナッチ数列を返す関数</code> とコメントを書いてEnterを押すと、灰色のテキストでコード提案が表示されます。Tabキーで受け入れ、Escキーで拒否できます。</p>
+    </div>
+    <div class="step">
+      <h4>Copilot Chatを試す</h4>
+      <p>VS Codeの左サイドバーにあるCopilotアイコン（吹き出し）をクリックするか、<code>Ctrl+Shift+I</code>（Mac: <code>Cmd+Shift+I</code>）でChatパネルを開きます。「このファイルのコードを説明して」「テストを書いて」「パフォーマンスを改善して」など、自然言語で質問してみましょう。</p>
+    </div>
+    <div class="step">
+      <h4>Agent Modeを試す</h4>
+      <p>Chatパネル上部のモードセレクタから「Agent」を選択します。「TODOアプリのバックエンドをExpressで作って」のようなハイレベルなタスクを入力すると、Copilotがファイル作成・コード記述・依存関係インストールまでを自律的に提案・実行します。各ステップで承認/拒否の操作が可能です。</p>
+    </div>
+    <div class="step">
+      <h4>カスタムインストラクションの設定（推奨）</h4>
+      <p>プロジェクトルートに <code>.github/copilot-instructions.md</code> ファイルを作成し、コーディング規約やフレームワーク情報、好みのスタイルなどを記述します。Copilotはこの情報を参照して、プロジェクトに最適化された提案を行うようになります。</p>
+    </div>
+  </div>
+
+  <div class="callout callout-success">
+    <strong>Pro Tip:</strong> JetBrains IDEsの場合は、Settings → Plugins から「GitHub Copilot」プラグインをインストールします。Neovimの場合は <code>github/copilot.vim</code> プラグインを、Xcodeの場合はGitHub Copilot for Xcodeアプリをインストールしてください。
+  </div>
+</div>
+</section>
+
+<!-- ============================================= -->
+<!-- SECTION 12: Tips・注意点・参考リンク -->
+<!-- ============================================= -->
+<div class="section-divider"></div>
+<section class="section" id="sec12">
+<div class="container">
+  <div class="section-header">
+    <div class="section-number">Section 12</div>
+    <h2>Tips・注意点・参考リンク</h2>
+    <p class="section-desc">効果的な活用法と注意すべきポイント</p>
+  </div>
+
+  <h4 style="font-family:var(--font-en);font-weight:600;margin:0 0 20px;color:var(--text-primary)">Effective Tips</h4>
+
+  <div class="grid-2" style="margin-bottom:40px">
+    <div class="card">
+      <h3>🎯 具体的なコメントを書く</h3>
+      <p>「// 関数を作る」ではなく「// ユーザーIDを受け取り、過去30日間の注文履歴をJSON形式で返す非同期関数」のように、入力・出力・条件を具体的に書くと、より正確なサジェストが得られます。</p>
+    </div>
+    <div class="card">
+      <h3>📂 コンテキストを意識する</h3>
+      <p>Copilotは開いているファイルや隣接ファイルをコンテキストとして使用します。関連するファイルをタブで開いておく、<code>@workspace</code>でプロジェクト全体を参照させる、Copilot Spacesでコンテキストを整理するなどの工夫が効果的です。</p>
+    </div>
+    <div class="card">
+      <h3>🔄 モデルを使い分ける</h3>
+      <p>日常的な補完にはGPT-5 miniやHaiku 4.5の高速モデル、複雑なロジックにはClaude Sonnet 4.5やGPT-5、アーキテクチャ設計にはGemini 2.5 Proなど、タスクの複雑さに応じてモデルを切り替えることで、リクエスト消費を最適化できます。</p>
+    </div>
+    <div class="card">
+      <h3>📝 カスタムインストラクションを活用</h3>
+      <p><code>.github/copilot-instructions.md</code> にコーディング規約、使用フレームワーク、命名規則、テスト方針などを記載しておくと、プロジェクト固有の文脈を踏まえたサジェストが得られます。チーム全体で共有しましょう。</p>
+    </div>
+    <div class="card">
+      <h3>✅ 生成コードは必ずレビューする</h3>
+      <p>Copilotの提案は「確率的な生成」であり、常に正確とは限りません。セキュリティ上の問題、非効率なアルゴリズム、廃止されたAPIの使用などがないか、必ず人間の目でレビューしましょう。テストの実行も忘れずに。</p>
+    </div>
+</body>
+</html>

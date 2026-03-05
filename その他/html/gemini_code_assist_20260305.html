@@ -1,0 +1,1833 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gemini Code Assist & Jules 完全ガイド — 初心者のためのAIコーディングアシスタント徹底解説</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* ========== CSS RESET & BASE ========== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-primary: #0A0A0A;
+      --bg-card: #16161A;
+      --bg-card-hover: #1C1C22;
+      --bg-code: #111114;
+      --border: rgba(255,255,255,0.06);
+      --border-hover: rgba(255,255,255,0.12);
+      --accent: #5E6AD2;
+      --accent-light: #7B85E8;
+      --accent-dim: rgba(94,106,210,0.15);
+      --accent-glow: rgba(94,106,210,0.25);
+      --text-primary: #FAFAFA;
+      --text-secondary: #8A8A9A;
+      --text-tertiary: #55556A;
+      --success: #30A46C;
+      --warning: #F5A623;
+      --danger: #E5484D;
+      --info: #3B82F6;
+      --google-blue: #4285F4;
+      --google-red: #EA4335;
+      --google-yellow: #FBBC04;
+      --google-green: #34A853;
+      --gradient-accent: linear-gradient(135deg, #5E6AD2 0%, #7B85E8 50%, #9BA3F5 100%);
+      --gradient-card: linear-gradient(180deg, rgba(94,106,210,0.08) 0%, transparent 100%);
+      --gradient-hero: linear-gradient(135deg, rgba(94,106,210,0.2) 0%, rgba(123,133,232,0.05) 50%, transparent 100%);
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
+      --shadow-glow: 0 0 40px rgba(94,106,210,0.15);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --font-en: 'Outfit', sans-serif;
+      --font-jp: 'Noto Sans JP', sans-serif;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ========== LIGHT MODE ========== */
+    .light-mode {
+      --bg-primary: #F8F8FA;
+      --bg-card: #FFFFFF;
+      --bg-card-hover: #F0F0F5;
+      --bg-code: #F4F4F8;
+      --border: rgba(0,0,0,0.08);
+      --border-hover: rgba(0,0,0,0.15);
+      --text-primary: #1A1A2E;
+      --text-secondary: #5A5A6E;
+      --text-tertiary: #8A8A9A;
+      --accent-dim: rgba(94,106,210,0.1);
+      --accent-glow: rgba(94,106,210,0.15);
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+      --shadow-glow: 0 0 40px rgba(94,106,210,0.08);
+      --gradient-hero: linear-gradient(135deg, rgba(94,106,210,0.1) 0%, rgba(123,133,232,0.03) 50%, transparent 100%);
+      --gradient-card: linear-gradient(180deg, rgba(94,106,210,0.05) 0%, transparent 100%);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      font-family: var(--font-jp);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.85;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      transition: var(--transition);
+      overflow-x: hidden;
+    }
+
+    /* ========== SCROLLBAR ========== */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--text-tertiary); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+
+    /* ========== THEME TOGGLE ========== */
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 8px 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      transition: var(--transition);
+      backdrop-filter: blur(20px);
+      box-shadow: var(--shadow-md);
+    }
+    .theme-toggle:hover {
+      border-color: var(--accent);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-glow);
+    }
+    .theme-toggle .icon { font-size: 1.1rem; }
+
+    /* ========== NAVIGATION ========== */
+    .toc-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 280px;
+      height: 100vh;
+      background: var(--bg-card);
+      border-right: 1px solid var(--border);
+      padding: 24px 0;
+      overflow-y: auto;
+      z-index: 1000;
+      transition: var(--transition);
+    }
+    .toc-nav .logo {
+      padding: 0 24px 20px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+    .toc-nav .logo h2 {
+      font-family: var(--font-en);
+      font-size: 1.1rem;
+      font-weight: 700;
+      background: var(--gradient-accent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .toc-nav .logo p {
+      font-size: 0.7rem;
+      color: var(--text-tertiary);
+      margin-top: 4px;
+    }
+    .toc-nav a {
+      display: block;
+      padding: 8px 24px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.8rem;
+      transition: var(--transition);
+      border-left: 2px solid transparent;
+      line-height: 1.5;
+    }
+    .toc-nav a:hover, .toc-nav a.active {
+      color: var(--accent-light);
+      background: var(--accent-dim);
+      border-left-color: var(--accent);
+    }
+    .toc-nav a .num {
+      font-family: var(--font-en);
+      font-weight: 600;
+      margin-right: 8px;
+      color: var(--text-tertiary);
+      font-size: 0.75rem;
+    }
+
+    /* Mobile nav toggle */
+    .nav-toggle {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 10001;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      cursor: pointer;
+      color: var(--text-primary);
+      font-size: 1.2rem;
+      box-shadow: var(--shadow-md);
+    }
+    .nav-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 999;
+    }
+
+    /* ========== MAIN CONTENT ========== */
+    .main-content {
+      margin-left: 280px;
+      padding: 0;
+      max-width: 100%;
+      transition: var(--transition);
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    /* ========== HERO ========== */
+    .hero {
+      padding: 100px 0 80px;
+      background: var(--gradient-hero);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(94,106,210,0.12) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(94,106,210,0.2);
+      border-radius: 50px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--accent-light);
+      margin-bottom: 24px;
+      font-family: var(--font-en);
+    }
+    .hero h1 {
+      font-family: var(--font-en);
+      font-size: 3.2rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+    .hero h1 .gradient {
+      background: var(--gradient-accent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      max-width: 640px;
+      line-height: 1.8;
+      margin-bottom: 32px;
+    }
+    .hero .meta {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .hero .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: var(--text-tertiary);
+    }
+    .hero .meta-item .dot {
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+
+    /* ========== SECTIONS ========== */
+    .section {
+      padding: 72px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .section:last-child { border-bottom: none; }
+
+    .section-header {
+      margin-bottom: 40px;
+    }
+    .section-num {
+      font-family: var(--font-en);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-family: var(--font-en);
+      font-size: 1.8rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 12px;
+    }
+    .section-lead {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      max-width: 720px;
+    }
+
+    /* ========== CARDS ========== */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-bottom: 24px;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .card:hover {
+      border-color: var(--border-hover);
+      box-shadow: var(--shadow-md);
+    }
+    .card.accent-top::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--gradient-accent);
+    }
+    .card h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card h3 .icon {
+      font-size: 1.3rem;
+    }
+    .card p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.85;
+    }
+    .card p + p {
+      margin-top: 12px;
+    }
+
+    /* Feature grid */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      transition: var(--transition);
+    }
+    .feature-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-glow);
+    }
+    .feature-card .icon-box {
+      width: 42px; height: 42px;
+      background: var(--accent-dim);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      margin-bottom: 16px;
+    }
+    .feature-card h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .feature-card p {
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      line-height: 1.7;
+    }
+
+    /* ========== TABLES ========== */
+    .table-wrap {
+      overflow-x: auto;
+      margin: 24px 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    thead {
+      background: var(--accent-dim);
+    }
+    th {
+      padding: 14px 18px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--accent-light);
+      white-space: nowrap;
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td {
+      background: rgba(94,106,210,0.03);
+    }
+    td:first-child {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+    .check { color: var(--success); font-weight: bold; }
+    .cross { color: var(--danger); }
+    .partial { color: var(--warning); }
+
+    /* ========== TAGS / CHIPS ========== */
+    .tag {
+      display: inline-block;
+      padding: 3px 10px;
+      background: var(--accent-dim);
+      border-radius: 50px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--accent-light);
+      margin: 2px 4px 2px 0;
+    }
+    .tag.green { background: rgba(48,164,108,0.15); color: #30A46C; }
+    .tag.yellow { background: rgba(245,166,35,0.15); color: #F5A623; }
+    .tag.red { background: rgba(229,72,77,0.15); color: #E5484D; }
+    .tag.blue { background: rgba(59,130,246,0.15); color: #3B82F6; }
+
+    /* ========== CALLOUT ========== */
+    .callout {
+      background: var(--accent-dim);
+      border: 1px solid rgba(94,106,210,0.2);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius-sm);
+      padding: 20px 24px;
+      margin: 24px 0;
+    }
+    .callout.warning {
+      background: rgba(245,166,35,0.08);
+      border-color: rgba(245,166,35,0.2);
+      border-left-color: var(--warning);
+    }
+    .callout.success {
+      background: rgba(48,164,108,0.08);
+      border-color: rgba(48,164,108,0.2);
+      border-left-color: var(--success);
+    }
+    .callout .callout-title {
+      font-weight: 600;
+      font-size: 0.88rem;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .callout p {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+
+    /* ========== USE CASE LIST ========== */
+    .usecase-list {
+      counter-reset: usecase;
+    }
+    .usecase-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px 24px 24px 72px;
+      margin-bottom: 16px;
+      position: relative;
+      transition: var(--transition);
+    }
+    .usecase-item:hover {
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+    .usecase-item::before {
+      counter-increment: usecase;
+      content: counter(usecase, decimal-leading-zero);
+      position: absolute;
+      left: 24px;
+      top: 24px;
+      font-family: var(--font-en);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--accent);
+      opacity: 0.6;
+    }
+    .usecase-item h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .usecase-item p {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+
+    /* ========== COMPARISON DIAGRAM ========== */
+    .comparison-diagram {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin: 32px 0;
+    }
+    .comp-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      text-align: center;
+    }
+    .comp-box .comp-icon {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+    }
+    .comp-box h4 {
+      font-family: var(--font-en);
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .comp-box .comp-desc {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+    .comp-box .comp-tags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    /* ========== LINK CARDS ========== */
+    .link-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin: 24px 0;
+    }
+    .link-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      text-decoration: none;
+      color: inherit;
+      transition: var(--transition);
+      display: block;
+    }
+    .link-card:hover {
+      border-color: var(--accent);
+      box-shadow: var(--shadow-glow);
+      transform: translateY(-2px);
+    }
+    .link-card .link-label {
+      font-size: 0.72rem;
+      color: var(--accent);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+    .link-card .link-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .link-card .link-url {
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
+      word-break: break-all;
+    }
+
+    /* ========== FLOW DIAGRAM ========== */
+    .flow-diagram {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 32px 0;
+      padding: 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+    }
+    .flow-step {
+      background: var(--accent-dim);
+      border: 1px solid rgba(94,106,210,0.2);
+      border-radius: var(--radius-sm);
+      padding: 12px 20px;
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 500;
+      min-width: 130px;
+    }
+    .flow-step .step-icon {
+      font-size: 1.3rem;
+      margin-bottom: 4px;
+    }
+    .flow-arrow {
+      color: var(--accent);
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    /* ========== FOOTER ========== */
+    .footer {
+      padding: 48px 0;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    .footer p {
+      color: var(--text-tertiary);
+      font-size: 0.8rem;
+    }
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* ========== PROSE STYLES ========== */
+    .prose { max-width: 720px; }
+    .prose p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.9;
+      margin-bottom: 16px;
+    }
+    .prose strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .prose a {
+      color: var(--accent-light);
+      text-decoration: underline;
+      text-decoration-color: rgba(94,106,210,0.3);
+      text-underline-offset: 3px;
+    }
+    .prose a:hover { text-decoration-color: var(--accent); }
+    .prose h4 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin: 32px 0 12px;
+    }
+    .prose code {
+      background: var(--bg-code);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.83rem;
+      font-family: 'Fira Code', 'Consolas', monospace;
+      border: 1px solid var(--border);
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 1024px) {
+      .toc-nav { transform: translateX(-100%); }
+      .toc-nav.open { transform: translateX(0); }
+      .nav-toggle { display: block; }
+      .nav-overlay.open { display: block; }
+      .main-content { margin-left: 0; }
+      .hero h1 { font-size: 2.2rem; }
+      .container { padding: 0 24px; }
+    }
+    @media (max-width: 768px) {
+      .feature-grid,
+      .comparison-diagram,
+      .link-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero { padding: 80px 0 60px; }
+      .hero h1 { font-size: 1.8rem; }
+      .section { padding: 48px 0; }
+      .section-title { font-size: 1.4rem; }
+      .card { padding: 24px; }
+      .flow-diagram { flex-direction: column; }
+      .flow-arrow { transform: rotate(90deg); }
+      .hero .meta { flex-direction: column; gap: 12px; }
+      .theme-toggle { top: 14px; right: 14px; padding: 6px 12px; font-size: 0.78rem; }
+      table { font-size: 0.78rem; }
+      th, td { padding: 10px 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Theme Toggle Button -->
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="テーマ切り替え">
+    <span class="icon" id="theme-icon">🌙</span>
+    <span id="theme-label">Light</span>
+  </button>
+
+  <!-- Mobile Nav Toggle -->
+  <button class="nav-toggle" onclick="toggleNav()" aria-label="メニュー">☰</button>
+  <div class="nav-overlay" id="navOverlay" onclick="toggleNav()"></div>
+
+  <!-- Sidebar Navigation -->
+  <nav class="toc-nav" id="tocNav">
+    <div class="logo">
+      <h2>Gemini Code Assist<br>&amp; Jules Guide</h2>
+      <p>初心者のための完全ガイド — 2026年3月版</p>
+    </div>
+    <a href="#sec1"><span class="num">01</span>Gemini Code Assistとは</a>
+    <a href="#sec2"><span class="num">02</span>Julesとは</a>
+    <a href="#sec3"><span class="num">03</span>主な機能</a>
+    <a href="#sec4"><span class="num">04</span>基盤モデル</a>
+    <a href="#sec5"><span class="num">05</span>対応IDE</a>
+    <a href="#sec6"><span class="num">06</span>料金体系</a>
+    <a href="#sec7"><span class="num">07</span>Google Cloud連携</a>
+    <a href="#sec8"><span class="num">08</span>セキュリティ</a>
+    <a href="#sec9"><span class="num">09</span>ユースケース集</a>
+    <a href="#sec10"><span class="num">10</span>制限事項・注意点</a>
+    <a href="#sec11"><span class="num">11</span>他ツール比較</a>
+    <a href="#sec12"><span class="num">12</span>始め方ガイド</a>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-content">
+
+    <!-- ========== HERO ========== -->
+    <header class="hero" id="top">
+      <div class="container">
+        <div class="badge">✦ Comprehensive Guide — Updated March 2026</div>
+        <h1>
+          <span class="gradient">Gemini Code Assist</span><br>
+          &amp; Jules
+        </h1>
+        <p class="subtitle">
+          GoogleのAIコーディングアシスタント「Gemini Code Assist」と非同期AIコーディングエージェント「Jules」について、初心者向けに包括的に解説する完全ガイドです。概要から料金体系、セキュリティ、他ツール比較まで、開発者が知るべきすべてを網羅しています。
+        </p>
+        <div class="meta">
+          <div class="meta-item"><span class="dot"></span>全12章構成</div>
+          <div class="meta-item"><span class="dot"></span>比較表・図表付き</div>
+          <div class="meta-item"><span class="dot"></span>2026年3月最新</div>
+          <div class="meta-item"><span class="dot"></span>初心者対応</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ========== SECTION 1: Gemini Code Assistとは ========== -->
+    <section class="section" id="sec1">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-num">Section 01</div>
+          <h2 class="section-title">Gemini Code Assistとは</h2>
+          <p class="section-lead">Google が提供する AI パワードのコーディングアシスタント。Gemini の大規模言語モデルを活用し、ソフトウェア開発ライフサイクル全体を支援します。</p>
+        </div>
+
+        <div class="card accent-top">
+          <h3><span class="icon">🤖</span>概要</h3>
+          <div class="prose">
+            <p>Gemini Code Assist は、Google が提供する AI パワードのコーディングアシスタントです。もともと「Duet AI for Developers」として 2023 年に登場し、2024 年に Gemini Code Assist へと名称変更されました。Gemini 2.5 モデル（将来的には Gemini 3 も対応予定）を基盤として、IDE 上でのコード補完、チャットベースの対話的なコーディング支援、コード生成、テスト生成、デバッグ支援、コードレビューなど、開発者の生産性を飛躍的に向上させる多彩な機能を備えています。</p>
+            <p>個人開発者向けの無料版（Gemini Code Assist for individuals）から、チームや企業向けの Standard / Enterprise エディションまで、さまざまな規模の開発ニーズに対応しています。特筆すべきは、無料版でも月間 180,000 回のコード補完と、1 日あたり 240 回のチャットリクエストという非常に高い利用上限が設定されている点です。これは競合ツールと比較しても圧倒的に寛大な無料枠です。</p>
+          </div>
+        </div>
+
+        <div class="comparison-diagram">
+          <div class="comp-box">
+            <div class="comp-icon">💻</div>
+            <h4>IDE内アシスタント</h4>
+            <p class="comp-desc">VS Code、JetBrains、Android Studio で動作するAI補完・チャット・エージェントモード</p>
+            <div class="comp-tags">
+              <span class="tag">コード補完</span>
+              <span class="tag">チャット</span>
+              <span class="tag">Agent Mode</span>
+              <span class="tag">MCP</span>
+            </div>
+          </div>
+          <div class="comp-box">
+            <div class="comp-icon">☁️</div>
+            <h4>Google Cloud 統合</h4>
+            <p class="comp-desc">Firebase、BigQuery、Cloud Run、Apigee など Google Cloud サービス全体に AI 支援を拡張</p>
+            <div class="comp-tags">
+              <span class="tag green">Firebase</span>
+              <span class="tag green">BigQuery</span>
+              <span class="tag green">Cloud Run</span>
+              <span class="tag green">Apigee</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><span class="icon">📊</span>Google Cloud 統合のメリット</h3>
+          <div class="prose">
+            <p>Gemini Code Assist は単なる IDE プラグインではなく、Google Cloud エコシステム全体に深く統合されています。Standard エディション以上では Firebase でのモバイル・Web アプリ開発支援、BigQuery でのデータ分析支援（SQL 生成・最適化）、Cloud Run でのコード補完、Colab Enterprise でのノートブック支援、Database Studio での SQL クエリ生成など、クラウドサービス横断で AI アシスタンスを受けられます。</p>
+            <p>Enterprise エディションではさらに Apigee での API 管理支援、Application Integration での自動化フロー生成、Gemini Cloud Assist による Google Cloud コンソール全体での AI 支援（インフラ管理、診断、コスト最適化）が加わります。これにより、コーディングだけでなく、アプリケーションの設計・デプロイ・運用まで、SDLC（ソフトウェア開発ライフサイクル）全体をカバーする包括的な AI 支援が実現します。</p>
+          </div>
+        </div>
+
+        <div class="callout">
+          <div class="callout-title">💡 ポイント</div>
+          <p>Gemini Code Assist は 2025 年 10 月に従来の「ツール」方式が廃止され、より高度な「エージェントモード（Agent Mode）」に移行しました。エージェントモードでは、マルチステップの複雑なタスクを自律的に実行でき、MCP（Model Context Protocol）サーバーとの連携も可能です。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SECTION 2: Julesとは ========== -->
+    <section class="section" id="sec2">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-num">Section 02</div>
+          <h2 class="section-title">Julesとは</h2>
+          <p class="section-lead">Google Labs が開発した非同期 AI コーディングエージェント。GitHub と統合し、バックグラウンドで自律的にコーディングタスクを実行します。</p>
+        </div>
+
+        <div class="card accent-top">
+          <h3><span class="icon">⚡</span>Julesの概要</h3>
+          <div class="prose">
+            <p>Jules は、Google Labs が開発した<strong>非同期（asynchronous）</strong>の AI コーディングエージェントです。2024 年 12 月に限定プレビューとして初登場し、2025 年 5 月に Google I/O でパブリックベータ版が公開され、2025 年 8 月に正式にベータを卒業して一般提供（GA）が開始されました。Gemini Code Assist が IDE 内での対話型アシスタントであるのに対し、Jules はよりエージェンティックな存在として設計されています。</p>
+            <p>Jules の最大の特徴は「非同期性」です。開発者がタスクを指示すると、Jules はそれを Google Cloud 上のセキュアな仮想マシン（VM）にクローンされたリポジトリ上で自律的に実行します。開発者はその間、他の作業に集中でき、タスクが完了するとブラウザ通知で知らされます。Jules はコードの変更計画（プラン）を提示し、開発者の承認を得てから変更を適用します。変更結果は GitHub のプルリクエストとして提出されます。</p>
+          </div>
+        </div>
+
+        <!-- Flow Diagram: Jules Workflow -->
+        <div class="flow-diagram">
+          <div class="flow-step">
+            <div class="step-icon">📋</div>
+            タスク指示
+          </div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step">
+            <div class="step-icon">🔍</div>
+            プラン生成
+          </div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step">
+            <div class="step-icon">✅</div>
+            承認
+          </div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step">
+            <div class="step-icon">⚙️</div>
+            非同期実行
+          </div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step">
+            <div class="step-icon">🔀</div>
+            PR作成
+          </div>
+        </div>
+
+        <div class="feature-grid">
+          <div class="feature-card">
+            <div class="icon-box">🔗</div>
+            <h4>GitHub ネイティブ統合</h4>
+            <p>GitHub リポジトリに直接接続し、既存のワークフローの中で動作します。新しいツールを学ぶ必要はなく、いつもの Git フローで Jules の成果物を取り込めます。</p>
+          </div>
+          <div class="feature-card">
+            <div class="icon-box">🔄</div>
+            <h4>並列タスク実行</h4>
+            <p>複数のタスクを同時に実行可能です。各タスクは独立した Cloud VM 上で動作するため、互いに干渉しません。無料プランで 3 並列、Pro で 15 並列、Ultra で 60 並列まで対応します。</p>
+          </div>
+          <div class="feature-card">
+            <div class="icon-box">👁️</div>
+            <h4>透明なワークフロー</h4>
+            <p>コード変更前に必ず計画（プラン）と推論過程を提示します。開発者は実行前・実行中・実行後にプランを修正でき、コードベースの主導権を維持できます。</p>
+          </div>
+          <div class="feature-card">
+            <div class="icon-box">🎧</div>
+            <h4>音声チェンジログ</h4>
+            <p>最近のコミット内容を音声形式のチェンジログとして生成する機能を搭載。移動中やマルチタスク時にプロジェクトの変更履歴をオーディオで確認できます。</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><span class="icon">📄</span>AGENTS.md ファイル</h3>
+          <div class="prose">
+            <p>Jules はリポジトリのルートに配置された <code>AGENTS.md</code> ファイルを自動的に読み取ります。このファイルにプロジェクトの構造、コーディング規約、依存関係、ビルド手順などを記述しておくことで、Jules がより正確で文脈に適したプランやコードを生成するようになります。これは、新しいチームメンバーへのオンボーディングドキュメントのような役割を果たし、AI エージェントの出力品質を大幅に向上させます。</p>
+          </div>
+        </div>
+
+        <div class="callout">
+          <div class="callout-title">💡 Gemini Code Assist との違い</div>
+          <p><strong>Gemini Code Assist</strong> は IDE 内でリアルタイムに動作する対話型のアシスタント（Agent Mode 含む）であり、<strong>Jules</strong> はバックグラウンドで非同期に動作する自律型エージェントです。Gemini CLI は「ターミナルで今フォーカスしているタスクの協力者」、Jules は「背後で独立して動く自律的な相棒」と位置づけられています。両者は補完的な関係にあり、2025 年 10 月には Gemini CLI から Jules タスクを起動・管理できる Jules 拡張機能もリリースされました。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SECTION 3: 主な機能 ========== -->
+    <section class="section" id="sec3">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-num">Section 03</div>
+          <h2 class="section-title">主な機能</h2>
+          <p class="section-lead">Gemini Code Assist と Jules が提供する主要機能を詳しく解説します。</p>
+        </div>
+
+        <div class="card accent-top">
+          <h3><span class="icon">⌨️</span>コード補完と生成</h3>
+          <div class="prose">
+            <p>Gemini Code Assist のコード補完は、開発者がコードを書いている最中にリアルタイムで次に書くべきコードを提案する機能です。単なる行単位の補完ではなく、Gemini の大規模コンテキストウィンドウを活用して、現在のファイルだけでなくプロジェクト全体の文脈を理解した上で提案を行います。関数全体の生成、コードブロックの生成、コメントからのコード自動生成にも対応しています。</p>
+            <p>さらに「Next Edit Predictions（次の編集予測）」機能（プレビュー）では、開発者が次にどの箇所を編集しようとしているかを予測し、プロアクティブに提案を行います。これにより、繰り返しの編集作業（関数名のリネームに伴う複数箇所の修正など）を大幅に効率化できます。</p>
+            <p>無料版では月間 180,000 回のコード補完が利用可能で、これは 1 日あたり約 6,000 回に相当します。Standard / Enterprise ではさらに高い上限が設定されています。</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><span class="icon">💬</span>チャット &amp; 対話型アシスタント</h3>
+          <div class="prose">
+            <p>IDE 内のチャットパネルで、自然言語による対話形式でコーディング支援を受けられます。開いているファイルのコンテキストを自動的に認識し、コードの説明、デバッグ支援、リファクタリング提案、ユニットテスト生成などを行います。「Write unit tests for my code」「Help me debug my code」「Make my code more readable」といったプロンプトを入力するだけで、即座に実用的なレスポンスが返されます。</p>
+            <p>チャットでは<strong>ソースサイテーション（出典引用）</strong>機能も提供されます。Gemini が既存のオープンソースコードから長い引用を行った場合、その出典情報を明示し、ライセンス要件への準拠を支援します。</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><span class="icon">🤖</span>エージェントモード（Agent Mode）</h3>
+          <div class="prose">
+            <p>2025 年後半に導入されたエージェントモードは、Gemini Code Assist の最も強力な機能の一つです。従来の単純なコマンド＆レスポンス型のやり取りを超え、マルチステップの複雑なタスクを自律的に計画・実行する推論エージェントとして機能します。</p>
+            <p>開発者がゴールを記述すると、Gemini がまず詳細な計画を提案します。開発者がその計画を確認・承認した後、Gemini はシステムツール（ファイルの読み書き、ターミナル実行、grep など）や MCP サーバーを活用しながら、自律的にコード変更を行います。VS Code のエージェントモードは内部的に Gemini CLI のパワーを活用しており、IDE の使い慣れた UI から高度なエージェンティック操作が可能です。</p>
+            <p>MCP（Model Context Protocol）のサポートにより、外部ツールやサービスとの連携が拡張可能です。データベースクライアント、CI/CD パイプライン、ドキュメント検索システムなどを MCP サーバーとして接続し、エージェントモードから利用できます。</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><span class="icon">🔍</span>コードレビュー（GitHub 統合）</h3>
+          <div class="prose">
+            <p>Gemini Code Assist for GitHub は、GitHub Marketplace からインストール可能なアプリで、プルリクエストの自動レビューを提供します。PRが作成されると自動的にレビューが実行され、以下の機能が提供されます。</p>
+            <p><strong>PR サマリーの自動生成：</strong>変更内容の概要を自動的に要約し、レビュワーが変更の全体像を素早く把握できるようにします。<strong>インラインコードレビュー：</strong>個別のコード行に対して問題点の指摘やコミット可能な修正提案を行います。<strong>対話的なフィードバック：</strong>PRのコメント欄で <code>/gemini</code> タグを使って質問やフォローアップが可能です。カスタマイズ可能なレビューガイドラインを設定することで、チームのコーディング規約に沿ったレビューを行わせることもできます。</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><span class="icon">📟</span>Gemini CLI</h3>
+          <div class="prose">
+            <p>Gemini CLI は、2025 年 6 月にリリースされたオープンソース（Apache 2.0 ライセンス）のターミナルベース AI エージェントです。Gemini のパワーを直接ターミナルに持ち込み、コードの読み書き、デバッグ、タスクの自動化を行えます。VS Code 内のエージェントモードは Gemini CLI のサブセットとして動作しており、両者はシームレスに連携します。</p>
+            <p>主な機能として、大規模コードベースのクエリと編集、PDF・画像・スケッチからのアプリ生成（マルチモーダル機能）、Google 検索によるグラウンディング、MCP サーバーのサポート、メモリモジュール（<code>/memory</code> コマンド）、YOLO モード（確認なしの連続実行）などがあります。Cloud Shell にはプリインストールされているため、追加セットアップなしですぐに利用を開始できます。</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><span class="icon">✏️</span>スマートアクションとコマンド</h3>
+          <div class="prose">
+            <p>コードを選択して右クリックから呼び出せるスマートアクション（VS Code / JetBrains / Android Studio 対応）と、スラッシュコマンド <code>/</code> でトリガーするスマートコマンド（VS Code）が用意されています。これにより、テスト生成（<code>/tests</code>）、コード説明、ドキュメント生成、コード修正、リファクタリングなどの頻繁に使う操作を素早く実行できます。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SECTION 4: 基盤モデル ========== -->
+    <section class="section" id="sec4">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-num">Section 04</div>
+          <h2 class="section-title">基盤モデル</h2>
+          <p class="section-lead">Gemini Code Assist と Jules を支える AI モデルについて解説します。</p>
+        </div>
+
+        <div class="card accent-top">
+          <h3><span class="icon">🧠</span>Gemini 2.5 Pro</h3>
+          <div class="prose">
+            <p>Gemini Code Assist と Jules の中核を担うのが<strong>Gemini 2.5 Pro</strong>モデルです。Google DeepMind が開発したこのモデルは、100 万トークン以上のコンテキストウィンドウを持ち、大規模なコードベース全体を一度に理解・処理する能力を備えています。特にコーディングタスクにおいて、高度な推論能力（thinking capabilities）を発揮し、複雑なマルチファイル変更やアーキテクチャ設計の提案にも対応します。</p>
+            <p>Jules では Gemini 2.5 Pro の高度な思考能力を活用して、コーディング計画（プラン）を生成しています。これにより、単純なコード補完を超えた、プロジェクト全体の文脈を考慮した高品質なコード出力が可能になっています。</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><span class="icon">⚡</span>Gemini Flash &amp; 今後の展開</h3>
+          <div class="prose">
+            <p>コード補完などの低レイテンシが求められるタスクでは、<strong>Gemini Flash</strong>シリーズのモデルが使用されています。Flash モデルは Pro モデルに比べてレスポンスが高速で、リアルタイムのコード補完体験を実現するために最適化されています。</p>
+            <p>今後については、<strong>Gemini 3</strong> モデルの導入が予定されています。Jules の有料プラン（Pro / Ultra）では Gemini 3 Pro への優先アクセスが予告されており、さらに高品質なコーディング支援が期待されます。公式ページでも「Gemini 3 coming soon」と明記されており、Gemini Code Assist でも順次 Gemini 3 ベースに移行していく見込みです。</p>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>モデル</th>
+                <th>用途</th>
+                <th>コンテキスト</th>
+                <th>特徴</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Gemini 2.5 Pro</td>
+                <td>チャット / Agent Mode / Jules</td>
+                <td>1M+ トークン</td>
+                <td>高度な推論・思考能力。コード計画と複雑なタスクに最適</td>
+              </tr>
+              <tr>
+                <td>Gemini 2.5 Flash</td>
+                <td>コード補完 / 低レイテンシ処理</td>
+                <td>1M トークン</td>
+                <td>高速レスポンス。リアルタイム補完に最適化</td>
+              </tr>
+              <tr>
+                <td>Gemini 3 Pro（予定）</td>
+                <td>次世代チャット / Agent / Jules</td>
+                <td>未公表</td>
+                <td>Jules Pro/Ultra で優先アクセス予定</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SECTION 5: 対応IDE ========== -->
+    <section class="section" id="sec5">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-num">Section 05</div>
+          <h2 class="section-title">対応IDE・インターフェース</h2>
+          <p class="section-lead">Gemini Code Assist はマルチ IDE 対応。主要な開発環境をすべてカバーします。</p>
+        </div>
+
+        <div class="feature-grid">
+          <div class="feature-card">
+            <div class="icon-box">🟦</div>
+            <h4>Visual Studio Code</h4>
+            <p>最もフル機能が利用できる IDE。コード補完、チャット、Agent Mode、Gemini CLI 統合、MCP サーバー、スマートアクション・コマンドのすべてに対応。VS Code Marketplace からワンクリックでインストール可能です。</p>
+          </div>
+          <div class="feature-card">
+            <div class="icon-box">🟧</div>
+            <h4>JetBrains IDEs</h4>
+            <p>IntelliJ IDEA（Community / Educational / Ultimate）、PyCharm（Community / Professional）、WebStorm、GoLand、PhpStorm、Rider、RubyMine、CLion、DataGrip に対応。JetBrains Marketplace からプラグインをインストールして使用します。</p>
+          </div>
+          <div class="feature-card">
+            <div class="icon-box">🤖</div>
+            <h4>Android Studio</h4>
+            <p>Android 開発専用の Gemini 統合。コード補完・生成に加えて、変数・メソッド名の提案、Compose プレビュー作成、画像からの UI 構築、コミットメッセージ生成など、Android 特化の機能を多数搭載しています。</p>
+          </div>
+          <div class="feature-card">
+            <div class="icon-box">☁️</div>
+            <h4>Cloud Shell Editor / Cloud Workstations</h4>
+            <p>Google Cloud のブラウザベース開発環境。Cloud Shell には Gemini CLI がプリインストールされており、追加セットアップなしですぐに利用開始可能。Cloud Workstations でも Gemini Code Assist を利用できます。</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><span class="icon">🖥️</span>Gemini CLI（ターミナル）</h3>
+          <div class="prose">
+            <p>IDE を離れてターミナルで作業したい開発者向けに、Gemini CLI が用意されています。npm でインストールするか、Cloud Shell で直接利用できます。VS Code のエージェントモードと同じ Gemini CLI エンジンを使用しており、MCP サーバー、メモリ、Web 検索、ファイル操作、シェル実行などのツールを活用した高度なタスク実行が可能です。オープンソース（Apache 2.0）なので、カスタマイズや拡張も自由に行えます。</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><span class="icon">🌐</span>対応プログラミング言語</h3>
+          <div class="prose">
+            <p>Gemini Code Assist は「パブリックドメインにあるすべてのプログラミング言語」をサポートすると公式に謳っています。特に高品質なサポートが確認されている言語は、Bash、C、C++、C#、Dart、Go、Java、JavaScript、TypeScript、Kotlin、PHP、Python、Ruby、Rust、Swift などの主要言語です。さらにチャットインターフェースでは、日本語を含む多数の自然言語での対話にも対応しています。</p>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>IDE / インターフェース</th>
+                <th>コード補完</th>
+                <th>チャット</th>
+                <th>Agent Mode</th>
+                <th>Gemini CLI</th>
+                <th>MCP</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>VS Code</td>
+                <td><span class="check">✓</span></td>
+                <td><span class="check">✓</span></td>
+                <td><span class="check">✓</span></td>
+                <td><span class="check">✓</span></td>
+                <td><span class="check">✓</span></td>
+              </tr>
+              <tr>
+                <td>JetBrains IDEs</td>
+                <td><span class="check">✓</span></td>
+                <td><span class="check">✓</span></td>
+                <td><span class="check">✓</span></td>
+                <td>—</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td>Android Studio</td>
+                <td><span class="check">✓</span></td>
+                <td><span class="check">✓</span></td>
+                <td><span class="check">✓</span></td>
+                <td>—</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td>Cloud Shell Editor</td>
+                <td><span class="check">✓</span></td>
+                <td><span class="check">✓</span></td>
+                <td><span class="check">✓</span></td>
+                <td><span class="check">✓</span></td>
+                <td><span class="check">✓</span></td>
+              </tr>
+              <tr>
+                <td>ターミナル（Gemini CLI）</td>
+                <td>—</td>
+                <td><span class="check">✓</span></td>
+                <td><span class="check">✓</span></td>
+                <td><span class="check">✓</span></td>
+                <td><span class="check">✓</span></td>
+              </tr>
+              <tr>
+                <td>Jules（Web UI）</td>
+                <td>—</td>
+                <td>—</td>
+                <td>非同期エージェント</td>
+                <td>拡張経由</td>
+                <td>—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SECTION 6: 料金体系 ========== -->
+    <section class="section" id="sec6">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-num">Section 06</div>
+          <h2 class="section-title">料金体系</h2>
+          <p class="section-lead">Gemini Code Assist と Jules のプランと料金を詳しく解説します。</p>
+        </div>
+
+        <div class="card accent-top">
+          <h3><span class="icon">🆓</span>Gemini Code Assist 料金プラン</h3>
+          <div class="prose">
+            <p>Gemini Code Assist は 3 つのエディションで提供されています。個人開発者向けの無料版は、Google アカウントさえあれば誰でも利用開始でき、クレジットカードも不要です。チームや企業向けには Standard と Enterprise が用意されており、いずれも 30 日間の無料トライアル（最大 50 ユーザー）が利用可能です。</p>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>項目</th>
+                <th>For Individuals（無料）</th>
+                <th>Standard</th>
+                <th>Enterprise</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>料金</td>
+                <td><strong>$0</strong></td>
+                <td><strong>$19/月</strong>（年間契約）<br>$22.80/月（月契約）</td>
+                <td><strong>$45/月</strong>（年間契約）<br>$54/月（月契約）</td>
+              </tr>
+              <tr>
+                <td>コード補完/月</td>
+                <td>180,000 回</td>
+                <td>より高い上限</td>
+                <td>最大上限</td>
+              </tr>
+              <tr>
+                <td>チャット/日</td>
+                <td>240 回</td>
+                <td>より高い上限</td>
+                <td>最大上限</td>
+              </tr>
+              <tr>
+                <td>Agent Mode / CLI（日）</td>
+                <td>1,000 リクエスト</td>
+                <td>より高い上限</td>
+                <td>最大上限</td>
+              </tr>
+              <tr>
+                <td>対応 IDE</td>
+                <td><span class="check">✓</span> 全 IDE</td>
+                <td><span class="check">✓</span> 全 IDE</td>
+                <td><span class="check">✓</span> 全 IDE</td>
+              </tr>
+              <tr>
+                <td>Agent Mode / MCP</td>
+                <td><span class="check">✓</span></td>
+                <td><span class="check">✓</span></td>
+                <td><span class="check">✓</span></td>
+              </tr>
+              <tr>
+                <td>IP 補償（Indemnification）</td>
+                <td><span class="cross">✗</span></td>
+                <td><span class="check">✓</span></td>
+                <td><span class="check">✓</span></td>
+              </tr>
+              <tr>
+                <td>VPC-SC 対応</td>
+                <td><span class="cross">✗</span></td>
+                <td><span class="check">✓</span></td>
+                <td><span class="check">✓</span></td>
+              </tr>
+              <tr>
+                <td>コードカスタマイズ</td>
+                <td><span class="cross">✗</span></td>
+                <td><span class="cross">✗</span></td>
+                <td><span class="check">✓</span></td>
+              </tr>
+              <tr>
+                <td>Gemini Cloud Assist</td>
+                <td><span class="cross">✗</span></td>
+                <td><span class="cross">✗</span></td>
+                <td><span class="check">✓</span></td>
+              </tr>
+              <tr>
+                <td>Firebase / BigQuery / Colab</td>
+                <td>基本機能</td>
+                <td><span class="check">✓</span></td>
+                <td><span class="check">✓</span></td>
+              </tr>
+              <tr>
+                <td>Apigee / Application Integration</td>
+                <td><span class="cross">✗</span></td>
+                <td><span class="cross">✗</span></td>
+                <td><span class="check">✓</span></td>
+              </tr>
+              <tr>
+                <td>30 日間無料トライアル</td>
+                <td>—</td>
+                <td><span class="check">✓</span></td>
+                <td><span class="check">✓</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h3><span class="icon">⚡</span>Jules 料金プラン</h3>
+          <div class="prose">
+            <p>Jules の料金は Google AI Plans（Google AI Pro / Google AI Ultra）に紐づいています。個人向けの無料プランに加え、Google AI Pro サブスクリプション（$19.99/月）に含まれる Jules in Pro、Google AI Ultra サブスクリプション（$124.99/月）に含まれる Jules in Ultra があります。なお、現時点では有料プランは個人 Google アカウント（@gmail.com）のみに対応しており、ビジネス/Workspace アカウント向けの対応は準備中です。</p>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>項目</th>
+                <th>Jules（無料）</th>
+                <th>Jules in Pro</th>
+                <th>Jules in Ultra</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>料金</td>
+                <td><strong>$0</strong></td>
+                <td><strong>$19.99/月</strong>（AI Pro プラン）</td>
+                <td><strong>$124.99/月</strong>（AI Ultra プラン）</td>
+              </tr>
+              <tr>
+                <td>1 日のタスク上限（24h ローリング）</td>
+                <td>15 タスク</td>
+                <td>100 タスク</td>
+                <td>300 タスク</td>
+              </tr>
+              <tr>
+                <td>同時実行タスク</td>
+                <td>3 タスク</td>
+                <td>15 タスク</td>
+                <td>60 タスク</td>
+              </tr>
+              <tr>
+                <td>モデルアクセス</td>
+                <td>Gemini 2.5 Pro</td>
+                <td>最新モデル優先<br>（Gemini 3 Pro 予定）</td>
+                <td>最新モデル最優先<br>（Gemini 3 Pro 予定）</td>
+              </tr>
+              <tr>
+                <td>対象アカウント</td>
+                <td>全 Google アカウント</td>
+                <td>@gmail.com のみ</td>
+                <td>@gmail.com のみ</td>
+              </tr>
+              <tr>
+                <td>最適な用途</td>
+                <td>評価・個人利用</td>
+                <td>日常的な開発業務</td>
+                <td>大規模・マルチエージェント</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout warning">
+          <div class="callout-title">⚠️ 注意事項</div>
+          <p>Gemini Code Assist の Standard / Enterprise は Google Cloud の法人向けプロダクトとして課金されます。一方、Jules の有料プランは Google AI Plans（旧 Google One）の個人向けサブスクリプションに含まれる形で提供されています。両者は別々の課金体系であるため、混同しないようご注意ください。また、Google AI Pro / Ultra プランには Jules 以外にも Gemini アプリ、Google フォト、ストレージなどの特典が含まれます。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SECTION 7: Google Cloud連携 ========== -->
+    <section class="section" id="sec7">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-num">Section 07</div>
+          <h2 class="section-title">Google Cloud・Firebase・Android Studio 連携</h2>
+          <p class="section-lead">Google のエコシステム全体にわたる AI 支援の統合を詳しく解説します。</p>
+        </div>
+
+        <div class="card accent-top">
+          <h3><span class="icon">🔥</span>Firebase 連携</h3>
+          <div class="prose">
+            <p>Firebase では「Gemini in Firebase」として、Firebase コンソール内で AI アシスタンスが利用できます。Firebase プロダクトに関する深い知識、ベストプラクティス、トラブルシューティングの専門知識を活用した対話型支援のほか、コードの生成・リファクタリング・デバッグを自然言語で行えます。</p>
+            <p>Crashlytics との連携ではアプリクラッシュの要約・分析・トラブルシューティング手順の提案が行われ、Cloud Messaging / In-App Messaging ではキャンペーンの要約・分析・パフォーマンス改善の提案が可能です。Data Connect ではスキーマの自然言語生成や GraphQL クエリ・ミューテーションの生成に対応しています。</p>
+            <p>さらに Firebase Studio（旧 Project IDX）では、Gemini Code Assist のエージェント機能が統合されたフルスタックのクラウド開発環境が提供されています。ブラウザから直接、Gemini の AI 支援を受けながらアプリケーション開発を行えます。</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><span class="icon">📱</span>Android Studio 連携</h3>
+          <div class="prose">
+            <p>Android Studio では「Gemini in Android Studio」として、Android 開発に特化した AI 支援が提供されています。コード補完・生成・変換に加えて、変数・メソッド・クラスの命名提案、コードドキュメント生成、コミットメッセージ作成、Jetpack Compose プレビューの作成、画像からの UI 構築などの Android 開発特有の機能を備えています。</p>
+            <p>企業向けには「Gemini in Android Studio for businesses」として、法人のプライバシー・セキュリティ・管理ニーズに対応した構成も提供されています。これは Gemini Code Assist Standard / Enterprise のライセンスで利用可能です。</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><span class="icon">📊</span>BigQuery 連携</h3>
+          <div class="prose">
+            <p>BigQuery Studio では、自然言語から SQL を生成する機能、SQL の説明・補完・最適化機能、スキーマを考慮したコンテキスチュアルなコード生成が利用できます。Python コードの生成・補完にも対応しており、Data Canvas や Data Preparation などの基本的な AI 機能は追加費用なしで全 BigQuery エディションで利用可能です。</p>
+            <p>Standard / Enterprise ライセンスでは、テーブルのメタデータから自動的にインサイト（分析クエリのライブラリ）を生成する Data Insights や、自動メタデータ生成などの高度な機能が追加されます。</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><span class="icon">🔗</span>その他の Google Cloud 連携</h3>
+          <div class="prose">
+            <p><strong>Cloud Run：</strong>Cloud Run のソースエディタ内でコード補完が利用でき、現在のコンテキストに関連するコード提案を受けられます。<strong>Colab Enterprise：</strong>ノートブック内で Python コードの生成・補完が可能で、データサイエンスやML ワークフローを加速します。<strong>Database Studio：</strong>自然言語から SQL を生成し、スキーマ対応のコード補完、クエリの最適化・説明を行います。</p>
+            <p><strong>Apigee（Enterprise のみ）：</strong>API 仕様の設計・作成をエンタープライズコンテキストを使って加速します。API Hub でのスマート検索やポリシーの説明機能も備えています。<strong>Application Integration（Enterprise のみ）：</strong>自動化フローの AI 支援ビジュアルエディタ、コンテキストを埋め込んだ自動化作成支援、ドキュメント生成・改善を提供します。<strong>Gemini Cloud Assist（Enterprise のみ）：</strong>Google Cloud コンソール全体で Infrastructure as Code の生成、診断・調査、コスト最適化、IAM 支援などの高度な AI 支援を提供します。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SECTION 8: セキュリティ ========== -->
+    <section class="section" id="sec8">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-num">Section 08</div>
+          <h2 class="section-title">セキュリティ・プライバシー</h2>
+          <p class="section-lead">企業が安心して導入できるセキュリティ体制とデータガバナンスを解説します。</p>
+        </div>
+
+        <div class="card accent-top">
+          <h3><span class="icon">🔒</span>データプライバシー</h3>
+          <div class="prose">
+            <p>Gemini Code Assist の Standard / Enterprise エディションは、Google のAI/ML プライバシーコミットメントに準拠しています。最も重要なポイントとして、<strong>ユーザーのプロンプト（入力）やレスポンス（出力）がモデルのトレーニングデータとして使用されることはありません</strong>。Google Cloud の利用規約と Cloud Data Processing Addendum（CDPA）に基づいたデータ処理が行われます。</p>
+            <p>Jules についても、<strong>プライベートコードでモデルのトレーニングは行われず、データは実行環境内で隔離されます</strong>。プライバシーバイデフォルトの設計思想が徹底されています。</p>
+          </div>
+        </div>
+
+        <div class="feature-grid">
+          <div class="feature-card">
+            <div class="icon-box">🔐</div>
+            <h4>暗号化</h4>
+            <p>プロンプトは転送時に暗号化され（encryption in-transit）、保存時にもデフォルト暗号化（encryption at-rest）が適用されます。Google Cloud の堅牢な暗号化インフラを活用します。</p>
+          </div>
+          <div class="feature-card">
+            <div class="icon-box">🛡️</div>
+            <h4>IP 補償（Indemnification）</h4>
+            <p>Standard / Enterprise エディションでは、Google が生成 AI の知的財産に関する法的リスクを引き受ける IP 補償を提供。トレーニングデータと生成コードの両面で保護されます。</p>
+          </div>
+          <div class="feature-card">
+            <div class="icon-box">🌐</div>
+            <h4>VPC-SC 対応</h4>
+            <p>Standard / Enterprise エディションでは VPC Service Controls と Private Google Access に対応。ネットワーク境界を設定して、データの流出リスクを最小化できます。</p>
+          </div>
+          <div class="feature-card">
+            <div class="icon-box">📋</div>
+            <h4>ソースサイテーション</h4>
+            <p>既存のオープンソースコードから長い引用がある場合、出典情報を自動的に提示。ライセンスコンプライアンスへの対応を支援します。</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><span class="icon">🏢</span>Enterprise セキュリティ機能</h3>
+          <div class="prose">
+            <p>Enterprise エディションのコードカスタマイズ機能では、組織のプライベートコードリポジトリ（GitHub、GitLab、Bitbucket）にアクセスしてカスタマイズされた提案を生成しますが、このアクセスと保存はサービス提供に必要な範囲に限定されます。管理者は IAM（Identity and Access Management）を通じてアクセス制御を行い、組織レベルでの有効化・無効化の管理が可能です。</p>
+            <p>Gemini Code Assist は複数のコンプライアンス認証にも対応しており、企業の規制要件（HIPAA、FedRAMP 等）への準拠を支援する体制が整っています。ただし、生成されたコードのセキュリティ、テスト、有効性については、最終的にはユーザー（開発者）が責任を持つ必要があります。</p>
+          </div>
+        </div>
+
+        <div class="callout success">
+          <div class="callout-title">✅ Jules のセキュリティ</div>
+          <p>Jules は Google Cloud VM 上のセキュアな環境でコードをクローン・実行します。実行環境はタスクごとに隔離され、プライベートコードがモデルのトレーニングに使用されることはありません。すべての変更は GitHub 上のプルリクエストとして提出されるため、既存のコードレビュー・CI/CD パイプラインを通じた品質管理が維持されます。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SECTION 9: ユースケース集 ========== -->
+    <section class="section" id="sec9">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-num">Section 09</div>
+          <h2 class="section-title">ユースケース集（10選）</h2>
+          <p class="section-lead">Gemini Code Assist と Jules の実践的な活用シナリオを紹介します。</p>
+        </div>
+
+        <div class="usecase-list">
+          <div class="usecase-item">
+            <h4>ユニットテストの自動生成</h4>
+            <p>既存のコードに対してユニットテストを自動生成する最も一般的なユースケースです。Jules にリポジトリを接続し、「Add tests for the parseQueryString function in utils.js」のようにタスクを指示すると、関数の仕様を理解した上でテストコードを生成し、PR として提出します。Gemini Code Assist のチャットやスマートアクションからも同様の操作が可能です。</p>
+          </div>
+          <div class="usecase-item">
+            <h4>バグの自動修正</h4>
+            <p>GitHub Issues に報告されたバグを Jules に割り当て、原因の特定から修正コードの作成までを自動化できます。Jules はコードベース全体を理解した上で変更計画を立て、修正パッチを PR として提出します。開発者はプランの確認と PR のレビューに集中できます。</p>
+          </div>
+          <div class="usecase-item">
+            <h4>依存関係のアップデート</h4>
+            <p>Node.js、Python、Java などのプロジェクトで、依存ライブラリのバージョンアップに伴うコード変更を Jules に任せることができます。バージョンバンプだけでなく、破壊的変更への対応コードの修正も含めて自動的に処理します。</p>
+          </div>
+          <div class="usecase-item">
+            <h4>コードのドキュメント追加</h4>
+            <p>ドキュメントが不足しているコードベースに対して、関数・クラス・モジュールの JSDoc / docstring / README を自動生成します。Jules に「Add comprehensive JSDoc comments to all exported functions in the src/utils directory」と指示するだけで、プロジェクト全体のドキュメント品質を一括で向上させられます。</p>
+          </div>
+          <div class="usecase-item">
+            <h4>新機能の実装</h4>
+            <p>既存のコードベースのアーキテクチャとパターンを理解した上で、新しい機能を実装します。たとえば「Add a dark mode toggle to the settings page that persists user preference in localStorage」のような具体的な指示を与えることで、既存のデザインパターンに沿った実装コードを生成します。</p>
+          </div>
+          <div class="usecase-item">
+            <h4>コードリファクタリング</h4>
+            <p>レガシーコードの近代化やパフォーマンス改善を行います。Gemini Code Assist のエージェントモードで「Refactor this module to use async/await instead of callbacks」と指示すると、ファイル全体を横断した整合性のあるリファクタリングを実行します。</p>
+          </div>
+          <div class="usecase-item">
+            <h4>PR の自動レビュー</h4>
+            <p>GitHub に Gemini Code Assist アプリをインストールすることで、すべての PR に対して自動的にサマリー生成とコードレビューを実行します。バグの潜在リスク、パフォーマンス問題、コーディングスタイルの不整合などを検出し、修正提案を行います。</p>
+          </div>
+          <div class="usecase-item">
+            <h4>データベース操作の効率化</h4>
+            <p>BigQuery や Database Studio で自然言語から SQL クエリを生成し、スキーマを考慮した最適なクエリを提案します。「Show me the top 10 customers by revenue in the last quarter, grouped by region」のような自然言語からクエリを即座に生成します。</p>
+          </div>
+          <div class="usecase-item">
+            <h4>API の設計・開発</h4>
+            <p>Enterprise エディションの Apigee 統合を活用し、API 仕様（OpenAPI）の設計・作成を AI で加速します。自然言語で API の要件を記述すると、仕様ファイルの自動生成、ポリシーの適用提案、テストケースの生成までを支援します。</p>
+          </div>
+          <div class="usecase-item">
+            <h4>モバイルアプリの UI 構築</h4>
+            <p>Android Studio の Gemini 統合を活用し、画像やスケッチから Jetpack Compose の UI コードを生成します。デザインカンプの画像をアップロードするだけで、対応する Compose コンポーネントのコードが生成されるため、デザインから実装への変換を劇的に高速化できます。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SECTION 10: 制限事項 ========== -->
+    <section class="section" id="sec10">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-num">Section 10</div>
+          <h2 class="section-title">制限事項・注意点</h2>
+          <p class="section-lead">導入前に知っておくべき制限事項と注意点を整理します。</p>
+        </div>
+
+        <div class="card accent-top">
+          <h3><span class="icon">⚠️</span>Gemini Code Assist の制限事項</h3>
+          <div class="prose">
+            <p><strong>出力の正確性：</strong>Gemini Code Assist は初期段階の技術であり、もっともらしいが事実上正しくないコードや情報を生成する可能性があります。Google 公式も「すべての出力を使用前に検証することを推奨」と明記しています。生成されたコードのセキュリティ・テスト・有効性はユーザーの責任です。</p>
+            <p><strong>利用上限：</strong>無料版では月間 180,000 回のコード補完（日あたり約 6,000 回）、日あたり 240 回のチャット、Agent Mode / CLI は日あたり 1,000 リクエストという上限があります。活発な開発者では、特に Agent Mode の上限に達する可能性があります。</p>
+            <p><strong>エージェントモードの制約：</strong>2025 年 10 月以降、従来の「ツール」方式は廃止されエージェントモードに移行しましたが、エージェントモードはまだプレビュー段階です。複雑なタスクでは意図しない変更が行われるリスクがあり、慎重なレビューが必要です。</p>
+            <p><strong>コードカスタマイズの制約：</strong>プライベートリポジトリに基づくコード提案のカスタマイズは Enterprise エディションのみの機能です。Standard や無料版では組織固有のコーディングパターンは反映されません。</p>
+            <p><strong>言語・フレームワークの偏り：</strong>主要言語（Python、JavaScript、TypeScript、Go、Java 等）では高品質な提案が得られますが、マイナー言語やニッチなフレームワークでは提案の品質が低下する場合があります。</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><span class="icon">⚠️</span>Jules の制限事項</h3>
+          <div class="prose">
+            <p><strong>GitHub 限定：</strong>Jules は現時点で GitHub リポジトリのみに対応しています。GitLab、Bitbucket、Azure DevOps などの他のリポジトリホスティングサービスには対応していません。</p>
+            <p><strong>地域制限：</strong>Jules は Gemini モデルが利用可能な地域でのみ使用できます。一部の国・地域ではアクセスが制限されています。</p>
+            <p><strong>有料プランのアカウント制限：</strong>有料プラン（Pro / Ultra）は現時点で個人 Google アカウント（@gmail.com）のみ対応です。企業の Workspace アカウントからのアップグレードパスは現在準備中です。</p>
+            <p><strong>タスクの複雑性：</strong>非常に大規模なリファクタリングやアーキテクチャレベルの変更では、Jules が適切な計画を立てられない場合があります。また、環境変数やシークレットへのアクセスが制限されるため、外部サービスとの統合テストが必要なタスクには向きません。</p>
+            <p><strong>年齢制限：</strong>Jules を利用するには 18 歳以上である必要があります。Google One ファミリープランの 18 歳未満のメンバーは、プランが有効であっても Jules にアクセスできません。</p>
+            <p><strong>タスク上限：</strong>無料プランでは 1 日 15 タスク（同時 3 タスク）と限定的です。日常的な開発には Pro プラン以上への加入が実質的に必要になります。</p>
+          </div>
+        </div>
+
+        <div class="callout warning">
+          <div class="callout-title">⚠️ 重要な注意事項</div>
+          <p>AI が生成したコードは必ず人間がレビューしてください。特にセキュリティに関わるコード（認証・認可・暗号化・入力バリデーション等）については、AI の提案をそのまま採用せず、セキュリティの専門知識に基づいた検証を行うことが極めて重要です。また、ライセンスコンプライアンスについても、ソースサイテーション機能を活用しつつ、最終的な確認はユーザーが行う必要があります。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SECTION 11: 他ツール比較 ========== -->
+    <section class="section" id="sec11">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-num">Section 11</div>
+          <h2 class="section-title">他ツール比較</h2>
+          <p class="section-lead">GitHub Copilot、Cursor、Claude Code、OpenAI Codex などの主要 AI コーディングツールとの比較です。</p>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>項目</th>
+                <th>Gemini Code Assist</th>
+                <th>GitHub Copilot</th>
+                <th>Cursor</th>
+                <th>Claude Code</th>
+                <th>OpenAI Codex</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>提供元</td>
+                <td>Google</td>
+                <td>GitHub / Microsoft</td>
+                <td>Anysphere</td>
+                <td>Anthropic</td>
+                <td>OpenAI</td>
+              </tr>
+              <tr>
+                <td>基盤モデル</td>
+                <td>Gemini 2.5 Pro/Flash</td>
+                <td>GPT-4o / Claude 等</td>
+                <td>Claude / GPT 等選択</td>
+                <td>Claude Opus / Sonnet</td>
+                <td>codex-1（o3 ベース）</td>
+              </tr>
+              <tr>
+                <td>動作形態</td>
+                <td>IDE 拡張 + CLI + Web</td>
+                <td>IDE 拡張 + CLI</td>
+                <td>専用 IDE（VS Code fork）</td>
+                <td>CLI（ターミナル）</td>
+                <td>ChatGPT 内 Web UI</td>
+              </tr>
+              <tr>
+                <td>非同期エージェント</td>
+                <td><span class="check">✓</span> Jules</td>
+                <td><span class="check">✓</span> Copilot Coding Agent</td>
+                <td><span class="partial">△</span> Background Agent</td>
+                <td><span class="cross">✗</span></td>
+                <td><span class="check">✓</span> Codex（クラウド）</td>
+              </tr>
+              <tr>
+                <td>無料プラン</td>
+                <td><span class="check">✓</span>（180K 補完/月）</td>
+                <td><span class="check">✓</span>（2K 補完/月）</td>
+                <td><span class="check">✓</span>（制限付き）</td>
+                <td><span class="cross">✗</span>（API 課金）</td>
+                <td><span class="check">✓</span>（ChatGPT Free 内）</td>
+              </tr>
+              <tr>
+                <td>個人有料</td>
+                <td>$0（無料で高機能）</td>
+                <td>$10/月</td>
+                <td>$20/月</td>
+                <td>$20/月（Pro）〜$200/月</td>
+                <td>$20/月（Plus）〜$200/月</td>
+              </tr>
+              <tr>
+                <td>企業向け</td>
+                <td>$19〜$45/月/ユーザー</td>
+                <td>$19〜$39/月/ユーザー</td>
+                <td>$40/月/ユーザー</td>
+                <td>API ベース従量課金</td>
+                <td>$30/月〜（Business）</td>
+              </tr>
+              <tr>
+                <td>コンテキスト</td>
+                <td>1M+ トークン</td>
+                <td>約 128K トークン</td>
+                <td>モデル依存（最大 200K）</td>
+                <td>最大 200K トークン</td>
+                <td>約 200K トークン</td>
+              </tr>
+              <tr>
+                <td>クラウド統合</td>
+                <td><span class="check">✓</span> Google Cloud 深度統合</td>
+                <td><span class="check">✓</span> Azure / GitHub</td>
+                <td><span class="cross">✗</span></td>
+                <td><span class="cross">✗</span></td>
+                <td><span class="partial">△</span> ChatGPT エコシステム</td>
+              </tr>
+              <tr>
+                <td>コードレビュー</td>
+                <td><span class="check">✓</span> GitHub PR 自動レビュー</td>
+                <td><span class="check">✓</span> GitHub PR レビュー</td>
+                <td><span class="cross">✗</span></td>
+                <td><span class="cross">✗</span></td>
+                <td><span class="check">✓</span>（PR 提出可能）</td>
+              </tr>
+              <tr>
+                <td>MCP サポート</td>
+                <td><span class="check">✓</span></td>
+                <td><span class="check">✓</span></td>
+                <td><span class="check">✓</span></td>
+                <td><span class="check">✓</span></td>
+                <td><span class="cross">✗</span></td>
+              </tr>
+              <tr>
+                <td>IP 補償</td>
+                <td><span class="check">✓</span>（Standard 以上）</td>
+                <td><span class="check">✓</span>（Business 以上）</td>
+                <td><span class="cross">✗</span></td>
+                <td><span class="cross">✗</span></td>
+                <td><span class="check">✓</span>（Enterprise）</td>
+              </tr>
+              <tr>
+                <td>オープンソース</td>
+                <td><span class="partial">△</span> Gemini CLI のみ</td>
+                <td><span class="cross">✗</span></td>
+                <td><span class="cross">✗</span></td>
+                <td><span class="cross">✗</span></td>
+                <td><span class="cross">✗</span></td>
+              </tr>
+              <tr>
+                <td>強み</td>
+                <td>無料枠の大きさ、Google Cloud 統合、大コンテキスト</td>
+                <td>GitHub 統合の深さ、補完精度、広い IDE 対応</td>
+                <td>Composer のマルチファイル編集、モデル選択の柔軟性</td>
+                <td>推論品質、コード理解の深さ、ワークスペース操作</td>
+                <td>ChatGPT エコシステム、非同期エージェント</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h3><span class="icon">📊</span>選び方のポイント</h3>
+          <div class="prose">
+            <p><strong>Google Cloud ユーザーなら Gemini Code Assist が最適です。</strong>Firebase、BigQuery、Cloud Run などとのネイティブ統合は他のツールでは得られないアドバンテージです。また、無料枠の大きさ（月間 180,000 コード補完）は個人開発者にとって最もコストパフォーマンスの高い選択肢となります。</p>
+            <p><strong>GitHub ヘビーユーザーには GitHub Copilot が依然として強力です。</strong>GitHub との統合の深さは他ツールを凌駕しており、Issues からの自動 PR 作成、コードレビュー、セキュリティスキャンなど GitHub エコシステム全体との連携が充実しています。</p>
+            <p><strong>モデルの柔軟な選択と高度なマルチファイル編集を求めるなら Cursor です。</strong>VS Code のフォークとして独自 IDE を提供し、Claude、GPT、Gemini など複数のモデルを切り替えて使える柔軟性が魅力です。Composer によるマルチファイル一括編集は評価が高い機能です。</p>
+            <p><strong>ターミナル中心のワークフローで最高の推論品質を求めるなら Claude Code です。</strong>Claude の強力な推論能力を活かし、コードベースの深い理解に基づいた高品質なコード生成が可能です。ワークスペースへの直接アクセスと編集能力も優れています。</p>
+            <p><strong>複数のツールを組み合わせることも有効な戦略です。</strong>たとえば、日常の IDE コーディングには Gemini Code Assist（無料）、PR レビューにも Gemini Code Assist for GitHub、非同期タスクには Jules、特に難しい設計判断には Claude Code や ChatGPT を使う、といった組み合わせが実践的です。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SECTION 12: 始め方ガイド ========== -->
+    <section class="section" id="sec12">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-num">Section 12</div>
+          <h2 class="section-title">始め方ガイド・参考リンク</h2>
+          <p class="section-lead">Gemini Code Assist と Jules を今すぐ始めるためのステップバイステップガイドと参考リソースです。</p>
+        </div>
+
+        <div class="card accent-top">
+          <h3><span class="icon">🚀</span>Gemini Code Assist（無料版）の始め方</h3>
+          <div class="prose">
+            <p><strong>ステップ 1：</strong>VS Code または JetBrains IDE を用意します。VS Code の場合は VS Code Marketplace で「Gemini Code Assist」を検索し、拡張機能をインストールします。JetBrains IDE の場合は JetBrains Marketplace からプラグインをインストールします。</p>
+            <p><strong>ステップ 2：</strong>IDE の Gemini アイコンをクリックし、Google アカウントでサインインします。個人の Gmail アカウントであれば、追加費用なく「Gemini Code Assist for individuals」が利用可能です。</p>
+            <p><strong>ステップ 3：</strong>プロジェクトを開き、コードを書き始めます。入力中に自動的にコード補完候補が表示されます。Tab キーで候補を受け入れ、Esc キーで候補を無視します。チャットパネルを開いて自然言語で質問することもできます。</p>
+            <p><strong>ステップ 4（オプション）：</strong>エージェントモードを使うには、チャットパネルで複雑なタスクを記述します。Gemini が計画を提案し、承認後に自律的にコード変更を実行します。</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><span class="icon">⚡</span>Jules の始め方</h3>
+          <div class="prose">
+            <p><strong>ステップ 1：</strong><a href="https://jules.google.com/" target="_blank" rel="noopener">jules.google.com</a> にアクセスし、Google アカウントでサインインします。初回はプライバシーに関する通知に同意する必要があります。</p>
+            <p><strong>ステップ 2：</strong>「Connect to GitHub account」をクリックし、GitHub アカウントを連携します。ログインフローを完了し、Jules にアクセスさせるリポジトリ（全リポジトリまたは特定のリポジトリ）を選択します。</p>
+            <p><strong>ステップ 3：</strong>リポジトリセレクターからリポジトリを選び、作業対象のブランチを選択し、プロンプト入力欄にタスクを記述します。たとえば「Add a test for the parseQueryString function in utils.js」のように具体的に書きます。</p>
+            <p><strong>ステップ 4：</strong>「Give me a plan」をクリックすると、Jules が実行計画を生成します。計画を確認・承認すると、Jules がバックグラウンドでタスクを実行します。実行中は自由に他の作業を進められます。</p>
+            <p><strong>ステップ 5：</strong>タスク完了時にブラウザ通知が届きます。結果を確認し、問題なければ Jules が作成した PR をマージします。</p>
+            <p><strong>プロのヒント：</strong>リポジトリのルートに <code>AGENTS.md</code> ファイルを配置し、プロジェクトの構造や規約を記述しておくと、Jules の出力品質が大幅に向上します。</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><span class="icon">📟</span>Gemini CLI の始め方</h3>
+          <div class="prose">
+            <p>Gemini CLI は npm でインストールできます。ターミナルで <code>npm install -g @anthropic-ai/gemini-cli</code> ではなく、正しくは <code>npx https://github.com/google-gemini/gemini-cli</code> またはドキュメントに従って <code>npm install -g @google/gemini-cli</code> でインストールします。Google Cloud Shell を使っている場合はプリインストール済みです。初回起動時に Google アカウントでの認証が求められます。認証後、ターミナル上で自然言語でコーディングタスクを指示できます。</p>
+          </div>
+        </div>
+
+        <div class="link-grid">
+          <a href="https://codeassist.google/" target="_blank" rel="noopener" class="link-card">
+            <div class="link-label">公式サイト</div>
+            <div class="link-title">Gemini Code Assist トップページ</div>
+            <div class="link-url">codeassist.google</div>
+          </a>
+          <a href="https://developers.google.com/gemini-code-assist/docs/overview" target="_blank" rel="noopener" class="link-card">
+            <div class="link-label">ドキュメント</div>
+            <div class="link-title">Gemini Code Assist 概要ドキュメント</div>
+            <div class="link-url">developers.google.com/gemini-code-assist/docs/overview</div>
+          </a>
+          <a href="https://jules.google.com/" target="_blank" rel="noopener" class="link-card">
+            <div class="link-label">Jules</div>
+            <div class="link-title">Jules — 非同期 AI コーディングエージェント</div>
+            <div class="link-url">jules.google.com</div>
+          </a>
+          <a href="https://jules.google/docs/" target="_blank" rel="noopener" class="link-card">
+            <div class="link-label">Jules ドキュメント</div>
+            <div class="link-title">Jules Getting Started ガイド</div>
+            <div class="link-url">jules.google/docs</div>
+          </a>
+          <a href="https://github.com/google-gemini/gemini-cli" target="_blank" rel="noopener" class="link-card">
+            <div class="link-label">GitHub</div>
+            <div class="link-title">Gemini CLI（オープンソース）</div>
+            <div class="link-url">github.com/google-gemini/gemini-cli</div>
+          </a>
+          <a href="https://cloud.google.com/products/gemini/pricing" target="_blank" rel="noopener" class="link-card">
+            <div class="link-label">料金</div>
+            <div class="link-title">Gemini for Google Cloud 料金ページ</div>
+            <div class="link-url">cloud.google.com/products/gemini/pricing</div>
+          </a>
+          <a href="https://developers.google.com/gemini-code-assist/docs/data-governance" target="_blank" rel="noopener" class="link-card">
+            <div class="link-label">プライバシー</div>
+            <div class="link-title">データガバナンス・プライバシーポリシー</div>
+            <div class="link-url">developers.google.com/.../data-governance</div>
+          </a>
+          <a href="https://github.com/google-labs-code/jules-awesome-list" target="_blank" rel="noopener" class="link-card">
+            <div class="link-label">コミュニティ</div>
+            <div class="link-title">Jules Awesome Prompts（プロンプト集）</div>
+            <div class="link-url">github.com/google-labs-code/jules-awesome-list</div>
+          </a>
+          <a href="https://github.com/marketplace/gemini-code-assist" target="_blank" rel="noopener" class="link-card">
+            <div class="link-label">GitHub Marketplace</div>
+            <div class="link-title">Gemini Code Assist for GitHub</div>
+            <div class="link-url">github.com/marketplace/gemini-code-assist</div>
+          </a>
+          <a href="https://developers.google.com/gemini-code-assist/resources/faqs" target="_blank" rel="noopener" class="link-card">
+            <div class="link-label">FAQ</div>
+            <div class="link-title">Gemini Code Assist よくある質問</div>
+            <div class="link-url">developers.google.com/.../faqs</div>
+          </a>
+        </div>
+
+        <div class="callout success">
+          <div class="callout-title">✅ まとめ</div>
+          <p>Gemini Code Assist と Jules は、Google が提供する AI コーディング支援の二本柱です。Gemini Code Assist は IDE 内でのリアルタイムなコーディング支援に、Jules はバックグラウンドでの自律的なタスク実行に、それぞれ最適化されています。無料枠が非常に大きく、Google Cloud エコシステムとの深い統合が最大の強みです。個人開発者からエンタープライズまで、幅広いニーズに対応できるスケーラブルなソリューションとして、AI 活用のコーディングワークフローを構築する上で有力な選択肢となるでしょう。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+      <div class="container">
+        <p>Gemini Code Assist &amp; Jules 完全ガイド — 2026年3月5日更新</p>
+        <p style="margin-top:8px;">本ガイドは公開情報に基づいて作成されています。最新情報は <a href="https://codeassist.google/" target="_blank" rel="noopener">公式サイト</a> をご確認ください。</p>
+        <p style="margin-top:8px; font-size:0.72rem;">Google、Gemini、Firebase、Android Studio、BigQuery、Cloud Run、Apigee 等は Google LLC の商標です。</p>
+      </div>
+    </footer>
+
+  </div><!-- /main-content -->
+
+  <script>
+    // ========== Theme Toggle ==========
+    function toggleTheme() {
+      document.body.classList.toggle('light-mode');
+      const isLight = document.body.classList.contains('light-mode');
+      document.getElementById('theme-icon').textContent = isLight ? '☀️' : '🌙';
+      document.getElementById('theme-label').textContent = isLight ? 'Dark' : 'Light';
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    }
+
+    // Load saved theme
+    (function() {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'light') {
+        document.body.classList.add('light-mode');
+        document.getElementById('theme-icon').textContent = '☀️';
+        document.getElementById('theme-label').textContent = 'Dark';
+      }
+    })();
+
+    // ========== Mobile Nav Toggle ==========
+    function toggleNav() {
+      const nav = document.getElementById('tocNav');
+      const overlay = document.getElementById('navOverlay');
+      nav.classList.toggle('open');
+      overlay.classList.toggle('open');
+    }
+
+    // ========== Active TOC Tracking ==========
+    (function() {
+      const sections = document.querySelectorAll('.section[id]');
+      const navLinks = document.querySelectorAll('.toc-nav a');
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            navLinks.forEach(link => {
+              link.classList.remove('active');
+              if (link.getAttribute('href') === '#' + entry.target.id) {
+                link.classList.add('active');
+              }
+            });
+          }
+        });
+      }, { rootMargin: '-20% 0px -70% 0px' });
+
+      sections.forEach(section => observer.observe(section));
+
+      // Close nav on link click (mobile)
+      navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          if (window.innerWidth <= 1024) {
+            toggleNav();
+          }
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
