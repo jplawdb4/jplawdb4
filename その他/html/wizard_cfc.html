@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CFC判定 ウィザード — 税法ラボ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--accent:#5E6AD2;--accent-light:#7B85E0;}
+[data-theme="dark"]{--bg:#0A0A0A;--bg-card:#16161A;--border:rgba(255,255,255,.08);--text:#FAFAFA;--text-sub:#8A8A9A;--text-muted:#55556A;--shadow:0 0 0 1px var(--border),0 4px 24px rgba(0,0,0,.4);--hbg:rgba(10,10,10,.85)}
+[data-theme="light"]{--bg:#FAFAF7;--bg-card:#fff;--border:rgba(0,0,0,.08);--text:#1A1A1A;--text-sub:#6B6B7B;--text-muted:#9999AA;--shadow:0 0 0 1px var(--border),0 2px 12px rgba(0,0,0,.05);--hbg:rgba(250,250,247,.9)}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-font-smoothing:antialiased}
+body{font-family:'Noto Sans JP','Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .4s,color .4s}
+a{color:inherit;text-decoration:none}
+header{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(20px);background:var(--hbg);border-bottom:1px solid var(--border)}
+.hi{max-width:700px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px;padding:0 24px}
+.logo{font-family:'Outfit',sans-serif;font-weight:800;font-size:1.05rem;display:flex;align-items:center;gap:8px}
+.lm{width:26px;height:26px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:900;color:#fff}
+.bk{font-size:.82rem;color:var(--text-muted);display:flex;align-items:center;gap:5px;transition:color .2s}
+.bk:hover{color:var(--accent)}
+.tb{width:34px;height:34px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--text-sub);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;margin-left:8px}
+.tb:hover{border-color:var(--accent);color:var(--accent)}
+.main{max-width:700px;margin:0 auto;padding:88px 24px 60px}
+h1{font-family:'Outfit',sans-serif;font-size:1.6rem;font-weight:900;letter-spacing:-.03em;background:linear-gradient(135deg,var(--accent),var(--accent-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
+.sub{color:var(--text-muted);font-size:.85rem;margin-bottom:28px}
+/* Progress */
+.prog{display:flex;gap:6px;margin-bottom:28px;align-items:center}
+.step-dot{width:28px;height:28px;border-radius:50%;background:var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:var(--text-muted);transition:all .3s;flex-shrink:0}
+.step-dot.active{background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff}
+.step-dot.done{background:rgba(74,222,128,.2);color:#4ade80;border:1px solid rgba(74,222,128,.3)}
+.prog-line{flex:1;height:2px;background:var(--border);border-radius:1px;transition:background .3s}
+.prog-line.done{background:rgba(74,222,128,.3)}
+/* Card */
+.wiz-card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:32px 36px;box-shadow:var(--shadow);animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.step-label{font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.wiz-q{font-size:1.15rem;font-weight:700;line-height:1.5;margin-bottom:8px}
+.wiz-hint{font-size:.85rem;color:var(--text-muted);line-height:1.65;margin-bottom:24px}
+.wiz-hint code{background:rgba(94,106,210,.12);color:#a5b4fc;padding:1px 6px;border-radius:4px;font-family:monospace}
+.wiz-btns{display:flex;gap:12px;flex-wrap:wrap}
+.yn-btn{flex:1;min-width:120px;padding:12px 20px;border-radius:12px;font-size:.95rem;font-weight:700;
+  font-family:inherit;cursor:pointer;border:1.5px solid;transition:all .2s}
+.yn-yes{background:rgba(74,222,128,.08);border-color:rgba(74,222,128,.3);color:#4ade80}
+.yn-yes:hover{background:rgba(74,222,128,.15)}
+.yn-no{background:rgba(248,113,113,.07);border-color:rgba(248,113,113,.25);color:#f87171}
+.yn-no:hover{background:rgba(248,113,113,.14)}
+.yn-more{background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.25);color:#f59e0b;flex:1;min-width:160px}
+.yn-more:hover{background:rgba(245,158,11,.15)}
+/* Results */
+.result-box{padding:24px;border-radius:12px;text-align:center}
+.result-box.apply{background:rgba(248,113,113,.08);border:2px solid rgba(248,113,113,.3)}
+.result-box.exempt{background:rgba(74,222,128,.08);border:2px solid rgba(74,222,128,.25)}
+.result-box.noapp{background:rgba(94,106,210,.08);border:2px solid rgba(94,106,210,.2)}
+.result-icon{font-size:2.5rem;margin-bottom:12px}
+.result-title{font-family:'Outfit',sans-serif;font-size:1.3rem;font-weight:900;margin-bottom:8px}
+.result-desc{font-size:.88rem;color:var(--text-sub);line-height:1.7}
+.result-law{margin-top:12px;font-size:.78rem;color:var(--text-muted);background:rgba(94,106,210,.06);padding:6px 12px;border-radius:6px;display:inline-block}
+.restart-btn{margin-top:24px;padding:10px 24px;background:var(--border);border:1px solid rgba(255,255,255,.1);border-radius:10px;color:var(--text-sub);font-family:inherit;font-size:.88rem;cursor:pointer;transition:all .2s}
+.restart-btn:hover{border-color:var(--accent);color:var(--accent)}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<header>
+  <div class="hi">
+    <a href="tax_law_lab_international_20260304.html" class="logo"><span class="lm">税</span><span>税法ラボ</span></a>
+    <div style="display:flex;align-items:center;gap:10px">
+      <a href="lesson_9_CFC税制の基礎.html" class="bk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Lesson 9</a>
+      <button class="tb" id="themeBtn"><svg id="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg id="si" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+    </div>
+  </div>
+</header>
+<div class="main">
+  <h1>CFC 判定ウィザード</h1>
+  <p class="sub">措法66条の6に基づく外国子会社合算課税の適用判定をステップで確認します</p>
+
+  <div class="prog" id="progBar">
+    <span class="step-dot active" id="pd1">1</span>
+    <div class="prog-line" id="pl1"></div>
+    <span class="step-dot" id="pd2">2</span>
+    <div class="prog-line" id="pl2"></div>
+    <span class="step-dot" id="pd3">3</span>
+    <div class="prog-line" id="pl3"></div>
+    <span class="step-dot" id="pd4">4</span>
+    <div class="prog-line" id="pl4"></div>
+    <span class="step-dot" id="pd5">5</span>
+    <div class="prog-line" id="pl5"></div>
+    <span class="step-dot" id="pd6">6</span>
+  </div>
+
+  <div id="wizard"></div>
+</div>
+<script>
+var STEPS=[
+  {id:1,q:'内国法人が外国法人の株式等を保有していますか？',
+   hint:'合算課税の出発点は「外国法人への出資」の有無です。直接保有・間接保有どちらも含みます。',
+   yes:2,no:'no-holding'},
+  {id:2,q:'内国法人の持分割合（直接+間接）が <strong>50%超</strong> ですか？',
+   hint:'措法66条の6第1項：内国法人の「持分割合」が50%を超える外国法人が「外国関係会社」に該当します（<code>措令39条の14第1項</code>）。複数の内国法人が合算して50%超の場合も含みます。',
+   yes:3,no:'no-50'},
+  {id:3,q:'その外国関係会社の <strong>租税負担割合が30%未満</strong> ですか？',
+   hint:'租税負担割合が30%以上の場合は「適用対象外国関係会社」に非該当となり、会社単位の合算課税は行われません（ただし部分合算課税は別途検討）。<code>措法66条の6第1項かっこ書き</code>',
+   yes:4,no:'high-tax'},
+  {id:4,q:'その外国関係会社は <strong>特定外国関係会社</strong>（ペーパーカンパニー・キャッシュボックス等）に該当しますか？',
+   hint:'特定外国関係会社：①主たる事業が株式保有等のペーパーカンパニー、②資産の一定割合以上が受動的資産（事実上のキャッシュボックス）、③ブラックリスト国所在法人のいずれか。<code>措法66条の6第2項1号</code>',
+   yes:'tokutei',no:5},
+  {id:5,q:'その外国関係会社は <strong>対象外国関係会社</strong>（租税負担割合 20%未満）ですか？',
+   hint:'20%〜30%未満の場合は「対象外国関係会社」として、経済活動基準の判定が必要です。<code>措法66条の6第2項2号</code>',
+   yes:6,no:'taishogai'},
+  {id:6,q:'その外国関係会社は経済活動基準（<strong>4要件すべて</strong>）を充足していますか？',
+   hint:'①事業基準（主たる事業が株式保有・知財等でない）②実体基準（事業に必要な固定施設あり）③管理支配基準（役員等が所在地国で管理）④所在地国基準 or 非関連者基準。<code>措法66条の6第3項</code>',
+   yes:'exempt',no:'apply'}
+];
+var RESULTS={
+  'no-holding':{cls:'noapp',icon:'➖',title:'合算課税：対象外',desc:'外国法人への出資がないため、外国子会社合算税制の検討は不要です。'},
+  'no-50':{cls:'noapp',icon:'➖',title:'合算課税：対象外（持分不足）',desc:'持分割合が50%以下のため「外国関係会社」に該当せず、合算課税は行われません。間接保有も含めて再確認してください。',law:'措法66条の6第1項・措令39条の14'},
+  'high-tax':{cls:'noapp',icon:'✅',title:'合算課税：対象外（高税率）',desc:'租税負担割合が30%以上のため会社単位の合算課税は行われません。ただし部分合算課税（受動的所得が一定額超の場合）は別途検討が必要です。',law:'措法66条の6第1項かっこ書き'},
+  'tokutei':{cls:'apply',icon:'⚠️',title:'合算課税あり（特定外国関係会社）',desc:'特定外国関係会社に該当します。経済活動基準による除外が認められず、会社単位の合算課税が行われます（留保所得の全額が合算対象）。',law:'措法66条の6第2項1号'},
+  'apply':{cls:'apply',icon:'⚠️',title:'合算課税あり（経済活動基準不充足）',desc:'対象外国関係会社に該当し、経済活動基準を充足しないため会社単位の合算課税が行われます。4要件のうち不充足の基準を再検討してください。',law:'措法66条の6第2項2号・第3項'},
+  'taishogai':{cls:'noapp',icon:'✅',title:'合算課税：対象外（20%以上）',desc:'租税負担割合20%〜30%未満で対象外国関係会社には非該当です。ただし部分合算課税（受動的所得）の検討は引き続き必要です。',law:'措法66条の6第2項2号'},
+  'exempt':{cls:'exempt',icon:'✅',title:'合算課税なし（経済活動基準充足）',desc:'経済活動基準（4要件）をすべて充足するため、会社単位の合算課税は行われません。ただし受動的所得の部分合算課税（措法66条の6の4等）は別途確認してください。',law:'措法66条の6第3項'}
+};
+function goStep(stepId){
+  if(typeof stepId==='string'){showResult(stepId);return;}
+  var s=STEPS.find(function(x){return x.id===stepId;});
+  if(!s)return;
+  // Update progress
+  for(var i=1;i<=6;i++){
+    var dot=document.getElementById('pd'+i);
+    var line=document.getElementById('pl'+i);
+    if(i<stepId){dot.className='step-dot done';if(line)line.className='prog-line done';}
+    else if(i===stepId){dot.className='step-dot active';}
+    else{dot.className='step-dot';if(line)line.className='prog-line';}
+  }
+  document.getElementById('wizard').innerHTML=
+    '<div class="wiz-card">'
+    +'<div class="step-label">ステップ '+s.id+' / 6</div>'
+    +'<div class="wiz-q">'+s.q+'</div>'
+    +'<div class="wiz-hint">'+s.hint+'</div>'
+    +'<div class="wiz-btns">'
+    +'<button class="yn-btn yn-yes" onclick="goStep('+JSON.stringify(s.yes)+')">はい</button>'
+    +'<button class="yn-btn yn-no" onclick="goStep('+JSON.stringify(s.no)+')">いいえ</button>'
+    +'</div>'
+    +'</div>';
+}
+function showResult(key){
+  var r=RESULTS[key];
+  for(var i=1;i<=6;i++){document.getElementById('pd'+i).className='step-dot done';if(document.getElementById('pl'+i))document.getElementById('pl'+i).className='prog-line done';}
+  document.getElementById('wizard').innerHTML=
+    '<div class="wiz-card">'
+    +'<div class="result-box '+r.cls+'">'
+    +'<div class="result-icon">'+r.icon+'</div>'
+    +'<div class="result-title">'+r.title+'</div>'
+    +'<div class="result-desc">'+r.desc+'</div>'
+    +(r.law?'<div class="result-law">📖 根拠：'+r.law+'</div>':'')
+    +'</div>'
+    +'<div style="text-align:center"><button class="restart-btn" onclick="restart()">↺ 最初からやり直す</button></div>'
+    +'</div>';
+}
+function restart(){goStep(1);}
+goStep(1);
+// Theme
+var he=document.documentElement,mi=document.getElementById('mi'),si=document.getElementById('si');
+function st(t){he.setAttribute('data-theme',t);mi.style.display=t==='dark'?'block':'none';si.style.display=t==='light'?'block':'none';localStorage.setItem('theme',t);}
+document.getElementById('themeBtn').addEventListener('click',function(){st(he.getAttribute('data-theme')==='dark'?'light':'dark');});
+var sv=localStorage.getItem('theme');if(sv)st(sv);
+</script>
+</body>
+</html>

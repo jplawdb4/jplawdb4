@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>外国税額控除 計算ツール — 税法ラボ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--accent:#5E6AD2;--accent-light:#7B85E0;}
+[data-theme="dark"]{--bg:#0A0A0A;--bg-card:#16161A;--bg-input:rgba(255,255,255,.04);
+  --border:rgba(255,255,255,.08);--border-focus:rgba(94,106,210,.5);
+  --text:#FAFAFA;--text-sub:#8A8A9A;--text-muted:#55556A;
+  --shadow:0 0 0 1px var(--border),0 4px 24px rgba(0,0,0,.4);--hbg:rgba(10,10,10,.85)}
+[data-theme="light"]{--bg:#FAFAF7;--bg-card:#fff;--bg-input:rgba(0,0,0,.03);
+  --border:rgba(0,0,0,.08);--border-focus:rgba(94,106,210,.4);
+  --text:#1A1A1A;--text-sub:#6B6B7B;--text-muted:#9999AA;
+  --shadow:0 0 0 1px var(--border),0 2px 12px rgba(0,0,0,.05);--hbg:rgba(250,250,247,.9)}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-font-smoothing:antialiased}
+body{font-family:'Noto Sans JP','Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .4s,color .4s}
+a{color:inherit;text-decoration:none}
+header{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(20px);
+  background:var(--hbg);border-bottom:1px solid var(--border)}
+.hi{max-width:800px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px;padding:0 24px}
+.logo{font-family:'Outfit',sans-serif;font-weight:800;font-size:1.05rem;display:flex;align-items:center;gap:8px}
+.lm{width:26px;height:26px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:900;color:#fff}
+.bk{font-size:.82rem;color:var(--text-muted);display:flex;align-items:center;gap:5px;transition:color .2s}
+.bk:hover{color:var(--accent)}
+.tb{width:34px;height:34px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--text-sub);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;margin-left:8px}
+.tb:hover{border-color:var(--accent);color:var(--accent)}
+.main{max-width:800px;margin:0 auto;padding:88px 24px 60px}
+h1{font-family:'Outfit',sans-serif;font-size:1.7rem;font-weight:900;letter-spacing:-.03em;
+  background:linear-gradient(135deg,var(--accent),var(--accent-light));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px}
+.sub{color:var(--text-muted);font-size:.88rem;margin-bottom:32px}
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:28px 32px;box-shadow:var(--shadow);margin-bottom:20px}
+.card h2{font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;color:var(--accent);margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field label{font-size:.8rem;font-weight:600;color:var(--text-sub);display:block;margin-bottom:6px}
+.field .hint{font-size:.72rem;color:var(--text-muted);margin-bottom:4px}
+.field input,.field select{width:100%;padding:10px 14px;background:var(--bg-input);
+  border:1px solid var(--border);border-radius:10px;color:var(--text);
+  font-size:.95rem;font-family:inherit;outline:none;transition:border-color .2s}
+.field input:focus,.field select:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(94,106,210,.1)}
+.btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--accent),var(--accent-light));
+  color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:700;
+  font-family:inherit;cursor:pointer;transition:opacity .2s;margin-top:8px}
+.btn:hover{opacity:.88}
+.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.res-item{background:var(--bg-input);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-align:center}
+.res-label{font-size:.72rem;color:var(--text-muted);margin-bottom:6px}
+.res-value{font-family:'Outfit',sans-serif;font-size:1.3rem;font-weight:800;color:var(--accent)}
+.res-value.ok{color:#4ade80}
+.res-value.warn{color:#f59e0b}
+.res-value.bad{color:#f87171}
+.res-sub{font-size:.7rem;color:var(--text-muted);margin-top:3px}
+.bar-wrap{margin-top:20px}
+.bar-label{display:flex;justify-content:space-between;font-size:.78rem;color:var(--text-muted);margin-bottom:6px}
+.bar-bg{height:8px;background:var(--border);border-radius:4px;overflow:hidden;position:relative}
+.bar-fg{height:100%;border-radius:4px;transition:width .5s cubic-bezier(.16,1,.3,1)}
+.bar-limit{height:100%;background:rgba(94,106,210,.3);position:absolute;top:0;left:0}
+.msg{margin-top:16px;padding:12px 16px;border-radius:10px;font-size:.88rem;line-height:1.6}
+.msg.ok{background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2);color:#4ade80}
+.msg.warn{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);color:#f59e0b}
+.hidden{display:none}
+.note{font-size:.78rem;color:var(--text-muted);margin-top:12px;line-height:1.6}
+@media(max-width:600px){.grid2,.result-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div class="hi">
+    <a href="tax_law_lab_international_20260304.html" class="logo"><span class="lm">税</span><span>税法ラボ</span></a>
+    <div style="display:flex;align-items:center;gap:10px">
+      <a href="lesson_11_外国税額控除と国際的二重課税.html" class="bk">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Lesson 11
+      </a>
+      <button class="tb" id="themeBtn" aria-label="テーマ">
+        <svg id="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg id="si" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+<div class="main">
+  <h1>外国税額控除 計算ツール</h1>
+  <p class="sub">法法69条の控除限度額・控除可能額・超過額を自動計算します</p>
+
+  <div class="card">
+    <h2>📥 入力</h2>
+    <div class="grid2">
+      <div class="field">
+        <label>全所得（税引前）</label>
+        <div class="hint">国内 + 国外の合計所得</div>
+        <input type="number" id="totalIncome" value="600000000" min="0" step="1000000">
+      </div>
+      <div class="field">
+        <label>うち 国外所得</label>
+        <div class="hint">外国源泉所得（国外所得金額）</div>
+        <input type="number" id="foreignIncome" value="100000000" min="0" step="1000000">
+      </div>
+      <div class="field">
+        <label>法人税額（控除前）</label>
+        <div class="hint">法人税率：下の選択か直接入力</div>
+        <input type="number" id="corpTax" value="139200000" min="0" step="100000">
+      </div>
+      <div class="field">
+        <label>外国法人税額</label>
+        <div class="hint">実際に外国で納付した税額</div>
+        <input type="number" id="foreignTax" value="30000000" min="0" step="100000">
+      </div>
+    </div>
+    <div class="field" style="margin-top:12px">
+      <label>法人税率（法人税額の自動計算用）</label>
+      <select id="taxRate" onchange="autoCalcCorpTax()">
+        <option value="0.232" selected>23.2%（標準）</option>
+        <option value="0.195">19.5%（中小軽減）</option>
+        <option value="0.15">15.0%（中小特例）</option>
+        <option value="custom">カスタム（手動入力）</option>
+      </select>
+    </div>
+    <button class="btn" onclick="calculate()">計算する</button>
+  </div>
+
+  <div class="card hidden" id="resultCard">
+    <h2>📊 計算結果</h2>
+    <div class="result-grid">
+      <div class="res-item">
+        <div class="res-label">控除限度額</div>
+        <div class="res-value" id="r-limit">—</div>
+        <div class="res-sub">法人税額 × 国外/全所得</div>
+      </div>
+      <div class="res-item">
+        <div class="res-label">控除可能額</div>
+        <div class="res-value" id="r-credit">—</div>
+        <div class="res-sub">min(外国税額, 限度額)</div>
+      </div>
+      <div class="res-item">
+        <div class="res-label">納付法人税額</div>
+        <div class="res-value" id="r-final">—</div>
+        <div class="res-sub">控除後の法人税額</div>
+      </div>
+    </div>
+    <div class="bar-wrap">
+      <div class="bar-label"><span>外国税額 vs 控除限度額</span><span id="r-ratio">—</span></div>
+      <div class="bar-bg" style="height:10px">
+        <div class="bar-fg" id="r-bar" style="width:0%;background:linear-gradient(90deg,#4ade80,#22c55e)"></div>
+      </div>
+    </div>
+    <div class="msg hidden" id="r-msg"></div>
+    <div style="margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:.82rem">
+      <div class="res-item"><div class="res-label">超過額（繰越3年）</div><div class="res-value" id="r-excess" style="font-size:1rem">—</div></div>
+      <div class="res-item"><div class="res-label">実効税率（全所得ベース）</div><div class="res-value" id="r-eff" style="font-size:1rem">—</div></div>
+    </div>
+    <div class="note">※ 控除限度額超過額は翌3年間繰越控除可能（法法69条2項）。限度余裕額（外国税額＜限度額）は翌5年間繰越可能（同3項）。</div>
+  </div>
+</div>
+<script>
+function fmt(n){return Math.round(n).toLocaleString('ja-JP')+'円';}
+function fmtp(n){return (n*100).toFixed(1)+'%';}
+function autoCalcCorpTax(){
+  var rate=document.getElementById('taxRate').value;
+  if(rate==='custom')return;
+  var ti=parseFloat(document.getElementById('totalIncome').value)||0;
+  document.getElementById('corpTax').value=Math.round(ti*parseFloat(rate));
+}
+document.getElementById('totalIncome').addEventListener('input',autoCalcCorpTax);
+function calculate(){
+  var ti=parseFloat(document.getElementById('totalIncome').value)||0;
+  var fi=parseFloat(document.getElementById('foreignIncome').value)||0;
+  var ct=parseFloat(document.getElementById('corpTax').value)||0;
+  var ft=parseFloat(document.getElementById('foreignTax').value)||0;
+  if(ti<=0||fi>ti){alert('全所得・国外所得の値を確認してください');return;}
+  var limit=ct*(fi/ti);
+  var credit=Math.min(ft,limit);
+  var final=ct-credit;
+  var excess=Math.max(0,ft-limit);
+  var surplus=Math.max(0,limit-ft);
+  var eff=final/ti;
+  document.getElementById('r-limit').textContent=fmt(limit);
+  document.getElementById('r-credit').textContent=fmt(credit);
+  var finalEl=document.getElementById('r-final');
+  finalEl.textContent=fmt(final);
+  finalEl.className='res-value '+(eff<0.232?'ok':'');
+  document.getElementById('r-excess').textContent=excess>0?fmt(excess):'なし';
+  document.getElementById('r-eff').textContent=fmtp(eff);
+  var ratio=fi>0?(ft/limit):0;
+  var pct=Math.min(ratio,2)*50;
+  document.getElementById('r-bar').style.width=pct+'%';
+  document.getElementById('r-bar').style.background=excess>0?'linear-gradient(90deg,#f87171,#ef4444)':'linear-gradient(90deg,#4ade80,#22c55e)';
+  document.getElementById('r-ratio').textContent='比率: '+fmtp(ft/limit);
+  var msg=document.getElementById('r-msg');
+  if(excess>0){msg.className='msg warn';msg.textContent='⚠ 超過額 '+fmt(excess)+' は控除不可。翌3年間の繰越控除を検討してください。';msg.classList.remove('hidden');}
+  else if(surplus>0){msg.className='msg ok';msg.textContent='✓ 限度余裕額 '+fmt(surplus)+' あり。翌5年間の繰越が可能です（法法69条3項）。';msg.classList.remove('hidden');}
+  else{msg.classList.add('hidden');}
+  document.getElementById('resultCard').classList.remove('hidden');
+}
+// Theme
+var he=document.documentElement,mi=document.getElementById('mi'),si=document.getElementById('si');
+function st(t){he.setAttribute('data-theme',t);mi.style.display=t==='dark'?'block':'none';si.style.display=t==='light'?'block':'none';localStorage.setItem('theme',t);}
+document.getElementById('themeBtn').addEventListener('click',function(){st(he.getAttribute('data-theme')==='dark'?'light':'dark');});
+var sv=localStorage.getItem('theme');if(sv)st(sv);
+</script>
+</body>
+</html>

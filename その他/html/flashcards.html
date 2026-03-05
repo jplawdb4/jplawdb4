@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>フラッシュカード — 国際課税 税法ラボ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--accent:#5E6AD2;--accent-light:#7B85E0;}
+[data-theme="dark"]{--bg:#0A0A0A;--bg-card:#16161A;--bg-card2:#1e1e24;--border:rgba(255,255,255,.08);--text:#FAFAFA;--text-sub:#8A8A9A;--text-muted:#55556A;--shadow:0 0 0 1px var(--border),0 4px 24px rgba(0,0,0,.5);--hbg:rgba(10,10,10,.85)}
+[data-theme="light"]{--bg:#FAFAF7;--bg-card:#fff;--bg-card2:#f0f0ed;--border:rgba(0,0,0,.08);--text:#1A1A1A;--text-sub:#6B6B7B;--text-muted:#9999AA;--shadow:0 0 0 1px var(--border),0 2px 16px rgba(0,0,0,.07);--hbg:rgba(250,250,247,.9)}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-font-smoothing:antialiased}
+body{font-family:'Noto Sans JP','Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .4s,color .4s}
+a{color:inherit;text-decoration:none}
+header{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(20px);background:var(--hbg);border-bottom:1px solid var(--border)}
+.hi{max-width:700px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px;padding:0 24px}
+.logo{font-family:'Outfit',sans-serif;font-weight:800;font-size:1.05rem;display:flex;align-items:center;gap:8px}
+.lm{width:26px;height:26px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:900;color:#fff}
+.bk{font-size:.82rem;color:var(--text-muted);display:flex;align-items:center;gap:5px;transition:color .2s}
+.bk:hover{color:var(--accent)}
+.tb{width:34px;height:34px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--text-sub);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;margin-left:8px}
+.tb:hover{border-color:var(--accent);color:var(--accent)}
+.main{max-width:700px;margin:0 auto;padding:88px 24px 60px}
+h1{font-family:'Outfit',sans-serif;font-size:1.6rem;font-weight:900;letter-spacing:-.03em;background:linear-gradient(135deg,var(--accent),var(--accent-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
+.sub{color:var(--text-muted);font-size:.85rem;margin-bottom:24px}
+/* Controls */
+.controls{display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.cat-sel{padding:7px 12px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:.82rem;outline:none;cursor:pointer}
+.ctrl-btn{padding:7px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;color:var(--text-sub);font-family:inherit;font-size:.82rem;cursor:pointer;transition:all .2s}
+.ctrl-btn:hover{border-color:var(--accent);color:var(--accent)}
+.counter{margin-left:auto;font-size:.82rem;color:var(--text-muted)}
+/* Card */
+.card-wrap{perspective:1200px;height:260px;cursor:pointer;user-select:none}
+.card-inner{width:100%;height:100%;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.16,1,.3,1);position:relative}
+.card-wrap.flipped .card-inner{transform:rotateY(180deg)}
+.card-face{position:absolute;inset:0;border-radius:18px;box-shadow:var(--shadow);backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:32px;text-align:center}
+.card-front{background:var(--bg-card)}
+.card-back{background:var(--bg-card2);transform:rotateY(180deg)}
+.card-cat{font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
+.card-ja{font-family:'Outfit',sans-serif;font-size:1.7rem;font-weight:900;margin-bottom:8px}
+.card-en{font-size:.85rem;color:var(--text-muted)}
+.card-hint{font-size:.78rem;color:var(--text-muted);margin-top:12px;opacity:.7}
+.card-def{font-size:.88rem;color:var(--text-sub);line-height:1.75;max-width:500px}
+.card-back-cat{font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.card-back-ja{font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;margin-bottom:16px}
+/* Navigation */
+.nav-btns{display:flex;align-items:center;gap:12px;margin-top:20px;justify-content:center}
+.nav-btn{width:44px;height:44px;border:1px solid var(--border);border-radius:50%;background:var(--bg-card);color:var(--text-sub);font-size:1.2rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center}
+.nav-btn:hover{border-color:var(--accent);color:var(--accent)}
+.nav-btn:disabled{opacity:.3;cursor:not-allowed}
+.prog-dots{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;max-width:300px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--border);transition:background .2s}
+.dot.done{background:rgba(74,222,128,.5)}
+.dot.curr{background:var(--accent)}
+/* Stats */
+.stats-row{display:flex;gap:10px;margin-top:16px;justify-content:center}
+.stat{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:8px 16px;text-align:center;min-width:80px}
+.stat-n{font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800}
+.stat-l{font-size:.68rem;color:var(--text-muted)}
+.n-ok{color:#4ade80}.n-no{color:#f87171}.n-skip{color:#f59e0b}
+.ans-btns{display:flex;gap:10px;margin-top:16px;justify-content:center}
+.ans-btn{padding:9px 22px;border-radius:10px;font-family:inherit;font-size:.88rem;font-weight:700;cursor:pointer;border:1.5px solid;transition:all .2s}
+.ans-ok{background:rgba(74,222,128,.08);border-color:rgba(74,222,128,.3);color:#4ade80}
+.ans-ok:hover{background:rgba(74,222,128,.15)}
+.ans-no{background:rgba(248,113,113,.08);border-color:rgba(248,113,113,.25);color:#f87171}
+.ans-no:hover{background:rgba(248,113,113,.15)}
+.ans-skip{background:rgba(245,158,11,.07);border-color:rgba(245,158,11,.2);color:#f59e0b}
+.ans-skip:hover{background:rgba(245,158,11,.14)}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<header>
+  <div class="hi">
+    <a href="tax_law_lab_international_20260304.html" class="logo"><span class="lm">税</span><span>税法ラボ</span></a>
+    <div style="display:flex;align-items:center;gap:10px">
+      <a href="glossary_international_tax.html" class="bk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>用語集</a>
+      <button class="tb" id="themeBtn"><svg id="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg id="si" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+    </div>
+  </div>
+</header>
+<div class="main">
+  <h1>フラッシュカード</h1>
+  <p class="sub">カードをクリックして定義を確認。理解度を自己評価して復習しましょう（全30用語）</p>
+  <div class="controls">
+    <select class="cat-sel" id="catSel" onchange="loadDeck()">
+      <option value="all">すべて</option>
+      <option value="移転価格">移転価格</option>
+      <option value="PE課税">PE課税</option>
+      <option value="CFC税制">CFC税制</option>
+      <option value="BEPS">BEPS</option>
+      <option value="外国税額控除">外国税額控除</option>
+      <option value="租税条約">租税条約</option>
+      <option value="紛争解決">紛争解決</option>
+    </select>
+    <button class="ctrl-btn" onclick="shuffle()">🔀 シャッフル</button>
+    <button class="ctrl-btn" onclick="resetStats()">↺ リセット</button>
+    <span class="counter" id="counter">0 / 0</span>
+  </div>
+
+  <div class="card-wrap" id="cardWrap" onclick="flip()">
+    <div class="card-inner" id="cardInner">
+      <div class="card-face card-front" id="cardFront">
+        <div class="card-cat" id="cf-cat">—</div>
+        <div class="card-ja" id="cf-ja">—</div>
+        <div class="card-en" id="cf-en">—</div>
+        <div class="card-hint">クリックして定義を確認</div>
+      </div>
+      <div class="card-face card-back" id="cardBack">
+        <div class="card-back-cat" id="cb-cat">—</div>
+        <div class="card-back-ja" id="cb-ja">—</div>
+        <div class="card-def" id="cb-def">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ans-btns" id="ansBtns">
+    <button class="ans-btn ans-ok" onclick="answer('ok')">✓ 理解した</button>
+    <button class="ans-btn ans-no" onclick="answer('no')">✗ 要復習</button>
+    <button class="ans-btn ans-skip" onclick="answer('skip')">→ スキップ</button>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat"><div class="stat-n n-ok" id="s-ok">0</div><div class="stat-l">理解</div></div>
+    <div class="stat"><div class="stat-n n-no" id="s-no">0</div><div class="stat-l">要復習</div></div>
+    <div class="stat"><div class="stat-n n-skip" id="s-skip">0</div><div class="stat-l">スキップ</div></div>
+    <div class="stat"><div class="stat-n" id="s-rem" style="color:var(--accent)">0</div><div class="stat-l">残り</div></div>
+  </div>
+
+  <div class="nav-btns" style="margin-top:16px">
+    <button class="nav-btn" id="btnPrev" onclick="prev()" disabled>‹</button>
+    <div class="prog-dots" id="dots"></div>
+    <button class="nav-btn" id="btnNext" onclick="next()">›</button>
+  </div>
+</div>
+<script>
+var ALL_TERMS = [{"ja": "独立企業原則", "en": "Arm's Length Principle (ALP)", "cat": "移転価格", "def": "関連企業間の取引価格が独立した第三者間で成立する価格と一致しなければならないとする原則。OECD移転価格ガイドラインの根幹。措法66条の4が国内根拠規定。"}, {"ja": "恒久的施設", "en": "Permanent Establishment (PE)", "cat": "PE課税", "def": "外国企業が他国で事業を行う際の固定の事業拠点。PEが認定されることで源泉地国の課税権が生じる。OECDモデル条約5条に定義。支店・建設・代理人の3類型。"}, {"ja": "OECD承認アプローチ", "en": "Authorised OECD Approach (AOA)", "cat": "PE課税", "def": "PEを独立した企業として仮定し、機能・資産・リスク分析（FAR分析）により帰属所得を算定するアプローチ。日本は2014年改正で帰属主義へ移行。"}, {"ja": "外国子会社合算税制", "en": "CFC Rules", "cat": "CFC税制", "def": "内国法人が支配する軽課税国の外国子会社の所得を、一定要件のもと親会社の所得に合算して課税する制度。措法66条の6以下。タックスヘイブン対策税制とも呼ばれる。"}, {"ja": "経済活動基準", "en": "Active Business Test", "cat": "CFC税制", "def": "CFC税制の適用除外基準。事業基準・実体基準・管理支配基準・非関連者基準（または所在地国基準）の4要件を全て充足すれば合算課税から除外される。"}, {"ja": "部分合算課税", "en": "Partial Inclusion Rules", "cat": "CFC税制", "def": "特定・対象外国関係会社の要件を満たさない場合でも、受動的所得（利子・配当・使用料等）が一定額を超える場合に部分的に合算課税する2019年度改正制度。"}, {"ja": "三層構造文書化", "en": "Three-Tiered Documentation", "cat": "移転価格", "def": "BEPS行動計画13が要求する文書化の枠組み。①マスターファイル（グループ全体）②ローカルファイル（個別取引）③国別報告書（CbCR）の三層で構成される。"}, {"ja": "相互協議", "en": "Mutual Agreement Procedure (MAP)", "cat": "紛争解決", "def": "租税条約に基づき二国間の権限ある当局が協議して二重課税を排除する手続。条約25条に規定。移転価格・PE課税等で生じた国際的二重課税の最終的な解決手段。"}, {"ja": "事前確認制度", "en": "Advance Pricing Agreement (APA)", "cat": "紛争解決", "def": "納税者が取引価格の算定方法を事前に税務当局と合意する制度。一国間・二国間・多国間APAがある。移転価格税務調査リスクを事前に排除できる重要な制度。"}, {"ja": "取引単位営業利益法", "en": "TNMM", "cat": "移転価格", "def": "検証対象企業の営業利益率を独立企業の営業利益率と比較して独立企業間価格を算定する間接法。措法66条の4第2項2号ニ。ルーティン機能企業の検証に多用される。"}, {"ja": "利益分割法", "en": "Profit Split Method (PSM)", "cat": "移転価格", "def": "グループ全体の利益を各企業の貢献度（機能・資産・リスク）に応じて分割する方法。無形資産取引や高度に統合されたビジネスモデルに適する。"}, {"ja": "DEMPE分析", "en": "DEMPE Analysis", "cat": "移転価格", "def": "無形資産の移転価格算定フレームワーク。開発・増価・維持・保護・活用（Development, Enhancement, Maintenance, Protection, Exploitation）の各機能担当主体を特定して経済的所有権を判断する。"}, {"ja": "BEPS", "en": "Base Erosion and Profit Shifting", "cat": "BEPS", "def": "多国籍企業が各国の税制の差異や抜け穴を利用して課税所得を低税率国に移転し税負担を軽減する行為。G20/OECDは2015年に15の行動計画を策定。"}, {"ja": "MLI", "en": "Multilateral Instrument", "cat": "BEPS", "def": "BEPSを防止するための多数国間条約。既存の二国間租税条約をMLIの規定に沿って一括改正するための条約。2017年署名、日本は2019年に発効。"}, {"ja": "PPT条項", "en": "Principal Purpose Test", "cat": "BEPS", "def": "条約の主要な目的の一つが租税上の便益を受けることにある場合、当該便益を否認できるとするMLI濫用防止規定（MLI第7条）。客観・主観を問わず広く適用。"}, {"ja": "LOB条項", "en": "Limitation on Benefits", "cat": "BEPS", "def": "条約締約国の「適格居住者」にのみ条約上の便益を認める客観的テスト。上場企業・政府機関・能動的事業活動者等が適格居住者に該当。PPTより予測可能性が高い。"}, {"ja": "国別報告書", "en": "Country-by-Country Report (CbCR)", "cat": "BEPS", "def": "BEPS行動計画13に基づく三層構造文書化の最上位文書。多国籍企業グループが国別に売上高・利益・法人税額・従業員数・資産を開示。各国税務当局間で自動的情報交換される。"}, {"ja": "Pillar 1 / Amount A", "en": "Pillar One", "cat": "BEPS", "def": "超大企業（売上高200億ユーロ超・利益率10%超）の超過利益を市場国に再配分する新たな課税権配分ルール。交渉継続中（2024年時点）。"}, {"ja": "Pillar 2 / GloBE", "en": "Global Anti-Base Erosion Rules", "cat": "BEPS", "def": "最低税率15%のグローバル・ミニマム課税を実現する規則群。IIR・UTPR・QDMTTで構成。連結売上高750億ユーロ超のMNEが対象。2024年に主要国で施行。"}, {"ja": "IIR", "en": "Income Inclusion Rule", "cat": "BEPS", "def": "Pillar 2の主要ルール。子会社の実効税率が15%未満の場合、差額（上乗せ税額）を親会社の所在地国が徴収。日本では2024年4月から適用（措法66条の6の2）。"}, {"ja": "QDMTT", "en": "Qualified Domestic Minimum Top-up Tax", "cat": "BEPS", "def": "低税率国が自国で最低15%課税を行うことで、IIR・UTTPRによる他国への税収移転を防ぐ制度。適格性を満たせばIIR・UTPRに優先して適用される。"}, {"ja": "外国税額控除", "en": "Foreign Tax Credit (FTC)", "cat": "外国税額控除", "def": "内国法人が外国で支払った税額を国内の法人税額から控除して国際的二重課税を排除する制度。法人税法69条に規定。控除限度額を超える部分は3年間繰越可能。"}, {"ja": "控除限度額", "en": "Credit Limitation", "cat": "外国税額控除", "def": "外国税額控除の上限額。「法人税額 × 国外所得 ÷ 全所得」で計算される。外国税額がこの限度額を超える部分は翌3年間繰り越せる（法法69条2項）。"}, {"ja": "情報交換", "en": "Exchange of Information (EOI)", "cat": "租税条約", "def": "租税条約または多国間協定に基づき各国の税務当局が相互に課税情報を交換する制度。要請・自動（AEOI/CRS）・自発的の3類型がある。"}, {"ja": "CRS", "en": "Common Reporting Standard", "cat": "租税条約", "def": "OECDが策定した金融口座情報の自動的情報交換の国際標準。金融機関が非居住者の口座情報を各国の税務当局に報告し、自動的に情報交換する。日本は2018年から実施。"}, {"ja": "推定課税", "en": "Estimated Assessment", "cat": "移転価格", "def": "移転価格税制において同期文書化義務違反がある場合に、税務当局が類似法人の所得水準を基に課税所得を推定して更正できる制度（措法66条の4第7項）。"}, {"ja": "特定外国関係会社", "en": "Specified Foreign Subsidiary", "cat": "CFC税制", "def": "ペーパーカンパニー・事実上のキャッシュボックス・ブラックリスト国所在法人のいずれかに該当する外国関係会社。経済活動基準による適用除外が認められない最強規制対象。"}, {"ja": "対象外国関係会社", "en": "Applicable Foreign Subsidiary", "cat": "CFC税制", "def": "特定外国関係会社以外の外国関係会社で、租税負担割合が20%未満のもの。経済活動基準（4要件）を全て充足すれば会社単位の合算課税から除外される。"}, {"ja": "比較可能性分析", "en": "Comparability Analysis", "cat": "移転価格", "def": "移転価格算定において比較対象取引を選定するための5要素分析。①取引対象の特性②機能分析③契約条件④経済状況⑤事業戦略を比較し、差異調整を行う。"}, {"ja": "代理人PE", "en": "Agency PE", "cat": "PE課税", "def": "外国企業の代理人が当該国において契約締結権限を持って活動する場合に認定されるPE。独立代理人（ブローカー等）は原則として代理人PEを構成しない。BEPS行動7で認定基準が強化された。"}];
+var CAT_COLORS = {"移転価格": "#4f9cf9", "PE課税": "#a78bfa", "CFC税制": "#34d399", "BEPS": "#f87171", "外国税額控除": "#f59e0b", "租税条約": "#38bdf8", "紛争解決": "#fb923c"};
+var deck=[], idx=0, stats={ok:0,no:0,skip:0}, answered=new Set();
+function loadDeck(){
+  var cat=document.getElementById('catSel').value;
+  deck=cat==='all'?ALL_TERMS.slice():ALL_TERMS.filter(function(t){return t.cat===cat;});
+  idx=0; stats={ok:0,no:0,skip:0}; answered=new Set();
+  updateUI();
+}
+function shuffle(){
+  for(var i=deck.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=deck[i];deck[i]=deck[j];deck[j]=tmp;}
+  idx=0;answered=new Set();stats={ok:0,no:0,skip:0};updateUI();
+}
+function resetStats(){stats={ok:0,no:0,skip:0};answered=new Set();updateUI();}
+function flip(){document.getElementById('cardWrap').classList.toggle('flipped');}
+function updateUI(){
+  if(!deck.length)return;
+  var t=deck[idx];
+  var col=CAT_COLORS[t.cat]||'#5E6AD2';
+  document.getElementById('cf-cat').textContent=t.cat;
+  document.getElementById('cf-cat').style.color=col;
+  document.getElementById('cf-ja').textContent=t.ja;
+  document.getElementById('cf-en').textContent=t.en;
+  document.getElementById('cb-cat').textContent=t.cat;
+  document.getElementById('cb-cat').style.color=col;
+  document.getElementById('cb-ja').textContent=t.ja;
+  document.getElementById('cb-def').textContent=t.def;
+  document.getElementById('cardWrap').classList.remove('flipped');
+  document.getElementById('counter').textContent=(idx+1)+' / '+deck.length;
+  document.getElementById('btnPrev').disabled=idx===0;
+  document.getElementById('btnNext').disabled=idx===deck.length-1;
+  document.getElementById('s-ok').textContent=stats.ok;
+  document.getElementById('s-no').textContent=stats.no;
+  document.getElementById('s-skip').textContent=stats.skip;
+  document.getElementById('s-rem').textContent=deck.length-answered.size;
+  // Dots
+  var html='';
+  for(var i=0;i<Math.min(deck.length,40);i++){
+    var cls=i===idx?'dot curr':(answered.has(i)?'dot done':'dot');
+    html+='<span class="'+cls+'"></span>';
+  }
+  document.getElementById('dots').innerHTML=html;
+}
+function answer(type){
+  answered.add(idx);
+  stats[type]++;
+  if(idx<deck.length-1){idx++;updateUI();}
+  else{updateUI();}
+}
+function next(){if(idx<deck.length-1){idx++;updateUI();}}
+function prev(){if(idx>0){idx--;updateUI();}}
+// Keyboard
+document.addEventListener('keydown',function(e){
+  if(e.key===' '||e.key==='Enter'){e.preventDefault();flip();}
+  else if(e.key==='ArrowRight')next();
+  else if(e.key==='ArrowLeft')prev();
+  else if(e.key==='1')answer('ok');
+  else if(e.key==='2')answer('no');
+  else if(e.key==='3')answer('skip');
+});
+loadDeck();
+// Theme
+var he=document.documentElement,mi=document.getElementById('mi'),si=document.getElementById('si');
+function st(t){he.setAttribute('data-theme',t);mi.style.display=t==='dark'?'block':'none';si.style.display=t==='light'?'block':'none';localStorage.setItem('theme',t);}
+document.getElementById('themeBtn').addEventListener('click',function(){st(he.getAttribute('data-theme')==='dark'?'light':'dark');});
+var sv=localStorage.getItem('theme');if(sv)st(sv);
+</script>
+</body>
+</html>
