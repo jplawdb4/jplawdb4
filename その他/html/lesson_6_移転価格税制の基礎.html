@@ -705,6 +705,31 @@ hr.sep {
 .score-num{font-size:2rem;font-weight:800;color:var(--accent,#4f9cf9)}
 .quiz-reset{margin-left:auto;padding:8px 18px;background:none;border:1px solid var(--border,rgba(255,255,255,.2));border-radius:8px;color:var(--text,#e2e8f0);cursor:pointer;font-size:.82rem;transition:background .15s}
 .quiz-reset:hover{background:rgba(255,255,255,.06)}
+
+/* ===== E-1: 計算例ボックス ===== */
+.calc-box{margin:40px 0;padding:28px 32px;background:var(--card-bg,rgba(255,255,255,.04));
+  border:1px solid var(--border,rgba(255,255,255,.1));border-radius:14px;overflow:hidden}
+.calc-box-title{font-size:1rem;font-weight:700;color:var(--accent,#4f9cf9);
+  display:flex;align-items:center;gap:8px;margin-bottom:20px;padding-bottom:12px;
+  border-bottom:1px solid var(--border,rgba(255,255,255,.1))}
+.calc-scenario{font-size:.88rem;line-height:1.8;color:var(--text,#e2e8f0);
+  background:rgba(94,106,210,.06);border-left:3px solid rgba(94,106,210,.4);
+  border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:20px}
+.calc-scenario strong{color:var(--accent,#4f9cf9)}
+.calc-steps{display:flex;flex-direction:column;gap:12px}
+.calc-step{display:flex;gap:14px;align-items:flex-start;font-size:.875rem}
+.step-num{min-width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--accent,#4f9cf9),#7B85E0);
+  color:#fff;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-body{flex:1;line-height:1.7}
+.step-label{font-weight:600;color:var(--text,#e2e8f0);margin-bottom:2px}
+.step-math{font-family:'Outfit',monospace;background:rgba(0,0,0,.2);
+  border:1px solid rgba(255,255,255,.08);border-radius:6px;
+  padding:6px 12px;margin:6px 0;font-size:.85rem;color:#a5f3fc;display:inline-block}
+.step-result{font-size:.78rem;color:#94a3b8}
+.calc-answer{margin-top:20px;padding:14px 18px;
+  background:linear-gradient(135deg,rgba(74,222,128,.08),rgba(94,106,210,.06));
+  border:1px solid rgba(74,222,128,.2);border-radius:10px;
+  font-size:.9rem;font-weight:600;color:#4ade80;display:flex;align-items:center;gap:8px}
 </style>
 </head>
 <body>
@@ -1684,6 +1709,73 @@ hr.sep {
     <button class="quiz-reset" onclick="quizReset('lesson_6_移転価格税制の基礎')">リセット</button>
   </div>
 </section>
+
+
+<div class="calc-box">
+  <div class="calc-box-title">🧮 計算例：独立企業間価格の算定（CUP法）</div>
+  <div class="calc-scenario">
+    <strong>【前提】</strong><br>
+    日本親会社P社が、シンガポール子会社S社へ完成品（電子部品）を1個 <strong>1,200円</strong>で販売。<br>
+    P社は第三者であるT社へも同一品を <strong>1,500円</strong>で販売している（比較対象取引）。<br>
+    ※ 取引条件・数量・市場とも実質的に同一と確認済み
+  </div>
+  <div class="calc-steps">
+    <div class="calc-step">
+      <span class="step-num">1</span>
+      <div class="step-body">
+        <div class="step-label">独立企業間価格の認定（CUP法）</div>
+        <div class="step-math">独立企業間価格 = T社向け販売価格 = <strong>1,500円／個</strong></div>
+        <div class="step-result">→ 実際の関連者間価格（1,200円）は300円低い＝利益移転が疑われる</div>
+      </div>
+    </div>
+    <div class="calc-step">
+      <span class="step-num">2</span>
+      <div class="step-body">
+        <div class="step-label">更正額の算定（当期販売数 10万個）</div>
+        <div class="step-math">差額 = (1,500円 − 1,200円) × 100,000個 = <strong>30,000,000円</strong></div>
+        <div class="step-result">→ 30百万円が国外への移転所得として更正対象となる可能性</div>
+      </div>
+    </div>
+    <div class="calc-step">
+      <span class="step-num">3</span>
+      <div class="step-body">
+        <div class="step-label">追徴税額の試算（法人税率23.2%）</div>
+        <div class="step-math">追徴税額 = 30,000,000円 × 23.2% ≒ <strong>6,960,000円</strong></div>
+        <div class="step-result">→ 過少申告加算税・利子税が別途加算される</div>
+      </div>
+    </div>
+  </div>
+  <div class="calc-answer">✓ 比較可能性分析で差異調整が必要な場合はCUP法より間接法（TNMM等）が優先されることがある</div>
+</div>
+
+<div class="calc-box" style="margin-top:24px">
+  <div class="calc-box-title">🧮 計算例：TNMM（取引単位営業利益法）による検証</div>
+  <div class="calc-scenario">
+    <strong>【前提】</strong><br>
+    S社（検証対象法人）の当期売上：50億円、営業利益：1億円（営業利益率 2%）<br>
+    比較対象独立企業群の四分位範囲：<strong>営業利益率 3%〜8%</strong>（中央値 5.5%）<br>
+    ※ 機能・リスク分析では S社は単純な製造機能を担うルーティン企業と認定
+  </div>
+  <div class="calc-steps">
+    <div class="calc-step">
+      <span class="step-num">1</span>
+      <div class="step-body">
+        <div class="step-label">アームズ・レングス・レンジの確認</div>
+        <div class="step-math">S社の営業利益率 2% ＜ 下限値 3%</div>
+        <div class="step-result">→ 独立企業間範囲を下回る → 移転価格課税リスクあり</div>
+      </div>
+    </div>
+    <div class="calc-step">
+      <span class="step-num">2</span>
+      <div class="step-body">
+        <div class="step-label">更正点（中央値）への引き上げ</div>
+        <div class="step-math">適正営業利益 = 50億円 × 5.5% = 2.75億円</div>
+        <div class="step-math">更正額 = 2.75億円 − 1億円 = <strong>1.75億円</strong></div>
+      </div>
+    </div>
+  </div>
+  <div class="calc-answer">✓ IQR（四分位範囲）内であれば原則として更正なし。超える場合は中央値が更正点となる</div>
+</div>
 
 <!-- ===== LESSON NAVIGATION ===== -->
 <nav class="lesson-nav">

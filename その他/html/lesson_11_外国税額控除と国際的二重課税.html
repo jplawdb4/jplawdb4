@@ -466,6 +466,31 @@ hr.sep {
 .score-num{font-size:2rem;font-weight:800;color:var(--accent,#4f9cf9)}
 .quiz-reset{margin-left:auto;padding:8px 18px;background:none;border:1px solid var(--border,rgba(255,255,255,.2));border-radius:8px;color:var(--text,#e2e8f0);cursor:pointer;font-size:.82rem;transition:background .15s}
 .quiz-reset:hover{background:rgba(255,255,255,.06)}
+
+/* ===== E-1: 計算例ボックス ===== */
+.calc-box{margin:40px 0;padding:28px 32px;background:var(--card-bg,rgba(255,255,255,.04));
+  border:1px solid var(--border,rgba(255,255,255,.1));border-radius:14px;overflow:hidden}
+.calc-box-title{font-size:1rem;font-weight:700;color:var(--accent,#4f9cf9);
+  display:flex;align-items:center;gap:8px;margin-bottom:20px;padding-bottom:12px;
+  border-bottom:1px solid var(--border,rgba(255,255,255,.1))}
+.calc-scenario{font-size:.88rem;line-height:1.8;color:var(--text,#e2e8f0);
+  background:rgba(94,106,210,.06);border-left:3px solid rgba(94,106,210,.4);
+  border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:20px}
+.calc-scenario strong{color:var(--accent,#4f9cf9)}
+.calc-steps{display:flex;flex-direction:column;gap:12px}
+.calc-step{display:flex;gap:14px;align-items:flex-start;font-size:.875rem}
+.step-num{min-width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--accent,#4f9cf9),#7B85E0);
+  color:#fff;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-body{flex:1;line-height:1.7}
+.step-label{font-weight:600;color:var(--text,#e2e8f0);margin-bottom:2px}
+.step-math{font-family:'Outfit',monospace;background:rgba(0,0,0,.2);
+  border:1px solid rgba(255,255,255,.08);border-radius:6px;
+  padding:6px 12px;margin:6px 0;font-size:.85rem;color:#a5f3fc;display:inline-block}
+.step-result{font-size:.78rem;color:#94a3b8}
+.calc-answer{margin-top:20px;padding:14px 18px;
+  background:linear-gradient(135deg,rgba(74,222,128,.08),rgba(94,106,210,.06));
+  border:1px solid rgba(74,222,128,.2);border-radius:10px;
+  font-size:.9rem;font-weight:600;color:#4ade80;display:flex;align-items:center;gap:8px}
 </style>
 </head>
 <body>
@@ -1444,6 +1469,52 @@ A国税額（実際納付）:          100万円
     <button class="quiz-reset" onclick="quizReset('lesson_11_外国税額控除と国際的二重課税')">リセット</button>
   </div>
 </section>
+
+
+<div class="calc-box">
+  <div class="calc-box-title">🧮 計算例：外国税額控除の限度額計算</div>
+  <div class="calc-scenario">
+    <strong>【前提】</strong><br>
+    内国法人A社（法人税率23.2%）の当期情報：<br>
+    ・国内所得：5億円　・国外所得：1億円（米国源泉、現地税額30百万円）<br>
+    ・全所得：6億円　・法人税額（控除前）：6億円 × 23.2% = 139,200,000円
+  </div>
+  <div class="calc-steps">
+    <div class="calc-step">
+      <span class="step-num">1</span>
+      <div class="step-body">
+        <div class="step-label">控除限度額の計算（法法69条）</div>
+        <div class="step-math">控除限度額 = 法人税額 × 国外所得 ÷ 全所得</div>
+        <div class="step-math">= 139,200,000円 × 1億円 ÷ 6億円</div>
+        <div class="step-math">= <strong>23,200,000円</strong></div>
+      </div>
+    </div>
+    <div class="calc-step">
+      <span class="step-num">2</span>
+      <div class="step-body">
+        <div class="step-label">外国法人税額との比較</div>
+        <div class="step-math">外国税額 30,000,000円 ＞ 控除限度額 23,200,000円</div>
+        <div class="step-result">→ 限度超過額 6,800,000円は控除不可。3年間の繰越が可能（法法69条2項）</div>
+      </div>
+    </div>
+    <div class="calc-step">
+      <span class="step-num">3</span>
+      <div class="step-body">
+        <div class="step-label">当期の外国税額控除適用額</div>
+        <div class="step-math">控除額 = min(外国税額, 控除限度額) = 23,200,000円</div>
+      </div>
+    </div>
+    <div class="calc-step">
+      <span class="step-num">4</span>
+      <div class="step-body">
+        <div class="step-label">納付法人税額の確定</div>
+        <div class="step-math">納付法人税額 = 139,200,000円 − 23,200,000円 = <strong>116,000,000円</strong></div>
+        <div class="step-result">→ 実効税率：116,000,000 ÷ 6億 ≒ 19.3%（国内税率23.2%を下回る）</div>
+      </div>
+    </div>
+  </div>
+  <div class="calc-answer">✓ 控除限度額超過分（6,800万円）は翌3年繰越／限度余裕は5年繰越可能</div>
+</div>
 
 <!-- ===== LESSON NAVIGATION ===== -->
 <nav class="lesson-nav">

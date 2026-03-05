@@ -749,6 +749,31 @@ hr.sep {
 .score-num{font-size:2rem;font-weight:800;color:var(--accent,#4f9cf9)}
 .quiz-reset{margin-left:auto;padding:8px 18px;background:none;border:1px solid var(--border,rgba(255,255,255,.2));border-radius:8px;color:var(--text,#e2e8f0);cursor:pointer;font-size:.82rem;transition:background .15s}
 .quiz-reset:hover{background:rgba(255,255,255,.06)}
+
+/* ===== E-1: 計算例ボックス ===== */
+.calc-box{margin:40px 0;padding:28px 32px;background:var(--card-bg,rgba(255,255,255,.04));
+  border:1px solid var(--border,rgba(255,255,255,.1));border-radius:14px;overflow:hidden}
+.calc-box-title{font-size:1rem;font-weight:700;color:var(--accent,#4f9cf9);
+  display:flex;align-items:center;gap:8px;margin-bottom:20px;padding-bottom:12px;
+  border-bottom:1px solid var(--border,rgba(255,255,255,.1))}
+.calc-scenario{font-size:.88rem;line-height:1.8;color:var(--text,#e2e8f0);
+  background:rgba(94,106,210,.06);border-left:3px solid rgba(94,106,210,.4);
+  border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:20px}
+.calc-scenario strong{color:var(--accent,#4f9cf9)}
+.calc-steps{display:flex;flex-direction:column;gap:12px}
+.calc-step{display:flex;gap:14px;align-items:flex-start;font-size:.875rem}
+.step-num{min-width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--accent,#4f9cf9),#7B85E0);
+  color:#fff;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-body{flex:1;line-height:1.7}
+.step-label{font-weight:600;color:var(--text,#e2e8f0);margin-bottom:2px}
+.step-math{font-family:'Outfit',monospace;background:rgba(0,0,0,.2);
+  border:1px solid rgba(255,255,255,.08);border-radius:6px;
+  padding:6px 12px;margin:6px 0;font-size:.85rem;color:#a5f3fc;display:inline-block}
+.step-result{font-size:.78rem;color:#94a3b8}
+.calc-answer{margin-top:20px;padding:14px 18px;
+  background:linear-gradient(135deg,rgba(74,222,128,.08),rgba(94,106,210,.06));
+  border:1px solid rgba(74,222,128,.2);border-radius:10px;
+  font-size:.9rem;font-weight:600;color:#4ade80;display:flex;align-items:center;gap:8px}
 </style>
 </head>
 <body>
@@ -1881,6 +1906,55 @@ hr.sep {
     <button class="quiz-reset" onclick="quizReset('lesson_9_CFC税制の基礎')">リセット</button>
   </div>
 </section>
+
+
+<div class="calc-box">
+  <div class="calc-box-title">🧮 計算例：外国関係会社の租税負担割合（トリガー税率判定）</div>
+  <div class="calc-scenario">
+    <strong>【前提】</strong><br>
+    内国法人P社（50%超保有）の外国子会社S社（シンガポール法人）：<br>
+    ・S社の税引前当期利益：10億円<br>
+    ・シンガポール現地法人税額：1.7億円（税率17%）<br>
+    ※ 日本の法人税率を34%と仮定（法令で定める算定税率）
+  </div>
+  <div class="calc-steps">
+    <div class="calc-step">
+      <span class="step-num">1</span>
+      <div class="step-body">
+        <div class="step-label">租税負担割合の計算（措令39条の17等準用）</div>
+        <div class="step-math">租税負担割合 = 外国法人税額 ÷ 税引前当期利益</div>
+        <div class="step-math">= 1.7億円 ÷ 10億円 = <strong>17%</strong></div>
+      </div>
+    </div>
+    <div class="calc-step">
+      <span class="step-num">2</span>
+      <div class="step-body">
+        <div class="step-label">トリガー税率との比較</div>
+        <div class="step-math">トリガー税率 = 30%（特定外国関係会社）/ 20%（対象外国関係会社）</div>
+        <div class="step-math">17% ＜ 30% → 特定外国関係会社の要件（租税負担割合）を充足</div>
+        <div class="step-result">→ さらにペーパーカンパニー等の実体要件を判断する</div>
+      </div>
+    </div>
+    <div class="calc-step">
+      <span class="step-num">3</span>
+      <div class="step-body">
+        <div class="step-label">合算課税額の試算（会社単位：ペーパーカンパニー認定の場合）</div>
+        <div class="step-math">合算所得 = S社の課税対象留保金額（仮）8億円（税引後利益相当）</div>
+        <div class="step-math">P社での法人税増加額 = 8億円 × 23.2% = <strong>185,600,000円</strong></div>
+        <div class="step-result">→ 外国税額控除（1.7億円）により実際の追徴は約16百万円程度に圧縮</div>
+      </div>
+    </div>
+    <div class="calc-step">
+      <span class="step-num">4</span>
+      <div class="step-body">
+        <div class="step-label">経済活動基準を充足する場合（適用除外）</div>
+        <div class="step-math">4要件（事業・実体・管理支配・所在地国）を全て充足</div>
+        <div class="step-math">→ 合算課税なし（措法66条の6第3項）</div>
+      </div>
+    </div>
+  </div>
+  <div class="calc-answer">✓ 租税負担割合20%未満かつ経済活動基準不充足 → 対象外国関係会社として合算課税</div>
+</div>
 
 <!-- ===== LESSON NAVIGATION ===== -->
 <nav class="lesson-nav">
