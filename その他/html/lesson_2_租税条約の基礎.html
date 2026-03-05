@@ -521,8 +521,86 @@ tr:last-child td { border-bottom: none; }
 .back-to-top svg { width: 18px; height: 18px; }
 
 /* ===== Print ===== */
+/* ===== Print / PDF CSS ===== */
 @media print {
-  .header, .theme-toggle, .menu-btn, .back-to-top { display: none !important; }
+  /* 非表示にするUI要素 */
+  .header, .theme-toggle, .menu-btn, .nav,
+  .lesson-nav, .lesson-quiz, .quiz-wrap,
+  #back-to-top, #scroll-prog-bar, #lesson-done-btn,
+  .lnav-done-row, .toc-sidebar { display: none !important; }
+
+  /* ページ設定 */
+  @page { margin: 20mm 18mm; size: A4; }
+
+  /* ベース */
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 10pt;
+    line-height: 1.65;
+  }
+
+  /* コンテナを全幅に */
+  .container, .content-wrap, main, article {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* 見出し */
+  h1 { font-size: 16pt; page-break-after: avoid; }
+  h2 { font-size: 13pt; page-break-after: avoid; margin-top: 16pt; }
+  h3 { font-size: 11pt; page-break-after: avoid; }
+
+  /* セクション・カード */
+  .section, .content-card {
+    background: #fff !important;
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    margin-bottom: 12pt;
+    padding: 10pt;
+    page-break-inside: avoid;
+  }
+
+  /* ポイントボックス */
+  .point-box {
+    background: #f5f5f5 !important;
+    border-left: 3px solid #5E6AD2 !important;
+    page-break-inside: avoid;
+  }
+
+  /* テーブル */
+  table { border-collapse: collapse; width: 100%; font-size: 9pt; }
+  th, td {
+    border: 1px solid #bbb;
+    padding: 4pt 6pt;
+    background: #fff !important;
+    color: #000 !important;
+  }
+  thead tr { background: #eee !important; }
+
+  /* 条文リンク: 下線のみ */
+  .law-link {
+    color: #000 !important;
+    border-bottom: 1px solid #555 !important;
+    background: none !important;
+  }
+
+  /* コードブロック */
+  code, pre {
+    background: #f0f0f0 !important;
+    color: #000 !important;
+    border: 1px solid #ccc;
+    font-size: 8.5pt;
+  }
+
+  /* ページ区切り */
+  .section { page-break-inside: avoid; }
+
+  /* ヒーロー部分 */
+  .hero, .lesson-hero { padding: 20pt 0; }
+}
   .content-card { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
   body { background: #fff; color: #000; }
 }
