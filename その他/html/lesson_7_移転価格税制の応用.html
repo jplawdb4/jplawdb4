@@ -1038,5 +1038,67 @@ hr.sep {
 }
 </style>
 
+
+<style id="svg-lb-style">
+#svg-lb{display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.88);
+  cursor:zoom-out;align-items:center;justify-content:center;padding:24px;box-sizing:border-box}
+#svg-lb.open{display:flex}
+#svg-lb-box{position:relative;background:#0f172a;border-radius:16px;padding:36px 28px 24px;
+  max-width:min(92vw,1100px);max-height:90vh;overflow:auto;
+  box-shadow:0 24px 80px rgba(0,0,0,.7)}
+#svg-lb-close{position:absolute;top:10px;right:12px;background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.18);color:#e2e8f0;width:34px;height:34px;
+  border-radius:50%;cursor:pointer;font-size:17px;line-height:32px;text-align:center;
+  transition:background .15s;padding:0}
+#svg-lb-close:hover{background:rgba(255,255,255,.22)}
+#svg-lb-content svg{width:78vw;max-width:1040px;height:auto;display:block}
+.svg-zoomable{cursor:zoom-in;position:relative}
+.svg-zoomable::after{content:'クリックで拡大';position:absolute;bottom:10px;right:14px;
+  font-size:.72rem;color:rgba(255,255,255,.3);pointer-events:none;opacity:0;
+  transition:opacity .2s;letter-spacing:.04em}
+.svg-zoomable:hover::after{opacity:1}
+</style>
+
+<div id="svg-lb" role="dialog" aria-modal="true" aria-label="図解拡大">
+  <div id="svg-lb-box">
+    <button id="svg-lb-close" aria-label="閉じる">&#x2715;</button>
+    <div id="svg-lb-content"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var lb=document.getElementById('svg-lb');
+  var content=document.getElementById('svg-lb-content');
+  function openLb(svg){
+    var c=svg.cloneNode(true);
+    c.removeAttribute('style');
+    content.innerHTML='';
+    content.appendChild(c);
+    lb.classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+  function closeLb(){
+    lb.classList.remove('open');
+    document.body.style.overflow='';
+  }
+  document.getElementById('svg-lb-close').addEventListener('click',closeLb);
+  lb.addEventListener('click',function(e){if(e.target===lb)closeLb();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeLb();});
+  document.querySelectorAll(
+    '[class*="section"] svg, [id*="svg"] svg, [id*="sec-svg"] svg'
+  ).forEach(function(svg){
+    var w=svg.closest('div[style*="overflow"]')||svg.parentElement;
+    if(w&&!w.classList.contains('svg-zoomable')){
+      w.classList.add('svg-zoomable');
+      w.setAttribute('tabindex','0');
+      w.addEventListener('click',function(){openLb(svg);});
+      w.addEventListener('keydown',function(e){
+        if(e.key==='Enter'||e.key===' '){e.preventDefault();openLb(svg);}
+      });
+    }
+  });
+})();
+</script>
 </body>
 </html>
