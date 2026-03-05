@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code 完全ガイド — Anthropic AIコーディングエージェントCLI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ========== CSS RESET & VARIABLES ========== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0A0A0A;--card:#16161A;--border:rgba(255,255,255,0.06);
+  --accent:#5E6AD2;--accent2:#7B61FF;--accent3:#A78BFA;
+  --text:#FAFAFA;--text2:#8A8A9A;--text3:#55556A;
+  --code-bg:#111113;--code-border:#1E1E22;
+  --shadow:0 0 0 1px rgba(255,255,255,0.06),0 4px 24px rgba(0,0,0,0.4);
+  --radius:12px;--font:'Outfit','Noto Sans JP',sans-serif;
+  --mono:'JetBrains Mono','Fira Code','SF Mono',Consolas,'Noto Sans JP',monospace;
+  --max-w:900px;--sidebar-w:280px;
+}
+[data-theme="light"]{
+  --bg:#F5F5F7;--card:#FFFFFF;--border:rgba(0,0,0,0.08);
+  --text:#1A1A1A;--text2:#555566;--text3:#888899;
+  --code-bg:#F0F0F3;--code-border:#E0E0E5;
+  --shadow:0 0 0 1px rgba(0,0,0,0.06),0 4px 24px rgba(0,0,0,0.08);
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  font-family:var(--font);background:var(--bg);color:var(--text);
+  line-height:1.8;transition:background .3s,color .3s;
+  overflow-x:hidden;
+}
+a{color:var(--accent);text-decoration:none;transition:color .2s}
+a:hover{color:var(--accent3)}
+img{max-width:100%;height:auto}
+
+/* ========== THEME TOGGLE ========== */
+.theme-toggle{
+  position:fixed;top:20px;right:20px;z-index:1000;
+  width:48px;height:48px;border-radius:50%;border:1px solid var(--border);
+  background:var(--card);cursor:pointer;display:flex;align-items:center;
+  justify-content:center;font-size:20px;box-shadow:var(--shadow);
+  transition:transform .2s,background .3s;
+}
+.theme-toggle:hover{transform:scale(1.1)}
+
+/* ========== LAYOUT ========== */
+.page-wrapper{display:flex;min-height:100vh}
+.sidebar{
+  position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;
+  background:var(--card);border-right:1px solid var(--border);
+  overflow-y:auto;padding:24px 0;z-index:100;
+  transition:transform .3s;
+}
+.sidebar-header{padding:0 20px 16px;border-bottom:1px solid var(--border);margin-bottom:12px}
+.sidebar-logo{font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sidebar-sub{font-size:11px;color:var(--text3);margin-top:2px;letter-spacing:.5px;text-transform:uppercase}
+.toc-list{list-style:none;padding:0 8px}
+.toc-list li{margin:1px 0}
+.toc-list a{
+  display:block;padding:6px 12px;font-size:13px;color:var(--text2);
+  border-radius:6px;transition:all .15s;line-height:1.4;
+}
+.toc-list a:hover{background:rgba(94,106,210,0.1);color:var(--accent)}
+.toc-part{
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;
+  color:var(--text3);padding:12px 12px 4px;margin-top:8px;
+}
+
+.main-content{
+  margin-left:var(--sidebar-w);flex:1;padding:40px 48px 80px;
+  max-width:calc(var(--max-w) + var(--sidebar-w) + 96px);
+}
+
+/* ========== HERO ========== */
+.hero{
+  text-align:center;padding:60px 0 48px;
+  border-bottom:1px solid var(--border);margin-bottom:48px;
+}
+.hero-badge{
+  display:inline-block;padding:4px 14px;border-radius:20px;
+  background:rgba(94,106,210,0.12);color:var(--accent);
+  font-size:12px;font-weight:600;letter-spacing:.5px;margin-bottom:16px;
+}
+.hero h1{
+  font-size:clamp(32px,5vw,52px);font-weight:900;line-height:1.15;
+  background:linear-gradient(135deg,var(--text) 0%,var(--accent) 50%,var(--accent3) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:16px;
+}
+.hero p{font-size:18px;color:var(--text2);max-width:640px;margin:0 auto;line-height:1.7}
+
+/* ========== SECTIONS ========== */
+.section{margin-bottom:56px}
+.section-label{
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;
+  color:var(--accent);margin-bottom:4px;
+}
+.section h2{
+  font-size:28px;font-weight:800;line-height:1.3;margin-bottom:20px;
+  background:linear-gradient(90deg,var(--text),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.section h3{font-size:20px;font-weight:700;color:var(--text);margin:28px 0 12px;line-height:1.4}
+.section h4{font-size:16px;font-weight:600;color:var(--text2);margin:20px 0 8px}
+.section p,.section li{font-size:15px;color:var(--text2);line-height:1.85;margin-bottom:12px}
+
+/* ========== CARDS ========== */
+.card{
+  background:var(--card);border-radius:var(--radius);padding:24px 28px;
+  box-shadow:var(--shadow);margin:20px 0;transition:background .3s;
+}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin:20px 0}
+.card-sm{
+  background:var(--card);border-radius:var(--radius);padding:20px;
+  box-shadow:var(--shadow);transition:transform .2s;
+}
+.card-sm:hover{transform:translateY(-2px)}
+.card-sm h4{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px}
+.card-sm p{font-size:13px;color:var(--text2);margin:0}
+
+/* ========== CODE BLOCKS ========== */
+pre{
+  background:var(--code-bg);border:1px solid var(--code-border);
+  border-radius:8px;padding:16px 20px;overflow-x:auto;
+  margin:14px 0;font-size:13px;line-height:1.7;
+}
+code{font-family:var(--mono);font-size:13px}
+p code,li code{
+  background:var(--code-bg);padding:2px 7px;border-radius:4px;
+  font-size:12.5px;border:1px solid var(--code-border);
+}
+
+/* ========== TABLES ========== */
+.table-wrap{overflow-x:auto;margin:16px 0}
+table{
+  width:100%;border-collapse:collapse;font-size:13.5px;
+  background:var(--card);border-radius:var(--radius);overflow:hidden;
+  box-shadow:var(--shadow);
+}
+th{
+  text-align:left;padding:12px 16px;font-weight:600;font-size:12px;
+  text-transform:uppercase;letter-spacing:.5px;color:var(--text3);
+  border-bottom:1px solid var(--border);background:rgba(94,106,210,0.05);
+}
+td{padding:10px 16px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(94,106,210,0.03)}
+
+/* ========== CALLOUT ========== */
+.callout{
+  border-left:3px solid var(--accent);padding:16px 20px;
+  background:rgba(94,106,210,0.06);border-radius:0 8px 8px 0;
+  margin:16px 0;
+}
+.callout p{margin:0;font-size:14px}
+.callout strong{color:var(--text)}
+.callout-warn{border-left-color:#F59E0B;background:rgba(245,158,11,0.06)}
+.callout-danger{border-left-color:#EF4444;background:rgba(239,68,68,0.06)}
+
+/* ========== PART DIVIDER ========== */
+.part-divider{
+  text-align:center;padding:32px 0;margin:48px 0 24px;
+  border-top:1px solid var(--border);
+}
+.part-divider span{
+  font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+  color:var(--accent);
+}
+
+/* ========== BACK TO TOP ========== */
+.back-top{
+  position:fixed;bottom:24px;right:24px;width:44px;height:44px;
+  border-radius:50%;background:var(--accent);color:#fff;border:none;
+  cursor:pointer;font-size:18px;display:none;align-items:center;
+  justify-content:center;z-index:999;box-shadow:0 4px 12px rgba(94,106,210,0.4);
+  transition:opacity .3s,transform .2s;
+}
+.back-top:hover{transform:scale(1.1)}
+.back-top.show{display:flex}
+
+/* ========== HAMBURGER ========== */
+.hamburger{
+  display:none;position:fixed;top:20px;left:20px;z-index:1001;
+  width:44px;height:44px;border-radius:10px;border:1px solid var(--border);
+  background:var(--card);cursor:pointer;flex-direction:column;
+  align-items:center;justify-content:center;gap:5px;
+}
+.hamburger span{display:block;width:20px;height:2px;background:var(--text);border-radius:2px;transition:all .3s}
+
+/* ========== RESPONSIVE ========== */
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0);box-shadow:4px 0 30px rgba(0,0,0,0.5)}
+  .main-content{margin-left:0;padding:24px 20px 60px}
+  .hamburger{display:flex}
+  .theme-toggle{top:20px;right:20px}
+  .hero h1{font-size:28px}
+  .hero{padding:40px 0 32px}
+  .card-grid{grid-template-columns:1fr}
+  table{font-size:12px}
+  th,td{padding:8px 10px}
+}
+.overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99;
+}
+.overlay.show{display:block}
+
+/* ========== ANIMATIONS ========== */
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.section{animation:fadeIn .5s ease both}
+
+/* ========== PRINT ========== */
+@media print{
+  .sidebar,.theme-toggle,.hamburger,.back-top,.overlay{display:none!important}
+  .main-content{margin-left:0;padding:0}
+  body{background:#fff;color:#000}
+}
+</style>
+</head>
+<body>
+
+<!-- Theme Toggle -->
+<button class="theme-toggle" id="themeToggle" aria-label="テーマ切り替え">🌙</button>
+
+<!-- Hamburger -->
+<button class="hamburger" id="hamburger" aria-label="メニュー"><span></span><span></span><span></span></button>
+
+<!-- Overlay -->
+<div class="overlay" id="overlay"></div>
+
+<!-- Back to top -->
+<button class="back-top" id="backTop" aria-label="トップへ">↑</button>
+
+<div class="page-wrapper">
+
+<!-- ==================== SIDEBAR / TOC ==================== -->
+<nav class="sidebar" id="sidebar">
+<div class="sidebar-header">
+  <div class="sidebar-logo">Claude Code Guide</div>
+  <div class="sidebar-sub">Complete Reference 2026</div>
+</div>
+<div class="toc-part">Part 1 — 基礎</div>
+<ul class="toc-list">
+  <li><a href="#ch1">1. Claude Codeとは</a></li>
+  <li><a href="#ch2">2. インストールとセットアップ</a></li>
+  <li><a href="#ch3">3. 基本的な使い方</a></li>
+</ul>
+<div class="toc-part">Part 2 — コア機能</div>
+<ul class="toc-list">
+  <li><a href="#ch4">4. ファイル操作</a></li>
+  <li><a href="#ch5">5. Bash実行とセキュリティ</a></li>
+  <li><a href="#ch6">6. Git統合</a></li>
+  <li><a href="#ch7">7. CLAUDE.md</a></li>
+</ul>
+<div class="toc-part">Part 3 — 上級機能</div>
+<ul class="toc-list">
+  <li><a href="#ch8">8. MCP統合</a></li>
+  <li><a href="#ch9">9. マルチエージェント</a></li>
+  <li><a href="#ch10">10. カスタムスキル</a></li>
+  <li><a href="#ch11">11. フック</a></li>
+</ul>
+<div class="toc-part">Part 4 — 実践・エコシステム</div>
+<ul class="toc-list">
+  <li><a href="#ch12">12. IDE統合・ヘッドレス</a></li>
+  <li><a href="#ch13">13. 料金体系</a></li>
+  <li><a href="#ch14">14. ユースケース集</a></li>
+  <li><a href="#ch15">15. 他ツール比較</a></li>
+</ul>
+<div class="toc-part">付録</div>
+<ul class="toc-list">
+  <li><a href="#appendix-commands">コマンド・フラグ一覧</a></li>
+  <li><a href="#appendix-settings">settings.json リファレンス</a></li>
+  <li><a href="#appendix-trouble">トラブルシューティング</a></li>
+  <li><a href="#appendix-links">参考リンク</a></li>
+</ul>
+</nav>
+
+<!-- ==================== MAIN CONTENT ==================== -->
+<main class="main-content">
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-badge">COMPREHENSIVE GUIDE — 2026 EDITION</div>
+  <h1>Claude Code<br>完全ガイド</h1>
+  <p>Anthropic社が提供するAIコーディングエージェントCLI「Claude Code」について、インストールから上級テクニックまで、初心者にもわかりやすく徹底解説する全15章のリファレンスガイドです。</p>
+</header>
+
+<!-- ============================================================ -->
+<!--  PART 1: 基礎                                                 -->
+<!-- ============================================================ -->
+<div class="part-divider"><span>Part 1 — Foundations / 基礎</span></div>
+
+<!-- ===== Chapter 1 ===== -->
+<section class="section" id="ch1">
+<div class="section-label">Chapter 01 — What is Claude Code</div>
+<h2>Claude Codeとは</h2>
+
+<h3>概要：ターミナルに住むAIペアプログラマー</h3>
+<p>Claude Code は、Anthropic社が開発・提供する<strong>エージェント型AIコーディングアシスタント</strong>です。ターミナル（コマンドライン）上で動作し、プロジェクトのコードベース全体を理解したうえで、ファイルの読み書き、シェルコマンドの実行、Git操作、テスト実行、PRの作成といった一連の開発タスクを自律的にこなします。単なるコード補完ツールとは異なり、Claude Codeは「エージェント」として振る舞います。つまり、開発者が高レベルの指示を与えれば、Claude Code自身が探索・計画・実装・検証のサイクルを回しながら、複数ファイルにまたがる複雑なタスクを遂行するのです。</p>
+
+<p>Claude Codeは2025年2月にリサーチプレビューとして公開され、その後急速に進化を遂げました。ターミナルCLIとしてスタートしましたが、現在ではVS Code拡張、JetBrainsプラグイン、スタンドアロンのデスクトップアプリ、さらにはWebブラウザ上でのクラウド実行にも対応しており、あらゆる環境から同一のClaude Codeエンジンにアクセスできます。CLAUDE.mdファイル、settings.json、MCPサーバーの設定はすべてのサーフェスで共有されるため、環境間で一貫した体験が得られます。</p>
+
+<h3>Anthropic社の位置づけ</h3>
+<p>Anthropic社は、AI安全性研究を使命とするサンフランシスコ拠点の企業で、Claudeモデルファミリーの開発元です。Claude Codeは同社の「AIを安全かつ有用に」という理念を開発ツール分野に拡張したプロダクトであり、開発者が日常的に使用するCLI環境にClaude Opus 4.6やClaude Sonnet 4.6といった最先端モデルのパワーを直接持ち込みます。Claude 4モデルファミリーには現在、Claude Opus 4.6（最高性能）、Claude Opus 4.5、Claude Opus 4.1、Claude Opus 4、Claude Sonnet 4があり、Claude Codeはこれらのモデルをバックエンドとして利用します。</p>
+
+<h3>なぜCLI（ターミナル）なのか</h3>
+<p>多くのAIコーディングツールがIDE統合を前提として設計されている中、Claude Codeがターミナルを第一級のインターフェースとする理由は明確です。ターミナルはあらゆる開発環境のベースレイヤーであり、SSH経由のリモートサーバー、CI/CDパイプライン、コンテナ内部など、GUIが存在しない環境でも一貫して動作します。また、パイプやリダイレクトによるUnixツールとの組み合わせが自然に行え、自動化スクリプトへの組み込みも容易です。Claude Codeはこの設計哲学に基づき、「エディタ非依存でどこでも使えるAIコーディングパートナー」を実現しています。</p>
+
+<h3>Claude Codeの主要な特徴</h3>
+<div class="card">
+<p><strong>コードベース全体の理解</strong> — Claude Codeはプロジェクトのファイル構造、依存関係、コーディングパターンを自律的に読み取り、コンテキストを構築します。開発者が手動でファイルを選択・貼り付けする必要はありません。</p>
+<p><strong>エージェント型自律実行</strong> — 指示を与えると、Claude Codeは自ら必要なファイルを読み、コマンドを実行し、コードを編集し、テストを走らせ、結果を検証します。この探索→計画→実装→検証のループを自動的に繰り返します。</p>
+<p><strong>権限ベースのセキュリティ</strong> — ファイル書き込みやシェルコマンド実行など、潜在的に危険な操作にはユーザーの承認が必要です。サンドボックス機能によるOS レベルの隔離も利用可能です。</p>
+<p><strong>マルチサーフェス対応</strong> — ターミナルCLI、VS Code、JetBrains、デスクトップアプリ、Webブラウザのいずれからでも同じエンジンにアクセスでき、設定やコンテキストが共有されます。</p>
+<p><strong>拡張性</strong> — MCP（Model Context Protocol）によるツール統合、カスタムスキル、フック、サブエージェント、プラグインにより、ほぼ無限に機能を拡張できます。</p>
+</div>
+</section>
+
+<!-- ===== Chapter 2 ===== -->
+<section class="section" id="ch2">
+<div class="section-label">Chapter 02 — Installation &amp; Setup</div>
+<h2>インストールと初期セットアップ</h2>
+
+<h3>前提条件</h3>
+<p>Claude Codeを使用するには、Claude有料サブスクリプション（Pro、Max）またはAnthropic APIアカウントが必要です。対応プラットフォームはmacOS 13.0以降、Linux（glibc / musl）、Windows（Git for Windows必須）、およびWSL2です。メモリは最低4GB推奨で、低メモリ環境ではスワップ領域の追加が必要になる場合があります。</p>
+
+<h3>インストール方法</h3>
+<p>Anthropicはネイティブインストーラーを推奨しています。従来のnpmグローバルインストールも引き続き動作しますが、ネイティブインストーラーの方がバイナリサイズの最適化やOSレベルの統合が優れています。</p>
+
+<h4>macOS / Linux / WSL（推奨：ネイティブインストーラー）</h4>
+<pre><code>curl -fsSL https://claude.ai/install.sh | bash</code></pre>
+
+<h4>Windows PowerShell</h4>
+<pre><code>irm https://claude.ai/install.ps1 | iex</code></pre>
+
+<h4>Windows CMD</h4>
+<pre><code>curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd</code></pre>
+
+<h4>Homebrew（macOS / Linux）</h4>
+<pre><code>brew install --cask claude-code</code></pre>
+
+<h4>WinGet（Windows）</h4>
+<pre><code>winget install Anthropic.ClaudeCode</code></pre>
+
+<h3>初回起動と認証</h3>
+<p>インストール完了後、プロジェクトディレクトリに移動して <code>claude</code> と入力するだけでインタラクティブセッションが開始されます。初回起動時にはブラウザが開き、Claude.ai または Anthropic Console アカウントでのOAuth認証を求められます。認証が成功すると、ターミナルにプロンプトが表示され、即座に対話を開始できます。</p>
+<pre><code>cd your-project
+claude</code></pre>
+
+<div class="callout">
+<p><strong>Tip：</strong>認証時にブラウザが自動で開かない場合は、ターミナルに表示されるURLをコピーして手動でブラウザに貼り付けてください。SSHリモート環境ではローカルマシンのブラウザでURLを開く必要があります。</p>
+</div>
+
+<h3>認証コマンド</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>コマンド</th><th>説明</th></tr></thead>
+<tbody>
+<tr><td><code>claude auth login</code></td><td>ログイン（<code>--email</code>でメール指定、<code>--sso</code>でSSO強制）</td></tr>
+<tr><td><code>claude auth logout</code></td><td>ログアウト</td></tr>
+<tr><td><code>claude auth status</code></td><td>認証状態をJSON出力（<code>--text</code>で可読形式）</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>アップデート</h3>
+<pre><code>claude update</code></pre>
+<p>安定版チャネルを利用する場合は、settings.jsonで <code>"autoUpdatesChannel": "stable"</code> を設定します。stable版は通常最新リリースの約1週間後に配信され、重大なリグレッションのあるバージョンをスキップします。</p>
+</section>
+
+<!-- ===== Chapter 3 ===== -->
+<section class="section" id="ch3">
+<div class="section-label">Chapter 03 — Basic Usage</div>
+<h2>基本的な使い方</h2>
+
+<h3>3つの基本モード</h3>
+<p>Claude Codeには、インタラクティブモード、ワンショットモード（print mode）、パイプ入力の3つの主要な利用パターンがあります。</p>
+
+<h4>インタラクティブモード</h4>
+<p>最も一般的な使い方です。<code>claude</code> と入力するだけで対話セッションが開始され、自然言語でプロンプトを入力しながらClaude Codeと会話できます。セッション中はファイル編集、テスト実行、Git操作などがリアルタイムに実行され、各操作に対する権限承認を求められます。</p>
+<pre><code># 対話セッションを開始
+claude
+
+# 初回プロンプト付きで開始
+claude "このプロジェクトの構造を説明して"</code></pre>
+
+<h4>ワンショットモード（Print Mode / -p フラグ）</h4>
+<p><code>-p</code>（<code>--print</code>）フラグを使うと、Claude Codeは質問に回答した後すぐに終了します。スクリプトや自動化パイプラインに組み込む場合に最適です。出力フォーマットとして <code>text</code>、<code>json</code>、<code>stream-json</code> を選択でき、後続のプログラムで構造化されたデータとして処理できます。</p>
+<pre><code># テキスト出力
+claude -p "この関数を説明して"
+
+# JSON出力（スクリプト向け）
+claude -p "全APIエンドポイントをリスト" --output-format json
+
+# ストリーミングJSON
+claude -p "このログファイルを分析" --output-format stream-json</code></pre>
+
+<h4>パイプ入力</h4>
+<p>Unix的なパイプでデータをClaude Codeに渡すことができます。ビルドエラーの解析、ログファイルの要約、コードレビューの自動化などに活用できます。</p>
+<pre><code># ビルドエラーの解析
+cat build-error.txt | claude -p "このビルドエラーの根本原因を簡潔に説明して"
+
+# コードレビュー
+git diff main | claude -p "このdiffをレビューして問題点を指摘して"
+
+# 出力をファイルに保存
+cat logs.txt | claude -p "エラーパターンを分析" > analysis.txt</code></pre>
+
+<h3>セッション管理</h3>
+<p>Claude Codeのセッションはローカルに保存されるため、前回の会話を再開できます。これはマルチタスクで複数の機能を並行開発する際に非常に便利です。</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>コマンド</th><th>説明</th></tr></thead>
+<tbody>
+<tr><td><code>claude -c</code></td><td>現在のディレクトリで最新の会話を続行</td></tr>
+<tr><td><code>claude -r</code></td><td>セッションピッカーを表示 / セッション名で再開</td></tr>
+<tr><td><code>claude --from-pr 123</code></td><td>特定のPRに紐づくセッションを再開</td></tr>
+<tr><td><code>/resume</code></td><td>セッション内でセッションピッカーを表示</td></tr>
+<tr><td><code>/rename auth-migration</code></td><td>セッションに名前を付ける</td></tr>
+<tr><td><code>/clear</code></td><td>コンテキストをリセット（タスク切り替え時に推奨）</td></tr>
+<tr><td><code>/compact</code></td><td>会話履歴を要約してコンテキスト消費を削減</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>インタラクティブモードのキーボードショートカット</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>ショートカット</th><th>操作</th></tr></thead>
+<tbody>
+<tr><td><code>Esc</code></td><td>Claudeの実行を中断（コンテキストは保持）</td></tr>
+<tr><td><code>Esc + Esc</code></td><td>巻き戻しメニューを開く（会話・コード状態の復元）</td></tr>
+<tr><td><code>Shift+Tab</code></td><td>権限モードを切り替え（Normal → Auto-Accept → Plan）</td></tr>
+<tr><td><code>Ctrl+O</code></td><td>verbose モード切り替え（思考プロセス表示）</td></tr>
+<tr><td><code>Option+T / Alt+T</code></td><td>拡張思考のオン/オフ</td></tr>
+<tr><td><code>Ctrl+B</code></td><td>実行中のタスクをバックグラウンドに移動</td></tr>
+<tr><td><code>@</code></td><td>ファイル/ディレクトリをメンション</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!--  PART 2: コア機能                                              -->
+<!-- ============================================================ -->
+<div class="part-divider"><span>Part 2 — Core Features / コア機能</span></div>
+
+<!-- ===== Chapter 4 ===== -->
+<section class="section" id="ch4">
+<div class="section-label">Chapter 04 — File Operations</div>
+<h2>ファイル操作 — 専用ツールの設計思想</h2>
+
+<p>Claude Codeは、ファイル操作に専用のツール群を備えています。単にBashの <code>cat</code> や <code>sed</code> を呼ぶのではなく、AIエージェントが確実かつ安全にファイルを扱えるよう設計された内部ツールが使われます。これにより、権限管理、変更追跡、エラーハンドリングが統一的に行われます。</p>
+
+<h3>Read — ファイル読み込み</h3>
+<p>指定パスのファイル内容を読み取ります。<code>offset</code>（開始行）と <code>limit</code>（読み取り行数）パラメータにより、巨大ファイルの一部のみを効率的に読み取ることもできます。Readは読み取り専用ツールであり、権限承認なしで実行されます。</p>
+<pre><code># tool_input 例
+{
+  "file_path": "/path/to/file.txt",
+  "offset": 10,
+  "limit": 50
+}</code></pre>
+
+<h3>Edit — ファイル編集（文字列置換）</h3>
+<p>既存ファイル内の文字列を検索し、置換します。<code>old_string</code>で検索対象、<code>new_string</code>で置換後の内容を指定します。<code>replace_all: true</code> で全出現箇所を一括置換できます。Editは差分ベースで動作するため、ファイル全体を書き直すWriteよりも意図が明確で、レビューしやすい変更を生成します。</p>
+<pre><code># tool_input 例
+{
+  "file_path": "/path/to/file.txt",
+  "old_string": "function oldName()",
+  "new_string": "function newName()",
+  "replace_all": false
+}</code></pre>
+
+<h3>Write — ファイル書き込み（作成/上書き）</h3>
+<p>新規ファイルの作成、または既存ファイルの完全な上書きに使用されます。新しいファイルを生成する場合（テストファイルの追加など）や、ファイルの大部分を書き換える場合に使用されます。</p>
+
+<h3>Glob — ファイル検索（パターンマッチ）</h3>
+<p>globパターンでファイルを検索します。プロジェクト構造の探索や、特定の拡張子を持つファイルの一覧取得に使われます。<code>path</code> パラメータで検索開始ディレクトリを指定できます。</p>
+<pre><code># TypeScriptファイルを検索
+{ "pattern": "**/*.ts", "path": "/path/to/project/src" }</code></pre>
+
+<h3>Grep — 内容検索（正規表現）</h3>
+<p>ファイル内容を正規表現で検索します。<code>output_mode</code> で出力形式を制御でき、<code>files_with_matches</code>（マッチしたファイル名のみ）、<code>content</code>（マッチ行を含む内容）、<code>count</code>（マッチ数）から選べます。大量ファイルの中から特定のAPI呼び出しやパターンを素早く見つけるのに最適です。</p>
+<pre><code># TODO コメントの検索
+{
+  "pattern": "TODO.*fix",
+  "path": "/path/to/project",
+  "glob": "*.ts",
+  "output_mode": "content"
+}</code></pre>
+
+<div class="callout">
+<p><strong>設計思想：</strong>これらの専用ツールが存在する理由は、Bashコマンドに依存すると権限制御が困難になり、また出力のパースもエラーが起きやすくなるためです。専用ツールにより、Claudeは確定的な構造化結果を受け取り、より信頼性の高い操作が可能になります。</p>
+</div>
+</section>
+
+<!-- ===== Chapter 5 ===== -->
+<section class="section" id="ch5">
+<div class="section-label">Chapter 05 — Bash Execution &amp; Security Model</div>
+<h2>Bash実行とセキュリティモデル</h2>
+
+<h3>Bashツール</h3>
+<p>Claude CodeのBashツールは、シェルコマンドを実行するための汎用ツールです。テストの実行、パッケージのインストール、Gitコマンド、ビルドスクリプトの実行など、ターミナルで行えるほぼすべての操作を委任できます。ただし、Bashコマンドはシステムに対して副作用を持つため、Claude Codeの中で最も厳格な権限管理の対象になっています。</p>
+
+<h3>権限モデル — 3層のアプローチ</h3>
+<p>Claude Codeは3種類のツールに対して異なる権限レベルを適用します。</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>ツール種別</th><th>例</th><th>承認</th><th>「今後聞かない」の永続性</th></tr></thead>
+<tbody>
+<tr><td>読み取り専用</td><td>Read, Grep, Glob</td><td>不要</td><td>—</td></tr>
+<tr><td>Bashコマンド</td><td>シェル実行</td><td>必要</td><td>プロジェクト+コマンド単位で永続</td></tr>
+<tr><td>ファイル変更</td><td>Edit, Write</td><td>必要</td><td>セッション終了まで</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>権限モード</h3>
+<p>Claude Codeには5つの権限モードがあり、状況に応じた安全性と利便性のバランスを提供します。</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>モード</th><th>説明</th><th>主な用途</th></tr></thead>
+<tbody>
+<tr><td><code>default</code></td><td>各ツールの初回使用時に権限確認</td><td>通常の開発</td></tr>
+<tr><td><code>acceptEdits</code></td><td>ファイル編集を自動承認</td><td>信頼できるコード変更作業</td></tr>
+<tr><td><code>plan</code></td><td>読み取り専用（コード変更・コマンド実行不可）</td><td>コードベース探索、計画策定</td></tr>
+<tr><td><code>dontAsk</code></td><td>明示的に許可されたツール以外を自動拒否</td><td>制限付きの自動化</td></tr>
+<tr><td><code>bypassPermissions</code></td><td>全権限チェックをスキップ</td><td>隔離環境での完全自動化</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>サンドボックス</h3>
+<p>サンドボックスはOS レベルのファイルシステム・ネットワーク隔離を提供する機能です。有効化すると、Bashコマンドとその子プロセスがアクセスできるファイルパスとネットワークドメインが厳密に制限されます。これにより、プロンプトインジェクション等によってClaudeの意思決定がバイパスされた場合でも、重要なシステムリソースへのアクセスが物理的にブロックされます。</p>
+<pre><code>// .claude/settings.json
+{
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true,
+    "excludedCommands": ["git", "docker"],
+    "filesystem": {
+      "allowWrite": ["//tmp/build", "~/.kube"],
+      "denyRead": ["~/.aws/credentials"]
+    },
+    "network": {
+      "allowedDomains": ["github.com", "*.npmjs.org"],
+      "allowLocalBinding": true
+    }
+  }
+}</code></pre>
+
+<div class="callout callout-warn">
+<p><strong>注意：</strong><code>--dangerously-skip-permissions</code> フラグは全権限チェックをスキップします。CI/CDパイプラインなど完全に隔離された環境でのみ使用してください。管理者は <code>disableBypassPermissionsMode: "disable"</code> で組織全体でこのフラグを無効化できます。</p>
+</div>
+
+<h3>権限ルール構文</h3>
+<p>settings.jsonの <code>permissions</code> セクションで、<code>allow</code>、<code>ask</code>、<code>deny</code> のルールを定義できます。ルールは <code>deny → ask → allow</code> の順に評価され、最初にマッチしたルールが適用されます。</p>
+<pre><code>{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(git commit *)",
+      "Read(~/.zshrc)"
+    ],
+    "deny": [
+      "Bash(curl *)",
+      "Read(./.env)",
+      "Read(./secrets/**)"
+    ]
+  }
+}</code></pre>
+</section>
+
+<!-- ===== Chapter 6 ===== -->
+<section class="section" id="ch6">
+<div class="section-label">Chapter 06 — Git Integration</div>
+<h2>Git統合</h2>
+
+<h3>Claude CodeはGitネイティブ</h3>
+<p>Claude Codeは設計レベルでGitと深く統合されています。Gitリポジトリ内で起動すると、ブランチ情報、コミット履歴、差分を自動的に活用し、コンテキストに応じた操作を行います。<code>gh</code>（GitHub CLI）がインストールされている場合、PRの作成、イシューの参照、コメントの読み取りなどの操作もシームレスに行えます。</p>
+
+<h3>基本的なGitワークフロー</h3>
+<p>Claude Codeに自然言語で指示するだけで、Gitの操作を一連のフローとして実行させることができます。</p>
+
+<h4>コミット</h4>
+<pre><code># 変更内容を確認してコミット
+> 変更内容を確認して、意味のあるコミットメッセージでコミットして
+
+# Conventional Commitsスタイル
+> Conventional Commits形式でコミットメッセージを作って</code></pre>
+<p>Claude Codeはデフォルトで <code>Co-Authored-By: Claude</code> トレーラーをコミットメッセージに付与します。この挙動は <code>attribution</code> 設定でカスタマイズまたは無効化できます。</p>
+
+<h4>PR作成</h4>
+<pre><code>> 変更内容のPRを作成して。説明も書いて
+
+# Claude Code が以下を自動実行:
+# 1. git diff で変更を確認
+# 2. 意味のあるブランチ名を生成
+# 3. コミットメッセージを作成
+# 4. gh pr create でPRを作成</code></pre>
+<p><code>gh pr create</code> で作成されたPRは自動的にセッションと紐付けられ、後から <code>claude --from-pr 123</code> で再開できます。</p>
+
+<h3>Git Worktree による並列作業</h3>
+<p><code>--worktree</code>（<code>-w</code>）フラグを使うと、独立したGit worktreeにClaude Codeを起動できます。これにより、メインの作業ディレクトリに影響を与えることなく、複数のClaude Codeセッションを並列に実行できます。</p>
+<pre><code># feature-auth というworktreeで起動
+claude --worktree feature-auth
+
+# 自動生成された名前でworktreeを作成
+claude --worktree
+
+# 別のセッション
+claude --worktree bugfix-123</code></pre>
+<p>worktreeは <code>&lt;repo&gt;/.claude/worktrees/&lt;name&gt;</code> に作成されます。セッション終了時に変更がなければ自動的にクリーンアップされ、変更がある場合はClaude Codeが保持するか削除するか確認します。</p>
+
+<h3>GitHub Actions統合</h3>
+<p>Claude Code GitHub Actionsを使えば、PRやイシューで <code>@claude</code> とメンションするだけでClaude Codeによる自動分析・コードレビュー・修正提案を受けられます。GitLab CI/CDにも対応しており、同様のワークフローを構築できます。</p>
+
+<div class="callout">
+<p><strong>ベストプラクティス：</strong>Claude Codeでのコミットは小さく、焦点を絞ったものにしましょう。大きなコミットよりも、アトミックな変更の方がClaudeがより正確なコミットメッセージを生成でき、後から <code>/rewind</code> で巻き戻しやすくなります。</p>
+</div>
+</section>
+
+<!-- ===== Chapter 7 ===== -->
+<section class="section" id="ch7">
+<div class="section-label">Chapter 07 — CLAUDE.md</div>
+<h2>CLAUDE.md — プロジェクト設定・メモリ・カスタム指示</h2>
+
+<h3>CLAUDE.mdとは</h3>
+<p>CLAUDE.mdは、Claude Codeがセッション開始時に自動的に読み込む特別なマークダウンファイルです。プロジェクト固有のルール、コーディング規約、ワークフロー、環境変数の説明などを記載しておくことで、Claudeが毎回のセッションでこれらのコンテキストを持った状態で作業を開始します。「AIエンジニアのための .editorconfig + README」とも言える存在です。</p>
+
+<h3>配置場所と優先順位</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>場所</th><th>スコープ</th><th>共有</th></tr></thead>
+<tbody>
+<tr><td><code>~/.claude/CLAUDE.md</code></td><td>全プロジェクト共通（個人）</td><td>いいえ</td></tr>
+<tr><td><code>./CLAUDE.md</code> or <code>.claude/CLAUDE.md</code></td><td>プロジェクトルート</td><td>はい（Git管理推奨）</td></tr>
+<tr><td><code>CLAUDE.local.md</code></td><td>プロジェクトローカル（個人）</td><td>いいえ（.gitignore）</td></tr>
+<tr><td>親ディレクトリの CLAUDE.md</td><td>モノレポ構造で自動継承</td><td>はい</td></tr>
+<tr><td>子ディレクトリの CLAUDE.md</td><td>作業時にオンデマンド読み込み</td><td>はい</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>効果的なCLAUDE.mdの書き方</h3>
+<p>CLAUDE.mdは毎セッション読み込まれるため、簡潔かつ実用的な内容にすることが重要です。<code>/init</code> コマンドでプロジェクトを分析し、ビルドシステム・テストフレームワーク・コードパターンを自動検出した初期ファイルを生成できます。</p>
+<pre><code># コードスタイル
+- ES modules (import/export) を使用、CommonJS (require) は使わない
+- インポートは可能な限りデストラクチャリング
+
+# ワークフロー
+- コード変更後は必ず型チェックを実行
+- テストは全体ではなく個別のテストファイルを実行（パフォーマンス重視）
+
+# プロジェクト固有
+- APIエンドポイントは /api/v2/ プレフィックスを使用
+- エラーレスポンスは { error: { code, message } } 形式</code></pre>
+
+<h3>含めるべき情報 / 含めるべきでない情報</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>含めるべき</th><th>含めるべきでない</th></tr></thead>
+<tbody>
+<tr><td>Claudeが推測できないBashコマンド</td><td>コードを読めば分かること</td></tr>
+<tr><td>デフォルトと異なるコーディング規約</td><td>Claudeが既に知っている標準規約</td></tr>
+<tr><td>テスト方法・テストランナーの指定</td><td>詳細なAPIドキュメント（リンクで十分）</td></tr>
+<tr><td>ブランチ命名規則、PR規約</td><td>頻繁に変わる情報</td></tr>
+<tr><td>環境変数やセットアップの注意事項</td><td>自明な「クリーンなコードを書け」等</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>@import構文</h3>
+<p>CLAUDE.mdから他のファイルを参照できます。</p>
+<pre><code>プロジェクト概要は @README.md を参照。
+利用可能なnpmコマンドは @package.json を参照。
+
+# Git ワークフロー: @docs/git-instructions.md
+# 個人設定: @~/.claude/my-project-instructions.md</code></pre>
+</section>
+
+<!-- ============================================================ -->
+<!--  PART 3: 上級機能                                              -->
+<!-- ============================================================ -->
+<div class="part-divider"><span>Part 3 — Advanced Features / 上級機能</span></div>
+
+<!-- ===== Chapter 8 ===== -->
+<section class="section" id="ch8">
+<div class="section-label">Chapter 08 — MCP Integration</div>
+<h2>MCP（Model Context Protocol）サーバー統合</h2>
+
+<h3>MCPとは</h3>
+<p>MCP（Model Context Protocol）は、AIツール統合のためのオープンソース標準プロトコルです。Anthropicが提唱し、現在は幅広いエコシステムで採用されています。MCPサーバーをClaude Codeに接続することで、データベースへのクエリ、イシュートラッカーとの連携、モニタリングデータの分析、Figmaデザインの統合、SaaSツールとの自動化など、Claude Codeの能力を大幅に拡張できます。</p>
+
+<h3>MCPで実現できること</h3>
+<div class="card-grid">
+<div class="card-sm"><h4>イシュートラッカー連携</h4><p>「JIRA の ENG-4521 に記載された機能を実装して PRを作って」</p></div>
+<div class="card-sm"><h4>データベースクエリ</h4><p>「PostgreSQL で過去90日間購入のないユーザーを検索して」</p></div>
+<div class="card-sm"><h4>モニタリング分析</h4><p>「Sentry で過去24時間の頻出エラーを確認して」</p></div>
+<div class="card-sm"><h4>デザイン統合</h4><p>「Figma の新デザインに基づいてメールテンプレートを更新して」</p></div>
+</div>
+
+<h3>MCPサーバーの追加方法</h3>
+<h4>リモート HTTP サーバー（推奨）</h4>
+<pre><code># Notion 接続
+claude mcp add --transport http notion https://mcp.notion.com/mcp
+
+# 認証ヘッダー付き
+claude mcp add --transport http secure-api https://api.example.com/mcp \
+  --header "Authorization: Bearer your-token"</code></pre>
+
+<h4>ローカル stdio サーバー</h4>
+<pre><code># Airtable サーバー
+claude mcp add --transport stdio --env AIRTABLE_API_KEY=YOUR_KEY airtable \
+  -- npx -y airtable-mcp-server</code></pre>
+
+<h3>MCPサーバーのスコープ</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>スコープ</th><th>保存先</th><th>用途</th></tr></thead>
+<tbody>
+<tr><td>Local（デフォルト）</td><td><code>~/.claude.json</code>（プロジェクト別）</td><td>個人・実験的設定</td></tr>
+<tr><td>Project</td><td><code>.mcp.json</code>（リポジトリルート）</td><td>チーム共有（Git管理）</td></tr>
+<tr><td>User</td><td><code>~/.claude.json</code>（グローバル）</td><td>全プロジェクト共通の個人ツール</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>MCPサーバーの管理</h3>
+<pre><code># 一覧表示
+claude mcp list
+
+# 詳細確認
+claude mcp get github
+
+# 削除
+claude mcp remove github
+
+# セッション内でステータス確認
+/mcp</code></pre>
+
+<h3>MCP Tool Search</h3>
+<p>多数のMCPサーバーを接続すると、ツール定義がコンテキストウィンドウの大部分を消費する問題が生じます。MCP Tool Searchはこの問題を解決する機能で、ツール定義がコンテキストの10%を超えると自動的に有効化されます。有効化されると、MCPツールは事前読み込みされず、Claudeが必要に応じて検索ツールを使って動的に発見・ロードします。</p>
+</section>
+
+<!-- ===== Chapter 9 ===== -->
+<section class="section" id="ch9">
+<div class="section-label">Chapter 09 — Multi-Agent &amp; Teams</div>
+<h2>マルチエージェント・チーム機能</h2>
+
+<h3>サブエージェント（Subagents）</h3>
+<p>サブエージェントは、独自のコンテキストウィンドウ、システムプロンプト、ツールアクセス権を持つ特化型AIアシスタントです。メインの会話から特定のタスクを委任し、その結果だけを受け取ることで、メインコンテキストの消費を抑えつつ専門的な作業を行えます。</p>
+
+<h4>組み込みサブエージェント</h4>
+<div class="table-wrap">
+<table>
+<thead><tr><th>名前</th><th>モデル</th><th>ツール</th><th>用途</th></tr></thead>
+<tbody>
+<tr><td>Explore</td><td>Haiku（高速）</td><td>読み取り専用</td><td>コードベース探索・検索</td></tr>
+<tr><td>Plan</td><td>継承</td><td>読み取り専用</td><td>プランモードでのリサーチ</td></tr>
+<tr><td>general-purpose</td><td>継承</td><td>全ツール</td><td>複雑なマルチステップタスク</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>カスタムサブエージェントの作成</h4>
+<p>Markdownファイル（YAMLフロントマター付き）としてサブエージェントを定義できます。</p>
+<pre><code># .claude/agents/security-reviewer.md
+---
+name: security-reviewer
+description: コードのセキュリティ脆弱性をレビュー
+tools: Read, Grep, Glob, Bash
+model: opus
+---
+
+あなたはシニアセキュリティエンジニアです。以下の観点でコードをレビューしてください：
+- インジェクション脆弱性（SQL, XSS, コマンドインジェクション）
+- 認証・認可の欠陥
+- コード内のシークレットやクレデンシャル
+- 安全でないデータハンドリング
+
+具体的な行参照と修正提案を含めてください。</code></pre>
+
+<h3>Agent Teams（エージェントチーム）</h3>
+<p>Agent Teamsは、複数のClaude Codeインスタンスが協調して作業する機能です。1つのセッションが「チームリード」として機能し、タスクの割り当て・進捗の統合を行います。チームメイトはそれぞれ独立したコンテキストウィンドウを持ち、ピアツーピアで直接通信できます。サブエージェントとの最大の違いは、チームメイト同士がメッセージを交換し、知見を共有し、互いの成果物を検証できる点です。</p>
+
+<h4>Agent Teamsの有効化</h4>
+<pre><code>// settings.json
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  }
+}</code></pre>
+
+<h4>使用例</h4>
+<pre><code>> CLIツールの設計をチームで検討して。
+> UX担当、技術アーキテクト、デビルズアドボケイトの
+> 3つの観点で探索してほしい。</code></pre>
+
+<h4>サブエージェントとの比較</h4>
+<div class="table-wrap">
+<table>
+<thead><tr><th>特性</th><th>サブエージェント</th><th>Agent Teams</th></tr></thead>
+<tbody>
+<tr><td>コミュニケーション</td><td>メインへの報告のみ</td><td>チームメイト間で直接通信</td></tr>
+<tr><td>調整方法</td><td>メインエージェントが管理</td><td>共有タスクリストで自己調整</td></tr>
+<tr><td>トークンコスト</td><td>低（結果を要約して返す）</td><td>高（各メンバーが独立インスタンス）</td></tr>
+<tr><td>最適な用途</td><td>結果のみ重要な集中タスク</td><td>議論・協調が必要な複雑な作業</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ===== Chapter 10 ===== -->
+<section class="section" id="ch10">
+<div class="section-label">Chapter 10 — Custom Skills</div>
+<h2>カスタムスキル — 独自ワークフローの定義</h2>
+
+<h3>スキルとは</h3>
+<p>スキルは、Claude Codeの知識と能力を拡張するための仕組みです。<code>SKILL.md</code>ファイルに指示を記述すると、Claudeがそれをツールキットに追加します。Claudeは関連するコンテキストでスキルを自動的に適用するか、<code>/skill-name</code>で直接呼び出すことができます。スキルはAgent Skillsオープン標準に準拠しています。</p>
+
+<h3>スキルの種類</h3>
+<p>スキルファイルは大きく「リファレンスコンテンツ」と「タスクコンテンツ」の2種類に分けられます。リファレンスコンテンツは規約やパターンなどの知識を提供し、Claudeがインラインで参照します。タスクコンテンツはデプロイメントやコミットなどの具体的なアクション手順を提供し、通常 <code>/skill-name</code> で明示的に呼び出します。</p>
+
+<h3>バンドルスキル</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>スキル</th><th>説明</th></tr></thead>
+<tbody>
+<tr><td><code>/simplify</code></td><td>最近変更したファイルを3つの観点（コード再利用、品質、効率）で並列レビューし修正</td></tr>
+<tr><td><code>/batch &lt;instruction&gt;</code></td><td>大規模な変更を5〜30の独立した作業単位に分解し、worktreeごとに並列実行</td></tr>
+<tr><td><code>/debug [description]</code></td><td>現在のセッションのデバッグログを読んでトラブルシュート</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>カスタムスキルの作成例</h3>
+<pre><code># .claude/skills/fix-issue/SKILL.md
+---
+name: fix-issue
+description: GitHub issueを修正する
+disable-model-invocation: true
+---
+GitHub issue $ARGUMENTS を分析して修正してください。
+
+1. `gh issue view` でissueの詳細を取得
+2. 問題を理解
+3. コードベースで関連ファイルを検索
+4. 修正を実装
+5. テストを書いて実行
+6. リンティングと型チェックを通過させる
+7. 記述的なコミットメッセージを作成
+8. プッシュしてPRを作成</code></pre>
+<p>実行: <code>/fix-issue 1234</code></p>
+
+<h3>フロントマター設定</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>フィールド</th><th>説明</th></tr></thead>
+<tbody>
+<tr><td><code>name</code></td><td>スキルの識別名</td></tr>
+<tr><td><code>description</code></td><td>Claudeがいつ使うか判断するための説明</td></tr>
+<tr><td><code>disable-model-invocation</code></td><td><code>true</code>でClaude自動呼出しを禁止（手動 <code>/name</code>のみ）</td></tr>
+<tr><td><code>user-invocable</code></td><td><code>false</code>で<code>/</code>メニューから非表示（Claude専用）</td></tr>
+<tr><td><code>allowed-tools</code></td><td>スキル実行中に使用可能なツールを制限</td></tr>
+<tr><td><code>context</code></td><td><code>fork</code>でサブエージェントコンテキストで実行</td></tr>
+<tr><td><code>agent</code></td><td><code>context: fork</code>時に使用するサブエージェント種別</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ===== Chapter 11 ===== -->
+<section class="section" id="ch11">
+<div class="section-label">Chapter 11 — Hooks</div>
+<h2>フック — イベント駆動の自動化</h2>
+
+<h3>フックとは</h3>
+<p>フックは、Claude Codeのライフサイクルの特定のポイントで自動的に実行されるシェルコマンド、HTTPエンドポイント、またはLLMプロンプトです。CLAUDE.mdの指示が「助言的」であるのに対し、フックは「決定的」であり、アクションの確実な実行を保証します。</p>
+
+<h3>フックイベント一覧</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>イベント</th><th>発火タイミング</th><th>ブロック可</th></tr></thead>
+<tbody>
+<tr><td><code>SessionStart</code></td><td>セッション開始・再開時</td><td>—</td></tr>
+<tr><td><code>UserPromptSubmit</code></td><td>プロンプト送信時（処理前）</td><td>✓</td></tr>
+<tr><td><code>PreToolUse</code></td><td>ツール実行前</td><td>✓</td></tr>
+<tr><td><code>PostToolUse</code></td><td>ツール成功後</td><td>—</td></tr>
+<tr><td><code>PostToolUseFailure</code></td><td>ツール失敗後</td><td>—</td></tr>
+<tr><td><code>PermissionRequest</code></td><td>権限ダイアログ表示時</td><td>✓</td></tr>
+<tr><td><code>Stop</code></td><td>Claudeの応答完了時</td><td>✓</td></tr>
+<tr><td><code>Notification</code></td><td>通知送信時</td><td>—</td></tr>
+<tr><td><code>SubagentStart / Stop</code></td><td>サブエージェント開始/終了</td><td>—/✓</td></tr>
+<tr><td><code>TeammateIdle</code></td><td>チームメイトがアイドル状態に</td><td>✓</td></tr>
+<tr><td><code>TaskCompleted</code></td><td>タスク完了マーク時</td><td>✓</td></tr>
+<tr><td><code>ConfigChange</code></td><td>設定ファイル変更時</td><td>✓</td></tr>
+<tr><td><code>PreCompact</code></td><td>コンテキスト圧縮前</td><td>—</td></tr>
+<tr><td><code>SessionEnd</code></td><td>セッション終了時</td><td>—</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>フック設定例：危険なコマンドのブロック</h3>
+<pre><code>// .claude/settings.json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/block-rm.sh"
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+<pre><code>#!/bin/bash
+# .claude/hooks/block-rm.sh
+COMMAND=$(jq -r '.tool_input.command')
+
+if echo "$COMMAND" | grep -q 'rm -rf'; then
+  jq -n '{
+    hookSpecificOutput: {
+      hookEventName: "PreToolUse",
+      permissionDecision: "deny",
+      permissionDecisionReason: "破壊的コマンドがフックによりブロックされました"
+    }
+  }'
+else
+  exit 0
+fi</code></pre>
+
+<h3>フックハンドラーの種類</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>種類</th><th>説明</th></tr></thead>
+<tbody>
+<tr><td><code>command</code></td><td>シェルコマンド実行（JSON入力をstdinで受信）</td></tr>
+<tr><td><code>http</code></td><td>HTTPエンドポイントにPOST送信</td></tr>
+<tr><td><code>prompt</code></td><td>LLMモデルに単発評価を依頼</td></tr>
+<tr><td><code>agent</code></td><td>ツール使用可能なサブエージェントを起動して検証</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>終了コードの意味</h3>
+<p>コマンドフックの終了コードによって動作が決まります。<code>exit 0</code> は成功（続行）、<code>exit 2</code> はブロッキングエラー（ツール呼び出しの阻止やプロンプトの拒否）、その他の終了コードは非ブロッキングエラー（verboseモードでstderrを表示し、実行は続行）です。</p>
+</section>
+
+<!-- ============================================================ -->
+<!--  PART 4: 実践・エコシステム                                      -->
+<!-- ============================================================ -->
+<div class="part-divider"><span>Part 4 — Practice &amp; Ecosystem / 実践・エコシステム</span></div>
+
+<!-- ===== Chapter 12 ===== -->
+<section class="section" id="ch12">
+<div class="section-label">Chapter 12 — IDE Integration &amp; Headless Mode</div>
+<h2>IDE統合とヘッドレスモード</h2>
+
+<h3>VS Code拡張</h3>
+<p>Claude Code VS Code拡張（<code>anthropic.claude-code</code>）は、インラインDiff、<code>@</code>メンション、プランレビュー、会話履歴をエディタ内に直接統合します。拡張機能ビュー（<code>Cmd+Shift+X</code>）で「Claude Code」を検索してインストールするか、Command Palette（<code>Cmd+Shift+P</code>）から「Claude Code: Open in New Tab」を選択して起動します。Cursor エディタにも同じ拡張がインストール可能です。</p>
+
+<h3>JetBrains プラグイン</h3>
+<p>IntelliJ IDEA、PyCharm、WebStormなどのJetBrains IDEに対応するプラグインが JetBrains Marketplace で提供されています。インタラクティブなDiffビューイングや選択コンテキストの共有が可能です。</p>
+
+<h3>デスクトップアプリ</h3>
+<p>スタンドアロンのデスクトップアプリケーションを使えば、IDEやターミナルの外でClaude Codeを実行できます。Diffの視覚的なレビュー、複数セッションの並列実行、クラウドセッションの起動が可能です。macOS（Intel/Apple Silicon）とWindows（x64/ARM64）に対応しています。</p>
+
+<h3>Web（claude.ai/code）</h3>
+<p>ブラウザ上でClaude Codeを実行できます。ローカルセットアップ不要で、長時間実行タスクを開始して後から確認したり、ローカルにないリポジトリで作業したり、複数タスクを並列に実行したりできます。Claude iOSアプリからも利用可能です。</p>
+
+<h3>ヘッドレスモード（非対話モード）</h3>
+<p><code>claude -p</code> を使用するヘッドレスモードは、CI/CDパイプライン、プリコミットフック、自動化ワークフローへの組み込みに最適です。</p>
+<pre><code># CI/CDパイプラインでの使用例
+claude -p "lint結果を確認して問題を修正" --output-format json
+
+# ストリーミング出力
+claude -p "テストを実行して結果を報告" --output-format stream-json
+
+# 予算制限付き
+claude -p "コードレビューを実行" --max-budget-usd 5.00
+
+# ターン数制限
+claude -p "型エラーを修正" --max-turns 3</code></pre>
+
+<h3>構造化出力（JSON Schema）</h3>
+<p><code>--json-schema</code> フラグを使うと、Claude Codeのワークフロー完了後にJSON Schemaに準拠した構造化出力を取得できます。</p>
+<pre><code>claude -p "このファイルの関数一覧を返して" \
+  --json-schema '{"type":"object","properties":{"functions":{"type":"array","items":{"type":"string"}}}}'</code></pre>
+</section>
+
+<!-- ===== Chapter 13 ===== -->
+<section class="section" id="ch13">
+<div class="section-label">Chapter 13 — Pricing</div>
+<h2>料金体系</h2>
+
+<h3>3つの利用方法</h3>
+<p>Claude Codeの料金体系は、サブスクリプションプラン（Claude Pro / Max）とAPI従量課金の2つに大別されます。</p>
+
+<div class="table-wrap">
+<table>
+<thead><tr><th>プラン</th><th>月額</th><th>概要</th></tr></thead>
+<tbody>
+<tr><td>Claude Pro</td><td>$20</td><td>Free版の5倍の使用量。軽量な開発タスク向け</td></tr>
+<tr><td>Claude Max 5x</td><td>$100</td><td>Pro の5倍の使用量。Opus アクセス、ピーク時優先</td></tr>
+<tr><td>Claude Max 20x</td><td>$200</td><td>Pro の20倍の使用量。ヘビーユーザー向け</td></tr>
+<tr><td>API（従量課金）</td><td>使用量に応じた課金</td><td>完全なコスト可視性。高コストになりやすい</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>APIトークン料金（主要モデル）</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>モデル</th><th>入力 ($/1M tokens)</th><th>出力 ($/1M tokens)</th><th>キャッシュ読取 ($/1M)</th><th>キャッシュ書込 ($/1M)</th></tr></thead>
+<tbody>
+<tr><td>Claude Opus 4.6</td><td>$15</td><td>$75</td><td>$1.50</td><td>$18.75</td></tr>
+<tr><td>Claude Sonnet 4</td><td>$3</td><td>$15</td><td>$0.30</td><td>$3.75</td></tr>
+<tr><td>Claude Haiku</td><td>$1</td><td>$5</td><td>$0.10</td><td>$1.25</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>コスト最適化のポイント</h3>
+<p>Claude Codeの使用トークンの90%以上はキャッシュ読み取りが占めます。これはClaude Codeが常にコードベースのコンテキストをキャッシュしているためです。実際のユーザー報告では、月間10億トークン以上を使用してAPI換算で$5,000以上に相当する使用量を、Max 5xプラン（$100/月）で賄えたケースがあります。日常的にClaude Codeを開発の中心ツールとして使う場合、Max プランは API と比較して大幅なコスト削減になります。</p>
+
+<div class="callout">
+<p><strong>損益分岐点の目安：</strong>月間のAPI相当コストが$100を超える場合はMax 5x、$200を超える場合はMax 20xが経済的です。軽い使用（月50Mトークン未満）であればProまたはAPIが適しています。</p>
+</div>
+
+<h3>コスト削減テクニック</h3>
+<p><code>/compact</code> でコンテキストを定期的に圧縮する。無関係なタスク間で <code>/clear</code> を使う。Exploreサブエージェント（Haikuモデル）を活用してメインコンテキストの消費を抑える。サンドボックスを有効化して <code>autoAllowBashIfSandboxed</code> で権限プロンプトを削減する。ステータスラインでリアルタイムにコンテキスト使用率を監視する。これらの手法を組み合わせることで、同じ予算でより多くの作業を遂行できます。</p>
+</section>
+
+<!-- ===== Chapter 14 ===== -->
+<section class="section" id="ch14">
+<div class="section-label">Chapter 14 — Use Cases</div>
+<h2>ユースケース集（15選）</h2>
+
+<div class="card-grid">
+<div class="card-sm">
+<h4>1. コードベースの理解</h4>
+<p>新しいプロジェクトに参加した際に「このプロジェクトの構造を説明して」と聞くだけで、アーキテクチャ、主要モジュール、技術スタックの概要を即座に把握できます。</p>
+</div>
+<div class="card-sm">
+<h4>2. バグ修正</h4>
+<p>エラーメッセージやスタックトレースをClaudeに渡し、根本原因の特定→修正→テスト検証までを一気通貫で行います。</p>
+</div>
+<div class="card-sm">
+<h4>3. リファクタリング</h4>
+<p>レガシーコードのモダン化、パターンの統一、型安全性の向上などを、プロジェクト全体の一貫性を保ちながら実行します。</p>
+</div>
+<div class="card-sm">
+<h4>4. テスト作成</h4>
+<p>既存のテストパターンを分析し、エッジケースを含むテストを自動生成。テストランナーの実行まで一貫して行います。</p>
+</div>
+<div class="card-sm">
+<h4>5. PR作成とレビュー</h4>
+<p>変更内容の分析、ブランチ作成、コミット、PR説明の記述までを自動化。GitHub Actions連携で自動レビューも可能。</p>
+</div>
+<div class="card-sm">
+<h4>6. ドキュメント生成</h4>
+<p>コードからAPIドキュメント、READMEの更新、JSDocコメントの追加などを自動生成します。</p>
+</div>
+<div class="card-sm">
+<h4>7. CI/CDパイプライン統合</h4>
+<p>ヘッドレスモードでリンター、コードレビュー、テスト生成をCIに組み込み、プッシュごとに自動チェックを実行します。</p>
+</div>
+<div class="card-sm">
+<h4>8. データベースクエリ分析</h4>
+<p>MCPでPostgreSQLに接続し、自然言語で「今月の総売上は？」と聞くだけでSQLクエリを生成・実行します。</p>
+</div>
+<div class="card-sm">
+<h4>9. 大規模マイグレーション</h4>
+<p><code>/batch</code>スキルで「全コンポーネントをReactからVueに移行」のような大規模変更を並列worktreeで実行します。</p>
+</div>
+<div class="card-sm">
+<h4>10. セキュリティレビュー</h4>
+<p>カスタムサブエージェントにセキュリティ専門の指示を与え、コード全体の脆弱性スキャンを実行します。</p>
+</div>
+<div class="card-sm">
+<h4>11. パフォーマンス最適化</h4>
+<p>プロファイリングデータを分析し、ボトルネックの特定と最適化提案を行います。</p>
+</div>
+<div class="card-sm">
+<h4>12. 環境構築の自動化</h4>
+<p>新しいチームメンバーのオンボーディング手順をスキルとして定義し、環境セットアップを自動化します。</p>
+</div>
+<div class="card-sm">
+<h4>13. Slackからバグ報告→PR</h4>
+<p>Slack統合でバグ報告を受け取り、自動的にイシュー作成、修正実装、PR作成まで行います。</p>
+</div>
+<div class="card-sm">
+<h4>14. Webアプリのデバッグ</h4>
+<p>Chrome拡張を使って実際のブラウザ上でUIの動作を確認し、問題を特定・修正します。</p>
+</div>
+<div class="card-sm">
+<h4>15. チームコードレビュー</h4>
+<p>Agent Teamsで3人のレビュアー（セキュリティ、パフォーマンス、テストカバレッジ）を並列起動し、多角的なレビューを実施します。</p>
+</div>
+</div>
+</section>
+
+<!-- ===== Chapter 15 ===== -->
+<section class="section" id="ch15">
+<div class="section-label">Chapter 15 — Tool Comparison</div>
+<h2>他ツール比較と選び方</h2>
+
+<div class="table-wrap">
+<table>
+<thead><tr><th>特性</th><th>Claude Code</th><th>GitHub Copilot</th><th>Cursor</th><th>OpenAI Codex</th><th>Devin</th></tr></thead>
+<tbody>
+<tr><td><strong>種別</strong></td><td>CLI エージェント</td><td>IDE補完 + Agent</td><td>AI IDE (VS Code fork)</td><td>クラウドエージェント</td><td>完全自律エージェント</td></tr>
+<tr><td><strong>実行環境</strong></td><td>ターミナル/IDE/Web/Desktop</td><td>VS Code / JetBrains</td><td>Cursor IDE</td><td>クラウドVM</td><td>クラウドVM</td></tr>
+<tr><td><strong>自律性</strong></td><td>高（監視付き自律実行）</td><td>中（補完+Agent mode）</td><td>高（Composer Agent）</td><td>高（非同期タスク実行）</td><td>非常に高（完全自律）</td></tr>
+<tr><td><strong>ファイル操作</strong></td><td>専用ツール群</td><td>IDE経由</td><td>IDE経由</td><td>サンドボックス内</td><td>独自環境</td></tr>
+<tr><td><strong>Git統合</strong></td><td>ネイティブ深い統合</td><td>良好</td><td>良好</td><td>PR作成対応</td><td>PR作成対応</td></tr>
+<tr><td><strong>拡張性</strong></td><td>MCP/スキル/フック/プラグイン</td><td>拡張機能API</td><td>MCP対応</td><td>限定的</td><td>限定的</td></tr>
+<tr><td><strong>月額</strong></td><td>$20〜$200（サブスク）</td><td>$10〜$39</td><td>$20〜$200</td><td>API従量課金</td><td>$500〜</td></tr>
+<tr><td><strong>オフライン/SSH</strong></td><td>◎（CLI設計）</td><td>△（IDE必須）</td><td>△（IDE必須）</td><td>✗（クラウド）</td><td>✗（クラウド）</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>選び方ガイド</h3>
+<p><strong>Claude Codeが最適な場合：</strong>ターミナル中心のワークフロー、SSH/リモート環境での作業、高度なカスタマイズ（MCP/フック/スキル）が必要な場合、CI/CDへの統合、マルチファイルにまたがる複雑なタスク、チーム全体での設定共有。</p>
+<p><strong>GitHub Copilotが最適な場合：</strong>VS Code/JetBrainsでのインライン補完を重視、Microsoft/GitHubエコシステムとの統合、比較的低コストで始めたい場合。</p>
+<p><strong>Cursorが最適な場合：</strong>ビジュアルなDiffレビューを重視、VS Codeライクな環境でのエージェント的な操作、Composerによるマルチファイル編集。</p>
+<p><strong>OpenAI Codexが最適な場合：</strong>非同期での並列タスク実行、クラウドベースのサンドボックス環境での安全な実行、OpenAI APIとの統合。</p>
+<p><strong>Devinが最適な場合：</strong>完全自律型のエンジニアリングが必要、大規模プロジェクトの包括的な開発委任、予算に余裕がある場合。</p>
+</section>
+
+<!-- ============================================================ -->
+<!--  付録                                                          -->
+<!-- ============================================================ -->
+<div class="part-divider"><span>Appendix / 付録</span></div>
+
+<!-- ===== Appendix: Commands ===== -->
+<section class="section" id="appendix-commands">
+<div class="section-label">Appendix A — Command &amp; Flag Reference</div>
+<h2>コマンド・フラグ一覧表</h2>
+
+<h3>主要CLIコマンド</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>コマンド</th><th>説明</th></tr></thead>
+<tbody>
+<tr><td><code>claude</code></td><td>インタラクティブセッション開始</td></tr>
+<tr><td><code>claude "query"</code></td><td>初回プロンプト付きでセッション開始</td></tr>
+<tr><td><code>claude -p "query"</code></td><td>ワンショットモード（応答後終了）</td></tr>
+<tr><td><code>cat file | claude -p "query"</code></td><td>パイプ入力で処理</td></tr>
+<tr><td><code>claude -c</code></td><td>最新の会話を続行</td></tr>
+<tr><td><code>claude -r "session"</code></td><td>セッション名/IDで再開</td></tr>
+<tr><td><code>claude update</code></td><td>最新版に更新</td></tr>
+<tr><td><code>claude auth login</code></td><td>認証ログイン</td></tr>
+<tr><td><code>claude auth logout</code></td><td>ログアウト</td></tr>
+<tr><td><code>claude agents</code></td><td>設定済みサブエージェント一覧</td></tr>
+<tr><td><code>claude mcp</code></td><td>MCPサーバーの管理</td></tr>
+<tr><td><code>claude mcp serve</code></td><td>Claude Code自身をMCPサーバーとして起動</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>主要CLIフラグ</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>フラグ</th><th>説明</th></tr></thead>
+<tbody>
+<tr><td><code>--model</code></td><td>モデル指定（<code>sonnet</code>, <code>opus</code>, フルネーム）</td></tr>
+<tr><td><code>--permission-mode</code></td><td>権限モード指定（<code>default</code>, <code>plan</code>, <code>acceptEdits</code>, <code>dontAsk</code>）</td></tr>
+<tr><td><code>--output-format</code></td><td>出力形式（<code>text</code>, <code>json</code>, <code>stream-json</code>）</td></tr>
+<tr><td><code>--max-turns</code></td><td>エージェントターン数制限（print mode）</td></tr>
+<tr><td><code>--max-budget-usd</code></td><td>API使用額上限（print mode）</td></tr>
+<tr><td><code>--worktree, -w</code></td><td>Git worktreeで隔離実行</td></tr>
+<tr><td><code>--add-dir</code></td><td>追加作業ディレクトリ指定</td></tr>
+<tr><td><code>--system-prompt</code></td><td>システムプロンプトを完全置換</td></tr>
+<tr><td><code>--append-system-prompt</code></td><td>システムプロンプトに追加</td></tr>
+<tr><td><code>--allowedTools</code></td><td>承認不要ツールの指定</td></tr>
+<tr><td><code>--disallowedTools</code></td><td>使用禁止ツールの指定</td></tr>
+<tr><td><code>--tools</code></td><td>利用可能ツールの制限</td></tr>
+<tr><td><code>--agents</code></td><td>カスタムサブエージェントをJSON定義</td></tr>
+<tr><td><code>--mcp-config</code></td><td>MCPサーバー設定ファイル読み込み</td></tr>
+<tr><td><code>--json-schema</code></td><td>JSON Schema準拠の構造化出力</td></tr>
+<tr><td><code>--chrome</code></td><td>Chrome統合を有効化</td></tr>
+<tr><td><code>--remote</code></td><td>claude.aiでWebセッションを開始</td></tr>
+<tr><td><code>--verbose</code></td><td>詳細ログ出力</td></tr>
+<tr><td><code>--debug</code></td><td>デバッグモード</td></tr>
+<tr><td><code>--dangerously-skip-permissions</code></td><td>全権限チェックをスキップ（危険）</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>インタラクティブモードのスラッシュコマンド</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>コマンド</th><th>説明</th></tr></thead>
+<tbody>
+<tr><td><code>/clear</code></td><td>コンテキストをリセット</td></tr>
+<tr><td><code>/compact [指示]</code></td><td>会話を要約して圧縮</td></tr>
+<tr><td><code>/config</code></td><td>設定UI を開く</td></tr>
+<tr><td><code>/permissions</code></td><td>権限ルールの管理</td></tr>
+<tr><td><code>/model</code></td><td>モデル切り替え</td></tr>
+<tr><td><code>/resume</code></td><td>セッションピッカーを開く</td></tr>
+<tr><td><code>/rename</code></td><td>セッション名を変更</td></tr>
+<tr><td><code>/rewind</code></td><td>巻き戻しメニューを開く</td></tr>
+<tr><td><code>/hooks</code></td><td>フック管理UI</td></tr>
+<tr><td><code>/mcp</code></td><td>MCPサーバーのステータス確認</td></tr>
+<tr><td><code>/agents</code></td><td>サブエージェント管理UI</td></tr>
+<tr><td><code>/init</code></td><td>プロジェクト分析してCLAUDE.md生成</td></tr>
+<tr><td><code>/status</code></td><td>設定ソースとステータス表示</td></tr>
+<tr><td><code>/doctor</code></td><td>診断チェック実行</td></tr>
+<tr><td><code>/bug</code></td><td>バグ報告をAnthropicに送信</td></tr>
+<tr><td><code>/login</code></td><td>再認証</td></tr>
+<tr><td><code>/context</code></td><td>コンテキスト使用状況の確認</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ===== Appendix: Settings ===== -->
+<section class="section" id="appendix-settings">
+<div class="section-label">Appendix B — settings.json Reference</div>
+<h2>settings.json 完全リファレンス</h2>
+
+<h3>設定ファイルの場所</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>スコープ</th><th>場所</th><th>共有</th></tr></thead>
+<tbody>
+<tr><td>ユーザー</td><td><code>~/.claude/settings.json</code></td><td>いいえ</td></tr>
+<tr><td>プロジェクト</td><td><code>.claude/settings.json</code></td><td>はい（Git管理）</td></tr>
+<tr><td>ローカル</td><td><code>.claude/settings.local.json</code></td><td>いいえ（gitignore）</td></tr>
+<tr><td>管理者</td><td>OS別のシステムパス</td><td>はい（IT管理）</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>主要設定キー</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>キー</th><th>型</th><th>説明</th></tr></thead>
+<tbody>
+<tr><td><code>model</code></td><td>string</td><td>デフォルトモデル（例: <code>"claude-sonnet-4-6"</code>）</td></tr>
+<tr><td><code>permissions</code></td><td>object</td><td><code>allow</code>, <code>ask</code>, <code>deny</code> ルール配列</td></tr>
+<tr><td><code>permissions.defaultMode</code></td><td>string</td><td>デフォルト権限モード</td></tr>
+<tr><td><code>sandbox</code></td><td>object</td><td>サンドボックス設定（<code>enabled</code>, ファイルシステム, ネットワーク）</td></tr>
+<tr><td><code>hooks</code></td><td>object</td><td>ライフサイクルフック定義</td></tr>
+<tr><td><code>env</code></td><td>object</td><td>環境変数の設定</td></tr>
+<tr><td><code>attribution</code></td><td>object</td><td>Git コミット/PR の帰属表示カスタマイズ</td></tr>
+<tr><td><code>language</code></td><td>string</td><td>応答言語（例: <code>"japanese"</code>）</td></tr>
+<tr><td><code>outputStyle</code></td><td>string</td><td>出力スタイル調整</td></tr>
+<tr><td><code>cleanupPeriodDays</code></td><td>number</td><td>非アクティブセッション削除期間（デフォルト30日）</td></tr>
+<tr><td><code>alwaysThinkingEnabled</code></td><td>boolean</td><td>拡張思考をデフォルト有効化</td></tr>
+<tr><td><code>autoUpdatesChannel</code></td><td>string</td><td><code>"stable"</code> or <code>"latest"</code></td></tr>
+<tr><td><code>enabledPlugins</code></td><td>object</td><td>プラグイン有効化設定</td></tr>
+<tr><td><code>teammateMode</code></td><td>string</td><td>Agent Teams表示モード（<code>"auto"</code>, <code>"in-process"</code>, <code>"tmux"</code>）</td></tr>
+<tr><td><code>companyAnnouncements</code></td><td>array</td><td>起動時の組織アナウンスメント</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>設定例</h3>
+<pre><code>{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "model": "claude-sonnet-4-6",
+  "language": "japanese",
+  "permissions": {
+    "allow": [
+      "Bash(npm run lint)",
+      "Bash(npm run test *)",
+      "Bash(git commit *)"
+    ],
+    "deny": [
+      "Bash(curl *)",
+      "Read(./.env)",
+      "Read(./secrets/**)"
+    ],
+    "defaultMode": "default"
+  },
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true,
+    "network": {
+      "allowedDomains": ["github.com", "*.npmjs.org"]
+    }
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          { "type": "command", "command": "npx prettier --write $FILE_PATH" }
+        ]
+      }
+    ]
+  },
+  "env": {
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "1"
+  }
+}</code></pre>
+</section>
+
+<!-- ===== Appendix: Troubleshooting ===== -->
+<section class="section" id="appendix-trouble">
+<div class="section-label">Appendix C — Troubleshooting</div>
+<h2>よくあるトラブルと解決法</h2>
+
+<div class="table-wrap">
+<table>
+<thead><tr><th>問題</th><th>原因</th><th>解決策</th></tr></thead>
+<tbody>
+<tr><td><code>command not found: claude</code></td><td>PATHにインストールディレクトリが含まれていない</td><td><code>~/.local/bin</code> をPATHに追加。<code>echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc</code></td></tr>
+<tr><td>インストール時に <code>Killed</code></td><td>メモリ不足（OOM Killer）</td><td>2GBのスワップを追加: <code>sudo fallocate -l 2G /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile</code></td></tr>
+<tr><td>TLS/SSL接続エラー</td><td>CA証明書の問題 / 企業プロキシ</td><td><code>sudo apt-get install ca-certificates</code> / <code>NODE_EXTRA_CA_CERTS</code> 設定</td></tr>
+<tr><td>OAuth認証エラー</td><td>コードの期限切れ / ブラウザ問題</td><td>Enterで再試行 / <code>c</code>キーでURLをコピーして手動ブラウザ</td></tr>
+<tr><td>403 Forbidden</td><td>サブスクリプション切れ / プロキシ干渉</td><td>claude.ai/settings でプラン確認 / プロキシ設定の見直し</td></tr>
+<tr><td>検索が動作しない</td><td>ripgrepがインストールされていない</td><td><code>brew install ripgrep</code> (macOS) / <code>apt install ripgrep</code> (Ubuntu)</td></tr>
+<tr><td>JetBrains IDEが検出されない（WSL2）</td><td>WSL2ネットワーク/ファイアウォール</td><td>Windows Firewallルール追加 or <code>.wslconfig</code> でmirrored networking</td></tr>
+<tr><td>高CPU/メモリ使用</td><td>巨大なコンテキスト</td><td><code>/compact</code> で圧縮、タスク間で <code>/clear</code></td></tr>
+<tr><td>権限プロンプトが頻繁</td><td>許可ルール未設定</td><td><code>/permissions</code> で頻用コマンドを許可リストに追加</td></tr>
+<tr><td>コンテキストが溢れる</td><td>長時間セッション</td><td>サブエージェントに調査を委任、<code>/clear</code> でリセット</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>診断コマンド</h3>
+<pre><code># 包括的な診断チェック
+/doctor
+
+# 設定ソースの確認
+/status
+
+# バグ報告
+/bug
+
+# デバッグモードで起動
+claude --debug</code></pre>
+
+<div class="callout">
+<p><strong>Tip：</strong><code>/doctor</code> はインストール状態、自動更新ステータス、settings.jsonの構文エラー、MCPサーバーの設定ミス、キーバインド問題、コンテキスト使用量の警告、プラグイン/エージェントのロードエラーなどを包括的にチェックします。問題が発生したらまずこのコマンドを実行してください。</p>
+</div>
+</section>
+
+<!-- ===== Appendix: Links ===== -->
+<section class="section" id="appendix-links">
+<div class="section-label">Appendix D — Reference Links</div>
+<h2>参考リンク・公式ドキュメント</h2>
+
+<div class="card">
+<h3>公式リソース</h3>
+<p><a href="https://docs.anthropic.com/en/docs/claude-code" target="_blank">Claude Code ドキュメント（docs.anthropic.com）</a> — 公式ドキュメントのメインハブ</p>
+<p><a href="https://code.claude.com" target="_blank">code.claude.com</a> — 製品ページ、デモ、価格情報</p>
+<p><a href="https://claude.ai/code" target="_blank">claude.ai/code</a> — ブラウザ上でClaude Codeを実行</p>
+<p><a href="https://github.com/anthropics/claude-code" target="_blank">GitHub リポジトリ</a> — イシュー報告、例、ディスカッション</p>
+<p><a href="https://modelcontextprotocol.io" target="_blank">Model Context Protocol 公式サイト</a> — MCPの仕様とサーバーディレクトリ</p>
+<p><a href="https://platform.claude.com/docs/en/agent-sdk/overview" target="_blank">Agent SDK ドキュメント</a> — プログラマティックなClaude Code利用</p>
+<p><a href="https://support.anthropic.com" target="_blank">Anthropic サポート</a> — アカウント・課金関連の問い合わせ</p>
+
+<h3>ドキュメント直リンク</h3>
+<p><a href="https://docs.anthropic.com/en/docs/claude-code/quickstart" target="_blank">クイックスタート</a> ・ <a href="https://docs.anthropic.com/en/docs/claude-code/common-workflows" target="_blank">一般的なワークフロー</a> ・ <a href="https://docs.anthropic.com/en/docs/claude-code/best-practices" target="_blank">ベストプラクティス</a> ・ <a href="https://docs.anthropic.com/en/docs/claude-code/settings" target="_blank">設定リファレンス</a> ・ <a href="https://docs.anthropic.com/en/docs/claude-code/permissions" target="_blank">権限</a> ・ <a href="https://docs.anthropic.com/en/docs/claude-code/mcp" target="_blank">MCP統合</a> ・ <a href="https://docs.anthropic.com/en/docs/claude-code/hooks" target="_blank">フック</a> ・ <a href="https://docs.anthropic.com/en/docs/claude-code/skills" target="_blank">スキル</a> ・ <a href="https://docs.anthropic.com/en/docs/claude-code/sub-agents" target="_blank">サブエージェント</a> ・ <a href="https://docs.anthropic.com/en/docs/claude-code/agent-teams" target="_blank">Agent Teams</a> ・ <a href="https://docs.anthropic.com/en/docs/claude-code/troubleshooting" target="_blank">トラブルシューティング</a></p>
+</div>
+
+<div class="card" style="margin-top:32px;text-align:center;">
+<p style="color:var(--text3);font-size:13px;margin:0">
+  Claude Code 完全ガイド — 2026年3月版<br>
+  本ガイドはAnthropic社の公式ドキュメントおよび公開情報に基づいて作成されています。<br>
+  最新情報は <a href="https://docs.anthropic.com/en/docs/claude-code" target="_blank">公式ドキュメント</a> をご確認ください。
+</p>
+</div>
+
+</section>
+
+</main>
+</div>
+
+<!-- ==================== SCRIPTS ==================== -->
+<script>
+// Theme toggle
+const toggle = document.getElementById('themeToggle');
+const html = document.documentElement;
+const stored = localStorage.getItem('theme');
+if (stored) { html.dataset.theme = stored; toggle.textContent = stored === 'light' ? '☀️' : '🌙'; }
+toggle.addEventListener('click', () => {
+  const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+  html.dataset.theme = next;
+  localStorage.setItem('theme', next);
+  toggle.textContent = next === 'light' ? '☀️' : '🌙';
+});
+
+// Sidebar toggle (mobile)
+const hamburger = document.getElementById('hamburger');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('overlay');
+function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('show'); }
+hamburger.addEventListener('click', () => { sidebar.classList.toggle('open'); overlay.classList.toggle('show'); });
+overlay.addEventListener('click', closeSidebar);
+sidebar.querySelectorAll('a').forEach(a => a.addEventListener('click', closeSidebar));
+
+// Back to top
+const backTop = document.getElementById('backTop');
+window.addEventListener('scroll', () => { backTop.classList.toggle('show', window.scrollY > 600); });
+backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+// Active TOC highlight
+const sections = document.querySelectorAll('.section[id]');
+const tocLinks = document.querySelectorAll('.toc-list a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      tocLinks.forEach(l => l.style.color = '');
+      const active = document.querySelector(`.toc-list a[href="#${entry.target.id}"]`);
+      if (active) active.style.color = 'var(--accent)';
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
