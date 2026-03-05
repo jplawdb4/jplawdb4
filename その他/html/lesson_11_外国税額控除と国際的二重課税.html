@@ -416,6 +416,33 @@ hr.sep {
 .rc-link:hover{opacity:.75}
 .rc-court{font-size:.78rem;color:#94a3b8;white-space:nowrap}
 .rc-desc{color:#94a3b8;font-size:.82rem}
+
+/* ===== 蛍光マーカー ===== */
+/* strongタグ → 黄色マーカー */
+.section strong, .content-section strong, .content-card strong,
+.card strong, .point-box strong {
+  background: linear-gradient(transparent 52%, rgba(250,204,21,.32) 52%);
+  padding: 0 1px 1px;
+  border-radius: 2px;
+  font-weight: 600;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+/* .mark クラス → 水色マーカー（数値・条文番号等） */
+.mark {
+  background: linear-gradient(transparent 52%, rgba(56,189,248,.3) 52%);
+  padding: 0 1px 1px;
+  border-radius: 2px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+/* point-boxのh3/h4 → アクセントアンダーライン */
+.point-box h3, .point-box h4,
+.info-box h3, .info-box h4 {
+  border-bottom: 2px solid rgba(250,204,21,.5);
+  padding-bottom: 4px;
+  display: inline;
+}
 </style>
 </head>
 <body>
@@ -1506,6 +1533,21 @@ A国税額（実際納付）:          100万円
         if(e.key==='Enter'||e.key===' '){e.preventDefault();openLb(svg);}
       });
     }
+  });
+})();
+</script>
+
+<script>
+(function(){
+  // 閾値数値・重要パーセントを .mark でラップ
+  var KEY_PATTERN = /((?:50|15|10|25|5|30|20|75|95|100|1,000|750|1000)(?:\.\d+)?%|(?:15|10|5|3|50|100|750|1,000|1000)(?:億|万|百|年|か月|ヶ月))/g;
+
+  function markText(node){ if(node.nodeType === 3){  // テキストノード   var txt = node.nodeValue;   if(!KEY_PATTERN.test(txt)) return;   KEY_PATTERN.lastIndex = 0;   var frag = document.createDocumentFragment();   var last = 0, m;   while((m = KEY_PATTERN.exec(txt)) !== null){     if(m.index > last) frag.appendChild(document.createTextNode(txt.slice(last, m.index)));     var span = document.createElement('span');     span.className = 'mark';     span.textContent = m[0];     frag.appendChild(span);     last = KEY_PATTERN.lastIndex;   }   if(last < txt.length) frag.appendChild(document.createTextNode(txt.slice(last)));   node.parentNode.replaceChild(frag, node); } else if(node.nodeType === 1){   // skip: script, style, a, strong, .mark   var tag = node.tagName.toLowerCase();   if(tag==='script'||tag==='style'||tag==='a') return;   if(node.classList && node.classList.contains('mark')) return;   if(tag==='strong'||tag==='b') return;   Array.from(node.childNodes).forEach(markText); }
+  }
+
+  // 対象: セクション内のテキストのみ
+  document.querySelectorAll( '.section p, .content-section p, .content-card p, .card p,  .section li, .content-card li, .card li,  .point-box p, .point-box li'
+  ).forEach(function(el){ markText(el);
   });
 })();
 </script>
