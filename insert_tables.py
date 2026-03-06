@@ -53,6 +53,8 @@ LAW_ID_MAP = {
     "kokuzei_tsusoku":        "337AC0000000066",
     "kaishahou":              "417AC0000000086",
     "shouhou":                "232AC0000000048",
+    "jisshi_tokurei":         "344AC0000000046",
+    "jisshi_tokurei_seirei":  "362CO0000000335",
 }
 
 # 省令など law_id が不定 → law_num で v1 API
@@ -67,6 +69,7 @@ LAW_NUM_MAP = {
     "kaishahou_kisoku":       "平成十八年法務省令第十二号",
     "kaishahou_seirei":       "平成十七年政令第三百六十四号",
     "shouhou_kisoku":         "平成十四年法務省令第二十二号",
+    "jisshi_tokurei_kisoku":  "昭和四十四年大蔵省・自治省令第一号",
 }
 
 
