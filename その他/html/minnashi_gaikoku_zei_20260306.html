@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>みなし外国税額控除（タックス・スペアリング）分析報告書 ― 日中租税条約第23条・法人税法第69条の交錯</title>
+<style>
+  :root {
+    --primary: #1a3a5c;
+    --secondary: #2e6da4;
+    --accent: #c0392b;
+    --warn: #e67e22;
+    --success: #27ae60;
+    --insight: #6c3483;
+    --bg: #f8f9fa;
+    --card: #ffffff;
+    --border: #dee2e6;
+    --text: #212529;
+    --muted: #6c757d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  /* ヘッダー */
+  .doc-header {
+    background: linear-gradient(135deg, var(--primary) 0%, #2c5282 100%);
+    color: white;
+    padding: 40px 48px 32px;
+  }
+  .doc-header .label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 8px;
+  }
+  .doc-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+  .doc-header .subtitle {
+    font-size: 14px;
+    opacity: 0.85;
+    margin-bottom: 20px;
+  }
+  .meta-row {
+    display: flex;
+    gap: 24px;
+    font-size: 12px;
+    opacity: 0.75;
+    flex-wrap: wrap;
+  }
+  /* ナビゲーション */
+  .toc {
+    background: var(--primary);
+    padding: 12px 48px;
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    border-bottom: 3px solid var(--secondary);
+  }
+  .toc a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 3px;
+    transition: background 0.2s;
+  }
+  .toc a:hover { background: rgba(255,255,255,0.15); color: white; }
+  /* メインレイアウト */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  .content { padding: 32px 0 64px; }
+  /* セクション */
+  section { margin-bottom: 48px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border);
+  }
+  .section-num {
+    background: var(--secondary);
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary);
+  }
+  h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 20px 0 10px;
+    padding-left: 10px;
+    border-left: 3px solid var(--secondary);
+  }
+  /* カード */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  /* ボックス種別 */
+  .box {
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin-bottom: 14px;
+  }
+  .box-primary { background: #e8f0fb; border-left: 4px solid var(--secondary); }
+  .box-danger  { background: #fdf2f2; border-left: 4px solid var(--accent); }
+  .box-warn    { background: #fef9ec; border-left: 4px solid var(--warn); }
+  .box-success { background: #edfaf1; border-left: 4px solid var(--success); }
+  .box-insight { background: #f5eef8; border-left: 4px solid var(--insight); }
+  .box-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    opacity: 0.7;
+  }
+  .box-primary .box-label { color: var(--secondary); }
+  .box-danger  .box-label { color: var(--accent); }
+  .box-warn    .box-label { color: var(--warn); }
+  .box-success .box-label { color: var(--success); }
+  .box-insight .box-label { color: var(--insight); }
+  /* テーブル */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+  th {
+    background: var(--primary);
+    color: white;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 12px;
+  }
+  td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #f8f9fb; }
+  tr:hover td { background: #eef3fb; }
+  /* バッジ */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .badge-red    { background: #fde8e8; color: var(--accent); border: 1px solid #f5c6c6; }
+  .badge-green  { background: #e8f8ee; color: var(--success); border: 1px solid #b6e9c8; }
+  .badge-blue   { background: #e8f0fb; color: var(--secondary); border: 1px solid #b8d0f0; }
+  .badge-orange { background: #fef3e2; color: var(--warn); border: 1px solid #f7d8a0; }
+  .badge-purple { background: #f3eafb; color: var(--insight); border: 1px solid #d8bfec; }
+  /* SVGコンテナ */
+  .svg-container {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    margin: 16px 0;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  /* 優先順位マーカー */
+  .priority {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .priority-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .p1 .priority-dot { background: var(--accent); }
+  .p2 .priority-dot { background: var(--warn); }
+  .p3 .priority-dot { background: var(--muted); }
+  /* 引用 */
+  blockquote {
+    border-left: 3px solid var(--border);
+    padding: 8px 16px;
+    color: var(--muted);
+    font-size: 13px;
+    margin: 12px 0;
+    background: #f9f9f9;
+    border-radius: 0 4px 4px 0;
+  }
+  /* リスト */
+  ul, ol { padding-left: 20px; }
+  li { margin-bottom: 6px; }
+  li ul, li ol { margin-top: 6px; }
+  /* 廃棄マーク */
+  .strike {
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+  /* フッター */
+  .doc-footer {
+    background: var(--primary);
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    padding: 20px;
+    font-size: 12px;
+    margin-top: 48px;
+  }
+  /* 印刷対応 */
+  @media print {
+    body { font-size: 12px; }
+    .toc, .doc-footer { display: none; }
+    .card, .box { break-inside: avoid; }
+    section { break-inside: avoid; }
+  }
+  @media (max-width: 768px) {
+    .doc-header { padding: 24px 16px; }
+    .toc { padding: 8px 16px; }
+    .container { padding: 0 12px; }
+    table { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="doc-header">
+  <div class="label">多者対話型税務分析報告書 / NTA Examiner × Tax Practitioner × Treaty Scholar</div>
+  <h1>みなし外国税額控除（タックス・スペアリング）の実務的分析<br>
+    ― 日中租税条約第23条と法人税法第69条の交錯を中心に ―</h1>
+  <div class="subtitle">日本法人が中国子会社から収受する使用料（ロイヤルティ）に係るみなし外国税額控除20%の法的構造・否認根拠・調査実務への含意</div>
+  <div class="meta-row">
+    <span>作成日: 2026年3月6日</span>
+    <span>分析対象: 日中租税条約（昭和58年締結）</span>
+    <span>参照判例: 最判H21.12.3（ガーンジー島）・裁決77-21・裁決76_03</span>
+    <span>参照DB: jplawdb4</span>
+  </div>
+</header>
+
+<nav class="toc">
+  <a href="#overview">1. 事案概要</a>
+  <a href="#structure">2. 条文構造</a>
+  <a href="#abandoned">3. 廃棄論拠</a>
+  <a href="#grounds">4. 否認根拠</a>
+  <a href="#burden">5. 立証責任</a>
+  <a href="#docs">6. 書類評価</a>
+  <a href="#precident">7. 判例教訓</a>
+  <a href="#eit">8. EIT法後の解釈</a>
+  <a href="#prevention">9. 予防的対応</a>
+  <a href="#conclusion">10. 結論</a>
+</nav>
+
+<div class="container">
+<div class="content">
+
+<!-- ===== 1. 事案概要 ===== -->
+<section id="overview">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <h2>事案の概要</h2>
+  </div>
+
+  <div class="card">
+    <h3>基本的事実関係</h3>
+    <table>
+      <tr><th style="width:28%">当事者</th><th>内容</th></tr>
+      <tr><td>日本法人（親会社）</td><td>内国法人。中国に完全子会社を設立し、当該子会社に技術・知的財産を供与</td></tr>
+      <tr><td>中国子会社</td><td>中国企業所得税法（EIT Law、2008年施行）上の居住者企業。使用料（ロイヤルティ）を日本親会社に送金</td></tr>
+      <tr><td>取引の性質</td><td>技術移転・IP使用に係る使用料。日中租税条約第12条2項の適用対象（源泉地国課税上限10%）</td></tr>
+    </table>
+
+    <h3>課税関係の概要</h3>
+    <div class="svg-container">
+      <svg width="700" height="220" viewBox="0 0 700 220" font-family="sans-serif" font-size="13">
+        <!-- 日本法人 -->
+        <rect x="30" y="70" width="160" height="80" rx="8" fill="#e8f0fb" stroke="#2e6da4" stroke-width="2"/>
+        <text x="110" y="105" text-anchor="middle" font-weight="700" fill="#1a3a5c">日本法人（親会社）</text>
+        <text x="110" y="122" text-anchor="middle" fill="#444" font-size="11">内国法人</text>
+        <text x="110" y="137" text-anchor="middle" fill="#444" font-size="11">使用料受取人</text>
+
+        <!-- 中国子会社 -->
+        <rect x="510" y="70" width="160" height="80" rx="8" fill="#fff3e0" stroke="#e67e22" stroke-width="2"/>
+        <text x="590" y="105" text-anchor="middle" font-weight="700" fill="#8b4513">中国子会社</text>
+        <text x="590" y="122" text-anchor="middle" fill="#444" font-size="11">EIT Law適用</text>
+        <text x="590" y="137" text-anchor="middle" fill="#444" font-size="11">使用料支払人</text>
+
+        <!-- 矢印：使用料 -->
+        <line x1="510" y1="95" x2="200" y2="95" stroke="#2e6da4" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+        <text x="350" y="88" text-anchor="middle" fill="#2e6da4" font-weight="700" font-size="12">使用料（ロイヤルティ）</text>
+
+        <!-- 矢印：源泉徴収 -->
+        <line x1="510" y1="120" x2="400" y2="120" stroke="#c0392b" stroke-width="1.5"/>
+        <line x1="400" y1="120" x2="400" y2="185" stroke="#c0392b" stroke-width="1.5" marker-end="url(#arrowRed)"/>
+        <text x="455" y="113" text-anchor="middle" fill="#c0392b" font-size="11">源泉徴収 10%</text>
+
+        <!-- 中国税務当局 -->
+        <rect x="330" y="185" width="140" height="30" rx="4" fill="#fde8e8" stroke="#c0392b" stroke-width="1.5"/>
+        <text x="400" y="205" text-anchor="middle" fill="#c0392b" font-weight="700" font-size="12">中国税務当局</text>
+
+        <!-- みなし税額控除 -->
+        <rect x="30" y="170" width="160" height="35" rx="4" fill="#f3eafb" stroke="#6c3483" stroke-width="1.5"/>
+        <text x="110" y="185" text-anchor="middle" fill="#6c3483" font-weight="700" font-size="12">みなし税額控除</text>
+        <text x="110" y="199" text-anchor="middle" fill="#6c3483" font-size="11">20%相当額（法69条）</text>
+
+        <!-- 矢印定義 -->
+        <defs>
+          <marker id="arrowBlue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#2e6da4"/>
+          </marker>
+          <marker id="arrowRed" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#c0392b"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+
+    <h3>みなし外国税額控除の仕組み</h3>
+    <div class="box box-primary">
+      <div class="box-label">制度概要</div>
+      日本法人は中国から使用料を受け取る際、中国で源泉徴収される実際の税額（10%）だけでなく、租税条約の規定に基づき<strong>「納付したとみなされる外国法人税額」（20%相当）</strong>を法人税法第69条の外国税額控除の対象として申告できる。この差額10ポイントが中国の「税収放棄（tax sparing）」の擬制であり、途上国への投資促進のための政策的仕組みである。
+    </div>
+
+    <table>
+      <tr><th>税率区分</th><th>根拠</th><th>金額（使用料100に対し）</th></tr>
+      <tr><td>実際源泉徴収税率</td><td>日中条約第12条2項の上限適用後</td><td>10</td></tr>
+      <tr><td>みなし税率（条約固定）</td><td>日中条約第23条3項(c)</td><td>20</td></tr>
+      <tr><td>みなし控除のメリット</td><td>差額部分の擬制</td><td>10（みなし部分）</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ===== 2. 条文構造 ===== -->
+<section id="structure">
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <h2>日中租税条約第23条の構造的分析</h2>
+  </div>
+
+  <div class="box box-insight">
+    <div class="box-label">核心的発見</div>
+    第23条2項（手続委任条項）と第23条3項（実体的みなし権利）は独立した条文である。第23条3項型（固定率みなし型）と第23条4項型（法令列挙型）は機能的に全く異なる仕組みであり、混同は致命的な法的誤謬を生む。
+  </div>
+
+  <div class="card">
+    <h3>第23条各項の機能的分離</h3>
+
+    <div class="svg-container">
+      <svg width="700" height="300" viewBox="0 0 700 300" font-family="sans-serif" font-size="13">
+        <!-- 第23条全体 -->
+        <rect x="10" y="10" width="680" height="280" rx="10" fill="none" stroke="#1a3a5c" stroke-width="2" stroke-dasharray="6,3"/>
+        <text x="350" y="32" text-anchor="middle" font-size="14" font-weight="700" fill="#1a3a5c">日中租税条約 第23条（外国税額控除条項）</text>
+
+        <!-- 第2項 -->
+        <rect x="30" y="50" width="200" height="100" rx="6" fill="#e8f0fb" stroke="#2e6da4" stroke-width="1.5"/>
+        <text x="130" y="75" text-anchor="middle" font-weight="700" fill="#2e6da4">第2項</text>
+        <text x="130" y="93" text-anchor="middle" fill="#333" font-size="11">「日本国の法令に従い」</text>
+        <text x="130" y="110" text-anchor="middle" fill="#333" font-size="11">手続・計算・控除限度額</text>
+        <text x="130" y="127" text-anchor="middle" fill="#333" font-size="11">の運用を国内法に委任</text>
+        <text x="130" y="144" text-anchor="middle" fill="#6c757d" font-size="10">実体的権利には及ばない</text>
+
+        <!-- 第3項 -->
+        <rect x="255" y="50" width="200" height="100" rx="6" fill="#edfaf1" stroke="#27ae60" stroke-width="2"/>
+        <text x="355" y="75" text-anchor="middle" font-weight="700" fill="#27ae60">第3項（主たる根拠）</text>
+        <text x="355" y="93" text-anchor="middle" fill="#333" font-size="11">固定率みなし型</text>
+        <text x="355" y="110" text-anchor="middle" fill="#333" font-size="11">「二十パーセント」を</text>
+        <text x="355" y="127" text-anchor="middle" fill="#333" font-size="11">条約が直接規定</text>
+        <text x="355" y="144" text-anchor="middle" fill="#27ae60" font-size="10">使用料に適用（(c)号）</text>
+
+        <!-- 第4項 -->
+        <rect x="480" y="50" width="200" height="100" rx="6" fill="#fef9ec" stroke="#e67e22" stroke-width="1.5"/>
+        <text x="580" y="75" text-anchor="middle" font-weight="700" fill="#e67e22">第4項（補完的）</text>
+        <text x="580" y="93" text-anchor="middle" fill="#333" font-size="11">法令列挙型</text>
+        <text x="580" y="110" text-anchor="middle" fill="#333" font-size="11">「両国政府合意」</text>
+        <text x="580" y="127" text-anchor="middle" fill="#333" font-size="11">という追加要件あり</text>
+        <text x="580" y="144" text-anchor="middle" fill="#e67e22" font-size="10">財税[2008]116号が対象</text>
+
+        <!-- 分離線 -->
+        <line x1="350" y1="165" x2="350" y2="185" stroke="#aaa" stroke-width="1" stroke-dasharray="4,2"/>
+        <text x="350" y="200" text-anchor="middle" fill="#6c757d" font-size="11">この2つは独立した条文（並列構造）</text>
+
+        <!-- 重要帰結 -->
+        <rect x="55" y="215" width="570" height="55" rx="6" fill="#f5eef8" stroke="#6c3483" stroke-width="1.5"/>
+        <text x="340" y="237" text-anchor="middle" font-weight="700" fill="#6c3483" font-size="12">第3項型の核心：「課されたであろう税が何%か」という問い自体が成立しない</text>
+        <text x="340" y="257" text-anchor="middle" fill="#444" font-size="11">第3項は直接「二十パーセント」を固定率として規定。国内法の税率変動に連動しない。</text>
+      </svg>
+    </div>
+
+    <h3>第23条2項の「日本国の法令に従い」留保の射程</h3>
+    <table>
+      <tr><th>適用範囲</th><th>留保の及ぶ事項（国内法に委任）</th></tr>
+      <tr>
+        <td><span class="badge badge-green">委任あり</span></td>
+        <td>控除の手続・申告方法、控除限度額の計算（法69条各項）、別表の様式・記載方法、添付書類要件（法69条25項・28項）</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-red">委任なし</span></td>
+        <td>みなし税率（20%）そのものの変更・縮減、「条約権利の消滅」（VCLT26条・27条抵触）、国内法廃止による条約権利の否定</td>
+      </tr>
+    </table>
+
+    <div class="box box-danger">
+      <div class="box-label">廃棄済み解釈（課税庁が過去に主張し撤回した論拠）</div>
+      <span class="strike">「法69条廃止または改正により、条約23条3項のみなし権利も消滅する」</span><br>
+      → VCLT第26条（pacta sunt servanda）・第27条（国内法による条約不履行の正当化禁止）に正面から抵触。成立不能。
+    </div>
+  </div>
+</section>
+
+<!-- ===== 3. 廃棄論拠 ===== -->
+<section id="abandoned">
+  <div class="section-header">
+    <div class="section-num">3</div>
+    <h2>廃棄確定の課税庁論拠（調査マニュアルへの明示的記載要）</h2>
+  </div>
+
+  <div class="box box-danger">
+    <div class="box-label">重要</div>
+    以下の論拠は「撤回（方針変更）」ではなく「廃棄（法的根拠なしとして内部規範化）」である。廃棄は「今後いかなる調査においても使用すべきでない」という規範の確立を意味する。調査担当者が安易に援用するリスクがあるため、否認根拠として挙げることを明示的に禁止する。
+  </div>
+
+  <div class="card">
+    <table>
+      <tr>
+        <th style="width:5%">#</th>
+        <th style="width:30%">廃棄論拠</th>
+        <th style="width:65%">廃棄の法的根拠（具体的・条文レベル）</th>
+      </tr>
+      <tr>
+        <td><span class="badge badge-red">E</span></td>
+        <td class="strike">「条約第12条2項の実際税率10%が控除基礎。20%みなしは不可」</td>
+        <td>
+          第23条3項は固定率型であり「二十パーセント」を条約が直接規定する。「みなす」という擬制構造の本質を看過している。VCLT第31条の文言解釈（ordinary meaning）に正面から反する。第23条3項と第12条2項は別個独立の条文であり、前者が後者を参照する構造にはない。
+        </td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-red">F</span></td>
+        <td class="strike">「第23条2項の『日本国の法令に従い』留保がみなし税率規定（20%）にも及ぶ」</td>
+        <td>
+          第23条2項の留保は手続・計算・運用面に限定される。第23条3項は独立した条文（条文の位置関係・並列構造から明確）。VCLT第26条・第27条（国内法による条約不履行の禁止）に抵触する解釈。有効性原則（ut res magis valeat quam pereat）にも反する。
+        </td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-red">G</span></td>
+        <td class="strike">「みなし税額は実際に納付していないから外国法人税（施行令141条）に該当しない」</td>
+        <td>
+          最判H21.12.3（ガーンジー島事件）が「規定から離れた一般的抽象的な否定は許されない」と明示。条約第23条3項という「規定」が存在する以上、これを離れた一般的否定は不可。この論拠は逆に納税者に援用される。
+        </td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-red">H</span></td>
+        <td class="strike">「施行条例91条（国務院令第512号）は条約上の『法令』に該当しない（行政規則に過ぎない）」</td>
+        <td>
+          条約上の「法令（law）」はVCLT第31条の一般解釈原則上、当該国家の法体系全体を指す。中国の企業所得税法施行条例は国務院が制定する行政法規（立法法上の「法規」）であり、「法令」性を否定する根拠はない。財税[2008]116号（部門規章）についても同様の問題が生じる。
+        </td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-red">I</span></td>
+        <td class="strike">「LOB（適格者テスト）違反による否認」</td>
+        <td>
+          日中租税条約にLOB条項は存在しない。MLI（多国間条約）は日中間でPPT（主要目的テスト、第7条）のみ採択。LOBは未採択。LOBへの言及は条約の読み誤りであり、処分取消事由となる。
+        </td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-red">J</span></td>
+        <td class="strike">「施行令141条3項の『任意に免れることのできる税』として申告手続未履践を評価する」</td>
+        <td>
+          令141条3項の「任意に免れることのできる税」は制度そのものの性格（その外国税の法令上の構造として納税者が選択的に免除できる仕組みになっているか）を問うものである。日本国内の申告手続を履践しなかったという事後的行為を同項で評価することは全く異なる次元の話。この解釈は実務・裁判所に一蹴される。
+        </td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<!-- ===== 4. 否認根拠 ===== -->
+<section id="grounds">
+  <div class="section-header">
+    <div class="section-num">4</div>
+    <h2>確立した否認根拠と優先順位</h2>
+  </div>
+
+  <div class="card">
+    <!-- 第1位 -->
+    <div class="box box-danger">
+      <div class="box-label">第1位（主位的・最強の根拠）</div>
+      <div class="priority p1"><div class="priority-dot"></div>添付書類不備（法人税法第69条第25項・段階的評価基準）</div>
+      <p style="margin-top:8px">実務的に大多数の案件はこの根拠のみで処分が維持できる。第2位以下の論拠は補充的位置づけに過ぎない。</p>
+    </div>
+
+    <h3>段階的評価基準（レベル1〜4）</h3>
+    <table>
+      <tr>
+        <th style="width:15%">レベル</th>
+        <th style="width:35%">事実状況</th>
+        <th style="width:30%">課税庁の対応</th>
+        <th style="width:20%">法的根拠</th>
+      </tr>
+      <tr>
+        <td><span class="badge badge-red">レベル1</span><br>全額否認</td>
+        <td>別表六(四)〜六(二)の完全無記載＋完税凭证・書類一切なし</td>
+        <td>みなし外国税額控除の全額否認。更正処分（重加算税検討）</td>
+        <td>法69条25項（添付なし）</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-orange">レベル2</span><br>修正申告慫慂</td>
+        <td>別表記載あり・転記漏れあり＋完税凭证添付あり</td>
+        <td>修正申告を慫慂。選択意思は認定（外部証拠で補完可）</td>
+        <td>法69条25項＋計算誤り</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-blue">レベル3</span><br>是正促進</td>
+        <td>書類完備＋計算誤りのみ（例：みなし税率の適用計算ミス）</td>
+        <td>更正の請求を促す。過少申告加算税（「正当な理由」検討）</td>
+        <td>法69条・通則65条</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-purple">レベル4</span><br>個別事実認定</td>
+        <td>別表ゼロ＋外部証拠あり（取引実態・完税凭证が別途発見される等）</td>
+        <td>第25条相互協議起動リスクを考慮。安易なレベル1適用を避ける</td>
+        <td>個別事実認定</td>
+      </tr>
+    </table>
+
+    <div class="box box-warn">
+      <div class="box-label">法69条25項・28項の峻別（実務上最重要）</div>
+      <table style="margin:0">
+        <tr>
+          <th>区分</th><th>内容</th><th>救済可否</th>
+        </tr>
+        <tr>
+          <td>25項「添付なし」</td>
+          <td>確定申告書に書類を添付しなかった場合</td>
+          <td><span class="badge badge-red">原則救済なし</span>（28項の「やむを得ない事情」の射程外）</td>
+        </tr>
+        <tr>
+          <td>28項「保存なし」</td>
+          <td>書類を保存していなかった場合（添付済みが前提）</td>
+          <td><span class="badge badge-orange">やむを得ない事情で救済可能</span></td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- 第2位 -->
+    <div class="box box-warn" style="margin-top:20px">
+      <div class="box-label">第2位（補充的・脆弱性あり・慎重運用）</div>
+      <div class="priority p2"><div class="priority-dot"></div>第23条4項(c)「両国政府合意」要件の未充足</div>
+      <p style="margin-top:8px"><strong>重大な脆弱性：</strong>財務省・外務省への照会で「正式承認記録なし」という回答が返っても、それが即座に「両国政府合意なし」を意味するわけではない。</p>
+      <ul style="margin-top:8px">
+        <li>2008年以降の日本企業によるタックス・スペアリング申告実績と国税庁の対応（否認事例の有無）が黙示的合意（VCLT31条3項(b)・subsequent practice）の最重要証拠となる</li>
+        <li>否認事例が確認できない場合、本論拠は「実務上使用困難な根拠」として実質的に放棄すべき</li>
+        <li><strong>調査戦略：否認事例の実績調査を先行させる</strong></li>
+        <li>第23条4項(c)を主位的に使用しようとする場合はMAP起動リスクを必ず上席と協議する</li>
+      </ul>
+    </div>
+
+    <!-- 第3位 -->
+    <div class="box box-success" style="margin-top:8px">
+      <div class="box-label">第3位（スキーム性証拠がある個別案件のみ）</div>
+      <div class="priority p3"><div class="priority-dot"></div>PPT否認（MLI第7条・主要目的テスト）</div>
+      <ul style="margin-top:8px">
+        <li>発効：日本2019年1月1日、中国2022年9月1日（源泉税は2023年1月1日以降の課税年度から適用）</li>
+        <li>2017年BEPS Action 6 Final Reportコメンタリー：「通常の商取引から付随的に生じる租税便益はPPTの対象外」と明記</li>
+        <li>実際の技術移転・IP使用の実態がある案件では、「主要目的がタックス・スペアリング」の証明は原則として困難</li>
+        <li><strong>適用可能なケース：</strong>実態のない取引の仮装・条約濫用のスキームが積極的証拠により確認された個別案件のみ</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 5. 立証責任 ===== -->
+<section id="burden">
+  <div class="section-header">
+    <div class="section-num">5</div>
+    <h2>立証責任の三層構造</h2>
+  </div>
+
+  <div class="card">
+    <div class="svg-container">
+      <svg width="680" height="260" viewBox="0 0 680 260" font-family="sans-serif" font-size="12">
+        <!-- 第一層 -->
+        <rect x="20" y="20" width="640" height="65" rx="6" fill="#e8f0fb" stroke="#2e6da4" stroke-width="2"/>
+        <text x="340" y="43" text-anchor="middle" font-weight="700" fill="#2e6da4" font-size="13">第一層：納税者（みなし外国税額控除の要件事実を証明）</text>
+        <text x="340" y="62" text-anchor="middle" fill="#333">① 使用料性の確認（日中条約第12条2項の適用対象）</text>
+        <text x="340" y="76" text-anchor="middle" fill="#333">② 完税凭证（完税証明書）の真正性　③ 施行条例91条の写し（軽減がなければ20%が課される制度的確認）</text>
+
+        <!-- 矢印 -->
+        <path d="M340,90 L330,105 L350,105 Z" fill="#aaa"/>
+
+        <!-- 第二層 -->
+        <rect x="100" y="110" width="480" height="65" rx="6" fill="#fde8e8" stroke="#c0392b" stroke-width="2"/>
+        <text x="340" y="133" text-anchor="middle" font-weight="700" fill="#c0392b" font-size="13">第二層：課税庁（例外事由の立証）</text>
+        <text x="340" y="152" text-anchor="middle" fill="#333">① PPT適用（スキーム性の積極的証拠）</text>
+        <text x="340" y="167" text-anchor="middle" fill="#333">② 両国政府合意の不存在（黙示的合意論に留意）　③ 使用料非該当</text>
+
+        <!-- 矢印 -->
+        <path d="M340,180 L330,195 L350,195 Z" fill="#aaa"/>
+
+        <!-- 第三層 -->
+        <rect x="180" y="200" width="320" height="45" rx="6" fill="#f5eef8" stroke="#6c3483" stroke-width="2"/>
+        <text x="340" y="220" text-anchor="middle" font-weight="700" fill="#6c3483" font-size="13">第三層：条項分岐の確定</text>
+        <text x="340" y="237" text-anchor="middle" fill="#333">第23条3項型か第23条4項型かを最初に確定する</text>
+      </svg>
+    </div>
+
+    <h3>第23条3項型と第23条4項型の分岐（最重要）</h3>
+    <table>
+      <tr>
+        <th style="width:30%">判断基準</th>
+        <th style="width:35%">第23条3項型（固定率みなし型）</th>
+        <th style="width:35%">第23条4項型（法令列挙型）</th>
+      </tr>
+      <tr>
+        <td>所得の種類</td>
+        <td>使用料（ロイヤルティ）→ <strong>(c)号</strong></td>
+        <td>両国政府が合意した法令に基づく租税減免</td>
+      </tr>
+      <tr>
+        <td>みなし税率の決定</td>
+        <td>条約が「二十パーセント」を直接固定</td>
+        <td>軽減前の法令税率を基礎に計算</td>
+      </tr>
+      <tr>
+        <td>「課されたであろう税」の問い</td>
+        <td><span class="badge badge-red">問い自体が不成立</span></td>
+        <td>問いが発生する（東京地裁H26参照）</td>
+      </tr>
+      <tr>
+        <td>両国政府合意要件</td>
+        <td>不要</td>
+        <td>必要（第23条4項(c)）</td>
+      </tr>
+      <tr>
+        <td>本事案への適用</td>
+        <td><span class="badge badge-green">こちらが正確</span></td>
+        <td>補完的・第2位否認根拠の場面</td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<!-- ===== 6. 書類評価 ===== -->
+<section id="docs">
+  <div class="section-header">
+    <div class="section-num">6</div>
+    <h2>添付書類の実務的評価</h2>
+  </div>
+
+  <div class="card">
+    <h3>標準確認事項三点セット（調査の最低要求）</h3>
+    <div class="box box-success">
+      <div class="box-label">調査で確認すべき最小限の三点</div>
+      <ol>
+        <li><strong>使用料性の確認：</strong>日中条約第12条2項の適用対象（技術移転・IP使用）であることを契約書等で確認</li>
+        <li><strong>完税凭证の真正性：</strong>10%の源泉税が実際に徴収されたことの確認（中国税務当局発行の完税証明書）</li>
+        <li><strong>施行条例91条の写し：</strong>軽減がなければ20%が課される制度的確認（国務院令第512号・企業所得税法施行条例91条）</li>
+      </ol>
+    </div>
+
+    <h3>別表記載の要求水準</h3>
+    <table>
+      <tr>
+        <th>別表</th>
+        <th>記載内容</th>
+        <th>不備時の処理</th>
+      </tr>
+      <tr>
+        <td>別表六(四)<br>（B06-4）</td>
+        <td>欄12〜18（みなし税額部分）の記載。課税標準・みなし税率・みなし税額の明記</td>
+        <td>欄12〜18が全て空欄かつ完税凭证もなければレベル1（全額否認）。完税凭证ありであればレベル2（選択意思あり・修正申告慫慂）</td>
+      </tr>
+      <tr>
+        <td>別表六(二の二)<br>（B06-2-2）</td>
+        <td>欄5（みなし納付分の控除対象外国法人税額）←B06(四)欄30から転記</td>
+        <td>転記漏れは計算誤りとして更正の請求を促す（選択意思認定後）</td>
+      </tr>
+      <tr>
+        <td>別表六(二)<br>（B06-2）</td>
+        <td>欄1（当期の控除対象外国法人税額）への反映</td>
+        <td>最終的な控除額の誤りとして処理</td>
+      </tr>
+    </table>
+
+    <h3>代替証拠スキーム（完税凭证遅延時）</h3>
+    <div class="box box-primary">
+      <div class="box-label">実務上の対応フロー</div>
+      <ul>
+        <li><strong>第一次証拠：</strong>完税凭证（完税証明書）― 中国税務当局発行・源泉徴収の直接証拠</li>
+        <li><strong>代替証拠①：</strong>代扣代缴申报表（源泉徴収代理申告書）― 支払法人が提出した申告書の写し。保管単位：支払ごとに1件・送金確認書と合せて綴じる</li>
+        <li><strong>代替証拠②：</strong>注册税務師確認書（中国の公認税理士相当）― 减免前税率（20%）の制度的確認として証明力あり。完税凭证の代替としての位置づけ</li>
+        <li><strong>実務上の注意：</strong>完税凭证が遅延する場合は申告時に代扣代缴申报表を先行添付し、後日完税凭证を提出する旨を付記する</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 7. 判例教訓 ===== -->
+<section id="precident">
+  <div class="section-header">
+    <div class="section-num">7</div>
+    <h2>関連判例・裁決からの教訓</h2>
+  </div>
+
+  <div class="card">
+    <h3>最判平成21年12月3日（ガーンジー島事件・判例11342）</h3>
+    <div class="box box-insight">
+      <div class="box-label">判示の核心</div>
+      「法人税法施行令141条の規定から離れた一般的抽象的な否定は許されない」<br>
+      ― 課税庁が施行令141条の定める要件以外の事由（「みなしだから外国法人税でない」等）を持ち出して外国法人税該当性を否定することは許容されない。
+    </div>
+    <table>
+      <tr><th>論点</th><th>本事案への含意</th></tr>
+      <tr>
+        <td>外国法人税の定義</td>
+        <td>令141条1項の定義要件（法人の所得を課税標準として課される税）を満たせば原則として外国法人税に該当。「実際に納付していない」という事実のみでは否定不可（論拠G廃棄の根拠）</td>
+      </tr>
+      <tr>
+        <td>令141条3項の解釈</td>
+        <td>同項各号の「任意に免れることのできる税」はその制度の性格を問うもの。日本国内の申告手続未履践は次元が異なる（論拠J廃棄の根拠）</td>
+      </tr>
+      <tr>
+        <td>課税庁への警告</td>
+        <td>規定から離れた論拠を持ち出すと、逆に納税者に援用されるリスクが生じる</td>
+      </tr>
+    </table>
+
+    <h3>裁決77-21（国税不服審判所 平成16年4月1日）</h3>
+    <div class="box box-warn">
+      <div class="box-label">教訓</div>
+      みなし外国税額控除を適用して確定申告を行った後の更正の請求が「更正をすべき理由がない」として認められなかった事案。
+      <br><strong>実務的含意：</strong>みなし外国税額控除の選択（申告時の意思決定）は慎重に行う必要がある。事後的な更正の請求による救済は困難。申告時に正確な書類を整備・添付することが唯一の安全策。
+    </div>
+
+    <h3>裁決76-03（信義則四要件）</h3>
+    <div class="box box-primary">
+      <div class="box-label">信義則の四要件（納税者の事後否認対抗手段）</div>
+      <ol>
+        <li>課税庁による公的見解の表示（文書回答・照会回答等）</li>
+        <li>その表示に対する納税者の信頼</li>
+        <li>信頼に基づく行動（申告・取引実行）</li>
+        <li>矛盾する処分による不利益（課税庁の意見変更）</li>
+        <li>（加えて）納税者の帰責事由なし</li>
+      </ol>
+      <p style="margin-top:8px"><strong>実務的含意：</strong>事前文書回答（照会制度）を取得した上でみなし外国税額控除を申告した納税者は、この四要件を援用して事後否認に対抗できる可能性がある。</p>
+    </div>
+
+    <h3>東京地裁平成26年8月28日（日伯マナウス事件）</h3>
+    <div class="box box-success">
+      <div class="box-label">第23条4項型への含意</div>
+      軽減前税率を基礎とする解釈原則。第23条4項型（法令列挙型）においては、「課されたであろう税」の計算基礎として軽減前の法令税率を用いることが妥当とされる方向性を示した。第23条3項型（本事案）には直接適用されないが、条項分岐の重要性を再確認する裁判例。
+    </div>
+  </div>
+</section>
+
+<!-- ===== 8. EIT Law後の解釈 ===== -->
+<section id="eit">
+  <div class="section-header">
+    <div class="section-num">8</div>
+    <h2>中国EIT Law施行（2008年）後の固定率継続適用（解釈A確定）</h2>
+  </div>
+
+  <div class="card">
+    <div class="box box-insight">
+      <div class="box-label">解釈Aの確定</div>
+      日中条約締結（昭和58年・1983年）当時は旧企業所得税法（1991年）・外国企業所得税法が適用されていたが、2007年EIT Law（企業所得税法）施行後も第23条3項の固定率（20%）は変動しない。これが三者対話において最も強固な論拠として確立した。
+    </div>
+
+    <h3>解釈Aの三層根拠</h3>
+    <table>
+      <tr>
+        <th style="width:30%">根拠</th>
+        <th>内容</th>
+      </tr>
+      <tr>
+        <td>条約2条2項<br>（類似租税への拡張適用）</td>
+        <td>EIT Lawは旧企業所得税法・外国企業所得税法と「同一又は類似の租税」として条約の射程に含まれる（条約2条2項）。EIT Law施行を「条約適用範囲外の新税」と解する余地はない。</td>
+      </tr>
+      <tr>
+        <td>VCLT31条3項(b)<br>（subsequent practice）</td>
+        <td>2008年以降、日本企業が第23条3項の固定率20%を継続適用し、国税庁がこれを否認していないという実務慣行は、「条約解釈についての合意を確立する当事国の後の慣行」（VCLT31条3項(b)）として解釈上の支持を与える。</td>
+      </tr>
+      <tr>
+        <td>VCLT26条<br>（pacta sunt servanda）</td>
+        <td>条約が固定した擬制率（20%）は、中国の税制変更（EIT Lawによる改正）によって一方的に変動しない。「条約が固定した放棄額は変動しない」がpacta sunt servandaの実践的意味。</td>
+      </tr>
+    </table>
+
+    <h3>軽減の根拠法令と「法令」概念</h3>
+    <table>
+      <tr><th>法令の種類</th><th>内容</th><th>「法令」該当性</th></tr>
+      <tr>
+        <td>企業所得税法3条3項</td>
+        <td>非居住者企業の法定税率：20%</td>
+        <td><span class="badge badge-green">法律（確実）</span></td>
+      </tr>
+      <tr>
+        <td>企業所得税法施行条例91条</td>
+        <td>50%減免規定→実効税率10%</td>
+        <td><span class="badge badge-green">行政法規（国務院令・法令該当）</span></td>
+      </tr>
+      <tr>
+        <td>財税[2008]116号</td>
+        <td>財政部・国家税务总局の通知（部門規章）</td>
+        <td><span class="badge badge-orange">条約4項(c)の「両国合意」要件が別途必要</span></td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<!-- ===== 9. 予防的対応 ===== -->
+<section id="prevention">
+  <div class="section-header">
+    <div class="section-num">9</div>
+    <h2>納税者側の予防的対応策（信義則・estoppelの二層構造）</h2>
+  </div>
+
+  <div class="card">
+    <div class="box box-insight">
+      <div class="box-label">二層の対抗手段</div>
+      みなし外国税額控除が事後的に否認されるリスクへの対抗手段は、国内法的局面（信義則）と国際法的局面（条約法上のestoppel）の二層から構成される。
+    </div>
+
+    <h3>第一層：国内法的対抗手段（信義則）</h3>
+    <table>
+      <tr><th>手段</th><th>実施方法</th><th>法的効果</th></tr>
+      <tr>
+        <td>事前文書回答の取得</td>
+        <td>国税庁照会制度（文書回答）を利用し、みなし20%の適用について事前確認</td>
+        <td>裁決76_03四要件の充足→信義則適用の基礎。課税庁の意見変更に対して直接対抗可能</td>
+      </tr>
+      <tr>
+        <td>申告書への根拠条文明示</td>
+        <td>確定申告書・別表六(四)への「日中条約第23条3項(c)適用」の明示記載</td>
+        <td>選択意思の客観的証拠。後の調査における「申告時の意思不明」の主張を封じる</td>
+      </tr>
+    </table>
+
+    <h3>第二層：条約法的対抗手段（VCLT・estoppel）</h3>
+    <table>
+      <tr><th>局面</th><th>内容</th></tr>
+      <tr>
+        <td>VCLT31条3項(b)<br>（後の慣行）</td>
+        <td>長年の実務慣行（申告実績と国税庁の非否認）が解釈上の合意を構成。一方的な解釈変更は正当化困難</td>
+      </tr>
+      <tr>
+        <td>国際法上のestoppel<br>（ICJ判例法）</td>
+        <td>日中双方の税務当局が長年にわたり20%みなし適用を承認してきた事実→一方的否認はestoppelの対象。ただし財務省・外務省の承認記録が具体的に必要</td>
+      </tr>
+      <tr>
+        <td>VCLT26条・27条</td>
+        <td>条約の誠実な履行義務（26条）・国内法による不履行の正当化禁止（27条）を援用して国内手続要件による条約権利否定に対抗</td>
+      </tr>
+    </table>
+
+    <h3>実務的チェックリスト</h3>
+    <div class="box box-success">
+      <div class="box-label">申告時に整備すべき書類・手続</div>
+      <ul>
+        <li>[ ] 使用料契約書（技術移転・IP使用の実態確認）</li>
+        <li>[ ] 完税凭证（源泉徴収10%の証明）― 遅延時は代扣代缴申报表で代替</li>
+        <li>[ ] 企業所得税法施行条例91条の写し（减免前税率20%の制度的確認）</li>
+        <li>[ ] 別表六(四)欄12〜18の正確な記載（みなし税額部分）</li>
+        <li>[ ] 別表六(二の二)欄5への正確な転記（B06(四)欄30から）</li>
+        <li>[ ] 申告書への「日中条約第23条3項(c)適用」の根拠条文明示</li>
+        <li>[ ] 必要に応じて事前文書回答の取得</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 10. 結論 ===== -->
+<section id="conclusion">
+  <div class="section-header">
+    <div class="section-num">10</div>
+    <h2>結論：三者対話から得られた核心的発見の統合</h2>
+  </div>
+
+  <div class="card">
+    <div class="box box-insight">
+      <div class="box-label">本分析の意義</div>
+      本報告書は、課税庁側（nta-examiner）・実務家側（tax-practitioner）・条約法学者側（treaty-scholar）の三者が多ラウンドにわたる対話を行い、単独では到達し得なかった論点整理を達成したものである。特に重要なのは、課税庁側論拠の誤りを条文レベルで廃棄し、真に有効な否認根拠を絞り込んだことである。
+    </div>
+
+    <h3>七点の核心的発見（最終確定版）</h3>
+    <table>
+      <tr><th style="width:5%">#</th><th style="width:35%">発見内容</th><th style="width:60%">実務的含意</th></tr>
+      <tr>
+        <td>1</td>
+        <td>第23条3項（固定率型）と第23条4項（法令列挙型）の機能的分離</td>
+        <td>条項分岐の確定を調査の最初のステップとする。分岐を誤ると全ての論拠が誤りとなる</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>「課されたであろう税」論争は第23条3項型では問いとして不成立</td>
+        <td>「なぜ20%か・10%ではないか」という調査質問を完全廃棄する</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>立証責任の三層構造</td>
+        <td>第一層（納税者）の証明が不完全な場合は第二層（課税庁）の例外事由証明に進む前に是正を促す</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>添付書類の段階的評価基準（レベル1〜4）</td>
+        <td>書類状況に応じた適切な対応を選択する。安易なレベル1（全額否認）はMAP起動リスクがある</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>法69条25項（添付なし）と28項（保存なし）の峻別</td>
+        <td>「添付なし」は28項救済の射程外であることを確認してから処分方針を決定する</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>代替証拠スキーム（代扣代缴申报表による完税凭证の代替）</td>
+        <td>完税凭证の遅延を理由に安易に全額否認しない。代替証拠の存否を確認する</td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td>信義則（裁決76_03四要件）とVCLT上のestoppelの二層構造</td>
+        <td>事前文書回答を取得済みの納税者に対する否認は処分取消リスクが高い</td>
+      </tr>
+    </table>
+
+    <h3>調査戦略の最終版（優先順位付き行動指針）</h3>
+    <div class="box box-primary">
+      <ol>
+        <li><strong>条項分岐の確定：</strong>取引が第23条3項(c)（使用料）に該当するか確認</li>
+        <li><strong>書類状況の確認：</strong>別表六(四)欄12〜18の記載状況と完税凭证の存否を確認 → レベル1〜4を判定</li>
+        <li><strong>三点セットの確認：</strong>使用料性・完税凭证・施行条例91条写しの三点が揃っているか確認</li>
+        <li><strong>事前文書回答の確認：</strong>納税者が照会回答を取得していないか確認（取得済みなら信義則適用リスク）</li>
+        <li><strong>第2位論拠の慎重判断：</strong>否認事例の実績調査を先行させてから第23条4項(c)の使用を検討</li>
+        <li><strong>PPTの留保：</strong>スキーム性の積極的証拠がある場合のみMLI第7条の適用を検討</li>
+      </ol>
+    </div>
+
+    <div class="box box-danger">
+      <div class="box-label">廃棄論拠の使用禁止（最終確認）</div>
+      論拠E・F・G・H・I・J（本報告書第3章）は今後いかなる調査においても否認根拠として使用しない。調査担当者への周知徹底と調査マニュアルへの明示的記載を要する。
+    </div>
+  </div>
+</section>
+
+</div>
+</div>
+
+<footer class="doc-footer">
+  本報告書は多者対話型税務分析（nta-examiner / tax-practitioner / treaty-scholar）の成果を統合したものである。<br>
+  参照: 日中租税条約（昭和58年）/ 法人税法第69条 / 最判H21.12.3 / 裁決77-21 / 裁決76-03 / VCLT / MLI<br>
+  jplawdb4 | 2026-03-06 | このファイルはAI分析用です。正確な内容は原文・条文を参照してください。
+</footer>
+
+</body>
+</html>
