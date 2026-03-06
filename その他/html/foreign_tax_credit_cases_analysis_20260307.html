@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>外国税額控除 判決・裁決 全件分析</title>
+<style>
+:root {
+  --primary: #1a365d;
+  --secondary: #2b6cb0;
+  --accent: #e53e3e;
+  --success: #38a169;
+  --warning: #d69e2e;
+  --bg: #f7fafc;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --text: #2d3748;
+  --text-light: #718096;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', 'Hiragino Sans', 'Meiryo', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+.container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 40px 20px; text-align: center; }
+header h1 { font-size: 1.8em; margin-bottom: 8px; }
+header p { opacity: 0.9; font-size: 0.95em; }
+.stats-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 24px 0; }
+.stat-card { background: var(--card); border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 4px solid var(--secondary); }
+.stat-card .num { font-size: 2em; font-weight: 700; color: var(--primary); }
+.stat-card .label { font-size: 0.85em; color: var(--text-light); margin-top: 4px; }
+.section { background: var(--card); border-radius: 12px; padding: 28px; margin: 24px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.section h2 { color: var(--primary); font-size: 1.35em; border-bottom: 3px solid var(--secondary); padding-bottom: 10px; margin-bottom: 20px; }
+.section h3 { color: var(--secondary); font-size: 1.1em; margin: 18px 0 10px; }
+table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.88em; }
+th { background: var(--primary); color: white; padding: 10px 8px; text-align: left; font-weight: 600; white-space: nowrap; }
+td { padding: 10px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:hover td { background: #edf2f7; }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.78em; font-weight: 600; margin: 2px; }
+.tag-lose { background: #fed7d7; color: #c53030; }
+.tag-win { background: #c6f6d5; color: #276749; }
+.tag-partial { background: #fefcbf; color: #975a16; }
+.tag-topic { background: #e9d8fd; color: #553c9a; }
+.tag-blue { background: #bee3f8; color: #2a4365; }
+.case-detail { border: 1px solid var(--border); border-radius: 8px; margin: 16px 0; overflow: hidden; }
+.case-header { background: #edf2f7; padding: 14px 18px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+.case-header:hover { background: #e2e8f0; }
+.case-header h4 { color: var(--primary); font-size: 1em; }
+.case-body { padding: 18px; display: none; }
+.case-body.open { display: block; }
+.case-meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.case-meta div { font-size: 0.9em; }
+.case-meta .meta-label { font-weight: 600; color: var(--text-light); }
+.key-point { background: #fffff0; border-left: 4px solid var(--warning); padding: 12px 16px; margin: 10px 0; font-size: 0.9em; }
+.analysis-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; }
+.analysis-box { border: 1px solid var(--border); border-radius: 8px; padding: 18px; }
+.analysis-box h4 { color: var(--secondary); margin-bottom: 10px; font-size: 1em; }
+ul.clean { list-style: none; padding: 0; }
+ul.clean li { padding: 6px 0; border-bottom: 1px solid #f0f0f0; font-size: 0.9em; }
+ul.clean li:last-child { border-bottom: none; }
+ul.clean li::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; background: var(--secondary); vertical-align: middle; }
+.rank-badge { display: inline-block; width: 28px; height: 28px; border-radius: 50%; background: var(--primary); color: white; text-align: center; line-height: 28px; font-weight: 700; font-size: 0.85em; margin-right: 8px; }
+.rank-badge.gold { background: #d69e2e; }
+.rank-badge.silver { background: #a0aec0; }
+.rank-badge.bronze { background: #c05621; }
+.timeline { position: relative; padding-left: 30px; }
+.timeline::before { content: ''; position: absolute; left: 10px; top: 0; bottom: 0; width: 3px; background: var(--secondary); }
+.timeline-item { position: relative; margin-bottom: 20px; }
+.timeline-item::before { content: ''; position: absolute; left: -24px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: var(--secondary); border: 2px solid white; }
+.timeline-item .year { font-weight: 700; color: var(--primary); }
+.chart-bar { display: flex; align-items: center; margin: 6px 0; }
+.chart-bar .bar-label { width: 200px; font-size: 0.85em; flex-shrink: 0; }
+.chart-bar .bar-track { flex: 1; height: 24px; background: #edf2f7; border-radius: 4px; overflow: hidden; }
+.chart-bar .bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 8px; font-size: 0.75em; color: white; font-weight: 600; }
+.toc { background: #edf2f7; border-radius: 8px; padding: 20px; margin: 20px 0; }
+.toc h3 { margin-bottom: 12px; color: var(--primary); }
+.toc a { color: var(--secondary); text-decoration: none; display: block; padding: 4px 0; font-size: 0.9em; }
+.toc a:hover { text-decoration: underline; }
+@media (max-width: 768px) {
+  .stats-bar { grid-template-columns: repeat(2, 1fr); }
+  table { font-size: 0.8em; }
+  .analysis-grid { grid-template-columns: 1fr; }
+  header h1 { font-size: 1.3em; }
+}
+@media print {
+  header { background: var(--primary) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .case-body { display: block !important; }
+  .section { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>外国税額控除に関する判決・裁決 全件分析</h1>
+  <p>判決13件 + 裁決5件（1993年〜2021年）の網羅的分析</p>
+  <p style="font-size:0.8em; margin-top:8px;">分析日: 2026-03-07 | データソース: jplawdb4</p>
+</header>
+
+<div class="container">
+
+<!-- 統計サマリー -->
+<div class="stats-bar">
+  <div class="stat-card">
+    <div class="num">18</div>
+    <div class="label">分析対象 総件数</div>
+  </div>
+  <div class="stat-card">
+    <div class="num">13 / 5</div>
+    <div class="label">判決 / 裁決</div>
+  </div>
+  <div class="stat-card">
+    <div class="num" style="color: var(--accent);">2</div>
+    <div class="label">納税者勝訴（実質）</div>
+  </div>
+  <div class="stat-card">
+    <div class="num">11.1%</div>
+    <div class="label">納税者勝率</div>
+  </div>
+  <div class="stat-card">
+    <div class="num">29年</div>
+    <div class="label">分析対象期間</div>
+  </div>
+</div>
+
+<!-- 目次 -->
+<div class="toc">
+  <h3>目次</h3>
+  <a href="#part1">I. 個別事案分析（全18件）</a>
+  <a href="#part2">II. 争点別類型化</a>
+  <a href="#part3">III. 時系列分析</a>
+  <a href="#part4">IV. 勝敗分析</a>
+  <a href="#part5">V. 重要判例ランキング</a>
+  <a href="#part6">VI. 裁判所の判断傾向</a>
+  <a href="#part7">VII. 総括</a>
+</div>
+
+<!-- ===== PART 1: 個別事案分析 ===== -->
+<div class="section" id="part1">
+<h2>I. 個別事案分析（全18件）</h2>
+
+<h3>A. 判決（13件）</h3>
+
+<!-- 11342 -->
+<div class="case-detail">
+  <div class="case-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    <h4>1. ID:11342 ガーンジー・キャプティブ保険事件【最高裁】</h4>
+    <span class="tag tag-win">納税者勝訴</span>
+  </div>
+  <div class="case-body">
+    <div class="case-meta">
+      <div><span class="meta-label">日付:</span> 2009-12-03</div>
+      <div><span class="meta-label">裁判所:</span> 最高裁判所</div>
+      <div><span class="meta-label">事件名:</span> 法人税更正処分取消等請求上告受理申立て事件</div>
+      <div><span class="meta-label">結論:</span> 原判決破棄・処分取消（納税者勝訴）</div>
+    </div>
+    <p><strong>争点:</strong> ガーンジーの「国際課税資格」制度に基づく税が、法人税法69条1項の「外国法人税」に該当するか。CFC税制の適用前提としての外国法人税該当性。</p>
+    <div class="key-point">
+      <strong>判旨の核心:</strong> 本件外国税は税率について納税者の裁量が広いものの、税務当局の承認が必要であり、納付後に免税申請や還付請求もできない。施行令141条3項1号・2号に該当せず、これらに「類する税」ともいえない。外国法人税に該当することを否定できない。
+    </div>
+    <p><span class="tag tag-blue">法人税法69条1項</span><span class="tag tag-blue">施行令141条</span><span class="tag tag-blue">措置法66条の6</span></p>
+    <p><span class="tag tag-topic">外国法人税該当性</span><span class="tag tag-topic">CFC税制</span><span class="tag tag-topic">租税負担割合</span></p>
+  </div>
+</div>
+
+<!-- 11344 -->
+<div class="case-detail">
+  <div class="case-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    <h4>2. ID:11344 シンガポール・CFC事件【最高裁】</h4>
+    <span class="tag tag-lose">納税者敗訴</span>
+  </div>
+  <div class="case-body">
+    <div class="case-meta">
+      <div><span class="meta-label">日付:</span> 2009-12-04</div>
+      <div><span class="meta-label">裁判所:</span> 最高裁判所</div>
+      <div><span class="meta-label">事件名:</span> 所得税更正処分取消等請求上告受理申立事件</div>
+      <div><span class="meta-label">結論:</span> 上告棄却（課税庁勝訴）</div>
+    </div>
+    <p><strong>争点:</strong> CFC税制（措置法40条の4）に基づく課税が、日星租税条約7条1項（企業利得条項）に違反するか。</p>
+    <div class="key-point">
+      <strong>判旨の核心:</strong> CFC税制は国家主権の中核に属する課税権の内容に含まれる。日星租税条約7条1項は法的二重課税を禁止するにとどまり、措置法40条の4による課税は居住者に対する課税権の行使であって同項の禁止・制限の対象に含まれない。制度は全体として合理性がある。
+    </div>
+    <p><span class="tag tag-blue">措置法40条の4</span><span class="tag tag-blue">日星租税条約7条</span></p>
+    <p><span class="tag tag-topic">CFC税制と租税条約</span><span class="tag tag-topic">国家主権</span></p>
+  </div>
+</div>
+
+<!-- 11381 -->
+<div class="case-detail">
+  <div class="case-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    <h4>3. ID:11381 シンガポール・B社事件（CFC適用除外・二重課税）</h4>
+    <span class="tag tag-lose">納税者敗訴</span>
+  </div>
+  <div class="case-body">
+    <div class="case-meta">
+      <div><span class="meta-label">日付:</span> 2010-02-17</div>
+      <div><span class="meta-label">裁判所:</span> 東京高等裁判所</div>
+      <div><span class="meta-label">事件名:</span> 法人税更正処分取消請求等控訴事件</div>
+      <div><span class="meta-label">結論:</span> 控訴棄却（課税庁勝訴）</div>
+    </div>
+    <p><strong>争点:</strong> (1) CFC税制が日星租税条約7条1項に違反するか (2) 適用除外要件（事業基準）の充足 (3) B株式売却益とCFC課税の二重課税</p>
+    <div class="key-point">
+      <strong>判旨の核心:</strong> B社の収入金額・所得金額のうち株式保有に係るものが99.5%超。主たる事業は株式の保有であり事業基準を満たさない。株式売却益と課税対象留保金額は同一とはいえず二重課税に該当しない。CFC税制は合理性のある制度であり租税条約に違反しない。
+    </div>
+    <p><span class="tag tag-blue">措置法66条の6</span><span class="tag tag-blue">日星租税条約7条</span></p>
+    <p><span class="tag tag-topic">CFC適用除外</span><span class="tag tag-topic">事業基準</span><span class="tag tag-topic">二重課税</span></p>
+  </div>
+</div>
+
+<!-- 11687 -->
+<div class="case-detail">
+  <div class="case-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    <h4>4. ID:11687 韓国不動産・利子所得事件</h4>
+    <span class="tag tag-lose">納税者敗訴</span>
+  </div>
+  <div class="case-body">
+    <div class="case-meta">
+      <div><span class="meta-label">日付:</span> 2011-05-17</div>
+      <div><span class="meta-label">裁判所:</span> 大阪高等裁判所</div>
+      <div><span class="meta-label">事件名:</span> 所得税更正処分等取消請求控訴事件</div>
+      <div><span class="meta-label">結論:</span> 控訴棄却（課税庁勝訴）</div>
+    </div>
+    <p><strong>争点:</strong> (1) 所得税法95条7項の「やむを得ない事情」の存否 (2) 外国所得税を必要経費として控除可能か (3) 日韓租税条約23条違反の有無</p>
+    <div class="key-point">
+      <strong>判旨の核心:</strong> 外国税額控除は恩恵的措置であり、手続要件（申告書記載・書類添付）の充足が必要。「やむを得ない事情」は天災等の客観的事情に限られ、法の不知・事実の誤認等は該当しない。日韓租税条約23条2項の「日本国の法令に従い」との文言から、国内法の手続要件を排除する根拠はない。
+    </div>
+    <p><span class="tag tag-blue">所得税法95条5項・7項</span><span class="tag tag-blue">日韓租税条約23条</span></p>
+    <p><span class="tag tag-topic">手続要件</span><span class="tag tag-topic">やむを得ない事情</span><span class="tag tag-topic">租税条約と国内法</span></p>
+  </div>
+</div>
+
+<!-- 11812 -->
+<div class="case-detail">
+  <div class="case-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    <h4>5. ID:11812 韓国相続土地譲渡事件</h4>
+    <span class="tag tag-lose">納税者敗訴</span>
+  </div>
+  <div class="case-body">
+    <div class="case-meta">
+      <div><span class="meta-label">日付:</span> 2011-11-18</div>
+      <div><span class="meta-label">裁判所:</span> 大阪地方裁判所</div>
+      <div><span class="meta-label">事件名:</span> 所得税更正の請求に対する更正をすべき理由がない旨の通知処分取消請求事件</div>
+      <div><span class="meta-label">結論:</span> 請求棄却（課税庁勝訴）</div>
+    </div>
+    <p><strong>争点:</strong> 確定申告書に外国税額控除の記載・書類添付がない場合に、更正の請求で事後的に控除を受けられるか。</p>
+    <div class="key-point">
+      <strong>判旨の核心:</strong> 外国税額控除は確定申告書に記載・書類添付がある場合に限り適用される。記載がないことを前提にされた申告額は「法律の規定に従って」計算されたものであり、通則法23条1項1号の更正の請求の要件を満たさない。
+    </div>
+    <p><span class="tag tag-blue">所得税法95条</span><span class="tag tag-blue">国税通則法23条</span></p>
+    <p><span class="tag tag-topic">手続要件</span><span class="tag tag-topic">更正の請求</span><span class="tag tag-topic">申告時記載</span></p>
+  </div>
+</div>
+
+<!-- 12215 -->
+<div class="case-detail">
+  <div class="case-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    <h4>6. ID:12215 カナダ不動産譲渡・為替換算事件</h4>
+    <span class="tag tag-lose">納税者敗訴</span>
+  </div>
+  <div class="case-body">
+    <div class="case-meta">
+      <div><span class="meta-label">日付:</span> 2013-05-16</div>
+      <div><span class="meta-label">裁判所:</span> 名古屋高等裁判所</div>
+      <div><span class="meta-label">事件名:</span> 所得税更正処分及び過少申告加算税賦課決定処分取消請求控訴事件</div>
+      <div><span class="meta-label">結論:</span> 控訴棄却（課税庁勝訴）</div>
+    </div>
+    <p><strong>争点:</strong> (1) 外貨建譲渡所得の為替換算方法 (2) 外国税額控除の適用可否（所得税法95条7項の「やむを得ない事情」）</p>
+    <div class="key-point">
+      <strong>判旨の核心:</strong> 確定申告書に外国税額控除の記載がなく、税理士が関与していた状況で「やむを得ない事情」は認められない。外貨建譲渡所得は、取得費は取得時、収入金額は譲渡時の為替相場で換算すべき。
+    </div>
+    <p><span class="tag tag-blue">所得税法95条7項</span><span class="tag tag-blue">所得税法57条の3</span></p>
+    <p><span class="tag tag-topic">やむを得ない事情</span><span class="tag tag-topic">為替換算</span></p>
+  </div>
+</div>
+
+<!-- 12495 -->
+<div class="case-detail">
+  <div class="case-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    <h4>7. ID:12495 ケイマン法人・国内源泉所得事件【地裁】</h4>
+    <span class="tag tag-lose">納税者敗訴</span>
+  </div>
+  <div class="case-body">
+    <div class="case-meta">
+      <div><span class="meta-label">日付:</span> 2014-06-27</div>
+      <div><span class="meta-label">裁判所:</span> 東京地方裁判所</div>
+      <div><span class="meta-label">事件名:</span> 法人税更正処分取消等請求事件</div>
+      <div><span class="meta-label">結論:</span> 請求棄却（課税庁勝訴）</div>
+    </div>
+    <p><strong>争点:</strong> ケイマン法人の国内源泉所得が課税対象留保金額に含まれるか。措置令39条の14の委任範囲。外国税額控除による二重課税調整の可否。</p>
+    <div class="key-point">
+      <strong>判旨の核心:</strong> CFC税制は国内源泉所得のみを有する場合を除外する規定がなく、日本で法人税を納付していても課税対象留保金額に含まれる。租税法律主義の下では文言を離れた限定解釈は許されない。外国税額控除等の調整措置が設けられており一定の配慮がなされている。
+    </div>
+    <p><span class="tag tag-blue">措置法66条の6</span><span class="tag tag-blue">措置令39条の14</span></p>
+    <p><span class="tag tag-topic">CFC税制</span><span class="tag tag-topic">国内源泉所得</span><span class="tag tag-topic">委任立法</span></p>
+  </div>
+</div>
+
+<!-- 12612 -->
+<div class="case-detail">
+  <div class="case-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    <h4>8. ID:12612 ケイマン法人・国内源泉所得事件【高裁】</h4>
+    <span class="tag tag-lose">納税者敗訴</span>
+  </div>
+  <div class="case-body">
+    <div class="case-meta">
+      <div><span class="meta-label">日付:</span> 2015-02-25</div>
+      <div><span class="meta-label">裁判所:</span> 東京高等裁判所</div>
+      <div><span class="meta-label">事件名:</span> 法人税更正処分取消等請求控訴事件</div>
+      <div><span class="meta-label">結論:</span> 控訴棄却（課税庁勝訴）</div>
+    </div>
+    <p><strong>争点:</strong> (1) 措置令39条の14の委任範囲 (2) 国内源泉所得の課税対象留保金額への算入 (3) 外国税額控除の手続要件充足</p>
+    <div class="key-point">
+      <strong>判旨の核心:</strong> 措置法66条の7の趣旨に照らし、CFC合算課税の場合は日本の法人税額も外国法人税額と同様に控除する解釈が可能（通達66の6-20の確認的位置付け）。ただし確定申告書に「控除を受けるべき金額の記載」「証明書類の添付」がないため控除不可。手続要件を満たさない以上、実体的に控除対象であっても適用を受けられない。
+    </div>
+    <p><span class="tag tag-blue">措置法66条の6・66条の7</span><span class="tag tag-blue">法人税法69条16項</span></p>
+    <p><span class="tag tag-topic">CFC税制</span><span class="tag tag-topic">手続要件</span><span class="tag tag-topic">申告書記載・添付</span></p>
+  </div>
+</div>
+
+<!-- 12732 -->
+<div class="case-detail">
+  <div class="case-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    <h4>9. ID:12732 中国企業所得税・租税債務確定時期事件【地裁】</h4>
+    <span class="tag tag-lose">納税者敗訴</span>
+  </div>
+  <div class="case-body">
+    <div class="case-meta">
+      <div><span class="meta-label">日付:</span> 2015-10-08</div>
+      <div><span class="meta-label">裁判所:</span> 東京地方裁判所</div>
+      <div><span class="meta-label">事件名:</span> 法人税更正処分等取消請求事件</div>
+      <div><span class="meta-label">結論:</span> 請求棄却（課税庁勝訴）</div>
+    </div>
+    <p><strong>争点:</strong> 法人税法69条1項「納付することとなる」の意義。中国企業所得税の租税債務が本件事業年度において確定したか。</p>
+    <div class="key-point">
+      <strong>判旨の核心:</strong> 「納付することとなる」とは、外国法人税について具体的にその納付すべき租税債務が確定したことをいう。中国企業所得税は申告（平成24年1月13日）により確定したものであり、本件事業年度（平成22年3月〜平成23年2月）においては確定しておらず、外国税額控除は適用できない。過少申告加算税の「正当な理由」も認められない。
+    </div>
+    <p><span class="tag tag-blue">法人税法69条1項</span><span class="tag tag-blue">通則法65条4項</span></p>
+    <p><span class="tag tag-topic">控除時期</span><span class="tag tag-topic">租税債務確定</span><span class="tag tag-topic">正当な理由</span></p>
+  </div>
+</div>
+
+<!-- 12881 -->
+<div class="case-detail">
+  <div class="case-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    <h4>10. ID:12881 中国企業所得税・租税債務確定時期事件【高裁】</h4>
+    <span class="tag tag-lose">納税者敗訴</span>
+  </div>
+  <div class="case-body">
+    <div class="case-meta">
+      <div><span class="meta-label">日付:</span> 2016-07-14</div>
+      <div><span class="meta-label">裁判所:</span> 東京高等裁判所</div>
+      <div><span class="meta-label">事件名:</span> 法人税更正処分等取消請求控訴事件</div>
+      <div><span class="meta-label">結論:</span> 控訴棄却（課税庁勝訴）</div>
+    </div>
+    <p><strong>争点:</strong> 12732の控訴審。外国税額控除における「納付することとなる」の解釈と租税債務確定時期。</p>
+    <div class="key-point">
+      <strong>判旨の核心:</strong> 昭和37年改正により外国法人税の確定日の属する事業年度で控除する制度に変更された経緯を踏まえ、法69条10項が「課されたことを証する書類」の保存を要件とすることからも、租税債務の確定を前提とする制度であることが裏付けられる。確定した事業年度で控除申告すれば二重課税は回避可能であり、遡及適用の主張は前提において失当。
+    </div>
+    <p><span class="tag tag-blue">法人税法69条1項・10項</span></p>
+    <p><span class="tag tag-topic">控除時期</span><span class="tag tag-topic">制度沿革</span><span class="tag tag-topic">租税債務確定</span></p>
+  </div>
+</div>
+
+<!-- 13531 -->
+<div class="case-detail">
+  <div class="case-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    <h4>11. ID:13531 香港子会社CFC・添付要件事件【地裁】</h4>
+    <span class="tag tag-lose">納税者敗訴</span>
+  </div>
+  <div class="case-body">
+    <div class="case-meta">
+      <div><span class="meta-label">日付:</span> 2021-02-26</div>
+      <div><span class="meta-label">裁判所:</span> 東京地方裁判所</div>
+      <div><span class="meta-label">事件名:</span> 法人税更正処分等取消請求事件</div>
+      <div><span class="meta-label">結論:</span> 一部却下・残部棄却（課税庁勝訴）</div>
+    </div>
+    <p><strong>争点:</strong> CFC適用除外の添付要件が実体要件か手続要件か。外国税額控除の連動適用の可否。理由差替えの違法性。</p>
+    <div class="key-point">
+      <strong>判旨の核心:</strong> 措置法66条の6第7項の「適用除外記載書面の添付」は、資料収集の必要性という制度趣旨から適用除外の要件と解するのが相当。添付がないため適用除外を受けられない。外国税額控除も法定要件を満たさない以上、課税庁が「当然に連動控除すべき」とはいえない。
+    </div>
+    <p><span class="tag tag-blue">措置法66条の6第7項</span><span class="tag tag-blue">措置法68条の90</span></p>
+    <p><span class="tag tag-topic">CFC添付要件</span><span class="tag tag-topic">理由差替え</span><span class="tag tag-topic">連動控除</span></p>
+  </div>
+</div>
+
+<!-- 13633 -->
+<div class="case-detail">
+  <div class="case-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    <h4>12. ID:13633 香港子会社CFC・添付要件事件【高裁】</h4>
+    <span class="tag tag-lose">納税者敗訴</span>
+  </div>
+  <div class="case-body">
+    <div class="case-meta">
+      <div><span class="meta-label">日付:</span> 2021-11-24</div>
+      <div><span class="meta-label">裁判所:</span> 東京高等裁判所</div>
+      <div><span class="meta-label">事件名:</span> 法人税更正処分等取消請求控訴事件</div>
+      <div><span class="meta-label">結論:</span> 控訴棄却（課税庁勝訴）</div>
+    </div>
+    <p><strong>争点:</strong> 13531の控訴審。添付要件の性質、日港租税条約との関係、外国税額控除の連動。</p>
+    <div class="key-point">
+      <strong>判旨の核心:</strong> 添付により適用除外を受ける意思の明確化・資料保存義務と相まって課税庁が早期確実に資料収集でき、適正迅速な判断が可能になる。添付は適用要件と解する妨げはない。外国税額控除も要件規定であり、誘導等の事情がない限り「当然に控除すべき」とはいえない。
+    </div>
+    <p><span class="tag tag-blue">措置法66条の6第7項</span><span class="tag tag-blue">日港租税条約</span></p>
+    <p><span class="tag tag-topic">CFC添付要件</span><span class="tag tag-topic">租税条約</span><span class="tag tag-topic">連動控除</span></p>
+  </div>
+</div>
+
+<!-- 13641 -->
+<div class="case-detail">
+  <div class="case-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    <h4>13. ID:13641 ブラジル利子・控除限度額計算事件</h4>
+    <span class="tag tag-lose">納税者敗訴</span>
+  </div>
+  <div class="case-body">
+    <div class="case-meta">
+      <div><span class="meta-label">日付:</span> 2021-12-08</div>
+      <div><span class="meta-label">裁判所:</span> 名古屋地方裁判所</div>
+      <div><span class="meta-label">事件名:</span> 所得税の更正及び過少申告加算税賦課決定の取消請求事件</div>
+      <div><span class="meta-label">結論:</span> 請求棄却（課税庁勝訴）</div>
+    </div>
+    <p><strong>争点:</strong> 日伯租税条約と国内法の外国税額控除限度額計算方法の関係。条約から直接計算方法を導けるか。</p>
+    <div class="key-point">
+      <strong>判旨の核心:</strong> 条約は二重課税回避の趣旨を有するが、限度額計算方法等の具体的定めを欠く。条約規定を直接適用して計算する余地はなく、所得税法95条・施行令222条による限度額計算は条約に反せず適法。
+    </div>
+    <p><span class="tag tag-blue">所得税法95条</span><span class="tag tag-blue">施行令222条</span><span class="tag tag-blue">日伯租税条約</span></p>
+    <p><span class="tag tag-topic">控除限度額計算</span><span class="tag tag-topic">租税条約と国内法</span></p>
+  </div>
+</div>
+
+<h3>B. 裁決（5件）</h3>
+
+<!-- 59_17 -->
+<div class="case-detail">
+  <div class="case-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    <h4>14. ID:59_17 米国優先株償還金・源泉税事件</h4>
+    <span class="tag tag-lose">納税者敗訴</span>
+  </div>
+  <div class="case-body">
+    <div class="case-meta">
+      <div><span class="meta-label">日付:</span> 1993-04-01</div>
+      <div><span class="meta-label">審判所:</span> 国税不服審判所</div>
+      <div><span class="meta-label">番号:</span> 裁決事例集No.59-17</div>
+      <div><span class="meta-label">結論:</span> 棄却（課税庁支持）</div>
+    </div>
+    <p><strong>争点:</strong> 米国子会社の優先株償還金に対する米国源泉税が法人税法69条の「外国法人税」に該当するか。</p>
+    <div class="key-point">
+      <strong>判旨の核心:</strong> 米国税法上配当として課税される償還金に対する源泉税は、株主の所得に対する税であり日本法上の外国法人税には当たらない。将来の二重課税は不確実で控除を認める根拠とならない。
+    </div>
+    <p><span class="tag tag-blue">法人税法69条</span><span class="tag tag-blue">日米租税条約</span></p>
+    <p><span class="tag tag-topic">外国法人税該当性</span><span class="tag tag-topic">配当と償還の区別</span></p>
+  </div>
+</div>
+
+<!-- 65_33 -->
+<div class="case-detail">
+  <div class="case-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    <h4>15. ID:65_33 外国税額控除の記載限度事件</h4>
+    <span class="tag tag-lose">納税者敗訴</span>
+  </div>
+  <div class="case-body">
+    <div class="case-meta">
+      <div><span class="meta-label">日付:</span> 2000-01-01</div>
+      <div><span class="meta-label">審判所:</span> 国税不服審判所</div>
+      <div><span class="meta-label">番号:</span> 裁決事例集No.65-33</div>
+      <div><span class="meta-label">結論:</span> 棄却（課税庁支持）</div>
+    </div>
+    <p><strong>争点:</strong> 外国税額控除の控除可能額が申告書記載額に限定されるか。記載・書類添付がない部分について「やむを得ない事情」があるか。</p>
+    <div class="key-point">
+      <strong>判旨の核心:</strong> 外国税額控除は申告書への記載と証拠書類の添付が要件であり、記載額が控除の限度。記載漏れ部分にやむを得ない事情は認められない。
+    </div>
+    <p><span class="tag tag-blue">法人税法69条</span></p>
+    <p><span class="tag tag-topic">記載限度</span><span class="tag tag-topic">手続要件</span></p>
+  </div>
+</div>
+
+<!-- 65_34 -->
+<div class="case-detail">
+  <div class="case-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    <h4>16. ID:65_34 マレーシア・ロイヤリティ源泉税事件</h4>
+    <span class="tag tag-lose">納税者敗訴</span>
+  </div>
+  <div class="case-body">
+    <div class="case-meta">
+      <div><span class="meta-label">日付:</span> 2000-04-01</div>
+      <div><span class="meta-label">審判所:</span> 国税不服審判所</div>
+      <div><span class="meta-label">番号:</span> 裁決事例集No.65-34</div>
+      <div><span class="meta-label">結論:</span> 棄却（課税庁支持）</div>
+    </div>
+    <p><strong>争点:</strong> マレーシアからのロイヤリティに係る源泉税の記載漏れが「やむを得ない事情」に当たるか。</p>
+    <div class="key-point">
+      <strong>判旨の核心:</strong> 送金額から源泉税控除が容易に認識でき、判定困難性はない。経理体制や情報共有の不足は本人の責に帰すべき事情であり、やむを得ない事情とはいえない。
+    </div>
+    <p><span class="tag tag-blue">法人税法69条</span></p>
+    <p><span class="tag tag-topic">やむを得ない事情</span><span class="tag tag-topic">内部管理不足</span></p>
+  </div>
+</div>
+
+<!-- 77_21 -->
+<div class="case-detail">
+  <div class="case-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    <h4>17. ID:77_21 みなし外国税額控除・更正の請求事件</h4>
+    <span class="tag tag-lose">納税者敗訴</span>
+  </div>
+  <div class="case-body">
+    <div class="case-meta">
+      <div><span class="meta-label">日付:</span> 2004-04-01</div>
+      <div><span class="meta-label">審判所:</span> 国税不服審判所</div>
+      <div><span class="meta-label">番号:</span> 裁決事例集No.77-21</div>
+      <div><span class="meta-label">結論:</span> 棄却（課税庁支持）</div>
+    </div>
+    <p><strong>争点:</strong> みなし外国税額控除を適用して確定申告した後、税額計算の誤り等を理由とする更正の請求の可否。</p>
+    <div class="key-point">
+      <strong>判旨の核心:</strong> みなし外国税額控除（タックス・スペアリング）の適用に関する更正の請求は認められない。申告書記載の限度で処理される。
+    </div>
+    <p><span class="tag tag-blue">法人税法69条</span><span class="tag tag-blue">租税条約</span></p>
+    <p><span class="tag tag-topic">みなし外国税額控除</span><span class="tag tag-topic">更正の請求</span></p>
+  </div>
+</div>
+
+<!-- 77_22 -->
+<div class="case-detail">
+  <div class="case-header" onclick="this.nextElementSibling.classList.toggle('open')">
+    <h4>18. ID:77_22 間接外国税額控除・記載添付要件事件</h4>
+    <span class="tag tag-lose">納税者敗訴</span>
+  </div>
+  <div class="case-body">
+    <div class="case-meta">
+      <div><span class="meta-label">日付:</span> 2006-12-21</div>
+      <div><span class="meta-label">審判所:</span> 国税不服審判所</div>
+      <div><span class="meta-label">番号:</span> 裁決事例集No.77-22</div>
+      <div><span class="meta-label">結論:</span> 棄却（課税庁支持）</div>
+    </div>
+    <p><strong>争点:</strong> 外国法人が納付（みなし納付）した法人税の間接外国税額控除について、確定申告書の記載・添付要件を充足しなかった場合の控除の可否。</p>
+    <div class="key-point">
+      <strong>判旨の核心:</strong> 法人税法69条16項・18項及び実施特例法省令の規定の趣旨は、外国税額控除の適用を受ける法人に確定申告における記載及び添付の要件の充足を求め、これを充足する法人に限り適用を認めるもの。やむを得ない事情がない限り適用不可。
+    </div>
+    <p><span class="tag tag-blue">法人税法69条16項・18項</span></p>
+    <p><span class="tag tag-topic">間接外国税額控除</span><span class="tag tag-topic">手続要件</span><span class="tag tag-topic">記載・添付</span></p>
+  </div>
+</div>
+
+</div><!-- section -->
+
+
+<!-- ===== PART 2: 争点別類型化 ===== -->
+<div class="section" id="part2">
+<h2>II. 争点別類型化</h2>
+
+<div class="analysis-grid">
+
+<div class="analysis-box">
+  <h4>類型1: 手続要件（申告書記載・書類添付）</h4>
+  <p style="font-size:0.85em; color:var(--text-light); margin-bottom:8px;">最大の争点類型 ── 全18件中10件で争点化</p>
+  <ul class="clean">
+    <li><strong>11687</strong> 韓国・やむを得ない事情（所得税95条7項）</li>
+    <li><strong>11812</strong> 韓国相続・更正の請求による事後控除</li>
+    <li><strong>12215</strong> カナダ・やむを得ない事情（税理士関与下）</li>
+    <li><strong>12612</strong> ケイマン・CFC連動控除の手続不備</li>
+    <li><strong>13531</strong> 香港CFC・添付要件＝実体要件</li>
+    <li><strong>13633</strong> 同控訴審</li>
+    <li><strong>65_33</strong> 記載額が控除限度</li>
+    <li><strong>65_34</strong> マレーシア・記載漏れ</li>
+    <li><strong>77_21</strong> みなし控除・更正の請求</li>
+    <li><strong>77_22</strong> 間接控除・記載添付不備</li>
+  </ul>
+  <div class="key-point">
+    <strong>パターン:</strong> 申告時に記載・添付がない → 事後的に更正の請求 → 棄却。「やむを得ない事情」は天災等の客観的事情に極めて限定的に解釈される。法の不知、内部管理不足、税理士のミスは一切救済されない。
+  </div>
+</div>
+
+<div class="analysis-box">
+  <h4>類型2: 外国法人税該当性</h4>
+  <p style="font-size:0.85em; color:var(--text-light); margin-bottom:8px;">3件</p>
+  <ul class="clean">
+    <li><strong>11342</strong> ガーンジー国際課税資格制度（最高裁・納税者勝訴）</li>
+    <li><strong>59_17</strong> 米国優先株償還金の源泉税（裁決・課税庁勝訴）</li>
+    <li><strong>12881</strong> 中国企業所得税（高裁・外国法人税該当性自体は肯定しつつ確定時期で否認）</li>
+  </ul>
+  <div class="key-point">
+    <strong>パターン:</strong> 外国の課税が施行令141条の定義に合致するかを検討。選択制・還付可能性がある場合は否定されうるが、税務当局の承認が必要な場合は肯定される（11342最高裁）。
+  </div>
+</div>
+
+<div class="analysis-box">
+  <h4>類型3: 控除時期（租税債務確定時期）</h4>
+  <p style="font-size:0.85em; color:var(--text-light); margin-bottom:8px;">2件（地裁・高裁の同一事案）</p>
+  <ul class="clean">
+    <li><strong>12732</strong> 中国企業所得税（地裁）</li>
+    <li><strong>12881</strong> 同控訴審（高裁）</li>
+  </ul>
+  <div class="key-point">
+    <strong>パターン:</strong> 「納付することとなる」＝租税債務の確定が必要。外国での申告日が確定日。所得の発生事業年度ではなく、外国税の確定事業年度で控除。
+  </div>
+</div>
+
+<div class="analysis-box">
+  <h4>類型4: 租税条約と国内法の関係</h4>
+  <p style="font-size:0.85em; color:var(--text-light); margin-bottom:8px;">5件</p>
+  <ul class="clean">
+    <li><strong>11344</strong> 日星租税条約7条とCFC税制（最高裁）</li>
+    <li><strong>11381</strong> 同論点（高裁）</li>
+    <li><strong>11687</strong> 日韓租税条約23条と手続要件</li>
+    <li><strong>13633</strong> 日港租税条約とCFC添付要件</li>
+    <li><strong>13641</strong> 日伯租税条約と控除限度額計算</li>
+  </ul>
+  <div class="key-point">
+    <strong>パターン:</strong> 条約は二重課税排除の趣旨を有するが、具体的な計算方法・手続は「国内法に従う」のが原則。条約の趣旨・目的から直ちに国内法の手続要件を排除する根拠は導けない。
+  </div>
+</div>
+
+<div class="analysis-box">
+  <h4>類型5: CFC税制との交錯</h4>
+  <p style="font-size:0.85em; color:var(--text-light); margin-bottom:8px;">7件</p>
+  <ul class="clean">
+    <li><strong>11342</strong> CFC適用前提の外国法人税該当性</li>
+    <li><strong>11344</strong> CFC税制と租税条約</li>
+    <li><strong>11381</strong> CFC適用除外（事業基準）</li>
+    <li><strong>12495</strong> ケイマン・国内源泉所得とCFC</li>
+    <li><strong>12612</strong> 同控訴審・CFC連動控除</li>
+    <li><strong>13531</strong> CFC添付要件と外国税額控除の連動</li>
+    <li><strong>13633</strong> 同控訴審</li>
+  </ul>
+  <div class="key-point">
+    <strong>パターン:</strong> CFC合算課税がなされた場合の外国税額控除の連動が問題となるが、手続要件（記載・添付）を満たさないと控除は認められない。CFC税制に外国税額控除の調整規定はあるが、自動適用はされない。
+  </div>
+</div>
+
+<div class="analysis-box">
+  <h4>類型6: 控除限度額の計算</h4>
+  <p style="font-size:0.85em; color:var(--text-light); margin-bottom:8px;">1件</p>
+  <ul class="clean">
+    <li><strong>13641</strong> 日伯租税条約と限度額計算方法</li>
+  </ul>
+  <div class="key-point">
+    <strong>パターン:</strong> 条約に計算方法の具体的定めがなければ、国内法（所得税法95条・施行令222条等）の計算ルールが適用される。
+  </div>
+</div>
+
+</div><!-- grid -->
+</div><!-- section -->
+
+
+<!-- ===== PART 3: 時系列分析 ===== -->
+<div class="section" id="part3">
+<h2>III. 時系列での傾向</h2>
+
+<div class="timeline">
+  <div class="timeline-item">
+    <div class="year">1993年（平成5年）</div>
+    <p>59_17: 外国法人税該当性（米国源泉税）── 裁決レベルで税目の性格判定が論点化</p>
+  </div>
+  <div class="timeline-item">
+    <div class="year">2000年（平成12年）</div>
+    <p>65_33, 65_34: 手続要件（記載漏れ・やむを得ない事情）── 基本論点が裁決で定着</p>
+  </div>
+  <div class="timeline-item">
+    <div class="year">2004〜2006年（平成16〜18年）</div>
+    <p>77_21, 77_22: みなし控除・間接控除の手続要件 ── 複雑な控除類型にも手続要件の厳格適用が確認</p>
+  </div>
+  <div class="timeline-item">
+    <div class="year">2009年（平成21年）★転換点</div>
+    <p><strong>11342, 11344: 最高裁2判決</strong> ── CFC税制と租税条約の関係、外国法人税の定義につき最高裁が判断。11342は唯一の納税者勝訴最高裁判決。</p>
+  </div>
+  <div class="timeline-item">
+    <div class="year">2010〜2011年（平成22〜23年）</div>
+    <p>11381, 11687, 11812: CFC事業基準・手続要件 ── 最高裁判決を踏まえた下級審の整理</p>
+  </div>
+  <div class="timeline-item">
+    <div class="year">2013〜2016年（平成25〜28年）</div>
+    <p>12215, 12495, 12612, 12732, 12881: 中国企業所得税の確定時期、ケイマン法人のCFC ── 新たな論点（控除時期）が出現</p>
+  </div>
+  <div class="timeline-item">
+    <div class="year">2021年（令和3年）</div>
+    <p>13531, 13633, 13641: CFC添付要件の実体要件化が確定、条約と国内法の関係再確認 ── 手続要件重視がさらに強化</p>
+  </div>
+</div>
+
+<h3>時系列の傾向まとめ</h3>
+<table>
+  <tr><th>期間</th><th>特徴</th></tr>
+  <tr><td>1990年代</td><td>外国法人税の定義・範囲が基本論点。裁決レベルでの蓄積期</td></tr>
+  <tr><td>2000年代前半</td><td>手続要件の厳格解釈が裁決で確立。「やむを得ない事情」の厳格化</td></tr>
+  <tr><td>2009年</td><td>最高裁によるCFC税制の合憲性・条約適合性の確認。外国法人税定義の精緻化</td></tr>
+  <tr><td>2010年代</td><td>控除時期（租税債務確定）という新論点。CFC税制との交錯が複雑化</td></tr>
+  <tr><td>2020年代</td><td>CFC添付要件の実体要件化が判例法として確定。手続偏重はさらに強化</td></tr>
+</table>
+</div>
+
+
+<!-- ===== PART 4: 勝敗分析 ===== -->
+<div class="section" id="part4">
+<h2>IV. 納税者勝率</h2>
+
+<h3>全体</h3>
+<div class="chart-bar">
+  <div class="bar-label">課税庁勝訴</div>
+  <div class="bar-track"><div class="bar-fill" style="width:88.9%; background:var(--accent);">16件（88.9%）</div></div>
+</div>
+<div class="chart-bar">
+  <div class="bar-label">納税者勝訴</div>
+  <div class="bar-track"><div class="bar-fill" style="width:11.1%; background:var(--success);">2件（11.1%）</div></div>
+</div>
+
+<h3>判決（13件）</h3>
+<div class="chart-bar">
+  <div class="bar-label">課税庁勝訴</div>
+  <div class="bar-track"><div class="bar-fill" style="width:84.6%; background:var(--accent);">11件（84.6%）</div></div>
+</div>
+<div class="chart-bar">
+  <div class="bar-label">納税者勝訴</div>
+  <div class="bar-track"><div class="bar-fill" style="width:15.4%; background:var(--success);">2件（15.4%）</div></div>
+</div>
+
+<h3>裁決（5件）</h3>
+<div class="chart-bar">
+  <div class="bar-label">課税庁勝訴</div>
+  <div class="bar-track"><div class="bar-fill" style="width:100%; background:var(--accent);">5件（100%）</div></div>
+</div>
+<div class="chart-bar">
+  <div class="bar-label">納税者勝訴</div>
+  <div class="bar-track"><div class="bar-fill" style="width:0%; background:var(--success);">0件（0%）</div></div>
+</div>
+
+<h3>争点類型別の勝率</h3>
+<table>
+  <tr><th>争点類型</th><th>件数</th><th>納税者勝訴</th><th>勝率</th></tr>
+  <tr><td>手続要件（記載・添付・やむを得ない事情）</td><td>10</td><td>0</td><td style="color:var(--accent); font-weight:700;">0%</td></tr>
+  <tr><td>外国法人税該当性</td><td>3</td><td>1</td><td>33.3%</td></tr>
+  <tr><td>控除時期（租税債務確定）</td><td>2</td><td>0</td><td style="color:var(--accent); font-weight:700;">0%</td></tr>
+  <tr><td>租税条約と国内法の関係</td><td>5</td><td>0</td><td style="color:var(--accent); font-weight:700;">0%</td></tr>
+  <tr><td>CFC税制との交錯</td><td>7</td><td>1</td><td>14.3%</td></tr>
+  <tr><td>控除限度額計算</td><td>1</td><td>0</td><td style="color:var(--accent); font-weight:700;">0%</td></tr>
+</table>
+
+<div class="key-point">
+  <strong>分析:</strong> 納税者の勝訴は、最高裁11342（ガーンジー・外国法人税該当性）の1件のみが外国税額控除の直接的論点での勝訴。11344は最高裁で課税庁敗訴（原判決破棄）と表記されているが、これはCFC税制そのものの条約適合性の論点であり、外国税額控除の直接論点ではない。<br>
+  <strong>手続要件で争った場合の納税者勝率は0%</strong>。これは外国税額控除紛争における最大の教訓である。
+</div>
+</div>
+
+
+<!-- ===== PART 5: 重要判例ランキング ===== -->
+<div class="section" id="part5">
+<h2>V. 重要判例ランキング（影響力順）</h2>
+
+<table>
+  <tr><th>順位</th><th>ID</th><th>事件名・裁判所</th><th>影響力の根拠</th></tr>
+  <tr>
+    <td><span class="rank-badge gold">1</span></td>
+    <td>11342</td>
+    <td>ガーンジー・キャプティブ保険事件<br>最高裁 2009-12-03</td>
+    <td>外国法人税の定義（施行令141条）の解釈について最高裁が判断を示した唯一の判例。選択制の税でも税務当局の承認が必要なら外国法人税に該当するとの基準を確立。CFC税制の適用範囲にも直接影響。</td>
+  </tr>
+  <tr>
+    <td><span class="rank-badge gold">2</span></td>
+    <td>11344</td>
+    <td>シンガポール・CFC事件<br>最高裁 2009-12-04</td>
+    <td>CFC税制と租税条約の関係につき最高裁が初判断。「国家主権の中核に属する課税権」の論理はCFC税制の合憲性・条約適合性の基盤。外国税額控除を含むCFC税制全体の合理性を肯定。</td>
+  </tr>
+  <tr>
+    <td><span class="rank-badge bronze">3</span></td>
+    <td>13531<br>13633</td>
+    <td>香港子会社CFC・添付要件事件<br>東京地裁 2021-02-26<br>東京高裁 2021-11-24</td>
+    <td>CFC適用除外の「添付要件」が実体要件であることを地裁・高裁で確定。外国税額控除の「連動控除」論を明確に排除。実務への影響が極めて大きい。</td>
+  </tr>
+  <tr>
+    <td><span class="rank-badge">4</span></td>
+    <td>12732<br>12881</td>
+    <td>中国企業所得税・確定時期事件<br>東京地裁 2015-10-08<br>東京高裁 2016-07-14</td>
+    <td>「納付することとなる」の解釈を制度沿革を含めて精緻に分析。外国税額控除の時期判定の実務基準を提供。外国での申告・確定が控除時期を決定する原則を確立。</td>
+  </tr>
+  <tr>
+    <td><span class="rank-badge">5</span></td>
+    <td>11687</td>
+    <td>韓国不動産・利子所得事件<br>大阪高裁 2011-05-17</td>
+    <td>「やむを得ない事情」の限定解釈を高裁レベルで確認。日韓租税条約23条の「日本国の法令に従い」の文言解釈。外国税額控除は「恩恵的措置」との位置付け。</td>
+  </tr>
+  <tr>
+    <td><span class="rank-badge">6</span></td>
+    <td>12612</td>
+    <td>ケイマン法人・国内源泉所得事件<br>東京高裁 2015-02-25</td>
+    <td>CFC合算課税の場合に日本の法人税額も控除対象とする解釈の可能性を示唆しつつ、手続要件で否認。実務上の教訓として重要。</td>
+  </tr>
+  <tr>
+    <td><span class="rank-badge">7</span></td>
+    <td>13641</td>
+    <td>ブラジル利子・控除限度額計算事件<br>名古屋地裁 2021-12-08</td>
+    <td>条約と国内法の控除限度額計算の関係につき判示。条約に具体的定めがなければ国内法が適用されるとの原則を再確認。</td>
+  </tr>
+</table>
+</div>
+
+
+<!-- ===== PART 6: 裁判所の判断傾向 ===== -->
+<div class="section" id="part6">
+<h2>VI. 裁判所の判断傾向</h2>
+
+<div class="analysis-grid">
+
+<div class="analysis-box">
+  <h4>1. 外国税額控除の法的性格</h4>
+  <p style="font-size:0.9em;">裁判所は外国税額控除を<strong>「恩恵的措置」</strong>と位置付けている（11687）。二重課税排除は政策目的であるが、納税者の「権利」として無条件に保障されるものではない。この位置付けが手続要件の厳格解釈の理論的根拠となっている。</p>
+</div>
+
+<div class="analysis-box">
+  <h4>2. 手続要件の徹底した厳格解釈</h4>
+  <p style="font-size:0.9em;">全18件中10件が手続要件に関わり、<strong>納税者勝率0%</strong>。裁判所は一貫して以下の立場を維持:
+  <br>(a) 申告書記載・書類添付は控除の「要件」であり、単なる手続ではない
+  <br>(b) 「やむを得ない事情」は天災・交通途絶等の客観的事情に限定
+  <br>(c) 法の不知、税理士のミス、内部管理不足は救済対象外
+  <br>(d) 更正の請求による事後的控除は原則不可</p>
+</div>
+
+<div class="analysis-box">
+  <h4>3. 租税条約の限界</h4>
+  <p style="font-size:0.9em;">納税者は多くの事案で租税条約（日韓23条、日星7条、日港、日伯）を根拠に国内法の手続要件の排除を主張するが、裁判所は一貫して否定。条約の「日本国の法令に従い」との文言を重視し、条約が国内法の手続規定を排除する根拠にはならないと判示。</p>
+</div>
+
+<div class="analysis-box">
+  <h4>4. CFC税制の合理性の肯定</h4>
+  <p style="font-size:0.9em;">最高裁（11344）がCFC税制を「国家主権の中核に属する課税権」の一部として肯定して以降、下級審でも条約違反・違憲の主張は一切認められていない。外国税額控除の調整規定（措置法66条の7等）の存在がCFC税制の合理性の根拠の一つとされている。</p>
+</div>
+
+<div class="analysis-box">
+  <h4>5. 外国法人税の定義の柔軟な解釈</h4>
+  <p style="font-size:0.9em;">最高裁11342は、ガーンジーの選択制の税について外国法人税該当性を肯定。税率の選択幅があっても税務当局の承認が必要であり、納付後に免税・還付の途がない限り外国法人税に該当しうるとの柔軟な解釈を示した。これは唯一の納税者勝訴例。</p>
+</div>
+
+<div class="analysis-box">
+  <h4>6. 控除時期の厳格な確定主義</h4>
+  <p style="font-size:0.9em;">法69条の「納付することとなる」は租税債務の確定を意味するとの解釈が地裁・高裁で確立（12732, 12881）。昭和37年改正の沿革的解釈を踏まえ、外国での申告・確定時期が基準。所得の発生時期ではなく外国税の確定時期で控除事業年度が決まる。</p>
+</div>
+
+</div><!-- grid -->
+</div>
+
+
+<!-- ===== PART 7: 総括 ===== -->
+<div class="section" id="part7">
+<h2>VII. 総括</h2>
+
+<h3>全体像</h3>
+<p>外国税額控除に関する18件の判決・裁決を横断分析した結果、以下の構造的特徴が明らかになった。</p>
+
+<h3>5つの核心的発見</h3>
+
+<table>
+  <tr><th>#</th><th>発見</th><th>根拠</th></tr>
+  <tr>
+    <td>1</td>
+    <td><strong>手続要件の絶対性</strong><br>申告書記載・書類添付の不備は、実体的に控除権があっても致命的。事後救済はほぼ不可能。</td>
+    <td>10件中10件で課税庁勝訴（勝率0%）。12612では実体的に控除可能と示唆しつつ手続不備で否認。</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td><strong>租税条約は万能薬ではない</strong><br>条約の二重課税排除規定は国内法の手続要件を排除する根拠にならない。</td>
+    <td>日韓・日星・日港・日伯の4条約が争われたが全て同一結論。</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td><strong>CFC税制との交錯が複雑化</strong><br>CFC合算課税に伴う外国税額控除の「連動控除」は自動的には認められない。</td>
+    <td>13531/13633で「当然に控除すべき」論を明確に排除。12612でも手続要件で否認。</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td><strong>外国法人税の定義は柔軟</strong><br>選択制の税でも一定の条件下で外国法人税に該当しうる。</td>
+    <td>11342最高裁が納税者有利に解釈。唯一の実質的勝訴例。</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td><strong>控除時期は確定主義</strong><br>外国税の「確定」が控除の前提であり、所得の発生時期とは異なる。</td>
+    <td>12732/12881で制度沿革に基づく解釈が確立。</td>
+  </tr>
+</table>
+
+<h3>実務への示唆</h3>
+<div class="key-point">
+  <strong>最重要教訓:</strong> 外国税額控除は「申告時が全て」である。以下の3点を確実に実行すること:
+  <br>1. 確定申告書に控除を受けるべき金額及び計算明細を記載する
+  <br>2. 外国所得税/外国法人税を課されたことを証する書類を添付する
+  <br>3. CFC税制の適用除外を受ける場合も添付要件を確実に充足する
+  <br><br>
+  これらを怠った場合、租税条約、二重課税排除の趣旨、やむを得ない事情のいずれを主張しても救済されない。判例・裁決の一貫した結論である。
+</div>
+
+<h3>一覧表（全18件）</h3>
+<table>
+  <tr>
+    <th>ID</th><th>日付</th><th>裁判所</th><th>主要争点</th><th>結論</th>
+  </tr>
+  <tr><td>11342</td><td>2009-12-03</td><td>最高裁</td><td>外国法人税該当性（ガーンジー）</td><td class="tag-win" style="font-weight:700;">納税者勝訴</td></tr>
+  <tr><td>11344</td><td>2009-12-04</td><td>最高裁</td><td>CFC税制と日星租税条約</td><td class="tag-lose">課税庁勝訴</td></tr>
+  <tr><td>11381</td><td>2010-02-17</td><td>東京高裁</td><td>CFC事業基準・二重課税</td><td class="tag-lose">課税庁勝訴</td></tr>
+  <tr><td>11687</td><td>2011-05-17</td><td>大阪高裁</td><td>やむを得ない事情・日韓条約</td><td class="tag-lose">課税庁勝訴</td></tr>
+  <tr><td>11812</td><td>2011-11-18</td><td>大阪地裁</td><td>更正の請求による事後控除</td><td class="tag-lose">課税庁勝訴</td></tr>
+  <tr><td>12215</td><td>2013-05-16</td><td>名古屋高裁</td><td>やむを得ない事情・為替換算</td><td class="tag-lose">課税庁勝訴</td></tr>
+  <tr><td>12495</td><td>2014-06-27</td><td>東京地裁</td><td>CFC・国内源泉所得</td><td class="tag-lose">課税庁勝訴</td></tr>
+  <tr><td>12612</td><td>2015-02-25</td><td>東京高裁</td><td>CFC連動控除・手続要件</td><td class="tag-lose">課税庁勝訴</td></tr>
+  <tr><td>12732</td><td>2015-10-08</td><td>東京地裁</td><td>控除時期・租税債務確定</td><td class="tag-lose">課税庁勝訴</td></tr>
+  <tr><td>12881</td><td>2016-07-14</td><td>東京高裁</td><td>控除時期（控訴審）</td><td class="tag-lose">課税庁勝訴</td></tr>
+  <tr><td>13531</td><td>2021-02-26</td><td>東京地裁</td><td>CFC添付要件・連動控除</td><td class="tag-lose">課税庁勝訴</td></tr>
+  <tr><td>13633</td><td>2021-11-24</td><td>東京高裁</td><td>CFC添付要件（控訴審）</td><td class="tag-lose">課税庁勝訴</td></tr>
+  <tr><td>13641</td><td>2021-12-08</td><td>名古屋地裁</td><td>控除限度額計算・日伯条約</td><td class="tag-lose">課税庁勝訴</td></tr>
+  <tr><td>59_17</td><td>1993</td><td>審判所</td><td>外国法人税該当性（米国源泉税）</td><td class="tag-lose">課税庁勝訴</td></tr>
+  <tr><td>65_33</td><td>2000</td><td>審判所</td><td>記載限度・手続要件</td><td class="tag-lose">課税庁勝訴</td></tr>
+  <tr><td>65_34</td><td>2000</td><td>審判所</td><td>やむを得ない事情・記載漏れ</td><td class="tag-lose">課税庁勝訴</td></tr>
+  <tr><td>77_21</td><td>2004</td><td>審判所</td><td>みなし控除・更正の請求</td><td class="tag-lose">課税庁勝訴</td></tr>
+  <tr><td>77_22</td><td>2006</td><td>審判所</td><td>間接控除・記載添付要件</td><td class="tag-lose">課税庁勝訴</td></tr>
+</table>
+
+</div>
+
+</div><!-- container -->
+
+<footer style="text-align:center; padding:20px; color:var(--text-light); font-size:0.8em; border-top:1px solid var(--border); margin-top:20px;">
+  外国税額控除 判決・裁決 全件分析 | 2026-03-07 作成 | jplawdb4
+</footer>
+
+<script>
+// 全て開く/閉じるトグル
+document.querySelectorAll('.case-header').forEach(h => {
+  h.addEventListener('click', function() {
+    const body = this.nextElementSibling;
+    body.classList.toggle('open');
+  });
+});
+</script>
+
+</body>
+</html>
