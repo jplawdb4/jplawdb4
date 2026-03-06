@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>外国税額控除及びみなし外国税額控除の仕組み - 条文ベース徹底解説</title>
+<style>
+:root{--main:#1a365d;--accent:#2b6cb0;--green:#276749;--red:#c53030;--orange:#c05621;--purple:#6b46c1;--bg:#f7fafc;--text:#2d3748;--light:#ebf8ff;--max:960px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:"Hiragino Kaku Gothic ProN","Noto Sans JP","Meiryo",sans-serif;background:var(--bg);color:var(--text);line-height:1.9;font-size:15px;}
+.wrap{max-width:var(--max);margin:0 auto;background:#fff;padding:36px 34px;box-shadow:0 2px 8px rgba(0,0,0,0.08);}
+h1{font-size:1.7rem;color:var(--main);border-bottom:3px solid var(--main);padding-bottom:12px;margin-bottom:8px;}
+.subtitle{color:#718096;font-size:0.95rem;margin-bottom:28px;}
+h2{font-size:1.3rem;color:var(--main);margin-top:44px;margin-bottom:16px;padding-left:14px;border-left:5px solid var(--accent);}
+h3{font-size:1.05rem;color:var(--accent);margin-top:24px;margin-bottom:12px;}
+p{margin:14px 0;}
+ul,ol{margin:12px 0 12px 24px;}
+li{margin:6px 0;}
+figure{margin:28px 0;padding:16px;background:#fafafa;border-radius:8px;border:1px solid #e2e8f0;overflow-x:auto;}
+figcaption{text-align:center;font-size:0.85rem;color:#718096;margin-top:10px;}
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:0.9rem;}
+th,td{border:1px solid #e2e8f0;padding:10px 12px;text-align:left;}
+th{background:var(--light);color:var(--main);font-weight:bold;}
+blockquote{background:#f8f9fa;border-left:4px solid #a0aec0;padding:14px 18px;margin:20px 0;font-size:0.9rem;}
+.law{background:#fffff0;border-left:4px solid #d69e2e;padding:14px 18px;margin:20px 0;font-size:0.9rem;}
+.law-ref{font-size:0.8rem;color:#718096;text-align:right;margin-top:6px;}
+.core{background:linear-gradient(135deg,#ebf8ff 0%,#bee3f8 100%);border:2px solid var(--main);border-radius:8px;padding:20px 24px;margin:24px 0;}
+.core-title{font-weight:bold;color:var(--main);font-size:1.05rem;margin-bottom:10px;}
+.point{background:#fffbeb;border-left:4px solid #d69e2e;padding:14px 18px;margin:20px 0;}
+.warn{background:#fff5f5;border-left:4px solid var(--red);padding:14px 18px;margin:20px 0;}
+.ok{background:#f0fff4;border-left:4px solid var(--green);padding:14px 18px;margin:20px 0;}
+.toc{background:var(--light);border-radius:8px;padding:18px 22px;margin:24px 0;}
+.toc-title{font-weight:bold;color:var(--main);margin-bottom:10px;font-size:1rem;}
+.toc ol{margin:0;padding-left:22px;}
+.toc li{margin:5px 0;}
+.toc a{color:var(--accent);text-decoration:none;}
+.toc a:hover{text-decoration:underline;}
+svg text{font-family:"Hiragino Kaku Gothic ProN","Noto Sans JP","Meiryo",sans-serif;}
+@media(max-width:600px){.wrap{padding:18px 14px;}h1{font-size:1.3rem;}h2{font-size:1.1rem;}}
+@media print{body{background:#fff;}.wrap{box-shadow:none;max-width:100%;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>外国税額控除及びみなし外国税額控除の仕組み</h1>
+<p class="subtitle">条文ベース徹底解説 | 法人税法69条・法人税法施行令141条・租税条約 | 2026-03-06</p>
+
+<div class="toc">
+<div class="toc-title">目次</div>
+<ol>
+<li><a href="#s1">制度全体の構造マップ</a></li>
+<li><a href="#s2">外国税額控除の趣旨と条文構造（法人税法69条）</a></li>
+<li><a href="#s3">控除対象外国法人税の範囲（施行令141条）</a></li>
+<li><a href="#s4">控除限度額の計算（施行令141条の2〜142条）</a></li>
+<li><a href="#s5">繰越控除制度（余裕額・超過額）</a></li>
+<li><a href="#s6">損金算入との選択</a></li>
+<li><a href="#s7">みなし外国税額控除（タックススペアリング）</a></li>
+<li><a href="#s8">両制度の関係と計算フロー</a></li>
+<li><a href="#s9">実務上の論点と近年の動向</a></li>
+</ol>
+</div>
+
+<!-- ===== Section 1: 全体構造マップ ===== -->
+<section id="s1">
+<h2>1. 制度全体の構造マップ</h2>
+
+<figure>
+<svg viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<marker id="a1" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#1a365d"/></marker>
+<marker id="a2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#c53030"/></marker>
+<marker id="a3" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#276749"/></marker>
+<filter id="sh"><feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.1"/></filter>
+</defs>
+
+<rect x="5" y="5" width="890" height="610" rx="12" fill="#f7fafc" stroke="#cbd5e0" stroke-width="2"/>
+<text x="450" y="38" text-anchor="middle" font-size="18" font-weight="bold" fill="#1a365d">外国税額控除及びみなし外国税額控除 ─ 制度全体の構造マップ</text>
+
+<!-- 問題 -->
+<rect x="300" y="55" width="300" height="50" rx="8" fill="#fed7d7" stroke="#c53030" stroke-width="2" filter="url(#sh)"/>
+<text x="450" y="78" text-anchor="middle" font-size="14" font-weight="bold" fill="#c53030">問題：国際的二重課税の発生</text>
+<text x="450" y="96" text-anchor="middle" font-size="11" fill="#c53030">居住地国課税 vs 源泉地国課税の衝突</text>
+
+<!-- 矢印 -->
+<line x1="450" y1="105" x2="450" y2="130" stroke="#1a365d" stroke-width="2" marker-end="url(#a1)"/>
+
+<!-- 解決策の枠 -->
+<rect x="30" y="135" width="840" height="470" rx="10" fill="#fff" stroke="#2b6cb0" stroke-width="2"/>
+<text x="450" y="158" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a365d">解決策：二重課税排除メカニズム</text>
+
+<!-- 左列：外国税額控除 -->
+<rect x="50" y="175" width="380" height="410" rx="8" fill="#ebf8ff" stroke="#2b6cb0" stroke-width="2"/>
+<text x="240" y="200" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a365d">外国税額控除（法人税法69条）</text>
+<text x="240" y="218" text-anchor="middle" font-size="10" fill="#718096">Foreign Tax Credit</text>
+
+<!-- FTC内部構造 -->
+<rect x="70" y="232" width="340" height="55" rx="6" fill="#fff" stroke="#2b6cb0"/>
+<text x="90" y="253" font-size="12" font-weight="bold" fill="#1a365d">Step1: 控除対象外国法人税の確定</text>
+<text x="90" y="273" font-size="10" fill="#4a5568">施行令141条 ─ 所得を課税標準とする税（35%超除外）</text>
+
+<line x1="240" y1="287" x2="240" y2="300" stroke="#2b6cb0" stroke-width="1.5" marker-end="url(#a1)"/>
+
+<rect x="70" y="303" width="340" height="55" rx="6" fill="#fff" stroke="#2b6cb0"/>
+<text x="90" y="324" font-size="12" font-weight="bold" fill="#1a365d">Step2: 控除限度額の計算</text>
+<text x="90" y="344" font-size="10" fill="#4a5568">法人税額 x（国外所得金額 / 全世界所得金額）</text>
+
+<line x1="240" y1="358" x2="240" y2="371" stroke="#2b6cb0" stroke-width="1.5" marker-end="url(#a1)"/>
+
+<rect x="70" y="374" width="340" height="55" rx="6" fill="#fff" stroke="#2b6cb0"/>
+<text x="90" y="395" font-size="12" font-weight="bold" fill="#1a365d">Step3: 控除額の決定</text>
+<text x="90" y="415" font-size="10" fill="#4a5568">MIN（控除対象外国法人税額, 控除限度額）</text>
+
+<line x1="240" y1="429" x2="240" y2="442" stroke="#2b6cb0" stroke-width="1.5" marker-end="url(#a1)"/>
+
+<rect x="70" y="445" width="160" height="50" rx="6" fill="#c6f6d5" stroke="#276749"/>
+<text x="150" y="467" text-anchor="middle" font-size="10" font-weight="bold" fill="#276749">控除余裕額</text>
+<text x="150" y="483" text-anchor="middle" font-size="9" fill="#276749">→ 3年繰越</text>
+
+<rect x="250" y="445" width="160" height="50" rx="6" fill="#fed7d7" stroke="#c53030"/>
+<text x="330" y="467" text-anchor="middle" font-size="10" font-weight="bold" fill="#c53030">控除限度超過額</text>
+<text x="330" y="483" text-anchor="middle" font-size="9" fill="#c53030">→ 3年繰越</text>
+
+<rect x="70" y="510" width="340" height="55" rx="6" fill="#e9d8fd" stroke="#6b46c1"/>
+<text x="90" y="531" font-size="11" font-weight="bold" fill="#6b46c1">選択制：外国税額控除 or 損金算入</text>
+<text x="90" y="549" font-size="10" fill="#4a5568">一括選択（法人税法41条）※通常は控除が有利</text>
+
+<!-- 右列：みなし外国税額控除 -->
+<rect x="470" y="175" width="380" height="280" rx="8" fill="#faf5ff" stroke="#6b46c1" stroke-width="2"/>
+<text x="660" y="200" text-anchor="middle" font-size="14" font-weight="bold" fill="#6b46c1">みなし外国税額控除（タックススペアリング）</text>
+<text x="660" y="218" text-anchor="middle" font-size="10" fill="#718096">Tax Sparing Credit ─ 租税条約の特別規定</text>
+
+<rect x="490" y="232" width="340" height="55" rx="6" fill="#fff" stroke="#6b46c1"/>
+<text x="510" y="253" font-size="12" font-weight="bold" fill="#6b46c1">趣旨：開発途上国の租税優遇を「生かす」</text>
+<text x="510" y="273" font-size="10" fill="#4a5568">実際に払っていない税も「納めたとみなす」</text>
+
+<rect x="490" y="303" width="340" height="55" rx="6" fill="#fff" stroke="#6b46c1"/>
+<text x="510" y="324" font-size="12" font-weight="bold" fill="#6b46c1">対象国（6か国）</text>
+<text x="510" y="344" font-size="10" fill="#4a5568">中国/タイ/ブラジル/バングラデシュ/スリランカ/ザンビア</text>
+
+<rect x="490" y="374" width="340" height="65" rx="6" fill="#fff" stroke="#6b46c1"/>
+<text x="510" y="395" font-size="12" font-weight="bold" fill="#6b46c1">計算方法</text>
+<text x="510" y="415" font-size="10" fill="#4a5568">みなし外国税額 = 所得 x みなし税率（通常税率）</text>
+<text x="510" y="432" font-size="10" fill="#4a5568">※ 控除限度額の制約あり（通常のFTCと同様）</text>
+
+<!-- 右下：関連制度 -->
+<rect x="470" y="475" width="380" height="90" rx="8" fill="#fefcbf" stroke="#d69e2e" stroke-width="2"/>
+<text x="660" y="500" text-anchor="middle" font-size="13" font-weight="bold" fill="#744210">関連制度</text>
+<text x="490" y="522" font-size="10" fill="#4a5568">- 外国子会社配当益金不算入制度（法人税法23条の2）</text>
+<text x="490" y="540" font-size="10" fill="#4a5568">- CFC税制（措置法66条の6〜9）</text>
+<text x="490" y="558" font-size="10" fill="#4a5568">- 租税条約（源泉税率軽減・二重課税排除条項）</text>
+
+<!-- 接続線 -->
+<line x1="430" y1="400" x2="465" y2="400" stroke="#6b46c1" stroke-width="1.5" stroke-dasharray="4"/>
+<text x="448" y="395" font-size="8" fill="#6b46c1">連携</text>
+</svg>
+<figcaption>【図1】外国税額控除及びみなし外国税額控除 ─ 制度全体の構造マップ</figcaption>
+</figure>
+</section>
+
+<!-- ===== Section 2: 外国税額控除の趣旨と条文構造 ===== -->
+<section id="s2">
+<h2>2. 外国税額控除の趣旨と条文構造</h2>
+
+<h3>2.1 制度の趣旨</h3>
+<p>外国税額控除制度は、<strong>国際的二重課税の排除</strong>を目的とする制度である。日本は全世界所得課税（居住地国課税）を採用しているため、内国法人が外国で所得を得て現地で課税された場合、同一の所得に対して日本と外国の双方で課税される「二重課税」が生じる。この二重課税を排除するため、外国で納付した税額を日本の法人税額から直接控除する仕組みが外国税額控除である。</p>
+
+<h3>2.2 法人税法69条の構造</h3>
+
+<div class="law">
+<strong>法人税法第69条第1項（外国税額の控除）</strong><br>
+内国法人が各事業年度において<strong>外国法人税</strong>（外国の法令により課される法人税に相当する税で政令で定めるものをいう。）を納付することとなる場合には、当該事業年度の所得に対する法人税の額のうち当該事業年度の所得でその源泉が国外にあるものに対応するものとして政令で定めるところにより計算した金額（<strong>控除限度額</strong>）を限度として、その外国法人税の額（控除対象外国法人税の額）を当該事業年度の所得に対する法人税の額から控除する。
+<div class="law-ref">法人税法69条1項（要旨）</div>
+</div>
+
+<figure>
+<svg viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<marker id="b1" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#1a365d"/></marker>
+</defs>
+<rect x="5" y="5" width="890" height="390" rx="10" fill="#f7fafc" stroke="#cbd5e0"/>
+<text x="450" y="35" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a365d">【図2】法人税法69条の条文構造</text>
+
+<!-- 1項 -->
+<rect x="30" y="55" width="250" height="65" rx="6" fill="#ebf8ff" stroke="#2b6cb0" stroke-width="2"/>
+<text x="155" y="78" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a365d">第1項：基本規定</text>
+<text x="155" y="98" text-anchor="middle" font-size="10" fill="#4a5568">外国法人税額を法人税額</text>
+<text x="155" y="112" text-anchor="middle" font-size="10" fill="#4a5568">から控除（控除限度額まで）</text>
+
+<!-- 2-3項 -->
+<rect x="320" y="55" width="250" height="65" rx="6" fill="#ebf8ff" stroke="#2b6cb0" stroke-width="2"/>
+<text x="445" y="78" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a365d">第2-3項：控除限度額</text>
+<text x="445" y="98" text-anchor="middle" font-size="10" fill="#4a5568">法人税の控除限度額（2項）</text>
+<text x="445" y="112" text-anchor="middle" font-size="10" fill="#4a5568">地方税の控除限度額（3項）</text>
+
+<!-- 4項 -->
+<rect x="610" y="55" width="250" height="65" rx="6" fill="#ebf8ff" stroke="#2b6cb0" stroke-width="2"/>
+<text x="735" y="78" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a365d">第4項：国外源泉所得</text>
+<text x="735" y="98" text-anchor="middle" font-size="10" fill="#4a5568">16号にわたる国外源泉</text>
+<text x="735" y="112" text-anchor="middle" font-size="10" fill="#4a5568">所得の定義</text>
+
+<!-- 5-8項 -->
+<rect x="30" y="150" width="250" height="65" rx="6" fill="#c6f6d5" stroke="#276749" stroke-width="2"/>
+<text x="155" y="173" text-anchor="middle" font-size="12" font-weight="bold" fill="#276749">第5-8項：繰越制度</text>
+<text x="155" y="193" text-anchor="middle" font-size="10" fill="#4a5568">控除余裕額の繰越（5項）</text>
+<text x="155" y="207" text-anchor="middle" font-size="10" fill="#4a5568">控除限度超過額の繰越（6-8項）</text>
+
+<!-- 9-14項 -->
+<rect x="320" y="150" width="250" height="65" rx="6" fill="#fefcbf" stroke="#d69e2e" stroke-width="2"/>
+<text x="445" y="173" text-anchor="middle" font-size="12" font-weight="bold" fill="#744210">第9-14項：特例等</text>
+<text x="445" y="193" text-anchor="middle" font-size="10" fill="#4a5568">通算法人の特例（9-14項）</text>
+<text x="445" y="207" text-anchor="middle" font-size="10" fill="#4a5568">グループ通算制度対応</text>
+
+<!-- 15-19項 -->
+<rect x="610" y="150" width="250" height="65" rx="6" fill="#e9d8fd" stroke="#6b46c1" stroke-width="2"/>
+<text x="735" y="173" text-anchor="middle" font-size="12" font-weight="bold" fill="#6b46c1">第15-19項：申告要件</text>
+<text x="735" y="193" text-anchor="middle" font-size="10" fill="#4a5568">申告書への記載要件</text>
+<text x="735" y="207" text-anchor="middle" font-size="10" fill="#4a5568">添付書類・更正の特例</text>
+
+<!-- 施行令との関係 -->
+<rect x="30" y="250" width="830" height="120" rx="8" fill="#fffff0" stroke="#d69e2e" stroke-width="2"/>
+<text x="450" y="275" text-anchor="middle" font-size="13" font-weight="bold" fill="#744210">法人税法施行令による具体化</text>
+
+<rect x="50" y="290" width="190" height="65" rx="4" fill="#fff" stroke="#d69e2e"/>
+<text x="145" y="313" text-anchor="middle" font-size="11" font-weight="bold" fill="#744210">施行令141条</text>
+<text x="145" y="330" text-anchor="middle" font-size="9" fill="#4a5568">外国法人税の定義</text>
+<text x="145" y="345" text-anchor="middle" font-size="9" fill="#4a5568">（控除対象の範囲）</text>
+
+<rect x="260" y="290" width="190" height="65" rx="4" fill="#fff" stroke="#d69e2e"/>
+<text x="355" y="313" text-anchor="middle" font-size="11" font-weight="bold" fill="#744210">施行令141条の2</text>
+<text x="355" y="330" text-anchor="middle" font-size="9" fill="#4a5568">国外所得金額の</text>
+<text x="355" y="345" text-anchor="middle" font-size="9" fill="#4a5568">計算方法</text>
+
+<rect x="470" y="290" width="190" height="65" rx="4" fill="#fff" stroke="#d69e2e"/>
+<text x="565" y="313" text-anchor="middle" font-size="11" font-weight="bold" fill="#744210">施行令142条</text>
+<text x="565" y="330" text-anchor="middle" font-size="9" fill="#4a5568">控除限度額の</text>
+<text x="565" y="345" text-anchor="middle" font-size="9" fill="#4a5568">具体的計算</text>
+
+<rect x="680" y="290" width="160" height="65" rx="4" fill="#fff" stroke="#d69e2e"/>
+<text x="760" y="313" text-anchor="middle" font-size="11" font-weight="bold" fill="#744210">施行令142条の2</text>
+<text x="760" y="330" text-anchor="middle" font-size="9" fill="#4a5568">高率部分の除外</text>
+<text x="760" y="345" text-anchor="middle" font-size="9" fill="#4a5568">（35%超）</text>
+</svg>
+<figcaption>【図2】法人税法69条の条文構造と施行令との関係</figcaption>
+</figure>
+</section>
+
+<!-- ===== Section 3: 控除対象外国法人税の範囲 ===== -->
+<section id="s3">
+<h2>3. 控除対象外国法人税の範囲（施行令141条）</h2>
+
+<div class="law">
+<strong>法人税法施行令第141条第1項</strong><br>
+法第69条第1項に規定する外国の法令により課される法人税に相当する税で政令で定めるものは、外国の法令に基づき外国又はその地方公共団体により<strong>法人の所得を課税標準として課される税</strong>とする。
+<div class="law-ref">法人税法施行令141条1項</div>
+</div>
+
+<h3>3.1 含まれるもの（施行令141条2項）</h3>
+<div class="law">
+<strong>法人税法施行令第141条第2項</strong> ─ 外国法人税に含まれるもの<br>
+一　超過利潤税その他法人の所得の<strong>特定の部分</strong>を課税標準として課される税<br>
+二　法人の所得又はその特定の部分を課税標準として課される税の<strong>附加税</strong><br>
+三　法人の所得を課税標準として課される税と同一の税目に属する税で、法人の特定の所得につき、<strong>徴税上の便宜のため</strong>、所得に代えて収入金額その他これに準ずるものを課税標準として課されるもの<br>
+四　法人の特定の所得につき、所得を課税標準とする税に代え、法人の<strong>収入金額その他これに準ずるもの</strong>を課税標準として課される税
+<div class="law-ref">法人税法施行令141条2項</div>
+</div>
+
+<h3>3.2 含まれないもの（施行令141条3項）</h3>
+<div class="law">
+<strong>法人税法施行令第141条第3項</strong> ─ 外国法人税に含まれないもの<br>
+一　税を納付する者が、<strong>任意に還付を請求</strong>できる税<br>
+二　<strong>納付猶予期間を任意に定められる</strong>税<br>
+三　<strong>税率を合意により決定</strong>した税（最低税率を超える部分）
+<div class="law-ref">法人税法施行令141条3項</div>
+</div>
+
+<figure>
+<svg viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<marker id="c1" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#1a365d"/></marker>
+</defs>
+<rect x="5" y="5" width="890" height="470" rx="10" fill="#f7fafc" stroke="#cbd5e0"/>
+<text x="450" y="35" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a365d">【図3】控除対象外国法人税の判定フロー（施行令141条ベース）</text>
+
+<!-- Start -->
+<rect x="330" y="55" width="240" height="40" rx="20" fill="#1a365d"/>
+<text x="450" y="80" text-anchor="middle" font-size="13" fill="#fff" font-weight="bold">外国で納付した税金</text>
+
+<line x1="450" y1="95" x2="450" y2="120" stroke="#1a365d" stroke-width="2" marker-end="url(#c1)"/>
+
+<!-- 判定1 -->
+<polygon points="450,125 570,175 450,225 330,175" fill="#fffbeb" stroke="#d69e2e" stroke-width="2"/>
+<text x="450" y="168" text-anchor="middle" font-size="11" fill="#744210">所得を課税標準</text>
+<text x="450" y="185" text-anchor="middle" font-size="11" fill="#744210">とするか？</text>
+<text x="450" y="200" text-anchor="middle" font-size="9" fill="#718096">（令141条1項）</text>
+
+<!-- No -->
+<line x1="570" y1="175" x2="680" y2="175" stroke="#c53030" stroke-width="2" marker-end="url(#c1)"/>
+<text x="620" y="167" font-size="10" fill="#c53030" font-weight="bold">NO</text>
+<rect x="690" y="150" width="170" height="50" rx="6" fill="#fed7d7" stroke="#c53030" stroke-width="2"/>
+<text x="775" y="172" text-anchor="middle" font-size="11" font-weight="bold" fill="#c53030">控除対象外</text>
+<text x="775" y="190" text-anchor="middle" font-size="9" fill="#c53030">VAT/関税/印紙税等</text>
+
+<!-- Yes -->
+<line x1="450" y1="225" x2="450" y2="255" stroke="#276749" stroke-width="2" marker-end="url(#c1)"/>
+<text x="465" y="245" font-size="10" fill="#276749" font-weight="bold">YES</text>
+
+<!-- 判定2 -->
+<polygon points="450,260 570,310 450,360 330,310" fill="#fffbeb" stroke="#d69e2e" stroke-width="2"/>
+<text x="450" y="300" text-anchor="middle" font-size="11" fill="#744210">任意還付・猶予</text>
+<text x="450" y="317" text-anchor="middle" font-size="11" fill="#744210">・合意税率か？</text>
+<text x="450" y="334" text-anchor="middle" font-size="9" fill="#718096">（令141条3項）</text>
+
+<!-- Yes -->
+<line x1="570" y1="310" x2="680" y2="310" stroke="#c53030" stroke-width="2" marker-end="url(#c1)"/>
+<text x="620" y="302" font-size="10" fill="#c53030" font-weight="bold">YES</text>
+<rect x="690" y="285" width="170" height="50" rx="6" fill="#fed7d7" stroke="#c53030" stroke-width="2"/>
+<text x="775" y="307" text-anchor="middle" font-size="11" font-weight="bold" fill="#c53030">控除対象外</text>
+<text x="775" y="325" text-anchor="middle" font-size="9" fill="#c53030">実質的でない租税</text>
+
+<!-- No -->
+<line x1="450" y1="360" x2="450" y2="390" stroke="#276749" stroke-width="2" marker-end="url(#c1)"/>
+<text x="465" y="380" font-size="10" fill="#276749" font-weight="bold">NO</text>
+
+<!-- 判定3 -->
+<rect x="300" y="395" width="130" height="55" rx="6" fill="#c6f6d5" stroke="#276749" stroke-width="2"/>
+<text x="365" y="418" text-anchor="middle" font-size="11" font-weight="bold" fill="#276749">35%以下</text>
+<text x="365" y="438" text-anchor="middle" font-size="10" fill="#276749">全額控除対象</text>
+
+<rect x="470" y="395" width="130" height="55" rx="6" fill="#fefcbf" stroke="#d69e2e" stroke-width="2"/>
+<text x="535" y="418" text-anchor="middle" font-size="11" font-weight="bold" fill="#744210">35%超部分</text>
+<text x="535" y="438" text-anchor="middle" font-size="10" fill="#744210">高率部分除外</text>
+<text x="535" y="452" text-anchor="middle" font-size="8" fill="#718096">（令142条の2）</text>
+
+<line x1="430" y1="395" x2="430" y2="395" stroke="none"/>
+
+<!-- 左の対象例 -->
+<rect x="40" y="120" width="230" height="230" rx="6" fill="#f0fff4" stroke="#276749"/>
+<text x="155" y="145" text-anchor="middle" font-size="12" font-weight="bold" fill="#276749">控除対象となる税の例</text>
+<text x="60" y="170" font-size="10" fill="#4a5568">- 各国の法人税（Corporate Tax）</text>
+<text x="60" y="190" font-size="10" fill="#4a5568">- 州税（State Income Tax）</text>
+<text x="60" y="210" font-size="10" fill="#4a5568">- 源泉徴収税（配当/利子/使用料）</text>
+<text x="60" y="230" font-size="10" fill="#4a5568">- 超過利潤税</text>
+<text x="60" y="250" font-size="10" fill="#4a5568">- 地方所得税（営業税等）</text>
+<text x="60" y="270" font-size="10" fill="#4a5568">- みなし所得課税</text>
+<text x="60" y="290" font-size="10" fill="#4a5568">- GloBEルールの国内最低課税</text>
+<text x="60" y="310" font-size="9" fill="#718096">  （令141条2項5号・新設）</text>
+<text x="60" y="335" font-size="9" fill="#276749">※ 名称ではなく実質で判定</text>
+</svg>
+<figcaption>【図3】控除対象外国法人税の判定フロー ─ 施行令141条の3段階判定</figcaption>
+</figure>
+
+<div class="point">
+<strong>高率部分の除外（施行令142条の2）</strong><br>
+外国法人税のうち税率が<strong>35%を超える部分</strong>は、控除対象外国法人税から除外される。35%基準は日本の法人実効税率（約30%）に若干の余裕を持たせた水準。35%超部分は損金算入で対応する。
+</div>
+</section>
+
+<!-- ===== Section 4: 控除限度額の計算 ===== -->
+<section id="s4">
+<h2>4. 控除限度額の計算</h2>
+
+<div class="core">
+<div class="core-title">控除限度額の算式（法人税法69条1項・2項、施行令142条）</div>
+<p style="text-align:center;font-size:1.15rem;margin:12px 0;">
+<strong>控除限度額 = 当期の法人税額 &times; （国外所得金額 &divide; 全世界所得金額）</strong>
+</p>
+<p style="font-size:0.9rem;color:#4a5568;">
+※ 国外所得金額は施行令141条の2に定義。全世界所得金額を超えない（上限は全世界所得の90%）。<br>
+※ 地方税（住民税）にも別途控除限度額がある（法人税法69条3項）。
+</p>
+</div>
+
+<figure>
+<svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<marker id="d1" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#1a365d"/></marker>
+</defs>
+<rect x="5" y="5" width="890" height="490" rx="10" fill="#f7fafc" stroke="#cbd5e0"/>
+<text x="450" y="35" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a365d">【図4】控除限度額の計算と3つのシナリオ</text>
+
+<!-- 算式 -->
+<rect x="200" y="50" width="500" height="45" rx="8" fill="#ebf8ff" stroke="#2b6cb0" stroke-width="2"/>
+<text x="450" y="78" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a365d">控除限度額 = 法人税額 x （国外所得 / 全世界所得）</text>
+
+<!-- シナリオ1: 外国税率 < 日本税率 -->
+<g transform="translate(30,120)">
+<rect x="0" y="0" width="270" height="350" rx="8" fill="#f0fff4" stroke="#276749" stroke-width="2"/>
+<text x="135" y="28" text-anchor="middle" font-size="13" font-weight="bold" fill="#276749">Case 1: 外国税率 &lt; 日本税率</text>
+<text x="135" y="48" text-anchor="middle" font-size="10" fill="#718096">（例：シンガポール17%）</text>
+
+<rect x="15" y="65" width="240" height="110" rx="4" fill="#fff" stroke="#276749"/>
+<text x="25" y="88" font-size="10" fill="#4a5568">国外所得：1,000万円</text>
+<text x="25" y="106" font-size="10" fill="#4a5568">外国税額：170万円（17%）</text>
+<text x="25" y="124" font-size="10" fill="#4a5568">全世界所得：5,000万円</text>
+<text x="25" y="142" font-size="10" fill="#4a5568">法人税額：1,160万円（23.2%）</text>
+<text x="25" y="165" font-size="10" font-weight="bold" fill="#276749">控除限度額 = 1,160 x 1,000/5,000</text>
+
+<rect x="15" y="185" width="240" height="45" rx="4" fill="#c6f6d5"/>
+<text x="135" y="205" text-anchor="middle" font-size="12" font-weight="bold" fill="#276749">= 232万円</text>
+<text x="135" y="222" text-anchor="middle" font-size="10" fill="#276749">外国税170 &lt; 限度232</text>
+
+<rect x="15" y="245" width="240" height="85" rx="4" fill="#fff" stroke="#276749"/>
+<text x="135" y="268" text-anchor="middle" font-size="11" font-weight="bold" fill="#276749">結果：全額控除</text>
+<text x="25" y="290" font-size="10" fill="#4a5568">控除額 = 170万円（全額）</text>
+<text x="25" y="308" font-size="10" fill="#276749">控除余裕額 = 62万円</text>
+<text x="25" y="324" font-size="9" fill="#718096">（翌期以降3年繰越可）</text>
+</g>
+
+<!-- シナリオ2: 外国税率 ≒ 日本税率 -->
+<g transform="translate(315,120)">
+<rect x="0" y="0" width="270" height="350" rx="8" fill="#ebf8ff" stroke="#2b6cb0" stroke-width="2"/>
+<text x="135" y="28" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a365d">Case 2: 外国税率 ≒ 日本税率</text>
+<text x="135" y="48" text-anchor="middle" font-size="10" fill="#718096">（例：フランス25%）</text>
+
+<rect x="15" y="65" width="240" height="110" rx="4" fill="#fff" stroke="#2b6cb0"/>
+<text x="25" y="88" font-size="10" fill="#4a5568">国外所得：1,000万円</text>
+<text x="25" y="106" font-size="10" fill="#4a5568">外国税額：250万円（25%）</text>
+<text x="25" y="124" font-size="10" fill="#4a5568">全世界所得：5,000万円</text>
+<text x="25" y="142" font-size="10" fill="#4a5568">法人税額：1,160万円（23.2%）</text>
+<text x="25" y="165" font-size="10" font-weight="bold" fill="#2b6cb0">控除限度額 = 1,160 x 1,000/5,000</text>
+
+<rect x="15" y="185" width="240" height="45" rx="4" fill="#bee3f8"/>
+<text x="135" y="205" text-anchor="middle" font-size="12" font-weight="bold" fill="#2b6cb0">= 232万円</text>
+<text x="135" y="222" text-anchor="middle" font-size="10" fill="#2b6cb0">外国税250 &gt; 限度232</text>
+
+<rect x="15" y="245" width="240" height="85" rx="4" fill="#fff" stroke="#2b6cb0"/>
+<text x="135" y="268" text-anchor="middle" font-size="11" font-weight="bold" fill="#2b6cb0">結果：限度額まで控除</text>
+<text x="25" y="290" font-size="10" fill="#4a5568">控除額 = 232万円</text>
+<text x="25" y="308" font-size="10" fill="#c53030">控除限度超過額 = 18万円</text>
+<text x="25" y="324" font-size="9" fill="#718096">（翌期以降3年繰越可）</text>
+</g>
+
+<!-- シナリオ3: 外国税率 > 35% -->
+<g transform="translate(600,120)">
+<rect x="0" y="0" width="270" height="350" rx="8" fill="#fff5f5" stroke="#c53030" stroke-width="2"/>
+<text x="135" y="28" text-anchor="middle" font-size="13" font-weight="bold" fill="#c53030">Case 3: 外国税率 &gt; 35%</text>
+<text x="135" y="48" text-anchor="middle" font-size="10" fill="#718096">（例：某国45%）</text>
+
+<rect x="15" y="65" width="240" height="110" rx="4" fill="#fff" stroke="#c53030"/>
+<text x="25" y="88" font-size="10" fill="#4a5568">国外所得：1,000万円</text>
+<text x="25" y="106" font-size="10" fill="#4a5568">外国税額：450万円（45%）</text>
+<text x="25" y="124" font-size="10" fill="#c53030">高率部分：100万円（10%分）</text>
+<text x="25" y="142" font-size="10" fill="#4a5568">控除対象：350万円（35%分）</text>
+<text x="25" y="165" font-size="10" font-weight="bold" fill="#c53030">控除限度額 = 232万円</text>
+
+<rect x="15" y="185" width="240" height="45" rx="4" fill="#fed7d7"/>
+<text x="135" y="205" text-anchor="middle" font-size="12" font-weight="bold" fill="#c53030">= 232万円</text>
+<text x="135" y="222" text-anchor="middle" font-size="10" fill="#c53030">控除対象350 &gt; 限度232</text>
+
+<rect x="15" y="245" width="240" height="85" rx="4" fill="#fff" stroke="#c53030"/>
+<text x="135" y="268" text-anchor="middle" font-size="11" font-weight="bold" fill="#c53030">結果：二重の制約</text>
+<text x="25" y="290" font-size="10" fill="#4a5568">控除額 = 232万円</text>
+<text x="25" y="308" font-size="10" fill="#c53030">超過 = 118万円（繰越可）</text>
+<text x="25" y="324" font-size="10" fill="#c53030">高率部分100万円 → 損金算入</text>
+</g>
+</svg>
+<figcaption>【図4】控除限度額の計算と3つのシナリオ ─ 外国税率の高低による影響</figcaption>
+</figure>
+
+<h3>4.1 国外所得金額の範囲（法69条4項）</h3>
+<p>法人税法69条4項は、国外源泉所得を<strong>16号</strong>にわたって列挙している。主なものは以下の通り。</p>
+<table>
+<tr><th>号</th><th>内容</th><th>具体例</th></tr>
+<tr><td>1号</td><td>国外事業所等帰属所得</td><td>海外支店・PEの事業所得</td></tr>
+<tr><td>2号</td><td>国外資産の運用・保有所得</td><td>海外不動産賃貸収入</td></tr>
+<tr><td>3号</td><td>国外資産の譲渡所得</td><td>海外不動産の売却益</td></tr>
+<tr><td>4-6号</td><td>外国法人からの配当等</td><td>外国子会社配当</td></tr>
+<tr><td>7号</td><td>貸付金利子</td><td>外国法人への貸付利息</td></tr>
+<tr><td>8号</td><td>使用料</td><td>海外ロイヤルティ収入</td></tr>
+<tr><td>9-16号</td><td>その他の国外源泉所得</td><td>海外サービス報酬等</td></tr>
+</table>
+</section>
+
+<!-- ===== Section 5: 繰越制度 ===== -->
+<section id="s5">
+<h2>5. 繰越控除制度</h2>
+
+<figure>
+<svg viewBox="0 0 900 350" xmlns="http://www.w3.org/2000/svg">
+<rect x="5" y="5" width="890" height="340" rx="10" fill="#f7fafc" stroke="#cbd5e0"/>
+<text x="450" y="35" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a365d">【図5】繰越控除制度の仕組み（法人税法69条5-8項）</text>
+
+<!-- 控除余裕額 -->
+<g transform="translate(30,55)">
+<rect x="0" y="0" width="400" height="270" rx="8" fill="#f0fff4" stroke="#276749" stroke-width="2"/>
+<text x="200" y="28" text-anchor="middle" font-size="14" font-weight="bold" fill="#276749">控除余裕額の繰越（69条5項）</text>
+
+<text x="20" y="55" font-size="11" fill="#4a5568">発生：控除限度額 &gt; 外国法人税額 の場合</text>
+<text x="20" y="75" font-size="11" fill="#276749" font-weight="bold">余裕額 = 控除限度額 - 外国法人税額</text>
+
+<!-- タイムライン -->
+<line x1="30" y1="110" x2="370" y2="110" stroke="#276749" stroke-width="2"/>
+<circle cx="60" cy="110" r="8" fill="#276749"/><text x="60" y="135" text-anchor="middle" font-size="9" fill="#4a5568">当期</text>
+<circle cx="145" cy="110" r="8" fill="#c6f6d5" stroke="#276749"/><text x="145" y="135" text-anchor="middle" font-size="9" fill="#4a5568">翌期</text>
+<circle cx="230" cy="110" r="8" fill="#c6f6d5" stroke="#276749"/><text x="230" y="135" text-anchor="middle" font-size="9" fill="#4a5568">翌々期</text>
+<circle cx="315" cy="110" r="8" fill="#c6f6d5" stroke="#276749"/><text x="315" y="135" text-anchor="middle" font-size="9" fill="#4a5568">3年目</text>
+<text x="360" y="115" font-size="9" fill="#c53030">消滅</text>
+
+<text x="20" y="165" font-size="10" fill="#4a5568">翌期以降に外国法人税額が控除限度額を超えた場合、</text>
+<text x="20" y="183" font-size="10" fill="#4a5568">繰り越された余裕額の範囲内で追加控除可能。</text>
+
+<rect x="20" y="200" width="360" height="55" rx="4" fill="#fff" stroke="#276749"/>
+<text x="200" y="222" text-anchor="middle" font-size="11" font-weight="bold" fill="#276749">実質的効果</text>
+<text x="200" y="242" text-anchor="middle" font-size="10" fill="#4a5568">低税率国と高税率国の「年度間の平準化」を実現</text>
+</g>
+
+<!-- 控除限度超過額 -->
+<g transform="translate(470,55)">
+<rect x="0" y="0" width="400" height="270" rx="8" fill="#fff5f5" stroke="#c53030" stroke-width="2"/>
+<text x="200" y="28" text-anchor="middle" font-size="14" font-weight="bold" fill="#c53030">控除限度超過額の繰越（69条6-8項）</text>
+
+<text x="20" y="55" font-size="11" fill="#4a5568">発生：外国法人税額 &gt; 控除限度額 の場合</text>
+<text x="20" y="75" font-size="11" fill="#c53030" font-weight="bold">超過額 = 外国法人税額 - 控除限度額</text>
+
+<!-- タイムライン -->
+<line x1="30" y1="110" x2="370" y2="110" stroke="#c53030" stroke-width="2"/>
+<circle cx="60" cy="110" r="8" fill="#c53030"/><text x="60" y="135" text-anchor="middle" font-size="9" fill="#4a5568">当期</text>
+<circle cx="145" cy="110" r="8" fill="#fed7d7" stroke="#c53030"/><text x="145" y="135" text-anchor="middle" font-size="9" fill="#4a5568">翌期</text>
+<circle cx="230" cy="110" r="8" fill="#fed7d7" stroke="#c53030"/><text x="230" y="135" text-anchor="middle" font-size="9" fill="#4a5568">翌々期</text>
+<circle cx="315" cy="110" r="8" fill="#fed7d7" stroke="#c53030"/><text x="315" y="135" text-anchor="middle" font-size="9" fill="#4a5568">3年目</text>
+<text x="360" y="115" font-size="9" fill="#c53030">消滅</text>
+
+<text x="20" y="165" font-size="10" fill="#4a5568">翌期以降に控除余裕額が生じた場合、</text>
+<text x="20" y="183" font-size="10" fill="#4a5568">繰り越された超過額を余裕額の範囲内で控除可能。</text>
+
+<rect x="20" y="200" width="360" height="55" rx="4" fill="#fff" stroke="#c53030"/>
+<text x="200" y="222" text-anchor="middle" font-size="11" font-weight="bold" fill="#c53030">実質的効果</text>
+<text x="200" y="242" text-anchor="middle" font-size="10" fill="#4a5568">高税率国での納税を将来の控除枠で救済</text>
+</g>
+</svg>
+<figcaption>【図5】繰越控除制度 ─ 余裕額と超過額の3年繰越メカニズム</figcaption>
+</figure>
+</section>
+
+<!-- ===== Section 6: 損金算入との選択 ===== -->
+<section id="s6">
+<h2>6. 損金算入との選択</h2>
+
+<p>内国法人は、外国法人税について<strong>外国税額控除</strong>か<strong>損金算入</strong>のいずれかを選択できる（法人税法41条・69条）。ただし一括選択が原則であり、一部を控除・一部を損金算入とすることは認められない。</p>
+
+<figure>
+<svg viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg">
+<rect x="5" y="5" width="890" height="290" rx="10" fill="#f7fafc" stroke="#cbd5e0"/>
+<text x="450" y="35" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a365d">【図6】外国税額控除 vs 損金算入の比較（外国税100万円の場合）</text>
+
+<!-- 外国税額控除 -->
+<g transform="translate(50,55)">
+<rect x="0" y="0" width="370" height="220" rx="8" fill="#f0fff4" stroke="#276749" stroke-width="2"/>
+<text x="185" y="28" text-anchor="middle" font-size="14" font-weight="bold" fill="#276749">外国税額控除を選択</text>
+
+<rect x="20" y="45" width="330" height="35" rx="4" fill="#fff" stroke="#276749"/>
+<text x="185" y="68" text-anchor="middle" font-size="11" fill="#4a5568">外国税100万円 → 法人税額から<strong>直接控除</strong></text>
+
+<rect x="20" y="95" width="330" height="35" rx="4" fill="#c6f6d5"/>
+<text x="185" y="118" text-anchor="middle" font-size="13" font-weight="bold" fill="#276749">減税効果：100万円</text>
+
+<text x="20" y="155" font-size="10" fill="#4a5568">メリット：税額を直接減少（効果大）</text>
+<text x="20" y="173" font-size="10" fill="#4a5568">デメリット：計算複雑、申告書別表作成要</text>
+<text x="20" y="195" font-size="10" fill="#276749" font-weight="bold">一般的にはこちらが有利</text>
+</g>
+
+<!-- 損金算入 -->
+<g transform="translate(480,55)">
+<rect x="0" y="0" width="370" height="220" rx="8" fill="#fff5f5" stroke="#c53030" stroke-width="2"/>
+<text x="185" y="28" text-anchor="middle" font-size="14" font-weight="bold" fill="#c53030">損金算入を選択</text>
+
+<rect x="20" y="45" width="330" height="35" rx="4" fill="#fff" stroke="#c53030"/>
+<text x="185" y="68" text-anchor="middle" font-size="11" fill="#4a5568">外国税100万円 → 課税所得から<strong>費用控除</strong></text>
+
+<rect x="20" y="95" width="330" height="35" rx="4" fill="#fed7d7"/>
+<text x="185" y="118" text-anchor="middle" font-size="13" font-weight="bold" fill="#c53030">減税効果：約30万円（100 x 30%）</text>
+
+<text x="20" y="155" font-size="10" fill="#4a5568">メリット：計算簡単、少額の場合に便利</text>
+<text x="20" y="173" font-size="10" fill="#4a5568">デメリット：減税効果が「税率分」に留まる</text>
+<text x="20" y="195" font-size="10" fill="#c53030">有利なケース：限度額超過/繰越不可/高率部分</text>
+</g>
+</svg>
+<figcaption>【図6】外国税額控除 vs 損金算入 ─ 100万円の外国税に対する効果比較</figcaption>
+</figure>
+</section>
+
+<!-- ===== Section 7: みなし外国税額控除 ===== -->
+<section id="s7">
+<h2>7. みなし外国税額控除（タックススペアリング）</h2>
+
+<h3>7.1 制度の趣旨</h3>
+<p>みなし外国税額控除（Tax Sparing Credit）は、<strong>租税条約の特別規定</strong>に基づく制度であり、国内法（法人税法）には直接の根拠規定はない。開発途上国が外国投資を誘致するために設けた租税優遇措置の効果が、日本の外国税額控除によって「吸い上げられる」ことを防止する目的で設けられている。</p>
+
+<div class="core">
+<div class="core-title">みなし外国税額控除の本質</div>
+<p>開発途上国で<strong>実際には納めていない税金</strong>（優遇措置により免除された部分）を、<strong>「納めたものとみなして」</strong>外国税額控除の対象とする。これにより、優遇措置の恩恵が日本企業に残り、開発途上国の投資誘致政策が「生きる」。</p>
+</div>
+
+<h3>7.2 通常の外国税額控除との対比</h3>
+
+<figure>
+<svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<filter id="sh2"><feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.1"/></filter>
+</defs>
+<rect x="5" y="5" width="890" height="510" rx="10" fill="#f7fafc" stroke="#cbd5e0"/>
+<text x="450" y="38" text-anchor="middle" font-size="17" font-weight="bold" fill="#1a365d">【図7】通常の外国税額控除 vs みなし外国税額控除</text>
+<text x="450" y="58" text-anchor="middle" font-size="11" fill="#718096">前提：中国での所得1,000万円、通常税率25%、優遇税率15%、日本税率23.2%</text>
+
+<!-- 左：タックススペアリングなし -->
+<g transform="translate(30,75)">
+<rect x="0" y="0" width="400" height="410" rx="10" fill="#fff5f5" stroke="#c53030" stroke-width="2" filter="url(#sh2)"/>
+<text x="200" y="30" text-anchor="middle" font-size="14" font-weight="bold" fill="#c53030">通常の外国税額控除のみ</text>
+
+<!-- 中国 -->
+<rect x="20" y="50" width="360" height="90" rx="6" fill="#fed7d7"/>
+<text x="200" y="75" text-anchor="middle" font-size="12" font-weight="bold" fill="#c53030">中国（源泉地国）</text>
+<text x="30" y="98" font-size="11" fill="#4a5568">通常税率25% → 優遇税率15%に軽減</text>
+<text x="30" y="118" font-size="12" font-weight="bold" fill="#c53030">実際の納税：1,000 x 15% = 150万円</text>
+<text x="30" y="135" font-size="10" fill="#718096">（100万円分の税負担を免除）</text>
+
+<!-- 日本 -->
+<rect x="20" y="160" width="360" height="120" rx="6" fill="#fefcbf"/>
+<text x="200" y="185" text-anchor="middle" font-size="12" font-weight="bold" fill="#744210">日本（居住地国）</text>
+<text x="30" y="210" font-size="11" fill="#4a5568">日本の法人税額：1,000 x 23.2% = 232万円</text>
+<text x="30" y="230" font-size="11" fill="#4a5568">外国税額控除：150万円（実際納付額のみ）</text>
+<text x="30" y="250" font-size="12" font-weight="bold" fill="#c53030">日本での追加納税：232 - 150 = 82万円</text>
+<text x="30" y="270" font-size="10" fill="#c53030">← 中国の優遇100万円のうち82万円が日本に「吸い上げ」</text>
+
+<!-- 結果 -->
+<rect x="20" y="295" width="360" height="55" rx="6" fill="#c53030"/>
+<text x="200" y="320" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">合計税負担：232万円</text>
+<text x="200" y="340" text-anchor="middle" font-size="10" fill="#ffd7d7">中国150 + 日本82 = 優遇効果わずか18万円</text>
+
+<rect x="20" y="365" width="360" height="30" rx="4" fill="#fff5f5" stroke="#c53030"/>
+<text x="200" y="385" text-anchor="middle" font-size="10" fill="#c53030">優遇メリット = 250-232 = 18万円しか残らない</text>
+</g>
+
+<!-- 右：タックススペアリングあり -->
+<g transform="translate(470,75)">
+<rect x="0" y="0" width="400" height="410" rx="10" fill="#f0fff4" stroke="#276749" stroke-width="2" filter="url(#sh2)"/>
+<text x="200" y="30" text-anchor="middle" font-size="14" font-weight="bold" fill="#276749">みなし外国税額控除あり</text>
+
+<!-- 中国 -->
+<rect x="20" y="50" width="360" height="90" rx="6" fill="#c6f6d5"/>
+<text x="200" y="75" text-anchor="middle" font-size="12" font-weight="bold" fill="#276749">中国（源泉地国）</text>
+<text x="30" y="98" font-size="11" fill="#4a5568">通常税率25% → 優遇税率15%に軽減</text>
+<text x="30" y="118" font-size="12" font-weight="bold" fill="#276749">実際の納税：1,000 x 15% = 150万円</text>
+<text x="30" y="135" font-size="10" fill="#276749">（100万円分は「みなし」で控除）</text>
+
+<!-- 日本 -->
+<rect x="20" y="160" width="360" height="120" rx="6" fill="#d1fae5"/>
+<text x="200" y="185" text-anchor="middle" font-size="12" font-weight="bold" fill="#276749">日本（居住地国）</text>
+<text x="30" y="210" font-size="11" fill="#4a5568">日本の法人税額：1,000 x 23.2% = 232万円</text>
+<text x="30" y="230" font-size="11" fill="#4a5568">みなし外国税額控除：250万円（通常税率で計算）</text>
+<text x="30" y="250" font-size="12" font-weight="bold" fill="#276749">日本での追加納税：0円</text>
+<text x="30" y="270" font-size="10" fill="#276749">← 中国の優遇がそのまま企業に残る</text>
+
+<!-- 結果 -->
+<rect x="20" y="295" width="360" height="55" rx="6" fill="#276749"/>
+<text x="200" y="320" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">合計税負担：150万円</text>
+<text x="200" y="340" text-anchor="middle" font-size="10" fill="#d1fae5">中国150 + 日本0 = 優遇効果100万円がフルに残る</text>
+
+<rect x="20" y="365" width="360" height="30" rx="4" fill="#f0fff4" stroke="#276749"/>
+<text x="200" y="385" text-anchor="middle" font-size="10" fill="#276749">優遇メリット = 250-150 = 100万円（全額温存）</text>
+</g>
+</svg>
+<figcaption>【図7】通常の外国税額控除 vs みなし外国税額控除 ─ 日中間の具体的計算比較</figcaption>
+</figure>
+
+<h3>7.3 日本の締結国一覧（6か国）</h3>
+<table>
+<tr><th>国名</th><th>条約発効年</th><th>みなし税率</th><th>対象所得</th><th>備考</th></tr>
+<tr><td><strong>中国</strong></td><td>1984年</td><td>通常税率（25%）</td><td>配当/利子/使用料</td><td>日本企業の主要投資先</td></tr>
+<tr><td><strong>タイ</strong></td><td>1963年（改正1990年）</td><td>20%</td><td>配当/利子/使用料</td><td>BOI認定企業への優遇</td></tr>
+<tr><td><strong>ブラジル</strong></td><td>1967年</td><td>25%</td><td>配当/利子/使用料</td><td>みなし利益課税との関係</td></tr>
+<tr><td><strong>バングラデシュ</strong></td><td>1991年</td><td>15%</td><td>配当/利子/使用料</td><td>経済特区での優遇</td></tr>
+<tr><td><strong>スリランカ</strong></td><td>1967年</td><td>条約上限税率</td><td>配当/利子/使用料</td><td></td></tr>
+<tr><td><strong>ザンビア</strong></td><td>1971年</td><td>条約上限税率</td><td>配当/利子/使用料</td><td></td></tr>
+</table>
+
+<div class="warn">
+<strong>廃止された主要国</strong><br>
+韓国（1999年）、シンガポール（2010年）、マレーシア（1999年）、インドネシア（1982年）、フィリピン（2008年）、インド（2006年）はいずれも条約改正により<strong>タックススペアリング条項を廃止</strong>している。経済発展を遂げた国では制度の必要性が薄れたことが背景。
+</div>
+
+<h3>7.4 日中租税条約の規定</h3>
+<div class="law">
+<strong>日中租税条約第23条（要約）</strong><br>
+日本の居住者が中国から取得する所得について、中国の法令により租税の<strong>軽減又は免除</strong>を受けた場合には、当該軽減又は免除がなかったとしたならば中国において<strong>納付すべきであった租税の額</strong>を、中国において納付したものとみなす。
+<div class="law-ref">日中租税条約23条（要旨）</div>
+</div>
+</section>
+
+<!-- ===== Section 8: 両制度の関係と計算フロー ===== -->
+<section id="s8">
+<h2>8. 両制度の関係と計算フロー</h2>
+
+<figure>
+<svg viewBox="0 0 900 650" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<marker id="e1" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#1a365d"/></marker>
+<marker id="e2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#276749"/></marker>
+<marker id="e3" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#6b46c1"/></marker>
+</defs>
+<rect x="5" y="5" width="890" height="640" rx="10" fill="#f7fafc" stroke="#cbd5e0"/>
+<text x="450" y="38" text-anchor="middle" font-size="17" font-weight="bold" fill="#1a365d">【図8】外国税額控除の統合計算フローチャート</text>
+<text x="450" y="58" text-anchor="middle" font-size="11" fill="#718096">通常の外国税額控除 + みなし外国税額控除を統合した実務フロー</text>
+
+<!-- Step 1 -->
+<rect x="300" y="75" width="300" height="45" rx="22" fill="#1a365d"/>
+<text x="450" y="103" text-anchor="middle" font-size="13" fill="#fff" font-weight="bold">START: 外国で所得を稼得</text>
+
+<line x1="450" y1="120" x2="450" y2="150" stroke="#1a365d" stroke-width="2" marker-end="url(#e1)"/>
+
+<!-- Step 2 -->
+<polygon points="450,155 580,195 450,235 320,195" fill="#ebf8ff" stroke="#2b6cb0" stroke-width="2"/>
+<text x="450" y="190" text-anchor="middle" font-size="11" fill="#1a365d">タックススペアリング</text>
+<text x="450" y="207" text-anchor="middle" font-size="11" fill="#1a365d">対象条約ありか？</text>
+
+<!-- Yes -->
+<line x1="580" y1="195" x2="720" y2="195" stroke="#6b46c1" stroke-width="2" marker-end="url(#e3)"/>
+<text x="640" y="187" font-size="10" fill="#6b46c1" font-weight="bold">YES</text>
+<rect x="725" y="165" width="150" height="60" rx="6" fill="#e9d8fd" stroke="#6b46c1" stroke-width="2"/>
+<text x="800" y="188" text-anchor="middle" font-size="11" font-weight="bold" fill="#6b46c1">みなし税額を計算</text>
+<text x="800" y="208" text-anchor="middle" font-size="9" fill="#6b46c1">所得 x みなし税率</text>
+<text x="800" y="222" text-anchor="middle" font-size="9" fill="#6b46c1">（条約規定の税率）</text>
+
+<!-- No -->
+<line x1="450" y1="235" x2="450" y2="265" stroke="#276749" stroke-width="2" marker-end="url(#e2)"/>
+<text x="465" y="255" font-size="10" fill="#276749" font-weight="bold">NO</text>
+
+<!-- みなし税額の合流 -->
+<line x1="800" y1="225" x2="800" y2="280" stroke="#6b46c1" stroke-width="1.5"/>
+<line x1="800" y1="280" x2="520" y2="280" stroke="#6b46c1" stroke-width="1.5" marker-end="url(#e3)"/>
+
+<!-- Step 3 -->
+<rect x="300" y="270" width="300" height="50" rx="8" fill="#ebf8ff" stroke="#2b6cb0" stroke-width="2"/>
+<text x="450" y="293" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a365d">控除対象外国法人税額の確定</text>
+<text x="450" y="311" text-anchor="middle" font-size="9" fill="#718096">実際納付額 or みなし税額（施行令141条で判定、35%超除外）</text>
+
+<line x1="450" y1="320" x2="450" y2="345" stroke="#1a365d" stroke-width="2" marker-end="url(#e1)"/>
+
+<!-- Step 4 -->
+<rect x="300" y="350" width="300" height="50" rx="8" fill="#ebf8ff" stroke="#2b6cb0" stroke-width="2"/>
+<text x="450" y="373" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a365d">控除限度額の計算</text>
+<text x="450" y="391" text-anchor="middle" font-size="9" fill="#718096">法人税額 x（国外所得 / 全世界所得）</text>
+
+<line x1="450" y1="400" x2="450" y2="425" stroke="#1a365d" stroke-width="2" marker-end="url(#e1)"/>
+
+<!-- Step 5 -->
+<rect x="300" y="430" width="300" height="45" rx="8" fill="#fefcbf" stroke="#d69e2e" stroke-width="2"/>
+<text x="450" y="453" text-anchor="middle" font-size="12" font-weight="bold" fill="#744210">MIN（控除対象税額, 控除限度額）</text>
+<text x="450" y="468" text-anchor="middle" font-size="9" fill="#718096">+ 前期繰越余裕額・超過額の調整</text>
+
+<line x1="450" y1="475" x2="450" y2="500" stroke="#1a365d" stroke-width="2" marker-end="url(#e1)"/>
+
+<!-- 分岐 -->
+<line x1="450" y1="500" x2="200" y2="530" stroke="#276749" stroke-width="2" marker-end="url(#e2)"/>
+<line x1="450" y1="500" x2="450" y2="530" stroke="#1a365d" stroke-width="2" marker-end="url(#e1)"/>
+<line x1="450" y1="500" x2="700" y2="530" stroke="#c53030" stroke-width="2"/>
+
+<!-- 結果ボックス -->
+<rect x="80" y="535" width="240" height="85" rx="8" fill="#c6f6d5" stroke="#276749" stroke-width="2"/>
+<text x="200" y="560" text-anchor="middle" font-size="12" font-weight="bold" fill="#276749">控除額を確定</text>
+<text x="200" y="582" text-anchor="middle" font-size="10" fill="#4a5568">法人税額から控除</text>
+<text x="200" y="600" text-anchor="middle" font-size="10" fill="#4a5568">申告書別表六(二)等に記載</text>
+
+<rect x="330" y="535" width="240" height="85" rx="8" fill="#ebf8ff" stroke="#2b6cb0" stroke-width="2"/>
+<text x="450" y="560" text-anchor="middle" font-size="12" font-weight="bold" fill="#2b6cb0">余裕額/超過額</text>
+<text x="450" y="582" text-anchor="middle" font-size="10" fill="#4a5568">翌期以降3年繰越</text>
+<text x="450" y="600" text-anchor="middle" font-size="10" fill="#4a5568">（法69条5-8項）</text>
+
+<rect x="580" y="535" width="240" height="85" rx="8" fill="#fed7d7" stroke="#c53030" stroke-width="2"/>
+<text x="700" y="560" text-anchor="middle" font-size="12" font-weight="bold" fill="#c53030">高率部分・控除不能分</text>
+<text x="700" y="582" text-anchor="middle" font-size="10" fill="#4a5568">損金算入を検討</text>
+<text x="700" y="600" text-anchor="middle" font-size="10" fill="#4a5568">（法人税法41条）</text>
+</svg>
+<figcaption>【図8】外国税額控除の統合計算フロー ─ 通常控除とみなし控除を含む実務手順</figcaption>
+</figure>
+</section>
+
+<!-- ===== Section 9: 実務上の論点 ===== -->
+<section id="s9">
+<h2>9. 実務上の論点と近年の動向</h2>
+
+<h3>9.1 外国子会社配当益金不算入制度との関係</h3>
+<p>2009年の税制改正により導入された<strong>外国子会社配当益金不算入制度</strong>（法人税法23条の2）は、25%以上保有の外国子会社からの配当の95%を益金不算入とする。この場合、配当に対応する外国源泉税は外国税額控除の<strong>対象外</strong>となる。益金に算入されない所得に対応する外国税は、二重課税が生じていないため控除する必要がないという論理に基づく。</p>
+
+<h3>9.2 CFC税制との交錯</h3>
+<p>CFC税制（措置法66条の6〜9）により合算課税された所得については、その合算所得に対応する外国法人税額を外国税額控除の対象とすることができる（措置法66条の7）。タックススペアリングとCFC税制は独立した制度であり、みなし外国税額控除を受けていても、<strong>租税負担割合</strong>（措置法66条の6第2項1号）の判定では実際の税負担で計算するため、CFC税制の適用対象となる可能性がある。</p>
+
+<h3>9.3 タックススペアリング縮小の背景</h3>
+<table>
+<tr><th>要因</th><th>内容</th></tr>
+<tr><td><strong>OECDの慎重姿勢</strong></td><td>1998年レポートで投資促進効果の実証性・租税回避リスクを指摘</td></tr>
+<tr><td><strong>開発途上国の経済発展</strong></td><td>韓国/シンガポール等が先進国水準に到達 → 制度の必要性低下</td></tr>
+<tr><td><strong>BEPSプロジェクト</strong></td><td>租税回避防止の国際的取組。実質的経済活動を伴わない優遇への懸念</td></tr>
+<tr><td><strong>二重非課税の問題</strong></td><td>源泉地国でも居住地国でも課税されない状態の発生</td></tr>
+<tr><td><strong>GloBEルール</strong></td><td>最低税率15%の導入により、過度な税優遇を設ける意義が低下</td></tr>
+</table>
+
+<h3>9.4 一括限度額方式の特徴</h3>
+<p>日本は1988年以降、<strong>一括限度額方式</strong>（全ての国の所得を合算して控除限度額を計算）を採用している。これにより、高税率国の超過額を低税率国の余裕額で相殺できる（クロスクレジット効果）。ただし、この方式は「彼此流用」の問題を内包しており、企業のタックスプランニングの対象となりやすい。</p>
+
+<div class="ok">
+<strong>制度のまとめ</strong><br>
+外国税額控除制度は、法人税法69条を中核に、施行令141条〜142条の2で外国法人税の範囲・控除限度額・高率部分除外を規定し、租税条約でみなし外国税額控除を上乗せするという<strong>多層的な構造</strong>を持つ。実務上は、外国子会社配当益金不算入制度・CFC税制・租税条約の源泉税率軽減と組み合わせて、国際税務全体の中で最適化を図る必要がある。
+</div>
+</section>
+
+<hr style="margin-top:40px;border:none;border-top:2px solid var(--main);">
+<p style="text-align:center;color:#718096;font-size:0.85rem;margin-top:16px;">
+外国税額控除及びみなし外国税額控除の仕組み ─ 条文ベース徹底解説 | 2026-03-06作成<br>
+法人税法69条・法人税法施行令141条〜142条の2・日中租税条約23条等に基づく
+</p>
+
+</div>
+</body>
+</html>
