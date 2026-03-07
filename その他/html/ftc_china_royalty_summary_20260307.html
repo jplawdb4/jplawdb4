@@ -3,143 +3,308 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>日中使用料20%みなし外国税額控除 summary版 ── 元レポートの分析と再構成 | jplawdb4</title>
+<title>日中使用料20%みなし外国税額控除 summary決定版 ── 条約根拠・申告要件・77_21/77_22の分水嶺 | jplawdb4</title>
 <style>
   :root {
-    --ink: #21313f;
-    --blue: #1e4768;
-    --blue2: #3f6f93;
-    --gold: #9b7322;
-    --red: #a33f34;
-    --bg: #f4f7fb;
-    --card: #ffffff;
-    --line: #d6e0ea;
-    --soft: #edf4fa;
-    --note: #fff7dd;
-    --ok: #e6f2e6;
-    --warn: #fbe4df;
+    --ink: #22313f;
+    --navy: #16354f;
+    --blue: #2d638c;
+    --blue-soft: #eef4fa;
+    --gold: #9d7624;
+    --gold-soft: #fff7e0;
+    --green: #1f6a48;
+    --green-soft: #ecf7f0;
+    --red: #a93d35;
+    --red-soft: #fbe7e4;
+    --paper: #ffffff;
+    --bg: #f3f6fa;
+    --line: #d8e0e8;
     --muted: #617181;
+    --shadow: 0 10px 30px rgba(20, 40, 60, 0.08);
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    background: var(--bg);
+    background:
+      radial-gradient(circle at top left, rgba(45, 99, 140, 0.08), transparent 28%),
+      linear-gradient(180deg, #f7f9fc 0%, var(--bg) 100%);
     color: var(--ink);
     font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
     font-size: 16px;
-    line-height: 1.9;
+    line-height: 1.95;
   }
-  a { color: var(--blue2); }
+  a { color: var(--blue); }
   .hero {
-    background: linear-gradient(135deg, #163753, #456f90 58%, #8c9aa7);
+    background:
+      linear-gradient(130deg, rgba(22, 53, 79, 0.96), rgba(46, 95, 131, 0.94) 56%, rgba(119, 135, 150, 0.92)),
+      #18344f;
     color: #fff;
-    padding: 58px 24px 44px;
-    border-radius: 0 0 16px 16px;
+    padding: 64px 24px 52px;
+    border-radius: 0 0 18px 18px;
+    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.06);
   }
-  .hero-inner, .container {
-    max-width: 1040px;
+  .hero-inner,
+  .page {
+    max-width: 1080px;
     margin: 0 auto;
   }
   .eyebrow {
+    display: inline-block;
+    padding: 4px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 999px;
+    font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
     font-size: 12px;
-    letter-spacing: 2px;
+    letter-spacing: 1.4px;
     text-transform: uppercase;
-    opacity: .8;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
+    opacity: 0.92;
   }
   h1 {
-    margin: 0 0 16px;
-    font-size: 2.05rem;
-    line-height: 1.45;
+    margin: 0 0 18px;
+    font-size: 2.2rem;
+    line-height: 1.42;
+    letter-spacing: 0.02em;
   }
-  .subtitle {
-    max-width: 930px;
-    font-size: 1rem;
-    opacity: .94;
+  .dek {
+    max-width: 940px;
+    font-size: 1.03rem;
+    opacity: 0.95;
   }
-  .meta {
+  .hero-meta {
     display: flex;
     flex-wrap: wrap;
-    gap: 18px;
-    margin-top: 18px;
-    font-size: .84rem;
-    opacity: .84;
+    gap: 12px;
+    margin-top: 22px;
   }
-  .container { padding: 28px 18px 72px; }
-  .toc, .card, .statute, .matrix, .source-box {
-    background: var(--card);
+  .meta-chip {
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+    font-size: 0.82rem;
+  }
+  .page { padding: 24px 18px 84px; }
+  .panel,
+  .toc,
+  .section-card,
+  .law-box,
+  .source-box {
+    background: var(--paper);
     border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 20px 22px;
-    margin: 18px 0;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, .04);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
   }
-  .toc { border-left: 6px solid var(--blue2); }
-  .note { background: var(--note); }
-  .ok { background: var(--ok); }
-  .warn { background: var(--warn); }
-  .statute {
-    background: #fffaf1;
-    border-color: #efcf95;
+  .panel,
+  .toc,
+  .section-card,
+  .source-box {
+    padding: 24px 26px;
+    margin: 18px 0;
+  }
+  .thesis-panel {
+    margin-top: -30px;
+    position: relative;
+    z-index: 2;
+    padding: 24px 26px 22px;
+    background: linear-gradient(180deg, #ffffff 0%, #f9fbfd 100%);
+  }
+  .thesis-head {
+    font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+    font-size: 0.86rem;
+    font-weight: 700;
+    color: var(--blue);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .thesis-list {
+    margin: 0;
+    padding-left: 1.4rem;
+  }
+  .thesis-list li {
+    margin: 8px 0;
+  }
+  .toc {
+    border-left: 6px solid var(--blue);
+  }
+  .toc h3,
+  .section-card h3 {
+    margin-top: 0;
   }
   h2 {
-    margin: 56px 0 18px;
-    font-size: 1.5rem;
-    color: var(--blue);
-    border-bottom: 3px solid var(--blue2);
+    margin: 58px 0 18px;
+    font-size: 1.58rem;
+    line-height: 1.45;
+    color: var(--navy);
+    border-bottom: 3px solid var(--blue);
     padding-bottom: 8px;
   }
   h3 {
-    margin: 26px 0 12px;
-    font-size: 1.1rem;
-    color: var(--blue2);
-    border-left: 4px solid var(--blue2);
+    margin: 28px 0 12px;
+    font-size: 1.12rem;
+    color: var(--blue);
+    border-left: 4px solid var(--blue);
     padding-left: 10px;
   }
-  p { margin: 0 0 14px; text-align: justify; }
-  ul, ol { margin: 10px 0 14px 24px; }
-  li { margin-bottom: 8px; }
-  .summary-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-    gap: 14px;
-    margin-top: 18px;
+  p {
+    margin: 0 0 14px;
+    text-align: justify;
   }
-  .summary-item {
-    background: #f8fbff;
-    border: 1px solid #d8e7f4;
-    border-radius: 8px;
+  ul,
+  ol {
+    margin: 10px 0 14px 24px;
+  }
+  li {
+    margin-bottom: 8px;
+  }
+  .grid-3,
+  .grid-2 {
+    display: grid;
+    gap: 16px;
+    margin: 18px 0;
+  }
+  .grid-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .grid-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .mini-card {
+    background: linear-gradient(180deg, #fbfdff 0%, #f5f9fc 100%);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 18px 18px 16px;
+  }
+  .mini-title {
+    font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .law-box {
+    padding: 18px 20px;
+    margin: 18px 0;
+    background: linear-gradient(180deg, #fffaf2 0%, #fffdf8 100%);
+    border-color: #ecd39d;
+  }
+  .law-label {
+    display: inline-block;
+    margin-bottom: 8px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: #f7ead0;
+    color: #7a5812;
+    font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+  .callout {
+    padding: 18px 20px;
+    border-radius: 12px;
+    margin: 18px 0;
+    border: 1px solid var(--line);
+  }
+  .callout.blue { background: var(--blue-soft); border-color: #d6e4ef; }
+  .callout.green { background: var(--green-soft); border-color: #cde5d6; }
+  .callout.red { background: var(--red-soft); border-color: #edc8c3; }
+  .callout.gold { background: var(--gold-soft); border-color: #e8d39a; }
+  .callout-title {
+    font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .ladder {
+    margin: 22px 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ladder li {
+    position: relative;
+    padding: 0 0 18px 64px;
+    margin: 0;
+  }
+  .ladder li:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    left: 23px;
+    top: 34px;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, rgba(45, 99, 140, 0.35), rgba(45, 99, 140, 0.08));
+  }
+  .ladder-num {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--navy), var(--blue));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+    font-weight: 700;
+  }
+  .ladder-body {
+    background: #fcfdff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
     padding: 16px 18px;
   }
-  .summary-item .num {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--blue);
-    margin-bottom: 4px;
-  }
-  .summary-item .desc {
-    font-size: .92rem;
-    color: var(--muted);
-  }
+  .ladder-body strong { color: var(--navy); }
   table {
     width: 100%;
     border-collapse: collapse;
     margin: 16px 0;
-    font-size: .93rem;
+    font-size: 0.93rem;
   }
-  th, td {
+  th,
+  td {
     border: 1px solid var(--line);
     padding: 10px 12px;
     text-align: left;
     vertical-align: top;
   }
   th {
-    background: #edf3fa;
-    color: var(--blue);
+    background: #edf3f8;
+    color: var(--navy);
+    font-weight: 700;
   }
-  .src, .small {
-    color: var(--muted);
-    font-size: .9rem;
+  tr:nth-child(even) td {
+    background: #fbfdff;
+  }
+  .tight td:first-child,
+  .tight th:first-child {
+    white-space: nowrap;
+  }
+  .bundle-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin: 18px 0;
+  }
+  .bundle {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 18px 18px 16px;
+    background: linear-gradient(180deg, #ffffff 0%, #f9fbfd 100%);
+  }
+  .bundle-tag {
+    display: inline-block;
+    margin-bottom: 10px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--navy);
+    color: #fff;
+    font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+    font-size: 0.76rem;
+    font-weight: 700;
   }
   .checklist {
     list-style: none;
@@ -147,191 +312,454 @@
     padding-left: 0;
   }
   .checklist li {
-    padding-left: 1.8em;
     position: relative;
+    padding-left: 1.8em;
   }
   .checklist li::before {
     content: "□";
     position: absolute;
     left: 0;
     top: 0;
-    color: var(--blue2);
+    color: var(--blue);
+    font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+    font-weight: 700;
+  }
+  .small {
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  .source-box ul {
+    margin-bottom: 0;
+  }
+  footer {
+    margin-top: 56px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  @media (max-width: 900px) {
+    .grid-3,
+    .bundle-grid {
+      grid-template-columns: 1fr;
+    }
+    .grid-2 {
+      grid-template-columns: 1fr;
+    }
   }
   @media (max-width: 760px) {
     body { font-size: 15px; }
-    h1 { font-size: 1.65rem; }
-    .container { padding: 22px 12px 52px; }
-    .summary-grid { grid-template-columns: 1fr; }
-    table { font-size: .87rem; }
+    .hero { padding: 48px 16px 40px; }
+    .page { padding: 18px 12px 56px; }
+    h1 { font-size: 1.74rem; }
+    h2 { font-size: 1.36rem; }
+    .panel,
+    .toc,
+    .section-card,
+    .source-box,
+    .thesis-panel { padding: 18px 16px; }
+    table { font-size: 0.86rem; }
+    .ladder li { padding-left: 56px; }
+    .ladder-num { width: 40px; height: 40px; }
   }
 </style>
 </head>
 <body>
 <header class="hero">
   <div class="hero-inner">
-    <div class="eyebrow">Summary Reconstruction</div>
-    <h1>日中使用料20%みなし外国税額控除 summary版<br>── 元レポートの分析と再構成</h1>
-    <p class="subtitle">元の統合完全版は、条文、改正史、裁決判例、実務証拠束、救済論までを一つの長大なリビングノートに統合したものだった。本summary版では、その中核論理だけを抽出し、結論先行で「なぜ20%なのか」「何を申告時に外形化すべきか」「どこで勝敗が分かれるか」を実務順に再構成する。</p>
-    <div class="meta">
-      <span>作成日: 2026-03-07</span>
-      <span>ベース文書: ftc_china_royalty_master_20260307.html</span>
-      <span>主論点: 日中条約23条3(c) / 法人税法69条25項 / 規29条の4 / 省令10条 / 77_21 / 77_22</span>
+    <div class="eyebrow">Zero-Base Reconstruction</div>
+    <h1>日中使用料20%みなし外国税額控除 summary決定版<br>── 条約根拠・申告要件・77_21/77_22の分水嶺</h1>
+    <p class="dek">このページは、元の統合完全版を短く言い換えたものではない。元ページに含まれていた論点をいったん分解し、「なぜ20%なのか」「なぜ中国10%の資料だけでは足りないのか」「なぜ勝敗が申告時の外形形成で決まるのか」を、法的構造が一目で見える順番に組み直したゼロベース再構成版である。</p>
+    <div class="hero-meta">
+      <span class="meta-chip">作成日: 2026-03-07</span>
+      <span class="meta-chip">ベース文書: ftc_china_royalty_master_20260307.html</span>
+      <span class="meta-chip">中心資料: 日中租税条約23条 / 法人税法69条25項 / 規29条の4 / 省令10条 / 77_21 / 77_22 / 東京高裁13633</span>
     </div>
   </div>
 </header>
 
-<main class="container">
-  <section class="toc">
-    <h3>目次</h3>
-    <ol>
-      <li><a href="#sec1">再構成後の結論</a></li>
-      <li><a href="#sec2">元ページの分析結果</a></li>
-      <li><a href="#sec3">20%みなしの法的骨格</a></li>
-      <li><a href="#sec4">申告で問われる三層構造</a></li>
-      <li><a href="#sec5">77_21 / 77_22 / サンリオ高裁の意味</a></li>
-      <li><a href="#sec6">実務用チェックリスト</a></li>
-      <li><a href="#sec7">参照元と位置づけ</a></li>
+<main class="page">
+  <section class="panel thesis-panel">
+    <div class="thesis-head">結論を先に</div>
+    <ol class="thesis-list">
+      <li>通常の中国使用料案件で日本側20%みなしを支える主位根拠は、<strong>日中租税条約23条3(c)</strong>である。23条4は通常案件の主戦場ではなく、歴史的・補充的ルートとして扱うのが安定する。</li>
+      <li>本件の本当の難所は、<strong>中国で見える10%の実税</strong>と、<strong>日本で控除に入れたい20%のみなし税額</strong>のあいだを、申告書添付束の中でどう橋渡ししたかにある。</li>
+      <li>77_21、77_22、東京高裁13633が共通して示すのは、条約や制度の存在そのものより、<strong>当初申告で選択・対象・計算骨格が外形化されていたか</strong>が勝敗を分けるという一点である。</li>
     </ol>
   </section>
 
-  <section id="sec1" class="card ok">
-    <h2>1. 再構成後の結論</h2>
-    <p>元ページの全体を要約すると、実務上の核心は五つに尽きる。第一に、日本側で20%みなしを説明する主位根拠は、通常案件では日中租税条約23条3(c)である。第二に、中国側で見える実税率10%と、日本側で控除に入れたい20%とのズレは、条約上の擬制で説明するしかない。第三に、条約上の根拠があっても、法人税申告の可否は別問題であり、69条25項、規29条の4、省令10条が支配する。第四に、勝敗は「当初申告時にみなし部分の存在と計算骨格が外形化されていたか」でほぼ決まる。第五に、争点は税率論より手続論で噛まれやすい。</p>
-    <div class="summary-grid">
-      <div class="summary-item"><div class="num">1</div><div class="desc">20%みなしの中核根拠は、通常案件では23条4ではなく23条3(c)。</div></div>
-      <div class="summary-item"><div class="num">2</div><div class="desc">中国実税10%だけでは足りず、日本側で追加10%のブリッジ資料が要る。</div></div>
-      <div class="summary-item"><div class="num">3</div><div class="desc">別表六を出しただけでは不十分で、省令10条の内容が添付束に読める必要がある。</div></div>
-      <div class="summary-item"><div class="num">4</div><div class="desc">77_21型は訂正余地、77_22型は後出し否認の典型として読むべき。</div></div>
-      <div class="summary-item"><div class="num">5</div><div class="desc">最適解は、申告時点で条約根拠メモ、計算明細、中国側証憑の束を明示すること。</div></div>
-    </div>
+  <section class="toc">
+    <h3>目次</h3>
+    <ol>
+      <li><a href="#sec1">元ページを読み解くための三つの混線</a></li>
+      <li><a href="#sec2">ゼロベースで組み直した法的骨格</a></li>
+      <li><a href="#sec3">なぜみなしFTCだけ文書化が重いのか</a></li>
+      <li><a href="#sec4">77_21・77_22・東京高裁13633の再配置</a></li>
+      <li><a href="#sec5">申告束をどう設計すべきか</a></li>
+      <li><a href="#sec6">最終結論とソース</a></li>
+    </ol>
   </section>
 
-  <section id="sec2">
-    <h2>2. 元ページの分析結果</h2>
-    <p>元ページは、単なるFAQではなく、条文解釈メモ、更新ログ、判例ノート、実務手順書、資料編を一つに畳み込んだ「統合母艦」だった。情報量は非常に多いが、論理の中心線は明確である。すなわち、<strong>条約で利益があること</strong>、<strong>国内法手続でその利益を主張できること</strong>、<strong>その主張を証拠化できること</strong>の三層が揃って初めて20%みなしが生きる、という構造である。</p>
-    <table>
+  <section id="sec1" class="section-card">
+    <h2>1. 元ページを読み解くための三つの混線</h2>
+    <p>元ページが長大になったのは、情報量が多いからだけではない。もともと別の問いである三つの問題が、一つの文章の中で連続して扱われていたからである。本summary版では、まずその混線を解くところから始める。</p>
+
+    <div class="grid-3">
+      <div class="mini-card">
+        <div class="mini-title">混線 1: 条約根拠の問題</div>
+        <p>日本で20%みなしが成り立つのは、どの条文が中心なのか。ここでは<strong>23条3(c)</strong>と<strong>23条4</strong>の役割を切り分ける必要がある。</p>
+      </div>
+      <div class="mini-card">
+        <div class="mini-title">混線 2: 税率の問題</div>
+        <p>中国側で実際に見える税率は10%であることが多い。他方で日本では20%を控除計算に入れたい。このズレをどう説明するかが核心になる。</p>
+      </div>
+      <div class="mini-card">
+        <div class="mini-title">混線 3: 手続の問題</div>
+        <p>条約上20%になり得ることと、申告上その20%を適法に主張できることは別問題である。ここは<strong>69条25項、規29条の4、省令10条</strong>が支配する。</p>
+      </div>
+    </div>
+
+    <table class="tight">
       <thead>
-        <tr><th>元ページの層</th><th>役割</th><th>summary版で残した要素</th></tr>
+        <tr><th>問い</th><th>支配する主資料</th><th>ゼロベースでの答え</th></tr>
       </thead>
       <tbody>
-        <tr><td>条約・国内法の詳細解説</td><td>20%みなしの法的根拠を精密に積む</td><td>23条3(c)中心、23条4は補充という骨格</td></tr>
-        <tr><td>改正史・判例群</td><td>後出し救済の限界を示す</td><td>77_21 / 77_22 / サンリオ高裁の対比</td></tr>
-        <tr><td>中国側制度の詳細</td><td>必要証拠の出所を示す</td><td>完税証明、協定待遇資料、BO資料の位置づけ</td></tr>
-        <tr><td>資料編・探索ログ</td><td>補強材料と将来更新用の蓄積</td><td>本summary版では削減し、実務判断に必要な部分のみ残す</td></tr>
+        <tr>
+          <td>なぜ20%なのか</td>
+          <td>日中租税条約23条3(c)</td>
+          <td>通常案件では、まずここを中核に据える。</td>
+        </tr>
+        <tr>
+          <td>なぜ中国資料だけでは足りないのか</td>
+          <td>23条3(c) + 省令10条</td>
+          <td>20%は中国で20%課税された意味ではなく、日本側FTC計算に入る擬制税額だからである。</td>
+        </tr>
+        <tr>
+          <td>なぜ後から広く直せないのか</td>
+          <td>69条25項、77_21、77_22、東京高裁13633</td>
+          <td>制度の争点は税率論より、申告時にその利益が外形化されていたかに移る。</td>
+        </tr>
       </tbody>
     </table>
-    <div class="card note">
-      <p><strong>再構成方針</strong></p>
-      <p>本summary版では、「制度の全履歴」ではなく「判断と行動に直結する論理」を前面に出した。したがって、元ページの長文検討や補遺は削り、実務担当者が最初に読むべき順番に並べ替えている。</p>
+
+    <div class="callout blue">
+      <div class="callout-title">この再構成で捨てたもの / 残したもの</div>
+      <p>元ページにあった探索ログ、補遺、細かな派生論点、制度史の長文説明は削った。他方で、<strong>23条3(c)と23条4の関係</strong>、<strong>10%実税と20%みなしのブリッジ</strong>、<strong>省令10条の意味</strong>、<strong>77_21 / 77_22 / 東京高裁13633の分水嶺</strong>は、むしろ前面に出している。</p>
     </div>
   </section>
 
-  <section id="sec3">
-    <h2>3. 20%みなしの法的骨格</h2>
-    <h3>3-1. 主位根拠は23条3(c)</h3>
-    <p>通常の中国ロイヤルティ案件で、日本側の20%みなしを説明する第一根拠は、日中租税条約23条3(c)である。23条4は、中国側の特定優遇措置や歴史的 spared tax を拾う補充ルートとして読む方が安定する。ここを混線させると、必要証拠も主張順序も崩れる。</p>
-    <div class="statute">
-      <p><strong>要点</strong>: 通常案件では「12条2が適用される使用料」かどうかが入口であり、その先で23条3(c)が20%みなしの根拠になる。</p>
-      <p class="src">ベース: [ftc_china_royalty_master_20260307.html](/home/user/jplawdb4/その他/html/ftc_china_royalty_master_20260307.html)</p>
-    </div>
+  <section id="sec2" class="section-card">
+    <h2>2. ゼロベースで組み直した法的骨格</h2>
+    <p>本件の構造は、次の四段階に分けて読むと最も安定する。入口論、条約による20%みなし、国内法上の申告ゲート、証拠の外形化である。元ページの全論証は、実質的にはこの四段階へ収束していた。</p>
 
-    <h3>3-2. 中国10%と日本20%のズレをどう説明するか</h3>
-    <p>中国側の完税証明や源泉徴収資料では10%が見えやすい。一方、日本では23条3(c)により20%をみなす。この差額10%は自動で埋まるのではなく、<strong>条約に基づく擬制税額の計算明細</strong>として別建てで説明しなければならない。元ページの価値は、このブリッジが省令10条書類の核心であると整理した点にある。</p>
+    <ol class="ladder">
+      <li>
+        <div class="ladder-num">1</div>
+        <div class="ladder-body">
+          <p><strong>入口を通ること。</strong> その収入が本当に日中租税条約12条の「使用料」か、受益所有人要件を崩していないか、PPTで落ちないか、PEに実質関連しないかを先に確認する。ここで落ちれば、そもそも23条3(c)の議論に入れない。</p>
+        </div>
+      </li>
+      <li>
+        <div class="ladder-num">2</div>
+        <div class="ladder-body">
+          <p><strong>20%みなしの主位根拠を23条3(c)に置くこと。</strong> 通常の中国使用料案件では、「第十二条2が適用される使用料については二十パーセント」という規定が中心である。23条4は、旧優遇法令や将来の特別奨励措置を拾う補充ルートとして整理するのが安定する。</p>
+        </div>
+      </li>
+      <li>
+        <div class="ladder-num">3</div>
+        <div class="ladder-body">
+          <p><strong>日本側申告では69条25項が入口を握ること。</strong> 条約便益が抽象的に存在しても、申告書等に明細書が添付され、必要書類が保存されていなければ、控除は制度として立ち上がらない。ここで条約論と申告論が分かれる。</p>
+        </div>
+      </li>
+      <li>
+        <div class="ladder-num">4</div>
+        <div class="ladder-body">
+          <p><strong>みなし部分だけは省令10条で一段重くなること。</strong> 通常FTCの一般構造に加えて、みなし外国税額があるときは、その計算明細と証明書類が添付書類側に含まれる。したがって、別表六を出しただけでは足りない。</p>
+        </div>
+      </li>
+    </ol>
+
+    <h3>2-1. 23条3(c)と23条4を混ぜてはいけない理由</h3>
+    <p>元ページの大きな到達点は、23条3(c)と23条4を同じ箱に入れないことだった。23条3(c)は、使用料に対して20%のみなし税額を直接置く固定率型の規定である。他方、23条4は、中国側の特定優遇で免除・軽減・還付されなければ納付されたはずの税額を拾う spared tax inclusion の規定である。条文の働き方が違う以上、必要証拠も主張順序も違う。</p>
+
     <table>
       <thead>
-        <tr><th>レイヤー</th><th>見える税率</th><th>実務上の意味</th></tr>
+        <tr><th>観点</th><th>23条3(c)</th><th>23条4</th></tr>
       </thead>
       <tbody>
-        <tr><td>中国国内法・中国側証憑</td><td>実務上10%</td><td>実課税と納付事実の証明</td></tr>
-        <tr><td>日中条約12条2</td><td>10%上限</td><td>使用料としての条約適格性の確認</td></tr>
-        <tr><td>日中条約23条3(c)</td><td>日本側で20%みなし</td><td>追加10%を控除計算に入れる法的根拠</td></tr>
+        <tr>
+          <td>規定の性質</td>
+          <td>使用料への固定率型 deeming</td>
+          <td>免除・軽減・還付税額を拾う spared tax inclusion</td>
+        </tr>
+        <tr>
+          <td>通常案件での位置</td>
+          <td>主位</td>
+          <td>補充・歴史的</td>
+        </tr>
+        <tr>
+          <td>必要資料</td>
+          <td>使用料該当性、12条2適用、10%実税と20%みなしのブリッジ</td>
+          <td>優遇法令、適用事実、場合により両政府合意の痕跡</td>
+        </tr>
       </tbody>
     </table>
 
-    <h3>3-3. 入口論点は先に潰す</h3>
-    <p>20%みなしは、収入が本当に使用料か、受益所有人要件に問題がないか、PPTやPE実質関連で落ちないかを先に通過して初めて成り立つ。元ページはこの点を厚く論じていたが、summary版では次の一文に圧縮できる。<strong>20%みなしの争点は税率だけではなく、そもそも23条3(c)の入口に立てているかである。</strong></p>
-  </section>
+    <div class="law-box">
+      <div class="law-label">Primary Source</div>
+      <p>日中租税条約23条3(c)は、12条2が適用される使用料について20%のみなしを置く。他方、23条4(c)は「両締約国の政府が合意するもの」という追加要件を含む。したがって、通常ロイヤルティ案件では23条3(c)を主位に据える方が、条文構造にも証拠設計にも整合的である。</p>
+      <p class="small">出典: 財務省「日中租税条約統合条文」23条。repo参照: <code>treaty/text/china--synthesizedtextforjapan-china-jp-pack-02.txt</code></p>
+    </div>
 
-  <section id="sec4">
-    <h2>4. 申告で問われる三層構造</h2>
-    <p>元ページの最重要整理は、必要書類を「一塊」ではなく三層で読む点にある。すなわち、一般的なFTCの申告・保存ルール、みなし部分固有の追加要件、中国側で取得する一次証憑の三層である。</p>
+    <h3>2-2. 本件の核心は「10%実税」と「20%みなし」のズレである</h3>
+    <p>この論点を浅くまとめると、「中国は10%、日本は20%」で終わってしまう。しかし本当に重要なのは、そのズレが偶然ではなく、<strong>中国で現に徴収された税額</strong>と、<strong>日本が自国税額の計算上みなす税額</strong>が制度的に別レイヤーにあることだという点である。中国側の完税証明は前者を示すが、後者は示さない。だからこそ、条約に基づく追加10%の説明資料が必要になる。</p>
+
+    <div class="grid-2">
+      <div class="mini-card">
+        <div class="mini-title">中国側で見えるもの</div>
+        <p>完税証明、源泉徴収資料、契約、送金資料など。ここから立つのは「実際にどの税がどれだけ課され、納付されたか」という事実である。</p>
+      </div>
+      <div class="mini-card">
+        <div class="mini-title">日本側で追加説明が要るもの</div>
+        <p>その10%実税に、なぜ日本ではなお10%を上乗せして20%みなしと扱えるのか。その法的橋渡しは23条3(c)と省令10条対応の計算明細で示す必要がある。</p>
+      </div>
+    </div>
+
+    <h3>2-3. 国内法上の三層構造</h3>
+    <p>69条25項、規29条の4、省令10条は、単に似た話を繰り返しているのではない。役割が違う。69条25項は入口と上限を定め、規29条の4は通常FTCの説明と保存の構造を具体化し、省令10条はみなし部分を添付側へ引き上げる。元ページの深さは、ここを一つの塊でなく、レイヤーとして読んだ点にある。</p>
+
     <table>
       <thead>
-        <tr><th>層</th><th>法的基礎</th><th>必要になるもの</th><th>役割</th></tr>
+        <tr><th>層</th><th>規定</th><th>この規定がしていること</th></tr>
       </thead>
       <tbody>
-        <tr><td>A</td><td>法人税法69条25項、規29条の4</td><td>明細書、控除対象税額の説明、計算経路</td><td>日本申告での一般FTCの骨格</td></tr>
-        <tr><td>B</td><td>実施特例法省令10条</td><td>みなし外国税額の計算明細、みなし税額を証明する書類</td><td>20%みなし部分の追加ゲート</td></tr>
-        <tr><td>C</td><td>中国側手続・保存実務</td><td>完税証明、契約、協定待遇情報、BO資料、送金資料</td><td>AとBを支える一次証拠</td></tr>
+        <tr>
+          <td>入口</td>
+          <td>法人税法69条25項</td>
+          <td>申告書等への明細書添付と必要書類保存を要求し、記載金額を上限とする。</td>
+        </tr>
+        <tr>
+          <td>一般FTCの具体化</td>
+          <td>規29条の4</td>
+          <td>税目該当性の説明、控除対象税額の計算明細、申告書写し、納付証明などを添付側と保存側に振り分ける。</td>
+        </tr>
+        <tr>
+          <td>みなしFTCの追加ゲート</td>
+          <td>省令10条</td>
+          <td>みなし外国税額の計算明細と証明書類を、添付すべき書類に含める。</td>
+        </tr>
       </tbody>
     </table>
-    <div class="card warn">
-      <p><strong>実務上の誤り</strong></p>
-      <p>「別表六を出したから足りる」と考えることが最も危ない。元ページの再構成結論は、<strong>別表六は入口に過ぎず、みなし部分の根拠と計算が添付束から読めないと足りない</strong>という点にある。</p>
-    </div>
-    <h3>4-1. 再構成した証拠束</h3>
-    <ul class="checklist">
-      <li>A束: 条約根拠メモ、別表六(四)を中心とする転記経路、控除対象税額の説明。</li>
-      <li>B束: 10%実税額から20%みなしへ至る計算別紙、省令10条対応メモ、みなし税額の証明資料一覧。</li>
-      <li>C束: 中国側の完税証明、ライセンス契約、請求・送金資料、協定待遇情報報告表、必要に応じBO関連資料。</li>
-    </ul>
   </section>
 
-  <section id="sec5">
-    <h2>5. 77_21 / 77_22 / サンリオ高裁の意味</h2>
-    <p>元ページは多数の裁決判決を扱っていたが、summary版では三点だけ押さえれば足りる。77_21は「当初申告で外形が出ていた案件の是正余地」、77_22は「みなし部分の後出し否認」、サンリオ高裁は「手続要件は単なる飾りではなく、課税庁が早期に判断するための実体的ゲート」という考え方を補強する。</p>
+  <section id="sec3" class="section-card">
+    <h2>3. なぜみなしFTCだけ文書化が重いのか</h2>
+    <p>ここが元ページのいちばん深いところである。単に「条文がそう書いてある」からでは足りない。なぜ通常FTCより、みなしFTCのほうが厳しく読まれやすいのか。その理由は、みなしFTCが実額税の調整ではなく、<strong>条約が政策的に付与する第二次的利益</strong>だからである。</p>
+
+    <div class="callout gold">
+      <div class="callout-title">制度の本質</div>
+      <p>通常FTCは、現に外国で課され納付した税を、日本が自国税額の側でどこまで引き受けるかという制度である。これに対して、みなしFTCは、現に徴収された税額を超えて日本が自国税額をさらに自己制限する制度である。だからこそ、どの条約根拠で、どの所得について、どこまでみなすのかを、日本側が厳格に把握したがるのは自然である。</p>
+    </div>
+
     <table>
       <thead>
-        <tr><th>資料</th><th>読み方</th><th>本件への含意</th></tr>
+        <tr><th>観点</th><th>通常FTC</th><th>みなしFTC</th></tr>
       </thead>
       <tbody>
-        <tr><td>77_21</td><td>選択や計算骨格が申告時に外形化されていた場面の訂正可能性</td><td>当初申告に痕跡があれば救済余地が残る</td></tr>
-        <tr><td>77_22</td><td>みなし外国税額について記載・添付要件を欠く後出しの否認</td><td>申告時に見えないみなし部分はかなり厳しい</td></tr>
-        <tr><td>サンリオ高裁</td><td>添付要件を資料収集・適正迅速処理のための本質的要件として扱う</td><td>「後で出せば足りる」論を弱める</td></tr>
+        <tr>
+          <td>調整対象</td>
+          <td>実際に課され納付した外国税</td>
+          <td>条約により「払ったものとみなす」税額</td>
+        </tr>
+        <tr>
+          <td>立証の中心</td>
+          <td>税目該当性、納付事実、計算明細</td>
+          <td>上記に加え、みなしの条約根拠と計算ブリッジ</td>
+        </tr>
+        <tr>
+          <td>情報非対称性</td>
+          <td>比較的低い</td>
+          <td>高い。課税庁は外国税実額だけでは把握できない</td>
+        </tr>
+        <tr>
+          <td>条文上の扱い</td>
+          <td>規29条の4で添付 / 保存構造が明確化</td>
+          <td>省令10条でなお添付側に追加される</td>
+        </tr>
       </tbody>
     </table>
-    <div class="card note">
-      <p><strong>実務での翻訳</strong></p>
-      <p>争いになったときの主戦場は、「20%が条約上あり得るか」よりも、「その20%を申告時にどこまで見える形で主張していたか」である。元ページの全論証は、ここへ収束していた。</p>
+
+    <h3>3-1. 平成23年改正と平成29年改正をどう読むか</h3>
+    <p>この点も雑にまとめると誤る。平成23年改正だけを見ると、「当初申告要件は緩和されたのだから後からでも足せる」と見えやすい。しかし元ページは、そこから先にもう一段進んでいた。すなわち、平成23年改正は入口を広げたが、平成29年改正は立証構造を条文化し、その上でみなしFTCについては省令10条がなお添付側の負担を残している、という読みである。</p>
+
+    <div class="grid-3">
+      <div class="mini-card">
+        <div class="mini-title">平成23</div>
+        <p>確定申告書だけでなく、修正申告書や更正請求書でも入口に立ち得る構造へ。</p>
+      </div>
+      <div class="mini-card">
+        <div class="mini-title">平成29</div>
+        <p>税目該当性の説明、計算明細、保存証拠の役割分担を規29条の4で明確化。</p>
+      </div>
+      <div class="mini-card">
+        <div class="mini-title">省令10条</div>
+        <p>みなし部分だけは「計算明細 + 証明書類」をなお添付側に残す。</p>
+      </div>
+    </div>
+
+    <div class="callout red">
+      <div class="callout-title">ここを外すと浅くなる</div>
+      <p>本件は「後から出せるか」の一点問題ではない。より正確には、<strong>緩和された入口を通るために、どこまでの立証と外形形成が要るのか</strong>という問題である。みなしFTCは、この立証負担が通常FTCより重い類型として残されている。</p>
     </div>
   </section>
 
-  <section id="sec6">
-    <h2>6. 実務用チェックリスト</h2>
-    <h3>6-1. 申告前</h3>
-    <ul class="checklist">
-      <li>対象収入が役務対価ではなく、条約12条の使用料に当たるかを確認する。</li>
-      <li>中国実税10%と日本側20%みなしを分けて計算する。</li>
-      <li>23条3(c)を主位、必要時のみ23条4を補充に置くメモを作る。</li>
-      <li>別表六のどの欄に、どの計算が流れ込むかを可視化する。</li>
-      <li>省令10条対応として、計算明細と証拠一覧を申告束に明示する。</li>
-    </ul>
-    <h3>6-2. 申告後</h3>
-    <ul class="checklist">
-      <li>提出控えから、みなし部分の根拠が第三者にも追えるか確認する。</li>
-      <li>中国側証憑の原本、翻訳、社内計算メモを一つの束で保存する。</li>
-      <li>不足がある場合でも、当初申告で何が既に外形化されているかを先に棚卸しする。</li>
-    </ul>
-    <h3>6-3. 調査・争訟</h3>
-    <ul class="checklist">
-      <li>「なぜ20%か」ではなく「いつ、どこで、どう主張したか」を説明できる形にする。</li>
-      <li>77_21型に寄せられる事実があるかを優先確認する。</li>
-      <li>77_22型に落ちる場合は、中国側証憑の有無だけでなく、申告時外形の弱さを正面から評価する。</li>
-    </ul>
+  <section id="sec4" class="section-card">
+    <h2>4. 77_21・77_22・東京高裁13633の再配置</h2>
+    <p>元ページの判例整理は量が多かったが、実務で本当に必要なのは三本の線である。77_21は「選択済み範囲の是正」、77_22は「未外形化の後出し否認」、東京高裁13633は「添付要件は単なる形式ではなく、適用意思の明確化と資料収集のための実質的ゲート」という理解を支える。</p>
+
+    <table>
+      <thead>
+        <tr><th>資料</th><th>何を言っているか</th><th>何を言っていないか</th><th>本件への翻訳</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>77_21</td>
+          <td>当初申告でみなし控除の適用意思と計算骨格が見えている範囲では、更正の請求の余地がある。</td>
+          <td>申告時に何も出ていない利益を広く後から追加できるとは言っていない。</td>
+          <td>「既に選択されていたのか」が鍵になる。</td>
+        </tr>
+        <tr>
+          <td>77_22</td>
+          <td>みなし外国税額控除について、記載及び添付の要件を充足しない限り、やむを得ない事情がないかぎり適用が難しい。</td>
+          <td>条約に根拠があれば手続欠缺を当然に超えられるとは言っていない。</td>
+          <td>未外形化の後出しはかなり厳しいという基準点になる。</td>
+        </tr>
+        <tr>
+          <td>東京高裁13633</td>
+          <td>添付により適用意思を明確化し、資料保存義務と相まって課税庁が早期・確実に資料収集し、適正迅速に判断できるという制度目的を認める。</td>
+          <td>後補を常に許すような柔らかい手続理解は採っていない。</td>
+          <td>FTCでも、添付や外形形成を実質的ゲートとして扱う発想の補助線になる。</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="law-box">
+      <div class="law-label">Case Reading</div>
+      <p>77_22を読むと、課税庁が嫌っているのは単なる形式不備というより、<strong>確定申告時点でその利益が見えないこと</strong>である。東京高裁13633も、添付の機能を、納税者の適用意思の明確化と課税庁の資料収集・判断の迅速化に置く。両者を重ねると、本件で問われるのは「あとで証拠が出るか」ではなく「その主張が申告時に立ち上がっていたか」であることがはっきりする。</p>
+      <p class="small">repo参照: <code>hanketsu/text/saiketsu/77_21.txt</code>, <code>hanketsu/text/saiketsu/77_22.txt</code>, <code>hanketsu/text/houjinzei/13633.txt</code></p>
+    </div>
+
+    <h3>4-1. 69条28項をどう位置づけるか</h3>
+    <p>ここもsummaryで雑に書くと危ない。69条28項は、保存書類がない場合でも、やむを得ない事情があれば適用を認め得るという限定的救済である。元ページの重要なニュアンスは、これを<strong>添付漏れ一般の治癒規定</strong>として読まないことにあった。したがって、本件で争点になる省令10条の添付側の欠缺を、69条28項が常に救うわけではない。</p>
   </section>
 
-  <section id="sec7">
-    <h2>7. 参照元と位置づけ</h2>
+  <section id="sec5" class="section-card">
+    <h2>5. 申告束をどう設計すべきか</h2>
+    <p>実務に翻訳すると、最適解は「別表六をきれいに埋めること」ではない。そうではなく、<strong>条約根拠、計算ブリッジ、中国側一次証拠</strong>の三束を、申告時に第三者が追える形で一つの束へ編み直すことにある。</p>
+
+    <div class="bundle-grid">
+      <div class="bundle">
+        <div class="bundle-tag">A束</div>
+        <p><strong>日本側の法的骨格</strong></p>
+        <ul>
+          <li>23条3(c)を主位に置く条約根拠メモ</li>
+          <li>対象収入が12条の使用料に当たる説明</li>
+          <li>別表六(四)から六(二の二)、六(二)への計算経路</li>
+        </ul>
+      </div>
+      <div class="bundle">
+        <div class="bundle-tag">B束</div>
+        <p><strong>みなし部分のブリッジ資料</strong></p>
+        <ul>
+          <li>中国実税10%と日本20%みなしの差額を示す計算別紙</li>
+          <li>省令10条対応の「計算明細」</li>
+          <li>みなし税額を証明する資料一覧と対応表</li>
+        </ul>
+      </div>
+      <div class="bundle">
+        <div class="bundle-tag">C束</div>
+        <p><strong>中国側の一次証拠</strong></p>
+        <ul>
+          <li>完税証明、源泉徴収資料、契約、請求・送金資料</li>
+          <li>協定待遇情報資料</li>
+          <li>必要に応じ受益所有人や事業実態の補助資料</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>5-1. 申告期限までに中国側書類が揃わない場合</h3>
+    <p>本summary版で最も実務的な提言はここである。資料未入手だから黙って申告する、という運用がもっとも危ない。勝負を分けるのは外形形成だからである。したがって、少なくとも次の三点は申告時に出しておきたい。</p>
+    <ul class="checklist">
+      <li>23条3(c)を主位とする日本語メモを添付し、20%みなしを主張していることを明確にする。</li>
+      <li>10%実税と20%みなしの関係を示す暫定計算別紙を付け、どの部分が実額でどの部分が擬制かを見えるようにする。</li>
+      <li>中国側証拠の取得状況一覧を作り、未着資料があっても請求主体・対象所得・計算骨格が既に立っていることを示す。</li>
+    </ul>
+
+    <div class="callout green">
+      <div class="callout-title">実務上の最重要感覚</div>
+      <p>課税庁は「20%という理論自体が間違いだ」とだけ攻めてくるとは限らない。むしろ、「その20%を申告時にどう主張し、どこに計算明細があり、どこに証拠があるのか」という手続論から攻めてくる可能性のほうが高い。だから防御も手続論から組むべきである。</p>
+    </div>
+
+    <h3>5-2. 申告後から争訟までの見取り図</h3>
+    <table>
+      <thead>
+        <tr><th>段階</th><th>見るべき点</th><th>実務上の問い</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>申告直後</td>
+          <td>添付束と保存束の対応</td>
+          <td>20%みなしの主張が第三者に追える形で残っているか。</td>
+        </tr>
+        <tr>
+          <td>自己点検</td>
+          <td>77_21型か77_22型か</td>
+          <td>当初申告でみなし部分の外形が出ていたか。</td>
+        </tr>
+        <tr>
+          <td>調査対応</td>
+          <td>法的根拠より主張の外形</td>
+          <td>条約根拠、計算式、証拠位置をその場でたどれるか。</td>
+        </tr>
+        <tr>
+          <td>更正の請求・争訟</td>
+          <td>後補の限界</td>
+          <td>それは是正なのか、新規の後出しなのか。</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="sec6" class="section-card">
+    <h2>6. 最終結論とソース</h2>
+    <div class="callout blue">
+      <div class="callout-title">最終結論</div>
+      <ol>
+        <li>通常の中国使用料案件では、20%みなしの主位根拠は23条3(c)である。23条4を主戦場に置くと論点と証拠がぶれる。</li>
+        <li>本件の中心問題は、中国10%実税と日本20%みなしの差を、申告書添付束の中でどう橋渡ししたかにある。</li>
+        <li>69条25項、規29条の4、省令10条は、条約便益を日本の申告制度へ翻訳する三層構造として読むべきである。</li>
+        <li>みなしFTCは通常FTCより一段重い。理由は、実額税の調整ではなく、条約が政策的に付与する第二次的利益だからである。</li>
+        <li>77_21、77_22、東京高裁13633を並べると、勝敗の分岐は「当初申告でその利益が見えていたか」に集約される。</li>
+        <li>最適実務は、別表六だけで終わらせず、条約根拠メモ、20%みなし計算別紙、中国側一次証拠を一つの外形へ束ねることである。</li>
+      </ol>
+    </div>
+
     <div class="source-box">
+      <h3>参照した主な公式ソース</h3>
       <ul>
-        <li>元レポート: <a href="ftc_china_royalty_master_20260307.html">ftc_china_royalty_master_20260307.html</a></li>
-        <li>関連総括: <a href="session_ftc_china_summary_20260307.html">session_ftc_china_summary_20260307.html</a></li>
-        <li>省令10条特化版: <a href="jisshi_tokurei_kisoku10_shorui_20260307.html">jisshi_tokurei_kisoku10_shorui_20260307.html</a></li>
-        <li>インデックス: <a href="../index.html">その他/index.html</a></li>
+        <li>財務省: <a href="https://www.mof.go.jp/tax_policy/summary/international/tax_convention/SynthesizedTextforJapan_China_JP.pdf">日中租税条約統合条文</a></li>
+        <li>e-Gov: <a href="https://laws.e-gov.go.jp/document?lawid=340AC0000000034">法人税法</a>、<a href="https://laws.e-gov.go.jp/document?lawid=340M50000040012">法人税法施行規則</a>、<a href="https://laws.e-gov.go.jp/document?lawid=344M50004040001">租税条約等実施特例法施行規則</a></li>
+        <li>国税不服審判所: <a href="https://www.kfs.go.jp/service/JP/77/21/index.html">77_21</a>、<a href="https://www.kfs.go.jp/service/JP/77/22/index.html">77_22</a></li>
+        <li>税務大学校訴訟資料: <a href="https://www.nta.go.jp/about/organization/ntc/sozei/jirei/hanketsu/021124/pdf/01.pdf">東京高裁13633</a></li>
+        <li>元の統合完全版: <a href="ftc_china_royalty_master_20260307.html">ftc_china_royalty_master_20260307.html</a></li>
       </ul>
+      <p class="small">repo参照: <code>treaty/text/china--synthesizedtextforjapan-china-jp-pack-02.txt</code> / <code>law/text/hojinzei/69_2.txt</code> / <code>law/text/hojinzei_kisoku/29-4.txt</code> / <code>law/text/jisshi_tokurei_kisoku/10.txt</code> / <code>hanketsu/text/saiketsu/77_21.txt</code> / <code>hanketsu/text/saiketsu/77_22.txt</code> / <code>hanketsu/text/houjinzei/13633.txt</code></p>
     </div>
-    <p class="small">このsummary版は、元ページの法的立場や結論を変えるものではなく、読解コストを下げるために論理順序を組み替えた再構成版である。詳細論証や一次資料の洗い込みが必要な場合は、必ず元ページを参照すること。</p>
   </section>
+
+  <footer>
+    このsummary決定版は、元レポートの立場を維持したまま、論点の順序と密度を組み替えたゼロベース再構成版である。詳細な派生論点や資料編は元の統合完全版を参照。
+  </footer>
 </main>
 </body>
 </html>
