@@ -23,7 +23,7 @@
   }
   * { box-sizing:border-box; }
   body { margin:0; background:var(--bg); color:var(--ink); font-family:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho",serif; line-height:1.95; font-size:16px; }
-  a { color:var(--blue2); }
+  a { color:var(--blue2); overflow-wrap:anywhere; word-break:break-word; }
   .hero { background:linear-gradient(135deg,var(--blue),#325f86 56%, #7e8e9d); color:#fff; padding:62px 24px 48px; border-radius:0 0 16px 16px; }
   .hero-inner,.container { max-width:1080px; margin:0 auto; }
   .label { font-size:12px; letter-spacing:2px; text-transform:uppercase; opacity:.78; margin-bottom:14px; }
@@ -44,25 +44,41 @@
   h2 { margin:60px 0 18px; font-size:1.55rem; color:var(--blue); border-bottom:3px solid var(--blue2); padding-bottom:8px; }
   h3 { margin:28px 0 12px; font-size:1.15rem; color:var(--blue2); border-left:4px solid var(--blue2); padding-left:10px; }
   h4 { margin:22px 0 10px; font-size:1rem; color:var(--gold); }
-  p { margin:0 0 14px; text-align:justify; }
-  blockquote { margin:14px 0; padding:14px 16px; background:#f8fbff; border-left:4px solid var(--blue2); }
+  p { margin:0 0 14px; text-align:justify; overflow-wrap:anywhere; word-break:break-word; }
+  blockquote { margin:14px 0; padding:14px 16px; background:#f8fbff; border-left:4px solid var(--blue2); overflow-wrap:anywhere; word-break:break-word; }
   ol,ul { padding-left:1.35rem; }
-  li { margin:6px 0; }
+  li { margin:6px 0; overflow-wrap:anywhere; word-break:break-word; }
   .summary-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-top:18px; }
   .summary-item { background:#f8fbff; border:1px solid #d8e8f4; border-radius:8px; padding:16px 18px; }
   .summary-item .num { font-size:1.55rem; font-weight:700; color:var(--blue); }
   .summary-item .desc { font-size:.9rem; color:var(--muted); }
-  table { width:100%; border-collapse:collapse; margin:16px 0; font-size:.93rem; }
-  th,td { border:1px solid var(--line); padding:10px 12px; text-align:left; vertical-align:top; }
+  table { width:100%; border-collapse:collapse; margin:16px 0; font-size:.93rem; table-layout:fixed; }
+  th,td { border:1px solid var(--line); padding:10px 12px; text-align:left; vertical-align:top; overflow-wrap:anywhere; word-break:break-word; }
   th { background:#edf3fa; }
   .statute .label, .case-box .label { display:inline-block; font-size:.8rem; font-weight:700; color:var(--blue2); margin-bottom:8px; }
   .two-col { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .two-col > * { min-width:0; }
+  .toc,.card,.statute,.case-box,.svg-box,.source-box,.timeline,.matrix,.appendix-block,.part-body,.agent-card,.agent-panel,.agent-body,.warn-box,.callout,.annex-body,.wrap,.box { overflow-wrap:anywhere; word-break:break-word; }
+  .part-body,.agent-card,.agent-panel,.agent-body,.annex-body { max-width:100%; overflow-x:hidden; }
+  .part-body *, .agent-card *, .agent-panel *, .agent-body *, .annex-body * { max-width:100%; min-width:0; overflow-wrap:anywhere; word-break:break-word; white-space:normal; }
+  .agent-card ol,.agent-card ul,.agent-body ol,.agent-body ul,.annex-body ol,.annex-body ul { padding-left:1.1rem; }
   .svg-box svg,.svg-wrap svg,.svg-container svg,.svg-figure svg { width:100%; height:auto; display:block; max-width:100%; margin:0 auto; }
   .svg-wrap,.svg-container,.svg-figure { margin:18px 0; }
   .svg-caption,.svg-figure figcaption { margin-top:10px; color:var(--muted); font-size:.9rem; text-align:center; }
+  .appendix-block { max-width:100%; }
   .appendix-block > h2 { margin-top:0; }
   .footnote-list li { font-size:.92rem; }
-  @media (max-width: 840px) { .two-col { grid-template-columns:1fr; } h1 { font-size:1.8rem; } }
+  @media (max-width: 980px) { .two-col { grid-template-columns:1fr; } }
+  @media (max-width: 720px) { table { display:block; overflow-x:auto; } }
+  @media (max-width: 480px) {
+    .appendix-block,.agent-panel { padding:18px 14px; }
+    p { text-align:left; }
+    .agent-card,.agent-body,.annex-body { font-size:.95rem; line-height:1.82; }
+    .annex-body, .annex-body * { word-break:break-all; }
+    .annex-body p,.agent-body p { max-width:100%; overflow-wrap:anywhere; word-break:break-all; }
+    .annex-body p strong,.agent-body p strong { white-space:normal; overflow-wrap:anywhere; word-break:break-all; }
+  }
+  @media (max-width: 840px) { h1 { font-size:1.8rem; } }
 </style>
 </head>
 <body>
@@ -2203,7 +2219,7 @@
 <p>この規定により、日本法人が「みなし納付外国法人税の額」として日本の外国税額控除（法人税法69条1項）に算入できる金額は、実際の納付額（条約適用後10%）ではなく、軽減・免除がなかった場合の税額となる。</p>
 <p>日中租税条約の場合、みなし税率の基準は「中国の通常税率」である点が他の締結国（タイ：固定20%、ブラジル：固定25%等）と異なる。使用料源泉税の文脈では「通常税率」の解釈が重要となる。中国企業所得税法上の使用料源泉税の通常税率は20%（居住者でない者への支払）であり、条約適用前のこの国内法上の20%が「軽減・免除がなかった場合に納付すべきであった税額」の計算基礎となる。</p>
 <p>ステップ1：控除限度額の計算（施行令142条1項・3項）</p>
-<p>ステップ2：高率部分の排除（施行令142条の2）</p>
+<p>ステップ2：高率部分の排除<wbr>（施行令142条の2）</p>
 <p>高率基準：課税標準 × 35% = 1,000万円 × 35% = 350万円。みなし外国税額200万円 &lt; 350万円 → 高率部分に該当しない。</p>
 <p>ステップ3：施行令142条の2第3項の重要規定</p>
 <p>施行令142条の2第3項は「外国法人税の額のうち所得に対する負担が高率な部分の金額は、 まずみなし納付外国法人税の額から成るもの とする」と規定する。本設例では高率部分は発生しないが、この規定の意味は実践上きわめて重要である。仮に何らかの理由で高率部分が生じた場合、その高率部分はまずみなし納付分から切り出される。みなし納付分が先に高率認定されて控除対象外とされることにより、実際に納付した外国法人税が保護される設計になっている。</p>
@@ -4797,12 +4813,13 @@ Tax sparingの適用を「主要目的」として取引を構造化した場合
 <!-- 添付書類 -->
 <rect fill="#faf5ff" filter="url(#legacy_mff-shadow)" height="170" rx="8" stroke="#6b46c1" stroke-width="2" width="300" x="30" y="280"></rect>
 <text fill="#6b46c1" font-size="13" font-weight="bold" text-anchor="middle" x="180" y="303">添付・保存書類</text>
-<text fill="#4a5568" font-size="10" x="45" y="328">[ 添付 ] 別表六(四)(二の二)(二)（上記）</text>
-<text fill="#4a5568" font-size="10" x="45" y="348">[ 添付 ] 外国法人税該当性説明書</text>
-<text fill="#4a5568" font-size="10" x="45" y="368">[ 添付 ] 控除対象FTC額の計算明細</text>
-<text fill="#c53030" font-size="10" x="45" y="388">[ 保存 ] 完税证明（10%分）</text>
-<text fill="#c53030" font-size="10" x="45" y="408">[ 保存 ] 条約23条3項(c)条文写し</text>
-<text fill="#c53030" font-size="10" x="45" y="428">[ 保存 ] みなし適用説明書（任意）</text>
+<text fill="#4a5568" font-size="10" x="45" y="328">[ 添付 ] 別表六(四)(二の二)</text>
+<text fill="#4a5568" font-size="10" x="45" y="342">　　　　(二)（上記）</text>
+<text fill="#4a5568" font-size="10" x="45" y="362">[ 添付 ] 外国法人税該当性説明書</text>
+<text fill="#4a5568" font-size="10" x="45" y="382">[ 添付 ] 控除対象FTC額の計算明細</text>
+<text fill="#c53030" font-size="10" x="45" y="402">[ 保存 ] 完税证明（10%分）</text>
+<text fill="#c53030" font-size="10" x="45" y="422">[ 保存 ] 条約23条3項(c)条文写し</text>
+<text fill="#c53030" font-size="10" x="45" y="442">[ 保存 ] みなし適用説明書（任意）</text>
 </svg>
 <figcaption>【図1】別表記載フローと添付・保存書類の関係</figcaption>
 </figure>
@@ -5435,7 +5452,7 @@ Tax sparingの適用を「主要目的」として取引を構造化した場合
 <li>90%上限チェック：1,000万円 ≤ 5,000万円 × 90% = 4,500万円（上限内）</li>
 <li>控除限度額：1,160万円 × (1,000万円 / 5,000万円) = <strong>232万円</strong></li>
 </ul>
-<p><strong>ステップ2：高率部分の排除（施行令142条の2）</strong></p>
+<p><strong>ステップ2：高率部分の排除<wbr>（施行令142条の2）</strong></p>
 <p>高率基準：課税標準 × 35% = 1,000万円 × 35% = 350万円。みなし外国税額200万円 &lt; 350万円 → 高率部分に該当しない。</p>
 <p><strong>ステップ3：施行令142条の2第3項の重要規定</strong></p>
 <p>施行令142条の2第3項は「外国法人税の額のうち所得に対する負担が高率な部分の金額は、<strong>まずみなし納付外国法人税の額から成るもの</strong>とする」と規定する。本設例では高率部分は発生しないが、この規定の意味は実践上きわめて重要である。仮に何らかの理由で高率部分が生じた場合、その高率部分はまずみなし納付分から切り出される。みなし納付分が先に高率認定されて控除対象外とされることにより、実際に納付した外国法人税が保護される設計になっている。</p>
@@ -5609,7 +5626,8 @@ Tax sparingの適用を「主要目的」として取引を構造化した場合
 <!-- 背景 -->
 <rect fill="#f7fafc" height="520" rx="8" width="800" x="0" y="0"></rect>
 <!-- タイトル -->
-<text fill="#1a365d" font-size="16" font-weight="bold" text-anchor="middle" x="400" y="32">みなし外国税額控除（タックススペアリング）の仕組み ── 日中租税条約・使用料の例</text>
+<text fill="#1a365d" font-size="15" font-weight="bold" text-anchor="middle" x="400" y="28">みなし外国税額控除（タックススペアリング）の仕組み</text>
+<text fill="#1a365d" font-size="13" font-weight="bold" text-anchor="middle" x="400" y="47">日中租税条約・使用料の例</text>
 <!-- 日本法人 -->
 <rect fill="#ebf8ff" height="90" rx="8" stroke="#2b6cb0" stroke-width="2" width="200" x="30" y="60"></rect>
 <text fill="#2b6cb0" font-size="13" font-weight="bold" text-anchor="middle" x="130" y="88">日本法人 A社</text>
@@ -5630,19 +5648,20 @@ Tax sparingの適用を「主要目的」として取引を構造化した場合
 <text fill="#2d3748" font-size="11" text-anchor="middle" x="670" y="238">源泉税の徴収</text>
 <!-- B社→中国税務 -->
 <line marker-end="url(#legacy_mft-arrowDown)" stroke="#975a16" stroke-width="2" x1="670" x2="670" y1="150" y2="188"></line>
-<text fill="#975a16" font-size="10" x="740" y="175">源泉税 100万円</text>
-<text fill="#975a16" font-size="10" x="740" y="187">（条約10%）</text>
+<text fill="#975a16" font-size="10" text-anchor="end" x="758" y="175">源泉税 100万円</text>
+<text fill="#975a16" font-size="10" text-anchor="end" x="758" y="187">（条約10%）</text>
 <!-- タックススペアリング計算ボックス -->
 <rect fill="#fff" height="140" rx="8" stroke="#2b6cb0" stroke-width="2" width="480" x="30" y="190"></rect>
 <text fill="#1a365d" font-size="13" font-weight="bold" text-anchor="middle" x="270" y="215">外国税額控除の計算（タックススペアリング適用）</text>
 <text fill="#2d3748" font-size="11" x="50" y="245">実際の中国源泉税（条約適用後10%）</text>
 <text fill="#c53030" font-size="12" font-weight="bold" text-anchor="end" x="420" y="245">100万円</text>
-<text fill="#2d3748" font-size="11" x="50" y="268">みなし外国税額（中国国内法20%ベース - 実際10%）</text>
-<text fill="#2b6cb0" font-size="12" font-weight="bold" text-anchor="end" x="420" y="268">+ 100万円</text>
-<line stroke="#a0aec0" stroke-dasharray="4" stroke-width="1" x1="50" x2="430" y1="278" y2="278"></line>
-<text fill="#2d3748" font-size="11" font-weight="bold" x="50" y="298">控除対象外国法人税の額（合計）</text>
-<text fill="#1a365d" font-size="13" font-weight="bold" text-anchor="end" x="420" y="298">200万円</text>
-<text fill="#718096" font-size="11" x="50" y="320">控除限度額: 232万円 &gt; 200万円 → 全額控除可</text>
+<text fill="#2d3748" font-size="10.5" x="50" y="266">みなし外国税額</text>
+<text fill="#2d3748" font-size="10.5" x="50" y="281">（中国国内法20%ベース - 実際10%）</text>
+<text fill="#2b6cb0" font-size="12" font-weight="bold" text-anchor="end" x="420" y="281">+ 100万円</text>
+<line stroke="#a0aec0" stroke-dasharray="4" stroke-width="1" x1="50" x2="430" y1="290" y2="290"></line>
+<text fill="#2d3748" font-size="11" font-weight="bold" x="50" y="310">控除対象外国法人税の額（合計）</text>
+<text fill="#1a365d" font-size="13" font-weight="bold" text-anchor="end" x="420" y="310">200万円</text>
+<text fill="#718096" font-size="11" x="50" y="330">控除限度額: 232万円 &gt; 200万円 → 全額控除可</text>
 <!-- 日本の税務署 -->
 <rect fill="#c6f6d5" height="90" rx="8" stroke="#276749" stroke-width="2" width="200" x="30" y="370"></rect>
 <text fill="#276749" font-size="13" font-weight="bold" text-anchor="middle" x="130" y="398">日本の法人税</text>
@@ -5677,8 +5696,8 @@ Tax sparingの適用を「主要目的」として取引を構造化した場合
 </div>
 <h3>添付書類要件と添付漏れの法的効果フロー</h3>
 <div class="svg-container">
-<svg font-family="'Noto Sans JP', sans-serif" viewBox="0 0 800 580" xmlns="http://www.w3.org/2000/svg">
-<rect fill="#f7fafc" height="580" rx="8" width="800" x="0" y="0"></rect>
+<svg font-family="'Noto Sans JP', sans-serif" viewBox="0 0 800 620" xmlns="http://www.w3.org/2000/svg">
+<rect fill="#f7fafc" height="620" rx="8" width="800" x="0" y="0"></rect>
 <!-- タイトル -->
 <text fill="#1a365d" font-size="16" font-weight="bold" text-anchor="middle" x="400" y="30">添付書類要件の判定フローと法的効果</text>
 <!-- Start -->
@@ -5701,7 +5720,7 @@ Tax sparingの適用を「主要目的」として取引を構造化した場合
 <text fill="#2b6cb0" font-size="10" font-weight="bold" text-anchor="middle" x="700" y="272">計算は正しい？</text>
 <!-- 計算正しい → 控除認容 -->
 <line stroke="#276749" stroke-width="1.5" x1="790" x2="790" y1="275" y2="340"></line>
-<text fill="#276749" font-size="10" x="795" y="310">Yes</text>
+<text fill="#276749" font-size="10" text-anchor="end" x="786" y="310">Yes</text>
 <rect fill="#276749" height="35" rx="6" width="70" x="720" y="340"></rect>
 <text fill="#fff" font-size="10" font-weight="bold" text-anchor="middle" x="755" y="362">控除OK</text>
 <!-- 計算誤り → 更正の請求可 -->
@@ -5736,13 +5755,16 @@ Tax sparingの適用を「主要目的」として取引を構造化した場合
 <text fill="#fff" font-size="11" font-weight="bold" text-anchor="middle" x="100" y="403">控除不適用</text>
 <text fill="#fff" font-size="10" text-anchor="middle" x="100" y="418">更正請求も不可</text>
 <!-- 注釈ボックス -->
-<rect fill="#fff5f5" height="100" rx="6" stroke="#fc8181" stroke-width="1" width="360" x="20" y="460"></rect>
-<text fill="#c53030" font-size="10" font-weight="bold" x="30" y="480">「やむを得ない事情」に該当しないもの:</text>
-<text fill="#2d3748" font-size="10" x="30" y="498">- 税理士の失念・認識不足（No.77-22で否定）</text>
-<text fill="#2d3748" font-size="10" x="30" y="514">- 制度の複雑さを理由とする不知</text>
-<text fill="#2d3748" font-size="10" x="30" y="530">- 社内の引継ぎミス・多忙</text>
-<text fill="#2d3748" font-size="10" x="30" y="546">- 情報収集の遅れ（事前に回避可能な場合）</text>
-<rect fill="#f0fff4" height="100" rx="6" stroke="#68d391" stroke-width="1" width="360" x="420" y="460"></rect>
+<rect fill="#fff5f5" height="132" rx="6" stroke="#fc8181" stroke-width="1" width="360" x="20" y="460"></rect>
+<text fill="#c53030" font-size="10" font-weight="bold" x="30" y="478">「やむを得ない事情」に</text>
+<text fill="#c53030" font-size="10" font-weight="bold" x="30" y="492">該当しないもの:</text>
+<text fill="#2d3748" font-size="9.5" x="30" y="510">- 税理士の失念・認識不足</text>
+<text fill="#2d3748" font-size="9.5" x="42" y="523">  （No.77-22で否定）</text>
+<text fill="#2d3748" font-size="9.5" x="30" y="538">- 制度の複雑さを理由とする不知</text>
+<text fill="#2d3748" font-size="9.5" x="30" y="553">- 社内の引継ぎミス・多忙</text>
+<text fill="#2d3748" font-size="9.5" x="30" y="568">- 情報収集の遅れ</text>
+<text fill="#2d3748" font-size="9.5" x="42" y="582">  （事前に回避可能な場合）</text>
+<rect fill="#f0fff4" height="132" rx="6" stroke="#68d391" stroke-width="1" width="360" x="420" y="460"></rect>
 <text fill="#276749" font-size="10" font-weight="bold" x="430" y="480">「保険的記載」で救済確率を高める:</text>
 <text fill="#2d3748" font-size="10" x="430" y="498">- 暫定数値でも別表に金額を記載する</text>
 <text fill="#2d3748" font-size="10" x="430" y="514">- 自社作成の計算明細を添付する</text>
@@ -5887,27 +5909,40 @@ Tax sparingの適用を「主要目的」として取引を構造化した場合
 <div class="lead">日中租税条約（1984年発効）は、みなし外国税額控除条項を含む代表的な条約である。本章では条約の三層構造を解説し、使用料に対するタックススペアリングの正確な法的根拠を明らかにする。三者討論における条約法学者の分析に基づく。</div>
 <h3>3-1. 条約の三層構造</h3>
 <figure class="svg-figure">
-<svg viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 720 424" xmlns="http://www.w3.org/2000/svg">
 <defs><filter id="legacy_ftm-sh1"><fedropshadow dx="2" dy="2" flood-opacity=".12" stddeviation="3"></fedropshadow></filter></defs>
-<rect fill="#f5f3ee" height="340" rx="4" width="720"></rect>
-<text fill="#1a1a2e" font-family="sans-serif" font-size="15" font-weight="bold" text-anchor="middle" x="360" y="30">日中租税条約の三層構造とみなし外国税額控除</text>
+<rect fill="#f5f3ee" height="424" rx="4" width="720"></rect>
+<text fill="#1a1a2e" font-family="sans-serif" font-size="15" font-weight="bold" text-anchor="middle" x="360" y="28">日中租税条約の三層構造と</text>
+<text fill="#1a1a2e" font-family="sans-serif" font-size="15" font-weight="bold" text-anchor="middle" x="360" y="47">みなし外国税額控除</text>
 <!-- Layer 1 -->
-<rect fill="#2e5f8b" filter="url(#legacy_ftm-sh1)" height="70" rx="6" width="640" x="40" y="50"></rect>
-<text fill="rgba(255,255,255,.7)" font-family="sans-serif" font-size="11" x="60" y="75">第一層（条約本文）</text>
-<text fill="white" font-family="sans-serif" font-size="13" font-weight="bold" x="60" y="98">第12条：使用料の源泉税上限 10%（ceiling rule）</text>
-<text fill="rgba(255,255,255,.8)" font-family="sans-serif" font-size="11" x="60" y="113">第23条2項：「日本国の法令に従い」外国税額控除を認める</text>
+<rect fill="#2e5f8b" filter="url(#legacy_ftm-sh1)" height="104" rx="6" width="640" x="40" y="58"></rect>
+<text fill="rgba(255,255,255,.7)" font-family="sans-serif" font-size="11" x="60" y="82">第一層（条約本文）</text>
+<text fill="white" font-family="sans-serif" font-size="12" font-weight="bold" x="60" y="104">第12条：使用料の源泉税上限</text>
+<text fill="rgba(255,255,255,.86)" font-family="sans-serif" font-size="11" x="60" y="120">10%（ceiling rule）</text>
+<text fill="rgba(255,255,255,.8)" font-family="sans-serif" font-size="9.6" x="60" y="136">第23条2項：</text>
+<text fill="rgba(255,255,255,.8)" font-family="sans-serif" font-size="9.6" x="60" y="149">「日本国の法令に従い」</text>
+<text fill="rgba(255,255,255,.8)" font-family="sans-serif" font-size="9.6" x="60" y="162">外国税額控除を認める</text>
 <!-- Layer 2 -->
-<rect fill="#8b2e2e" filter="url(#legacy_ftm-sh1)" height="90" rx="6" width="640" x="40" y="130"></rect>
-<text fill="rgba(255,255,255,.7)" font-family="sans-serif" font-size="11" x="60" y="155">第二層（議定書）── 条約本文と同等の法的効力</text>
-<text fill="white" font-family="sans-serif" font-size="13" font-weight="bold" x="60" y="178">第23条3項(c)：使用料のみなし税率 = 20%（固定率方式）</text>
-<text fill="rgba(255,255,255,.8)" font-family="sans-serif" font-size="11" x="60" y="195">「中国の租税は、次の率で支払われたものとみなす：(c) 使用料については20%」</text>
-<text fill="rgba(255,255,255,.8)" font-family="sans-serif" font-size="11" x="60" y="212">第23条4項：法令列挙型（「軽減がなければ納付されたとみられる額」）</text>
+<rect fill="#8b2e2e" filter="url(#legacy_ftm-sh1)" height="140" rx="6" width="640" x="40" y="180"></rect>
+<text fill="rgba(255,255,255,.7)" font-family="sans-serif" font-size="10.2" x="60" y="202">第二層（議定書）</text>
+<text fill="rgba(255,255,255,.7)" font-family="sans-serif" font-size="10.2" x="60" y="216">条約本文と同等の法的効力</text>
+<text fill="white" font-family="sans-serif" font-size="10" font-weight="bold" x="60" y="236">第23条3項(c)：</text>
+<text fill="rgba(255,255,255,.86)" font-family="sans-serif" font-size="9.6" x="60" y="250">使用料のみなし税率 = 20%</text>
+<text fill="rgba(255,255,255,.86)" font-family="sans-serif" font-size="9.2" x="60" y="263">（固定率方式）</text>
+<text fill="rgba(255,255,255,.8)" font-family="sans-serif" font-size="8.5" x="60" y="276">「中国の租税は、次の率で</text>
+<text fill="rgba(255,255,255,.8)" font-family="sans-serif" font-size="8.5" x="60" y="288">支払われたものとみなす」</text>
+<text fill="rgba(255,255,255,.8)" font-family="sans-serif" font-size="8.5" x="60" y="300">：(c) 使用料については20%</text>
+<text fill="rgba(255,255,255,.8)" font-family="sans-serif" font-size="8.6" x="60" y="311">第23条4項：法令列挙型</text>
+<text fill="rgba(255,255,255,.8)" font-family="sans-serif" font-size="7.9" x="60" y="322">（軽減がなければ納付されたとみられる額）</text>
 <!-- Layer 3 -->
-<rect fill="#2e8b57" filter="url(#legacy_ftm-sh1)" height="60" rx="6" width="640" x="40" y="230"></rect>
-<text fill="rgba(255,255,255,.7)" font-family="sans-serif" font-size="11" x="60" y="255">第三層（交換公文・行政的確認）</text>
-<text fill="white" font-family="sans-serif" font-size="13" font-weight="bold" x="60" y="275">財務省プレスリリース（2008年3月26日）：EIT法施行後の継続適用確認</text>
+<rect fill="#2e8b57" filter="url(#legacy_ftm-sh1)" height="70" rx="6" width="640" x="40" y="330"></rect>
+<text fill="rgba(255,255,255,.7)" font-family="sans-serif" font-size="9.8" x="60" y="350">第三層（交換公文・行政的確認）</text>
+<text fill="white" font-family="sans-serif" font-size="9.2" font-weight="bold" x="60" y="366">財務省プレスリリース</text>
+<text fill="white" font-family="sans-serif" font-size="8.6" font-weight="bold" x="60" y="377">（2008年3月26日）</text>
+<text fill="white" font-family="sans-serif" font-size="8.6" font-weight="bold" x="60" y="389">EIT法施行後の継続適用確認</text>
 <!-- Arrow -->
-<text fill="#8888aa" font-family="sans-serif" font-size="11" text-anchor="middle" x="360" y="315">使用料には第23条3項(c)が直接適用 → 第23条4項の「計算基礎」議論は不要</text>
+<text fill="#8888aa" font-family="sans-serif" font-size="8.5" text-anchor="middle" x="360" y="406">国内法優遇(20%→10%)と条約上限(10%)は別次元</text>
+<text fill="#8888aa" font-family="sans-serif" font-size="8.5" text-anchor="middle" x="360" y="417">→ 二重計上なし</text>
 </svg>
 <figcaption>【図1】日中租税条約の三層構造 ── 使用料のタックススペアリングの法的位置づけ</figcaption>
 </figure>
@@ -5981,7 +6016,8 @@ Tax sparingの適用を「主要目的」として取引を構造化した場合
 <text fill="white" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="middle" x="570" y="198">控除対象額 = 使用料 x 20%</text>
 <text fill="rgba(255,255,255,.7)" font-family="sans-serif" font-size="9" text-anchor="middle" x="570" y="215">実際納付10% + みなし10%</text>
 <!-- 結論 -->
-<text fill="#1a1a2e" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="middle" x="360" y="268">並立構造論：国内法優遇(20%→10%)と条約上限(10%)は異なる法的次元で機能 → 二重計上なし</text>
+<text fill="#1a1a2e" font-family="sans-serif" font-size="9.5" font-weight="bold" text-anchor="middle" x="360" y="264">並立構造論：国内法優遇(20%→10%)と</text>
+<text fill="#1a1a2e" font-family="sans-serif" font-size="9.5" font-weight="bold" text-anchor="middle" x="360" y="278">条約上限(10%)は別次元で機能 → 二重計上なし</text>
 </svg>
 <figcaption>【図2】使用料に対する税率構造と並立構造論</figcaption>
 </figure>
