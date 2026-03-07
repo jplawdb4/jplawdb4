@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日中使用料みなしFTC ── 実務ガイド</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --blue-dark:  #1a365d;
+  --blue:       #2b6cb0;
+  --blue-light: #EBF8FF;
+  --purple:     #553c9a;
+  --purple-light:#EDE9FE;
+  --yellow:     #744210;
+  --yellow-light:#FEFCBF;
+  --green:      #276749;
+  --green-light:#F0FFF4;
+  --red:        #c53030;
+  --red-light:  #FFF5F5;
+  --gray:       #4a5568;
+  --gray-light: #EDF2F7;
+  --text:       #1a202c;
+}
+body {
+  font-family: 'Hiragino Kaku Gothic Pro', 'Yu Gothic', 'Meiryo', sans-serif;
+  background: #f0f4f8;
+  color: var(--text);
+  line-height: 1.75;
+}
+
+/* ── HEADER ── */
+.site-header {
+  background: var(--blue-dark);
+  color: white;
+  padding: 20px 0 0;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+}
+.header-inner {
+  max-width: 1060px; margin: 0 auto; padding: 0 24px;
+}
+.header-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 4px; }
+.header-sub   { font-size: 0.78rem; opacity: 0.65; }
+.header-nav {
+  display: flex; gap: 4px; margin-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.15);
+  padding-top: 0;
+}
+.nav-btn {
+  display: inline-block;
+  padding: 7px 14px;
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.8);
+  text-decoration: none;
+  border-radius: 4px 4px 0 0;
+  transition: background 0.15s;
+}
+.nav-btn:hover, .nav-btn.active { background: rgba(255,255,255,0.12); color: white; }
+.nav-btn.external::after { content: " ↗"; font-size: 0.7rem; opacity: 0.6; }
+
+/* ── LAYOUT ── */
+.page { max-width: 1060px; margin: 0 auto; padding: 28px 24px 60px; }
+
+/* ── SECTION TITLE ── */
+.sec-title {
+  font-size: 1.05rem; font-weight: bold;
+  padding: 8px 14px;
+  border-radius: 6px 6px 0 0;
+  margin-bottom: 0;
+  display: flex; align-items: center; gap: 8px;
+}
+.sec-title .num {
+  display: inline-block; width: 24px; height: 24px; border-radius: 50%;
+  background: rgba(255,255,255,0.25); text-align: center;
+  line-height: 24px; font-size: 0.75rem; font-weight: bold; flex-shrink: 0;
+}
+
+/* ── CARD ── */
+.card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+.card-body { padding: 20px 24px; }
+
+/* Section colors */
+.s-overview .sec-title  { background: var(--blue-dark); color: white; }
+.s-overview             { border: 1px solid #bee3f8; }
+.s-mechanism .sec-title { background: var(--purple); color: white; }
+.s-mechanism            { border: 1px solid #d6bcfa; }
+.s-chain .sec-title     { background: var(--yellow); color: white; }
+.s-chain                { border: 1px solid #f6e05e; }
+.s-checklist .sec-title { background: var(--green); color: white; }
+.s-checklist            { border: 1px solid #9ae6b4; }
+.s-risk .sec-title      { background: var(--red); color: white; }
+.s-risk                 { border: 1px solid #feb2b2; }
+
+/* ── OVERVIEW ── */
+.overview-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;
+  margin-top: 16px;
+}
+.ov-box {
+  border-radius: 8px; padding: 14px 16px;
+  font-size: 0.85rem;
+}
+.ov-box .label {
+  font-size: 0.7rem; font-weight: bold; text-transform: uppercase;
+  letter-spacing: 0.08em; margin-bottom: 6px; opacity: 0.7;
+}
+.ov-box .value { font-size: 1.5rem; font-weight: bold; line-height: 1.2; }
+.ov-box .note  { font-size: 0.75rem; margin-top: 4px; opacity: 0.75; }
+.ov-blue   { background: var(--blue-light);   color: var(--blue); }
+.ov-purple { background: var(--purple-light); color: var(--purple); }
+.ov-green  { background: var(--green-light);  color: var(--green); }
+
+/* ── MECHANISM / CALCULATION ── */
+.calc-wrap {
+  display: flex; align-items: stretch; gap: 0;
+  border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden;
+  font-size: 0.87rem; margin: 16px 0;
+}
+.calc-col {
+  flex: 1; padding: 16px;
+  border-right: 1px solid #e2e8f0;
+  text-align: center;
+}
+.calc-col:last-child { border-right: none; }
+.calc-label { font-size: 0.72rem; font-weight: bold; margin-bottom: 6px; color: var(--gray); letter-spacing: 0.05em; }
+.calc-num   { font-size: 1.6rem; font-weight: bold; }
+.calc-sub   { font-size: 0.75rem; margin-top: 4px; color: var(--gray); }
+.calc-arrow { display: flex; align-items: center; justify-content: center; padding: 0 8px; color: #a0aec0; font-size: 1.5rem; flex: 0 0 32px; }
+
+.flow-box {
+  display: flex; gap: 0; align-items: stretch;
+  border-radius: 8px; overflow: hidden;
+  border: 1px solid #e2e8f0; font-size: 0.84rem; margin: 12px 0;
+}
+.flow-step {
+  flex: 1; padding: 12px 16px; position: relative;
+  border-right: 1px solid #e2e8f0;
+}
+.flow-step:last-child { border-right: none; }
+.flow-step .step-num { font-size: 0.68rem; font-weight: bold; letter-spacing: 0.08em; color: var(--gray); margin-bottom: 4px; }
+.flow-step p { font-size: 0.82rem; }
+
+/* ── CHAIN TABLE ── */
+.chain-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+.chain-table th { background: var(--gray-light); padding: 8px 12px; text-align: left; font-weight: bold; font-size: 0.78rem; color: var(--gray); }
+.chain-table td { padding: 9px 12px; border-top: 1px solid #e2e8f0; vertical-align: top; }
+.chain-table tr:hover td { background: #fafafa; }
+.layer-badge {
+  display: inline-block; font-size: 0.68rem; padding: 2px 7px;
+  border-radius: 3px; font-weight: bold; white-space: nowrap;
+}
+.badge-treaty  { background: var(--purple-light); color: var(--purple); }
+.badge-law     { background: var(--yellow-light); color: var(--yellow); }
+.badge-order   { background: var(--gray-light);   color: var(--gray); }
+.badge-rule    { background: var(--green-light);  color: var(--green); }
+.badge-key     { background: #FED7D7; color: var(--red); }
+.badge-premise { background: #FFF5F5; color: #c05621; }
+.chain-link a { color: var(--blue); font-size: 0.78rem; text-decoration: none; }
+.chain-link a:hover { text-decoration: underline; }
+.chain-func { font-size: 0.79rem; color: var(--gray); }
+.chain-name { font-weight: bold; color: var(--text); }
+
+/* ── CHECKLIST ── */
+.checklist { list-style: none; }
+.checklist li {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 0; border-bottom: 1px solid #e2e8f0; font-size: 0.87rem;
+}
+.checklist li:last-child { border-bottom: none; }
+.check-icon {
+  width: 22px; height: 22px; border-radius: 4px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; font-weight: bold; margin-top: 1px;
+}
+.ci-pre    { background: #BEE3F8; color: #2b6cb0; }
+.ci-filing { background: #C6F6D5; color: #276749; }
+.ci-keep   { background: #FED7D7; color: #c53030; }
+.check-body .title { font-weight: bold; margin-bottom: 2px; }
+.check-body .desc  { font-size: 0.79rem; color: var(--gray); }
+.tag {
+  display: inline-block; font-size: 0.65rem; padding: 1px 6px;
+  border-radius: 3px; font-weight: bold; margin-left: 6px; vertical-align: middle;
+}
+.tag-req { background: #FED7D7; color: var(--red); }
+.tag-alt { background: var(--yellow-light); color: var(--yellow); }
+
+/* ── RISK ── */
+.risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.risk-box { border-radius: 8px; padding: 16px; font-size: 0.85rem; }
+.risk-box .risk-title { font-weight: bold; margin-bottom: 8px; font-size: 0.9rem; }
+.risk-box ul { list-style: none; }
+.risk-box ul li { padding: 3px 0; }
+.risk-box ul li::before { content: "・"; }
+.risk-red    { background: var(--red-light); color: var(--red); }
+.risk-orange { background: #FFFAF0; color: #744210; border: 1px solid #F6AD55; }
+
+/* ── RULING BOX ── */
+.ruling-box {
+  border-left: 4px solid var(--red); background: var(--red-light);
+  padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 12px 0;
+  font-size: 0.84rem;
+}
+.ruling-box .ruling-head { font-weight: bold; color: var(--red); margin-bottom: 4px; font-size: 0.88rem; }
+.ruling-box a { color: var(--red); }
+
+/* ── INFO BOX ── */
+.info-box {
+  border-radius: 8px; padding: 12px 16px; font-size: 0.84rem; margin: 12px 0;
+}
+.info-blue   { background: var(--blue-light); border: 1px solid #90CDF4; }
+.info-yellow { background: var(--yellow-light); border: 1px solid #F6E05E; }
+.info-green  { background: var(--green-light); border: 1px solid #9AE6B4; }
+
+.info-box strong { color: var(--blue-dark); }
+
+/* ── CTA BUTTON ── */
+.cta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 18px; border-radius: 7px; font-size: 0.86rem; font-weight: bold;
+  text-decoration: none; transition: opacity 0.15s;
+}
+.cta-btn:hover { opacity: 0.85; }
+.cta-primary  { background: var(--blue-dark); color: white; }
+.cta-purple   { background: var(--purple);    color: white; }
+.cta-green    { background: var(--green);      color: white; }
+
+/* ── DIVIDER ── */
+.divider { border: none; border-top: 1px solid #e2e8f0; margin: 24px 0; }
+
+/* ── RESPONSIVE ── */
+@media(max-width: 700px) {
+  .overview-grid { grid-template-columns: 1fr; }
+  .risk-grid     { grid-template-columns: 1fr; }
+  .calc-wrap     { flex-direction: column; }
+  .calc-arrow    { transform: rotate(90deg); padding: 4px 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── STICKY HEADER ── -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-title">日中使用料 みなし外国税額控除（Tax Sparing）── 実務ガイド</div>
+    <div class="header-sub">日中租税条約23条3(c)・4項 ／ 法人税法69条 ／ 3エージェント検証済み完全法的根拠チェーン</div>
+    <nav class="header-nav">
+      <a class="nav-btn active" href="#overview">概要</a>
+      <a class="nav-btn" href="#mechanism">仕組み</a>
+      <a class="nav-btn" href="#chain">法的根拠</a>
+      <a class="nav-btn" href="#checklist">申告チェックリスト</a>
+      <a class="nav-btn" href="#risk">リスク</a>
+      <a class="nav-btn external" href="ftc_china_royalty_flow_20260307.html" target="_blank">フロー図（SVG）</a>
+      <a class="nav-btn external" href="ftc_china_royalty_provisions_20260307.html" target="_blank">根拠条文</a>
+    </nav>
+  </div>
+</header>
+
+<main class="page">
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 1: 概要
+     ══════════════════════════════════════════════════ -->
+<div class="card s-overview" id="overview">
+  <div class="sec-title">
+    <span class="num">1</span>
+    このガイドについて ── 何のためのみなし控除か
+  </div>
+  <div class="card-body">
+    <p style="font-size:0.9rem;">
+      日本企業が中国の法人（子会社・ライセンシー等）から<strong>使用料（ロイヤルティ）</strong>を受け取るとき、中国は源泉徴収税（10%）を差し引きます。
+      日中租税条約は、この源泉税を日本の法人税から控除できると定めていますが（外国税額控除）、さらに
+      <strong>「実際には徴収されなかった分も含め、20%が支払われたとみなす」</strong>という特別ルール（Tax Sparing）を設けています。
+      この「みなし10%分」をどう申告するかが、実務上の最重要論点です。
+    </p>
+
+    <div class="overview-grid">
+      <div class="ov-box ov-blue">
+        <div class="label">条約上の源泉税上限</div>
+        <div class="value">10<span style="font-size:1rem;">%</span></div>
+        <div class="note">日中条約12条2項<br>完税凭证で証明・確実控除</div>
+      </div>
+      <div class="ov-box ov-purple">
+        <div class="label">みなし税率（Tax Sparing）</div>
+        <div class="value">20<span style="font-size:1rem;">%</span></div>
+        <div class="note">日中条約23条3(c)<br>10%は「みなし」で追加控除</div>
+      </div>
+      <div class="ov-box ov-green">
+        <div class="label">申告失敗時のペナルティ</div>
+        <div class="value" style="font-size:1.1rem;">全額否認</div>
+        <div class="note">裁決77-22・74-09<br>後発的救済不可（永久喪失）</div>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <a class="cta-btn cta-primary" href="ftc_china_royalty_flow_20260307.html" target="_blank">
+        ▶ 完全法的根拠チェーン（8層フロー図）を見る
+      </a>
+      <a class="cta-btn cta-purple" href="ftc_china_royalty_provisions_20260307.html" target="_blank">
+        ▶ 根拠条文（原文抜粋）を見る
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 2: 仕組み
+     ══════════════════════════════════════════════════ -->
+<div class="card s-mechanism" id="mechanism">
+  <div class="sec-title">
+    <span class="num">2</span>
+    仕組みと計算 ── 20%みなし控除の内訳
+  </div>
+  <div class="card-body">
+
+    <p style="font-size:0.87rem; margin-bottom:14px;">
+      <strong>具体例：日本法人が中国法人から使用料1,000万円を受領するケース</strong>
+    </p>
+
+    <!-- 計算ステップ -->
+    <div class="calc-wrap">
+      <div class="calc-col" style="background:#EBF8FF;">
+        <div class="calc-label">使用料収入</div>
+        <div class="calc-num" style="color:#2b6cb0;">1,000<span style="font-size:0.9rem;">万円</span></div>
+        <div class="calc-sub">中国子会社からの技術料</div>
+      </div>
+      <div class="calc-arrow">→</div>
+      <div class="calc-col" style="background:#FFF5F5;">
+        <div class="calc-label">中国源泉徴収税（実際）</div>
+        <div class="calc-num" style="color:#c53030;">▲100<span style="font-size:0.9rem;">万円</span></div>
+        <div class="calc-sub">完税凭证に記載<br>条約12条2項 上限10%</div>
+      </div>
+      <div class="calc-arrow">→</div>
+      <div class="calc-col" style="background:#FAF5FF;">
+        <div class="calc-label">みなし外国税額（追加）</div>
+        <div class="calc-num" style="color:#553c9a;">＋100<span style="font-size:0.9rem;">万円</span></div>
+        <div class="calc-sub">条約23条3(c): 20%-10%=10%分<br>実際には中国に納付されていない</div>
+      </div>
+      <div class="calc-arrow">→</div>
+      <div class="calc-col" style="background:#F0FFF4;">
+        <div class="calc-label">外国税額控除 合計</div>
+        <div class="calc-num" style="color:#276749;">200<span style="font-size:0.9rem;">万円</span></div>
+        <div class="calc-sub">実際100万 ＋ みなし100万<br>日本の法人税から控除</div>
+      </div>
+    </div>
+
+    <div class="info-box info-blue" style="margin-top:16px;">
+      <strong>なぜこうなるのか？</strong><br>
+      日中条約23条4項は「中国が租税奨励措置（免除・軽減）により実際に徴収しなかった税額も、納付したものとみなして日本のFTC計算に含める」と定めています。
+      さらに23条3(c)が「使用料については20%が支払われたものとみなす」と率を固定しているため、
+      実際の源泉税率（10%）と約定みなし率（20%）の差額（10%）が追加控除の対象となります。
+    </div>
+
+    <hr class="divider">
+
+    <p style="font-size:0.87rem; font-weight:bold; margin-bottom:10px;">条約のみなし規定が国内法に接続されるまでの流れ</p>
+    <div class="flow-box">
+      <div class="flow-step" style="background:#FAF5FF;">
+        <div class="step-num">STEP 1 ── 条約</div>
+        <p>日中条約<br>23条3(c)・4項<br><span style="color:#553c9a; font-weight:bold;">「20%みなし」を宣言</span></p>
+      </div>
+      <div class="calc-arrow">→</div>
+      <div class="flow-step" style="background:#FEFCBF;">
+        <div class="step-num">STEP 2 ── 施行令</div>
+        <p>施行令<br>142条の2第3項<br><span style="color:#744210; font-weight:bold;">「みなし納付外国法人税の額」として国内法に取込む</span></p>
+      </div>
+      <div class="calc-arrow">→</div>
+      <div class="flow-step" style="background:#FEFCBF;">
+        <div class="step-num">STEP 3 ── 法律</div>
+        <p>法人税法<br>69条1項<br><span style="color:#744210; font-weight:bold;">控除限度額の範囲内で法人税から控除</span></p>
+      </div>
+      <div class="calc-arrow">→</div>
+      <div class="flow-step" style="background:#F0FFF4;">
+        <div class="step-num">STEP 4 ── 申告</div>
+        <p>法69条25項<br>施行規則29条の4<br><span style="color:#276749; font-weight:bold;">確定申告書に明細書添付で「選択完了」</span></p>
+      </div>
+    </div>
+
+    <div class="info-box info-yellow">
+      <strong>控除限度額に注意：</strong>
+      みなし外国税額100万円も「控除限度額（法人税額 × 調整国外所得金額÷所得金額）」の範囲内でのみ控除可能です。
+      控除しきれない場合は翌期以降3年間繰り越し可能（法69条2項）。
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 3: 法的根拠チェーン
+     ══════════════════════════════════════════════════ -->
+<div class="card s-chain" id="chain">
+  <div class="sec-title">
+    <span class="num">3</span>
+    法的根拠チェーン（8層構造）── 各条文の役割
+  </div>
+  <div class="card-body">
+
+    <div class="info-box info-blue" style="margin-bottom:14px;">
+      各条文の<strong>原文</strong>は
+      <a href="ftc_china_royalty_provisions_20260307.html" target="_blank" style="color:var(--blue);">根拠条文ページ</a>、
+      条文間の<strong>法的フロー</strong>は
+      <a href="ftc_china_royalty_flow_20260307.html" target="_blank" style="color:var(--blue);">SVGフロー図</a>
+      で確認できます。
+    </div>
+
+    <table class="chain-table">
+      <thead>
+        <tr>
+          <th style="width:7%;">層</th>
+          <th style="width:28%;">条文</th>
+          <th style="width:35%;">内容・役割</th>
+          <th style="width:30%;">原文・リンク</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="layer-badge badge-premise">前提</span></td>
+          <td class="chain-name">憲法98条2項<br>＋ 同84条</td>
+          <td class="chain-func">条約を国内法として拘束させる根拠。同時に「租税法律主義」として条約規定を国内法で担保することを要求する制約でもある。</td>
+          <td class="chain-link">—</td>
+        </tr>
+        <tr>
+          <td><span class="layer-badge badge-treaty">第1層</span></td>
+          <td class="chain-name">日中条約 第12条<br>（使用料の定義・10%上限）</td>
+          <td class="chain-func">「使用料」の範囲を定義し、源泉徴収税率の上限を10%に固定。どの所得にみなし控除が適用されるかを画定する入口規定。</td>
+          <td class="chain-link">
+            <a href="ftc_china_royalty_provisions_20260307.html#treaty-12" target="_blank">条文原文 →</a><br>
+            <a href="ftc_china_royalty_flow_20260307.html" target="_blank">フロー図 →</a>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="layer-badge badge-treaty">第1層</span></td>
+          <td class="chain-name">日中条約 第23条3(c)<br>（20%みなし ── <strong style="color:var(--red);">核心</strong>）</td>
+          <td class="chain-func">「使用料については20%が支払われたものとみなす」と率を直接規定。実際の源泉税（10%）との差額（10%）の擬制根拠。</td>
+          <td class="chain-link">
+            <a href="ftc_china_royalty_provisions_20260307.html#treaty-23" target="_blank">条文原文 →</a>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="layer-badge badge-treaty">第1層</span></td>
+          <td class="chain-name">日中条約 第23条4項<br>（Tax Sparing ── 免除も「支払済」とみなす）</td>
+          <td class="chain-func">中国が租税奨励措置で実際に免除・軽減した税額も「納付したとみなす」として日本のFTC計算に算入。3(c)の20%と組み合わせて機能する。</td>
+          <td class="chain-link">
+            <a href="ftc_china_royalty_provisions_20260307.html#treaty-23" target="_blank">条文原文 →</a>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="layer-badge badge-premise">第1.5層</span></td>
+          <td class="chain-name">実施特例法（本則）<br>（昭和44年法律第46号）</td>
+          <td class="chain-func">条約みなし規定を国内法秩序に接続するブリッジ法。省令10条の発動根拠。この法律がなければ省令10条は法的根拠を欠く。</td>
+          <td class="chain-link">
+            <a href="https://jplawdb4.github.io/jplawdb4/law/text/jisshi_tokurei/1.txt" target="_blank">全文参照 →</a>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="layer-badge badge-key">第2層</span></td>
+          <td class="chain-name">施行令142条の2 <strong>第3項</strong><br>（「みなし納付外国法人税の額」の定義 ── <strong style="color:var(--red);">最重要</strong>）</td>
+          <td class="chain-func">条約が「みなす」と言った税額を、国内法の「外国法人税の額」として取り込む接続規定。この規定がなければ条約みなし分はFTCの計算に載らない。3エージェント検証で「最重要欠落条項」と認定。</td>
+          <td class="chain-link">
+            <a href="ftc_china_royalty_provisions_20260307.html#seirei142-2-3" target="_blank">条文原文 →</a>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="layer-badge badge-law">第2層</span></td>
+          <td class="chain-name">法人税法 第69条 <strong>第1項</strong><br>（外国税額控除の基本原則）</td>
+          <td class="chain-func">「外国法人税を納付することとなる場合に、控除限度額を限度として法人税額から控除する」という大原則。施行令142条の2第3項がみなし分をここに接続する。</td>
+          <td class="chain-link">
+            <a href="ftc_china_royalty_provisions_20260307.html#law69-1" target="_blank">条文原文 →</a>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="layer-badge badge-order">第3層</span></td>
+          <td class="chain-name">施行令 第142条<br>（控除限度額の計算）</td>
+          <td class="chain-func">控除限度額 ＝ 法人税額 × （調整国外所得金額 ÷ 所得金額）。みなし税100万もこの上限内でのみ控除可。3項で上限は所得金額の90%。</td>
+          <td class="chain-link">
+            <a href="ftc_china_royalty_provisions_20260307.html#seirei142" target="_blank">条文原文 →</a>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="layer-badge badge-key">第4層</span></td>
+          <td class="chain-name">法人税法 第69条 <strong>第25項</strong><br>（明細書添付 ── <strong style="color:var(--red);">効力要件</strong>）</td>
+          <td class="chain-func">「確定申告書に明細書を添付した場合に限り適用する」（前段）＋「明細書記載額が控除の永久的上限」（後段）。後発的修正申告・更正の請求では要件を充足しない（裁決77-22・74-09）。</td>
+          <td class="chain-link">
+            <a href="ftc_china_royalty_provisions_20260307.html#law69-25" target="_blank">条文原文 →</a>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="layer-badge badge-law">第4層</span></td>
+          <td class="chain-name">法人税法 第69条 <strong>第28項</strong><br>（やむを得ない事情）</td>
+          <td class="chain-func">書類「保存」がない場合の例外的救済。ただし明細書「添付」がない場合には適用されない（裁決77-22）。みなしFTCの「添付なし」は本条で救済不可。</td>
+          <td class="chain-link">
+            <a href="ftc_china_royalty_provisions_20260307.html#law69-28" target="_blank">条文原文 →</a>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="layer-badge badge-rule">第5層</span></td>
+          <td class="chain-name">施行規則 <strong>第29条の4</strong><br>（別表六(五)の法的根拠）</td>
+          <td class="chain-func">法69条25項「財務省令で定める事項」の委任先。別表六(五)欄7に何を記載するかの法的根拠。1項=明細書内容、2項=証明書類（完税凭证等）、3項=金額定義。</td>
+          <td class="chain-link">
+            <a href="ftc_china_royalty_provisions_20260307.html#kisoku29-4" target="_blank">条文原文 →</a>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="layer-badge badge-rule">第5層</span></td>
+          <td class="chain-name">実施特例法省令 第10条<br>（みなし分の追加書類）</td>
+          <td class="chain-func">みなし外国税額がある場合は、通常の添付書類に加えて「計算の明細書＋証明書類」の添付が必要と定める。施行規則29条の4の書類要件を補完・拡張する。</td>
+          <td class="chain-link">
+            <a href="ftc_china_royalty_provisions_20260307.html#kisoku10" target="_blank">条文原文 →</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="text-align:center; margin-top:16px;">
+      <a class="cta-btn cta-primary" href="ftc_china_royalty_flow_20260307.html" target="_blank">
+        ▶ 8層チェーンの完全フロー図（SVG）を開く
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 4: 申告チェックリスト
+     ══════════════════════════════════════════════════ -->
+<div class="card s-checklist" id="checklist">
+  <div class="sec-title">
+    <span class="num">4</span>
+    申告時チェックリスト ── 当初申告が唯一のチャンス
+  </div>
+  <div class="card-body">
+
+    <div class="ruling-box" style="border-color:#276749; background:var(--green-light); color:var(--green);">
+      <div class="ruling-head" style="color:var(--green);">鉄則：確定申告書の提出時に全て完了させる。後からの訂正は実質不可能。</div>
+      みなし外国税額控除は「申告書への明細書添付」が効力要件（法69条25項）であり、
+      後発的な修正申告書・更正の請求での追加記載では要件を充足しない（裁決77-22・74-09）。
+    </div>
+
+    <p style="font-size:0.85rem; font-weight:bold; margin: 16px 0 8px; color:var(--gray);">━━ 申告前（中国側書類の取得） ━━</p>
+    <ul class="checklist">
+      <li>
+        <span class="check-icon ci-pre">前</span>
+        <div class="check-body">
+          <div class="title">① 完税凭证（完税証明書）の取得 <span class="tag tag-req">必須</span></div>
+          <div class="desc">実際に納付した源泉税（10%）の最強証拠。申告書提出前に中国側から必ず入手。施行規則29条の4第2項の「納付を証する書類」に相当。</div>
+        </div>
+      </li>
+      <li>
+        <span class="check-icon ci-pre">前</span>
+        <div class="check-body">
+          <div class="title">② 代扣代缴申报表（源泉徴収申告表）の写し <span class="tag tag-req">必須</span></div>
+          <div class="desc">「税に係る申告書の写し」（施行規則29条の4第2項一号）。完税凭证と組み合わせて証明力を補完する。</div>
+        </div>
+      </li>
+      <li>
+        <span class="check-icon ci-pre">前</span>
+        <div class="check-body">
+          <div class="title">③ 協定待遇情况报告表の控え <span class="tag tag-alt">推奨</span></div>
+          <div class="desc">条約適用申請書類。条約12条2項の10%税率適用を証明するための補助書類として有用。</div>
+        </div>
+      </li>
+    </ul>
+
+    <p style="font-size:0.85rem; font-weight:bold; margin: 16px 0 8px; color:var(--gray);">━━ 申告書作成時（別表の記入） ━━</p>
+    <ul class="checklist">
+      <li>
+        <span class="check-icon ci-filing">申</span>
+        <div class="check-body">
+          <div class="title">④ 別表六(五)欄7の記入 <span class="tag tag-req">効力要件</span></div>
+          <div class="desc">
+            施行規則29条の4第1項の「明細書」として機能する。以下を明記すること：<br>
+            <span style="display:inline-block; margin-top:4px; padding: 6px 10px; background:#f7fafc; border-radius:4px; font-size:0.78rem;">
+              ①適用条約: 「日中租税協定 第23条3項(c) ／ 第23条4項」<br>
+              ②外国法人税率: みなし20% ／ 実効10%<br>
+              ③みなし外国税額: 使用料 × 10%（= 20% − 10%）の計算式と金額<br>
+              ④実際の外国法人税額（完税凭证記載額）
+            </span>
+          </div>
+        </div>
+      </li>
+      <li>
+        <span class="check-icon ci-filing">申</span>
+        <div class="check-body">
+          <div class="title">⑤ 省令10条が要求するみなし分の計算明細書の添付 <span class="tag tag-req">必須</span></div>
+          <div class="desc">「みなし外国税額の計算の明細を記載した書類」（実施特例法省令10条）。条約23条3(c)の根拠と計算式（1,000万 × 10% = 100万）を記載した書類を添付。</div>
+        </div>
+      </li>
+      <li>
+        <span class="check-icon ci-filing">申</span>
+        <div class="check-body">
+          <div class="title">⑥ 省令10条が要求するみなし外国税額の証明書類の添付 <span class="tag tag-req">必須</span></div>
+          <div class="desc">完税凭证・代扣代缴申报表等を「みなし外国税額を証明する書類」として添付。①②で取得した書類をここで活用。</div>
+        </div>
+      </li>
+    </ul>
+
+    <p style="font-size:0.85rem; font-weight:bold; margin: 16px 0 8px; color:var(--gray);">━━ 申告後（保存義務） ━━</p>
+    <ul class="checklist">
+      <li>
+        <span class="check-icon ci-keep">保</span>
+        <div class="check-body">
+          <div class="title">⑦ 証明書類の保存（7年間） <span class="tag tag-req">必須</span></div>
+          <div class="desc">法69条25項・施行規則29条の4第2項が要求する証明書類を7年間（法定保存期間）保存。調査時に提示できる状態を維持すること。</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 5: リスクと裁決
+     ══════════════════════════════════════════════════ -->
+<div class="card s-risk" id="risk">
+  <div class="sec-title">
+    <span class="num">5</span>
+    リスクと先例 ── 失敗した場合に何が起きるか
+  </div>
+  <div class="card-body">
+
+    <div class="risk-grid">
+      <div class="risk-box risk-red">
+        <div class="risk-title">❌ 申告時に記載・添付を失念した場合</div>
+        <ul>
+          <li>みなし外国税額（100万円）は全額否認</li>
+          <li>後発的修正申告・更正の請求は不可</li>
+          <li>追徴税額 ＋ 加算税（過少申告加算税等）＋ 延滞税</li>
+          <li>実際の源泉税（100万円）は控除可能（別問題）</li>
+        </ul>
+      </div>
+      <div class="risk-box risk-orange">
+        <div class="risk-title">⚠ 将来リスク：Pillar Two（OECD GloBE）</div>
+        <ul>
+          <li>グローバル・ミニマム課税（実効税率15%）</li>
+          <li>中国がPillar Two対象となった場合、Tax Sparingの経済効果が間接的に縮小する可能性</li>
+          <li>現行制度存続中に確実に享受することが戦略的に重要</li>
+        </ul>
+      </div>
+    </div>
+
+    <p style="font-size:0.87rem; font-weight:bold; margin: 18px 0 8px;">関連裁決（先例）</p>
+
+    <div class="ruling-box">
+      <div class="ruling-head">
+        <a href="https://www.kfs.go.jp/service/JP/77/22/index.html" target="_blank">
+          裁決77-22（平成21年）── Tax Sparing否認の基本判例
+        </a>
+      </div>
+      別表欄7への未記載・書類未添付 →「みなし外国税額控除の選択をしなかったものと同視する」として全額否認。
+      後発的修正申告で追加記載しても法69条25項の効力要件を充足しないと明示。
+    </div>
+
+    <div class="ruling-box">
+      <div class="ruling-head">
+        <a href="https://www.kfs.go.jp/service/JP/74/09/index.html" target="_blank">
+          裁決74-09（平成19年）── 同趣旨の先例
+        </a>
+      </div>
+      確定申告書への記載欠如 → 後発的な修正申告での追加記載では効力要件を充足しない。
+      裁決77-22と同趣旨を2年前に認定。実務上の一貫した行政判断を示す。
+    </div>
+
+    <div class="info-box info-blue">
+      <strong>まとめ：</strong>
+      「みなし外国税額控除の選択」は <strong>確定申告書を提出する瞬間にしか</strong> 行えない。
+      中国側からの書類取得の遅れ・担当者の知識不足・申告書作成ソフトの設定ミス等により、
+      毎年一定数が失権している。事前の体制整備が唯一の防御策。
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer style="background:var(--blue-dark); color:rgba(255,255,255,0.6); text-align:center; padding:18px; font-size:0.75rem;">
+  <p>
+    <a href="ftc_china_royalty_flow_20260307.html" target="_blank" style="color:#90CDF4; text-decoration:none;">フロー図（SVG）</a>
+    ／
+    <a href="ftc_china_royalty_provisions_20260307.html" target="_blank" style="color:#90CDF4; text-decoration:none;">根拠条文抜粋</a>
+    ／ jplawdb4 ── 条文 as_of 2025-12-27 / 2026-01-01
+  </p>
+  <p style="margin-top:4px;">本ガイドは解説目的であり、個別の税務アドバイスを構成するものではありません。</p>
+</footer>
+
+</body>
+</html>
