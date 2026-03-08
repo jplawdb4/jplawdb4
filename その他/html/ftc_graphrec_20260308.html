@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>外国税額控除 グラレコ 2026-03-08 ── 控除限度額・除外税額・手続・CFC接続</title>
+  <style>
+    @media print {
+      @page {
+        size: A4 landscape;
+        margin: 0;
+      }
+
+      html, body {
+        width: 297mm;
+        height: 210mm;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        background: #fff7ec;
+      }
+
+      .slide-wrapper {
+        width: 297mm;
+        height: 210mm;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        page-break-after: always;
+        break-after: page;
+      }
+
+      .slide-wrapper:last-child {
+        page-break-after: auto;
+        break-after: auto;
+      }
+    }
+
+    @media screen {
+      body {
+        background:
+          radial-gradient(circle at top left, rgba(211, 163, 63, 0.13), transparent 20%),
+          radial-gradient(circle at top right, rgba(70, 97, 136, 0.11), transparent 26%),
+          #eee6d8;
+      }
+
+      .slide-wrapper {
+        width: 297mm;
+        height: 210mm;
+        margin: 10mm auto;
+        box-shadow: 0 18px 48px rgba(30, 35, 45, 0.18);
+        overflow: hidden;
+        border-radius: 6mm;
+      }
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+      color: #1f2430;
+      line-height: 1.35;
+      font-size: 8pt;
+    }
+
+    .slide-wrapper {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.78), rgba(255,252,246,0.92)),
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 10mm,
+          rgba(60, 67, 83, 0.03) 10mm,
+          rgba(60, 67, 83, 0.03) 10.2mm
+        ),
+        #fff7ec;
+      position: relative;
+      border: 1.5px solid rgba(38, 45, 61, 0.09);
+    }
+
+    .slide {
+      width: 297mm;
+      min-height: 210mm;
+      padding: 5.5mm 7mm 11mm;
+      transform-origin: top left;
+      position: relative;
+    }
+
+    .scribble {
+      position: absolute;
+      inset: 4mm;
+      border: 1.2px dashed rgba(48, 56, 72, 0.18);
+      border-radius: 5mm;
+      pointer-events: none;
+    }
+
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding-bottom: 2.2mm;
+      margin-bottom: 3mm;
+      border-bottom: 1.6px solid #1f2430;
+      position: relative;
+      z-index: 1;
+    }
+
+    .slide-title {
+      font-size: 12.2pt;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    .slide-subtitle {
+      font-size: 7.5pt;
+      color: #5b6270;
+      margin-top: 0.8mm;
+    }
+
+    .slide-number {
+      font-size: 9pt;
+      font-weight: 800;
+      padding: 1.2mm 2.4mm;
+      border: 1.4px solid #1f2430;
+      border-radius: 999px;
+      background: #fffdf7;
+    }
+
+    .content {
+      display: grid;
+      gap: 2.2mm;
+      position: relative;
+      z-index: 1;
+    }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.2mm;
+    }
+
+    .grid-3col {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 2.2mm;
+    }
+
+    .section {
+      border: 1.2px solid #1f2430;
+      border-radius: 3mm;
+      padding: 2.2mm;
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: 0 2mm 4mm rgba(31, 36, 48, 0.05);
+    }
+
+    .section-title {
+      display: inline-block;
+      margin: -0.2mm 0 1.6mm;
+      padding: 0.8mm 2mm;
+      border-radius: 999px;
+      background: #1f2430;
+      color: #fffdf9;
+      font-size: 8.3pt;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .highlight-box {
+      background: #fff2c8;
+      border: 1.1px solid #b38025;
+      border-radius: 2.6mm;
+      padding: 1.8mm 2mm;
+    }
+
+    .quote {
+      border-left: 2.2px solid #1f2430;
+      padding: 1.5mm 0 1.5mm 2mm;
+      background: rgba(255,255,255,0.55);
+      font-size: 7.1pt;
+    }
+
+    .fact-box {
+      border: 1.1px solid #3d4659;
+      background: #fbfcff;
+      border-radius: 2.6mm;
+      padding: 1.7mm 1.9mm;
+    }
+
+    .fact-title {
+      font-size: 7.1pt;
+      font-weight: 800;
+      color: #24314b;
+      margin-bottom: 0.8mm;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2mm;
+      margin-top: 1.2mm;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.8mm 1.8mm;
+      border: 1px solid #445066;
+      border-radius: 999px;
+      background: #f7f9fc;
+      font-size: 6.7pt;
+      font-weight: 700;
+      color: #2a3346;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      gap: 2.4mm;
+      align-items: start;
+    }
+
+    .hero-card {
+      padding: 3.2mm;
+      border-radius: 4mm;
+      border: 1.3px solid #1f2430;
+      background:
+        radial-gradient(circle at top right, rgba(179, 128, 37, 0.20), transparent 24%),
+        linear-gradient(135deg, #fff7df, #fffdf8 62%);
+      min-height: 61mm;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      right: -8mm;
+      bottom: -10mm;
+      width: 28mm;
+      height: 28mm;
+      border-radius: 50%;
+      background: rgba(58, 74, 99, 0.08);
+    }
+
+    .hero-kicker {
+      font-size: 7.2pt;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: #8c5f16;
+      text-transform: uppercase;
+      margin-bottom: 1mm;
+    }
+
+    .hero-title {
+      font-size: 18pt;
+      line-height: 1.08;
+      font-weight: 900;
+      max-width: 120mm;
+    }
+
+    .hero-desc {
+      margin-top: 1.8mm;
+      max-width: 128mm;
+      font-size: 7.9pt;
+      color: #495162;
+    }
+
+    .phase-box {
+      display: grid;
+      gap: 1.4mm;
+    }
+
+    .phase-line {
+      padding: 1.8mm 2mm;
+      border-radius: 2.8mm;
+      border: 1px solid #7b8697;
+      background: rgba(255,255,255,0.88);
+    }
+
+    .phase-line strong {
+      display: inline-block;
+      min-width: 22mm;
+      color: #22314b;
+    }
+
+    .hub-wrap {
+      position: relative;
+      min-height: 57mm;
+      padding-top: 1mm;
+    }
+
+    .hub-center {
+      width: 44mm;
+      height: 44mm;
+      border-radius: 50%;
+      border: 2px solid #1f2430;
+      background: #fff8e8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 8pt;
+      font-weight: 800;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 1.5mm 3mm rgba(31, 36, 48, 0.08);
+    }
+
+    .hub-note {
+      position: absolute;
+      width: 38mm;
+      padding: 1.8mm;
+      border: 1.1px solid #2d3546;
+      border-radius: 2.8mm;
+      background: #fffdf8;
+      font-size: 6.8pt;
+      box-shadow: 0 1.5mm 3mm rgba(31, 36, 48, 0.06);
+    }
+
+    .hub-note strong {
+      display: block;
+      margin-bottom: 0.7mm;
+      font-size: 7.1pt;
+      color: #24314b;
+    }
+
+    .n1 { left: 0; top: 2mm; }
+    .n2 { right: 0; top: 1mm; }
+    .n3 { left: 3mm; bottom: 0; }
+    .n4 { right: 2mm; bottom: 0; }
+
+    .connector {
+      position: absolute;
+      border-top: 1.3px dashed #677288;
+      transform-origin: left center;
+    }
+
+    .c1 { width: 39mm; left: 38mm; top: 17mm; transform: rotate(12deg); }
+    .c2 { width: 39mm; right: 38mm; top: 18mm; transform: rotate(-13deg); }
+    .c3 { width: 40mm; left: 41mm; bottom: 15mm; transform: rotate(-13deg); }
+    .c4 { width: 39mm; right: 40mm; bottom: 15mm; transform: rotate(14deg); }
+
+    .flow-strip {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1.4mm;
+    }
+
+    .flow-card {
+      border: 1px solid #374151;
+      border-radius: 3mm;
+      padding: 1.7mm;
+      background: #fffdfa;
+      min-height: 26mm;
+      position: relative;
+    }
+
+    .flow-num {
+      display: inline-flex;
+      width: 6mm;
+      height: 6mm;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: #24314b;
+      color: #fff;
+      font-size: 6.3pt;
+      font-weight: 800;
+      margin-bottom: 0.9mm;
+    }
+
+    .flow-card h3 {
+      font-size: 7.2pt;
+      margin-bottom: 0.8mm;
+      color: #24314b;
+    }
+
+    .flow-card p {
+      font-size: 6.6pt;
+      color: #4d5564;
+    }
+
+    .formula-box {
+      border: 1.2px solid #1f2430;
+      border-radius: 3mm;
+      background: #f9fbff;
+      padding: 2.1mm;
+    }
+
+    .formula {
+      font-size: 9.2pt;
+      font-weight: 800;
+      line-height: 1.4;
+      color: #1f2430;
+      text-align: center;
+      margin: 0.8mm 0 1.2mm;
+    }
+
+    .formula small {
+      font-size: 6.5pt;
+      color: #5c6473;
+      font-weight: 700;
+    }
+
+    .calc-steps {
+      display: grid;
+      gap: 1.1mm;
+      font-size: 6.8pt;
+    }
+
+    .calc-steps div {
+      padding: 1.2mm 1.6mm;
+      border-radius: 2.4mm;
+      border: 1px dashed #7e8798;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 6.8pt;
+    }
+
+    th, td {
+      border: 1px solid #434d61;
+      padding: 1mm 1.2mm;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #e9eef6;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .mini-note {
+      font-size: 6.3pt;
+      color: #5a6170;
+      margin-top: 1mm;
+    }
+
+    ul {
+      padding-left: 3.7mm;
+    }
+
+    li {
+      margin-bottom: 0.8mm;
+    }
+
+    .check-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.8mm;
+    }
+
+    .check-card {
+      border: 1.2px solid #394154;
+      border-radius: 2.8mm;
+      padding: 1.8mm 2mm;
+      background: #fffdf8;
+    }
+
+    .check-card h3 {
+      font-size: 7.3pt;
+      margin-bottom: 1mm;
+      color: #24314b;
+    }
+
+    .tagline {
+      display: inline-block;
+      padding: 0.8mm 1.8mm;
+      border-radius: 999px;
+      border: 1px solid #b38025;
+      background: #fff0c5;
+      font-size: 6.4pt;
+      font-weight: 800;
+      color: #8b5d15;
+      margin-bottom: 0.8mm;
+    }
+
+    .footer {
+      position: absolute;
+      left: 7mm;
+      right: 7mm;
+      bottom: 4mm;
+      border-top: 1px solid rgba(67, 77, 97, 0.35);
+      padding-top: 1.2mm;
+      display: flex;
+      justify-content: space-between;
+      gap: 3mm;
+      font-size: 6.1pt;
+      color: #5f6775;
+    }
+  </style>
+</head>
+<body>
+
+<div class="slide-wrapper">
+  <div class="slide">
+    <div class="scribble"></div>
+    <div class="slide-header">
+      <div>
+        <div class="slide-title">外国税額控除 グラフィックレコード</div>
+        <div class="slide-subtitle">構造解説型 / 5枚構成 / 法人税法69条・施行令141条/142条・措法66条の7/66条の9の3</div>
+      </div>
+      <div class="slide-number">1/5</div>
+    </div>
+    <div class="content">
+      <div class="hero-grid">
+        <div class="hero-card">
+          <div class="hero-kicker">Graphic Record</div>
+          <div class="hero-title">外国税額控除は<br>「外国税の全部を引く制度」ではなく、<br>日本税額との接続ルールである。</div>
+          <div class="hero-desc">
+            国際的二重課税を排除するため、外国で課された税をそのまま差し引くのではなく、
+            「控除対象か」「国外所得に対応する日本税額はいくらか」「繰越できるか」「書類で立証できるか」を
+            順番に判定していく制度として整理すると全体像が崩れにくい。
+          </div>
+          <div class="pill-row">
+            <span class="pill">コア条文: 法法69条</span>
+            <span class="pill">定義: 法令141条</span>
+            <span class="pill">限度額: 法令142条</span>
+            <span class="pill">CFC接続: 措法66条の7等</span>
+          </div>
+        </div>
+
+        <div class="phase-box">
+          <div class="phase-line"><strong>分析タイプ</strong>構造解説型。制度の要素分解と接続関係が核心。</div>
+          <div class="phase-line"><strong>枚数判断</strong>主要論点が 5 系統あるため、標準の 5 枚構成を採用。</div>
+          <div class="phase-line"><strong>見る順番</strong>制度の目的 → 計算式 → 除外税額 → 手続 → CFC二重課税調整。</div>
+          <div class="phase-line"><strong>着地点</strong>「控除できる税額」ではなく「控除できると主張できる状態」を作る。</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">全体マップ</div>
+        <div class="hub-wrap">
+          <div class="connector c1"></div>
+          <div class="connector c2"></div>
+          <div class="connector c3"></div>
+          <div class="connector c4"></div>
+          <div class="hub-center">外国税額控除<br>5つの論点</div>
+          <div class="hub-note n1"><strong>1. 外国法人税の範囲</strong>所得課税型の外国税か。任意還付型や恣意的税率合意型は外れる。</div>
+          <div class="hub-note n2"><strong>2. 控除対象外のふるい</strong>高率負担部分、通常でない取引、日本で非課税所得対応部分などを除外。</div>
+          <div class="hub-note n3"><strong>3. 控除限度額</strong>日本法人税額 × 調整国外所得金額 / 所得金額。ただし 90% キャップあり。</div>
+          <div class="hub-note n4"><strong>4. 3年繰越と手続</strong>余裕枠・超過税額の両方向繰越。明細添付と証憑保存が前提。</div>
+        </div>
+        <div class="highlight-box">
+          <strong>読み方のコツ</strong><br>
+          「外国で払った」だけではまだ早い。<br>
+          実務では、<strong>定義</strong> → <strong>除外</strong> → <strong>限度額</strong> → <strong>繰越</strong> → <strong>証憑</strong> の順に詰めると、
+          計算と申告実務がきれいにつながる。
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <span>Source: 法法69[p1]-[4], 法令141[p1]-[3], 法令142[p1]-[4]</span>
+      <span>Page 1/5</span>
+    </div>
+  </div>
+</div>
+
+<div class="slide-wrapper">
+  <div class="slide">
+    <div class="scribble"></div>
+    <div class="slide-header">
+      <div>
+        <div class="slide-title">計算の芯: 何が、どこまで、今年落とせるか</div>
+        <div class="slide-subtitle">基本控除・3年繰越・90%キャップを一枚で把握</div>
+      </div>
+      <div class="slide-number">2/5</div>
+    </div>
+    <div class="content">
+      <div class="flow-strip">
+        <div class="flow-card"><div class="flow-num">1</div><h3>外国税を把握</h3><p>外国の所得課税型の税かを定義面で確認。</p></div>
+        <div class="flow-card"><div class="flow-num">2</div><h3>除外税額を落とす</h3><p>高率負担部分・非通常取引・日本で非課税部分対応税額を除く。</p></div>
+        <div class="flow-card"><div class="flow-num">3</div><h3>限度額を計算</h3><p>日本法人税額に調整国外所得比率を掛ける。</p></div>
+        <div class="flow-card"><div class="flow-num">4</div><h3>当期控除</h3><p>当期税額と限度額の小さい方が基本控除。</p></div>
+        <div class="flow-card"><div class="flow-num">5</div><h3>3年繰越へ</h3><p>余裕枠は繰越限度額、超過税額は繰越対象外国法人税額へ。</p></div>
+      </div>
+
+      <div class="grid-2col">
+        <div class="formula-box">
+          <div class="section-title">控除限度額の公式</div>
+          <div class="formula">
+            日本の法人税額 × 調整国外所得金額 ÷ 所得金額
+          </div>
+          <div class="quote">
+            法令142条は、単なる「国外所得 / 全所得」の比例ではなく、<strong>外国法人税が課されない国外源泉所得を控除</strong>した
+            「調整国外所得金額」を使う。また、その額は所得金額の <strong>90%</strong> を上限とする。
+          </div>
+          <div class="pill-row">
+            <span class="pill">法令142条1項</span>
+            <span class="pill">調整国外所得金額</span>
+            <span class="pill">90% cap</span>
+          </div>
+        </div>
+
+        <div class="formula-box">
+          <div class="section-title">ミニ数値例</div>
+          <div class="calc-steps">
+            <div>所得金額 = 800</div>
+            <div>日本法人税額 = 1,000</div>
+            <div>調整国外所得金額 = 300</div>
+            <div>控除限度額 = 1,000 × 300 / 800 = <strong>375</strong></div>
+            <div>控除対象外国法人税額 = 420 のとき、当期控除は <strong>375</strong></div>
+            <div>残り <strong>45</strong> は要件充足を前提に繰越対象へ</div>
+          </div>
+          <div class="mini-note">逆に当期の外国税額が 300 なら、限度額との差額 75 が翌期以降に使える余裕枠候補になる。</div>
+        </div>
+      </div>
+
+      <div class="grid-2col">
+        <div class="section">
+          <div class="section-title">法法69条1〜3項の役割分担</div>
+          <table>
+            <tr><th>条文</th><th>役割</th><th>イメージ</th></tr>
+            <tr><td>1項</td><td>当期の基本控除</td><td>今年払う外国税を今年の日本税額から引く本体</td></tr>
+            <tr><td>2項</td><td>繰越控除限度額</td><td>過去の使い残し枠を今年へ持ってくる</td></tr>
+            <tr><td>3項</td><td>繰越控除対象外国法人税額</td><td>過去に引き切れなかった税額を今年へ持ってくる</td></tr>
+          </table>
+        </div>
+
+        <div class="section">
+          <div class="section-title">ここでつまずきやすい点</div>
+          <ul>
+            <li>「外国税額控除」と呼んでいても、実際に引くのは <strong>控除対象外国法人税の額</strong> であり、外国税全額ではない。</li>
+            <li>限度額の分母は「課税所得ベース」、分子は「調整国外所得」で、国外売上高比率ではない。</li>
+            <li>繰越を使う年度では、当年度だけでなく <strong>最も古い年度以後の連続資料</strong> が必要になる。</li>
+          </ul>
+          <div class="highlight-box" style="margin-top:1.2mm;">
+            実務メモ: 控除の議論は「税額の大きさ」より、<strong>税額がいつ・どの所得に対応し・どの年度へ接続するか</strong> の管理が勝負。
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <span>Source: 法法69[p1]-[3], 法令142[p1]-[5]</span>
+      <span>Page 2/5</span>
+    </div>
+  </div>
+</div>
+
+<div class="slide-wrapper">
+  <div class="slide">
+    <div class="scribble"></div>
+    <div class="slide-header">
+      <div>
+        <div class="slide-title">除外税額と国外所得: 入口で落ちるものを先に知る</div>
+        <div class="slide-subtitle">「外国税なら全部OK」ではないことを、定義と除外で整理</div>
+      </div>
+      <div class="slide-number">3/5</div>
+    </div>
+    <div class="content">
+      <div class="grid-2col">
+        <div class="section">
+          <div class="section-title">外国法人税に入るもの / 入らないもの</div>
+          <table>
+            <tr><th>区分</th><th>ポイント</th></tr>
+            <tr><td>入る</td><td>外国で法人所得を課税標準として課される税、附加税、所得代替で収入基準課税される一定税、国内最低課税額に係る一定税。</td></tr>
+            <tr><td>入らない</td><td>納付後に任意還付請求できる税、納付時期を任意設定できる税、合意税率の上乗せ部分、外国のIIR系税、附帯税に類する税。</td></tr>
+          </table>
+          <div class="pill-row">
+            <span class="pill">法令141条2項</span>
+            <span class="pill">法令141条3項</span>
+          </div>
+          <div class="mini-note">入口判定で落ちる税は、その後の限度額計算に進ませない方が整理しやすい。</div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">控除対象外にされる代表例</div>
+          <div class="fact-box">
+            <div class="fact-title">法法69条1項の除外トリガー</div>
+            <ul>
+              <li>負担が高率な部分として政令で定める税額</li>
+              <li>通常行われる取引と認められないものに基因する所得対応税額</li>
+              <li>日本の法人税法令で非課税となる金額に対応する税額</li>
+              <li>その他政令で定める除外税額</li>
+            </ul>
+          </div>
+          <div class="highlight-box" style="margin-top:1.3mm;">
+            実務では「外国で確かに払った」ことと「日本で控除対象に残る」ことは別問題。
+            高率負担や制度濫用を削るフィルターが最初から入っている。
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2col">
+        <div class="section">
+          <div class="section-title">国外源泉所得のざっくり棚卸し</div>
+          <table>
+            <tr><th>大きな類型</th><th>69条4項の主な中身</th></tr>
+            <tr><td>PE帰属所得</td><td>国外事業所等が独立企業なら帰属するといえる所得</td></tr>
+            <tr><td>資産関連</td><td>国外資産の運用・保有・譲渡所得</td></tr>
+            <tr><td>役務・不動産</td><td>国外での人的役務対価、不動産・採石権・船舶航空機貸付対価</td></tr>
+            <tr><td>金融所得</td><td>外国債券利子、国外預金利子、国外投資信託分配</td></tr>
+            <tr><td>配当・使用料</td><td>外国法人配当、国外業務に係るライセンス料・著作権料・機械使用料</td></tr>
+            <tr><td>その他</td><td>年金、匿名組合分配、条約で相手国課税可とされた所得など</td></tr>
+          </table>
+        </div>
+
+        <div class="section">
+          <div class="section-title">限度額側でさらに落ちる国外所得</div>
+          <div class="quote">
+            法令142条3項・4項では、国外源泉所得のうち<strong>そもそも外国法人税が課されない国外源泉所得</strong>を
+            調整国外所得金額から控除する。つまり、「国外所得だから全部分子に入る」わけではない。
+          </div>
+          <div class="check-grid" style="margin-top:1.3mm;">
+            <div class="check-card">
+              <h3>通常の国外所得</h3>
+              <p>その所得を生じた国・地域が、その所得に外国法人税を課さないときは分子から落ちる。</p>
+            </div>
+            <div class="check-card">
+              <h3>PE帰属所得</h3>
+              <p>所得発生国とPE所在国の双方で課税されないと、分子から落ちる構造になる。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <span>Source: 法法69[p1][4], 法令141[p1]-[3], 法令142[p3]-[5]</span>
+      <span>Page 3/5</span>
+    </div>
+  </div>
+</div>
+
+<div class="slide-wrapper">
+  <div class="slide">
+    <div class="scribble"></div>
+    <div class="slide-header">
+      <div>
+        <div class="slide-title">手続と証憑: 申告できることと、申告で守れること</div>
+        <div class="slide-subtitle">添付・保存・繰越継続・やむを得ない事情の救済まで</div>
+      </div>
+      <div class="slide-number">4/5</div>
+    </div>
+    <div class="content">
+      <div class="grid-2col">
+        <div class="section">
+          <div class="section-title">当期控除の必須セット</div>
+          <div class="tagline">法法69条25項</div>
+          <div class="check-grid">
+            <div class="check-card">
+              <h3>1. 明細書の添付</h3>
+              <p>控除を受ける金額、その計算明細、控除対象外国法人税額の計算関係事項を申告書等に添付。</p>
+            </div>
+            <div class="check-card">
+              <h3>2. 証拠書類の保存</h3>
+              <p>課税・納付を証する書類その他財務省令書類を保存。保存がなければ原則適用不可。</p>
+            </div>
+          </div>
+          <div class="highlight-box" style="margin-top:1.4mm;">
+            明細書に書いた金額が、特別事情がない限り <strong>計算の上限</strong> になる。<br>
+            「あとで本当はもっと多かった」は通りにくい。
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">繰越を使うときの追加要件</div>
+          <div class="tagline">法法69条26項</div>
+          <ul>
+            <li>最も古い繰越年度以後の各年度について、控除限度額と当該年度の外国税額を記載した書類の添付が必要。</li>
+            <li>今年の申告でも、繰越控除限度額または繰越控除対象外国法人税額の計算基礎を記載した書類を添付する。</li>
+            <li>繰越分に係る外国税についても、証拠書類の保存が必要。</li>
+          </ul>
+          <div class="fact-box" style="margin-top:1.2mm;">
+            <div class="fact-title">実務感覚</div>
+            単年の税額控除ではなく、<strong>3年通しの証憑チェーン</strong> を維持して初めて繰越が生きる。
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-3col">
+        <div class="section">
+          <div class="section-title">やむを得ない事情</div>
+          <p>69条28項は、保存がなくても<strong>やむを得ない事情</strong>があれば適用できる余地を残す。</p>
+          <div class="mini-note">ただし、自動救済ではなく「保存なしでもよい」制度ではない。</div>
+        </div>
+        <div class="section">
+          <div class="section-title">PE文書化</div>
+          <p>69条29項・30項は、国外事業所等帰属所得や内部取引の明細作成義務を置く。</p>
+          <div class="mini-note">PEが絡むと、税額控除は移転価格・AOA的な文書管理に近づく。</div>
+        </div>
+        <div class="section">
+          <div class="section-title">通算制度の固定</div>
+          <p>69条15項以下では、通算法人について当初申告税額控除額固定や事後調整ルールが入る。</p>
+          <div class="mini-note">後から増やすより、初動で記載と根拠を固める発想が大切。</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">保存書類のイメージ</div>
+        <table>
+          <tr><th>場面</th><th>最低限の束</th><th>ひとこと</th></tr>
+          <tr><td>通常FTC</td><td>外国申告書写し / 納税証明 / 源泉徴収票 / 明細計算書</td><td>どの所得に対応する税かが分かるように束ねる</td></tr>
+          <tr><td>繰越利用</td><td>上記 + 各年度の連続明細</td><td>1年欠けると全体の連鎖が切れやすい</td></tr>
+          <tr><td>PE・内部取引</td><td>帰属所得明細 / 内部取引明細 / 共通費用配分根拠</td><td>限度額の分子・分母双方に効く</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="footer">
+      <span>Source: 法法69[p15]-[33] とくに [25]-[30]</span>
+      <span>Page 4/5</span>
+    </div>
+  </div>
+</div>
+
+<div class="slide-wrapper">
+  <div class="slide">
+    <div class="scribble"></div>
+    <div class="slide-header">
+      <div>
+        <div class="slide-title">CFCとの接続: 合算課税後の二重課税をどうほどくか</div>
+        <div class="slide-subtitle">措法66条の7 / 66条の9の3 による「みなしFTC」接続</div>
+      </div>
+      <div class="slide-number">5/5</div>
+    </div>
+    <div class="content">
+      <div class="grid-2col">
+        <div class="section">
+          <div class="section-title">通常FTCとの違い</div>
+          <table>
+            <tr><th>論点</th><th>通常FTC</th><th>CFC接続</th></tr>
+            <tr><td>税額の出発点</td><td>内国法人が納付する外国法人税</td><td>外国関係会社等に課された外国税を内国法人の控除対象外国法人税とみなす</td></tr>
+            <tr><td>対象条文</td><td>法法69条</td><td>措法66条の7第1項、66条の9の3第1項</td></tr>
+            <tr><td>追加特徴</td><td>当期控除・繰越</td><td>みなし税額や所得税等相当額控除、益金算入ルールが並走</td></tr>
+          </table>
+          <div class="highlight-box" style="margin-top:1.3mm;">
+            ポイントは、CFC合算税制の世界でも「外国で払われた税を日本で二重課税調整する」必要があるため、
+            法法69条の器に接続する専用ジョイントが置かれていること。
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">接続の流れ</div>
+          <div class="flow-strip" style="grid-template-columns: repeat(4, 1fr);">
+            <div class="flow-card"><div class="flow-num">1</div><h3>CFC合算</h3><p>措法66条の6系で課税対象金額等を日本側へ取り込む。</p></div>
+            <div class="flow-card"><div class="flow-num">2</div><h3>外国税を按分</h3><p>外国関係会社に課された外国税のうち、課税対象金額対応部分を切り出す。</p></div>
+            <div class="flow-card"><div class="flow-num">3</div><h3>みなしFTC化</h3><p>その部分を内国法人が納付する控除対象外国法人税とみなす。</p></div>
+            <div class="flow-card"><div class="flow-num">4</div><h3>法人税から控除</h3><p>法法69条・地方法人税法12条へ接続して二重課税を調整。</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2col">
+        <div class="section">
+          <div class="section-title">CFC接続で見落としやすい点</div>
+          <ul>
+            <li>みなし控除対象外国法人税となった金額や控除対象所得税額等相当額は、一定年度で<strong>益金算入</strong>される仕組みがある。</li>
+            <li>所得税等相当額控除は、法人税額控除の順番の中で<strong>後先関係</strong>が定められている。</li>
+            <li>通常FTCと同じく、申告書への明細添付が適用条件となる。</li>
+          </ul>
+          <div class="quote" style="margin-top:1.2mm;">
+            CFC二重課税調整は「別制度」ではなく、法法69条を母体とする特則接続として読むと迷いにくい。
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">最後の実務チェックリスト</div>
+          <div class="check-grid">
+            <div class="check-card">
+              <h3>税の性質</h3>
+              <p>その外国税は法令141条で外国法人税に入るか。</p>
+            </div>
+            <div class="check-card">
+              <h3>除外項目</h3>
+              <p>高率負担・非通常取引・日本で非課税部分を落としたか。</p>
+            </div>
+            <div class="check-card">
+              <h3>限度額</h3>
+              <p>法令142条の調整国外所得金額ベースで計算したか。</p>
+            </div>
+            <div class="check-card">
+              <h3>書類束</h3>
+              <p>明細添付と証憑保存、繰越年度の連続資料がそろっているか。</p>
+            </div>
+            <div class="check-card">
+              <h3>CFC連結</h3>
+              <p>措法66条の7 / 66条の9の3 のみなし税額・益金算入まで追えたか。</p>
+            </div>
+            <div class="check-card">
+              <h3>税目順序</h3>
+              <p>法人税・地方法人税の控除順や他税額控除との前後関係を確認したか。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="highlight-box">
+        <strong>一言でまとめると</strong><br>
+        外国税額控除は「海外で払った税の返金ボタン」ではなく、
+        <strong>国外所得の帰属・税の性質・限度額・繰越・証憑管理</strong> を接続して初めて作動する
+        日本側の二重課税調整システムである。CFCまで含めると、その接続点はさらに精密になる。
+      </div>
+    </div>
+    <div class="footer">
+      <span>Source: 措法66条の7[p1]-[7], 措法66条の9の3[p1]-[6], 法法69条との接続整理</span>
+      <span>Page 5/5</span>
+    </div>
+  </div>
+</div>
+
+<script>
+function adjustSlides() {
+  const wrappers = document.querySelectorAll('.slide-wrapper');
+  const maxHeight = 210 * 3.7795275591;
+
+  wrappers.forEach((wrapper) => {
+    const slide = wrapper.querySelector('.slide');
+    slide.style.transform = 'none';
+    slide.style.width = '297mm';
+
+    const contentHeight = slide.scrollHeight;
+    const availableHeight = maxHeight - 5;
+
+    if (contentHeight > availableHeight) {
+      const scale = availableHeight / contentHeight;
+      const finalScale = Math.max(scale, 0.7);
+      slide.style.transform = `scale(${finalScale})`;
+      slide.style.width = `${297 / finalScale}mm`;
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', adjustSlides);
+window.addEventListener('resize', adjustSlides);
+window.addEventListener('beforeprint', adjustSlides);
+</script>
+</body>
+</html>
