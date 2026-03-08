@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>外国税額控除 条文マップ v2</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f8f6f1;--surface:#fff;--ink:#1a1f2e;--muted:#6b7280;--border:#e5e1d8;
+  --green:#059669;--green-bg:#ecfdf5;--green-light:#d1fae5;
+  --amber:#b45309;--amber-bg:#fffbeb;--amber-light:#fef3c7;
+  --blue:#2563eb;--blue-bg:#eff6ff;--blue-light:#dbeafe;
+  --slate:#475569;--slate-bg:#f8fafc;--slate-light:#e2e8f0;
+  --radius:14px;--shadow:0 4px 24px rgba(0,0,0,.06);
+  --sans:"Hiragino Sans","Yu Gothic UI",sans-serif;
+  --mono:"SF Mono",Consolas,"Liberation Mono",monospace;
+}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.6}
+a{color:inherit;text-decoration:none}
+
+/* === HEADER === */
+.header{
+  background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 50%,#7c2d12 100%);
+  color:#fff;padding:32px 0 0;position:relative;overflow:hidden;
+}
+.header::after{
+  content:"";position:absolute;right:-80px;top:-80px;
+  width:300px;height:300px;border-radius:50%;
+  background:rgba(255,255,255,.04);
+}
+.header-inner{max-width:1280px;margin:0 auto;padding:0 24px}
+.header h1{font-size:clamp(1.8rem,3vw,2.6rem);font-weight:800;letter-spacing:-.02em}
+.header-desc{color:rgba(255,255,255,.75);margin-top:8px;max-width:720px;font-size:.95rem}
+.stats-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.stat-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 14px;border-radius:999px;font-size:.85rem;font-weight:600;
+  background:rgba(255,255,255,.12);backdrop-filter:blur(8px);
+}
+
+/* === TABS === */
+.tab-bar{
+  display:flex;gap:2px;margin-top:20px;position:sticky;top:0;z-index:100;
+  background:linear-gradient(135deg,#0f172a,#1e3a5f 50%,#7c2d12);
+  padding:0 24px;
+}
+.tab-btn{
+  padding:12px 20px;border:none;background:transparent;color:rgba(255,255,255,.6);
+  font-size:.9rem;font-weight:700;cursor:pointer;border-bottom:3px solid transparent;
+  transition:all .15s;font-family:var(--sans);white-space:nowrap;
+}
+.tab-btn:hover{color:rgba(255,255,255,.9)}
+.tab-btn.active{color:#fff;border-bottom-color:#f59e0b}
+.tab-btn .badge{
+  display:inline-block;background:rgba(255,255,255,.2);border-radius:999px;
+  padding:1px 8px;font-size:.75rem;margin-left:6px;
+}
+
+/* === SEARCH === */
+.search-bar{
+  max-width:1280px;margin:18px auto 0;padding:0 24px;
+  display:flex;gap:10px;align-items:center;
+}
+.search-input{
+  flex:1;padding:10px 16px;border-radius:999px;border:1px solid var(--border);
+  background:#fff;font-size:.92rem;font-family:var(--sans);outline:none;
+  transition:border-color .15s;
+}
+.search-input:focus{border-color:#2563eb}
+.search-input::placeholder{color:#aaa}
+.search-count{font-size:.82rem;color:var(--muted);white-space:nowrap}
+.tag-filters{
+  max-width:1280px;margin:10px auto 0;padding:0 24px;
+  display:flex;flex-wrap:wrap;gap:6px;
+}
+.tag-filter{
+  padding:4px 12px;border-radius:999px;border:1px solid var(--border);
+  background:#fff;font-size:.78rem;cursor:pointer;font-weight:600;
+  transition:all .15s;font-family:var(--sans);
+}
+.tag-filter:hover,.tag-filter.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* === MAIN === */
+.main{max-width:1280px;margin:0 auto;padding:18px 24px 60px}
+.lane-panel{display:none}
+.lane-panel.active{display:block}
+
+/* === SVG MAP === */
+.map-panel{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:20px;margin-bottom:18px;
+}
+.map-panel h2{font-size:1.2rem;margin-bottom:12px}
+.map-wrap{overflow-x:auto;border-radius:12px;border:1px solid #e8e3d8;background:#faf9f6}
+.map-wrap svg{display:block;min-width:900px;width:100%;height:auto}
+
+/* === ARTICLE GROUPS === */
+.article-group{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden;
+}
+.group-header{
+  display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;
+  border-left:5px solid var(--accent);transition:background .12s;user-select:none;
+}
+.group-header:hover{background:rgba(0,0,0,.02)}
+.group-chevron{
+  width:20px;height:20px;transition:transform .2s;flex-shrink:0;color:var(--muted);
+}
+.group-header.open .group-chevron{transform:rotate(90deg)}
+.group-title{flex:1}
+.group-title h3{font-size:1.05rem;line-height:1.3}
+.group-title h3 .sub{color:var(--muted);font-size:.9rem;font-weight:500;margin-left:8px}
+.group-title .kicker{font-size:.72rem;font-weight:700;color:var(--accent);letter-spacing:.04em;text-transform:uppercase}
+.group-count{
+  font-size:.78rem;background:var(--soft);color:var(--accent);
+  padding:3px 10px;border-radius:999px;font-weight:700;white-space:nowrap;
+}
+.group-body{display:none;padding:0 18px 14px;border-top:1px solid var(--border)}
+.group-header.open+.group-body{display:block}
+.group-desc{color:var(--muted);font-size:.88rem;padding:10px 0 8px}
+
+/* === ITEM ROWS === */
+.items{display:grid;gap:6px}
+.item{
+  display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;
+  padding:8px 12px;border-radius:10px;text-decoration:none;
+  border:1px solid transparent;transition:all .12s;
+}
+.item:hover{background:var(--soft);border-color:var(--accent);transform:translateX(2px)}
+.item-label{
+  font-family:var(--mono);font-weight:700;font-size:.88rem;
+  color:var(--accent);white-space:nowrap;min-width:100px;
+}
+.item-desc{font-size:.88rem;color:#374151;line-height:1.5}
+.item-tag{
+  font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:999px;
+  white-space:nowrap;letter-spacing:.02em;
+}
+.tag-main{background:#dbeafe;color:#1e40af}
+.tag-def{background:#fef3c7;color:#92400e}
+.tag-formula{background:#d1fae5;color:#065f46}
+.tag-exclude{background:#fce7f3;color:#9d174d}
+.tag-carry{background:#e0e7ff;color:#3730a3}
+.tag-delegate{background:#f3f4f6;color:#4b5563}
+.tag-apply{background:#fae8ff;color:#7e22ce}
+.tag-proc{background:#ffedd5;color:#9a3412}
+.tag-reorg{background:#f1f5f9;color:#334155}
+.tag-connect{background:#ccfbf1;color:#115e59}
+
+/* === OVERVIEW PANEL === */
+.overview-tab{display:none}
+.overview-tab.active{display:block}
+
+/* === FLOW STRIP === */
+.flow-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:14px 0}
+.flow-step{
+  text-align:center;padding:12px 8px;border-radius:12px;
+  background:#f0ece4;border:1px solid #e2d8c5;
+}
+.flow-step strong{display:block;font-size:.9rem;margin-bottom:2px}
+.flow-step span{font-size:.78rem;color:var(--muted)}
+.flow-arrow{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:1.2rem}
+
+/* === RESPONSIVE === */
+@media(max-width:860px){
+  .tab-bar{overflow-x:auto;padding:0 12px}
+  .tab-btn{padding:10px 14px;font-size:.82rem}
+  .header-inner,.search-bar,.tag-filters,.main{padding-left:14px;padding-right:14px}
+  .flow-strip{grid-template-columns:1fr 1fr;gap:6px}
+  .item{grid-template-columns:1fr;gap:4px}
+  .item-label{min-width:unset}
+}
+
+/* === PRINT === */
+@media print{
+  .tab-bar,.search-bar,.tag-filters{display:none!important}
+  .lane-panel,.group-body{display:block!important}
+  .article-group{break-inside:avoid;page-break-inside:avoid}
+  .header{background:#1a1f2e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{background:#fff}
+}
+
+/* === HIGHLIGHT === */
+mark{background:#fef08a;border-radius:2px;padding:0 2px}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <h1>外国税額控除 条文マップ</h1>
+    <p class="header-desc">所得税法・法人税法・地方税法・各施行令にまたがるFTC条文体系を、4レーン&times;5段階（対象税&rarr;国外所得&rarr;限度額&rarr;繰越&rarr;特例）で俯瞰する。全197項にLawzilla直リンク。</p>
+    <div class="stats-row">
+      <span class="stat-badge">197項</span>
+      <span class="stat-badge">25条グループ</span>
+      <span class="stat-badge">8法令</span>
+      <span class="stat-badge">2026-03-08</span>
+    </div>
+  </div>
+  <nav class="tab-bar" id="tabBar">
+    <button class="tab-btn active" data-tab="overview">全体像</button>
+    <button class="tab-btn" data-tab="lane-1">個人国税<span class="badge">42</span></button>
+    <button class="tab-btn" data-tab="lane-2">個人地方税<span class="badge">21</span></button>
+    <button class="tab-btn" data-tab="lane-3">法人国税<span class="badge">79</span></button>
+    <button class="tab-btn" data-tab="lane-4">法人地方税<span class="badge">55</span></button>
+  </nav>
+</header>
+
+<div class="search-bar">
+  <input type="text" class="search-input" id="searchInput" placeholder="条文番号・キーワードで検索（例: 所法95、繰越、限度額）">
+  <span class="search-count" id="searchCount"></span>
+</div>
+<div class="tag-filters" id="tagFilters">
+  <button class="tag-filter" data-tag="all">すべて</button>
+  <button class="tag-filter" data-tag="本則">本則</button>
+  <button class="tag-filter" data-tag="定義">定義</button>
+  <button class="tag-filter" data-tag="算式">算式</button>
+  <button class="tag-filter" data-tag="除外">除外</button>
+  <button class="tag-filter" data-tag="繰越">繰越</button>
+  <button class="tag-filter" data-tag="委任">委任</button>
+  <button class="tag-filter" data-tag="準用">準用</button>
+  <button class="tag-filter" data-tag="手続">手続</button>
+  <button class="tag-filter" data-tag="再編">再編</button>
+  <button class="tag-filter" data-tag="接続">接続</button>
+</div>
+
+<main class="main">
+
+<!-- ==================== OVERVIEW ==================== -->
+<div class="lane-panel overview-tab active" id="panel-overview">
+  <div class="map-panel">
+    <h2>制度フロー</h2>
+    <div class="flow-strip">
+      <div class="flow-step"><strong>1. 対象税</strong><span>FTCに入る外国税か</span></div>
+      <div class="flow-step"><strong>2. 国外所得</strong><span>分子をどう計算するか</span></div>
+      <div class="flow-step"><strong>3. 限度額</strong><span>国税・地方税の控除枠</span></div>
+      <div class="flow-step"><strong>4. 繰越</strong><span>超過額&amp;余裕額の3年回転</span></div>
+      <div class="flow-step"><strong>5. 特例</strong><span>再編・減額・国外転出</span></div>
+    </div>
+  </div>
+
+  <div class="map-panel">
+    <h2>4レーン全体像</h2>
+    <p style="color:var(--muted);font-size:.88rem;margin-bottom:12px">各ノードをクリックすると該当レーンの詳細へ移動します。</p>
+    <div class="map-wrap">
+<svg viewBox="0 0 1200 620" role="img" aria-label="外国税額控除の全体像マップ">
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="620" rx="16" fill="#faf9f6"/>
+
+  <!-- Column Headers -->
+  <g font-size="15" font-weight="700" fill="#fff" text-anchor="middle">
+    <rect x="180" y="16" width="160" height="38" rx="10" fill="#334155"/>
+    <text x="260" y="42">対象税</text>
+    <rect x="370" y="16" width="160" height="38" rx="10" fill="#334155"/>
+    <text x="450" y="42">国外所得</text>
+    <rect x="560" y="16" width="160" height="38" rx="10" fill="#334155"/>
+    <text x="640" y="42">限度額</text>
+    <rect x="750" y="16" width="160" height="38" rx="10" fill="#334155"/>
+    <text x="830" y="42">繰越</text>
+    <rect x="940" y="16" width="200" height="38" rx="10" fill="#334155"/>
+    <text x="1040" y="42">特例</text>
+  </g>
+
+  <!-- Row backgrounds -->
+  <rect x="16" y="68" width="1168" height="126" rx="14" fill="#ecfdf5"/>
+  <rect x="16" y="206" width="1168" height="126" rx="14" fill="#fffbeb"/>
+  <rect x="16" y="344" width="1168" height="126" rx="14" fill="#eff6ff"/>
+  <rect x="16" y="482" width="1168" height="126" rx="14" fill="#f8fafc"/>
+
+  <!-- Row labels -->
+  <g font-size="18" font-weight="800">
+    <text x="36" y="118" fill="#059669">個人</text>
+    <text x="36" y="138" fill="#059669">国税</text>
+    <text x="36" y="256" fill="#b45309">個人</text>
+    <text x="36" y="276" fill="#b45309">地方税</text>
+    <text x="36" y="394" fill="#2563eb">法人</text>
+    <text x="36" y="414" fill="#2563eb">国税</text>
+    <text x="36" y="532" fill="#475569">法人</text>
+    <text x="36" y="552" fill="#475569">地方税</text>
+  </g>
+
+  <!-- === Lane 1: 個人国税 === -->
+  <a class="svg-node" data-lane="lane-1" data-grp="grp-所法95" style="cursor:pointer">
+    <rect x="180" y="82" width="160" height="52" rx="12" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+    <text x="260" y="106" text-anchor="middle" font-size="14" font-weight="700" fill="#064e3b">所法95 / 95の2</text>
+    <text x="260" y="122" text-anchor="middle" font-size="11" fill="#065f46">本体+出国特例</text>
+  </a>
+  <a class="svg-node" data-lane="lane-1" data-grp="grp-所令221" style="cursor:pointer">
+    <rect x="370" y="82" width="160" height="52" rx="12" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+    <text x="450" y="106" text-anchor="middle" font-size="14" font-weight="700" fill="#064e3b">所令221 / 221の2</text>
+    <text x="450" y="122" text-anchor="middle" font-size="11" fill="#065f46">対象税+国外所得</text>
+  </a>
+  <a class="svg-node" data-lane="lane-1" data-grp="grp-所令222" style="cursor:pointer">
+    <rect x="560" y="82" width="160" height="52" rx="12" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+    <text x="640" y="106" text-anchor="middle" font-size="13" font-weight="700" fill="#064e3b">所令222 / 222の2</text>
+    <text x="640" y="122" text-anchor="middle" font-size="11" fill="#065f46">限度額+除外</text>
+  </a>
+  <a class="svg-node" data-lane="lane-1" data-grp="grp-所令224" style="cursor:pointer">
+    <rect x="750" y="82" width="160" height="52" rx="12" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+    <text x="830" y="106" text-anchor="middle" font-size="14" font-weight="700" fill="#064e3b">所令223 / 224</text>
+    <text x="830" y="122" text-anchor="middle" font-size="11" fill="#065f46">接続+繰越</text>
+  </a>
+  <a class="svg-node" data-lane="lane-1" data-grp="grp-所令226-2" style="cursor:pointer">
+    <rect x="940" y="82" width="200" height="52" rx="12" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+    <text x="1040" y="106" text-anchor="middle" font-size="14" font-weight="700" fill="#064e3b">所令226の2</text>
+    <text x="1040" y="122" text-anchor="middle" font-size="11" fill="#065f46">国外転出細則</text>
+  </a>
+
+  <!-- Arrows Lane 1 -->
+  <g stroke="#059669" stroke-width="2" fill="none" marker-end="url(#arr)">
+    <line x1="340" y1="108" x2="368" y2="108"/>
+    <line x1="530" y1="108" x2="558" y2="108"/>
+    <line x1="720" y1="108" x2="748" y2="108"/>
+    <line x1="910" y1="108" x2="938" y2="108"/>
+  </g>
+
+  <!-- === Lane 2: 個人地方税 === -->
+  <a class="svg-node" data-lane="lane-2" data-grp="grp-地法37-3" style="cursor:pointer">
+    <rect x="180" y="220" width="160" height="52" rx="12" fill="#fef3c7" stroke="#b45309" stroke-width="2"/>
+    <text x="260" y="244" text-anchor="middle" font-size="14" font-weight="700" fill="#78350f">地法37の3</text>
+    <text x="260" y="260" text-anchor="middle" font-size="11" fill="#92400e">道府県民税FTC</text>
+  </a>
+  <a class="svg-node" data-lane="lane-2" data-grp="grp-地法314-8" style="cursor:pointer">
+    <rect x="370" y="220" width="160" height="52" rx="12" fill="#fef3c7" stroke="#b45309" stroke-width="2"/>
+    <text x="450" y="244" text-anchor="middle" font-size="14" font-weight="700" fill="#78350f">地法314の8</text>
+    <text x="450" y="260" text-anchor="middle" font-size="11" fill="#92400e">市町村民税FTC</text>
+  </a>
+  <a class="svg-node" data-lane="lane-2" data-grp="grp-地令7-19" style="cursor:pointer">
+    <rect x="560" y="220" width="160" height="52" rx="12" fill="#fef3c7" stroke="#b45309" stroke-width="2"/>
+    <text x="640" y="244" text-anchor="middle" font-size="14" font-weight="700" fill="#78350f">地令7の19</text>
+    <text x="640" y="260" text-anchor="middle" font-size="11" fill="#92400e">道府県民税計算</text>
+  </a>
+  <a class="svg-node" data-lane="lane-2" data-grp="grp-地令48-9-2" style="cursor:pointer">
+    <rect x="750" y="220" width="160" height="52" rx="12" fill="#fef3c7" stroke="#b45309" stroke-width="2"/>
+    <text x="830" y="244" text-anchor="middle" font-size="14" font-weight="700" fill="#78350f">地令48の9の2</text>
+    <text x="830" y="260" text-anchor="middle" font-size="11" fill="#92400e">市町村民税計算</text>
+  </a>
+
+  <!-- Arrows Lane 2 -->
+  <g stroke="#b45309" stroke-width="2" fill="none" marker-end="url(#arr)">
+    <line x1="340" y1="246" x2="368" y2="246"/>
+    <line x1="530" y1="246" x2="558" y2="246"/>
+    <line x1="720" y1="246" x2="748" y2="246"/>
+  </g>
+
+  <!-- Vertical: 国税→地方税 connection -->
+  <g stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6,4" fill="none" marker-end="url(#arr)">
+    <line x1="260" y1="134" x2="260" y2="218"/>
+    <line x1="640" y1="134" x2="640" y2="218"/>
+    <line x1="260" y1="410" x2="260" y2="480"/>
+    <line x1="640" y1="410" x2="640" y2="480"/>
+  </g>
+
+  <!-- === Lane 3: 法人国税 === -->
+  <a class="svg-node" data-lane="lane-3" data-grp="grp-法法69" style="cursor:pointer">
+    <rect x="180" y="358" width="160" height="52" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+    <text x="260" y="382" text-anchor="middle" font-size="14" font-weight="700" fill="#1e3a8a">法法69</text>
+    <text x="260" y="398" text-anchor="middle" font-size="11" fill="#1e40af">法人FTC本体(34項)</text>
+  </a>
+  <a class="svg-node" data-lane="lane-3" data-grp="grp-法令141" style="cursor:pointer">
+    <rect x="370" y="358" width="160" height="52" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+    <text x="450" y="382" text-anchor="middle" font-size="14" font-weight="700" fill="#1e3a8a">法令141 / 141の2</text>
+    <text x="450" y="398" text-anchor="middle" font-size="11" fill="#1e40af">対象税+国外所得</text>
+  </a>
+  <a class="svg-node" data-lane="lane-3" data-grp="grp-法令142" style="cursor:pointer">
+    <rect x="560" y="358" width="160" height="52" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+    <text x="640" y="382" text-anchor="middle" font-size="13" font-weight="700" fill="#1e3a8a">法令142 / 142の2</text>
+    <text x="640" y="398" text-anchor="middle" font-size="11" fill="#1e40af">限度額+除外</text>
+  </a>
+  <a class="svg-node" data-lane="lane-3" data-grp="grp-法令144" style="cursor:pointer">
+    <rect x="750" y="358" width="160" height="52" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+    <text x="830" y="382" text-anchor="middle" font-size="13" font-weight="700" fill="#1e3a8a">法令143-145</text>
+    <text x="830" y="398" text-anchor="middle" font-size="11" fill="#1e40af">接続+繰越</text>
+  </a>
+  <a class="svg-node" data-lane="lane-3" data-grp="grp-法令146" style="cursor:pointer">
+    <rect x="940" y="358" width="200" height="52" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+    <text x="1040" y="382" text-anchor="middle" font-size="14" font-weight="700" fill="#1e3a8a">法令146 / 147</text>
+    <text x="1040" y="398" text-anchor="middle" font-size="11" fill="#1e40af">再編+減額</text>
+  </a>
+
+  <!-- Arrows Lane 3 -->
+  <g stroke="#2563eb" stroke-width="2" fill="none" marker-end="url(#arr)">
+    <line x1="340" y1="384" x2="368" y2="384"/>
+    <line x1="530" y1="384" x2="558" y2="384"/>
+    <line x1="720" y1="384" x2="748" y2="384"/>
+    <line x1="910" y1="384" x2="938" y2="384"/>
+  </g>
+
+  <!-- === Lane 4: 法人地方税 === -->
+  <a class="svg-node" data-lane="lane-4" data-grp="grp-地令9-7" style="cursor:pointer">
+    <rect x="370" y="496" width="350" height="52" rx="12" fill="#e2e8f0" stroke="#475569" stroke-width="2"/>
+    <text x="545" y="520" text-anchor="middle" font-size="14" font-weight="700" fill="#1e293b">地令9の7 (27項)</text>
+    <text x="545" y="536" text-anchor="middle" font-size="11" fill="#334155">法人道府県民税&middot;事業税の準用&middot;再編</text>
+  </a>
+  <a class="svg-node" data-lane="lane-4" data-grp="grp-地令48-13" style="cursor:pointer">
+    <rect x="750" y="496" width="350" height="52" rx="12" fill="#e2e8f0" stroke="#475569" stroke-width="2"/>
+    <text x="925" y="520" text-anchor="middle" font-size="14" font-weight="700" fill="#1e293b">地令48の13 (28項)</text>
+    <text x="925" y="536" text-anchor="middle" font-size="11" fill="#334155">法人市町村民税の準用&middot;再編</text>
+  </a>
+
+  <!-- Arrows Lane 4 -->
+  <g stroke="#475569" stroke-width="2" fill="none" marker-end="url(#arr)">
+    <line x1="720" y1="522" x2="748" y2="522"/>
+  </g>
+
+  <!-- Legend -->
+  <text x="1170" y="610" text-anchor="end" font-size="11" fill="#94a3b8">ノードクリック → 詳細へ移動</text>
+  <text x="36" y="610" font-size="11" fill="#94a3b8">破線 = 国税→地方税への準用接続</text>
+</svg>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== LANE 1: 個人国税 ==================== -->
+<div class="lane-panel" id="panel-lane-1">
+
+  <div class="article-group" id="grp-所法95" style="--accent:#059669;--soft:#ecfdf5">
+    <div class="group-header open" onclick="toggleGroup(this)">
+      <svg class="group-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M6 4l8 6-8 6z"/></svg>
+      <div class="group-title">
+        <div class="kicker">所得税法 / 本体</div>
+        <h3>所法95<span class="sub">個人FTCの本体</span></h3>
+      </div>
+      <span class="group-count">16項</span>
+    </div>
+    <div class="group-body">
+      <p class="group-desc">当年控除、国外源泉所得、3年繰越、申告要件までの中心条文。</p>
+      <div class="items">
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000033?mode=onlylawzilla#L340AC0000000033_ln95-1" target="_blank" data-tag="本則"><span class="item-label">所法95①</span><span class="item-desc">当年の外国所得税を国税・地方税の控除枠内で控除する本則。</span><span class="item-tag tag-main">本則</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000033?mode=onlylawzilla#L340AC0000000033_ln95-2" target="_blank" data-tag="繰越"><span class="item-label">所法95②</span><span class="item-desc">控除し切れない外国税額を3年繰り越す。</span><span class="item-tag tag-carry">繰越</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000033?mode=onlylawzilla#L340AC0000000033_ln95-3" target="_blank" data-tag="繰越"><span class="item-label">所法95③</span><span class="item-desc">当年の余裕枠を3年繰り越して将来の超過額に充てる。</span><span class="item-tag tag-carry">繰越</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000033?mode=onlylawzilla#L340AC0000000033_ln95-4" target="_blank" data-tag="定義"><span class="item-label">所法95④</span><span class="item-desc">国外源泉所得の類型を定義する。</span><span class="item-tag tag-def">定義</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000033?mode=onlylawzilla#L340AC0000000033_ln95-5" target="_blank" data-tag="定義"><span class="item-label">所法95⑤</span><span class="item-desc">内部取引の意味を定義する。</span><span class="item-tag tag-def">定義</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000033?mode=onlylawzilla#L340AC0000000033_ln95-6" target="_blank" data-tag="定義"><span class="item-label">所法95⑥</span><span class="item-desc">租税条約優先時の国外源泉所得判定。</span><span class="item-tag tag-def">定義</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000033?mode=onlylawzilla#L340AC0000000033_ln95-7" target="_blank" data-tag="委任"><span class="item-label">所法95⑦</span><span class="item-desc">政令への委任（対象税・計算の細目）。</span><span class="item-tag tag-delegate">委任</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000033?mode=onlylawzilla#L340AC0000000033_ln95-8" target="_blank" data-tag="定義"><span class="item-label">所法95⑧</span><span class="item-desc">棚卸資産購入業務の帰属所得調整。</span><span class="item-tag tag-def">定義</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000033?mode=onlylawzilla#L340AC0000000033_ln95-9" target="_blank" data-tag="委任"><span class="item-label">所法95⑨</span><span class="item-desc">政令への委任（国外所得の計算）。</span><span class="item-tag tag-delegate">委任</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000033?mode=onlylawzilla#L340AC0000000033_ln95-10" target="_blank" data-tag="手続"><span class="item-label">所法95⑩</span><span class="item-desc">申告書記載・明細添付を適用要件化する。</span><span class="item-tag tag-proc">手続</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000033?mode=onlylawzilla#L340AC0000000033_ln95-11" target="_blank" data-tag="手続"><span class="item-label">所法95⑪</span><span class="item-desc">宥恕規定（やむを得ない事情がある場合の救済）。</span><span class="item-tag tag-proc">手続</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000033?mode=onlylawzilla#L340AC0000000033_ln95-12" target="_blank" data-tag="委任"><span class="item-label">所法95⑫</span><span class="item-desc">政令への委任（繰越計算の細目）。</span><span class="item-tag tag-delegate">委任</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000033?mode=onlylawzilla#L340AC0000000033_ln95-13" target="_blank" data-tag="委任"><span class="item-label">所法95⑬</span><span class="item-desc">政令への委任（控除限度額の計算）。</span><span class="item-tag tag-delegate">委任</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000033?mode=onlylawzilla#L340AC0000000033_ln95-14" target="_blank" data-tag="準用"><span class="item-label">所法95⑭</span><span class="item-desc">他条の定義・計算を準用する。</span><span class="item-tag tag-apply">準用</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000033?mode=onlylawzilla#L340AC0000000033_ln95-15" target="_blank" data-tag="委任"><span class="item-label">所法95⑮</span><span class="item-desc">政令への委任（地方税控除限度額）。</span><span class="item-tag tag-delegate">委任</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000033?mode=onlylawzilla#L340AC0000000033_ln95-16" target="_blank" data-tag="委任"><span class="item-label">所法95⑯</span><span class="item-desc">政令への委任（その他必要事項）。</span><span class="item-tag tag-delegate">委任</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-group" id="grp-所法95-2" style="--accent:#059669;--soft:#ecfdf5">
+    <div class="group-header" onclick="toggleGroup(this)">
+      <svg class="group-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M6 4l8 6-8 6z"/></svg>
+      <div class="group-title">
+        <div class="kicker">所得税法 / 特例</div>
+        <h3>所法95の2<span class="sub">国外転出特例</span></h3>
+      </div>
+      <span class="group-count">3項</span>
+    </div>
+    <div class="group-body">
+      <p class="group-desc">出国時課税が絡む場合に外国税額控除をどう接続するかの特則。</p>
+      <div class="items">
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000033?mode=onlylawzilla#L340AC0000000033_ln95_2-1" target="_blank" data-tag="本則"><span class="item-label">所法95の2①</span><span class="item-desc">国外転出時課税に対応する外国税額控除の特例本体。</span><span class="item-tag tag-main">本則</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000033?mode=onlylawzilla#L340AC0000000033_ln95_2-2" target="_blank" data-tag="委任"><span class="item-label">所法95の2②</span><span class="item-desc">政令への委任（転出特例の計算細目）。</span><span class="item-tag tag-delegate">委任</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000033?mode=onlylawzilla#L340AC0000000033_ln95_2-3" target="_blank" data-tag="委任"><span class="item-label">所法95の2③</span><span class="item-desc">政令への委任（その他必要事項）。</span><span class="item-tag tag-delegate">委任</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-group" id="grp-所令221" style="--accent:#059669;--soft:#ecfdf5">
+    <div class="group-header" onclick="toggleGroup(this)">
+      <svg class="group-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M6 4l8 6-8 6z"/></svg>
+      <div class="group-title">
+        <div class="kicker">所得税法施行令 / 対象税</div>
+        <h3>所令221<span class="sub">個人の対象税</span></h3>
+      </div>
+      <span class="group-count">3項</span>
+    </div>
+    <div class="group-body">
+      <p class="group-desc">個人側でFTCに入る税と入らない税を切り分ける入口。</p>
+      <div class="items">
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000096?mode=onlylawzilla#L340CO0000000096_ln221-1" target="_blank" data-tag="定義"><span class="item-label">所令221①</span><span class="item-desc">個人側で対象となる外国所得税の基本定義。</span><span class="item-tag tag-def">定義</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000096?mode=onlylawzilla#L340CO0000000096_ln221-2" target="_blank" data-tag="定義"><span class="item-label">所令221②</span><span class="item-desc">対象税に含める税目を列挙する。</span><span class="item-tag tag-def">定義</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000096?mode=onlylawzilla#L340CO0000000096_ln221-3" target="_blank" data-tag="除外"><span class="item-label">所令221③</span><span class="item-desc">対象外とする税目を列挙する。</span><span class="item-tag tag-exclude">除外</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-group" id="grp-所令221-2" style="--accent:#059669;--soft:#ecfdf5">
+    <div class="group-header" onclick="toggleGroup(this)">
+      <svg class="group-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M6 4l8 6-8 6z"/></svg>
+      <div class="group-title">
+        <div class="kicker">所得税法施行令 / 国外所得</div>
+        <h3>所令221の2<span class="sub">個人の国外所得</span></h3>
+      </div>
+      <span class="group-count">1項</span>
+    </div>
+    <div class="group-body">
+      <p class="group-desc">分子に入る国外所得金額の計算土台。</p>
+      <div class="items">
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000096?mode=onlylawzilla#L340CO0000000096_ln221_2-1" target="_blank" data-tag="算式"><span class="item-label">所令221の2①</span><span class="item-desc">国外所得金額の計算対象を定義する。</span><span class="item-tag tag-formula">算式</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-group" id="grp-所令222" style="--accent:#059669;--soft:#ecfdf5">
+    <div class="group-header" onclick="toggleGroup(this)">
+      <svg class="group-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M6 4l8 6-8 6z"/></svg>
+      <div class="group-title">
+        <div class="kicker">所得税法施行令 / 限度額</div>
+        <h3>所令222<span class="sub">個人の限度額</span></h3>
+      </div>
+      <span class="group-count">3項</span>
+    </div>
+    <div class="group-body">
+      <p class="group-desc">控除限度額の基本算式と分母・分子の意味を定める。</p>
+      <div class="items">
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000096?mode=onlylawzilla#L340CO0000000096_ln222-1" target="_blank" data-tag="算式"><span class="item-label">所令222①</span><span class="item-desc">個人の控除限度額の基本算式。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000096?mode=onlylawzilla#L340CO0000000096_ln222-2" target="_blank" data-tag="定義"><span class="item-label">所令222②</span><span class="item-desc">分母となる所得総額の範囲を定める。</span><span class="item-tag tag-def">定義</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000096?mode=onlylawzilla#L340CO0000000096_ln222-3" target="_blank" data-tag="定義"><span class="item-label">所令222③</span><span class="item-desc">所得総額に加算・除外する調整項目。</span><span class="item-tag tag-def">定義</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-group" id="grp-所令222-2" style="--accent:#059669;--soft:#ecfdf5">
+    <div class="group-header" onclick="toggleGroup(this)">
+      <svg class="group-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M6 4l8 6-8 6z"/></svg>
+      <div class="group-title">
+        <div class="kicker">所得税法施行令 / 除外</div>
+        <h3>所令222の2<span class="sub">個人の除外税額</span></h3>
+      </div>
+      <span class="group-count">4項</span>
+    </div>
+    <div class="group-body">
+      <p class="group-desc">高率負担や特殊取引などFTCから外れる税額の整理。</p>
+      <div class="items">
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000096?mode=onlylawzilla#L340CO0000000096_ln222_2-1" target="_blank" data-tag="除外"><span class="item-label">所令222の2①</span><span class="item-desc">FTC対象外税額の範囲を定める。</span><span class="item-tag tag-exclude">除外</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000096?mode=onlylawzilla#L340CO0000000096_ln222_2-2" target="_blank" data-tag="除外"><span class="item-label">所令222の2②</span><span class="item-desc">特殊関係者取引に関する除外要件。</span><span class="item-tag tag-exclude">除外</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000096?mode=onlylawzilla#L340CO0000000096_ln222_2-3" target="_blank" data-tag="除外"><span class="item-label">所令222の2③</span><span class="item-desc">国内非課税相当部分を対象外にする。</span><span class="item-tag tag-exclude">除外</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000096?mode=onlylawzilla#L340CO0000000096_ln222_2-4" target="_blank" data-tag="除外"><span class="item-label">所令222の2④</span><span class="item-desc">高率負担部分の除外計算。</span><span class="item-tag tag-exclude">除外</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-group" id="grp-所令223" style="--accent:#059669;--soft:#ecfdf5">
+    <div class="group-header" onclick="toggleGroup(this)">
+      <svg class="group-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M6 4l8 6-8 6z"/></svg>
+      <div class="group-title">
+        <div class="kicker">所得税法施行令 / 地方税接続</div>
+        <h3>所令223<span class="sub">個人地方税への接続</span></h3>
+      </div>
+      <span class="group-count">1項</span>
+    </div>
+    <div class="group-body">
+      <p class="group-desc">国税から住民税控除限度額へ渡す橋渡し。</p>
+      <div class="items">
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000096?mode=onlylawzilla#L340CO0000000096_ln223-1" target="_blank" data-tag="接続"><span class="item-label">所令223①</span><span class="item-desc">個人地方税控除限度額の接続算式。</span><span class="item-tag tag-connect">接続</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-group" id="grp-所令224" style="--accent:#059669;--soft:#ecfdf5">
+    <div class="group-header" onclick="toggleGroup(this)">
+      <svg class="group-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M6 4l8 6-8 6z"/></svg>
+      <div class="group-title">
+        <div class="kicker">所得税法施行令 / 繰越</div>
+        <h3>所令224<span class="sub">個人の繰越</span></h3>
+      </div>
+      <span class="group-count">6項</span>
+    </div>
+    <div class="group-body">
+      <p class="group-desc">超過額と余裕額の3年繰越計算。</p>
+      <div class="items">
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000096?mode=onlylawzilla#L340CO0000000096_ln224-1" target="_blank" data-tag="繰越"><span class="item-label">所令224①</span><span class="item-desc">繰越控除限度額の基本定義。</span><span class="item-tag tag-carry">繰越</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000096?mode=onlylawzilla#L340CO0000000096_ln224-2" target="_blank" data-tag="繰越"><span class="item-label">所令224②</span><span class="item-desc">繰越対象外国税額の定義。</span><span class="item-tag tag-carry">繰越</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000096?mode=onlylawzilla#L340CO0000000096_ln224-3" target="_blank" data-tag="算式"><span class="item-label">所令224③</span><span class="item-desc">繰越控除の充当順序（古い年度から）。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000096?mode=onlylawzilla#L340CO0000000096_ln224-4" target="_blank" data-tag="算式"><span class="item-label">所令224④</span><span class="item-desc">余裕額の繰越充当の順序。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000096?mode=onlylawzilla#L340CO0000000096_ln224-5" target="_blank" data-tag="算式"><span class="item-label">所令224⑤</span><span class="item-desc">超過額と余裕額の相殺計算。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000096?mode=onlylawzilla#L340CO0000000096_ln224-6" target="_blank" data-tag="算式"><span class="item-label">所令224⑥</span><span class="item-desc">地方税分との按分調整。</span><span class="item-tag tag-formula">算式</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-group" id="grp-所令226-2" style="--accent:#059669;--soft:#ecfdf5">
+    <div class="group-header" onclick="toggleGroup(this)">
+      <svg class="group-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M6 4l8 6-8 6z"/></svg>
+      <div class="group-title">
+        <div class="kicker">所得税法施行令 / 特例</div>
+        <h3>所令226の2<span class="sub">国外転出の細則</span></h3>
+      </div>
+      <span class="group-count">5項</span>
+    </div>
+    <div class="group-body">
+      <p class="group-desc">所法95の2を実装する政令細目。</p>
+      <div class="items">
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000096?mode=onlylawzilla#L340CO0000000096_ln226_2-1" target="_blank" data-tag="算式"><span class="item-label">所令226の2①</span><span class="item-desc">転出特例の控除額計算方法。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000096?mode=onlylawzilla#L340CO0000000096_ln226_2-2" target="_blank" data-tag="定義"><span class="item-label">所令226の2②</span><span class="item-desc">転出特例における対象資産の定義。</span><span class="item-tag tag-def">定義</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000096?mode=onlylawzilla#L340CO0000000096_ln226_2-3" target="_blank" data-tag="準用"><span class="item-label">所令226の2③</span><span class="item-desc">他条の定義・計算を準用する。</span><span class="item-tag tag-apply">準用</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000096?mode=onlylawzilla#L340CO0000000096_ln226_2-4" target="_blank" data-tag="算式"><span class="item-label">所令226の2④</span><span class="item-desc">帰国時の再計算ルール。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000096?mode=onlylawzilla#L340CO0000000096_ln226_2-5" target="_blank" data-tag="準用"><span class="item-label">所令226の2⑤</span><span class="item-desc">他条の定義・計算を準用する。</span><span class="item-tag tag-apply">準用</span></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== LANE 2: 個人地方税 ==================== -->
+<div class="lane-panel" id="panel-lane-2">
+
+  <div class="article-group" id="grp-地法37-3" style="--accent:#b45309;--soft:#fffbeb">
+    <div class="group-header open" onclick="toggleGroup(this)">
+      <svg class="group-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M6 4l8 6-8 6z"/></svg>
+      <div class="group-title">
+        <div class="kicker">地方税法 / 道府県民税</div>
+        <h3>地法37の3<span class="sub">道府県民税FTC</span></h3>
+      </div>
+      <span class="group-count">1項</span>
+    </div>
+    <div class="group-body">
+      <p class="group-desc">個人地方税FTCの本体。</p>
+      <div class="items">
+        <a class="item" href="https://lawzilla.jp/law/325AC0000000226?mode=onlylawzilla#L325AC0000000226_ln37_3-1" target="_blank" data-tag="本則"><span class="item-label">地法37の3①</span><span class="item-desc">道府県民税側で外国税額控除を認める本則。</span><span class="item-tag tag-main">本則</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-group" id="grp-地法314-8" style="--accent:#b45309;--soft:#fffbeb">
+    <div class="group-header" onclick="toggleGroup(this)">
+      <svg class="group-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M6 4l8 6-8 6z"/></svg>
+      <div class="group-title">
+        <div class="kicker">地方税法 / 市町村民税</div>
+        <h3>地法314の8<span class="sub">市町村民税FTC</span></h3>
+      </div>
+      <span class="group-count">1項</span>
+    </div>
+    <div class="group-body">
+      <p class="group-desc">市町村民税側の本体。</p>
+      <div class="items">
+        <a class="item" href="https://lawzilla.jp/law/325AC0000000226?mode=onlylawzilla#L325AC0000000226_ln314_8-1" target="_blank" data-tag="本則"><span class="item-label">地法314の8①</span><span class="item-desc">市町村民税側で外国税額控除を認める本則。</span><span class="item-tag tag-main">本則</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-group" id="grp-地令7-19" style="--accent:#b45309;--soft:#fffbeb">
+    <div class="group-header" onclick="toggleGroup(this)">
+      <svg class="group-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M6 4l8 6-8 6z"/></svg>
+      <div class="group-title">
+        <div class="kicker">地方税法施行令 / 道府県民税計算</div>
+        <h3>地令7の19<span class="sub">個人地方税の計算細目</span></h3>
+      </div>
+      <span class="group-count">9項</span>
+    </div>
+    <div class="group-body">
+      <p class="group-desc">道府県民税側の限度額、繰越、準用を整理。</p>
+      <div class="items">
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln7_19-1" target="_blank" data-tag="準用"><span class="item-label">地令7の19①</span><span class="item-desc">国税FTCの範囲・計算を個人地方税へ準用する。</span><span class="item-tag tag-apply">準用</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln7_19-2" target="_blank" data-tag="算式"><span class="item-label">地令7の19②</span><span class="item-desc">道府県民税の控除限度額算式。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln7_19-3" target="_blank" data-tag="算式"><span class="item-label">地令7の19③</span><span class="item-desc">道府県民税側の控除限度額割合を示す。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln7_19-4" target="_blank" data-tag="繰越"><span class="item-label">地令7の19④</span><span class="item-desc">余裕額の繰越計算（道府県民税分）。</span><span class="item-tag tag-carry">繰越</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln7_19-5" target="_blank" data-tag="繰越"><span class="item-label">地令7の19⑤</span><span class="item-desc">超過額の繰越計算（道府県民税分）。</span><span class="item-tag tag-carry">繰越</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln7_19-6" target="_blank" data-tag="算式"><span class="item-label">地令7の19⑥</span><span class="item-desc">繰越充当の順序（地方税版）。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln7_19-7" target="_blank" data-tag="算式"><span class="item-label">地令7の19⑦</span><span class="item-desc">超過額と余裕額の相殺計算（地方税版）。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln7_19-8" target="_blank" data-tag="算式"><span class="item-label">地令7の19⑧</span><span class="item-desc">国税との按分調整計算。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln7_19-9" target="_blank" data-tag="手続"><span class="item-label">地令7の19⑨</span><span class="item-desc">申告書記載・明細添付を適用要件化する。</span><span class="item-tag tag-proc">手続</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-group" id="grp-地令48-9-2" style="--accent:#b45309;--soft:#fffbeb">
+    <div class="group-header" onclick="toggleGroup(this)">
+      <svg class="group-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M6 4l8 6-8 6z"/></svg>
+      <div class="group-title">
+        <div class="kicker">地方税法施行令 / 市町村民税計算</div>
+        <h3>地令48の9の2<span class="sub">市町村民税の計算細目</span></h3>
+      </div>
+      <span class="group-count">10項</span>
+    </div>
+    <div class="group-body">
+      <p class="group-desc">市町村民税側の限度額、繰越、配分を整理。</p>
+      <div class="items">
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_9_2-1" target="_blank" data-tag="準用"><span class="item-label">地令48の9の2①</span><span class="item-desc">国税FTCの範囲・計算を準用する。</span><span class="item-tag tag-apply">準用</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_9_2-2" target="_blank" data-tag="繰越"><span class="item-label">地令48の9の2②</span><span class="item-desc">余裕額を3年繰り越す場合の計算。</span><span class="item-tag tag-carry">繰越</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_9_2-3" target="_blank" data-tag="算式"><span class="item-label">地令48の9の2③</span><span class="item-desc">市町村民税の控除限度額算式。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_9_2-4" target="_blank" data-tag="算式"><span class="item-label">地令48の9の2④</span><span class="item-desc">市町村民税側の限度額割合を示す。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_9_2-5" target="_blank" data-tag="繰越"><span class="item-label">地令48の9の2⑤</span><span class="item-desc">超過額を3年繰り越す場合の計算。</span><span class="item-tag tag-carry">繰越</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_9_2-6" target="_blank" data-tag="算式"><span class="item-label">地令48の9の2⑥</span><span class="item-desc">繰越充当の順序（市町村版）。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_9_2-7" target="_blank" data-tag="算式"><span class="item-label">地令48の9の2⑦</span><span class="item-desc">超過額と余裕額の相殺計算。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_9_2-8" target="_blank" data-tag="算式"><span class="item-label">地令48の9の2⑧</span><span class="item-desc">国税との按分調整計算。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_9_2-9" target="_blank" data-tag="算式"><span class="item-label">地令48の9の2⑨</span><span class="item-desc">道府県民税との配分調整。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_9_2-10" target="_blank" data-tag="手続"><span class="item-label">地令48の9の2⑩</span><span class="item-desc">申告書記載・明細添付を適用要件化する。</span><span class="item-tag tag-proc">手続</span></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== LANE 3: 法人国税 ==================== -->
+<div class="lane-panel" id="panel-lane-3">
+
+  <div class="article-group" id="grp-法法69" style="--accent:#2563eb;--soft:#eff6ff">
+    <div class="group-header open" onclick="toggleGroup(this)">
+      <svg class="group-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M6 4l8 6-8 6z"/></svg>
+      <div class="group-title">
+        <div class="kicker">法人税法 / 本体</div>
+        <h3>法法69<span class="sub">法人FTCの本体 (34項)</span></h3>
+      </div>
+      <span class="group-count">34項</span>
+    </div>
+    <div class="group-body">
+      <p class="group-desc">当年控除、3年繰越、組織再編、申告要件、特例の起点。個人版(所法95)と対称構造だが再編規定(⑨〜⑪)が追加。</p>
+      <div class="items">
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-1" target="_blank" data-tag="本則"><span class="item-label">法法69①</span><span class="item-desc">当年の外国法人税を国税・地方税の控除枠内で控除する本則。</span><span class="item-tag tag-main">本則</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-2" target="_blank" data-tag="繰越"><span class="item-label">法法69②</span><span class="item-desc">控除し切れない外国法人税を3年繰り越す。</span><span class="item-tag tag-carry">繰越</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-3" target="_blank" data-tag="繰越"><span class="item-label">法法69③</span><span class="item-desc">当年の余裕枠を3年繰り越して将来の超過額に充てる。</span><span class="item-tag tag-carry">繰越</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-4" target="_blank" data-tag="定義"><span class="item-label">法法69④</span><span class="item-desc">国外源泉所得の類型を定義する。</span><span class="item-tag tag-def">定義</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-5" target="_blank" data-tag="定義"><span class="item-label">法法69⑤</span><span class="item-desc">内部取引の意味を定義する。</span><span class="item-tag tag-def">定義</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-6" target="_blank" data-tag="定義"><span class="item-label">法法69⑥</span><span class="item-desc">租税条約優先時の判定ルール。</span><span class="item-tag tag-def">定義</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-7" target="_blank" data-tag="委任"><span class="item-label">法法69⑦</span><span class="item-desc">政令への委任（対象税・国外所得の細目）。</span><span class="item-tag tag-delegate">委任</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-8" target="_blank" data-tag="定義"><span class="item-label">法法69⑧</span><span class="item-desc">棚卸資産購入業務の帰属所得調整。</span><span class="item-tag tag-def">定義</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-9" target="_blank" data-tag="再編"><span class="item-label">法法69⑨</span><span class="item-desc">適格合併時の繰越超過額の引継ぎ。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-10" target="_blank" data-tag="再編"><span class="item-label">法法69⑩</span><span class="item-desc">適格合併時の繰越余裕額の引継ぎ。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-11" target="_blank" data-tag="再編"><span class="item-label">法法69⑪</span><span class="item-desc">分割型分割時の繰越配分ルール。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-12" target="_blank" data-tag="委任"><span class="item-label">法法69⑫</span><span class="item-desc">政令への委任（控除限度額の計算）。</span><span class="item-tag tag-delegate">委任</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-13" target="_blank" data-tag="委任"><span class="item-label">法法69⑬</span><span class="item-desc">政令への委任（国外所得の計算）。</span><span class="item-tag tag-delegate">委任</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-14" target="_blank" data-tag="委任"><span class="item-label">法法69⑭</span><span class="item-desc">政令への委任（除外税額の範囲）。</span><span class="item-tag tag-delegate">委任</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-15" target="_blank" data-tag="委任"><span class="item-label">法法69⑮</span><span class="item-desc">政令への委任（地方税接続の細目）。</span><span class="item-tag tag-delegate">委任</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-16" target="_blank" data-tag="委任"><span class="item-label">法法69⑯</span><span class="item-desc">政令への委任（繰越計算の細目）。</span><span class="item-tag tag-delegate">委任</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-17" target="_blank" data-tag="委任"><span class="item-label">法法69⑰</span><span class="item-desc">政令への委任（繰越対象税額の定義）。</span><span class="item-tag tag-delegate">委任</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-18" target="_blank" data-tag="委任"><span class="item-label">法法69⑱</span><span class="item-desc">政令への委任（再編時引継ぎの細目）。</span><span class="item-tag tag-delegate">委任</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-19" target="_blank" data-tag="委任"><span class="item-label">法法69⑲</span><span class="item-desc">政令への委任（再編時配分の細目）。</span><span class="item-tag tag-delegate">委任</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-20" target="_blank" data-tag="委任"><span class="item-label">法法69⑳</span><span class="item-desc">政令への委任（通算法人の特例）。</span><span class="item-tag tag-delegate">委任</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-21" target="_blank" data-tag="委任"><span class="item-label">法法69㉑</span><span class="item-desc">政令への委任（通算法人の計算）。</span><span class="item-tag tag-delegate">委任</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-22" target="_blank" data-tag="委任"><span class="item-label">法法69㉒</span><span class="item-desc">政令への委任（減額時調整の細目）。</span><span class="item-tag tag-delegate">委任</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-23" target="_blank" data-tag="準用"><span class="item-label">法法69㉓</span><span class="item-desc">他条の定義・計算を準用する。</span><span class="item-tag tag-apply">準用</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-24" target="_blank" data-tag="準用"><span class="item-label">法法69㉔</span><span class="item-desc">他条の定義・計算を準用する。</span><span class="item-tag tag-apply">準用</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-25" target="_blank" data-tag="手続"><span class="item-label">法法69㉕</span><span class="item-desc">申告書記載・明細添付を適用要件化する。</span><span class="item-tag tag-proc">手続</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-26" target="_blank" data-tag="委任"><span class="item-label">法法69㉖</span><span class="item-desc">政令への委任（申告手続の細目）。</span><span class="item-tag tag-delegate">委任</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-27" target="_blank" data-tag="手続"><span class="item-label">法法69㉗</span><span class="item-desc">宥恕規定（やむを得ない事情がある場合の救済）。</span><span class="item-tag tag-proc">手続</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-28" target="_blank" data-tag="委任"><span class="item-label">法法69㉘</span><span class="item-desc">政令への委任（その他必要事項）。</span><span class="item-tag tag-delegate">委任</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-29" target="_blank" data-tag="委任"><span class="item-label">法法69㉙</span><span class="item-desc">政令への委任（減額更正の手続）。</span><span class="item-tag tag-delegate">委任</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-30" target="_blank" data-tag="委任"><span class="item-label">法法69㉚</span><span class="item-desc">政令への委任（外国税額の邦貨換算）。</span><span class="item-tag tag-delegate">委任</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-31" target="_blank" data-tag="委任"><span class="item-label">法法69㉛</span><span class="item-desc">政令への委任（みなし納付との調整）。</span><span class="item-tag tag-delegate">委任</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-32" target="_blank" data-tag="委任"><span class="item-label">法法69㉜</span><span class="item-desc">政令への委任（国外PE帰属所得の調整）。</span><span class="item-tag tag-delegate">委任</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-33" target="_blank" data-tag="委任"><span class="item-label">法法69㉝</span><span class="item-desc">政令への委任（特定外国子会社との調整）。</span><span class="item-tag tag-delegate">委任</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340AC0000000034?mode=onlylawzilla#L340AC0000000034_ln69-34" target="_blank" data-tag="委任"><span class="item-label">法法69㉞</span><span class="item-desc">政令への委任（その他必要事項）。</span><span class="item-tag tag-delegate">委任</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-group" id="grp-法令141" style="--accent:#2563eb;--soft:#eff6ff">
+    <div class="group-header" onclick="toggleGroup(this)">
+      <svg class="group-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M6 4l8 6-8 6z"/></svg>
+      <div class="group-title"><div class="kicker">法人税法施行令 / 対象税</div><h3>法令141<span class="sub">法人の対象税</span></h3></div>
+      <span class="group-count">3項</span>
+    </div>
+    <div class="group-body">
+      <p class="group-desc">法人側でFTCに入る税と入らない税を切り分ける入口。</p>
+      <div class="items">
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln141-1" target="_blank" data-tag="定義"><span class="item-label">法令141①</span><span class="item-desc">法人側で対象となる外国法人税の基本定義。</span><span class="item-tag tag-def">定義</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln141-2" target="_blank" data-tag="定義"><span class="item-label">法令141②</span><span class="item-desc">対象税に含める税目を列挙する。</span><span class="item-tag tag-def">定義</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln141-3" target="_blank" data-tag="除外"><span class="item-label">法令141③</span><span class="item-desc">対象外とする税目を列挙する。</span><span class="item-tag tag-exclude">除外</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-group" id="grp-法令141-2" style="--accent:#2563eb;--soft:#eff6ff">
+    <div class="group-header" onclick="toggleGroup(this)">
+      <svg class="group-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M6 4l8 6-8 6z"/></svg>
+      <div class="group-title"><div class="kicker">法人税法施行令 / 国外所得</div><h3>法令141の2<span class="sub">法人の国外所得</span></h3></div>
+      <span class="group-count">1項</span>
+    </div>
+    <div class="group-body">
+      <p class="group-desc">分子に入る国外所得金額を定義。</p>
+      <div class="items">
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln141_2-1" target="_blank" data-tag="算式"><span class="item-label">法令141の2①</span><span class="item-desc">国外所得金額の計算対象を定義する。</span><span class="item-tag tag-formula">算式</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-group" id="grp-法令142" style="--accent:#2563eb;--soft:#eff6ff">
+    <div class="group-header" onclick="toggleGroup(this)">
+      <svg class="group-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M6 4l8 6-8 6z"/></svg>
+      <div class="group-title"><div class="kicker">法人税法施行令 / 限度額</div><h3>法令142<span class="sub">法人の限度額</span></h3></div>
+      <span class="group-count">5項</span>
+    </div>
+    <div class="group-body">
+      <p class="group-desc">法人側の控除限度額算式と所得概念を定義。</p>
+      <div class="items">
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln142-1" target="_blank" data-tag="算式"><span class="item-label">法令142①</span><span class="item-desc">法人の控除限度額の基本算式。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln142-2" target="_blank" data-tag="定義"><span class="item-label">法令142②</span><span class="item-desc">分母となる所得総額の範囲を定める。</span><span class="item-tag tag-def">定義</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln142-3" target="_blank" data-tag="定義"><span class="item-label">法令142③</span><span class="item-desc">所得総額に加算・除外する調整項目。</span><span class="item-tag tag-def">定義</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln142-4" target="_blank" data-tag="算式"><span class="item-label">法令142④</span><span class="item-desc">通算法人の限度額調整計算。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln142-5" target="_blank" data-tag="算式"><span class="item-label">法令142⑤</span><span class="item-desc">欠損金がある場合の限度額修正。</span><span class="item-tag tag-formula">算式</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-group" id="grp-法令142-2" style="--accent:#2563eb;--soft:#eff6ff">
+    <div class="group-header" onclick="toggleGroup(this)">
+      <svg class="group-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M6 4l8 6-8 6z"/></svg>
+      <div class="group-title"><div class="kicker">法人税法施行令 / 除外</div><h3>法令142の2<span class="sub">法人の除外税額</span></h3></div>
+      <span class="group-count">8項</span>
+    </div>
+    <div class="group-body">
+      <p class="group-desc">高率負担部分や対象外税額を切り分ける。</p>
+      <div class="items">
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln142_2-1" target="_blank" data-tag="除外"><span class="item-label">法令142の2①</span><span class="item-desc">高率負担部分をFTC対象外に切り分ける。</span><span class="item-tag tag-exclude">除外</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln142_2-2" target="_blank" data-tag="除外"><span class="item-label">法令142の2②</span><span class="item-desc">タックスヘイブン税制との調整除外。</span><span class="item-tag tag-exclude">除外</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln142_2-3" target="_blank" data-tag="除外"><span class="item-label">法令142の2③</span><span class="item-desc">みなし外国税額に関する除外規定。</span><span class="item-tag tag-exclude">除外</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln142_2-4" target="_blank" data-tag="除外"><span class="item-label">法令142の2④</span><span class="item-desc">損金算入を選択した税額の除外。</span><span class="item-tag tag-exclude">除外</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln142_2-5" target="_blank" data-tag="除外"><span class="item-label">法令142の2⑤</span><span class="item-desc">租税条約に基づく軽減税額の除外。</span><span class="item-tag tag-exclude">除外</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln142_2-6" target="_blank" data-tag="除外"><span class="item-label">法令142の2⑥</span><span class="item-desc">特殊関係者取引に関する除外要件。</span><span class="item-tag tag-exclude">除外</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln142_2-7" target="_blank" data-tag="除外"><span class="item-label">法令142の2⑦</span><span class="item-desc">国内非課税相当部分を対象外にする。</span><span class="item-tag tag-exclude">除外</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln142_2-8" target="_blank" data-tag="除外"><span class="item-label">法令142の2⑧</span><span class="item-desc">仮装取引に関する除外要件。</span><span class="item-tag tag-exclude">除外</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-group" id="grp-法令143" style="--accent:#2563eb;--soft:#eff6ff">
+    <div class="group-header" onclick="toggleGroup(this)">
+      <svg class="group-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M6 4l8 6-8 6z"/></svg>
+      <div class="group-title"><div class="kicker">法人税法施行令 / 地方税接続</div><h3>法令143<span class="sub">法人地方税への接続</span></h3></div>
+      <span class="group-count">1項</span>
+    </div>
+    <div class="group-body">
+      <p class="group-desc">法人税から地方税FTCへ渡す短い接続条文。</p>
+      <div class="items">
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln143-1" target="_blank" data-tag="接続"><span class="item-label">法令143①</span><span class="item-desc">法人地方税控除限度額の接続算式。</span><span class="item-tag tag-connect">接続</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-group" id="grp-法令144" style="--accent:#2563eb;--soft:#eff6ff">
+    <div class="group-header" onclick="toggleGroup(this)">
+      <svg class="group-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M6 4l8 6-8 6z"/></svg>
+      <div class="group-title"><div class="kicker">法人税法施行令 / 繰越</div><h3>法令144<span class="sub">法人の繰越限度額</span></h3></div>
+      <span class="group-count">7項</span>
+    </div>
+    <div class="group-body">
+      <p class="group-desc">超過額と余裕額の3年繰越計算。</p>
+      <div class="items">
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln144-1" target="_blank" data-tag="繰越"><span class="item-label">法令144①</span><span class="item-desc">法人の繰越控除限度額の基本定義。</span><span class="item-tag tag-carry">繰越</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln144-2" target="_blank" data-tag="繰越"><span class="item-label">法令144②</span><span class="item-desc">繰越対象外国法人税額の定義。</span><span class="item-tag tag-carry">繰越</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln144-3" target="_blank" data-tag="繰越"><span class="item-label">法令144③</span><span class="item-desc">通算法人が絡む繰越調整。</span><span class="item-tag tag-carry">繰越</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln144-4" target="_blank" data-tag="算式"><span class="item-label">法令144④</span><span class="item-desc">繰越充当の順序（古い年度から）。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln144-5" target="_blank" data-tag="算式"><span class="item-label">法令144⑤</span><span class="item-desc">余裕額の繰越充当の順序。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln144-6" target="_blank" data-tag="算式"><span class="item-label">法令144⑥</span><span class="item-desc">超過額と余裕額の相殺計算。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln144-7" target="_blank" data-tag="算式"><span class="item-label">法令144⑦</span><span class="item-desc">地方税分との按分調整。</span><span class="item-tag tag-formula">算式</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-group" id="grp-法令145" style="--accent:#2563eb;--soft:#eff6ff">
+    <div class="group-header" onclick="toggleGroup(this)">
+      <svg class="group-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M6 4l8 6-8 6z"/></svg>
+      <div class="group-title"><div class="kicker">法人税法施行令 / 繰越</div><h3>法令145<span class="sub">繰越対象税額</span></h3></div>
+      <span class="group-count">4項</span>
+    </div>
+    <div class="group-body">
+      <p class="group-desc">翌期へ持ち出す税額の定義と順序。</p>
+      <div class="items">
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln145-1" target="_blank" data-tag="繰越"><span class="item-label">法令145①</span><span class="item-desc">翌期へ持ち出す控除対象税額を定義する。</span><span class="item-tag tag-carry">繰越</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln145-2" target="_blank" data-tag="準用"><span class="item-label">法令145②</span><span class="item-desc">前条の繰越計算ルールを準用する。</span><span class="item-tag tag-apply">準用</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln145-3" target="_blank" data-tag="繰越"><span class="item-label">法令145③</span><span class="item-desc">繰越対象税額の上限規定。</span><span class="item-tag tag-carry">繰越</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln145-4" target="_blank" data-tag="繰越"><span class="item-label">法令145④</span><span class="item-desc">通算法人における繰越税額の調整。</span><span class="item-tag tag-carry">繰越</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-group" id="grp-法令146" style="--accent:#2563eb;--soft:#eff6ff">
+    <div class="group-header" onclick="toggleGroup(this)">
+      <svg class="group-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M6 4l8 6-8 6z"/></svg>
+      <div class="group-title"><div class="kicker">法人税法施行令 / 組織再編</div><h3>法令146<span class="sub">組織再編特例</span></h3></div>
+      <span class="group-count">11項</span>
+    </div>
+    <div class="group-body">
+      <p class="group-desc">適格合併・分割等での繰越引継ぎと配分。</p>
+      <div class="items">
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln146-1" target="_blank" data-tag="再編"><span class="item-label">法令146①</span><span class="item-desc">適格合併時の繰越引継ぎを定める。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln146-2" target="_blank" data-tag="再編"><span class="item-label">法令146②</span><span class="item-desc">被合併法人の繰越超過額の引継額計算。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln146-3" target="_blank" data-tag="再編"><span class="item-label">法令146③</span><span class="item-desc">被合併法人の繰越余裕額の引継額計算。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln146-4" target="_blank" data-tag="再編"><span class="item-label">法令146④</span><span class="item-desc">分割型分割時の超過額配分。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln146-5" target="_blank" data-tag="再編"><span class="item-label">法令146⑤</span><span class="item-desc">分割型分割時の余裕額配分。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln146-6" target="_blank" data-tag="算式"><span class="item-label">法令146⑥</span><span class="item-desc">引継ぎ時の按分比率の計算方法。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln146-7" target="_blank" data-tag="算式"><span class="item-label">法令146⑦</span><span class="item-desc">配分時の按分比率の計算方法。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln146-8" target="_blank" data-tag="再編"><span class="item-label">法令146⑧</span><span class="item-desc">現物出資・現物分配の特例。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln146-9" target="_blank" data-tag="再編"><span class="item-label">法令146⑨</span><span class="item-desc">株式交換・移転の特例。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln146-10" target="_blank" data-tag="再編"><span class="item-label">法令146⑩</span><span class="item-desc">連結加入・離脱時の調整。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln146-11" target="_blank" data-tag="再編"><span class="item-label">法令146⑪</span><span class="item-desc">通算法人間の繰越調整。</span><span class="item-tag tag-reorg">再編</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-group" id="grp-法令147" style="--accent:#2563eb;--soft:#eff6ff">
+    <div class="group-header" onclick="toggleGroup(this)">
+      <svg class="group-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M6 4l8 6-8 6z"/></svg>
+      <div class="group-title"><div class="kicker">法人税法施行令 / 減額特例</div><h3>法令147<span class="sub">減額時特例</span></h3></div>
+      <span class="group-count">5項</span>
+    </div>
+    <div class="group-body">
+      <p class="group-desc">後年度に外国税額が減ったときの戻し調整。</p>
+      <div class="items">
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln147-1" target="_blank" data-tag="算式"><span class="item-label">法令147①</span><span class="item-desc">後年度減額が起きたときの戻し調整の起点。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln147-2" target="_blank" data-tag="再編"><span class="item-label">法令147②</span><span class="item-desc">合併時の減額調整引継ぎ。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln147-3" target="_blank" data-tag="算式"><span class="item-label">法令147③</span><span class="item-desc">後年度減額時の戻し計算ルール。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln147-4" target="_blank" data-tag="再編"><span class="item-label">法令147④</span><span class="item-desc">分割時の減額調整配分。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/340CO0000000097?mode=onlylawzilla#L340CO0000000097_ln147-5" target="_blank" data-tag="算式"><span class="item-label">法令147⑤</span><span class="item-desc">減額に伴う繰越額の再計算。</span><span class="item-tag tag-formula">算式</span></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== LANE 4: 法人地方税 ==================== -->
+<div class="lane-panel" id="panel-lane-4">
+
+  <div class="article-group" id="grp-地令9-7" style="--accent:#475569;--soft:#f8fafc">
+    <div class="group-header open" onclick="toggleGroup(this)">
+      <svg class="group-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M6 4l8 6-8 6z"/></svg>
+      <div class="group-title">
+        <div class="kicker">地方税法施行令 / 法人道府県民税</div>
+        <h3>地令9の7<span class="sub">法人地方税の計算細目</span></h3>
+      </div>
+      <span class="group-count">27項</span>
+    </div>
+    <div class="group-body">
+      <p class="group-desc">法人の道府県民税・事業税側の準用、限度額、繰越。組織再編関連が多い。</p>
+      <div class="items">
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln9_7-1" target="_blank" data-tag="準用"><span class="item-label">地令9の7①</span><span class="item-desc">国税FTCの範囲・計算を法人地方税へ準用する。</span><span class="item-tag tag-apply">準用</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln9_7-2" target="_blank" data-tag="算式"><span class="item-label">地令9の7②</span><span class="item-desc">道府県民税の控除限度額算式。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln9_7-3" target="_blank" data-tag="算式"><span class="item-label">地令9の7③</span><span class="item-desc">みなし税額・みなし計算。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln9_7-4" target="_blank" data-tag="繰越"><span class="item-label">地令9の7④</span><span class="item-desc">余裕額の繰越計算（法人地方税版）。</span><span class="item-tag tag-carry">繰越</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln9_7-5" target="_blank" data-tag="繰越"><span class="item-label">地令9の7⑤</span><span class="item-desc">超過額の繰越計算（法人地方税版）。</span><span class="item-tag tag-carry">繰越</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln9_7-6" target="_blank" data-tag="再編"><span class="item-label">地令9の7⑥</span><span class="item-desc">適格合併時の超過額引継ぎ（地方税版）。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln9_7-7" target="_blank" data-tag="再編"><span class="item-label">地令9の7⑦</span><span class="item-desc">適格合併時の余裕額引継ぎ（地方税版）。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln9_7-8" target="_blank" data-tag="再編"><span class="item-label">地令9の7⑧</span><span class="item-desc">分割型分割時の超過額配分（地方税版）。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln9_7-9" target="_blank" data-tag="再編"><span class="item-label">地令9の7⑨</span><span class="item-desc">分割型分割時の余裕額配分（地方税版）。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln9_7-10" target="_blank" data-tag="算式"><span class="item-label">地令9の7⑩</span><span class="item-desc">引継ぎ時の按分比率の計算。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln9_7-11" target="_blank" data-tag="算式"><span class="item-label">地令9の7⑪</span><span class="item-desc">配分時の按分比率の計算。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln9_7-12" target="_blank" data-tag="算式"><span class="item-label">地令9の7⑫</span><span class="item-desc">繰越充当の順序（地方税版）。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln9_7-13" target="_blank" data-tag="再編"><span class="item-label">地令9の7⑬</span><span class="item-desc">現物出資・現物分配の特例（地方税版）。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln9_7-14" target="_blank" data-tag="再編"><span class="item-label">地令9の7⑭</span><span class="item-desc">株式交換・移転の特例（地方税版）。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln9_7-15" target="_blank" data-tag="再編"><span class="item-label">地令9の7⑮</span><span class="item-desc">連結加入・離脱時の調整（地方税版）。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln9_7-16" target="_blank" data-tag="算式"><span class="item-label">地令9の7⑯</span><span class="item-desc">超過額と余裕額の相殺計算（地方税版）。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln9_7-17" target="_blank" data-tag="算式"><span class="item-label">地令9の7⑰</span><span class="item-desc">国税との按分調整計算。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln9_7-18" target="_blank" data-tag="再編"><span class="item-label">地令9の7⑱</span><span class="item-desc">通算法人間の繰越超過額の調整。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln9_7-19" target="_blank" data-tag="再編"><span class="item-label">地令9の7⑲</span><span class="item-desc">通算法人間の繰越余裕額の調整。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln9_7-20" target="_blank" data-tag="再編"><span class="item-label">地令9の7⑳</span><span class="item-desc">減額時の戻し調整（地方税版）。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln9_7-21" target="_blank" data-tag="再編"><span class="item-label">地令9の7㉑</span><span class="item-desc">合併時の減額調整引継ぎ（地方税版）。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln9_7-22" target="_blank" data-tag="再編"><span class="item-label">地令9の7㉒</span><span class="item-desc">減額戻し計算ルール（地方税版）。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln9_7-23" target="_blank" data-tag="再編"><span class="item-label">地令9の7㉓</span><span class="item-desc">分割時の減額調整配分（地方税版）。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln9_7-24" target="_blank" data-tag="再編"><span class="item-label">地令9の7㉔</span><span class="item-desc">減額に伴う繰越額の再計算（地方税版）。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln9_7-25" target="_blank" data-tag="再編"><span class="item-label">地令9の7㉕</span><span class="item-desc">通算法人の減額調整の特例。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln9_7-26" target="_blank" data-tag="手続"><span class="item-label">地令9の7㉖</span><span class="item-desc">申告書記載・添付要件（法人地方税版）。</span><span class="item-tag tag-proc">手続</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln9_7-27" target="_blank" data-tag="手続"><span class="item-label">地令9の7㉗</span><span class="item-desc">宥恕規定（やむを得ない事情の救済）。</span><span class="item-tag tag-proc">手続</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-group" id="grp-地令48-13" style="--accent:#475569;--soft:#f8fafc">
+    <div class="group-header" onclick="toggleGroup(this)">
+      <svg class="group-chevron" viewBox="0 0 20 20" fill="currentColor"><path d="M6 4l8 6-8 6z"/></svg>
+      <div class="group-title">
+        <div class="kicker">地方税法施行令 / 法人市町村民税</div>
+        <h3>地令48の13<span class="sub">法人住民税の計算細目</span></h3>
+      </div>
+      <span class="group-count">28項</span>
+    </div>
+    <div class="group-body">
+      <p class="group-desc">法人の市町村民税側の準用、限度額、繰越。地令9の7とほぼ対称構造。</p>
+      <div class="items">
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_13-1" target="_blank" data-tag="準用"><span class="item-label">地令48の13①</span><span class="item-desc">国税FTCの範囲・計算を法人住民税へ準用する。</span><span class="item-tag tag-apply">準用</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_13-2" target="_blank" data-tag="繰越"><span class="item-label">地令48の13②</span><span class="item-desc">余裕額を3年繰り越す場合の計算。</span><span class="item-tag tag-carry">繰越</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_13-3" target="_blank" data-tag="算式"><span class="item-label">地令48の13③</span><span class="item-desc">市町村民税の控除限度額算式。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_13-4" target="_blank" data-tag="算式"><span class="item-label">地令48の13④</span><span class="item-desc">みなし税額・みなし計算（市町村版）。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_13-5" target="_blank" data-tag="算式"><span class="item-label">地令48の13⑤</span><span class="item-desc">市町村民税側の限度額割合を示す。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_13-6" target="_blank" data-tag="繰越"><span class="item-label">地令48の13⑥</span><span class="item-desc">超過額を3年繰り越す場合の計算。</span><span class="item-tag tag-carry">繰越</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_13-7" target="_blank" data-tag="再編"><span class="item-label">地令48の13⑦</span><span class="item-desc">適格合併時の超過額引継ぎ（市町村版）。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_13-8" target="_blank" data-tag="再編"><span class="item-label">地令48の13⑧</span><span class="item-desc">適格合併時の余裕額引継ぎ（市町村版）。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_13-9" target="_blank" data-tag="再編"><span class="item-label">地令48の13⑨</span><span class="item-desc">分割型分割時の超過額配分（市町村版）。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_13-10" target="_blank" data-tag="再編"><span class="item-label">地令48の13⑩</span><span class="item-desc">分割型分割時の余裕額配分（市町村版）。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_13-11" target="_blank" data-tag="算式"><span class="item-label">地令48の13⑪</span><span class="item-desc">引継ぎ時の按分比率の計算。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_13-12" target="_blank" data-tag="算式"><span class="item-label">地令48の13⑫</span><span class="item-desc">配分時の按分比率の計算。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_13-13" target="_blank" data-tag="算式"><span class="item-label">地令48の13⑬</span><span class="item-desc">繰越充当の順序（市町村版）。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_13-14" target="_blank" data-tag="再編"><span class="item-label">地令48の13⑭</span><span class="item-desc">現物出資・現物分配の特例（市町村版）。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_13-15" target="_blank" data-tag="再編"><span class="item-label">地令48の13⑮</span><span class="item-desc">株式交換・移転の特例（市町村版）。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_13-16" target="_blank" data-tag="再編"><span class="item-label">地令48の13⑯</span><span class="item-desc">連結加入・離脱時の調整（市町村版）。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_13-17" target="_blank" data-tag="算式"><span class="item-label">地令48の13⑰</span><span class="item-desc">超過額と余裕額の相殺計算（市町村版）。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_13-18" target="_blank" data-tag="算式"><span class="item-label">地令48の13⑱</span><span class="item-desc">国税との按分調整計算（市町村版）。</span><span class="item-tag tag-formula">算式</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_13-19" target="_blank" data-tag="再編"><span class="item-label">地令48の13⑲</span><span class="item-desc">通算法人間の繰越超過額の調整（市町村版）。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_13-20" target="_blank" data-tag="再編"><span class="item-label">地令48の13⑳</span><span class="item-desc">通算法人間の繰越余裕額の調整（市町村版）。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_13-21" target="_blank" data-tag="再編"><span class="item-label">地令48の13㉑</span><span class="item-desc">減額時の戻し調整（市町村版）。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_13-22" target="_blank" data-tag="再編"><span class="item-label">地令48の13㉒</span><span class="item-desc">合併時の減額調整引継ぎ（市町村版）。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_13-23" target="_blank" data-tag="再編"><span class="item-label">地令48の13㉓</span><span class="item-desc">減額戻し計算ルール（市町村版）。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_13-24" target="_blank" data-tag="再編"><span class="item-label">地令48の13㉔</span><span class="item-desc">分割時の減額調整配分（市町村版）。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_13-25" target="_blank" data-tag="再編"><span class="item-label">地令48の13㉕</span><span class="item-desc">減額に伴う繰越額の再計算（市町村版）。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_13-26" target="_blank" data-tag="再編"><span class="item-label">地令48の13㉖</span><span class="item-desc">通算法人の減額調整の特例（市町村版）。</span><span class="item-tag tag-reorg">再編</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_13-27" target="_blank" data-tag="手続"><span class="item-label">地令48の13㉗</span><span class="item-desc">申告書記載・添付要件（市町村版）。</span><span class="item-tag tag-proc">手続</span></a>
+        <a class="item" href="https://lawzilla.jp/law/325CO0000000245?mode=onlylawzilla#L325CO0000000245_ln48_13-28" target="_blank" data-tag="手続"><span class="item-label">地令48の13㉘</span><span class="item-desc">宥恕規定（やむを得ない事情の救済）。</span><span class="item-tag tag-proc">手続</span></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer style="text-align:center;padding:20px 24px 40px;color:var(--muted);font-size:.82rem">
+  注: 要約は全体把握用の圧縮メモであり、解釈や適用判断は必ずリンク先条文で確認する前提。<br>
+  各項ラベルは <a href="https://lawzilla.jp" target="_blank" style="color:var(--muted);text-decoration:underline">Lawzilla</a> の該当項へ直リンクする。
+</footer>
+
+<script>
+// === Tab switching ===
+const tabBar=document.getElementById('tabBar');
+const panels=document.querySelectorAll('.lane-panel');
+tabBar.addEventListener('click',e=>{
+  const btn=e.target.closest('.tab-btn');
+  if(!btn)return;
+  const tab=btn.dataset.tab;
+  tabBar.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  panels.forEach(p=>{
+    p.classList.toggle('active',p.id==='panel-'+tab);
+  });
+});
+
+// === SVG node click → switch to lane tab ===
+document.querySelectorAll('.svg-node').forEach(node=>{
+  node.addEventListener('click',e=>{
+    e.preventDefault();
+    const lane=node.dataset.lane;
+    const grp=node.dataset.grp;
+    const btn=tabBar.querySelector(`[data-tab="${lane}"]`);
+    if(btn)btn.click();
+    setTimeout(()=>{
+      const el=document.getElementById(grp);
+      if(el){
+        el.scrollIntoView({behavior:'smooth',block:'start'});
+        const hdr=el.querySelector('.group-header');
+        if(hdr&&!hdr.classList.contains('open')){hdr.classList.add('open')}
+      }
+    },100);
+  });
+});
+
+// === Accordion toggle ===
+function toggleGroup(hdr){hdr.classList.toggle('open')}
+
+// === Search ===
+const searchInput=document.getElementById('searchInput');
+const searchCount=document.getElementById('searchCount');
+
+searchInput.addEventListener('input',()=>{
+  const q=searchInput.value.trim().toLowerCase();
+  const allItems=document.querySelectorAll('.item');
+  const allGroups=document.querySelectorAll('.article-group');
+  let count=0;
+
+  if(!q){
+    allItems.forEach(it=>{it.style.display='';it.querySelectorAll('mark').forEach(m=>{m.replaceWith(m.textContent)})});
+    allGroups.forEach(g=>g.style.display='');
+    searchCount.textContent='';
+    return;
+  }
+
+  allGroups.forEach(g=>{
+    const items=g.querySelectorAll('.item');
+    let groupHasMatch=false;
+    items.forEach(it=>{
+      const label=it.querySelector('.item-label');
+      const desc=it.querySelector('.item-desc');
+      const text=(label?.textContent||'')+(desc?.textContent||'');
+      if(text.toLowerCase().includes(q)){
+        it.style.display='';
+        groupHasMatch=true;
+        count++;
+      }else{
+        it.style.display='none';
+      }
+    });
+    g.style.display=groupHasMatch?'':'none';
+    if(groupHasMatch){
+      const hdr=g.querySelector('.group-header');
+      if(hdr&&!hdr.classList.contains('open'))hdr.classList.add('open');
+    }
+  });
+  // show all lane panels during search
+  if(q)panels.forEach(p=>p.classList.add('active'));
+  searchCount.textContent=count+'件';
+});
+
+// === Tag filter ===
+const tagFilters=document.getElementById('tagFilters');
+let activeTag='all';
+tagFilters.addEventListener('click',e=>{
+  const btn=e.target.closest('.tag-filter');
+  if(!btn)return;
+  activeTag=btn.dataset.tag;
+  tagFilters.querySelectorAll('.tag-filter').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const allItems=document.querySelectorAll('.item');
+  const allGroups=document.querySelectorAll('.article-group');
+
+  if(activeTag==='all'){
+    allItems.forEach(it=>it.style.display='');
+    allGroups.forEach(g=>g.style.display='');
+    if(!searchInput.value.trim())panels.forEach(p=>{
+      const isOverview=p.id==='panel-overview';
+      const activeBtn=tabBar.querySelector('.tab-btn.active');
+      p.classList.toggle('active',isOverview?activeBtn?.dataset.tab==='overview':activeBtn?.dataset.tab===p.id.replace('panel-',''));
+    });
+    return;
+  }
+
+  // show all panels for tag filter
+  panels.forEach(p=>p.classList.add('active'));
+  let count=0;
+  allGroups.forEach(g=>{
+    const items=g.querySelectorAll('.item');
+    let groupHasMatch=false;
+    items.forEach(it=>{
+      if(it.dataset.tag===activeTag){
+        it.style.display='';groupHasMatch=true;count++;
+      }else{it.style.display='none'}
+    });
+    g.style.display=groupHasMatch?'':'none';
+    if(groupHasMatch){
+      const hdr=g.querySelector('.group-header');
+      if(hdr&&!hdr.classList.contains('open'))hdr.classList.add('open');
+    }
+  });
+  searchCount.textContent=count+'件';
+});
+</script>
+</body>
+</html>
