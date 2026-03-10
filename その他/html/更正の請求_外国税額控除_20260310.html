@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>更正の請求と外国税額控除 ― 国税通則法23条・法人税法69条の要件分析</title>
+<style>
+:root {
+  --primary: #1a365d;
+  --secondary: #2b6cb0;
+  --accent: #e53e3e;
+  --bg: #f7fafc;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --text: #2d3748;
+  --muted: #718096;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: "Noto Serif JP", "Hiragino Mincho ProN", serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+  padding: 2rem;
+}
+.container { max-width: 1000px; margin: 0 auto; }
+h1 {
+  font-size: 1.6rem;
+  color: var(--primary);
+  border-bottom: 3px solid var(--secondary);
+  padding-bottom: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+h2 {
+  font-size: 1.3rem;
+  color: var(--primary);
+  border-left: 4px solid var(--secondary);
+  padding-left: 0.8rem;
+  margin: 2rem 0 1rem;
+}
+h3 {
+  font-size: 1.1rem;
+  color: var(--secondary);
+  margin: 1.5rem 0 0.8rem;
+}
+h4 {
+  font-size: 1rem;
+  color: var(--text);
+  margin: 1rem 0 0.5rem;
+  font-weight: bold;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+.card-red {
+  border-left: 4px solid var(--accent);
+}
+.card-blue {
+  border-left: 4px solid var(--secondary);
+}
+.card-green {
+  border-left: 4px solid #38a169;
+}
+.statute {
+  background: #edf2f7;
+  border-radius: 6px;
+  padding: 1rem 1.2rem;
+  margin: 0.8rem 0;
+  font-size: 0.95rem;
+  border: 1px solid #cbd5e0;
+}
+.statute .label {
+  font-weight: bold;
+  color: var(--primary);
+  display: block;
+  margin-bottom: 0.3rem;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.95rem;
+}
+th, td {
+  border: 1px solid var(--border);
+  padding: 0.6rem 0.8rem;
+  text-align: left;
+}
+th {
+  background: var(--primary);
+  color: white;
+  font-weight: 600;
+}
+tr:nth-child(even) { background: #f7fafc; }
+.highlight {
+  background: #fefcbf;
+  padding: 0.1rem 0.3rem;
+  border-radius: 3px;
+}
+.important {
+  color: var(--accent);
+  font-weight: bold;
+}
+ul, ol {
+  margin: 0.5rem 0 0.5rem 1.5rem;
+}
+li { margin-bottom: 0.4rem; }
+.toc {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.2rem 1.5rem;
+  margin: 1rem 0 2rem;
+}
+.toc a {
+  color: var(--secondary);
+  text-decoration: none;
+}
+.toc a:hover { text-decoration: underline; }
+.toc ol { list-style-type: decimal; }
+.toc ol ol { list-style-type: lower-alpha; margin-top: 0.3rem; }
+.meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-align: right;
+  margin-bottom: 1rem;
+}
+.sources {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--border);
+  font-size: 0.85rem;
+}
+.sources a { color: var(--secondary); }
+@media print {
+  body { padding: 1rem; }
+  .card { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<p class="meta">調査日: 2026-03-10</p>
+
+<h1>更正の請求と外国税額控除 ― 国税通則法23条・法人税法69条の要件分析</h1>
+
+<div class="toc">
+<strong>目次</strong>
+<ol>
+  <li><a href="#sec1">国税通則法23条1項の更正の請求の要件</a>
+    <ol>
+      <li><a href="#sec1a">条文テキストと基本構造</a></li>
+      <li><a href="#sec1b">「法律の規定に従っていなかったこと又は計算に誤りがあったこと」の解釈</a></li>
+      <li><a href="#sec1c">手続要件の不備は「計算の誤り」に該当するか</a></li>
+    </ol>
+  </li>
+  <li><a href="#sec2">外国税額控除（法人税法69条）における更正の請求</a>
+    <ol>
+      <li><a href="#sec2a">裁決例の分析 ― 「選択」と「計算の誤り」の境界</a></li>
+      <li><a href="#sec2b">書類添付漏れの場合の更正の請求の可否</a></li>
+    </ol>
+  </li>
+  <li><a href="#sec3">平成23年改正（当初申告要件廃止）の射程</a>
+    <ol>
+      <li><a href="#sec3a">改正の概要</a></li>
+      <li><a href="#sec3b">法人税法69条25項の趣旨と構造</a></li>
+    </ol>
+  </li>
+  <li><a href="#sec4">「税額が過大」要件の分析</a></li>
+  <li><a href="#sec5">総合分析と実務上の留意点</a></li>
+</ol>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec1">1. 国税通則法23条1項の更正の請求の要件</h2>
+
+<h3 id="sec1a">1-a. 条文テキストと基本構造</h3>
+
+<div class="statute">
+<span class="label">国税通則法23条1項（通常の更正の請求）</span>
+納税申告書を提出した者は、次の各号のいずれかに該当する場合には、当該申告書に係る国税の法定申告期限から<strong>5年以内</strong>に限り、税務署長に対し、その申告に係る課税標準等又は税額等につき更正をすべき旨の請求をすることができる。<br>
+<strong>一</strong>　当該申告書に記載した課税標準等若しくは税額等の計算が<span class="highlight">国税に関する法律の規定に従っていなかったこと又は当該計算に誤りがあったこと</span>により、当該申告書の提出により<span class="highlight">納付すべき税額（中略）が過大であるとき</span>。
+</div>
+
+<div class="card card-blue">
+<h4>更正の請求の3要件</h4>
+<ol>
+  <li><strong>実体要件（原因）</strong>：税額等の計算が「国税に関する法律の規定に従っていなかったこと」又は「計算に誤りがあったこと」</li>
+  <li><strong>結果要件</strong>：納付すべき税額が過大であること</li>
+  <li><strong>期間要件</strong>：法定申告期限から5年以内（平成23年改正後。改正前は1年以内）</li>
+</ol>
+</div>
+
+<h3 id="sec1b">1-b. 「法律の規定に従っていなかったこと又は計算に誤りがあったこと」の解釈</h3>
+
+<div class="card">
+<p>この要件は、二つの類型を含む。</p>
+<ul>
+  <li><strong>「国税に関する法律の規定に従っていなかったこと」</strong>：法令の適用・解釈を誤った場合。例えば、税率の適用誤り、所得区分の誤り、控除規定の適用誤り等。</li>
+  <li><strong>「当該計算に誤りがあったこと」</strong>：法令の適用自体は正しいが、計算過程に算術的・事実認定上の誤りがあった場合。為替レートの換算誤り、転記ミス、集計ミス等。</li>
+</ul>
+<p>重要なのは、いずれも<strong>「税額等の計算」に関する誤り</strong>であり、<strong>手続的な選択や意思表示の問題とは区別される</strong>という点である。</p>
+</div>
+
+<h3 id="sec1c">1-c. 手続要件の不備（書類添付漏れ等）は「計算の誤り」に該当するか</h3>
+
+<div class="card card-red">
+<h4>核心的論点</h4>
+<p>手続要件の不備（例：添付書類の漏れ、明細記載の欠如）が通則法23条1項の「計算の誤り」に該当するかは、場面によって結論が分かれる。</p>
+
+<table>
+<tr><th>場面</th><th>通則法23条の該当性</th><th>根拠</th></tr>
+<tr>
+  <td>FTCの適用を<strong>選択して申告</strong>したが、計算・記載に<strong>誤り</strong>があった</td>
+  <td class="important">該当する（更正の請求可）</td>
+  <td>裁決事例集No.77-21</td>
+</tr>
+<tr>
+  <td>FTCの適用を<strong>選択しなかった</strong>（記載・添付なし）</td>
+  <td>改正前：不該当（不可）<br>改正後：該当する（可）</td>
+  <td>平成23年改正による当初申告要件廃止</td>
+</tr>
+<tr>
+  <td>FTCの一部を<strong>選択して申告</strong>したが、別の外国法人税について<strong>添付・記載を完全に欠く</strong></td>
+  <td class="important">不該当（不可）</td>
+  <td>裁決事例集No.77-22</td>
+</tr>
+<tr>
+  <td>FTCの適用意思はあったが<strong>失念</strong>して記載・添付しなかった</td>
+  <td>改正前：不該当（やむを得ない事情なければ不可）<br>改正後：該当する（可）</td>
+  <td>裁決事例集No.65-34 + 平成23年改正</td>
+</tr>
+</table>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec2">2. 外国税額控除における更正の請求 ― 裁決例の分析</h2>
+
+<h3 id="sec2a">2-a. 「選択」と「計算の誤り」の境界 ― 裁決事例集No.77の2件の対比</h3>
+
+<div class="card card-green">
+<h4>裁決事例集No.77-21（平21.5.20裁決）― 更正の請求を認容</h4>
+<p><strong>事案</strong>：納税者は、D社・E社からの配当に係るみなし外国税額控除を含む外国税額控除を確定申告書に記載して申告した。しかし、為替レートの換算誤り、別表間の転記誤り、租税条約の解釈誤り（みなし間接外国税額控除の上限に関する誤解）などにより、外国税額控除額が過少に計算されていた。</p>
+<p><strong>判断</strong>：審判所は以下の解釈を示した。</p>
+<ul>
+  <li>法69条16項（現25項）の「控除をされるべき金額」とは、内国法人が外国税額控除の<strong>適用を選択したと認められる範囲内</strong>において、誤りを是正した上で<strong>正当に算定される金額</strong>と解するのが相当</li>
+  <li>当初申告において外国税額控除の対象に<strong>選択して申告記載した事項</strong>については、記載金額又は計算に誤りがあったため控除金額が過少になっている場合、基本的には控除額の増額を認めるべき</li>
+  <li>本件の各誤りは、外国税額控除の適用を選択した後の<strong>控除税額の算出過程における誤り</strong>であるから、通則法23条1項の「計算が国税に関する法律の規定に従っていなかったこと又は当該計算に誤りがあったこと」に該当する</li>
+</ul>
+</div>
+
+<div class="card card-red">
+<h4>裁決事例集No.77-22（平21.5.20裁決）― 更正の請求を不認容</h4>
+<p><strong>事案</strong>：納税者は、外国子会社E社に係る「間接納付した控除対象外国法人税の額」については申告書に記載・添付していたが、E社の「<strong>みなし納付外国法人税の額</strong>につき間接納付したとみなされる控除対象外国法人税の額」については、別表六（五）への記載も別表六（五の三）の添付も<strong>全くなかった</strong>。税理士が当該控除の適用を<strong>失念</strong>していた。</p>
+<p><strong>判断</strong>：審判所は以下の判断を示した。</p>
+<ul>
+  <li>みなし納付外国法人税に係る外国税額控除については、記載及び添付の要件を<strong>充足していない</strong></li>
+  <li>失念は「やむを得ない事情」に該当しない</li>
+  <li>記載及び添付の要件を充足しない以上、外国税額控除の<strong>適用を受けることができない</strong></li>
+  <li>よって、「納税申告書に記載した税額等の計算が国税に関する法律の規定に従っていなかったこと又は当該計算に誤りがあったこと」に<strong>該当しない</strong></li>
+</ul>
+</div>
+
+<div class="card card-blue">
+<h4>2件の対比から導かれる法理</h4>
+<table>
+<tr><th>区別基準</th><th>No.77-21（認容）</th><th>No.77-22（不認容）</th></tr>
+<tr>
+  <td>FTC適用の「選択」の有無</td>
+  <td>選択あり（記載・添付あり）</td>
+  <td>選択なし（記載・添付なし）</td>
+</tr>
+<tr>
+  <td>誤りの性質</td>
+  <td>選択後の計算過程の誤り</td>
+  <td>手続要件（記載・添付）の不履行</td>
+</tr>
+<tr>
+  <td>通則法23条該当性</td>
+  <td>「計算の誤り」に該当</td>
+  <td>「計算の誤り」に該当しない</td>
+</tr>
+</table>
+<p><strong>結論</strong>：FTCの適用を「選択」した上での計算誤りは通則法23条の「計算の誤り」に該当するが、FTCの適用自体を選択しなかった（記載・添付の手続要件を充足しなかった）場合は「計算の誤り」に該当しない。<em>ただし、この法理は平成23年改正前の事案であることに注意。</em></p>
+</div>
+
+<h3 id="sec2b">2-b. その他の裁決例</h3>
+
+<div class="card">
+<h4>裁決事例集No.65-34（平15.5.20裁決）― やむを得ない事情の否認</h4>
+<p><strong>事案</strong>：マレーシア子会社からのロイヤリティに係る源泉税について、外国税額控除の記載・添付を全くしなかった。外国法人税が課されていること自体を知らなかったと主張。</p>
+<p><strong>判断</strong>：「やむを得ない事情」とは本人の責めに帰すことのできない客観的事情をいう。ロイヤリティ契約書に源泉税条項があり、代表者が契約内容を承知していた以上、通常要求される確認作業で判明し得たものであり、やむを得ない事情は認められない。</p>
+</div>
+
+<div class="card">
+<h4>裁決事例集No.74-09（平19.10.9裁決）― 手続要件不備による否認</h4>
+<p><strong>事案</strong>：米国不動産の譲渡所得について、米国での確定申告時期と日本の申告時期のずれから、外国税額控除の適用手続が適切にされなかった。更正の請求で事後的に外国税額控除の適用を主張。</p>
+<p><strong>判断</strong>：「外国税額控除の制度は、申告期限内であるか否かを問わず、最初に提出する納税申告書に所定の記載等をすることを要件としている」。所得税法95条2項・5項が控除方法を明確に規定しており、この規定に従った申告を行っていなかった以上、更正の請求は認められない。修正申告での外国税額控除の適用を認めないことへの不服は「立法論」であるとした。</p>
+<p><em>※この裁決も平成23年改正前のもの。</em></p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec3">3. 平成23年改正（当初申告要件廃止）の射程</h2>
+
+<h3 id="sec3a">3-a. 改正の概要</h3>
+
+<div class="card card-blue">
+<h4>平成23年12月税制改正の骨子</h4>
+<ol>
+  <li><strong>更正の請求期間の延長</strong>：法定申告期限から1年 → <strong>5年</strong></li>
+  <li><strong>当初申告要件の廃止</strong>：外国税額控除を含む多くの税額控除について、確定申告書（当初申告）に記載がなくても、修正申告・更正の請求で事後的に適用可能に</li>
+  <li><strong>記載金額限度要件の廃止</strong>：「当該金額として記載された金額を限度とする」という制限の廃止</li>
+</ol>
+<p><strong>適用時期</strong>：平成23年12月2日以後に法定申告期限が到来する国税に適用。</p>
+</div>
+
+<div class="card card-green">
+<h4>改正による実務上の変更点</h4>
+<ul>
+  <li><strong>損金算入→税額控除への変更</strong>：当初申告で外国法人税を損金経理した場合でも、更正の請求で税額控除方式に変更可能</li>
+  <li><strong>FTCの事後適用</strong>：当初申告でFTCを全く申告していなかった場合でも、更正の請求でFTCを新規に主張可能</li>
+  <li><strong>FTCの増額</strong>：当初申告でFTCの金額に誤りがあった場合、更正の請求で控除額の増額が可能</li>
+</ul>
+</div>
+
+<h3 id="sec3b">3-b. 法人税法69条25項の趣旨と構造</h3>
+
+<div class="statute">
+<span class="label">法人税法69条25項（現行法）</span>
+第1項の規定は、<span class="highlight">確定申告書、修正申告書又は更正請求書</span>に第1項の規定による控除を受けるべき金額及びその計算に関する明細を記載した書類並びに控除対象外国法人税の額の計算に関する明細その他の財務省令で定める事項を記載した書類の<span class="highlight">添付</span>があり、かつ、控除対象外国法人税の額を課されたことを証する書類その他の財務省令で定める書類を<span class="highlight">保存</span>している場合に限り、適用する。
+</div>
+
+<div class="card card-red">
+<h4>重要な分析：69条25項の文言の意義</h4>
+
+<p>改正前の旧16項は「<strong>確定申告書</strong>に……記載があり、かつ……書類の<strong>添付</strong>がある場合に限り」と規定しており、確定申告書のみを対象としていた。</p>
+
+<p>現行25項は「<strong>確定申告書、修正申告書又は更正請求書</strong>」と規定することで、以下の場面を包摂する。</p>
+
+<table>
+<tr><th>場面</th><th>25項の対応</th></tr>
+<tr>
+  <td>当初申告でFTCを申告していなかった場合に、<strong>更正の請求で新規にFTCを主張</strong></td>
+  <td>更正請求書に明細書類を添付し、証拠書類を保存していれば適用可</td>
+</tr>
+<tr>
+  <td>当初申告でFTCを申告済みだが、<strong>修正申告で控除額を変更</strong></td>
+  <td>修正申告書に明細書類を添付すれば適用可</td>
+</tr>
+<tr>
+  <td>当初申告でFTCを申告済みだが<strong>書類添付が不完全</strong>な場合に、更正の請求で補完</td>
+  <td>更正請求書に不足書類を添付すれば適用可（下記分析参照）</td>
+</tr>
+</table>
+</div>
+
+<div class="card card-blue">
+<h4>書類添付が不完全な場合の更正の請求の可否</h4>
+<p>69条25項が「確定申告書、修正申告書又は更正請求書」と並列で規定していることから、以下のように解される。</p>
+<ol>
+  <li>25項の趣旨は、FTCの適用に際して<strong>いずれかの段階で</strong>必要な書類の添付・保存があることを求めるもの</li>
+  <li>当初申告で書類添付が不完全であっても、<strong>更正請求書に必要書類を添付</strong>し、証拠書類を保存していれば、25項の要件を充足する</li>
+  <li>ただし、これは<strong>平成23年改正後</strong>の法文の解釈であり、改正前の事案（旧16項が「確定申告書」のみを対象としていた時代）には適用されない</li>
+</ol>
+<p>なお、69条28項は「やむを得ない事情」がある場合には、書類の<strong>保存</strong>がなくても適用できる旨を規定している（添付要件ではなく保存要件の緩和である点に注意）。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec4">4. 更正の請求の「税額が過大」要件</h2>
+
+<div class="card card-red">
+<h4>核心的問題：既にFTCを申告している場合の「税額過大」の判断</h4>
+
+<p>通則法23条1項1号は「納付すべき税額が<strong>過大</strong>であるとき」を要件とする。この「過大」の判定基準が問題となる。</p>
+
+<table>
+<tr><th>場面</th><th>税額過大の該当性</th><th>理由</th></tr>
+<tr>
+  <td>FTCを全く申告しておらず、本来控除すべき額がある</td>
+  <td>該当する</td>
+  <td>法令に従った計算では控除後の税額が少なくなるため過大</td>
+</tr>
+<tr>
+  <td>FTCを申告済みだが計算誤りにより<strong>控除額が過少</strong></td>
+  <td>該当する</td>
+  <td>正当に計算した控除額はより大きく、結果として納付税額が過大（No.77-21で認容）</td>
+</tr>
+<tr>
+  <td>FTCを申告済みで計算は正しいが、<strong>添付書類が不完全</strong></td>
+  <td class="important">微妙（改正前後で異なる）</td>
+  <td>改正前：書類不備→FTC適用不可→税額は「適正」→過大でない<br>改正後：更正請求書で書類補完可能→本来の控除額との差額は過大に該当し得る</td>
+</tr>
+<tr>
+  <td>FTCを申告済みで控除額も<strong>適正</strong>（又は過少申告ではない）</td>
+  <td>不該当</td>
+  <td>税額が過大でない以上、更正の請求の余地なし</td>
+</tr>
+</table>
+</div>
+
+<div class="card card-blue">
+<h4>「過大」の判定基準</h4>
+<p>「過大」とは、<strong>法律の規定に従い正当に計算した場合の税額</strong>と比較して過大であることを意味する。</p>
+<ul>
+  <li>FTCの計算に誤りがあった場合：正当に計算したFTC額は申告額より大きい → 納付税額は「過大」</li>
+  <li>FTCの適用自体を選択しなかった場合（改正後）：法令に従えばFTCを適用した税額が「正当」→ 適用しなかった税額は「過大」</li>
+  <li>FTCの適用自体を選択しなかった場合（改正前）：適用要件（記載・添付）を充足しない以上、FTCの不適用が「法律の規定に従った」結果 → 税額は「適正」であり「過大」ではない</li>
+</ul>
+<p>つまり、<strong>改正前は手続要件を充足していないことが「適正」な申告とされ、改正後は実体的に本来控除されるべき額との比較で「過大」が判定される</strong>という構造転換が生じた。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sec5">5. 総合分析と実務上の留意点</h2>
+
+<div class="card card-green">
+<h4>分析のまとめ</h4>
+
+<h4>（1）更正の請求が認められる典型的場面（現行法下）</h4>
+<ul>
+  <li>当初申告でFTCを適用したが、<strong>控除額の計算に誤り</strong>があった場合 → 更正の請求で増額可能（No.77-21の法理が引き続き妥当）</li>
+  <li>当初申告でFTCを<strong>全く適用しなかった</strong>場合 → 更正請求書に必要書類を添付し、証拠書類を保存していれば、更正の請求でFTCの新規適用が可能（平成23年改正による当初申告要件廃止）</li>
+  <li>当初申告で外国法人税を<strong>損金算入</strong>していた場合 → 更正の請求で税額控除方式に変更可能（当初申告要件廃止の効果）</li>
+</ul>
+
+<h4>（2）添付書類が不完全な場合の更正の請求</h4>
+<ul>
+  <li>69条25項が「確定申告書、修正申告書又は更正請求書」に添付と規定 → <strong>更正請求書に不足書類を添付することで要件充足可能</strong></li>
+  <li>ただし、「保存」要件（控除対象外国法人税の額を課されたことを証する書類の保存）は別途充足する必要あり</li>
+  <li>書類の保存がない場合は、69条28項の「やむを得ない事情」の認定が必要</li>
+</ul>
+
+<h4>（3）実務上のリスクポイント</h4>
+<ul>
+  <li>更正の請求の<strong>5年間の期限</strong>に留意（法定申告期限から起算）</li>
+  <li>「やむを得ない事情」は<strong>厳格に解釈</strong>される傾向（単なる失念・不注意は該当しない）</li>
+  <li>平成23年改正前の事業年度については旧法が適用 → 当初申告要件が存続</li>
+  <li>69条15項～17項の「当初申告税額控除額」による調整規定にも留意が必要（平成29年改正で増額更正時の調整規定が整備）</li>
+</ul>
+</div>
+
+<div class="card">
+<h4>ローカルDB裁決例一覧（外国税額控除＋更正の請求関連）</h4>
+<table>
+<tr><th>裁決番号</th><th>年月日</th><th>概要</th><th>結論</th></tr>
+<tr>
+  <td>No.65-34</td>
+  <td>平15.5.20</td>
+  <td>マレーシア源泉税の外国税額控除漏れ、やむを得ない事情の主張</td>
+  <td>不認容（やむを得ない事情なし）</td>
+</tr>
+<tr>
+  <td>No.74-09</td>
+  <td>平19.10.9</td>
+  <td>米国不動産譲渡に係るFTC記載漏れ、更正の請求</td>
+  <td>不認容（手続要件不備）</td>
+</tr>
+<tr>
+  <td>No.77-21</td>
+  <td>平21.5.20</td>
+  <td>みなし外国税額控除の計算誤り（為替レート・転記・条約解釈）</td>
+  <td><strong>認容</strong>（選択した範囲の計算誤り）</td>
+</tr>
+<tr>
+  <td>No.77-22</td>
+  <td>平21.5.20</td>
+  <td>みなし納付外国法人税の記載・添付の完全な欠如（失念）</td>
+  <td>不認容（記載・添付要件不充足）</td>
+</tr>
+</table>
+</div>
+
+<!-- ============================================================ -->
+<div class="sources">
+<h3>出典・参考資料</h3>
+<p><strong>条文・法令</strong></p>
+<ul>
+  <li><a href="https://www.zeiken.co.jp/hourei/HHTUS000000/23.html" target="_blank">国税通則法 第23条 更正の請求 | 税研法令集</a></li>
+  <li><a href="https://www.zeiken.co.jp/hourei/HHHOU000000/69.html" target="_blank">法人税法 第69条 外国税額の控除 | 税研法令集</a></li>
+  <li><a href="https://laws.e-gov.go.jp/law/337AC0000000066" target="_blank">e-Gov 法令検索 ― 国税通則法</a></li>
+</ul>
+<p><strong>国税庁資料</strong></p>
+<ul>
+  <li><a href="https://www.nta.go.jp/information/other/encho/haishi_sochi.htm" target="_blank">当初申告要件が廃止された措置 | 国税庁</a></li>
+  <li><a href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/hojin/annai/1554_8.htm" target="_blank">法人税及び地方法人税の更正の請求 | 国税庁</a></li>
+  <li><a href="https://www.mof.go.jp/tax_policy/summary/international/h23kaiseikokusai2.pdf" target="_blank">平成23年度改正関係参考資料（国際課税関係）| 財務省</a></li>
+</ul>
+<p><strong>裁決事例</strong></p>
+<ul>
+  <li><a href="https://www.kfs.go.jp/service/JP/77/21/index.html" target="_blank">裁決事例集No.77-21（平21.5.20）| 国税不服審判所</a> ― FTC計算誤り（認容）</li>
+  <li><a href="https://www.kfs.go.jp/service/JP/77/22/index.html" target="_blank">裁決事例集No.77-22（平21.5.20）| 国税不服審判所</a> ― みなし納付FTC記載欠如（不認容）</li>
+  <li><a href="https://www.kfs.go.jp/service/JP/74/09/index.html" target="_blank">裁決事例集No.74-09（平19.10.9）| 国税不服審判所</a> ― 米国FTC記載漏れ（不認容）</li>
+  <li><a href="https://www.kfs.go.jp/service/JP/65/34/index.html" target="_blank">裁決事例集No.65-34（平15.5.20）| 国税不服審判所</a> ― マレーシアFTCやむを得ない事情（不認容）</li>
+  <li><a href="https://www.kfs.go.jp/service/JP/79/12/index.html" target="_blank">裁決事例集No.79-12（平22.6.18）| 国税不服審判所</a> ― 所得税FTC添付書類欠如</li>
+  <li><a href="https://www.kfs.go.jp/service/MP/03/0302030000.html" target="_blank">外国税額控除 ― 公表裁決事例一覧 | 国税不服審判所</a></li>
+</ul>
+<p><strong>学説・実務解説</strong></p>
+<ul>
+  <li><a href="https://www.zeiken.co.jp/news/0863630.php" target="_blank">損金に算入した外国税額は当初申告要件の廃止によって事後的に税額控除とすることが可能に | ZEIKEN Online News</a></li>
+  <li><a href="https://www.eiko.gr.jp/law/%E6%9B%B4%E6%AD%A3%E3%81%AE%E8%AB%8B%E6%B1%82%E3%81%A7%E3%82%82%E7%A8%8E%E9%A1%8D%E6%8E%A7%E9%99%A4%E3%81%8C%E5%8F%AF%E8%83%BD%E3%81%AB-2/" target="_blank">更正の請求でも税額控除が可能に | 弁護士法人栄光</a></li>
+  <li><a href="https://profession-net.com/professionjournal/general-rule-article-183/" target="_blank">谷口教授と学ぶ「国税通則法の構造と手続」第13回 | PROnet</a></li>
+  <li><a href="https://profession-net.com/professionjournal/general-rule-report-32/" target="_blank">外国税額控除・研究開発税制等は増額更正に応じ税額控除額が増加（平成29年改正）| PROnet</a></li>
+  <li><a href="https://kachiel.jp/blog/%E7%94%B3%E5%91%8A%E6%89%80%E5%BE%97%E7%A8%8E%E3%81%A7%E6%9B%B4%E6%AD%A3%E3%81%AE%E8%AB%8B%E6%B1%82%E3%81%8C%E3%81%A7%E3%81%8D%E3%82%8B%E3%82%B1%E3%83%BC%E3%82%B9%E3%83%BB%E3%81%A7%E3%81%8D%E3%81%AA-2/" target="_blank">申告所得税で更正の請求ができるケース・できないケース（後半）| KACHIEL</a></li>
+  <li><a href="https://tomorrowstax.com/knowledge/2023082412110/" target="_blank">国税通則法23条1項の更正の請求をわかりやすく解説 | トゥモローズ</a></li>
+  <li><a href="https://www.sn-hoki.co.jp/articles/article332082/" target="_blank">国税通則法23条1項に定める更正の請求 | 新日本法規</a></li>
+</ul>
+<p><strong>ローカルDB</strong></p>
+<ul>
+  <li>/home/user/ai-law-db/simple/saiketsu/77_21.json</li>
+  <li>/home/user/ai-law-db/simple/saiketsu/77_22.json</li>
+  <li>/home/user/ai-law-db/simple/saiketsu/74_09.json</li>
+  <li>/home/user/ai-law-db/simple/saiketsu/65_34.json</li>
+</ul>
+</div>
+
+</div>
+</body>
+</html>
