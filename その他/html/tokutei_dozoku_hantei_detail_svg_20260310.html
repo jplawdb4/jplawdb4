@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>特定同族会社の詳細判定フロー ─ 法人税法67条・66条・施行令139条の7・別表二18欄をつなぐ条文SVG</title>
+<style>
+:root{
+  --ink:#183249;
+  --sub:#57697c;
+  --line:#c8d7e2;
+  --paper:#ffffff;
+  --bg:#eef4f8;
+  --navy:#1f537d;
+  --teal:#2f7a83;
+  --green:#327756;
+  --amber:#a16a1f;
+  --rose:#8d4f4a;
+  --soft-blue:#edf5fb;
+  --soft-green:#eef7f1;
+  --soft-amber:#fff6e8;
+  --soft-rose:#fff1f1;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at top left,#f9fbfd 0,#eef4f8 42%,#e5edf4 100%);
+  font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
+  line-height:1.82;
+}
+.wrap{
+  max-width:1260px;
+  margin:0 auto;
+  background:var(--paper);
+  padding:40px 44px 70px;
+  box-shadow:0 14px 40px rgba(16,42,66,.08);
+}
+.doc-header{
+  border-bottom:3px solid var(--navy);
+  padding-bottom:24px;
+  margin-bottom:28px;
+}
+.doc-title{
+  margin:0;
+  color:var(--navy);
+  font-size:2rem;
+  line-height:1.42;
+  font-weight:800;
+}
+.doc-subtitle{
+  margin-top:10px;
+  color:var(--sub);
+  font-size:1rem;
+}
+.meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px 18px;
+  margin-top:14px;
+  color:var(--sub);
+  font-size:.9rem;
+}
+.badge{
+  display:inline-block;
+  padding:4px 10px;
+  border-radius:999px;
+  background:var(--navy);
+  color:#fff;
+  font-size:.8rem;
+}
+.summary-box,.note-box,.warn-box,.source-box,.statute{
+  margin:20px 0;
+  padding:18px 22px;
+  border-radius:12px;
+}
+.summary-box{
+  background:linear-gradient(135deg,#eff7fd 0%,#dfeef9 100%);
+  border:2px solid #99bfd9;
+}
+.note-box{
+  background:var(--soft-green);
+  border-left:5px solid var(--green);
+}
+.warn-box{
+  background:var(--soft-amber);
+  border-left:5px solid var(--amber);
+}
+.source-box{
+  background:#f7fafc;
+  border:1px solid var(--line);
+}
+.statute{
+  background:#f9fbfd;
+  border:1px solid var(--line);
+}
+.box-title{
+  margin:0 0 8px;
+  color:var(--navy);
+  font-weight:800;
+  font-size:1.05rem;
+}
+.toc{
+  margin:28px 0 32px;
+  padding:18px 22px;
+  border-radius:10px;
+  border:1px solid var(--line);
+  background:var(--soft-blue);
+}
+.toc-title{
+  margin:0 0 8px;
+  color:var(--navy);
+  font-weight:800;
+}
+.toc ol{
+  margin:0;
+  padding-left:22px;
+}
+.toc li{margin:6px 0}
+.action-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin:18px 0 8px;
+}
+.action{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--navy);
+  text-decoration:none;
+  font-weight:700;
+  font-size:.9rem;
+}
+.action:hover{background:#f4f8fb}
+h1{
+  margin:42px 0 14px;
+  padding-left:12px;
+  border-left:5px solid var(--teal);
+  color:var(--navy);
+  font-size:1.45rem;
+}
+h2{
+  margin:26px 0 10px;
+  padding-bottom:6px;
+  border-bottom:2px solid var(--line);
+  color:var(--navy);
+  font-size:1.08rem;
+}
+p{margin:12px 0}
+ul{margin:12px 0 12px 24px}
+li{margin:6px 0}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin:18px 0 24px;
+  font-size:.93rem;
+}
+th,td{
+  border:1px solid var(--line);
+  padding:10px 12px;
+  text-align:left;
+  vertical-align:top;
+}
+th{
+  background:var(--soft-blue);
+  color:var(--navy);
+}
+tr:nth-child(even) td{background:#fbfdff}
+.svg-shell{
+  margin:20px 0 26px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:14px;
+  background:linear-gradient(180deg,#f8fbfe 0%,#eef4f8 100%);
+  overflow:auto;
+}
+.svg-shell object,.svg-shell img{
+  width:100%;
+  min-width:1040px;
+  height:auto;
+  display:block;
+  border:0;
+}
+.statute-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:16px;
+}
+.small{
+  font-size:.86rem;
+  color:var(--sub);
+}
+a{color:var(--navy)}
+code{
+  background:#f2f5f7;
+  padding:1px 4px;
+  border-radius:4px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+footer{
+  margin-top:42px;
+  padding-top:18px;
+  border-top:1px solid var(--line);
+  color:var(--sub);
+  font-size:.86rem;
+}
+@media (max-width:760px){
+  .wrap{padding:22px 16px 34px}
+  .doc-title{font-size:1.55rem}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="doc-header">
+    <h1 class="doc-title" style="border:none;padding:0;margin:0">特定同族会社の詳細判定フロー<br>── 法人税法67条・66条・施行令139条の7・別表二18欄をつなぐ条文SVG</h1>
+    <div class="doc-subtitle">既存の判定表が「全体の道筋」を示すのに対し、本頁は <strong>法2条十の同族会社判定、法67条2項の被支配会社判定、令139条の7の特殊関係・同意議決権、法67条1項の除外再判定、法66条5項・6項の1億円以下分岐、法67条8項の期末時点</strong> を一段細かく分解し、B02 17欄・18欄まで落とし込んだ詳細版である。</div>
+    <div class="meta">
+      <span>作成日: 2026年3月10日</span>
+      <span class="badge">SVG詳細版</span>
+      <span class="badge">法人税法67条</span>
+      <span class="badge">法人税法66条</span>
+      <span class="badge">施行令139条の7</span>
+      <span>検証ベース: jplawdb4 条文DB（法人税法 as_of 2025-12-27） / 国税庁 令和7年版手引</span>
+    </div>
+  </div>
+
+  <div class="summary-box">
+    <div class="box-title">まず結論</div>
+    <p>特定同族会社の判定は、単に <strong>「筆頭グループが50%超か」</strong> を見るだけでは終わらない。正確には、<strong>法67条2項 + 令139条の7</strong> でまず被支配会社に当たるかを見て、その判定基礎に <strong>被支配会社でない法人</strong> が混じれば <strong>法67条1項</strong> に従って除外再判定し、さらに 1億円以下なら <strong>法66条5項2号〜5号又は6項</strong> に当たるかを確認し、最後に清算中でないことまで確かめて、はじめて法67条1項の「特定同族会社」に到達する。</p>
+    <p>したがって、実務上の核心は四つある。第一に、<strong>期末現在</strong> で判定すること。第二に、<strong>株式数だけでなく議決権・社員数</strong> でも50%超が成立し得ること。第三に、<strong>非被支配会社法人株主等の除外再判定</strong> を飛ばさないこと。第四に、<strong>1億円以下だから自動的に対象外になるわけではない</strong> こと。大法人の完全子法人等や大通算法人は、この最後の分岐で再び特定同族会社側へ戻ってくる。</p>
+  </div>
+
+  <div class="note-box">
+    <div class="box-title">既存ページとの分担</div>
+    <p><a href="特定同族会社_判定表_SVG_20260310.html">既存の判定表</a> は俯瞰用、本頁は精査用である。入口をざっと掴むなら前者、相互持合い・同意議決権・1億円以下例外まで安全に読み切るなら本頁、という使い分けを想定している。</p>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">目次</div>
+    <ol>
+      <li><a href="#svg">詳細SVG</a></li>
+      <li><a href="#statutes">条文の骨格</a></li>
+      <li><a href="#examples">ミニ設例</a></li>
+      <li><a href="#b02">別表二の読み方</a></li>
+      <li><a href="#sources">参照元</a></li>
+    </ol>
+  </div>
+
+  <div class="action-row">
+    <a class="action" href="tokutei_dozoku_hantei_detail_20260310.svg" target="_blank" rel="noopener noreferrer">生SVGを開く</a>
+    <a class="action" href="特定同族会社_判定表_SVG_20260310.html" target="_blank" rel="noopener noreferrer">既存判定表へ</a>
+    <a class="action" href="https://jplawdb4.github.io/jplawdb4/law/text/hojinzei/67.txt" target="_blank" rel="noopener noreferrer">法人税法67条 TXT</a>
+    <a class="action" href="https://jplawdb4.github.io/jplawdb4/law/text/hojinzei_seirei/139-7.txt" target="_blank" rel="noopener noreferrer">施行令139条の7 TXT</a>
+    <a class="action" href="https://www.nta.go.jp/publication/pamph/hojin/aramashi2025/pdf/02-03.pdf" target="_blank" rel="noopener noreferrer">別表二記載要領 PDF</a>
+  </div>
+
+  <h1 id="svg">1. 詳細SVG</h1>
+  <p>中央の本流が条文の順番、左列が定義・入力補正、右列が読み違えやすい補助論点、下段が除外再判定のミニ設例である。実務では、<strong>中央を上から下へ</strong>辿り、迷った論点だけ左右と下段へ戻ると速い。</p>
+
+  <div class="svg-shell">
+    <object data="tokutei_dozoku_hantei_detail_20260310.svg" type="image/svg+xml" aria-label="特定同族会社の詳細判定フロー">
+      <img src="tokutei_dozoku_hantei_detail_20260310.svg" alt="特定同族会社の詳細判定フロー">
+    </object>
+  </div>
+
+  <div class="warn-box">
+    <div class="box-title">最短で押さえる3点</div>
+    <ul>
+      <li>特定同族会社判定は <strong>上位1グループ</strong> が50%超かで出発する。上位3グループの同族会社判定と混同しない。</li>
+      <li>被支配会社でない法人株主等がいるときは、<strong>除外してもう一度50%超か</strong> を見る。ここを省くと誤判定しやすい。</li>
+      <li>1億円以下でも、大法人完全子法人等や大通算法人なら特定同族会社側へ戻る。<strong>小規模 = 自動的に対象外</strong> ではない。</li>
+    </ul>
+  </div>
+
+  <h1 id="statutes">2. 条文の骨格</h1>
+  <p>詳細判定フローを条文単位で切り出すと、次の5ブロックに整理できる。</p>
+
+  <div class="statute-grid">
+    <div class="statute">
+      <div class="box-title">法2条十</div>
+      <p>同族会社の基礎規定。上位3株主グループで50%超かを測る土台であり、別表二の同族会社判定割合につながる。</p>
+    </div>
+    <div class="statute">
+      <div class="box-title">法67条2項</div>
+      <p>特定同族会社判定の核。被支配会社とは、一人の株主等と特殊関係個人・法人が、株式等総数等の50%超を持つ会社その他政令所定の場合をいう。</p>
+    </div>
+    <div class="statute">
+      <div class="box-title">令139条の7</div>
+      <p>特殊関係個人・法人の範囲、支配の3ルート、同意議決権の吸収を定める。特定同族会社判定を実際に回すための作動規定である。</p>
+    </div>
+    <div class="statute">
+      <div class="box-title">法67条1項</div>
+      <p>非被支配会社法人の除外再判定、1億円以下法人への限定、清算中除外を一つに抱える。特定同族会社かどうかの最後の絞り込みはここで行う。</p>
+    </div>
+    <div class="statute">
+      <div class="box-title">法67条8項</div>
+      <p>判定時点は各事業年度終了の時の現況であると固定する。期中の株主構成ではなく、期末の事実で決まる。</p>
+    </div>
+    <div class="statute">
+      <div class="box-title">法66条5項・6項</div>
+      <p>大法人完全子法人等や大通算法人など、中小軽減税率の適用除外法人群を定める。法67条1項は1億円以下法人についてこの群を参照する。</p>
+    </div>
+  </div>
+
+  <h2>通達16-1-3の意味</h2>
+  <p>相互持合いがあるとき、非被支配会社法人の除外再判定を片側だけで終えてはいけない。通達16-1-3は、当該法人と相手法人の双方について除外後も被支配会社かを見よと補足している。条文のかっこ書きは、相互持合いに入るほど重要になる。</p>
+
+  <h1 id="examples">3. ミニ設例</h1>
+  <p>除外再判定のイメージが掴みにくいので、あえてそこだけ二つの小設例に切り出す。</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ケース</th>
+        <th>初回判定</th>
+        <th>除外再判定</th>
+        <th>結論</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>A</td>
+        <td>A本人32% + 配偶者12% + A支配法人B10% + 非被支配会社法人C8% = 62%</td>
+        <td>Cを外して 54%</td>
+        <td>除外後も50%超なので、他要件も満たせば特定同族会社へ進む</td>
+      </tr>
+      <tr>
+        <td>B</td>
+        <td>A本人29% + 配偶者11% + 非被支配会社法人C12% = 52%</td>
+        <td>Cを外して 40%</td>
+        <td>50%以下に落ちるため、特定同族会社にはならない</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="note-box">
+    <div class="box-title">設例の読み筋</div>
+    <p>両ケースとも初回は50%超だが、法67条1項の除外再判定を通すと結論が分かれる。したがって、B02 17欄だけで「特定同族会社」と即断せず、<strong>その50%超に非被支配会社法人が混ざっていないか</strong> を必ず点検する必要がある。</p>
+  </div>
+
+  <h1 id="b02">4. 別表二の読み方</h1>
+  <p>別表二は条文判定をフォームに落としたものであり、実務上は次の欄を軸に読むと混乱しにくい。</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>欄</th>
+        <th>意味</th>
+        <th>このページでの位置づけ</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>10欄</td>
+        <td>同族会社の判定割合</td>
+        <td>上位3グループで50%超か。法2条十の基礎判定。</td>
+      </tr>
+      <tr>
+        <td>17欄</td>
+        <td>特定同族会社の判定割合</td>
+        <td>上位1グループで50%超か。法67条2項 + 令139条の7 の入口。</td>
+      </tr>
+      <tr>
+        <td>被支配会社でない法人株主等欄</td>
+        <td>非被支配会社法人の抽出</td>
+        <td>法67条1項の除外再判定へ進むための材料。</td>
+      </tr>
+      <tr>
+        <td>18欄</td>
+        <td>判定結果</td>
+        <td>最終的に「特定同族会社 / 同族会社 / 非同族会社」を表示する出口。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="warn-box">
+    <div class="box-title">別表二だけで完結しない理由</div>
+    <p>17欄が50%超でも、清算中であったり、1億円以下で法66条5項2号〜5号・6項に当たらなかったり、除外再判定で50%以下に落ちたりすれば、法67条1項の「特定同族会社」にはならない。別表二は強いシグナルだが、最終結論は条文側で閉じる。</p>
+  </div>
+
+  <h1 id="sources">5. 参照元</h1>
+  <div class="source-box">
+    <div class="box-title">jplawdb4 / 公式資料</div>
+    <ul>
+      <li><a href="https://jplawdb4.github.io/jplawdb4/law/text/hojinzei/2.txt" target="_blank" rel="noopener noreferrer">jplawdb4 / 法人税法2条</a> － 同族会社の定義の基礎。</li>
+      <li><a href="https://jplawdb4.github.io/jplawdb4/law/text/hojinzei/67.txt" target="_blank" rel="noopener noreferrer">jplawdb4 / 法人税法67条</a> － 特定同族会社の本則、除外再判定、清算中除外、期末時点。</li>
+      <li><a href="https://jplawdb4.github.io/jplawdb4/law/text/hojinzei/66.txt" target="_blank" rel="noopener noreferrer">jplawdb4 / 法人税法66条</a> － 1億円以下法人の限定列挙の参照元。</li>
+      <li><a href="https://jplawdb4.github.io/jplawdb4/law/text/hojinzei_seirei/139-7.txt" target="_blank" rel="noopener noreferrer">jplawdb4 / 法人税法施行令139条の7</a> － 特殊関係個人・法人、支配の3ルート、同意議決権。</li>
+      <li><a href="https://jplawdb4.github.io/jplawdb4/guide/text/hojin_aramashi_2025/s011.txt" target="_blank" rel="noopener noreferrer">jplawdb4 / 別表二記載要領テキスト</a> － 10欄・17欄・18欄の読み方。</li>
+      <li><a href="https://jplawdb4.github.io/jplawdb4/tsutatsu/text/hojinzei_kihon_tsutatsu/16-1-3.txt" target="_blank" rel="noopener noreferrer">jplawdb4 / 通達16-1-3</a> － 相互持合い時の除外再判定。</li>
+      <li><a href="https://www.nta.go.jp/publication/pamph/hojin/aramashi2025/pdf/02-03.pdf" target="_blank" rel="noopener noreferrer">国税庁 / 令和7年版 別表二記載要領</a> － 判定結果18、同意議決権、行使不能議決権の記載実務。</li>
+      <li><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5800.htm" target="_blank" rel="noopener noreferrer">国税庁 / タックスアンサー No.5800</a> － 大法人100%子法人等で留保金課税不適用が外れる点の確認。</li>
+    </ul>
+  </div>
+
+  <footer>
+    本頁は、特定同族会社判定の「入口」を条文単位にほぐした詳細版である。留保金課税の計算そのものは、別ページの「特定同族会社の留保金課税」へ接続する前提で構成している。
+  </footer>
+</div>
+</body>
+</html>
