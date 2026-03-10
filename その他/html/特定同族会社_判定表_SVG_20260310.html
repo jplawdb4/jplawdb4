@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>特定同族会社の判定表 ─ 法人税法67条・66条・施行令139条の7に基づくSVGフロー</title>
+<style>
+:root{
+  --ink:#19324a;
+  --sub:#546579;
+  --line:#cad8e4;
+  --bg:#eef4f8;
+  --paper:#ffffff;
+  --navy:#1d4e77;
+  --teal:#2d7d7d;
+  --green:#2f7a55;
+  --amber:#a0671f;
+  --rose:#8b4a4a;
+  --soft-blue:#edf5fb;
+  --soft-green:#edf8f2;
+  --soft-amber:#fff6e8;
+  --soft-rose:#fff1f1;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at top left, #f8fbff 0, #edf4f8 40%, #e7eef4 100%);
+  font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
+  line-height:1.85;
+}
+.wrap{
+  max-width:1240px;
+  margin:0 auto;
+  background:var(--paper);
+  padding:40px 44px 64px;
+  box-shadow:0 12px 36px rgba(17,44,72,.08);
+}
+.doc-header{
+  border-bottom:3px solid var(--navy);
+  padding-bottom:24px;
+  margin-bottom:28px;
+}
+.doc-title{
+  margin:0;
+  color:var(--navy);
+  font-size:2rem;
+  line-height:1.45;
+  font-weight:800;
+}
+.doc-subtitle{
+  margin-top:10px;
+  color:var(--sub);
+  font-size:1rem;
+}
+.meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px 18px;
+  margin-top:14px;
+  color:var(--sub);
+  font-size:.9rem;
+}
+.badge{
+  display:inline-block;
+  padding:4px 10px;
+  border-radius:999px;
+  background:var(--navy);
+  color:#fff;
+  font-size:.8rem;
+}
+.summary-box,.note-box,.warn-box,.source-box{
+  margin:20px 0;
+  padding:18px 22px;
+  border-radius:10px;
+}
+.summary-box{
+  background:linear-gradient(135deg, #eff7fd 0%, #dfeef9 100%);
+  border:2px solid #99bfd9;
+}
+.note-box{
+  background:var(--soft-green);
+  border-left:5px solid var(--green);
+}
+.warn-box{
+  background:var(--soft-amber);
+  border-left:5px solid var(--amber);
+}
+.source-box{
+  background:#f7fafc;
+  border:1px solid var(--line);
+}
+.box-title{
+  margin:0 0 8px;
+  color:var(--navy);
+  font-weight:800;
+  font-size:1.05rem;
+}
+.toc{
+  margin:28px 0 32px;
+  padding:18px 22px;
+  border-radius:10px;
+  border:1px solid var(--line);
+  background:var(--soft-blue);
+}
+.toc-title{
+  margin:0 0 8px;
+  color:var(--navy);
+  font-weight:800;
+}
+.toc ol{
+  margin:0;
+  padding-left:22px;
+}
+.toc li{
+  margin:6px 0;
+}
+h1{
+  margin:42px 0 14px;
+  padding-left:12px;
+  border-left:5px solid var(--teal);
+  color:var(--navy);
+  font-size:1.45rem;
+}
+h2{
+  margin:26px 0 10px;
+  padding-bottom:6px;
+  border-bottom:2px solid var(--line);
+  color:var(--navy);
+  font-size:1.08rem;
+}
+p{margin:12px 0}
+ul{
+  margin:12px 0 12px 24px;
+}
+li{margin:6px 0}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin:18px 0 24px;
+  font-size:.93rem;
+}
+th,td{
+  border:1px solid var(--line);
+  padding:10px 12px;
+  text-align:left;
+  vertical-align:top;
+}
+th{
+  background:var(--soft-blue);
+  color:var(--navy);
+}
+tr:nth-child(even) td{
+  background:#fbfdff;
+}
+.svg-shell{
+  margin:20px 0 26px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:14px;
+  background:linear-gradient(180deg, #f8fbfe 0%, #eef4f8 100%);
+  overflow:auto;
+}
+.svg-shell svg{
+  width:100%;
+  min-width:980px;
+  height:auto;
+  display:block;
+}
+.small{
+  font-size:.86rem;
+  color:var(--sub);
+}
+a{color:var(--navy)}
+code{
+  background:#f2f5f7;
+  padding:1px 4px;
+  border-radius:4px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+footer{
+  margin-top:42px;
+  padding-top:18px;
+  border-top:1px solid var(--line);
+  color:var(--sub);
+  font-size:.86rem;
+}
+@media (max-width:760px){
+  .wrap{padding:22px 16px 34px}
+  .doc-title{font-size:1.55rem}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="doc-header">
+    <h1 class="doc-title" style="border:none;padding:0;margin:0">特定同族会社の判定表<br>── 法人税法67条・66条・施行令139条の7に基づくSVGフロー</h1>
+    <div class="doc-subtitle">留保金課税の入口となる「特定同族会社」該当性を、<strong>被支配会社判定 → 被支配会社でない法人株主等の除外再判定 → 1億円基準 → 法66条5項2号〜5号・6項</strong> の順で可視化した。条文の枝分かれと、別表二・別表三(一)への落とし込みを一枚で確認できる実務用の判定表である。</div>
+    <div class="meta">
+      <span>作成日: 2026年3月10日</span>
+      <span class="badge">SVG判定表</span>
+      <span class="badge">法人税法67条</span>
+      <span class="badge">留保金課税</span>
+      <span class="badge">別表二・三(一)</span>
+      <span>検証ベース: e-Gov法令検索 / 国税庁「法人税のあらましと申告の手引（令和7年版）」</span>
+    </div>
+  </div>
+
+  <div class="summary-box">
+    <div class="box-title">まず結論</div>
+    <p>特定同族会社かどうかは、単に「上位株主で50%超か」を見るだけでは足りない。<strong>法67条2項・令139条の7で被支配会社に当たるか</strong>を先に判定し、そのうえで<strong>被支配会社でない法人株主等を除外してもなお被支配会社か</strong>を確かめ、さらに<strong>資本金等が1億円以下なら法66条5項2号〜5号又は6項の限定列挙に入るか</strong>を確認して、初めて法67条1項の「特定同族会社」に到達する。</p>
+    <p>したがって、実務上の肝は次の四点である。第一に、判定時点は<strong>事業年度終了時</strong>である。第二に、株式数だけでなく、<strong>一定議決権の50%超や持分会社社員の過半</strong>でも被支配会社となりうる。第三に、<strong>被支配会社でない法人株主等の除外再判定</strong>を落とすと誤判定しやすい。第四に、資本金等1億円以下の会社は、被支配会社でも直ちに特定同族会社にはならず、法66条側の限定列挙確認が必要である。</p>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">目次</div>
+    <ol>
+      <li><a href="#flow">SVG判定フロー</a></li>
+      <li><a href="#steps">条文に対応させた読み方</a></li>
+      <li><a href="#oneoku">資本金等1億円以下の分岐</a></li>
+      <li><a href="#forms">別表二・別表三(一)への落とし込み</a></li>
+      <li><a href="#sources">参照条文・出典</a></li>
+    </ol>
+  </div>
+
+  <h1 id="flow">1. SVG判定フロー</h1>
+  <p>中央が法67条の本流、左右の注記が令139条の7と法66条の補助論点である。実務では、<strong>真ん中を上から下へ</strong>読み、迷った箇所だけ左右の注記で確認すると速い。</p>
+
+  <div class="svg-shell">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 2140" aria-labelledby="svg-title svg-desc" role="img">
+      <title id="svg-title">特定同族会社の判定フロー</title>
+      <desc id="svg-desc">法人税法67条、66条、法人税法施行令139条の7に基づく特定同族会社判定の流れを示す図</desc>
+      <defs>
+        <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#fbfdff"/>
+          <stop offset="100%" stop-color="#eef4f8"/>
+        </linearGradient>
+        <marker id="arrowBlue" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" orient="auto-start-reverse">
+          <path d="M0,0 L12,6 L0,12 z" fill="#2a628f"/>
+        </marker>
+        <marker id="arrowGreen" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" orient="auto-start-reverse">
+          <path d="M0,0 L12,6 L0,12 z" fill="#2f7a55"/>
+        </marker>
+        <marker id="arrowRose" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" orient="auto-start-reverse">
+          <path d="M0,0 L12,6 L0,12 z" fill="#9b5858"/>
+        </marker>
+        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#23425f" flood-opacity=".14"/>
+        </filter>
+        <style>
+          .title{font:700 34px 'Hiragino Sans','Yu Gothic',sans-serif;fill:#143c61}
+          .subtitle{font:500 16px 'Hiragino Sans','Yu Gothic',sans-serif;fill:#5b7082}
+          .section{font:700 18px 'Hiragino Sans','Yu Gothic',sans-serif;fill:#1d4e77}
+          .node-title{font:700 21px 'Hiragino Sans','Yu Gothic',sans-serif;fill:#15314a}
+          .node-text{font:500 16px 'Hiragino Sans','Yu Gothic',sans-serif;fill:#274357}
+          .mini-title{font:700 17px 'Hiragino Sans','Yu Gothic',sans-serif;fill:#1d4e77}
+          .mini-text{font:500 15px 'Hiragino Sans','Yu Gothic',sans-serif;fill:#2f4353}
+          .yesno{font:700 16px 'Hiragino Sans','Yu Gothic',sans-serif}
+          .lab{font:600 15px 'Hiragino Sans','Yu Gothic',sans-serif;fill:#4f6576}
+          .panel{filter:url(#shadow)}
+          .core{fill:#ffffff;stroke:#2a628f;stroke-width:2.4}
+          .sub{fill:#f3f8fc;stroke:#8ab3d2;stroke-width:2}
+          .note{fill:#f4faf5;stroke:#86b79a;stroke-width:2}
+          .warn{fill:#fff6ec;stroke:#d6a661;stroke-width:2}
+          .stop{fill:#fff2f2;stroke:#c68181;stroke-width:2}
+          .goal{fill:#eef8f0;stroke:#4b9464;stroke-width:2.6}
+          .form{fill:#eef5fb;stroke:#7ea9c9;stroke-width:2}
+          .diamond{fill:#ffffff;stroke:#2a628f;stroke-width:2.4}
+          .dash{stroke-dasharray:8 7}
+        </style>
+      </defs>
+
+      <rect x="0" y="0" width="1600" height="2140" fill="url(#bg)"/>
+
+      <rect x="42" y="32" width="1516" height="92" rx="18" fill="#e8f2fa" stroke="#a9c5da" stroke-width="1.5"/>
+      <text x="800" y="72" text-anchor="middle" class="title">特定同族会社の判定フロー</text>
+      <text x="800" y="101" text-anchor="middle" class="subtitle">法人税法67条1項・2項・8項 / 法人税法66条5項2号〜5号・6項 / 法人税法施行令139条の7</text>
+
+      <rect x="60" y="148" width="1480" height="54" rx="12" fill="#ffffff" stroke="#bfd2e2" stroke-width="1.5"/>
+      <text x="90" y="181" class="mini-title">判定時点</text>
+      <text x="200" y="181" class="mini-text">法67条8項により、</text>
+      <text x="360" y="181" class="mini-text" style="font-weight:700;fill:#1d4e77">事業年度終了時の現況</text>
+      <text x="550" y="181" class="mini-text">で判定する。適用除外事業者判定は不要。自己株式等、行使不可能議決権、同意議決権の扱いは別表二の実務上重要な補正点。</text>
+
+      <rect x="520" y="240" width="560" height="104" rx="18" class="core panel"/>
+      <text x="800" y="280" text-anchor="middle" class="node-title">出発点</text>
+      <text x="800" y="311" text-anchor="middle" class="node-text">対象法人は留保金課税の対象となり得る会社か</text>
+      <text x="800" y="335" text-anchor="middle" class="node-text">法67条2項の「会社」には投資法人を含む</text>
+
+      <line x1="800" y1="344" x2="800" y2="388" stroke="#2a628f" stroke-width="3" marker-end="url(#arrowBlue)"/>
+
+      <polygon points="800,392 940,478 800,564 660,478" class="diamond panel"/>
+      <text x="800" y="463" text-anchor="middle" class="node-title">清算中か</text>
+      <text x="800" y="492" text-anchor="middle" class="node-text">法67条1項かっこ書で除外</text>
+
+      <line x1="940" y1="478" x2="1135" y2="478" stroke="#9b5858" stroke-width="3" marker-end="url(#arrowRose)"/>
+      <text x="1018" y="460" class="yesno" fill="#9b5858">YES</text>
+      <rect x="1160" y="430" width="330" height="96" rx="18" class="stop panel"/>
+      <text x="1325" y="465" text-anchor="middle" class="node-title" style="fill:#7b3434">特定同族会社ではない</text>
+      <text x="1325" y="493" text-anchor="middle" class="node-text">清算中の会社は法67条1項で除外</text>
+
+      <line x1="800" y1="564" x2="800" y2="616" stroke="#2a628f" stroke-width="3" marker-end="url(#arrowBlue)"/>
+      <text x="822" y="604" class="yesno" fill="#2a628f">NO</text>
+
+      <rect x="470" y="632" width="660" height="138" rx="18" class="core panel"/>
+      <text x="800" y="670" text-anchor="middle" class="node-title">被支配会社の判定素材</text>
+      <text x="800" y="700" text-anchor="middle" class="node-text">株主等の一人 + 特殊関係個人 + 特殊関係法人でみる</text>
+      <text x="800" y="729" text-anchor="middle" class="node-text">株式等50%超、一定議決権50%超、持分会社社員の過半のいずれか</text>
+      <text x="800" y="754" text-anchor="middle" class="node-text">法67条2項、令139条の7第1項〜第6項</text>
+
+      <line x1="800" y1="770" x2="800" y2="818" stroke="#2a628f" stroke-width="3" marker-end="url(#arrowBlue)"/>
+
+      <polygon points="800,824 955,912 800,1000 645,912" class="diamond panel"/>
+      <text x="800" y="897" text-anchor="middle" class="node-title">被支配会社か</text>
+      <text x="800" y="926" text-anchor="middle" class="node-text">上記いずれかの支配関係が成立するか</text>
+
+      <line x1="645" y1="912" x2="450" y2="912" stroke="#9b5858" stroke-width="3" marker-end="url(#arrowRose)"/>
+      <text x="510" y="892" class="yesno" fill="#9b5858">NO</text>
+      <rect x="70" y="862" width="350" height="102" rx="18" class="stop panel"/>
+      <text x="245" y="900" text-anchor="middle" class="node-title" style="fill:#7b3434">特定同族会社ではない</text>
+      <text x="245" y="930" text-anchor="middle" class="node-text">そもそも被支配会社でないため法67条1項に入らない</text>
+
+      <line x1="800" y1="1000" x2="800" y2="1052" stroke="#2a628f" stroke-width="3" marker-end="url(#arrowBlue)"/>
+      <text x="825" y="1038" class="yesno" fill="#2a628f">YES</text>
+
+      <polygon points="800,1060 980,1156 800,1252 620,1156" class="diamond panel"/>
+      <text x="800" y="1134" text-anchor="middle" class="node-title">判定基礎に</text>
+      <text x="800" y="1164" text-anchor="middle" class="node-title">被支配会社でない法人株主等があるか</text>
+      <text x="800" y="1194" text-anchor="middle" class="node-text">法67条1項かっこ書前段</text>
+
+      <line x1="980" y1="1156" x2="1155" y2="1156" stroke="#2a628f" stroke-width="3" marker-end="url(#arrowBlue)"/>
+      <text x="1040" y="1136" class="yesno" fill="#2a628f">YES</text>
+      <rect x="1170" y="1088" width="320" height="136" rx="18" class="sub panel"/>
+      <text x="1330" y="1126" text-anchor="middle" class="node-title">その法人株主等を除外して</text>
+      <text x="1330" y="1154" text-anchor="middle" class="node-title">もう一度被支配会社判定</text>
+      <text x="1330" y="1184" text-anchor="middle" class="node-text">除外後も被支配会社でなければ</text>
+      <text x="1330" y="1208" text-anchor="middle" class="node-text">特定同族会社にならない</text>
+
+      <line x1="1330" y1="1224" x2="1330" y2="1300" stroke="#2a628f" stroke-width="3" marker-end="url(#arrowBlue)"/>
+
+      <polygon points="1330,1308 1460,1388 1330,1468 1200,1388" class="diamond panel"/>
+      <text x="1330" y="1382" text-anchor="middle" class="node-title">除外後も</text>
+      <text x="1330" y="1411" text-anchor="middle" class="node-title">被支配会社か</text>
+
+      <line x1="1200" y1="1388" x2="1040" y2="1388" stroke="#9b5858" stroke-width="3" marker-end="url(#arrowRose)"/>
+      <text x="1110" y="1368" class="yesno" fill="#9b5858">NO</text>
+      <rect x="680" y="1336" width="330" height="104" rx="18" class="stop panel"/>
+      <text x="845" y="1374" text-anchor="middle" class="node-title" style="fill:#7b3434">特定同族会社ではない</text>
+      <text x="845" y="1402" text-anchor="middle" class="node-text">除外後に支配が崩れるため法67条1項の射程外</text>
+
+      <line x1="800" y1="1252" x2="800" y2="1336" stroke="#2a628f" stroke-width="3" marker-end="url(#arrowBlue)"/>
+      <text x="820" y="1318" class="yesno" fill="#2a628f">NO</text>
+
+      <line x1="1330" y1="1468" x2="1330" y2="1520" stroke="#2a628f" stroke-width="3" marker-end="url(#arrowBlue)"/>
+      <text x="1354" y="1506" class="yesno" fill="#2a628f">YES</text>
+
+      <line x1="1330" y1="1520" x2="960" y2="1520" stroke="#2a628f" stroke-width="3"/>
+      <line x1="960" y1="1520" x2="960" y2="1578" stroke="#2a628f" stroke-width="3" marker-end="url(#arrowBlue)"/>
+      <line x1="800" y1="1438" x2="800" y2="1578" stroke="#2a628f" stroke-width="3"/>
+
+      <polygon points="880,1588 1040,1680 880,1772 720,1680" class="diamond panel"/>
+      <text x="880" y="1664" text-anchor="middle" class="node-title">当期末の資本金等は</text>
+      <text x="880" y="1694" text-anchor="middle" class="node-title">1億円以下か</text>
+      <text x="880" y="1724" text-anchor="middle" class="node-text">法67条1項かっこ書後段</text>
+
+      <line x1="1040" y1="1680" x2="1205" y2="1680" stroke="#2f7a55" stroke-width="3" marker-end="url(#arrowGreen)"/>
+      <text x="1110" y="1660" class="yesno" fill="#2f7a55">NO</text>
+      <rect x="1220" y="1628" width="290" height="104" rx="18" class="goal panel"/>
+      <text x="1365" y="1666" text-anchor="middle" class="node-title" style="fill:#23543a">特定同族会社</text>
+      <text x="1365" y="1694" text-anchor="middle" class="node-text">被支配会社で、除外再判定も通り、</text>
+      <text x="1365" y="1718" text-anchor="middle" class="node-text">資本金等が1億円超</text>
+
+      <line x1="880" y1="1772" x2="880" y2="1828" stroke="#2a628f" stroke-width="3" marker-end="url(#arrowBlue)"/>
+      <text x="905" y="1812" class="yesno" fill="#2a628f">YES</text>
+
+      <rect x="600" y="1840" width="560" height="148" rx="18" class="warn panel"/>
+      <text x="880" y="1878" text-anchor="middle" class="node-title" style="fill:#8a561a">1億円以下でも特定同族会社になり得る限定類型</text>
+      <text x="880" y="1908" text-anchor="middle" class="node-text">法66条5項2号・3号・4号・5号 又は 法66条6項の大通算法人</text>
+      <text x="880" y="1938" text-anchor="middle" class="node-text">大法人完全支配普通法人 / 複数大法人みなし一社完全支配 / 投資法人 / 特定目的会社 / 大通算法人</text>
+      <text x="880" y="1964" text-anchor="middle" class="node-text">受託法人は法67条1項の引用対象から外れる点に注意</text>
+
+      <line x1="880" y1="1988" x2="880" y2="2036" stroke="#2a628f" stroke-width="3" marker-end="url(#arrowBlue)"/>
+
+      <polygon points="880,1952 1050,2048 880,2140 710,2048" class="diamond panel"/>
+      <text x="880" y="2066" text-anchor="middle" class="node-title">限定類型に当たるか</text>
+      <text x="880" y="2096" text-anchor="middle" class="node-text">法66条5項2号〜5号又は6項</text>
+
+      <line x1="710" y1="2048" x2="520" y2="2048" stroke="#9b5858" stroke-width="3" marker-end="url(#arrowRose)"/>
+      <text x="588" y="2028" class="yesno" fill="#9b5858">NO</text>
+      <rect x="70" y="1996" width="420" height="104" rx="18" class="stop panel"/>
+      <text x="280" y="2034" text-anchor="middle" class="node-title" style="fill:#7b3434">特定同族会社ではない</text>
+      <text x="280" y="2062" text-anchor="middle" class="node-text">1億円以下で、法66条側の限定列挙にも入らない</text>
+
+      <line x1="1050" y1="2048" x2="1205" y2="2048" stroke="#2f7a55" stroke-width="3" marker-end="url(#arrowGreen)"/>
+      <text x="1110" y="2028" class="yesno" fill="#2f7a55">YES</text>
+      <rect x="1220" y="1996" width="290" height="104" rx="18" class="goal panel"/>
+      <text x="1365" y="2034" text-anchor="middle" class="node-title" style="fill:#23543a">特定同族会社</text>
+      <text x="1365" y="2062" text-anchor="middle" class="node-text">1億円以下でも法67条1項の限定列挙に該当</text>
+
+      <rect x="60" y="650" width="340" height="278" rx="18" class="note panel"/>
+      <text x="90" y="688" class="mini-title">特殊関係個人</text>
+      <text x="90" y="716" class="mini-text">令139条の7第1項</text>
+      <text x="90" y="748" class="mini-text">1. 親族</text>
+      <text x="90" y="777" class="mini-text">2. 事実上の配偶者</text>
+      <text x="90" y="806" class="mini-text">3. 個人株主等の使用人</text>
+      <text x="90" y="835" class="mini-text">4. 株主等からの資産で生計維持する者</text>
+      <text x="90" y="864" class="mini-text">5. 1〜3と生計を一にする親族</text>
+      <text x="90" y="895" class="mini-text">株主等の「一人」と合算して判定する</text>
+
+      <rect x="1200" y="650" width="340" height="320" rx="18" class="note panel"/>
+      <text x="1230" y="688" class="mini-title">特殊関係法人と支配</text>
+      <text x="1230" y="716" class="mini-text">令139条の7第2項〜第4項</text>
+      <text x="1230" y="748" class="mini-text">株主等の一人、又はその一人と特殊関係個人・法人が</text>
+      <text x="1230" y="776" class="mini-text">他の会社を支配していれば、その会社も特殊関係法人</text>
+      <text x="1230" y="812" class="mini-text">「支配」 = 次のいずれか</text>
+      <text x="1230" y="842" class="mini-text">・株式等の総数又は総額の50%超</text>
+      <text x="1230" y="871" class="mini-text">・一定議決権の総数の50%超</text>
+      <text x="1230" y="900" class="mini-text">・持分会社社員の総数の半数超</text>
+      <text x="1230" y="936" class="mini-text">同一人と特殊関係がある複数会社は相互に</text>
+      <text x="1230" y="964" class="mini-text">特殊関係法人とみなされる</text>
+
+      <rect x="60" y="1050" width="340" height="282" rx="18" class="sub panel"/>
+      <text x="90" y="1088" class="mini-title">「その他政令で定める場合」</text>
+      <text x="90" y="1116" class="mini-text">令139条の7第5項・第6項</text>
+      <text x="90" y="1148" class="mini-text">株式数だけでなく、次でも被支配会社となり得る</text>
+      <text x="90" y="1178" class="mini-text">・事業譲渡、解散、合併、分割等の重要決議</text>
+      <text x="90" y="1207" class="mini-text">・役員選解任決議</text>
+      <text x="90" y="1236" class="mini-text">・役員報酬決議</text>
+      <text x="90" y="1265" class="mini-text">・剰余金配当決議</text>
+      <text x="90" y="1294" class="mini-text">上記議決権の50%超、又は持分会社社員の過半</text>
+      <text x="90" y="1322" class="mini-text">同意議決権は、同意を受けた者側に集約して判定する</text>
+
+      <rect x="1188" y="1784" width="352" height="252" rx="18" class="warn panel"/>
+      <text x="1218" y="1822" class="mini-title" style="fill:#8a561a">1億円以下枝の中身</text>
+      <text x="1218" y="1854" class="mini-text">法66条5項2号: 5億円以上法人等による完全支配</text>
+      <text x="1218" y="1883" class="mini-text">法66条5項3号: 複数大法人を一社とみなす完全支配</text>
+      <text x="1218" y="1912" class="mini-text">法66条5項4号: 投資法人</text>
+      <text x="1218" y="1941" class="mini-text">法66条5項5号: 特定目的会社</text>
+      <text x="1218" y="1970" class="mini-text">法66条6項: 大通算法人</text>
+      <text x="1218" y="2002" class="mini-text">大通算法人は通算法人グループ内で</text>
+      <text x="1218" y="2030" class="mini-text">1億円超法人等がいるときの普通法人</text>
+
+      <rect x="60" y="1680" width="430" height="208" rx="18" class="form panel"/>
+      <text x="275" y="1718" text-anchor="middle" class="mini-title">別表二での出口整理</text>
+      <text x="88" y="1752" class="mini-text">・17欄「特定同族会社の判定割合」が50%超</text>
+      <text x="88" y="1781" class="mini-text">  → 判定結果18は「特定同族会社」</text>
+      <text x="88" y="1810" class="mini-text">・17欄が50%以下でも10欄が50%超</text>
+      <text x="88" y="1839" class="mini-text">  → 「同族会社」</text>
+      <text x="88" y="1868" class="mini-text">・10欄が50%以下</text>
+      <text x="88" y="1897" class="mini-text">  → 「非同族会社」</text>
+
+      <rect x="540" y="1680" width="250" height="104" rx="18" class="goal panel"/>
+      <text x="665" y="1718" text-anchor="middle" class="mini-title" style="fill:#23543a">YESの出口</text>
+      <text x="665" y="1748" text-anchor="middle" class="mini-text">特定同族会社として</text>
+      <text x="665" y="1772" text-anchor="middle" class="mini-text">別表三(一)作成へ</text>
+    </svg>
+  </div>
+
+  <div class="note-box">
+    <div class="box-title">読み方のコツ</div>
+    <p>誤りやすいのは、<strong>「被支配会社かどうか」</strong>と<strong>「特定同族会社かどうか」</strong>を同じ問いとして処理してしまう点である。法67条は、まず被支配会社を定義し、その後に<strong>被支配会社でない法人株主等の除外再判定</strong>と<strong>1億円以下法人の限定列挙</strong>を重ねている。したがって、別表二17欄の判定は、単純な持株比率メモではなく、法67条1項のかっこ書まで通した後の結論である。</p>
+  </div>
+
+  <h1 id="steps">2. 条文に対応させた読み方</h1>
+  <table>
+    <thead>
+      <tr>
+        <th style="width:15%">判定段階</th>
+        <th style="width:26%">見るポイント</th>
+        <th style="width:23%">条文根拠</th>
+        <th>実務上の注意</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>出発点</td>
+        <td>対象法人が留保金課税の対象になり得るか</td>
+        <td>法人税法67条1項・2項</td>
+        <td>法67条2項の「会社」には投資法人が含まれる。判定時点は事業年度終了時である。</td>
+      </tr>
+      <tr>
+        <td>清算中除外</td>
+        <td>清算中の会社か</td>
+        <td>法人税法67条1項かっこ書</td>
+        <td>清算中なら、被支配会社性があっても特定同族会社から外れる。</td>
+      </tr>
+      <tr>
+        <td>被支配会社判定</td>
+        <td>株主等の一人と特殊関係者で50%超か</td>
+        <td>法人税法67条2項、法人税法施行令139条の7第1項〜第6項</td>
+        <td>株式数・出資額だけでなく、一定議決権の50%超、持分会社社員の過半も対象。自己株式等と行使不可能議決権の処理に注意。</td>
+      </tr>
+      <tr>
+        <td>除外再判定</td>
+        <td>判定基礎に被支配会社でない法人株主等があるか</td>
+        <td>法人税法67条1項かっこ書前段</td>
+        <td>その法人株主等を除外してもなお被支配会社なら先に進む。除外後に支配が崩れるなら特定同族会社ではない。</td>
+      </tr>
+      <tr>
+        <td>1億円基準</td>
+        <td>当期末資本金等が1億円以下か</td>
+        <td>法人税法67条1項かっこ書後段</td>
+        <td>1億円超なら、ここまでの要件を満たした時点で特定同族会社になりうる。</td>
+      </tr>
+      <tr>
+        <td>1億円以下の限定列挙</td>
+        <td>法66条5項2号〜5号又は6項に該当するか</td>
+        <td>法人税法67条1項、法人税法66条5項2号〜5号・6項</td>
+        <td>被支配会社でも、限定列挙外なら特定同族会社にはならない。受託法人は67条1項の引用対象外である。</td>
+      </tr>
+      <tr>
+        <td>別表処理</td>
+        <td>17欄・10欄・18欄の表示と別表三(一)</td>
+        <td>国税庁「別表二」「別表三(一)」記載要領</td>
+        <td>17欄が50%超なら特定同族会社。特定同族会社なら別表三(一)へ進む。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>2.1 被支配会社判定の中身</h2>
+  <p>被支配会社判定では、<strong>株主等の一人</strong>を起点にして、その人と特殊関係にある個人・法人を一まとまりにして支配割合を見る。特殊関係個人は、親族、事実上の配偶者、使用人、生計維持者、生計を一にする親族である。特殊関係法人は、その一人又はその一人と特殊関係者が支配している会社の連鎖で広がる。ここでいう「支配」は、株式等50%超のほか、重要決議議決権50%超や持分会社社員の過半でも足りる。</p>
+  <p>また、令139条の7第6項は、同意議決権を受けた者側に議決権を寄せて判定する仕組みを置いている。そのため、名義上の保有割合だけを見て「50%を切っている」と判断すると危ない。国税庁の別表二記載要領が、行使不可能議決権と同意議決権の記載方法を細かく指示しているのはこのためである。</p>
+
+  <h2>2.2 被支配会社でない法人株主等の除外再判定</h2>
+  <p>法67条1項のかっこ書前段は、特定同族会社判定の独特なひっかけポイントである。最初の被支配会社判定で50%超になっていても、その基礎となった株主等の中に<strong>被支配会社でない法人</strong>が混ざっている場合には、その法人を外してもう一度見る。これは、単に法人株主が入っていれば外すという話ではなく、<strong>被支配会社でない法人株主等によって支配が水増しされていないか</strong>を確認する工程だと理解すると分かりやすい。</p>
+
+  <h1 id="oneoku">3. 資本金等1億円以下の分岐</h1>
+  <p>資本金等が1億円以下の会社については、被支配会社であっても直ちに特定同族会社にはならない。法67条1項は、法66条5項2号〜5号と同条6項の大通算法人だけに絞っている。したがって、実務では「1億円以下なら一旦止まって、66条側を開く」が基本動作になる。</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width:26%">限定類型</th>
+        <th style="width:26%">法令上の位置付け</th>
+        <th>要点</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>大法人による完全支配普通法人</td>
+        <td>法人税法66条5項2号</td>
+        <td>5億円以上法人、相互会社、受託法人などの「大法人」に完全支配される普通法人。</td>
+      </tr>
+      <tr>
+        <td>複数大法人を一社とみなす完全支配普通法人</td>
+        <td>法人税法66条5項3号</td>
+        <td>複数大法人が持つ全株式等を一社保有とみなすと完全支配になる普通法人。</td>
+      </tr>
+      <tr>
+        <td>投資法人</td>
+        <td>法人税法66条5項4号</td>
+        <td>資本金等1億円以下でも、法67条1項が明示的に拾い上げる。</td>
+      </tr>
+      <tr>
+        <td>特定目的会社</td>
+        <td>法人税法66条5項5号</td>
+        <td>SPCのうち法66条5項5号に当たるもの。</td>
+      </tr>
+      <tr>
+        <td>大通算法人</td>
+        <td>法人税法66条6項</td>
+        <td>通算法人グループ内に1億円超法人や法66条5項1号〜3号・6号該当法人がいるときの普通法人。通算法人用の判定フロー確認が安全。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="warn-box">
+    <div class="box-title">注意点</div>
+    <p>法66条5項には6号の受託法人まで並ぶが、法67条1項が引用しているのは<strong>2号から5号まで</strong>である。したがって、資本金等1億円以下の会社について、受託法人だからという理由だけで特定同族会社に入れるのは条文上危ない。ここは66条の列挙全部をそのまま持ってこないことが大切である。</p>
+  </div>
+
+  <h1 id="forms">4. 別表二・別表三(一)への落とし込み</h1>
+  <p>国税庁の令和7年版手引では、別表二の判定結果を次のように整理している。<strong>17欄「特定同族会社の判定割合」</strong>が50%超なら特定同族会社、17欄が50%以下でも<strong>10欄「同族会社の判定割合」</strong>が50%超なら同族会社、10欄が50%以下なら非同族会社である。したがって、特定同族会社判定は、同族会社判定の上にさらに法67条固有のフィルターを重ねたものと理解できる。</p>
+  <p>さらに、別表三(一)の手引は、別表二で特定同族会社になった法人が法67条1項の適用を受ける場合に使用するとし、特に<strong>17欄が50%超で、当期末資本金等が1億円超の場合又は一若しくは複数の大法人に完全支配されている場合</strong>に作成を確認するよう促している。つまり、SVGの出口はそのまま別表実務の入口になっている。</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width:22%">別表欄</th>
+        <th style="width:26%">意味</th>
+        <th>実務上の読み替え</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>別表二 10欄</td>
+        <td>同族会社の判定割合</td>
+        <td>まず一般の同族会社該当性を見る。50%超なら同族会社の土台はある。</td>
+      </tr>
+      <tr>
+        <td>別表二 17欄</td>
+        <td>特定同族会社の判定割合</td>
+        <td>法67条1項の追加フィルターまで通した結果。50%超なら特定同族会社。</td>
+      </tr>
+      <tr>
+        <td>別表二 18欄</td>
+        <td>判定結果</td>
+        <td>「特定同族会社」「同族会社」「非同族会社」の出口表示。</td>
+      </tr>
+      <tr>
+        <td>別表三(一)</td>
+        <td>留保金額に対する税額計算</td>
+        <td>別表二で特定同族会社になった法人が、法67条1項の特別税率計算へ進む。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h1 id="sources">5. 参照条文・出典</h1>
+  <div class="source-box">
+    <div class="box-title">公式ソース</div>
+    <ul>
+      <li><a href="https://laws.e-gov.go.jp/law/340AC0000000034" target="_blank" rel="noopener noreferrer">e-Gov法令検索 法人税法（昭和40年法律第34号）</a> － 法67条1項・2項・8項、法66条5項・6項を確認。</li>
+      <li><a href="https://laws.e-gov.go.jp/law/340CO0000000097" target="_blank" rel="noopener noreferrer">e-Gov法令検索 法人税法施行令（昭和40年政令第97号）</a> － 令139条の7を確認。</li>
+      <li><a href="https://www.nta.go.jp/publication/pamph/hojin/aramashi2025/pdf/02-03.pdf" target="_blank" rel="noopener noreferrer">国税庁「法人税のあらましと申告の手引（令和7年版）」別表二 同族会社等の判定に関する明細書</a> － 17欄・10欄・18欄の読み方を確認。</li>
+      <li><a href="https://www.nta.go.jp/publication/pamph/hojin/aramashi2025/pdf/02-04.pdf" target="_blank" rel="noopener noreferrer">国税庁「法人税のあらましと申告の手引（令和7年版）」別表三(一) 特定同族会社の留保金額に対する税額の計算に関する明細書</a> － 別表三(一)への接続を確認。</li>
+      <li><a href="https://www.nta.go.jp/publication/pamph/hojin/aramashi2025/pdf/03.pdf" target="_blank" rel="noopener noreferrer">国税庁「中小企業者の判定等フロー（令和7年10月）」</a> － 特定同族会社フローの実務確認用。</li>
+    </ul>
+  </div>
+
+  <footer>
+    <p>このページは、特定同族会社の判定順序を実務で迷いにくい形に整理したものであり、留保金額計算そのものは扱っていない。具体案件では、別表二の株主グループ整理、行使不可能議決権、同意議決権、通算法人該当性を先に洗ってから、本フローに当てはめるとズレにくい。</p>
+  </footer>
+</div>
+</body>
+</html>
