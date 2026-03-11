@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>憲法84条 vs 98条2項 — 租税条約の手続要件をめぐる「憲法内衝突」の構造分析</title>
+<style>
+:root{
+  --main:#2c1654;--accent:#5b3a8c;--gold:#8c6a18;--red:#9b2226;--green:#1e6e3e;--blue:#1a3a5c;
+  --bg:#f6f4fa;--line:#c5b8d8;--soft:#ece6f5;--text:#1e1a2a;--muted:#5a4a6a;
+  --note:#f0ecf7;--warn:#fff5ee;--case:#f3eef9;--treaty:#fdf6ec;--collision:#fff0f5;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Hiragino Mincho ProN","Yu Mincho","游明朝",serif;font-size:15px;line-height:1.92}
+.wrap{max-width:1100px;margin:0 auto;background:#fff;padding:44px 50px 64px;box-shadow:0 1px 16px rgba(0,0,0,.08)}
+.doc-header{border-bottom:3px solid var(--main);padding-bottom:24px;margin-bottom:28px}
+.doc-title{margin:0 0 10px;font-size:1.7rem;line-height:1.45;color:var(--main);font-weight:bold}
+.doc-subtitle{color:var(--muted);font-size:.96rem;margin-bottom:14px;line-height:1.7}
+.meta{display:flex;flex-wrap:wrap;gap:8px 16px;color:var(--muted);font-size:.85rem}
+.badge{display:inline-block;background:var(--main);color:#fff;padding:3px 10px;border-radius:999px;font-size:.78rem}
+.badge-gold{background:var(--gold)}.badge-red{background:var(--red)}.badge-green{background:var(--green)}.badge-blue{background:var(--blue)}
+.summary-box,.note-box,.warn-box,.case-box,.statute,.treaty-box,.collision-box,.discovery-box,.gap-box{border-radius:8px;padding:18px 22px;margin:20px 0}
+.summary-box{background:linear-gradient(135deg,#ece6f5 0%,#ddd4ec 100%);border:2px solid var(--main)}
+.note-box{background:var(--note);border-left:4px solid var(--accent)}
+.warn-box{background:var(--warn);border-left:4px solid #b6633e}
+.case-box{background:var(--case);border:1px solid #d1c4e9}
+.statute{background:#f2f0f8;border-left:4px solid var(--accent)}
+.treaty-box{background:var(--treaty);border-left:4px solid var(--gold)}
+.collision-box{background:var(--collision);border:2px solid var(--red);padding:22px 26px}
+.discovery-box{background:#eef6ee;border:2px solid var(--green);padding:22px 26px}
+.gap-box{background:#fffde8;border:2px solid var(--gold);padding:22px 26px}
+.box-title{font-weight:bold;color:var(--main);margin-bottom:8px;font-size:1.02rem}
+.toc{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:20px 24px;margin:26px 0 30px}
+.toc-title{color:var(--main);font-weight:bold;margin-bottom:10px;font-size:1.06rem}
+.toc ol{margin:0;padding-left:22px}.toc li{margin:5px 0}.toc a{color:var(--accent);text-decoration:none}
+h1{font-size:1.44rem;color:var(--main);border-left:5px solid var(--accent);padding-left:12px;margin:42px 0 16px}
+h2{font-size:1.12rem;color:var(--main);border-bottom:2px solid var(--line);padding-bottom:6px;margin:28px 0 12px}
+h3{font-size:1.0rem;color:var(--accent);border-left:3px solid var(--accent);padding-left:10px;margin:22px 0 8px}
+p{margin:12px 0}ul,ol{margin:12px 0 12px 24px}li{margin:5px 0}
+table{width:100%;border-collapse:collapse;margin:18px 0 22px;font-size:.91rem}
+th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}
+th{background:var(--soft);color:var(--main);font-weight:bold}
+tr:nth-child(even) td{background:#fbfaff}
+blockquote{border-left:3px solid var(--accent);background:#f8f5fd;margin:14px 0;padding:10px 16px;font-size:.93rem;color:#3a2a50}
+.hl{background:#e8d4f8;padding:1px 4px;border-radius:3px}
+.hl-red{background:#fde2e2;padding:1px 4px;border-radius:3px}
+.hl-gold{background:#fff1ab;padding:1px 4px;border-radius:3px}
+.small{font-size:.85rem;color:var(--muted)}
+a{color:var(--accent)}
+.hierarchy{font-family:"Courier New",monospace;background:#f8f5fd;border:1px solid var(--line);border-radius:6px;padding:16px 20px;margin:16px 0;font-size:.88rem;line-height:1.7;white-space:pre-wrap}
+.verdict{display:inline-block;padding:4px 12px;border-radius:4px;font-weight:bold;font-size:.9rem;color:#fff}
+.verdict-new{background:var(--main)}.verdict-exist{background:var(--green)}.verdict-partial{background:var(--gold)}
+.dual-col{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:16px 0}
+.dual-col>div{border-radius:8px;padding:16px;border:1px solid var(--line)}
+.col-84{background:#f0f4f8;border-color:#aec5dc}
+.col-98{background:#fdf6ec;border-color:#dcc8a0}
+footer{margin-top:44px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.84rem}
+@media print{body{background:#fff;font-size:10pt}.wrap{box-shadow:none;padding:20px}.collision-box,.discovery-box,.gap-box{page-break-inside:avoid}}
+@media(max-width:768px){.wrap{padding:20px 16px}.dual-col{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="doc-header">
+  <div class="doc-title">憲法84条 vs 98条2項<br>— 租税条約の手続要件をめぐる「憲法内衝突」の構造分析</div>
+  <div class="doc-subtitle">
+    みなし外国税額控除の添付要件問題は、租税法律主義（憲法84条）と条約遵守義務（憲法98条2項）の<br>
+    「憲法内衝突」（Verfassungskollision）として再定式化できるか？<br>
+    先行研究の網羅的調査と学術的空白の同定
+  </div>
+  <div class="meta">
+    <span class="badge">憲法論</span>
+    <span class="badge badge-gold">租税条約</span>
+    <span class="badge badge-red">先行研究空白</span>
+    <span>調査日: 2026-03-12</span>
+    <span>検索: ai-law-db全文DB ＋ CFC税制DB ＋ Web学術情報</span>
+  </div>
+</div>
+
+<!-- 目次 -->
+<div class="toc">
+  <div class="toc-title">目次</div>
+  <ol>
+    <li><a href="#sec-1">問題の構図 — 二つの憲法原理の衝突</a></li>
+    <li><a href="#sec-2">先行研究の調査結果</a></li>
+    <li><a href="#sec-3">通説的調和フレームワーク — 「制限的効力説」</a></li>
+    <li><a href="#sec-4">判例における二原理の取扱い（6件分析）</a></li>
+    <li><a href="#sec-5">調和が破綻する場面 — みなしFTCの逆説</a></li>
+    <li><a href="#sec-6">先行研究が埋めていない空白</a></li>
+    <li><a href="#sec-7">学術的位置づけと博論への示唆</a></li>
+    <li><a href="#sec-8">関連資料</a></li>
+  </ol>
+</div>
+
+<!-- 要旨 -->
+<div class="summary-box">
+  <div class="box-title">要旨</div>
+  <p>みなし外国税額控除（tax sparing credit）の添付要件不充足問題を掘り下げると、その底層に<strong>憲法84条（租税法律主義）</strong>と<strong>憲法98条2項（条約遵守義務）</strong>の構造的緊張が存在する。本稿は、この二原理の関係を「憲法内衝突」（Verfassungskollision）として定式化し、先行研究の網羅的調査を通じて、以下の結論を得た。</p>
+  <ol>
+    <li><strong>通説は「調和」で処理</strong> — 谷口勢津夫の「制限的効力説」（条約は課税を制限するのみで創設しない）が通説的地位を占め、二原理の衝突は「解消済み」として扱われている</li>
+    <li><strong>判例は「並行適用」</strong> — 6件の判決が両原理に言及するが、いずれも両者を並行的に参照し、正面衝突として論じたものはない</li>
+    <li><strong>「逆転構造」は未論究</strong> — <span class="hl-red">みなしFTCのように「租税法律主義が納税者を害し、条約遵守義務が納税者を救う」という逆転構造は、先行研究・判例のいずれにおいても正面から分析されていない</span></li>
+  </ol>
+  <p>この「逆転構造」の発見は、通説の射程に構造的な限界があることを示唆し、博士論文における独自の理論的貢献の可能性を開くものである。</p>
+</div>
+
+<!-- 第1章 -->
+<h1 id="sec-1">第1章　問題の構図 — 二つの憲法原理の衝突</h1>
+
+<div class="dual-col">
+  <div class="col-84">
+    <h3 style="border-left-color:#1a3a5c;color:#1a3a5c">憲法84条 — 租税法律主義</h3>
+    <blockquote>「あらたに租税を課し、又は現行の租税を変更するには、法律又は法律の定める条件によることを必要とする」</blockquote>
+    <p><strong>機能</strong>: 国民の財産権の保障。課税要件法定主義・課税要件明確主義。</p>
+    <p><strong>税法への帰結</strong>: 条文の文理を厳格に解釈。「場合に限り、適用する」（法人税法69条25項）のような限定文言は、その文言どおりに「適用要件」として機能する。</p>
+    <p><strong>みなしFTCへの適用</strong>: 添付が「場合に限り」の条件である以上、添付がなければ控除は認められない。</p>
+  </div>
+  <div class="col-98">
+    <h3 style="border-left-color:var(--gold);color:var(--gold)">憲法98条2項 — 条約遵守義務</h3>
+    <blockquote>「日本国が締結した条約及び確立された国際法規は、これを誠実に遵守することを必要とする」</blockquote>
+    <p><strong>機能</strong>: 国際法の国内的効力の保障。条約の国内法に対する優位。</p>
+    <p><strong>税法への帰結</strong>: 租税条約に定められた権利を国内法の手続的欠缺のみを理由に否定することは、条約の「誠実な遵守」に反しうる。</p>
+    <p><strong>みなしFTCへの適用</strong>: 条約が付与したtax sparing creditを、国内省令の手続不備のみで全面否定することは、条約義務の不履行にあたりうる。</p>
+  </div>
+</div>
+
+<div class="collision-box">
+  <div class="box-title" style="color:var(--red)">衝突の核心</div>
+  <p>通常、憲法84条と98条2項は同じ方向に機能する。条約が課税を<strong>制限</strong>する場面では、租税法律主義も条約優位も、ともに「国が勝手に課税を拡大してはならない」方向で一致する。</p>
+  <p>しかし、みなし外国税額控除の添付要件問題では、<strong>二原理が逆方向に作用する</strong>：</p>
+  <ul>
+    <li><strong>84条</strong>: 「法律の文言どおり、添付がなければ適用しない」→ <span class="hl-red">納税者に不利</span></li>
+    <li><strong>98条2項</strong>: 「条約で付与した権利を手続瑕疵のみで剥奪するな」→ <span class="hl">納税者に有利</span></li>
+  </ul>
+  <p>この「逆転構造」こそが、従来の調和フレームワークでは処理しきれない構造的問題を生んでいる。</p>
+</div>
+
+<!-- 第2章 -->
+<h1 id="sec-2">第2章　先行研究の調査結果</h1>
+
+<p>以下の3方面から網羅的調査を行った。</p>
+
+<h2>2.1 調査方法と範囲</h2>
+<table>
+  <tr><th>調査経路</th><th>対象</th><th>手法</th></tr>
+  <tr><td>ローカルDB</td><td>ai-law-db（判決1955件）＋CFC税制DB（248文献）</td><td>全文grep: 「租税法律主義×条約」「84条×98条」「制限的効力説」「課税制限規範」等</td></tr>
+  <tr><td>学術Web</td><td>CiNii, NDLサーチ, J-GLOBAL, researchmap</td><td>著者名検索（谷口・木村・藤谷・中里・金子）＋キーワード複合検索</td></tr>
+  <tr><td>判例DB</td><td>ai-law-db判例全文</td><td>「84条」AND「98条」の共起検索</td></tr>
+</table>
+
+<h2>2.2 主要文献マッピング</h2>
+<table>
+  <tr><th>文献</th><th>著者</th><th>84条</th><th>98条2項</th><th>衝突論</th><th>みなしFTC</th></tr>
+  <tr>
+    <td>『租税条約論 — 租税条約の解釈及び適用と国内法』（1999）</td>
+    <td>谷口勢津夫</td>
+    <td style="text-align:center">○</td><td style="text-align:center">◎</td>
+    <td style="text-align:center"><span class="verdict verdict-partial">調和的処理</span></td>
+    <td style="text-align:center">—</td>
+  </tr>
+  <tr>
+    <td>『租税法律主義の総合的検討』（2021）</td>
+    <td>中里実・藤谷武史 編</td>
+    <td style="text-align:center">◎</td><td style="text-align:center">△</td>
+    <td style="text-align:center"><span class="verdict verdict-partial">間接的言及</span></td>
+    <td style="text-align:center">—</td>
+  </tr>
+  <tr>
+    <td>「論拠としての『租税法律主義』— 各国比較」</td>
+    <td>藤谷武史</td>
+    <td style="text-align:center">◎</td><td style="text-align:center">△</td>
+    <td style="text-align:center"><span class="verdict verdict-partial">比較法的整理</span></td>
+    <td style="text-align:center">—</td>
+  </tr>
+  <tr>
+    <td>『国際租税法』（第4版）</td>
+    <td>増井良啓・宮崎裕子</td>
+    <td style="text-align:center">○</td><td style="text-align:center">◎</td>
+    <td style="text-align:center"><span class="verdict verdict-partial">制限的効力説</span></td>
+    <td style="text-align:center">△</td>
+  </tr>
+  <tr>
+    <td>『租税法総則』『租税法学』</td>
+    <td>木村弘之亮</td>
+    <td style="text-align:center">○</td><td style="text-align:center">◎</td>
+    <td style="text-align:center"><span class="verdict verdict-partial">直接適用論</span></td>
+    <td style="text-align:center">—</td>
+  </tr>
+  <tr>
+    <td>「租税条約における『みなし外国税額控除』（tax-sparing credit）について」</td>
+    <td>金子宏</td>
+    <td style="text-align:center">—</td><td style="text-align:center">○</td>
+    <td style="text-align:center">—</td>
+    <td style="text-align:center"><span class="verdict verdict-exist">◎</span></td>
+  </tr>
+  <tr>
+    <td style="background:#fff0f5"><strong>「84条 vs 98条2項の正面衝突」としての定式化</strong></td>
+    <td style="background:#fff0f5">—</td>
+    <td style="background:#fff0f5;text-align:center">—</td>
+    <td style="background:#fff0f5;text-align:center">—</td>
+    <td style="background:#fff0f5;text-align:center"><span class="verdict verdict-new">未発見</span></td>
+    <td style="background:#fff0f5;text-align:center"><span class="verdict verdict-new">未発見</span></td>
+  </tr>
+</table>
+
+<div class="note-box">
+  <div class="box-title">調査結果の要約</div>
+  <p>84条と98条2項の<strong>両方</strong>に言及する文献は複数存在するが、いずれも「制限的効力説」「直接適用論」等の枠組みで<strong>調和的に処理</strong>している。二原理が正面衝突する場面（特にみなしFTCの添付要件問題）を意識した上で「未解決の憲法問題」として論じた文献は<strong>発見されなかった</strong>。</p>
+</div>
+
+
+<!-- 第3章 -->
+<h1 id="sec-3">第3章　通説的調和フレームワーク — 「制限的効力説」</h1>
+
+<h2>3.1 谷口勢津夫の体系</h2>
+<p>谷口勢津夫『租税条約論』（1999、租税資料館賞受賞）は、租税条約と国内法の関係について最も体系的な理論を提供した基本文献である。その核心は以下の2つの概念区分にある。</p>
+
+<table>
+  <tr><th>概念</th><th>定義</th><th>84条との関係</th></tr>
+  <tr>
+    <td><strong>課税制限規範</strong><br>（Steuerbegrenzungsnorm）</td>
+    <td>条約は国内法による課税を<strong>制限</strong>するのみ。条約自体が新たな課税根拠を創設することはない。</td>
+    <td><span class="hl">衝突しない</span> — 課税の根拠は常に国内法（＝法律）にある。条約は「天井」を設定するだけ。</td>
+  </tr>
+  <tr>
+    <td><strong>課税根拠規範</strong><br>（Steuergrundnorm）</td>
+    <td>仮に条約が新たな課税権を<strong>創設</strong>する場合。</td>
+    <td><span class="hl-red">衝突しうる</span> — 法律によらない課税となり、84条違反の問題が生じる。</td>
+  </tr>
+</table>
+
+<p>谷口は、租税条約の機能を原則として<strong>課税制限規範</strong>に限定する。これにより——</p>
+
+<div class="statute">
+  <p><strong>制限的効力説の調和ロジック</strong></p>
+  <p>① 条約は課税を<em>減らす</em>方向にのみ機能する<br>
+  ② 課税の根拠は常に<em>法律</em>にある（84条充足）<br>
+  ③ よって、条約が84条に反することは構造的にない<br>
+  ④ 98条2項は、この「制限」を国内法が勝手に排除できないことを担保する<br>
+  ⑤ <strong>結論: 84条と98条2項は同じ方向を向き、衝突しない</strong></p>
+</div>
+
+<h2>3.2 木村弘之亮の直接適用論</h2>
+<p>木村弘之亮は条約の「直接適用可能性」（self-executing性）について、以下の二重基準を提示した。</p>
+<ul>
+  <li><strong>主観的基準</strong>: 締約国が直接適用を意図したか</li>
+  <li><strong>客観的基準</strong>: 条約規定の内容が直接適用に適するほど明確・完全か</li>
+</ul>
+<p>この基準は、判決13641（名古屋地裁）でも採用された「明確性・完全性テスト」の理論的基盤となっている。</p>
+
+<h2>3.3 藤谷武史の比較法的視座</h2>
+<p>藤谷武史「論拠としての『租税法律主義』— 各国比較」は、租税法律主義の機能が国によって異なることを実証的に示した。特にドイツ・フランスとの比較から、日本の租税法律主義が<strong>「厳格な文理解釈」に傾斜している</strong>ことを指摘。しかし、この厳格さが条約上の権利と衝突する場面は、明示的には分析されていない。</p>
+
+
+<!-- 第4章 -->
+<h1 id="sec-4">第4章　判例における二原理の取扱い（6件分析）</h1>
+
+<p>ai-law-db全文DBにおいて、「憲法84条」と「憲法98条2項」（または「条約優位」）の<strong>双方に言及</strong>する判決を網羅的に検索した結果、6件を同定した。</p>
+
+<table>
+  <tr><th>判決ID</th><th>裁判所</th><th>84条の役割</th><th>98条2項の役割</th><th>二原理の関係</th></tr>
+  <tr>
+    <td><strong>11302</strong></td>
+    <td>最高裁 H21.10.29</td>
+    <td>CFC税制の合憲性</td>
+    <td>条約はCFC税制を排除しない</td>
+    <td><span class="verdict verdict-partial">並行参照</span> — 各原理を別々の争点で適用</td>
+  </tr>
+  <tr>
+    <td><strong>11344</strong></td>
+    <td>最高裁 H21.12.4</td>
+    <td>同上（日星租税条約）</td>
+    <td>条約優位は「公定解釈であり通説」</td>
+    <td><span class="verdict verdict-partial">並行参照</span> — 同上</td>
+  </tr>
+  <tr>
+    <td><strong>12672</strong></td>
+    <td>東京地裁 H27.5.28</td>
+    <td>省令による課税要件設定は84条違反</td>
+    <td>条約適用は届出書なしでも可能</td>
+    <td><span class="verdict verdict-exist">同方向作用</span> — 両原理とも納税者有利</td>
+  </tr>
+  <tr>
+    <td><strong>12689</strong></td>
+    <td>東京高裁 H27.12.17</td>
+    <td>省令の手続規定は84条に抵触しない</td>
+    <td>条約の適否は実体で判断</td>
+    <td><span class="verdict verdict-partial">並行参照</span></td>
+  </tr>
+  <tr>
+    <td><strong>12980</strong></td>
+    <td>東京地裁 H30頃</td>
+    <td>租税法律主義に基づく厳格解釈</td>
+    <td>条約の自動執行性</td>
+    <td><span class="verdict verdict-partial">並行参照</span></td>
+  </tr>
+  <tr>
+    <td><strong>11342</strong></td>
+    <td>東京高裁 H19.10.25</td>
+    <td>課税要件の法定</td>
+    <td>条約の国内法的効力</td>
+    <td><span class="verdict verdict-partial">並行参照</span></td>
+  </tr>
+</table>
+
+<div class="warn-box">
+  <div class="box-title">判例分析からの発見</div>
+  <p><strong>6件すべてにおいて、裁判所は84条と98条2項を「対立する原理」として位置づけていない。</strong></p>
+  <p>最も注目すべきは判決12672（倉庫PE事件）で、ここでは84条と98条2項が<strong>同じ方向</strong>に機能した（ともに納税者を保護）。しかし、この判決でも裁判所は二原理の「衝突可能性」を論じてはおらず、結果的に同方向だったために問題が顕在化しなかったにすぎない。</p>
+  <p>最高裁11302・11344は条約優位を「公定解釈であり通説」と明示したが、あくまでCFC税制（国内法による課税根拠の正当性）の文脈であり、「条約上の<em>減免権利</em>を国内法の手続的要件で制限できるか」という逆方向の問いには触れていない。</p>
+</div>
+
+
+<!-- 第5章 -->
+<h1 id="sec-5">第5章　調和が破綻する場面 — みなしFTCの逆説</h1>
+
+<h2>5.1 通常ケース — 調和が機能する構造</h2>
+
+<div class="hierarchy">
+【通常ケース: 条約による課税制限】
+
+  条約「この所得への課税は10%を超えてはならない」
+    │
+    ├── 98条2項: 条約を誠実に遵守 → 10%上限を守れ
+    │
+    └── 84条: 課税は法律に基づく → 10%上限は法律（条約）で定まっている
+
+  → 両原理とも「10%超の課税を否定」= <strong>同方向</strong> ✓
+</div>
+
+<h2>5.2 逆転ケース — みなしFTCの添付要件問題</h2>
+
+<div class="hierarchy">
+【逆転ケース: みなし外国税額控除の添付要件不充足】
+
+  条約「外国で免税された税額もXX%で納付されたものとみなして控除する」（tax sparing）
+    │
+    ├── 98条2項: 条約を誠実に遵守 → みなし控除を認めるべき
+    │     ↓
+    │   （添付書類の不備のみで条約上の権利を全面否定するのは「誠実な遵守」に反する）
+    │
+    └── 84条: 法律を厳格適用 → 法人税法69条25項「場合に限り」→ 添付なければ不適用
+          ↓
+        （文理上、添付は「適用要件」であり、これを緩めることは租税法律主義に反する）
+
+  → 98条2項は「控除を認めよ」、84条は「控除を否定せよ」= <strong>逆方向</strong> ✗
+</div>
+
+<div class="collision-box">
+  <div class="box-title" style="color:var(--red)">なぜ制限的効力説では処理できないか</div>
+  <p>制限的効力説の前提: <strong>「条約は課税を制限するのみ → 84条と衝突しない」</strong></p>
+  <p>みなしFTCの構造:</p>
+  <ol>
+    <li>みなし外国税額控除は<strong>課税制限規範</strong>（税負担を軽減する機能）に分類される</li>
+    <li>したがって制限的効力説によれば、84条と衝突するはずがない</li>
+    <li>ところが、国内法（69条25項）が「添付なき場合は不適用」と定め、<strong>84条に基づく厳格解釈でこの文言を絶対視</strong>する</li>
+    <li>結果として、84条が<strong>条約上の課税制限措置を無効化する</strong>ために使われる</li>
+    <li>これは「条約は課税を制限するだけだから84条と衝突しない」という命題の<strong>反例</strong>となる</li>
+  </ol>
+  <p><strong>核心的矛盾</strong>: 84条は本来「国家の課税権を制限」するための原理なのに、ここでは「納税者の条約上の減免権利を制限」するために機能している。<span class="hl-red">租税法律主義の「保護法益の逆転」</span>が生じている。</p>
+</div>
+
+<h2>5.3 逆転が生じるメカニズムの分析</h2>
+
+<table>
+  <tr><th>要素</th><th>通常ケース</th><th>みなしFTCケース</th></tr>
+  <tr>
+    <td>条約の機能</td>
+    <td>課税の上限設定（源泉税率等）</td>
+    <td>控除の付与（tax sparing）</td>
+  </tr>
+  <tr>
+    <td>国内法の役割</td>
+    <td>課税根拠の提供</td>
+    <td>控除の実施手続の規定</td>
+  </tr>
+  <tr>
+    <td>84条の機能方向</td>
+    <td>課税要件の法定 → 納税者保護</td>
+    <td>適用要件の厳格化 → <span class="hl-red">納税者負担</span></td>
+  </tr>
+  <tr>
+    <td>98条2項の機能方向</td>
+    <td>条約上限の遵守 → 納税者保護</td>
+    <td>条約上の控除権の保障 → 納税者保護</td>
+  </tr>
+  <tr>
+    <td>二原理の関係</td>
+    <td><strong>協調</strong></td>
+    <td><strong>対立</strong></td>
+  </tr>
+  <tr>
+    <td>制限的効力説の説明力</td>
+    <td>十分</td>
+    <td><span class="hl-red">不十分</span></td>
+  </tr>
+</table>
+
+<h2>5.4 なぜこの逆転が見落とされてきたか</h2>
+<ul>
+  <li><strong>みなしFTCの周縁性</strong>: tax sparingは条約6か国のみ（タイ・ブラジル・スリランカ・ザンビア・中国・バングラデシュ）に残存し、制度としては縮小傾向。学術的関心が低い</li>
+  <li><strong>添付要件訴訟の不在</strong>: みなしFTCの添付要件に関する判例が存在しない。CFC・所得拡大促進・株式損失否認・配当選択方式の添付訴訟16件は全て<strong>国内法措置</strong>であり、条約上の権利は争点になっていない</li>
+  <li><strong>制限的効力説の完成度</strong>: 谷口理論の説明力が高いため、「射程外」の問題が意識されにくかった</li>
+  <li><strong>12672判決の一回性</strong>: 84条を武器に省令手続要件を否定した唯一の判決（倉庫PE事件）だが、上級審（12689）で覆され、最高裁には至っていない。この判決では二原理が同方向だったため、対立構造が可視化されなかった</li>
+</ul>
+
+
+<!-- 第6章 -->
+<h1 id="sec-6">第6章　先行研究が埋めていない空白</h1>
+
+<div class="gap-box">
+  <div class="box-title" style="color:var(--gold)">同定された学術的空白（Gap）</div>
+
+  <h3>Gap 1: 「保護法益の逆転」問題</h3>
+  <p>84条の保護法益は「国民の財産権」（納税者保護）であるはずが、みなしFTCの文脈では84条が<strong>納税者の不利益</strong>に作用する。この「保護法益の逆転」は、憲法学の文脈では「基本権の衝突」（Grundrechtskollision）に類似するが、租税法において論じられたことはない。</p>
+
+  <h3>Gap 2: 「手続要件のカテゴリーエラー」の憲法論的根拠</h3>
+  <p>先行分析（<a href="みなし外国税額控除_添付要件不充足_取扱論_20260312.html">納税者側分析</a>）で指摘した「CFC添付訴訟の判例法理をみなしFTCに適用するのはカテゴリーエラー」という議論は、行政法・税法レベルの主張にとどまっている。その<strong>憲法論的根拠</strong>（なぜ「カテゴリーエラー」なのか）を84条 vs 98条2項の構造から導出した研究は存在しない。</p>
+
+  <h3>Gap 3: 「Verfassungskollision」としての定式化</h3>
+  <p>ドイツ公法学では、同じ憲法典内の異なる条項間の緊張を「Verfassungskollision」（憲法内衝突）として分析し、「実践的調和」（praktische Konkordanz）の方法で解決する枠組みがある（Konrad Hesse）。日本の租税法学において、84条と98条2項の関係をこの枠組みで分析した研究は<strong>見当たらない</strong>。</p>
+
+  <h3>Gap 4: 逆転構造の一般理論</h3>
+  <p>みなしFTCは「逆転」の一事例にすぎない。他にも、条約上の権利を国内法の手続要件が阻害しうる場面が理論的に存在する（例: 条約上の相互協議請求権と国内法上の不服申立期間の衝突）。このような「条約上の実体的権利 vs 国内法上の手続的要件」の一般理論は未構築である。</p>
+</div>
+
+<h2>6.1 「空白」であることの検証</h2>
+
+<table>
+  <tr><th>検証方法</th><th>結果</th></tr>
+  <tr>
+    <td>ai-law-db全文検索<br>（「84条×98条」共起）</td>
+    <td>6件ヒット。すべて並行参照または同方向作用。「衝突」「矛盾」「Kollision」としての定式化は<strong>ゼロ</strong></td>
+  </tr>
+  <tr>
+    <td>CFC税制DB全文検索<br>（248文献）</td>
+    <td>12件が「租税法律主義×条約」に言及。いずれもCFC税制の条約適合性の文脈であり、「条約上の減免権利を84条が阻害する」構図のものは<strong>ゼロ</strong></td>
+  </tr>
+  <tr>
+    <td>Web学術検索</td>
+    <td>谷口（1999）、中里・藤谷（2021）、木村、増井・宮崎が両原理に言及。いずれも「調和」前提。「正面衝突」の定式化は<strong>未発見</strong></td>
+  </tr>
+  <tr>
+    <td>ユーザー自身の研究ノート<br>（20251230_条約優位の逆説.md）</td>
+    <td>「法の階層構造が生む租税回避の間隙」を発見済み。ただし、みなしFTCの「逆転」問題ではなく、二重非課税（匿名組合）の文脈</td>
+  </tr>
+</table>
+
+
+<!-- 第7章 -->
+<h1 id="sec-7">第7章　学術的位置づけと博論への示唆</h1>
+
+<div class="discovery-box">
+  <div class="box-title" style="color:var(--green)">発見の位置づけ</div>
+  <p>本リサーチで同定された「84条 vs 98条2項の逆転構造」は、以下の意味で学術的に有意義な発見である。</p>
+
+  <h3>1. 通説の「射程」の明確化</h3>
+  <p>制限的効力説は、「条約は課税を制限する」→「84条と衝突しない」と論じる。しかしこの推論には隠れた前提がある: <strong>「84条は課税を『創設する』方向にのみ作用する」</strong>という前提である。みなしFTCの添付要件問題は、84条が課税を「維持する」（＝控除を否定する）方向にも作用しうることを示す。制限的効力説は、この場面をカバーしていない。</p>
+
+  <h3>2. 判決12672の未完の可能性</h3>
+  <p>12672判決（倉庫PE事件）は、84条を用いて省令手続要件を否定した唯一の判例である。この判決では84条と98条2項が同方向に作用したが、<strong>もし被告（課税庁）が「84条に基づく厳格解釈」を攻撃ではなく防御に使っていたら</strong>、裁判所は両原理の正面衝突に直面していたはずである。みなしFTCの添付要件訴訟が提起されれば、まさにこの構図になる。</p>
+
+  <h3>3. 博士論文での展開可能性</h3>
+  <p>この発見は、CFC税制（博士論文の主題）と以下の接点で関連する:</p>
+  <ul>
+    <li>CFC税制と条約の関係は11302・11344で「CFC税制は条約に違反しない」と確立されたが、これは「国内法の課税根拠→条約の課税制限」という順方向の構図</li>
+    <li>みなしFTCの添付要件問題は「条約の減免権利→国内法の手続制限」という逆方向であり、11302・11344の射程外</li>
+    <li>CFC税制自体にも添付要件問題があり（措置法66条の6関連の書類添付）、国内法措置としての添付要件と条約上の権利に対する添付要件のカテゴリー的差異を論じることは、CFC税制の構造理解にも資する</li>
+  </ul>
+</div>
+
+<h2>7.1 「実践的調和」の試論</h2>
+<p>Hesseの「実践的調和」（praktische Konkordanz）の方法に倣えば、84条と98条2項の衝突は、一方を他方に完全に従属させるのではなく、<strong>両方の原理が最大限実現される解</strong>を探索すべきことになる。</p>
+
+<div class="statute">
+  <p><strong>実践的調和の具体的帰結</strong></p>
+  <ul>
+    <li><strong>84条の要請</strong>: 控除の適用要件は法律で明確に定められるべき → 法人税法69条25項の「場合に限り」文言は<em>尊重</em>される</li>
+    <li><strong>98条2項の要請</strong>: 条約上の権利は国内法の手続的瑕疵のみで全面否定されるべきでない → 添付要件の不充足に対する<em>救済経路</em>が確保される</li>
+    <li><strong>調和解</strong>: 法人税法69条28項（やむを得ない事情による保存書類の後出し容認）の<strong>合憲限定解釈</strong>——同項の「保存」を「添付」も含むものと解する。または、69条25項の「場合に限り」を「原則として」と読み、条約上の権利が問題となる場合には例外を認める</li>
+  </ul>
+</div>
+
+<h2>7.2 残された論点</h2>
+<ul>
+  <li>ウィーン条約法条約27条（内国法の援用禁止）は、この衝突をどう位置づけるか。27条は国家間の義務を規定するが、個人の権利に直結するか</li>
+  <li>比較法上、tax sparingの手続要件不備に対して「条約直接適用」で救済した事例はあるか</li>
+  <li>立法論として、69条28項の「保存」を「保存又は添付」に改正することの立法技術的検討</li>
+  <li>この「逆転構造」の発見は、CFC税制以外の場面（例: 相互協議と更正の請求の衝突）にも一般化できるか</li>
+</ul>
+
+
+<!-- 第8章 -->
+<h1 id="sec-8">第8章　関連資料</h1>
+
+<h2>8.1 本研究の文脈を構成する先行DR成果物</h2>
+<table>
+  <tr><th>カテゴリ</th><th>資料</th></tr>
+  <tr>
+    <td>みなしFTC構造分析</td>
+    <td>
+      <a href="みなし外国税額控除_添付要件不充足_取扱論_20260312.html">添付要件不充足の取扱論（納税者側）</a><br>
+      <a href="みなし外国税額控除_添付要件_課税庁側反論_20260312.html">課税庁側の体系的反駁</a><br>
+      <a href="みなし外国税額控除_条文判定_20260310.html">条文判定マトリクス＋SVG図解</a><br>
+      <a href="みなし外国税額控除_申告添付書類_完全解説_20260306.html">申告添付書類の完全解説</a>
+    </td>
+  </tr>
+  <tr>
+    <td>条約と国内法</td>
+    <td>
+      <a href="条約と国内法_判例リサーチ_20260311.html">総合リサーチ（判例28件＋裁決8件＋条文構造）</a><br>
+      <a href="届出書後出し_法律構成_みなし控除比較_20260311.html">届出書後出しの法律構成</a><br>
+      <a href="届出書vsみなし控除_後出し比較分析_20260311.html">届出書 vs みなし控除の後出し比較分析</a>
+    </td>
+  </tr>
+  <tr>
+    <td>更正の請求</td>
+    <td>
+      <a href="外国税額控除_更正の請求_全文争訟研究_20260309.html">全文争訟研究（4類型）</a><br>
+      <a href="更正の請求_外国税額控除_20260310.html">外国税額控除の更正の請求</a>
+    </td>
+  </tr>
+  <tr>
+    <td>比較研究</td>
+    <td>
+      <a href="源泉所得税_租税条約届出書_vs_みなし外国税額控除_比較研究_20260311.html">届出書 vs みなしFTC 比較研究</a><br>
+      <a href="外国税額控除_みなし外国税額控除_20260306.html">外国税額控除 vs みなし外国税額控除</a>
+    </td>
+  </tr>
+</table>
+
+<h2>8.2 学術文献一覧</h2>
+<table>
+  <tr><th>著者</th><th>文献</th><th>関連</th></tr>
+  <tr><td>谷口勢津夫</td><td>『租税条約論 — 租税条約の解釈及び適用と国内法』（1999、清文社）</td><td>制限的効力説の基本文献</td></tr>
+  <tr><td>中里実・藤谷武史 編</td><td>『租税法律主義の総合的検討』（2021）</td><td>84条の機能分析</td></tr>
+  <tr><td>藤谷武史</td><td>「論拠としての『租税法律主義』— 各国比較」（NDL収録）</td><td>比較法的視座</td></tr>
+  <tr><td>木村弘之亮</td><td>『租税法総則』『租税法学』、直接適用論</td><td>条約直接適用の二重基準</td></tr>
+  <tr><td>金子宏</td><td>「租税条約における『みなし外国税額控除』（tax-sparing credit）について」（『租税法理論の形成と解明』所収）</td><td>みなしFTCの基本文献</td></tr>
+  <tr><td>増井良啓・宮崎裕子</td><td>『国際租税法』（第4版、東京大学出版会）</td><td>制限的効力説の教科書的整理</td></tr>
+  <tr><td>Konrad Hesse</td><td><em>Grundzüge des Verfassungsrechts der Bundesrepublik Deutschland</em></td><td>praktische Konkordanz（実践的調和）の方法論</td></tr>
+</table>
+
+<h2>8.3 主要判例</h2>
+<table>
+  <tr><th>判決ID</th><th>裁判所・日付</th><th>関連論点</th></tr>
+  <tr><td>11302</td><td>最高裁 H21.10.29</td><td>CFC税制の条約適合性。条約優位の公定解釈</td></tr>
+  <tr><td>11344</td><td>最高裁 H21.12.4</td><td>同上（日星条約）。「公定解釈であり通説」</td></tr>
+  <tr><td>12672</td><td>東京地裁 H27.5.28</td><td>84条に基づく省令手続要件の否定</td></tr>
+  <tr><td>13633</td><td>東京高裁 R3.11.24</td><td>添付要件は「適用要件」（constitutive）</td></tr>
+  <tr><td>13641</td><td>名古屋地裁</td><td>条約直接適用の「明確性・完全性」テスト</td></tr>
+  <tr><td>13440</td><td>東京高裁</td><td>条約の国内実施措置の許容範囲</td></tr>
+</table>
+
+<footer>
+  <p>調査日: 2026-03-12 ｜ 検索対象: ai-law-db全文DB（1955件）＋CFC税制DB（248文献）＋Web学術情報<br>
+  本文書は <a href="条約と国内法_判例リサーチ_20260311.html">条約と国内法_総合リサーチ</a> の補遺として作成</p>
+</footer>
+
+</div>
+</body>
+</html>
