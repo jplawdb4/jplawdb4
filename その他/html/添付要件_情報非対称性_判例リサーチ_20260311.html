@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>添付要件・情報の非対称性 — 関連裁判例リサーチ（32件）</title>
+<style>
+:root {
+  --blue: #1a5276;
+  --blue-light: #d4e6f1;
+  --green: #1e8449;
+  --green-light: #d5f5e3;
+  --gold: #7d6608;
+  --gold-light: #fef9e7;
+  --red: #922b21;
+  --red-light: #fadbd8;
+  --purple: #6c3483;
+  --purple-light: #e8daef;
+  --gray: #566573;
+  --bg: #f8f9fa;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: "Noto Serif JP", "Georgia", serif;
+  background: var(--bg);
+  color: #2c3e50;
+  line-height: 1.75;
+  padding: 0;
+}
+.container { max-width: 980px; margin: 0 auto; padding: 2rem 1.5rem; }
+h1 {
+  font-size: 1.5rem;
+  color: var(--blue);
+  border-bottom: 3px solid var(--blue);
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.3rem;
+}
+.subtitle { color: var(--gray); font-size: 0.9rem; margin-bottom: 2rem; }
+h2 {
+  font-size: 1.2rem;
+  color: var(--blue);
+  margin-top: 2.5rem;
+  margin-bottom: 0.8rem;
+  padding-left: 0.8rem;
+  border-left: 4px solid var(--blue);
+}
+h3 { font-size: 1.05rem; margin-top: 1.2rem; margin-bottom: 0.4rem; }
+p, li { margin-bottom: 0.4rem; font-size: 0.92rem; }
+ul, ol { padding-left: 1.5rem; }
+
+/* Case cards */
+.case-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+  margin: 0.8rem 0;
+  border-left: 5px solid var(--blue);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+.case-card.starred { border-left-color: var(--red); background: #fff8f8; }
+.case-card.treaty { border-left-color: var(--green); }
+.case-card.general { border-left-color: var(--gray); }
+
+.case-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+.case-id {
+  font-weight: bold;
+  font-size: 1rem;
+  color: var(--blue);
+}
+.case-card.starred .case-id { color: var(--red); }
+.case-card.treaty .case-id { color: var(--green); }
+.case-court {
+  font-size: 0.82rem;
+  color: var(--gray);
+}
+.case-result {
+  display: inline-block;
+  padding: 0.1rem 0.5rem;
+  border-radius: 3px;
+  font-size: 0.78rem;
+  font-weight: bold;
+}
+.result-lose { background: #fadbd8; color: var(--red); }
+.result-win { background: var(--green-light); color: var(--green); }
+.case-name {
+  font-size: 0.88rem;
+  color: #555;
+  margin: 0.2rem 0;
+}
+.case-tags {
+  display: flex;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+  margin: 0.3rem 0;
+}
+.tag {
+  display: inline-block;
+  padding: 0.05rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+.tag-ftc { background: var(--blue-light); color: var(--blue); }
+.tag-treaty { background: var(--green-light); color: var(--green); }
+.tag-cfc { background: var(--purple-light); color: var(--purple); }
+.tag-info { background: var(--gold-light); color: var(--gold); }
+.tag-relief { background: #fdebd0; color: #a04000; }
+.case-body {
+  font-size: 0.88rem;
+  margin-top: 0.3rem;
+  line-height: 1.7;
+}
+.case-body strong { color: #2c3e50; }
+
+/* Summary table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.85rem;
+}
+th, td {
+  border: 1px solid #ccc;
+  padding: 0.4rem 0.6rem;
+  text-align: left;
+}
+th { background: #34495e; color: white; font-weight: 600; }
+tr:nth-child(even) { background: #f5f5f5; }
+
+/* Category header */
+.cat-header {
+  background: #2c3e50;
+  color: white;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  margin-top: 2rem;
+  margin-bottom: 0.8rem;
+  font-size: 1rem;
+  font-weight: bold;
+}
+.cat-header span { font-size: 0.82rem; font-weight: normal; opacity: 0.8; }
+
+/* Stats */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.stat-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+.stat-num {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--blue);
+}
+.stat-label { font-size: 0.8rem; color: var(--gray); }
+
+/* Insight */
+.insight {
+  background: #eaf2f8;
+  border: 1px solid #aed6f1;
+  border-radius: 6px;
+  padding: 0.8rem 1rem;
+  margin: 0.8rem 0;
+  font-size: 0.88rem;
+}
+.insight-title { font-weight: bold; color: var(--blue); margin-bottom: 0.2rem; }
+
+/* Footer */
+.footer {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ccc;
+  color: var(--gray);
+  font-size: 0.78rem;
+  text-align: center;
+}
+
+@media print {
+  body { background: white; font-size: 9pt; }
+  .container { max-width: 100%; padding: 0; }
+  .case-card { page-break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>添付要件・情報の非対称性 — 関連裁判例リサーチ</h1>
+<p class="subtitle">
+  届出書（後出しOK）vs みなし外国税額控除（後出し困難）の構造的非対称性に関連する裁判例の網羅的調査<br>
+  検索対象: ai-law-db 全文DB（国税庁判決事例集）｜調査日: 2026年3月11日
+</p>
+
+<div class="stats">
+  <div class="stat-card">
+    <div class="stat-num">32</div>
+    <div class="stat-label">関連裁判例</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">~90</div>
+    <div class="stat-label">調査対象（全文検索）</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">5</div>
+    <div class="stat-label">最重要判決</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">7</div>
+    <div class="stat-label">カテゴリ</div>
+  </div>
+</div>
+
+<h2>検索方法</h2>
+<p>以下のキーワード群で並列grep検索を実施し、ヒットした全ファイルの冒頭情報と関連判示部分を3エージェントで並列調査。</p>
+<table>
+  <tr><th>検索カテゴリ</th><th>キーワード</th><th>ヒット数</th></tr>
+  <tr><td>みなしFTC/tax sparing</td><td>みなし外国税額, みなし納付, tax sparing</td><td>3件</td></tr>
+  <tr><td>FTC+添付要件</td><td>外国税額控除.*添付, 控除.*明細書.*添付</td><td>41件</td></tr>
+  <tr><td>条約届出書</td><td>租税条約.*届出, 届出書.*租税条約</td><td>8件</td></tr>
+  <tr><td>CFC適用除外添付</td><td>外国子会社合算.*添付, 適用除外記載書面</td><td>14件</td></tr>
+  <tr><td>当初申告要件/更正の請求</td><td>当初申告要件, 外国税額.*更正の請求</td><td>17件</td></tr>
+  <tr><td>やむを得ない事情+添付</td><td>やむを得ない事情.*添付</td><td>41件</td></tr>
+  <tr><td>条約と国内法</td><td>ウィーン条約法, 自動執行力</td><td>1件</td></tr>
+  <tr><td>二重課税防止/FTC趣旨</td><td>二重課税.*排除, 外国税額控除.*趣旨</td><td>73件</td></tr>
+  <tr><td>源泉税の条約軽減</td><td>源泉.*条約.*軽減, 限度税率</td><td>14件</td></tr>
+</table>
+
+<!-- ============================================ -->
+<div class="cat-header">A. みなし外国税額控除（Tax Sparing）<span> — 1件</span></div>
+
+<div class="case-card starred">
+  <div class="case-header">
+    <span class="case-id">判決13641</span>
+    <span class="case-court">名古屋地裁・令和3年12月8日</span>
+    <span class="case-result result-lose">納税者敗訴</span>
+  </div>
+  <div class="case-name">所得税の更正及び過少申告加算税賦課決定の取消請求事件</div>
+  <div class="case-tags">
+    <span class="tag tag-ftc">みなしFTC</span>
+    <span class="tag tag-treaty">日伯条約</span>
+  </div>
+  <div class="case-body">
+    <strong>DB内唯一のみなしFTC直接事案。</strong>日伯租税条約22条2項(b)(i)(B)のみなし外国税額控除（利子20%みなし）について、所得税法95条1項・施行令222条1項による外国税額控除限度額の計算が条約に反しないかが争点。裁判所は、条約規定は控除限度額の計算方法について「明確性・完全性を欠き直接適用の余地はない」とし、国内法による計算を許容した。<br>
+    <strong>討論との関連：</strong>条約が「国内法の定めるところにより」との留保を含む場合の国内法の裁量範囲を示す。課税庁側がRound 3で主張した「条約が国内法による制度設計を許容している」論を支持する方向の判示。
+  </div>
+</div>
+
+<!-- ============================================ -->
+<div class="cat-header">B. 届出書の効力・後出し <span> — 6件</span></div>
+
+<div class="case-card starred treaty">
+  <div class="case-header">
+    <span class="case-id">判決12672</span>
+    <span class="case-court">東京地裁・平成27年5月28日</span>
+    <span class="case-result result-lose">納税者敗訴</span>
+  </div>
+  <div class="case-name">所得税決定処分等取消請求事件（米国非居住者・ネット販売事業）</div>
+  <div class="case-tags">
+    <span class="tag tag-treaty">届出書の効力</span>
+    <span class="tag tag-treaty">日米条約</span>
+  </div>
+  <div class="case-body">
+    <strong>届出書不提出と条約適用の関係を正面から判示した重要判決。</strong>「実特法省令9条の2の届出書を提出しなければ条約7条1項の軽減・免除を受けられないのか」を争点として明示的に扱い、<strong>「届出書不提出をもって条約適用を否定することはできない」</strong>と判示。手続的要件は実体的権利を左右しないとの法理を確認。<br>
+    <strong>討論との関連：</strong>届出書が「確認的」性格を持つことの判例上の根拠。納税者側のRound 1第1論点（条約上の権利は手続で消滅しない）を直接支持。ただし敗訴理由はPE認定（アパート・倉庫がPEに該当）。
+  </div>
+</div>
+
+<div class="case-card treaty">
+  <div class="case-header">
+    <span class="case-id">判決12789</span>
+    <span class="case-court">東京高裁・平成28年1月28日</span>
+    <span class="case-result result-lose">納税者敗訴</span>
+  </div>
+  <div class="case-name">所得税決定処分等取消請求控訴事件（12672の控訴審）</div>
+  <div class="case-tags">
+    <span class="tag tag-treaty">届出書の効力</span>
+    <span class="tag tag-treaty">日米条約</span>
+  </div>
+  <div class="case-body">
+    12672の控訴審。届出書不提出でも条約適用は否定されないとの原審判断を維持。
+  </div>
+</div>
+
+<div class="case-card treaty">
+  <div class="case-header">
+    <span class="case-id">判決12919</span>
+    <span class="case-court">仙台地裁・平成28年10月19日</span>
+    <span class="case-result result-lose">納税者敗訴</span>
+  </div>
+  <div class="case-name">源泉所得税納税告知処分等取消請求事件（韓国法人・広告使用料）</div>
+  <div class="case-tags">
+    <span class="tag tag-treaty">届出書不提出</span>
+    <span class="tag tag-treaty">日韓条約</span>
+  </div>
+  <div class="case-body">
+    韓国法人への広告使用料につき日韓条約12条2項の軽減税率の適用が背景。届出書未提出の場合、源泉徴収義務者は国内法率（20%）で徴収する義務があると確認。条約上の権利が「永久に」失われるかは判断されていない。
+  </div>
+</div>
+
+<div class="case-card treaty">
+  <div class="case-header">
+    <span class="case-id">判決11041</span>
+    <span class="case-court">名古屋地裁・平成20年9月29日</span>
+    <span class="case-result result-lose">納税者敗訴</span>
+  </div>
+  <div class="case-name">異議決定取消請求事件（米国移住者・配当）</div>
+  <div class="case-tags">
+    <span class="tag tag-treaty">届出書の事後提出</span>
+    <span class="tag tag-treaty">日米条約</span>
+    <span class="tag tag-relief">還付請求</span>
+  </div>
+  <div class="case-body">
+    米国移住者がA社配当について日米条約限度税率適用のため届出書・還付請求書を<strong>事後提出（後出し）</strong>した事案。主争点は異議申立期間の徒過であり、後出しの可否自体は直接判断されていないが、事後提出の実務的問題が記録されている。
+  </div>
+</div>
+
+<div class="case-card treaty">
+  <div class="case-header">
+    <span class="case-id">判決11566</span>
+    <span class="case-court">東京地裁・平成22年12月3日</span>
+    <span class="case-result result-lose">納税者敗訴</span>
+  </div>
+  <div class="case-name">源泉所得税納税告知処分等取消請求事件（新日米条約の使用料免税）</div>
+  <div class="case-tags">
+    <span class="tag tag-treaty">条約経過規定</span>
+    <span class="tag tag-treaty">日米条約</span>
+  </div>
+  <div class="case-body">
+    新日米条約12条1項（使用料免税）の適用時期が争点。届出書は提出済みだが、条約30条2項の経過規定の解釈が主争点。条約の便益と手続の時的関係を示す背景事例。
+  </div>
+</div>
+
+<!-- ============================================ -->
+<div class="cat-header">C. 条約上の源泉税軽減・条約解釈 <span> — 4件</span></div>
+
+<div class="case-card treaty">
+  <div class="case-header">
+    <span class="case-id">判決13671 / 13816</span>
+    <span class="case-court">東京地裁 R4.2.17 / 東京高裁 R5.2.16</span>
+    <span class="case-result result-win">納税者勝訴</span>
+  </div>
+  <div class="case-name">還付金（過誤納金）返還請求事件（ルクセンブルク法人・みなし配当）</div>
+  <div class="case-tags">
+    <span class="tag tag-treaty">日ルクセンブルク条約</span>
+    <span class="tag tag-treaty">ウィーン条約31条</span>
+    <span class="tag tag-relief">事後還付</span>
+  </div>
+  <div class="case-body">
+    日ルクセンブルク条約10条2項(a)の配当5%限度税率の保有期間要件の解釈が争点。控訴審（13816）で<strong>ウィーン条約法条約31条・32条、OECDコメンタリーの参照価値</strong>に言及。事後的な還付請求が認容された事例。<br>
+    <strong>討論との関連：</strong>条約上の便益の事後的主張が認められた数少ない勝訴事例。届出書の「後出しOK」と同じ構造。
+  </div>
+</div>
+
+<div class="case-card treaty">
+  <div class="case-header">
+    <span class="case-id">判決12327 / 12555</span>
+    <span class="case-court">東京地裁 H25.11.1 / 東京高裁 H26.10.29</span>
+    <span class="case-result result-win">納税者勝訴</span>
+  </div>
+  <div class="case-name">納税告知処分取消等請求事件（アイルランド法人・匿名組合）</div>
+  <div class="case-tags">
+    <span class="tag tag-treaty">日愛条約</span>
+  </div>
+  <div class="case-body">
+    日愛条約23条の匿名組合利益分配。スワップ契約による実質的利益移転の有無が争点。条約適用を認容。条約上の便益と実質的享受者の関係を示す。
+  </div>
+</div>
+
+<!-- ============================================ -->
+<div class="cat-header">D. 外国税額控除の添付要件 <span> — 6件</span></div>
+
+<div class="case-card starred">
+  <div class="case-header">
+    <span class="case-id">判決12671</span>
+    <span class="case-court">東京地裁・平成27年5月28日</span>
+    <span class="case-result result-lose">納税者敗訴</span>
+  </div>
+  <div class="case-name">所得税更正処分取消等請求事件（証券会社従業員・株式報酬）</div>
+  <div class="case-tags">
+    <span class="tag tag-ftc">FTC添付要件</span>
+    <span class="tag tag-relief">やむを得ない事情</span>
+    <span class="tag tag-info">情報の非対称性</span>
+  </div>
+  <div class="case-body">
+    <strong>FTCの「やむを得ない事情」（所得税法95条7項）の意義を判示した重要判決。</strong>「天災、交通途絶その他本人の責に帰すことのできない<strong>客観的事情</strong>をいい、本人の法の不知や事実の誤認などの主観的事情はこれに当たらない」。FTCの趣旨として「国がその主権の一部をなす課税権の行使について一方的に譲歩する措置」であり「自らその意思内容を<strong>明確に示すこと</strong>を要件としている」と述べ、添付要件の「意思表明機能」を明確化。<br>
+    <strong>討論との関連：</strong>課税庁側Round 1の「添付要件の二重機能（情報提供＋意思表明）」を直接支持。「やむを得ない事情」の極めて限定的な解釈が、みなしFTCの事後救済を困難にする構造を示す。
+  </div>
+</div>
+
+<div class="case-card">
+  <div class="case-header">
+    <span class="case-id">判決12732 / 12881</span>
+    <span class="case-court">東京地裁 H27.10.8 / 東京高裁 H28.7.14</span>
+    <span class="case-result result-lose">納税者敗訴</span>
+  </div>
+  <div class="case-name">法人税更正処分等取消請求事件（中国企業所得税）</div>
+  <div class="case-tags">
+    <span class="tag tag-ftc">FTC保存要件</span>
+  </div>
+  <div class="case-body">
+    中国企業所得税のFTC。保存要件（法人税法69条10項）の不充足も不適用理由。FTCの添付・保存要件の両面から控除不可と判断。
+  </div>
+</div>
+
+<div class="case-card">
+  <div class="case-header">
+    <span class="case-id">判決12612</span>
+    <span class="case-court">東京高裁・平成27年2月25日</span>
+    <span class="case-result result-lose">納税者敗訴</span>
+  </div>
+  <div class="case-name">法人税更正処分取消等請求控訴事件（CFC関連FTC）</div>
+  <div class="case-tags">
+    <span class="tag tag-ftc">FTC添付要件</span>
+    <span class="tag tag-cfc">CFC税制</span>
+  </div>
+  <div class="case-body">
+    CFC税制に関連するFTCの事案。確定申告で「控除を受けるべき金額及びその計算に関する明細の記載」及び「書類の添付」なく、FTC不適用。
+  </div>
+</div>
+
+<div class="case-card">
+  <div class="case-header">
+    <span class="case-id">判決13440</span>
+    <span class="case-court">東京地裁・令和2年8月20日</span>
+    <span class="case-result result-lose">納税者敗訴</span>
+  </div>
+  <div class="case-name">裁決取消請求事件（個人FTC・控除限度額超過）</div>
+  <div class="case-tags">
+    <span class="tag tag-ftc">FTCと条約</span>
+    <span class="tag tag-treaty">日米他条約</span>
+  </div>
+  <div class="case-body">
+    FTCの控除限度額超過分を条約が控除すべきと主張。裁判所は「条約が具体的な適用要件や計算方法について国内法と異なる定めをしていない場合は<strong>国内法に従う</strong>」と判示。FTCと条約の関係の基本的枠組みを示す。
+  </div>
+</div>
+
+<!-- ============================================ -->
+<div class="cat-header">E. CFC適用除外の添付要件 <span> — 12件（6系列）</span></div>
+
+<div class="insight">
+  <div class="insight-title">カテゴリの意義</div>
+  <p>CFC適用除外の添付要件は、みなしFTCの添付要件と直接は異なる制度だが、<strong>「課税庁の情報把握困難性」「手続的要件と実体的権利の関係」「条約との関係」</strong>について最も豊富な判示を含む。討論で課税庁側が援用した判決13633号はこのカテゴリに属する。</p>
+</div>
+
+<div class="case-card starred">
+  <div class="case-header">
+    <span class="case-id">判決12508</span>
+    <span class="case-court">岡山地裁・平成26年7月16日</span>
+    <span class="case-result result-lose">納税者敗訴</span>
+  </div>
+  <div class="case-name">法人税更正処分等決定取消請求事件</div>
+  <div class="case-tags">
+    <span class="tag tag-cfc">CFC添付要件</span>
+    <span class="tag tag-info">添付=適用要件</span>
+  </div>
+  <div class="case-body">
+    <strong>添付要件=適用要件の法的性質を正面から判示した最初期の重要判決。</strong>措置法66条の6第6項（当時）は文理上も趣旨に照らしても適用除外記載書面の添付が適用要件であると判示。宥恕規定の不存在は「手続義務にすぎない」ことの根拠にならないとした。
+  </div>
+</div>
+
+<div class="case-card starred">
+  <div class="case-header">
+    <span class="case-id">判決13531 → 13633</span>
+    <span class="case-court">東京地裁 R3.2.26 → 東京高裁 R3.11.24</span>
+    <span class="case-result result-lose">納税者敗訴</span>
+  </div>
+  <div class="case-name">法人税更正処分等取消請求事件（香港キャラクターライセンス会社）</div>
+  <div class="case-tags">
+    <span class="tag tag-cfc">CFC添付要件</span>
+    <span class="tag tag-info">情報の非対称性</span>
+    <span class="tag tag-treaty">日港条約</span>
+    <span class="tag tag-relief">H23改正</span>
+  </div>
+  <div class="case-body">
+    <strong>本研究の最重要判決。</strong>争点は多岐にわたる：<br>
+    (1) 適用除外記載書面の添付なしに適用除外を受けられるか → <strong>否定</strong><br>
+    (2) H23改正による当初申告要件廃止は添付要件の位置づけを変容させたか → <strong>否定</strong><br>
+    (3) 日港租税条約に違反するか → <strong>否定</strong>（「手続的要件を定めることが実体的に条約に違反するということはできない」166行目）<br>
+    (4) 情報の非対称性 → 「課税庁において、確定申告書に添付された財務諸表等の資料のみから、特定外国子会社等の該当性等を<strong>把握することは困難</strong>」（89行目）<br>
+    控訴人は「紙切れ1枚に記載された情報は情報量の観点からして根拠とはなり得ない」と反論したが退けられた。
+  </div>
+</div>
+
+<div class="case-card">
+  <div class="case-header">
+    <span class="case-id">判決12854 → 13023</span>
+    <span class="case-court">東京地裁 H28.5.13 → 東京高裁 H29.5.25</span>
+    <span class="case-result result-lose">納税者敗訴</span>
+  </div>
+  <div class="case-name">更正処分取消等請求事件（デンマーク法人CFC）</div>
+  <div class="case-tags">
+    <span class="tag tag-cfc">CFC添付要件</span>
+  </div>
+  <div class="case-body">
+    手続要件不充足で適用除外不可。「明文の規定なしに、納税者において国際的な二重課税が生じていないことを要件とすることは、<strong>法的安定性の要請に反する</strong>」と判示。二重課税の主張を退けた。
+  </div>
+</div>
+
+<div class="case-card">
+  <div class="case-header">
+    <span class="case-id">判決13592 → 13739</span>
+    <span class="case-court">東京地裁 R3.7.20 → 東京高裁 R4.7.27</span>
+    <span class="case-result result-lose">納税者敗訴</span>
+  </div>
+  <div class="case-name">所得税更正処分等取消請求事件（香港子会社・ケーブル等製造販売）</div>
+  <div class="case-tags">
+    <span class="tag tag-cfc">CFC添付要件</span>
+    <span class="tag tag-treaty">日星・日港条約</span>
+  </div>
+  <div class="case-body">
+    個人版CFC（措置法40条の4第7項）。控訴審（13739）で「全体として合理性のある制度として<strong>租税条約の趣旨目的に反しない</strong>」と判示。納税者の「手続的要件に実体法的拘束力は生じない」との主張も否定。
+  </div>
+</div>
+
+<div class="case-card starred">
+  <div class="case-header">
+    <span class="case-id">判決13680</span>
+    <span class="case-court">東京地裁・令和4年3月2日</span>
+    <span class="case-result result-lose">納税者敗訴</span>
+  </div>
+  <div class="case-name">法人税更正処分等取消請求事件（香港子会社・ケーブル等製造販売）</div>
+  <div class="case-tags">
+    <span class="tag tag-cfc">CFC添付要件</span>
+    <span class="tag tag-relief">追完の可否</span>
+    <span class="tag tag-info">信義則</span>
+  </div>
+  <div class="case-body">
+    <strong>添付書面の追完の可否を正面から扱った重要判決。</strong>確定申告後に適用除外記載書面を提出した場合の追完の可否（争点4）、税務調査中に調査担当者が書面提出を認める対応をしていた事実に基づく信義則違反（争点5）が争点。いずれも否定。<br>
+    <strong>討論との関連：</strong>事後的添付（追完）が認められなかった事例。学者がRound 3で提案した「段階的緩和」の現行法上の限界を示す。
+  </div>
+</div>
+
+<div class="case-card starred">
+  <div class="case-header">
+    <span class="case-id">判決13832</span>
+    <span class="case-court">東京地裁・令和5年3月16日</span>
+    <span class="case-result result-lose">納税者敗訴</span>
+  </div>
+  <div class="case-name">法人税更正処分等取消請求事件（シンガポール船舶会社）</div>
+  <div class="case-tags">
+    <span class="tag tag-cfc">CFC添付要件</span>
+    <span class="tag tag-relief">やむを得ない事情</span>
+    <span class="tag tag-info">最も包括的</span>
+  </div>
+  <div class="case-body">
+    <strong>CFC添付要件を最も包括的に論じた判決。</strong>争点2（添付=適用要件か）、争点3（やむを得ない事情〔措置法66条の6第8項〕）を正面審理。原告は(1)添付は要件でない、(2)H27/H29改正の方向性、(3)罰則で対応すべき、(4)やむを得ない事情（外国関係会社非該当と認識）等を主張。<strong>「外国関係会社非該当と認識していた」ことは「やむを得ない事情」に当たらない</strong>と判示。<br>
+    <strong>討論との関連：</strong>学者がRound 3で提案したA案（やむを得ない事情の柔軟解釈）の現行判例上の限界を示す。認識不足・法的判断の誤りは「やむを得ない事情」に含まれない。
+  </div>
+</div>
+
+<div class="case-card">
+  <div class="case-header">
+    <span class="case-id">判決13048</span>
+    <span class="case-court">東京地裁・平成29年8月31日</span>
+    <span class="case-result result-lose">納税者敗訴</span>
+  </div>
+  <div class="case-name">損害賠償請求事件（国家賠償）</div>
+  <div class="case-tags">
+    <span class="tag tag-cfc">CFC添付要件</span>
+    <span class="tag tag-info">情報の非対称性</span>
+  </div>
+  <div class="case-body">
+    CFC税制適用に関する国家賠償請求。添付要件の趣旨として課税庁の<strong>把握困難性</strong>（情報の非対称性）に言及。
+  </div>
+</div>
+
+<div class="case-card">
+  <div class="case-header">
+    <span class="case-id">判決13810 → 13883</span>
+    <span class="case-court">東京地裁 R5.1.27 → 東京高裁 R5.9.13</span>
+    <span class="case-result result-lose">納税者敗訴</span>
+  </div>
+  <div class="case-name">法人税更正処分取消請求事件（ラブアン・キャプティブ保険）</div>
+  <div class="case-tags">
+    <span class="tag tag-cfc">CFC添付要件</span>
+  </div>
+  <div class="case-body">
+    適用除外記載書面未添付が前提事実として確認。主争点はB社の特定外国子会社等該当性（保険準備金の訂正の効力）。
+  </div>
+</div>
+
+<!-- ============================================ -->
+<div class="cat-header">F. 条約と国内法の関係 <span> — 2件</span></div>
+
+<div class="case-card starred">
+  <div class="case-header">
+    <span class="case-id">判決11302</span>
+    <span class="case-court">最高裁・平成21年10月29日</span>
+    <span class="case-result result-lose">納税者敗訴</span>
+  </div>
+  <div class="case-name">法人税更正処分取消等請求上告受理申立て事件</div>
+  <div class="case-tags">
+    <span class="tag tag-treaty">CFC税制と条約</span>
+    <span class="tag tag-treaty">日星条約</span>
+    <span class="tag tag-treaty">ウィーン条約32条</span>
+  </div>
+  <div class="case-body">
+    <strong>条約と国内法の関係に関する最高裁判例。</strong>CFC税制（措置法66条の6）が日星条約7条1項に違反するかが争点。最高裁は、条約7条1項は「法的二重課税」を禁止するにとどまり、B国の内国法人に対する課税権行使を制限しないと判示。<strong>OECDモデル条約コメンタリーはウィーン条約法条約32条の「解釈の補足的な手段」として参照されるべき</strong>と明言した重要判例。<br>
+    <strong>討論との関連：</strong>CFC税制と条約の関係の最高裁レベルの枠組み。ただし、外国税額控除の添付要件の問題とは直接の射程が異なる。
+  </div>
+</div>
+
+<!-- ============================================ -->
+<div class="cat-header">G. 添付要件一般（比較参照用） <span> — 5件（代表例）</span></div>
+
+<div class="case-card general">
+  <div class="case-header">
+    <span class="case-id">判決11468</span>
+    <span class="case-court">佐賀地裁・平成22年4月6日</span>
+    <span class="case-result result-lose">納税者敗訴</span>
+  </div>
+  <div class="case-name">所得税更正処分取消等請求事件（貸倒引当金の添付要件）</div>
+  <div class="case-tags">
+    <span class="tag tag-info">情報の非対称性の源流</span>
+  </div>
+  <div class="case-body">
+    <strong>「情報の非対称性」論の源流的判決。</strong>貸倒引当金の添付要件の根拠として「<strong>課税庁が該当する債権の金額を把握することは困難</strong>であること、明細書を<strong>添付した納税者との間に不公平な結果を生じさせるべきでない</strong>こと」を明示。添付は「納税者が確定申告において意思を表明する<strong>手続的要件</strong>」であり「便宜上の規定ではない」。<br>
+    <strong>討論との関連：</strong>課税庁側がRound 1で援用した「情報提供機能＋公平性機能」の判例上の出典。この論理構造がみなしFTCにも転用可能かが討論の核心的争点となった。
+  </div>
+</div>
+
+<div class="case-card general">
+  <div class="case-header">
+    <span class="case-id">判決11715</span>
+    <span class="case-court">東京高裁・平成23年7月19日</span>
+    <span class="case-result result-lose">納税者敗訴</span>
+  </div>
+  <div class="case-name">法人税更正処分等取消請求控訴事件（肉用牛特例・書面添付）</div>
+  <div class="case-tags">
+    <span class="tag tag-relief">やむを得ない事情</span>
+    <span class="tag tag-info">25年間の行政慣行</span>
+  </div>
+  <div class="case-body">
+    <strong>25年間にわたり</strong>書面添付なしで肉用牛特例の適用を認めていた税務署の指導実態があったにもかかわらず、宥恕規定（やむを得ない事情）の適用は認められなかった。<strong>行政慣行の長期継続ですら「やむを得ない事情」を構成しない</strong>とする厳格な判示。
+  </div>
+</div>
+
+<div class="case-card general">
+  <div class="case-header">
+    <span class="case-id">判決11519</span>
+    <span class="case-court">東京地裁・平成22年9月29日</span>
+    <span class="case-result result-lose">納税者敗訴</span>
+  </div>
+  <div class="case-name">法人税更正処分等取消請求事件（受取配当金益金不算入）</div>
+  <div class="case-tags">
+    <span class="tag tag-relief">やむを得ない事情</span>
+  </div>
+  <div class="case-body">
+    法人税法23条7項の「やむを得ない事情」が争点。税理士が規定の適用をしなかったことは該当しない。やむを得ない事情の解釈の重要先例。
+  </div>
+</div>
+
+<div class="case-card general">
+  <div class="case-header">
+    <span class="case-id">判決12879 / 12968</span>
+    <span class="case-court">東京地裁 H28.7.8 / 東京高裁 H29.1.26</span>
+    <span class="case-result result-lose">納税者敗訴</span>
+  </div>
+  <div class="case-name">法人税更正処分等取消請求事件（雇用者給与等特別控除）</div>
+  <div class="case-tags">
+    <span class="tag tag-info">当初申告要件</span>
+  </div>
+  <div class="case-body">
+    措置法42条の12の4の控除明細書添付要件。確定申告書に添付がない場合、更正請求書への添付では控除不可。<strong>当初申告要件の厳格解釈</strong>の典型例。「当該確定申告書等に添付された書類」を中間申告書・確定申告書に限定する解釈。
+  </div>
+</div>
+
+<!-- ============================================ -->
+<h2>分析：討論テーマとの対応関係</h2>
+
+<h3>1. 情報の非対称性・課税庁の把握困難性</h3>
+<table>
+  <tr><th>判決</th><th>判示内容</th></tr>
+  <tr><td>11468</td><td>「課税庁が該当する債権の金額を<strong>把握することは困難</strong>」「添付した納税者との不公平」</td></tr>
+  <tr><td>13633 (89行)</td><td>「確定申告書に添付された財務諸表等のみから特定外国子会社等の該当性等を<strong>把握することは困難</strong>」</td></tr>
+  <tr><td>13048</td><td>課税庁の把握困難性（情報の非対称性）を添付要件の趣旨として言及</td></tr>
+  <tr><td>12671</td><td>FTCの添付は「自らその意思内容を<strong>明確に示す</strong>」ための要件（意思表明機能）</td></tr>
+</table>
+
+<h3>2. 手続的要件と条約の関係</h3>
+<table>
+  <tr><th>判決</th><th>判示内容</th></tr>
+  <tr><td><strong>12672/12789</strong></td><td>届出書不提出でも条約適用は否定されない（<strong>手続≠実体</strong>）</td></tr>
+  <tr><td>13633 (166行)</td><td>「手続的要件を定めることが実体的に条約に違反する<strong>ということはできない</strong>」</td></tr>
+  <tr><td>13739</td><td>制度全体として「租税条約の趣旨目的に<strong>反しない</strong>」</td></tr>
+  <tr><td>13440</td><td>「条約が国内法と異なる定めをしていない場合は国内法に従う」</td></tr>
+  <tr><td>13641</td><td>みなしFTCの計算方法につき条約規定は「明確性・完全性を欠き直接適用の余地はない」</td></tr>
+  <tr><td>11302</td><td>最高裁: CFC税制は条約7条1項に違反しない。OECDコメンタリーはウィーン条約32条の補足的手段</td></tr>
+</table>
+
+<div class="insight">
+  <div class="insight-title">重要な発見：判例の「二面性」</div>
+  <p>判例には明確な<strong>二面性</strong>がある。<strong>12672/12789</strong>は「届出書不提出でも条約適用を否定できない」（手続は実体を左右しない）と判示する一方、<strong>13633</strong>は「手続的要件は条約に違反しない」と判示する。前者は届出書（源泉税）の文脈、後者はCFC適用除外の文脈である。<br>
+  この二面性は、討論で学者がRound 3で指摘した「CFC適用除外（国内法上の政策的優遇）とみなしFTC（条約上の義務）では条約法的に異なる次元の問題が生じる」という分析と整合する。判例はみなしFTCの添付要件について直接判断していないため、<strong>どちらの法理が適用されるかは未決</strong>である。</p>
+</div>
+
+<h3>3. やむを得ない事情の射程</h3>
+<table>
+  <tr><th>判決</th><th>「やむを得ない事情」に当たらないとされた事由</th></tr>
+  <tr><td>12671</td><td>法の不知、事実の誤認（主観的事情）</td></tr>
+  <tr><td>13832</td><td>外国関係会社非該当との認識</td></tr>
+  <tr><td>11715</td><td>25年間の税務署の誤指導</td></tr>
+  <tr><td>11519</td><td>税理士の規定適用漏れ</td></tr>
+</table>
+<p>→ 判例上、「やむを得ない事情」は<strong>天災等の外的・客観的事由</strong>に極めて限定されている。学者がRound 3で提案した「柔軟解釈」は、<strong>現行判例の立場を変更する通達・立法が必要</strong>であることが確認された。</p>
+
+<h3>4. 当初申告要件・H23改正</h3>
+<table>
+  <tr><th>判決</th><th>判示内容</th></tr>
+  <tr><td>13531/13633</td><td>H23改正による当初申告要件廃止は添付要件の位置づけを<strong>変容させない</strong>と判示</td></tr>
+  <tr><td>12879/12968</td><td>確定申告書に添付がなければ更正請求書での添付では不可（当初申告の厳格解釈）</td></tr>
+</table>
+
+<!-- ============================================ -->
+<h2>未決の論点：判例が判断していない領域</h2>
+
+<div class="summary-box" style="border-color: var(--red);">
+<p>本調査で32件を特定したが、以下の論点は<strong>判例が直接判断していない</strong>：</p>
+<ol>
+  <li><strong>みなしFTCの添付要件（省令10条）の合法性・条約適合性</strong> — 判決13641はみなしFTCの計算方法が争点であり、添付要件自体は争われていない。</li>
+  <li><strong>みなしFTCの事後的主張（更正の請求・追完）の可否</strong> — 直接の判例なし。</li>
+  <li><strong>省令10条の「添付」格上げと法69条28項の救済遮断の関係</strong> — 直接の判例なし。</li>
+  <li><strong>みなしFTCの添付要件とウィーン条約法条約27条の関係</strong> — 直接の判例なし（13633は CFC文脈）。</li>
+  <li><strong>届出書の「後出しOK」法理（12672/12789）がみなしFTCにも及ぶか</strong> — 直接の判例なし。</li>
+</ol>
+<p>→ <strong>本研究の討論テーマは、判例がまだ判断していない領域に位置する。</strong>これは、この問題が学術的にも実務的にも未開拓であることを意味し、博士論文での分析価値が極めて高い。</p>
+</div>
+
+<!-- ============================================ -->
+<h2>関連成果物</h2>
+<ul>
+  <li><a href="情報非対称性_エージェント討論_20260311.html">情報の非対称性と添付要件 — エージェント討論記録（3ラウンド）</a></li>
+  <li><a href="届出書vsみなし控除_後出し比較分析_20260311.html">届出書 vs みなし控除 後出し比較分析</a></li>
+  <li><a href="届出書後出し_法律構成_みなし控除比較_20260311.html">届出書後出しの三層法律構成＋みなし控除比較</a></li>
+  <li><a href="みなし外国税額控除_条文判定_20260310.html">みなし外国税額控除 条文判定</a></li>
+  <li><a href="源泉所得税_租税条約届出書_後出し可能性_研究_20260309.html">源泉所得税 租税条約届出書 後出し可能性 研究</a></li>
+</ul>
+
+<div class="footer">
+  <p>調査日: 2026年3月11日 ｜ 検索DB: ai-law-db全文DB（国税庁判決事例集）</p>
+  <p>調査方法: 9カテゴリのキーワードgrep → 3エージェント並列調査（~90件 → 32件特定）</p>
+</div>
+
+</div>
+</body>
+</html>
