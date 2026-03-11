@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>情報の非対称性と添付要件 — エージェント討論記録（3ラウンド）</title>
+<style>
+:root {
+  --blue: #1a5276;
+  --blue-light: #d4e6f1;
+  --green: #1e8449;
+  --green-light: #d5f5e3;
+  --gold: #7d6608;
+  --gold-light: #fef9e7;
+  --red: #922b21;
+  --red-light: #fadbd8;
+  --gray: #566573;
+  --bg: #f8f9fa;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: "Noto Serif JP", "Georgia", serif;
+  background: var(--bg);
+  color: #2c3e50;
+  line-height: 1.8;
+  padding: 0;
+}
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+h1 {
+  font-size: 1.6rem;
+  color: var(--blue);
+  border-bottom: 3px solid var(--blue);
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.subtitle {
+  color: var(--gray);
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+}
+h2 {
+  font-size: 1.3rem;
+  color: var(--blue);
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  padding-left: 0.8rem;
+  border-left: 4px solid var(--blue);
+}
+h3 {
+  font-size: 1.1rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+h4 {
+  font-size: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 0.3rem;
+}
+p, li { margin-bottom: 0.5rem; font-size: 0.95rem; }
+ul, ol { padding-left: 1.5rem; }
+
+/* Agent cards */
+.agent-card {
+  border-radius: 8px;
+  padding: 1.2rem 1.5rem;
+  margin: 1.2rem 0;
+  border-left: 5px solid;
+}
+.agent-authority {
+  background: var(--blue-light);
+  border-color: var(--blue);
+}
+.agent-taxpayer {
+  background: var(--green-light);
+  border-color: var(--green);
+}
+.agent-academic {
+  background: var(--gold-light);
+  border-color: var(--gold);
+}
+.agent-label {
+  font-weight: bold;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+.agent-authority .agent-label { color: var(--blue); }
+.agent-taxpayer .agent-label { color: var(--green); }
+.agent-academic .agent-label { color: var(--gold); }
+
+.agent-card h4 {
+  font-size: 1rem;
+  margin-top: 0.8rem;
+}
+.agent-card p, .agent-card li {
+  font-size: 0.92rem;
+}
+
+/* Round header */
+.round-header {
+  background: #2c3e50;
+  color: white;
+  padding: 0.8rem 1.2rem;
+  border-radius: 6px;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  font-size: 1.15rem;
+  font-weight: bold;
+}
+
+/* Quote */
+blockquote {
+  background: #f0f0f0;
+  border-left: 4px solid #999;
+  padding: 0.6rem 1rem;
+  margin: 0.8rem 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.88rem;
+}
+th, td {
+  border: 1px solid #ccc;
+  padding: 0.5rem 0.7rem;
+  text-align: left;
+}
+th {
+  background: #34495e;
+  color: white;
+  font-weight: 600;
+}
+tr:nth-child(even) { background: #f5f5f5; }
+
+/* Evaluation colors */
+.eval-strong { color: var(--green); font-weight: bold; }
+.eval-medium { color: var(--gold); font-weight: bold; }
+.eval-weak { color: var(--red); font-weight: bold; }
+
+/* Summary box */
+.summary-box {
+  background: white;
+  border: 2px solid var(--blue);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+.conclusion-box {
+  background: #1a5276;
+  color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+.conclusion-box h3 { color: #f0f0f0; }
+.conclusion-box p, .conclusion-box li { color: #e8e8e8; }
+.conclusion-box strong { color: white; }
+
+/* Setup diagram */
+.setup-diagram {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+  flex-wrap: wrap;
+}
+.setup-agent {
+  text-align: center;
+  padding: 1rem;
+  border-radius: 8px;
+  width: 200px;
+  font-size: 0.88rem;
+}
+.setup-agent.auth { background: var(--blue-light); border: 2px solid var(--blue); }
+.setup-agent.tax { background: var(--green-light); border: 2px solid var(--green); }
+.setup-agent.acad { background: var(--gold-light); border: 2px solid var(--gold); }
+.setup-agent strong { display: block; font-size: 1rem; margin-bottom: 0.3rem; }
+
+/* Insight box */
+.insight {
+  background: #eaf2f8;
+  border: 1px solid #aed6f1;
+  border-radius: 6px;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+  font-size: 0.92rem;
+}
+.insight-title {
+  font-weight: bold;
+  color: var(--blue);
+  margin-bottom: 0.3rem;
+}
+
+/* Footer */
+.footer {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ccc;
+  color: var(--gray);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+/* Print */
+@media print {
+  body { background: white; font-size: 10pt; }
+  .container { max-width: 100%; padding: 0; }
+  .agent-card { page-break-inside: avoid; }
+  .round-header { page-break-before: always; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>情報の非対称性と添付要件</h1>
+<p class="subtitle">
+  届出書（後出しOK）vs みなし外国税額控除（後出し困難）の構造的非対称性<br>
+  エージェント討論記録（3ラウンド） — 2026年3月11日
+</p>
+
+<!-- ============================== -->
+<h2>1. 討論の設計</h2>
+
+<h3>問題設定</h3>
+<p>租税条約の届出書（源泉所得税）は省令2条8項・9項で事後還付ルートが明示的に用意されている（「後出しOK」）のに対し、みなし外国税額控除（tax sparing credit）は省令10条が法69条25項の「添付すべき書類」にみなし外国税額の計算明細・証明書類を含ませることで、法69条28項の救済ルートを構造的に遮断している（「後出し困難」）。</p>
+<p><strong>核心的問い：この構造的非対称性は、「税務当局と納税者の情報の非対称性」の観点から正当化できるか？</strong></p>
+
+<h3>エージェント構成</h3>
+<div class="setup-diagram">
+  <div class="setup-agent auth">
+    <strong>課税庁側</strong>
+    添付要件の厳格化は<br>情報の非対称性解消に<br>不可欠と主張
+  </div>
+  <div class="setup-agent tax">
+    <strong>納税者側</strong>
+    情報の非対称性は<br>正当化理由として<br>不十分と主張
+  </div>
+  <div class="setup-agent acad">
+    <strong>学者（中立）</strong>
+    双方の論理の射程と<br>限界を批判的に検証
+  </div>
+</div>
+
+<h3>討論ルール</h3>
+<ul>
+  <li>3ラウンド制。Round 1で冒頭主張、Round 2で相互反論、Round 3で最終主張。</li>
+  <li>各ラウンドで他の2者の主張を受けて論点を深化。</li>
+  <li>リーダーが各ラウンドの論点を整理し、次ラウンドの焦点を指定。</li>
+</ul>
+
+<!-- ============================== -->
+<div class="round-header">Round 1 — 冒頭主張</div>
+
+<div class="agent-card agent-authority">
+<div class="agent-label">課税庁側 — Round 1</div>
+<h4>主張の骨子：添付要件の厳格化は「情報の構造的非対称性」の程度に比例した合理的措置</h4>
+
+<p><strong>第1論点：情報の非対称性の「質的差異」</strong></p>
+<p>届出書の場合、検証対象は受益者の居住地国・所得種類・持株比率等の客観的に検証可能な事実。EOI・CRS自動情報交換で事後検証も可能。一方、みなしFTCは「実際には納付していない税」であり外国政府の納税証明書が存在しない。課税庁は納税者からの申告情報に全面依存せざるを得ない。</p>
+
+<p><strong>第2論点：添付要件の二重機能</strong></p>
+<p>判決11468号（貸倒引当金事件）が示すとおり、添付要件は(1)情報提供機能（課税庁の検証可能性確保）と(2)公平性機能（添付した納税者との衡平）の二重機能を果たす。みなしFTCにはこの二重機能の必要性が通常FTCより格段に高い。</p>
+
+<p><strong>第3論点：H23改正後の体系的整合性</strong></p>
+<p>当初申告要件廃止で「いつでもFTC主張可能」になった以上、添付要件は廃止された当初申告要件に代わる最低限の手続的歯止めとして機能。施行令142条の2第3項のみなし税の劣後的位置づけとも整合。</p>
+
+<p><strong>第4論点：モラルハザード防止</strong></p>
+<p>後出しを容易に認めれば、税務調査で追徴を受けた場合にのみ遡及的にみなしFTCを主張する「戦略的行動」が可能に。誠実に添付した納税者との不公平が生じる。</p>
+</div>
+
+<div class="agent-card agent-taxpayer">
+<div class="agent-label">納税者側 — Round 1</div>
+<h4>結論：情報の非対称性は、添付要件の厳格化を正当化しない</h4>
+
+<p><strong>第1論点：条約法上の制約</strong></p>
+<p>みなしFTCは租税条約が創設する権利。ウィーン条約法条約27条は「国内法の規定を条約不履行の正当化理由として援用できない」と規定。省令10条という下位規範で条約上の権利を消滅させることは条約法の基本原則に抵触。</p>
+
+<p><strong>第2論点：制度内在的矛盾</strong></p>
+<p>届出書でも条約適用の可否に関する情報は納税者側に偏在するのに事後還付を認めている。これは情報の非対称性が手続的厳格化の十分な理由にならないことを制度自体が証明している。</p>
+
+<p><strong>第3論点：比例原則違反</strong></p>
+<p>「保存」要件で税務調査時に検証可能。「添付」への格上げは過剰な手続的負担。CFC判決で納税者側が主張したとおり、課税庁は公開資料等でも一定の把握が可能。</p>
+
+<p><strong>第4論点：H23改正との矛盾</strong></p>
+<p>当初申告要件廃止は「手続で実体的権利を消滅させるべきでない」方向。デロイトトーマツもみなしFTCの更正の請求を肯定。</p>
+</div>
+
+<div class="agent-card agent-academic">
+<div class="agent-label">学者（中立） — Round 1</div>
+<h4>情報の非対称性論の射程と限界——三次元の分析</h4>
+
+<p><strong>(a) 記述的妥当性（事実としての情報格差）：認容</strong></p>
+<p>みなしFTCが「実際には納付していない税」の控除である以上、通常FTCと比較して課税庁の検証困難性が構造的に高いことは否定し難い。</p>
+
+<p><strong>(b) 規範的正当性（手続厳格化の許容性）：疑問</strong></p>
+<p>記述的に情報の非対称性が存在することと、手続的要件の厳格化を「正当化」することは論理的に別問題。H23改正の立法趨勢は手続緩和方向であり、みなしFTCの添付要件はこの趨勢と緊張関係にある。</p>
+
+<p><strong>(c) 条約法的制約：未解消の緊張</strong></p>
+<p>ウィーン条約法条約27条との緊張関係が未解消。情報の非対称性という国内行政上の都合が条約義務の不履行を正当化できるかは疑問。</p>
+
+<p><strong>暫定評価：</strong>部分的正当化は認め得るが、代替手段の不存在の立証不足・条約法的制約・立法趨勢の3点で完全な正当化には不十分。</p>
+</div>
+
+<!-- ============================== -->
+<div class="round-header">Round 2 — 相互反論</div>
+
+<div class="agent-card agent-taxpayer">
+<div class="agent-label">納税者側 — Round 2</div>
+
+<h4>課税庁「質的差異」論への反論</h4>
+<p>質的差異の記述的事実は認める。しかし「添付」しようが「調査時提示」しようが<strong>検証可能性に差はない</strong>。実際の検証は調査段階で行われる。また、情報の非対称性が高いからこそ課税庁にはより強い調査権限（質問検査権・国際的情報交換）がある。</p>
+
+<h4>「公平性機能」論への反論</h4>
+<p>判決11468の「添付した納税者との衡平」は、手続の公平を実体的権利に優先させる倒錯。事後添付に合理的な<strong>期間制限・加算税</strong>等を課すことで衡平は確保可能であり、権利の完全剥奪は比例原則に反する。</p>
+
+<h4>「モラルハザード」論への根本的反論</h4>
+<p>みなしFTCは条約上の権利であり、追徴後の主張は「元々有していた権利の行使」にすぎない。通常FTCでもH23改正後は更正の請求で事後主張可能であり、みなしFTCのみ制限するのは<strong>ダブルスタンダード</strong>。</p>
+
+<h4>濫用防止の代替手段</h4>
+<ul>
+  <li>期間制限（更正の請求の法定期間5年内）</li>
+  <li>保存義務＋違反に対する加算税</li>
+  <li>事後主張の場合の立証責任加重</li>
+  <li>当初不添付の正当理由の疎明</li>
+</ul>
+</div>
+
+<div class="agent-card agent-authority">
+<div class="agent-label">課税庁側 — Round 2</div>
+
+<h4>条約法（ウィーン27条）への反論</h4>
+<p>判決13633号166行目：<strong>「手続的要件を定めることが実体的に条約に違反するということはできない」</strong>。判例は手続的要件と条約違反を明確に峻別。省令10条は権利を「消滅」させているのではなく、権利行使の方法と時期を規律しているにすぎない。</p>
+
+<h4>届出書との質的差異（表で提示）</h4>
+<table>
+  <tr><th>比較項目</th><th>届出書</th><th>みなしFTC</th></tr>
+  <tr><td>検証対象</td><td>受益者の居住地・所得種類・持株比率</td><td>外国の租税優遇の適用要件・みなし税額の計算根拠</td></tr>
+  <tr><td>客観的証拠</td><td>パスポート・登記簿・配当通知書</td><td>存在しない（「納付していない税」の証明）</td></tr>
+  <tr><td>事後検証手段</td><td>EOI・CRS自動情報交換</td><td>相手国に「優遇を与えなかった税額」の照会は実務上困難</td></tr>
+  <tr><td>独立検証可能性</td><td>高い</td><td>極めて低い</td></tr>
+</table>
+
+<h4>「保存」の構造的限界</h4>
+<p>判決13633号：添付の機能は「<strong>早期かつ確実に</strong>資料を収集し、適正かつ迅速に判断すること」。保存では、(1)調査選定の困難（みなしFTC対象取引の存在すら把握不能）、(2)更正期限内の全件調査不能、(3)証拠保全の不確実性に直面。</p>
+
+<h4>「事後的添付＋検証期間」の実効性への疑問</h4>
+<p>事後添付を認めれば全件が事後添付に流れインセンティブ構造が崩壊。「みなし税額」の計算書類を事後的に作出するリスクが高く、通常FTCのように領収書で検証できない。</p>
+</div>
+
+<div class="agent-card agent-academic">
+<div class="agent-label">学者（中立） — Round 2</div>
+
+<h4>論点1評価：モラルハザード防止・公平性機能の重み</h4>
+<p>モラルハザード防止は制度運用上の懸念として正当だが、<strong>条約法的制約の克服ができていない</strong>。国内行政上の政策目的はウィーン27条の下で条約義務不履行を正当化しない。また「衡平」論は届出書で事後還付を認めていることとの整合性が説明できていない。</p>
+<p><strong>暫定評価：</strong>「添付を求めること自体」は正当化し得るが、「添付不存在→権利喪失」は過剰。</p>
+
+<h4>論点2評価：制度内在的矛盾論の射程</h4>
+<p>届出書とみなしFTCでは検証対象の性質が根本的に異なる。届出書は客観的事実の確認、みなしFTCは<strong>反事実的仮定（counterfactual）</strong>の検証。この質的差異を無視して「矛盾」と一括りにすることは分析として粗い。ただし、質的差異が「権利消滅」効果を正当化するかは別問題。</p>
+
+<h4>論点3評価：代替的制度設計</h4>
+<p>「事後的添付＋検証期間」は理論的に最適だが、反事実的仮定の検証困難性と時間的劣化の問題がある。現実的には追完期間を短く設定（例：1年以内）、相手国証明を必須化、やむを得ない事情の柔軟解釈という<strong>段階的緩和</strong>が最適解。</p>
+
+<h4>Round 2時点の評価マトリクス</h4>
+<table>
+  <tr><th>論点</th><th>課税庁側</th><th>納税者側</th><th>評価理由</th></tr>
+  <tr><td>モラルハザード防止</td><td class="eval-medium">中</td><td>—</td><td>懸念は正当だが「権利消滅」まで正当化不能</td></tr>
+  <tr><td>公平性（衡平）機能</td><td class="eval-weak">弱〜中</td><td>—</td><td>届出書の事後還付との整合性未説明</td></tr>
+  <tr><td>条約法的制約</td><td>—</td><td class="eval-strong">強</td><td>ウィーン27条の壁。課税庁は正面回答なし</td></tr>
+  <tr><td>情報の質的差異</td><td class="eval-strong">中〜強</td><td class="eval-weak">弱〜中</td><td>反事実的仮定の検証困難性は否定し難い</td></tr>
+  <tr><td>制度内在的矛盾</td><td>—</td><td class="eval-medium">中</td><td>質的差異を考慮すると完全な矛盾とは言い切れない</td></tr>
+  <tr><td>比例原則</td><td class="eval-weak">弱</td><td class="eval-strong">中〜強</td><td>「保存→添付」格上げの合理的必要性の立証が弱い</td></tr>
+  <tr><td>代替的制度設計</td><td>—</td><td class="eval-medium">中〜強</td><td>理論的に最適だが実務的制約あり</td></tr>
+</table>
+</div>
+
+<!-- ============================== -->
+<div class="round-header">Round 3 — 最終主張</div>
+
+<div class="agent-card agent-taxpayer">
+<div class="agent-label">納税者側 — Round 3（最終）</div>
+
+<h4>1. 判決13633号の射程は限定的</h4>
+<p>同判決はCFC適用除外（<strong>国内法上の制度</strong>に対する国内法上の手続規律）の文脈。みなしFTCは<strong>条約自体が創設した権利</strong>であり、制度文脈が質的に異なる。判示を一般化して「手続的要件は条約に違反しない」とすることは射程の不当な拡張。</p>
+
+<h4>2.「方法と時期の規律」は実態を隠蔽</h4>
+<p>省令10条を「権利行使の方法・時期の規律」と再構成しても、方法・時期を逸した場合に権利が回復不能になる構造は<strong>実質的に権利消滅と同義</strong>。形式ではなく効果で法的評価すべき。</p>
+
+<h4>3. 反事実的仮定の検証困難性を認めた上での論証</h4>
+<p>検証困難性は認める。しかし、添付された書類でも保存された書類でも検証可能性は<strong>同一</strong>。課税庁が「机上審査でのスクリーニング」を添付の利点とする一方で反事実的仮定の検証困難性を強調することは<strong>自己矛盾</strong>。</p>
+
+<h4>4. 段階的緩和の受容と具体的提言</h4>
+<table>
+  <tr><th>要素</th><th>現行</th><th>納税者側提言</th></tr>
+  <tr><td>当初申告時の添付</td><td>必須（欠けば権利消滅）</td><td>努力義務（権利は存続）</td></tr>
+  <tr><td>追完期間</td><td>なし（やむを得ない事情のみ）</td><td>法定申告期限から1年以内</td></tr>
+  <tr><td>追完時の要件</td><td>—</td><td>相手国税務当局の証明書必須</td></tr>
+  <tr><td>追完なし＋保存あり</td><td>権利消滅</td><td>加算税を課した上で適用認容</td></tr>
+  <tr><td>追完なし＋保存なし</td><td>権利消滅</td><td>権利消滅（正当化可能）</td></tr>
+</table>
+</div>
+
+<div class="agent-card agent-authority">
+<div class="agent-label">課税庁側 — Round 3（最終）</div>
+
+<h4>1.「差異化 vs 権利消滅」への応答</h4>
+<p>「権利消滅」という性格付けに異議。省令10条は権利行使の<strong>時的制約</strong>（temporal limitation）であり、出訴期間・更正の請求期間・時効と同じ構造。ただし、<strong>時的制約が過重であれば実質的に権利消滅と同視される</strong>点は正直に認める。過重か否かの判断では、みなしFTC固有の検証困難性が決定的。</p>
+
+<h4>2.「ダブルスタンダード」批判への応答</h4>
+<p>通常FTCは現実に納付した税額の領収書があり事後検証可能。みなしFTCには客観的証拠が構造的に不存在。「同じFTCだから同じ扱い」は<strong>形式的平等論</strong>であり、実質的差異に基づく<strong>合理的区別</strong>はH23改正の趣旨にも反しない。</p>
+
+<h4>3.「条件付き段階的緩和」の対案</h4>
+<p>課税庁として以下の対案を提示：</p>
+<ul>
+  <li><strong>原則</strong>：添付要件は当初申告時を維持</li>
+  <li><strong>例外の4要件</strong>：(1)相手国税務当局の「租税優遇措置適用証明書」添付、(2)「やむを得ない事情」（拡張解釈含む）の存在、(3)法定申告期限から<strong>2年以内</strong>の更正の請求、(4)計算明細が当初申告時に既に作成されていたことの立証</li>
+  <li>「やむを得ない事情」を相手国税務行政の遅延等に拡張解釈する通達の発出</li>
+  <li>相手国との情報交換強化（証明書の迅速発行体制）</li>
+</ul>
+</div>
+
+<div class="agent-card agent-academic">
+<div class="agent-label">学者（中立） — Round 3（最終）</div>
+
+<h4>1. 判決13633号の射程——限定的</h4>
+<p>CFC適用除外は「国内法上の政策的優遇」であり、みなしFTCは「条約上の義務」。制度目的の異質性から、判決13633号のみなしFTCへの直接的射程は否定。また「合理的な手続的要件を設けること自体は条約に違反しない」ことと「添付を欠けば権利消滅」が合理的かは別命題。</p>
+
+<h4>2. 3段階の許容性テスト（最終版）</h4>
+<table>
+  <tr><th>段階</th><th>内容</th><th>許容性</th></tr>
+  <tr><td>第1段階</td><td>情報提供要件の設定（証明書類の提出要求）</td><td class="eval-strong">許容される</td></tr>
+  <tr><td>第2段階</td><td>時的要件の設定（添付の時期制限）</td><td class="eval-medium">条件付き許容（追完の余地が必要）</td></tr>
+  <tr><td>第3段階</td><td>権利消滅効果の付与（事後救済の完全遮断）</td><td class="eval-weak">原則として許容されない</td></tr>
+</table>
+<p>現行省令10条は第2段階と第3段階の中間に位置し、第3段階に極めて近い。</p>
+
+<h4>3. 段階的緩和の具体的制度設計</h4>
+<p><strong>提案A（短期・解釈論）</strong>：「やむを得ない事情」の柔軟解釈通達。相手国証明書取得の遅延、CFC調査更正に伴う新規発生等を含める。</p>
+<p><strong>提案B（中期・立法論）</strong>：省令10条改正。追完期間1年以内、相手国証明必須、立証責任加重、延滞税調整。</p>
+<p><strong>提案C（制度設計論）</strong>：電子申告の自動チェック、情報交換拡充、保存義務強化＋制裁明確化。</p>
+<p>最も現実的な組み合わせは、短期に提案A、中期に提案B＋C。</p>
+
+<h4>4. 比例原則テスト（最終評価）</h4>
+<ul>
+  <li><strong>(a) 目的の正当性</strong>：情報把握・濫用防止 → 正当</li>
+  <li><strong>(b) 手段の適合性</strong>：添付要件は情報収集に適合 → 充足</li>
+  <li><strong>(c) 手段の必要性</strong>：より権利制約的でない代替手段（事後添付＋検証期間）が存在 → <strong>不充足</strong></li>
+  <li><strong>(d) 狭義の比例性</strong>：行政の検証利便性 vs 条約上の権利の実効的保護 → <strong>不充足</strong>（条約義務が優先）</li>
+</ul>
+</div>
+
+<!-- ============================== -->
+<h2>2. 討論の総括</h2>
+
+<h3>2.1 三者の合意点</h3>
+<div class="summary-box">
+<ol>
+  <li><strong>情報の質的差異の存在</strong>：みなしFTCの反事実的仮定に基づく検証困難性は、届出書・通常FTCと質的に異なる。（三者合意）</li>
+  <li><strong>手続的差異化の正当性</strong>：検証困難性に対応するための何らかの手続的差異化は正当化し得る。（三者合意）</li>
+  <li><strong>権利消滅効果の問題性</strong>：添付要件による権利の実質的消滅は正当化困難。（納税者＋学者。課税庁も部分的に認容）</li>
+  <li><strong>段階的緩和の方向性</strong>：現行制度の何らかの緩和が望ましい。（三者が異なる程度で合意）</li>
+</ol>
+</div>
+
+<h3>2.2 残された対立点</h3>
+<table>
+  <tr><th>論点</th><th>課税庁側</th><th>納税者側</th></tr>
+  <tr><td>添付要件の原則</td><td>当初申告時を維持（例外を拡大）</td><td>努力義務に格下げ</td></tr>
+  <tr><td>追完期間</td><td>2年以内＋4要件全充足</td><td>1年以内＋相手国証明</td></tr>
+  <tr><td>保存のみの場合</td><td>権利消滅（現行維持）</td><td>加算税を課して適用認容</td></tr>
+  <tr><td>判決13633号の射程</td><td>みなしFTCにも及ぶ</td><td>CFC文脈に限定</td></tr>
+</table>
+
+<h3>2.3 討論で浮上した新たな知見</h3>
+
+<div class="insight">
+<div class="insight-title">知見1：「差異化」と「遮断」の区別</div>
+<p>情報の非対称性は手続的「差異化」（証明要件の加重、追完期間の短縮等）を正当化するが、手続的「遮断」（事後救済の完全遮断＝実質的権利消滅）は正当化しない。この区別が本討論の核心的成果である。学者が提示した3段階許容性テストは、この区別を制度設計に具体化する枠組みとして有用。</p>
+</div>
+
+<div class="insight">
+<div class="insight-title">知見2：反事実的仮定（counterfactual）の検証構造</div>
+<p>みなしFTCの検証対象は「もし減免がなければ納付すべきであった税額」という反事実的仮定であり、客観的証拠（領収書）が構造的に存在しない。この特殊性は、届出書や通常FTCとの単純な比較を困難にする。ただし、この検証困難性は書類の提出時期（申告時 vs 調査時）に依存しないため、「添付」の正当化根拠としての射程には限界がある。</p>
+</div>
+
+<div class="insight">
+<div class="insight-title">知見3：課税庁の「机上スクリーニング」論と検証困難性の自己矛盾</div>
+<p>納税者側が指摘した論点。課税庁は添付の利点として「机上審査でのスクリーニング」を挙げる一方、反事実的仮定の検証困難性を強調する。反事実の検証が困難であるなら、添付書類の机上審査も機能しないはず。この自己矛盾は、添付要件が実質的には「スクリーニング」よりも「意思表明の強制」（申告時点でのコミットメント）に機能していることを示唆する。</p>
+</div>
+
+<div class="insight">
+<div class="insight-title">知見4：判決13633号の射程の限界</div>
+<p>CFC適用除外の添付要件（国内法上の政策的優遇の手続規律）と、みなしFTCの添付要件（条約上の義務の履行態様の規律）では、条約法的に異なる次元の問題が生じる。前者の正当化論理を後者に無限定に転用することは、判示の射程を不当に拡張するものである。</p>
+</div>
+
+<div class="insight">
+<div class="insight-title">知見5：「相手国税務当局の証明書」という解決の鍵</div>
+<p>三者が共通して認めた制度設計上の要素。みなしFTCの反事実的仮定の検証困難性を解消する最も実効的な手段は、相手国税務当局による「租税優遇措置適用証明書」の発行。これにより、(1)事後的な計算書類の作出リスクが低減し、(2)通常FTCの領収書に相当する客観的証拠が創出され、(3)事後的添付を認める条件として機能する。</p>
+</div>
+
+<!-- ============================== -->
+<h2>3. 最終結論</h2>
+
+<div class="conclusion-box">
+<h3>学術的最終判断</h3>
+<p><strong>情報の非対称性は、手続的「差異化」を正当化するが、手続的「遮断」は正当化しない。</strong></p>
+<p>現行の省令10条は後者（遮断）に該当しており、条約法上の問題を内包する。</p>
+<ul>
+  <li><strong>比例原則テスト</strong>：目的の正当性と手段の適合性は充足するが、手段の必要性（代替手段の存在）と狭義の比例性（条約義務の優先）が不充足。</li>
+  <li><strong>条約法的制約</strong>：ウィーン条約法条約27条に照らし、国内省令で条約上の権利を実質的に消滅させる構造は正当化困難。課税庁側はこの点に3ラウンドを通じて十分な応答を示せなかった。</li>
+  <li><strong>制度設計の方向性</strong>：段階的緩和（短期＝やむを得ない事情の柔軟解釈、中期＝追完期間の制度化＋相手国証明必須化）が最も現実的な解決策。</li>
+</ul>
+</div>
+
+<table>
+  <tr><th>最終評価</th><th>判定</th></tr>
+  <tr><td>情報の非対称性の質的差異は存在するか</td><td class="eval-strong">Yes（三者合意）</td></tr>
+  <tr><td>質的差異は手続的「差異化」を正当化するか</td><td class="eval-strong">Yes（条件付き）</td></tr>
+  <tr><td>質的差異は「権利消滅」効果を正当化するか</td><td class="eval-weak">No</td></tr>
+  <tr><td>現行省令10条は比例原則に適合するか</td><td class="eval-weak">No（必要性・狭義の比例性が不充足）</td></tr>
+  <tr><td>段階的緩和が望ましいか</td><td class="eval-strong">Yes（三者が方向性で合意）</td></tr>
+</table>
+
+<!-- ============================== -->
+<h2>4. 関連成果物</h2>
+<ul>
+  <li><a href="届出書後出し_法律構成_みなし控除比較_20260311.html">届出書後出しの三層法律構成＋みなし控除比較（2026-03-11）</a></li>
+  <li><a href="届出書vsみなし控除_後出し比較分析_20260311.html">届出書 vs みなし控除 後出し比較分析（2026-03-11）</a></li>
+  <li><a href="みなし外国税額控除_条文判定_20260310.html">みなし外国税額控除 条文判定（2026-03-10）</a></li>
+  <li><a href="源泉所得税_租税条約届出書_後出し可能性_研究_20260309.html">源泉所得税 租税条約届出書 後出し可能性 研究（2026-03-09）</a></li>
+  <li><a href="tax_sparing_structure_20260308.html">Tax Sparing 構造分析（2026-03-08）</a></li>
+</ul>
+
+<div class="footer">
+  <p>討論日: 2026年3月11日 ｜ 3ラウンド・3エージェント（課税庁側・納税者側・学者）</p>
+  <p>参照判例: 東京高裁R3.11.24（判決13633号）、佐賀地裁H19（判決11468号）</p>
+  <p>参照条文: 省令10条、法69条25項・28項、省令2条8項・9項、ウィーン条約法条約27条</p>
+</div>
+
+</div>
+</body>
+</html>
