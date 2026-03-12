@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日中租税条約におけるTax Sparing Credit（配当）の実務的機能分析</title>
+<style>
+:root {
+  --primary: #1a365d;
+  --secondary: #2b6cb0;
+  --accent: #e53e3e;
+  --bg: #f7fafc;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --text: #2d3748;
+  --muted: #718096;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+  padding: 20px;
+}
+.container { max-width: 1100px; margin: 0 auto; }
+h1 {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  padding: 30px 40px;
+  border-radius: 12px;
+  font-size: 1.6em;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 15px rgba(26,54,93,0.3);
+}
+h1 small { display: block; font-size: 0.55em; font-weight: 400; margin-top: 8px; opacity: 0.85; }
+h2 {
+  color: var(--primary);
+  font-size: 1.3em;
+  border-left: 5px solid var(--secondary);
+  padding: 10px 20px;
+  margin: 35px 0 20px;
+  background: #ebf4ff;
+  border-radius: 0 8px 8px 0;
+}
+h3 {
+  color: var(--secondary);
+  font-size: 1.1em;
+  margin: 25px 0 12px;
+  padding-bottom: 5px;
+  border-bottom: 2px solid var(--border);
+}
+.card {
+  background: var(--card);
+  border-radius: 10px;
+  padding: 25px 30px;
+  margin: 15px 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border: 1px solid var(--border);
+}
+.treaty-text {
+  background: #fffff0;
+  border-left: 4px solid #d69e2e;
+  padding: 20px 25px;
+  margin: 15px 0;
+  font-size: 0.92em;
+  line-height: 2;
+  border-radius: 0 8px 8px 0;
+}
+.treaty-text .label {
+  display: inline-block;
+  background: #d69e2e;
+  color: white;
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0;
+  font-size: 0.95em;
+}
+th, td {
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+th {
+  background: var(--primary);
+  color: white;
+  font-weight: 600;
+}
+tr:nth-child(even) { background: #f7fafc; }
+tr:hover { background: #ebf8ff; }
+.highlight { background: #fff5f5; border-left: 4px solid var(--accent); padding: 15px 20px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+.highlight strong { color: var(--accent); }
+.key-point { background: #f0fff4; border-left: 4px solid #38a169; padding: 15px 20px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+.key-point strong { color: #276749; }
+.calc-box {
+  background: #f8f9fa;
+  border: 2px solid var(--secondary);
+  border-radius: 10px;
+  padding: 20px 25px;
+  margin: 15px 0;
+  font-family: 'Consolas', 'Source Code Pro', monospace;
+  font-size: 0.9em;
+  line-height: 2;
+}
+.calc-box .title {
+  background: var(--secondary);
+  color: white;
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.calc-row { display: flex; justify-content: space-between; padding: 3px 0; }
+.calc-row.total { border-top: 2px solid var(--primary); font-weight: bold; margin-top: 5px; padding-top: 8px; }
+.calc-row.subtotal { border-top: 1px solid #cbd5e0; font-weight: 600; }
+.timeline {
+  position: relative;
+  padding-left: 30px;
+  margin: 20px 0;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--secondary);
+}
+.timeline-item {
+  position: relative;
+  margin-bottom: 20px;
+  padding: 15px 20px;
+  background: var(--card);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -25px;
+  top: 20px;
+  width: 12px;
+  height: 12px;
+  background: var(--secondary);
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 0 0 2px var(--secondary);
+}
+.timeline-item .year {
+  display: inline-block;
+  background: var(--primary);
+  color: white;
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-weight: bold;
+}
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin: 15px 0;
+}
+.comparison-grid .item {
+  padding: 15px 20px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.comparison-grid .item.before { background: #fff5f5; border-color: #feb2b2; }
+.comparison-grid .item.after { background: #f0fff4; border-color: #9ae6b4; }
+.comparison-grid .item .label-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.8em;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+.comparison-grid .item.before .label-tag { background: #fc8181; color: white; }
+.comparison-grid .item.after .label-tag { background: #48bb78; color: white; }
+.note { color: var(--muted); font-size: 0.88em; margin-top: 8px; }
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.8em;
+  font-weight: 600;
+}
+.badge-red { background: #fed7d7; color: #c53030; }
+.badge-green { background: #c6f6d5; color: #276749; }
+.badge-blue { background: #bee3f8; color: #2b6cb0; }
+.badge-yellow { background: #fefcbf; color: #975a16; }
+.sources {
+  background: #edf2f7;
+  padding: 20px 25px;
+  border-radius: 10px;
+  margin-top: 30px;
+  font-size: 0.88em;
+}
+.sources h3 { color: var(--muted); border: none; font-size: 1em; }
+.sources ul { padding-left: 20px; }
+.sources li { margin: 5px 0; }
+.sources a { color: var(--secondary); text-decoration: none; }
+.sources a:hover { text-decoration: underline; }
+.toc {
+  background: var(--card);
+  border: 2px solid var(--secondary);
+  border-radius: 10px;
+  padding: 20px 30px;
+  margin: 20px 0 30px;
+}
+.toc h3 { border: none; margin: 0 0 10px; color: var(--primary); }
+.toc ol { padding-left: 20px; }
+.toc li { margin: 5px 0; }
+.toc a { color: var(--secondary); text-decoration: none; }
+.toc a:hover { text-decoration: underline; }
+@media (max-width: 768px) {
+  body { padding: 10px; }
+  h1 { font-size: 1.2em; padding: 20px; }
+  .comparison-grid { grid-template-columns: 1fr; }
+  .calc-row { flex-direction: column; }
+}
+@media print {
+  body { padding: 0; }
+  .card, .treaty-text, .calc-box { break-inside: avoid; }
+  h2 { break-before: auto; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>日中租税条約におけるTax Sparing Credit（配当）の実務的機能分析
+<small>日中租税条約第23条3項・4項の構造と2008年企業所得税法改正による変容 | 2026-03-12</small>
+</h1>
+
+<div class="toc">
+<h3>目次</h3>
+<ol>
+<li><a href="#sec1">条約の原文：第23条の構造</a></li>
+<li><a href="#sec2">Tax Sparingの実際の機能（配当の場合）-- 数値例</a></li>
+<li><a href="#sec3">23条3項(a)の「合弁企業10%」と「その他20%」の差</a></li>
+<li><a href="#sec4">23条4項の奨励措置みなし -- 旧法下の機能</a></li>
+<li><a href="#sec5">2008年企業所得税法改正の影響</a></li>
+<li><a href="#sec6">2009年日本税制改正（外国子会社配当益金不算入）の決定的影響</a></li>
+<li><a href="#sec7">MLI（BEPS防止措置実施条約）の影響</a></li>
+<li><a href="#sec8">他の条約国との比較</a></li>
+<li><a href="#sec9">総括：Tax Sparingの現在の実質的意義</a></li>
+</ol>
+</div>
+
+<!-- ================================ -->
+<h2 id="sec1">1. 条約の原文：第23条の構造</h2>
+<!-- ================================ -->
+
+<div class="card">
+<p>日中租税条約（1983年9月6日署名、1984年6月26日発効）第23条は、二重課税の除去方法を規定する。以下は財務省公表のMLI統合テキストから抽出した条文原文である。</p>
+</div>
+
+<div class="treaty-text">
+<span class="label">第23条2項 -- 日本側の外国税額控除（基本規定）</span><br>
+<strong>2</strong>　日本国以外の国において納付される租税を日本国の租税から控除することに関する日本国の法令に従い、<br>
+<strong>(a)</strong> 日本国の居住者がこの協定の規定に従つて中華人民共和国において租税を課される所得を中華人民共和国において取得する場合には、当該所得について納付される中国の租税の額は、当該居住者に対して課される日本国の租税の額から控除する。ただし、控除の額は、日本国の租税の額のうち当該所得に対応する部分を超えないものとする。<br>
+<strong>(b)</strong> 中華人民共和国において取得される所得が、中華人民共和国の居住者である法人によりその議決権のある株式又はその発行済株式の少なくとも<strong>二十五パーセント</strong>を所有する日本国の居住者である法人に対して支払われる配当である場合には、日本国の租税からの控除を行うに当たり、当該配当を支払う法人によりその所得について納付される中国の租税を考慮に入れるものとする。
+</div>
+
+<div class="treaty-text">
+<span class="label">第23条3項 -- みなし外国税額控除（Tax Sparing Credit）</span><br>
+<strong>3</strong>　2(a)に規定する控除の適用上、中国の租税は、次の率で支払われたものとみなす。<br>
+<strong>(a)</strong> 第十条2の規定が適用される配当については、中華人民共和国の<strong>合弁企業</strong>が支払う配当である場合には<strong>十パーセント</strong>、<strong>その他</strong>の配当である場合には<strong>二十パーセント</strong><br>
+<strong>(b)</strong> 第十一条2の規定が適用される利子については<strong>十パーセント</strong><br>
+<strong>(c)</strong> 第十二条2の規定が適用される使用料については<strong>二十パーセント</strong>
+</div>
+
+<div class="treaty-text">
+<span class="label">第23条4項 -- 奨励措置に基づくみなし税額控除</span><br>
+<strong>4</strong>　2に規定する控除の適用上、「納付される中国の租税」には、次のいずれかのものに従つて免除、軽減又は還付が行われないとしたならば納付されたとみられる中国の租税の額を含むものとみなす。<br>
+<strong>(a)</strong> 中華人民共和国合弁企業所得税法第五条及び第六条の規定並びに中華人民共和国合弁企業所得税法施行細則第三条の規定<br>
+<strong>(b)</strong> 中華人民共和国外国企業所得税法第四条及び第五条の規定<br>
+<strong>(c)</strong> この協定の署名の日の後に中華人民共和国の法令に導入される中華人民共和国の経済開発を促進するための他の同様な特別の奨励措置で<strong>両締約国の政府が合意するもの</strong>
+</div>
+
+<div class="key-point">
+<strong>構造の整理：</strong>第23条には2つの異なるタイプのtax sparingが規定されている。<br>
+(1) <strong>3項</strong>：定率みなし（Fixed-rate deemed credit）-- 実際の源泉税率にかかわらず、一定率で納付されたとみなす<br>
+(2) <strong>4項</strong>：奨励措置みなし（Incentive-based deemed credit）-- 特定法令に基づく減免がなければ納付されたはずの額をみなす<br>
+この2つは別個の規定であり、適用場面が異なる。3項は源泉税（直接税額控除）、4項は法人税の減免（間接税額控除）に主に関係する。
+</div>
+
+<!-- ================================ -->
+<h2 id="sec2">2. Tax Sparingの実際の機能（配当の場合）-- 数値例</h2>
+<!-- ================================ -->
+
+<h3>前提条件</h3>
+<div class="card">
+<ul>
+<li>日本親会社P社（法人税率：約30%と仮定）</li>
+<li>中国子会社S社（100%子会社 = 独資企業、合弁企業ではない）</li>
+<li>S社からP社への配当支払額：100</li>
+<li>日中租税条約第10条2項による源泉税上限：10%</li>
+<li>条約23条3項(a)によるみなし税率：その他の配当 = 20%</li>
+</ul>
+</div>
+
+<h3>ケース1：中国の源泉税率が実際に10%の場合（条約上限と同率）</h3>
+
+<div class="calc-box">
+<div class="title">ケース1：実際の源泉税10%、みなし税率20%（独資企業）</div>
+<div class="calc-row"><span>配当額（グロス）</span><span>100</span></div>
+<div class="calc-row"><span>中国の実際の源泉税（10%）</span><span>▲10</span></div>
+<div class="calc-row"><span>手取配当額</span><span>90</span></div>
+<div class="calc-row"><span></span><span></span></div>
+<div class="calc-row"><span>--- 日本側のFTC計算 ---</span><span></span></div>
+<div class="calc-row"><span>日本の法人税額（100 x 30%）</span><span>30</span></div>
+<div class="calc-row"><span>FTC控除額（みなし：100 x 20%）</span><span>▲20</span></div>
+<div class="calc-row subtotal"><span>日本での追加納税額</span><span>10</span></div>
+<div class="calc-row"><span></span><span></span></div>
+<div class="calc-row"><span>--- 税負担の合計 ---</span><span></span></div>
+<div class="calc-row"><span>中国源泉税（実際納付）</span><span>10</span></div>
+<div class="calc-row"><span>日本法人税（追加納付）</span><span>10</span></div>
+<div class="calc-row total"><span>合計税負担</span><span>20（実効税率20%）</span></div>
+<div class="calc-row"><span></span><span></span></div>
+<div class="calc-row"><span>--- 比較：tax sparingがなかった場合 ---</span><span></span></div>
+<div class="calc-row"><span>FTC控除額（実額：100 x 10%）</span><span>▲10</span></div>
+<div class="calc-row"><span>日本での追加納税額</span><span>20</span></div>
+<div class="calc-row total"><span>合計税負担（sparingなし）</span><span>30（実効税率30%）</span></div>
+</div>
+
+<div class="highlight">
+<strong>Tax Sparingの効果：</strong>配当100に対する合計税負担が30から20に軽減される（10の節税効果）。みなし税率20%と実際の源泉税率10%の差額10%分がtax sparingによる実質的なメリットとなる。日本の法人税率30%のうち、20%分はFTCで控除され、残り10%のみが追加課税される。
+</div>
+
+<h3>ケース2：中国の源泉税率が0%の場合（旧法下の外商投資企業配当免税）</h3>
+
+<div class="calc-box">
+<div class="title">ケース2：旧法下 -- 配当免税 + みなし税率20%（独資企業）</div>
+<div class="calc-row"><span>配当額（グロス）</span><span>100</span></div>
+<div class="calc-row"><span>中国の実際の源泉税（0%：旧法免税）</span><span>0</span></div>
+<div class="calc-row"><span>手取配当額</span><span>100</span></div>
+<div class="calc-row"><span></span><span></span></div>
+<div class="calc-row"><span>--- 日本側のFTC計算 ---</span><span></span></div>
+<div class="calc-row"><span>日本の法人税額（100 x 30%）</span><span>30</span></div>
+<div class="calc-row"><span>FTC控除額（みなし：100 x 20%）</span><span>▲20</span></div>
+<div class="calc-row subtotal"><span>日本での追加納税額</span><span>10</span></div>
+<div class="calc-row"><span></span><span></span></div>
+<div class="calc-row"><span>--- 税負担の合計 ---</span><span></span></div>
+<div class="calc-row"><span>中国源泉税（実際納付）</span><span>0</span></div>
+<div class="calc-row"><span>日本法人税（追加納付）</span><span>10</span></div>
+<div class="calc-row total"><span>合計税負担</span><span>10（実効税率10%）</span></div>
+<div class="calc-row"><span></span><span></span></div>
+<div class="calc-row"><span>--- 比較：tax sparingがなかった場合 ---</span><span></span></div>
+<div class="calc-row"><span>FTC控除額（実額：0）</span><span>0</span></div>
+<div class="calc-row"><span>日本での追加納税額</span><span>30</span></div>
+<div class="calc-row total"><span>合計税負担（sparingなし）</span><span>30（実効税率30%）</span></div>
+</div>
+
+<div class="highlight">
+<strong>旧法下のTax Sparingの効果は絶大：</strong>中国が配当を完全免税にしているにもかかわらず、日本側では20%分のFTCが認められるため、合計税負担は10%にまで圧縮される。Tax sparingがなければ、中国の免税措置の効果は日本の課税により完全に相殺され、実効税率は30%のままとなる。これがtax sparingの本来の政策目的（開発途上国の投資奨励措置の効果を確保する）の典型例である。
+</div>
+
+<h3>ケース3：合弁企業の場合（みなし税率10%）</h3>
+
+<div class="calc-box">
+<div class="title">ケース3：合弁企業 -- 実際の源泉税10% + みなし税率10%</div>
+<div class="calc-row"><span>配当額（グロス）</span><span>100</span></div>
+<div class="calc-row"><span>中国の実際の源泉税（10%）</span><span>▲10</span></div>
+<div class="calc-row"><span>手取配当額</span><span>90</span></div>
+<div class="calc-row"><span></span><span></span></div>
+<div class="calc-row"><span>--- 日本側のFTC計算 ---</span><span></span></div>
+<div class="calc-row"><span>日本の法人税額（100 x 30%）</span><span>30</span></div>
+<div class="calc-row"><span>FTC控除額（みなし：100 x 10%）</span><span>▲10</span></div>
+<div class="calc-row subtotal"><span>日本での追加納税額</span><span>20</span></div>
+<div class="calc-row"><span></span><span></span></div>
+<div class="calc-row"><span>--- 税負担の合計 ---</span><span></span></div>
+<div class="calc-row"><span>中国源泉税（実際納付）</span><span>10</span></div>
+<div class="calc-row"><span>日本法人税（追加納付）</span><span>20</span></div>
+<div class="calc-row total"><span>合計税負担</span><span>30（実効税率30%）</span></div>
+<div class="calc-row"><span></span><span></span></div>
+<div class="calc-row"><span>--- 比較：tax sparingがなかった場合 ---</span><span></span></div>
+<div class="calc-row total"><span>合計税負担（sparingなし）</span><span>30（実効税率30%）-- 同一</span></div>
+</div>
+
+<div class="key-point">
+<strong>合弁企業の場合、Tax Sparingの効果はゼロ：</strong>みなし税率10%と実際の条約上限源泉税率10%が同率であるため、3項のtax sparingは実質的な節税効果を生まない。ただし、4項の奨励措置みなし（旧法下の法人税減免に対するもの）は別途適用可能であった。
+</div>
+
+<!-- ================================ -->
+<h2 id="sec3">3. 23条3項(a)の「合弁企業10%」と「その他20%」の差</h2>
+<!-- ================================ -->
+
+<div class="card">
+<h3>「合弁企業」とは何か</h3>
+<p>条約23条3項(a)における「中華人民共和国の合弁企業」とは、条約署名時（1983年）の中国法における<strong>中外合資経営企業（Equity Joint Venture = EJV）</strong>を指す。これは中華人民共和国中外合資経営企業法（1979年制定）に基づき設立された、中国側と外国側が共同出資する企業形態である。</p>
+<p>「その他の配当」には、<strong>外商独資企業（Wholly Foreign-Owned Enterprise = WFOE）</strong>および<strong>中外合作経営企業（Cooperative Joint Venture = CJV）</strong>からの配当が含まれる。日本企業の中国進出が100%子会社（独資企業）形態で行われる場合、みなし税率は20%が適用される。</p>
+</div>
+
+<table>
+<tr>
+<th>企業形態</th>
+<th>条約上の分類</th>
+<th>みなし税率（3項(a)）</th>
+<th>実際の源泉税率</th>
+<th>Tax Sparing効果</th>
+</tr>
+<tr>
+<td>中外合資経営企業（EJV）<br><span class="badge badge-blue">合弁企業</span></td>
+<td>合弁企業</td>
+<td><strong>10%</strong></td>
+<td>10%（条約上限）</td>
+<td><span class="badge badge-red">効果なし（0%）</span></td>
+</tr>
+<tr>
+<td>外商独資企業（WFOE）<br><span class="badge badge-green">100%子会社</span></td>
+<td>その他</td>
+<td><strong>20%</strong></td>
+<td>10%（条約上限）</td>
+<td><span class="badge badge-green">10%分の効果あり</span></td>
+</tr>
+<tr>
+<td>中外合作経営企業（CJV）<br><span class="badge badge-yellow">合作企業</span></td>
+<td>その他</td>
+<td><strong>20%</strong></td>
+<td>10%（条約上限）</td>
+<td><span class="badge badge-green">10%分の効果あり</span></td>
+</tr>
+</table>
+
+<div class="highlight">
+<strong>構造的な不均衡：</strong>合弁企業（EJV）のみなし税率が10%に設定されている理由は、条約署名時の中国法の下で合弁企業の配当源泉税率が10%であったことによる。条約は「みなし」として実際の法定税率と同率を設定したに過ぎず、tax sparingの実質的効果は当初から限定的であった。これに対し、独資企業（WFOE）は「その他」に分類されてみなし20%が適用されるため、<strong>実際の条約上限10%との差額10%分</strong>がtax sparingの恩恵となる。
+</div>
+
+<div class="card">
+<h3>現在の実質的意味</h3>
+<p>2020年1月1日施行の外商投資法により、中外合資経営企業法、中外合作経営企業法、外商独資企業法（いわゆる「外資三法」）は廃止された。既存企業には5年間の移行期間（2024年末まで）が設けられ、全て統一的に「外商投資企業」として扱われるようになった。</p>
+<p>しかし、<strong>日中租税条約の文言は改正されていない</strong>ため、「合弁企業」の定義について解釈上の問題が生じ得る。実務上、旧法下で設立されたEJV形態の企業がその後組織変更した場合のみなし税率の適用関係は、今後の課税当局の解釈に委ねられる部分がある。</p>
+</div>
+
+<!-- ================================ -->
+<h2 id="sec4">4. 23条4項の奨励措置みなし -- 旧法下の機能</h2>
+<!-- ================================ -->
+
+<div class="card">
+<h3>23条4項が参照する中国法令</h3>
+<p>4項は「納付される中国の租税」に、以下の法令に基づく減免がなければ納付されたはずの額を含めるとしている：</p>
+<table>
+<tr><th>条項</th><th>参照法令</th><th>主な内容</th><th>現行法上の地位</th></tr>
+<tr>
+<td>(a)</td>
+<td>合弁企業所得税法 第5条・第6条<br>同施行細則 第3条</td>
+<td>合弁企業の法人税減免（「二免三減」等）<br>-- 初年度から2年間免税、3年間半減</td>
+<td><span class="badge badge-red">廃止（2008年）</span></td>
+</tr>
+<tr>
+<td>(b)</td>
+<td>外国企業所得税法 第4条・第5条</td>
+<td>外国企業の一定所得に対する税率軽減<br>-- 経済特区等の優遇税率</td>
+<td><span class="badge badge-red">廃止（2008年）</span></td>
+</tr>
+<tr>
+<td>(c)</td>
+<td>両国政府が合意する将来の奨励措置</td>
+<td>条約署名後に導入される経済開発促進のための措置</td>
+<td><span class="badge badge-yellow">合意なし（実質的に空文化）</span></td>
+</tr>
+</table>
+</div>
+
+<h3>旧法下（2008年改正前）の具体的機能</h3>
+
+<div class="card">
+<p><strong>旧法の構造：</strong>2008年以前の中国には2つの法人税法が並存していた。</p>
+<ul>
+<li><strong>中華人民共和国外商投資企業及び外国企業所得税法</strong>（1991年制定）-- 外資系企業に適用</li>
+<li><strong>中華人民共和国企業所得税暫行条例</strong>（1993年制定）-- 内資系企業に適用</li>
+</ul>
+<p>外商投資企業所得税法の下では：</p>
+<ul>
+<li>法定税率：<strong>33%</strong>（国税30% + 地方税3%）</li>
+<li>経済特区の外商投資企業：<strong>15%</strong></li>
+<li>沿海経済開発地域等：<strong>24%</strong></li>
+<li><strong>「二免三減」（2年免税・3年半減）</strong>：生産性外商投資企業で経営期間10年以上のものに適用</li>
+<li><strong>配当源泉税：免税</strong>（外商投資企業から外国投資者への配当は源泉税なし）</li>
+</ul>
+</div>
+
+<div class="calc-box">
+<div class="title">旧法下のTax Sparingの全体像（23条3項+4項の複合適用）</div>
+<div class="calc-row"><span>--- 前提 ---</span><span></span></div>
+<div class="calc-row"><span>中国子会社S社（WFOE）の税引前利益</span><span>1,000</span></div>
+<div class="calc-row"><span>中国法人税率（経済特区：15%）</span><span>▲150</span></div>
+<div class="calc-row"><span>「二免三減」適用（免税年度）</span><span>+150（還付/免除）</span></div>
+<div class="calc-row"><span>実際の法人税負担</span><span>0</span></div>
+<div class="calc-row"><span>税後利益（全額を配当と仮定）</span><span>1,000</span></div>
+<div class="calc-row"><span>配当に対する中国源泉税（旧法免税）</span><span>0</span></div>
+<div class="calc-row"><span>日本親会社P社の受取配当額</span><span>1,000</span></div>
+<div class="calc-row"><span></span><span></span></div>
+<div class="calc-row"><span>--- 日本側のFTC計算 ---</span><span></span></div>
+<div class="calc-row"><span>【直接FTC：3項適用】</span><span></span></div>
+<div class="calc-row"><span>みなし源泉税（1,000 x 20%）</span><span>200 ...（A）</span></div>
+<div class="calc-row"><span></span><span></span></div>
+<div class="calc-row"><span>【間接FTC：4項適用】</span><span></span></div>
+<div class="calc-row"><span>「免除がなければ納付されたはずの」法人税</span><span></span></div>
+<div class="calc-row"><span>= S社の税引前利益 x みなし税率</span><span></span></div>
+<div class="calc-row"><span>（通常法定税率33%で計算）</span><span>330 ...（B）</span></div>
+<div class="calc-row"><span></span><span></span></div>
+<div class="calc-row"><span>FTC控除可能額合計（A + B）</span><span>530</span></div>
+<div class="calc-row"><span>日本の法人税額（1,000 x 30%）</span><span>300</span></div>
+<div class="calc-row"><span>控除限度額超過</span><span>▲230（控除余裕額）</span></div>
+<div class="calc-row total"><span>日本での追加納税額</span><span>0</span></div>
+<div class="calc-row"><span></span><span></span></div>
+<div class="calc-row total"><span>合計税負担（中国+日本）</span><span>0（実効税率0%）</span></div>
+</div>
+
+<div class="highlight">
+<strong>旧法下では完全な非課税が実現し得た：</strong>中国側で法人税も源泉税も実質免税であり、日本側ではtax sparingにより実際には納付されていない税額に基づくFTCが日本の法人税額を上回るため、追加課税がゼロとなる。これは国際税務上極めて異例の状態であり、日中双方の国庫からの税収がゼロという状況が発生し得た。これがtax sparingに対する批判の最大の論拠の一つである。
+</div>
+
+<div class="card">
+<p class="note"><strong>注意：</strong>上記の計算は構造を示すための単純化した例である。実際には、(1) 間接FTCの計算は配当に対応する法人税額の按分計算が必要、(2) FTC控除限度額は一括限度額方式で計算される、(3) 控除余裕額の繰越制度（3年）がある、などの複雑な要素が加わる。</p>
+</div>
+
+<!-- ================================ -->
+<h2 id="sec5">5. 2008年企業所得税法改正の影響</h2>
+<!-- ================================ -->
+
+<div class="timeline">
+<div class="timeline-item">
+<span class="year">1983年</span>
+<p>日中租税条約署名。当時は合弁企業所得税法（1980年）と外国企業所得税法（1981年）が存在。23条4項はこれらの法令を名指しで参照。</p>
+</div>
+<div class="timeline-item">
+<span class="year">1991年</span>
+<p>外商投資企業及び外国企業所得税法制定（合弁企業所得税法と外国企業所得税法を統合）。配当源泉税の免税規定は維持。</p>
+</div>
+<div class="timeline-item">
+<span class="year">1998年</span>
+<p>OECD「Tax Sparing: A Reconsideration」報告書公表。Tax sparingの縮小・廃止を提言。サンセット条項の導入を推奨。</p>
+</div>
+<div class="timeline-item">
+<span class="year">2008年1月1日</span>
+<p><strong>中華人民共和国企業所得税法</strong>施行。内資・外資の法人税法を統一。<br>
+-- 統一税率25%（旧法の優遇税率15%/24%を廃止）<br>
+-- 「二免三減」等の外資向け優遇措置を廃止（経過措置あり）<br>
+-- <strong>配当に対する源泉税10%を導入</strong>（旧法の免税を廃止）<br>
+-- ただし、2008年1月1日以前の累積未処分利益からの配当は引き続き免税</p>
+</div>
+<div class="timeline-item">
+<span class="year">2009年4月1日</span>
+<p><strong>日本の税制改正：外国子会社配当益金不算入制度</strong>導入（法人税法23条の2）。<br>
+25%以上保有の外国子会社からの配当の95%を益金不算入。<br>
+<strong>この制度を適用する場合、外国税額控除（みなし外国税額控除を含む）は適用不可。</strong></p>
+</div>
+<div class="timeline-item">
+<span class="year">2020年1月1日</span>
+<p>中国外商投資法施行。外資三法（合弁企業法・合作企業法・独資企業法）廃止。</p>
+</div>
+<div class="timeline-item">
+<span class="year">2022年9月1日</span>
+<p>中国がMLIを批准・発効。日中租税条約にMLIが適用開始。</p>
+</div>
+</div>
+
+<h3>2008年改正による各条項への影響</h3>
+
+<div class="comparison-grid">
+<div class="item before">
+<span class="label-tag">改正前（~2007年）</span>
+<h3>23条3項（直接みなし税額控除）</h3>
+<ul>
+<li>配当源泉税が<strong>免税</strong>（旧法）</li>
+<li>みなし税率20%（独資）or 10%（合弁）を適用</li>
+<li><strong>効果：大</strong>（免税 vs みなし20%/10%）</li>
+</ul>
+</div>
+<div class="item after">
+<span class="label-tag">改正後（2008年~）</span>
+<h3>23条3項（直接みなし税額控除）</h3>
+<ul>
+<li>配当源泉税が<strong>10%</strong>（新法 + 条約上限）</li>
+<li>みなし税率20%（独資）or 10%（合弁）を適用</li>
+<li><strong>効果：独資のみ10%の差額</strong></li>
+<li>合弁は効果ゼロ</li>
+</ul>
+</div>
+</div>
+
+<div class="comparison-grid">
+<div class="item before">
+<span class="label-tag">改正前（~2007年）</span>
+<h3>23条4項（奨励措置みなし税額控除）</h3>
+<ul>
+<li>合弁企業所得税法5条・6条 = 有効</li>
+<li>外国企業所得税法4条・5条 = 有効</li>
+<li>「二免三減」等で実際の法人税ゼロ</li>
+<li>みなしで33%分のFTCが可能</li>
+<li><strong>効果：極大</strong></li>
+</ul>
+</div>
+<div class="item after">
+<span class="label-tag">改正後（2008年~）</span>
+<h3>23条4項（奨励措置みなし税額控除）</h3>
+<ul>
+<li>合弁企業所得税法 = <strong>廃止</strong></li>
+<li>外国企業所得税法 = <strong>廃止</strong></li>
+<li>4項(a)(b)の参照法令が存在しない</li>
+<li>4項(c)は「両国政府の合意」が必要だが合意なし</li>
+<li><strong>効果：実質的に失効</strong></li>
+</ul>
+</div>
+</div>
+
+<div class="highlight">
+<strong>23条4項の実質的失効：</strong>4項は条文上は依然として存在するが、参照先の中国法令が全て廃止されているため、(a)(b)は適用の余地がない。(c)は将来の奨励措置について「両締約国の政府が合意するもの」を条件としているが、2008年以降、日中間でこの合意がなされた形跡はない。したがって、<strong>23条4項は事実上の空文</strong>となっている。
+</div>
+
+<!-- ================================ -->
+<h2 id="sec6">6. 2009年日本税制改正（外国子会社配当益金不算入）の決定的影響</h2>
+<!-- ================================ -->
+
+<div class="card">
+<p>2008年の中国側の改正以上に決定的な影響を与えたのが、2009年度（平成21年度）の日本の税制改正で導入された<strong>外国子会社配当益金不算入制度</strong>（法人税法23条の2）である。</p>
+
+<h3>制度の概要</h3>
+<ul>
+<li>内国法人が、発行済株式等の<strong>25%以上</strong>を<strong>6ヶ月以上</strong>保有する外国子会社から受ける配当等の<strong>95%</strong>を益金不算入</li>
+<li>残り5%は費用とみなされ課税</li>
+<li>配当に係る外国源泉税は<strong>損金不算入・外国税額控除の対象外</strong></li>
+</ul>
+</div>
+
+<div class="highlight">
+<strong>核心的問題：外国子会社配当益金不算入を適用した場合、みなし外国税額控除は適用できない。</strong><br><br>
+日本の法人税法上、外国子会社配当益金不算入制度と外国税額控除制度は排他的関係にある。配当について益金不算入を選択した場合、当該配当に係る外国税額控除（みなし外国税額控除を含む）の適用はない。<br><br>
+実務上、中国子会社（25%以上保有）からの配当を受ける日本親会社は、ほぼ全てのケースで<strong>外国子会社配当益金不算入制度を適用</strong>する。なぜなら：<br>
+-- 益金不算入の場合：配当の95%が非課税（実効負担は配当の約1.5% = 5% x 30%）<br>
+-- FTC（tax sparing含む）の場合：日本の法人税率30%から、みなし20%を控除しても10%の追加課税<br>
+<strong>益金不算入の方が圧倒的に有利</strong>であり、tax sparingを敢えて選択する合理的理由がない。
+</div>
+
+<div class="calc-box">
+<div class="title">制度比較：外国子会社配当益金不算入 vs Tax Sparing（配当100の場合）</div>
+<div class="calc-row"><span></span><span>益金不算入</span><span>Tax Sparing</span></div>
+<div class="calc-row"><span>中国源泉税（10%）</span><span>10</span><span>10</span></div>
+<div class="calc-row"><span>日本の課税所得</span><span>5（=100x5%）</span><span>100</span></div>
+<div class="calc-row"><span>日本の法人税（30%）</span><span>1.5</span><span>30</span></div>
+<div class="calc-row"><span>FTC控除</span><span>なし</span><span>▲20（みなし）</span></div>
+<div class="calc-row"><span>日本の追加納税</span><span>1.5</span><span>10</span></div>
+<div class="calc-row total"><span>合計税負担</span><span>11.5</span><span>20</span></div>
+<div class="calc-row total"><span>実効税率</span><span>11.5%</span><span>20%</span></div>
+</div>
+
+<div class="key-point">
+<strong>結論：</strong>現行法の下では、25%以上保有の中国子会社からの配当について、日中租税条約23条3項のtax sparing（みなし外国税額控除）は<strong>制度として存在するが、実務上適用される場面はほぼない</strong>。外国子会社配当益金不算入制度の導入により、tax sparingの実務的意義は事実上消滅した。<br><br>
+なお、25%未満の持分保有の場合は益金不算入の適用がなく、通常のFTC方式となるため、その場合にはtax sparingが機能し得る。ただし、25%未満の保有で受ける配当は実務上限定的である。
+</div>
+
+<!-- ================================ -->
+<h2 id="sec7">7. MLI（BEPS防止措置実施条約）の影響</h2>
+<!-- ================================ -->
+
+<div class="card">
+<h3>MLIの日中条約への適用状況</h3>
+<p>日本は2018年9月26日にMLIの留保・通告を寄託、中国は2022年5月25日に寄託した。日中租税条約は両国によりMLIの「対象租税条約（Covered Tax Agreement）」として通告されている。</p>
+
+<h3>適用されるMLI条項</h3>
+<table>
+<tr><th>MLI条項</th><th>内容</th><th>発効日</th></tr>
+<tr><td>第4条1項</td><td>双方居住者の振分けルール（法人）</td><td>2023年1月1日以降</td></tr>
+<tr><td>第6条1項</td><td>前文への非課税・軽減課税の文言追加</td><td>2023年1月1日以降</td></tr>
+<tr><td>第6条3項</td><td>経済・税務協力強化の文言追加</td><td>2023年1月1日以降</td></tr>
+<tr><td>第7条1項</td><td><strong>主たる目的テスト（PPT）</strong>の導入</td><td>源泉税：2023年1月1日以降<br>その他：2023年3月1日以降</td></tr>
+<tr><td>第17条1項</td><td>対応的調整（移転価格）</td><td>2023年3月1日以降</td></tr>
+</table>
+</div>
+
+<div class="key-point">
+<strong>MLIはTax Sparing条項に直接影響を与えていない。</strong><br>
+MLIは租税条約の濫用防止（第7条PPT等）に焦点を当てており、tax sparing条項（第23条3項・4項）自体を修正・削除する規定は含まれていない。<br><br>
+ただし、<strong>第7条のPPT（Principal Purpose Test）</strong>は間接的な影響を持ち得る。tax sparingの恩恵を主たる目的とした取引構造が「取引の主たる目的の一つが条約の特典を得ること」と認定された場合、PPTにより条約の特典（tax sparingを含む）が否認される可能性がある。
+</div>
+
+<!-- ================================ -->
+<h2 id="sec8">8. 他の条約国との比較</h2>
+<!-- ================================ -->
+
+<div class="card">
+<p>日本が現在も有効なtax sparing条項を持つ租税条約は<strong>6ヶ国</strong>のみである。</p>
+</div>
+
+<table>
+<tr>
+<th>相手国</th>
+<th>配当のみなし税率</th>
+<th>利子のみなし税率</th>
+<th>使用料のみなし税率</th>
+<th>特徴</th>
+</tr>
+<tr>
+<td><strong>中国</strong></td>
+<td>合弁10%<br>その他20%</td>
+<td>10%</td>
+<td>20%</td>
+<td>定率みなし + 奨励措置みなし。4項の参照法令は廃止済み</td>
+</tr>
+<tr>
+<td><strong>ブラジル</strong></td>
+<td><strong>25%</strong></td>
+<td>20%</td>
+<td>25%</td>
+<td>最も高いみなし税率。配当25%は実際の源泉税率を大幅に上回り、効果が最大</td>
+</tr>
+<tr>
+<td><strong>タイ</strong></td>
+<td>BOI奨励事業<br>に限定</td>
+<td>規定あり</td>
+<td>規定あり</td>
+<td>BOI（投資奨励委員会）認可事業からの所得に限定。一般配当には不適用</td>
+</tr>
+<tr>
+<td><strong>スリランカ</strong></td>
+<td>規定あり</td>
+<td>規定あり</td>
+<td>25%</td>
+<td>軽減されたセイロンの租税に25%を加算するみなし方式</td>
+</tr>
+<tr>
+<td><strong>ザンビア</strong></td>
+<td>規定あり</td>
+<td>規定あり</td>
+<td>規定あり</td>
+<td>実務上の利用は極めて限定的</td>
+</tr>
+<tr>
+<td><strong>バングラデシュ</strong></td>
+<td>規定あり</td>
+<td>規定あり</td>
+<td>規定あり</td>
+<td>実務上の利用は極めて限定的</td>
+</tr>
+</table>
+
+<div class="card">
+<h3>OECDの立場</h3>
+<p>OECDは1998年報告書「Tax Sparing: A Reconsideration」で以下のベストプラクティスを提言した：</p>
+<ul>
+<li><strong>サンセット条項</strong>の導入（一定期間経過後に自動失効）</li>
+<li>適用対象を<strong>真正の新規投資</strong>に限定</li>
+<li><strong>濫用防止条項</strong>の併設</li>
+<li>tax sparingの効果に関する<strong>定期的レビュー</strong></li>
+<li>先進国間の条約にはtax sparingを含めないこと</li>
+</ul>
+<p>OECDは「投資決定は税スペアリングの有無にほとんど影響されない」と主張したが、この見解に対しては開発途上国側から強い異論がある。日中条約にはサンセット条項がなく、1983年の署名以来40年以上経過した現在も形式上は有効であり続けている。</p>
+</div>
+
+<div class="card">
+<h3>国際的動向</h3>
+<ul>
+<li><strong>日本</strong>：新規の租税条約にはtax sparing条項を含めない方針。インド（2006年改定で削除）、パキスタン（2008年改定で削除）等で廃止の実績あり</li>
+<li><strong>イギリス</strong>：新規条約でのtax sparing付与に極めて消極的</li>
+<li><strong>カナダ</strong>：1990年代後半以降、新規条約でのtax sparing付与を縮小</li>
+<li><strong>途上国側</strong>：税制優遇措置の効果確保のためtax sparingの維持を主張する国も多い</li>
+<li><strong>国連モデル条約</strong>：tax sparingをコメンタリーで論じており、途上国の立場に一定の理解を示している</li>
+</ul>
+</div>
+
+<!-- ================================ -->
+<h2 id="sec9">9. 総括：Tax Sparingの現在の実質的意義</h2>
+<!-- ================================ -->
+
+<div class="card">
+<h3>配当に関するTax Sparingの機能変遷</h3>
+
+<table>
+<tr>
+<th>時期</th>
+<th>中国側の状況</th>
+<th>日本側の状況</th>
+<th>Tax Sparingの実質的効果</th>
+</tr>
+<tr>
+<td>1984~2007年</td>
+<td>配当源泉税：免税<br>法人税：優遇税率+二免三減</td>
+<td>外国税額控除方式<br>（間接FTC含む）</td>
+<td><span class="badge badge-green">極大</span><br>完全非課税も可能</td>
+</tr>
+<tr>
+<td>2008年</td>
+<td>配当源泉税：10%導入<br>法人税：統一25%</td>
+<td>外国税額控除方式</td>
+<td><span class="badge badge-yellow">縮小</span><br>3項のみ機能（独資で10%効果）<br>4項は参照法令廃止で実質失効</td>
+</tr>
+<tr>
+<td>2009年~現在</td>
+<td>配当源泉税：10%<br>法人税：25%</td>
+<td>外国子会社配当<br>益金不算入制度</td>
+<td><span class="badge badge-red">実質的にゼロ</span><br>益金不算入の方が圧倒的に有利<br>FTC（tax sparing含む）を選択する<br>合理的理由がない</td>
+</tr>
+</table>
+</div>
+
+<div class="key-point">
+<strong>最終的な結論：</strong><br><br>
+日中租税条約第23条3項・4項のtax sparing credit（みなし外国税額控除）は、配当に関しては以下の理由で<strong>現在ほぼ実質的意義を失っている</strong>：<br><br>
+<strong>1. 日本側の制度変更（2009年）が決定的：</strong>外国子会社配当益金不算入制度（95%非課税）の導入により、FTC方式（tax sparing含む）を選択するインセンティブが消滅した。益金不算入の方が税負担が小さいため、合理的な企業はtax sparingを選択しない。<br><br>
+<strong>2. 中国側の制度変更（2008年）による4項の空文化：</strong>23条4項が参照する旧法（合弁企業所得税法、外国企業所得税法）は全て廃止され、新法に基づく奨励措置についての日中政府間合意もない。間接みなし税額控除としての4項は事実上機能していない。<br><br>
+<strong>3. 3項自体の効果の限定：</strong>配当源泉税が実際に10%課税されるようになった現行法の下では、3項による追加的メリットは独資企業で10%のみ。合弁企業では効果ゼロ。<br><br>
+<strong>4. 残存する意義：</strong>配当ではなく、<strong>使用料（ロイヤルティ）</strong>についてはtax sparingの意義が残っている可能性がある。使用料のみなし税率は20%であり、実際の条約上限10%との差額10%分のFTC効果がある。ただし、使用料についても別途、益金算入・損金算入の問題が生じるため、実務上の検討が必要である。
+</div>
+
+<div class="sources">
+<h3>参考資料・情報源</h3>
+<ul>
+<li><a href="https://www.mof.go.jp/tax_policy/summary/international/tax_convention/SynthesizedTextforJapan_China_JP.pdf" target="_blank">財務省：日中租税条約MLI統合テキスト（日本語）</a></li>
+<li><a href="https://www.mof.go.jp/english/policy/tax_policy/tax_conventions/mli_Chi.html" target="_blank">財務省：MLIの日中条約への適用関係（英語）</a></li>
+<li><a href="https://www.mof.go.jp/tax_policy/summary/international/tax_convention/index.htm" target="_blank">財務省：租税条約に関する資料</a></li>
+<li><a href="https://www.jetro.go.jp/world/asia/cn/invest_04.html" target="_blank">JETRO：中国の税制</a></li>
+<li><a href="https://direction-tax.com/post-1386/" target="_blank">税理士法人ディレクション：タックススペアリングクレジットによる節税</a></li>
+<li><a href="https://www.oecd.org/en/publications/1998/02/tax-sparing_g1ghgc56.html" target="_blank">OECD: Tax Sparing: A Reconsideration (1998)</a></li>
+<li><a href="https://taxsummaries.pwc.com/peoples-republic-of-china/corporate/withholding-taxes" target="_blank">PwC Tax Summaries: China Withholding Taxes</a></li>
+<li><a href="https://www.pwc.com/jp/ja/knowledge/glossary/dividend-from-foreign-subsidiary-company.html" target="_blank">PwC Japan：外国子会社配当益金不算入</a></li>
+<li><a href="https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/beps-mli/beps-mli-position-japan.pdf" target="_blank">OECD: Japan MLI Position</a></li>
+</ul>
+<p class="note">本分析は2026年3月12日時点の情報に基づく。具体的な税務判断については、国際税務の専門家に相談されたい。</p>
+</div>
+
+</div>
+</body>
+</html>
