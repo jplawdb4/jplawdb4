@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>添付要件と事後提出の可否 ― 網羅的調査</title>
+<style>
+:root { --primary: #1a365d; --accent: #2b6cb0; --warn: #c53030; --ok: #276749; --bg: #f7fafc; --card: #fff; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif; background: var(--bg); color: #2d3748; line-height: 1.7; padding: 20px; }
+.container { max-width: 1100px; margin: 0 auto; }
+h1 { background: var(--primary); color: #fff; padding: 24px 32px; border-radius: 8px 8px 0 0; font-size: 1.5em; }
+h1 small { display: block; font-weight: normal; font-size: 0.6em; margin-top: 4px; opacity: 0.85; }
+h2 { background: var(--accent); color: #fff; padding: 12px 24px; margin-top: 32px; border-radius: 6px; font-size: 1.15em; }
+h3 { color: var(--primary); border-left: 4px solid var(--accent); padding-left: 12px; margin: 20px 0 10px; font-size: 1.05em; }
+.card { background: var(--card); border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); padding: 20px 24px; margin: 16px 0; }
+table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.92em; }
+th, td { border: 1px solid #e2e8f0; padding: 8px 12px; text-align: left; }
+th { background: #edf2f7; font-weight: 600; white-space: nowrap; }
+.strict { background: #fff5f5; color: var(--warn); font-weight: 700; }
+.rescue { background: #f0fff4; color: var(--ok); font-weight: 700; }
+.partial { background: #fffff0; color: #975a16; font-weight: 700; }
+.tag-strict { display: inline-block; background: #fed7d7; color: var(--warn); padding: 2px 8px; border-radius: 4px; font-size: 0.85em; font-weight: 700; }
+.tag-rescue { display: inline-block; background: #c6f6d5; color: var(--ok); padding: 2px 8px; border-radius: 4px; font-size: 0.85em; font-weight: 700; }
+.tag-mixed { display: inline-block; background: #fefcbf; color: #975a16; padding: 2px 8px; border-radius: 4px; font-size: 0.85em; font-weight: 700; }
+.note { background: #ebf8ff; border-left: 4px solid var(--accent); padding: 12px 16px; margin: 12px 0; border-radius: 0 6px 6px 0; font-size: 0.93em; }
+.warn { background: #fff5f5; border-left: 4px solid var(--warn); padding: 12px 16px; margin: 12px 0; border-radius: 0 6px 6px 0; font-size: 0.93em; }
+.quote { background: #f7fafc; border-left: 4px solid #a0aec0; padding: 10px 16px; margin: 10px 0; font-size: 0.9em; color: #4a5568; }
+ul, ol { margin: 8px 0 8px 24px; }
+li { margin: 4px 0; }
+.toc { background: #edf2f7; padding: 16px 24px; border-radius: 8px; margin: 16px 0; }
+.toc a { color: var(--accent); text-decoration: none; }
+.toc a:hover { text-decoration: underline; }
+@media print { body { padding: 0; } .card { box-shadow: none; border: 1px solid #e2e8f0; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>申告書への「添付」要件と事後提出の可否<small>法人税法・所得税法・租税特別措置法・国税通則法の網羅的調査 ― 2026年3月12日</small></h1>
+
+<div class="card toc">
+<strong>目次</strong>
+<ol>
+<li><a href="#s1">全体構造: 3類型の整理</a></li>
+<li><a href="#s2">法人税法における添付要件規定一覧</a></li>
+<li><a href="#s3">法人税法69条（外国税額控除）の詳細分析</a></li>
+<li><a href="#s4">所得税法における添付要件規定</a></li>
+<li><a href="#s5">租税特別措置法における添付要件規定</a></li>
+<li><a href="#s6">CFC税制（措置法40条の4・66条の6）の特殊構造</a></li>
+<li><a href="#s7">通則法23条（更正の請求）による救済可能性</a></li>
+<li><a href="#s8">当初申告要件 vs 添付要件: 平成23年改正の分水嶺</a></li>
+<li><a href="#s9">重要判例・裁決の整理</a></li>
+<li><a href="#s10">総合対照表</a></li>
+</ol>
+</div>
+
+<!-- ===== Section 1 ===== -->
+<h2 id="s1">1. 全体構造: 添付要件の3類型</h2>
+<div class="card">
+<p>日本の税法において、申告書への書類「添付」が要件とされる規定は、その法的効果の厳格さに応じて以下の<strong>3類型</strong>に分類できる。</p>
+
+<table>
+<tr><th>類型</th><th>文言パターン</th><th>事後提出</th><th>該当規定</th></tr>
+<tr>
+<td class="strict">A. 厳格型（適用要件）</td>
+<td>「添付がある場合に限り、適用する」<br>＋救済規定なし</td>
+<td>不可</td>
+<td>法69条25項（添付部分）、法68条3項、法69条の2第3項、措置法の当初申告要件規定多数</td>
+</tr>
+<tr>
+<td class="rescue">B. 救済型</td>
+<td>「添付がある場合に限り」＋<br>「やむを得ない事情→適用できる」</td>
+<td>やむを得ない事情あれば可</td>
+<td>法23条の2第6項、法37条10項、法57条13項、法59条7項 等</td>
+</tr>
+<tr>
+<td class="partial">C. 保存型</td>
+<td>「保存している場合に限り」＋<br>「やむを得ない事情→保存なくても適用できる」</td>
+<td>保存があれば添付の事後性問題を回避</td>
+<td>法69条25項（保存部分）＋28項、法23条の2第5項・6項</td>
+</tr>
+</table>
+
+<div class="note">
+<strong>核心的な区別</strong>: 「添付」と「保存」は別概念である。「添付」は申告書と一体として提出する行為であり時点が固定される。「保存」は手元に保持している状態であり、事後的な提示・提出が可能。法69条25項は「添付」と「保存」の二重要件を課しており、28項は「保存」部分のみを救済する構造となっている。
+</div>
+</div>
+
+<!-- ===== Section 2 ===== -->
+<h2 id="s2">2. 法人税法における添付要件規定一覧</h2>
+<div class="card">
+
+<h3>2-1. 「添付がある場合に限り、適用する」＋救済規定なし</h3>
+<table>
+<tr><th>条文</th><th>制度</th><th>添付要件の内容</th><th>救済</th></tr>
+<tr>
+<td>法23条7項</td>
+<td>受取配当等の益金不算入</td>
+<td>益金不算入額・計算明細の書類の添付</td>
+<td class="strict">なし（添付＝厳格要件）<br>ただし金額は記載額が限度</td>
+</tr>
+<tr>
+<td>法68条3項</td>
+<td>所得税額の控除</td>
+<td>控除額・計算明細の書類の添付</td>
+<td class="strict">なし<br>（平成23年改正で「確定申告書」→「確定申告書、修正申告書又は更正請求書」に拡大）</td>
+</tr>
+<tr>
+<td>法69条25項</td>
+<td>外国税額控除（1〜3項）</td>
+<td>明細書の添付＋証明書類の保存</td>
+<td class="partial">添付→厳格<br>保存→28項で救済（やむを得ない事情）</td>
+</tr>
+<tr>
+<td>法69条26項</td>
+<td>外国税額控除（繰越控除2・3項）</td>
+<td>各事業年度の控除限度額等の書類添付＋保存</td>
+<td class="partial">25項と同構造。28項で保存部分のみ救済</td>
+</tr>
+<tr>
+<td>法69条27項</td>
+<td>外国税額控除（通算調整18項）</td>
+<td>明細書の添付＋証明書類の保存</td>
+<td class="partial">28項で保存部分のみ救済</td>
+</tr>
+<tr>
+<td>法69条の2第3項</td>
+<td>分配時調整外国税相当額の控除</td>
+<td>控除対象額・計算明細書類の添付</td>
+<td class="strict">なし（救済規定なし）</td>
+</tr>
+<tr>
+<td>法142条の10第2項</td>
+<td>外国銀行等の資本に係る負債の利子の損金算入</td>
+<td>明細書類の添付＋計算書類の保存</td>
+<td class="partial">3項で保存部分のみ救済（やむを得ない事情）</td>
+</tr>
+</table>
+
+<h3>2-2. 「添付がある場合に限り、適用する」＋「やむを得ない事情」救済あり</h3>
+<table>
+<tr><th>条文</th><th>制度</th><th>添付要件</th><th>救済規定</th></tr>
+<tr>
+<td>法23条の2第5項・6項</td>
+<td>外国子会社配当の益金不算入</td>
+<td>明細書類の添付＋省令書類の保存</td>
+<td class="rescue">6項: 保存がなくても「やむを得ない事情」があれば適用可</td>
+</tr>
+<tr>
+<td>法37条9項・10項</td>
+<td>寄附金（特定公益増進法人等）</td>
+<td>寄附金明細の書類添付＋証明書類の保存</td>
+<td class="rescue">10項: 保存がなくても「やむを得ない事情」があれば適用可</td>
+</tr>
+<tr>
+<td>法57条12項・13項</td>
+<td>欠損金繰越し（更生・再生等の100%損金算入）</td>
+<td>事実証明書類の添付</td>
+<td class="rescue">13項: 添付がなくても「やむを得ない事情」があれば適用可</td>
+</tr>
+<tr>
+<td>法59条6項・7項</td>
+<td>会社更生等による債務免除等の欠損金損金算入</td>
+<td>計算明細書類＋省令書類の添付</td>
+<td class="rescue">7項: 省令書類の添付がなくても「やむを得ない事情」があれば適用可</td>
+</tr>
+<tr>
+<td>法64条の11第6項・7項</td>
+<td>通算制度開始に伴う資産の時価評価損益</td>
+<td>評価明細の記載＋関係書類の添付</td>
+<td class="rescue">7項: 「やむを得ない事情」があれば適用可</td>
+</tr>
+<tr>
+<td>法64条の12第7項・8項</td>
+<td>通算制度加入に伴う資産の時価評価損益</td>
+<td>評価明細の記載＋関係書類の添付</td>
+<td class="rescue">8項: 「やむを得ない事情」があれば適用可</td>
+</tr>
+<tr>
+<td>法64条の14第4項・5項</td>
+<td>公共法人等が普通法人等に移行する場合の特例</td>
+<td>金額記載＋省令書類の添付</td>
+<td class="rescue">5項: 「やむを得ない事情」があれば適用可</td>
+</tr>
+</table>
+
+<h3>2-3. 添付義務規定（適用要件ではない）</h3>
+<table>
+<tr><th>条文</th><th>制度</th><th>内容</th></tr>
+<tr>
+<td>法60条2項</td>
+<td>保険会社の契約者配当</td>
+<td>「添付しなければならない」（義務規定）。不添付でも適用は妨げられない</td>
+</tr>
+</table>
+
+<h3>2-4. 確定申告書の連続提出＋帳簿保存型（法57条10項）</h3>
+<div class="note">
+法57条1項（一般的な欠損金繰越控除）の要件は<strong>添付要件ではなく</strong>、「欠損金額の生じた事業年度について確定申告書を提出し、かつ、その後において連続して確定申告書を提出している場合」＋「帳簿書類の保存」である。これは「添付」の問題ではなく「申告書提出」の問題。
+</div>
+</div>
+
+<!-- ===== Section 3 ===== -->
+<h2 id="s3">3. 法人税法69条（外国税額控除）の詳細分析</h2>
+<div class="card">
+
+<h3>3-1. 25項の二重構造</h3>
+<p>法69条25項は、外国税額控除（1項）の適用につき、以下の<strong>二重の要件</strong>を課している。</p>
+
+<table>
+<tr><th>要件</th><th>具体的内容</th><th>不充足の場合</th></tr>
+<tr>
+<td class="strict">添付要件</td>
+<td>申告書等に「明細書」の添付</td>
+<td>適用不可。28項による救済対象外</td>
+</tr>
+<tr>
+<td class="partial">保存要件</td>
+<td>控除対象外国法人税の額を課されたことを証する書類その他の省令書類の保存</td>
+<td>原則適用不可。ただし28項で救済余地あり</td>
+</tr>
+</table>
+
+<h3>3-2. 28項の救済範囲</h3>
+<div class="quote">
+法69条28項:「税務署長は、第一項から第三項まで又は第十八項の規定による控除をされるべきこととなる金額の全部又は一部につき前三項に規定する<strong>財務省令で定める書類の保存がない場合</strong>においても、その書類の保存がなかつたことについて<strong>やむを得ない事情</strong>があると認めるときは、その書類の保存がなかつた金額につき第一項から第三項まで又は第十八項の規定を<strong>適用することができる</strong>。」
+</div>
+
+<div class="warn">
+<strong>重要</strong>: 28項は「保存がない場合」の救済であり、「添付がない場合」の救済ではない。明細書の添付そのものが欠けている場合は、28項の射程外である。この点は東京高裁令和3年11月24日判決（CFC外国税額控除事件）でも確認されている。
+</div>
+
+<h3>3-3. 25項後段の「特別の事情」</h3>
+<p>25項後段では、控除額の計算基礎となる金額は「税務署長において<strong>特別の事情</strong>があると認める場合を除くほか」明細書記載額を限度とするとされている。この「特別の事情」は28項の「やむを得ない事情」とは別概念で、記載額の上限を緩和するもの。</p>
+</div>
+
+<!-- ===== Section 4 ===== -->
+<h2 id="s4">4. 所得税法における添付要件規定</h2>
+<div class="card">
+
+<table>
+<tr><th>条文</th><th>制度</th><th>添付要件</th><th>救済</th></tr>
+<tr>
+<td>所法57条の2第3項</td>
+<td>給与所得者の特定支出控除</td>
+<td>適用を受ける旨の記載＋特定支出明細書・証明書類の添付</td>
+<td class="strict">なし</td>
+</tr>
+<tr>
+<td>所法64条の2第3項</td>
+<td>資産の譲渡代金が回収不能の場合の特例</td>
+<td>適用を受ける旨の記載＋明細書類の添付</td>
+<td class="strict">なし</td>
+</tr>
+<tr>
+<td>所法90条4項</td>
+<td>変動所得・臨時所得の平均課税</td>
+<td>適用を受ける旨の記載＋計算明細書類の添付</td>
+<td class="strict">なし</td>
+</tr>
+<tr>
+<td>所法92条の2第2項</td>
+<td>分配時調整外国税相当額控除</td>
+<td>控除対象額・計算明細の書類の添付</td>
+<td class="strict">なし</td>
+</tr>
+<tr>
+<td>所法95条10項</td>
+<td>外国税額控除（1項）</td>
+<td>明細書の添付＋証明書類の添付</td>
+<td class="partial">「特別の事情」で記載額限度の緩和あり（法人税法69条25項と同構造）</td>
+</tr>
+<tr>
+<td>所法95条11項</td>
+<td>外国税額控除（繰越控除2・3項）</td>
+<td>各年の控除限度額等の書類添付＋省令書類の添付</td>
+<td class="partial">同上</td>
+</tr>
+<tr>
+<td>所法137条の2第3項・4項</td>
+<td>国外転出時課税の納税猶予</td>
+<td>適用を受ける旨の記載＋省令書類の添付</td>
+<td class="rescue">4項: 「やむを得ない事情」があれば、書類の提出があった場合に限り適用可</td>
+</tr>
+<tr>
+<td>所法137条の3第4項・5項</td>
+<td>贈与等による国外転出時課税の納税猶予</td>
+<td>同上</td>
+<td class="rescue">5項: 同上</td>
+</tr>
+</table>
+
+<div class="note">
+<strong>所得税法95条の「やむを得ない事情」</strong>: 現行法では所得税法95条に法人税法69条28項に相当する明文の救済規定は存在しない。しかし、東京地裁令和4年判決（12671号事件）では、所得税法旧95条7項の「やむを得ない事情」（現行法では別の位置）について、「納税者の責めに帰すことのできない客観的な事情」がある場合に認められるとした。課税庁は「天災、交通の途絶その他真に納税者の責めに帰すことができない客観的事情」に限定解釈する立場。
+</div>
+</div>
+
+<!-- ===== Section 5 ===== -->
+<h2 id="s5">5. 租税特別措置法における添付要件規定</h2>
+<div class="card">
+
+<h3>5-1. 「確定申告書」のみに限定する当初申告要件（事後提出不可）</h3>
+<p>以下の規定では、<strong>「確定申告書」にのみ</strong>添付・記載を求めており、「修正申告書又は更正請求書」を含まない。これは事後的な適用選択を排除する「当初申告要件」である。</p>
+
+<table>
+<tr><th>条文</th><th>制度</th><th>要件</th><th>救済</th></tr>
+<tr>
+<td>措法10条の3第7〜9項</td>
+<td>中小事業者の機械等取得（特別償却・税額控除）</td>
+<td>確定申告書に記載＋明細書添付</td>
+<td class="strict">なし</td>
+</tr>
+<tr>
+<td>措法10条の4第5〜6項</td>
+<td>地域経済牽引事業の特定事業用機械等</td>
+<td>同上</td>
+<td class="strict">なし</td>
+</tr>
+<tr>
+<td>措法10条の4の2第5〜6項</td>
+<td>地方活力向上地域等の特定建物等</td>
+<td>同上</td>
+<td class="strict">なし</td>
+</tr>
+<tr>
+<td>措法10条の5第7〜9項</td>
+<td>特定経営力向上設備等</td>
+<td>同上</td>
+<td class="strict">なし</td>
+</tr>
+<tr>
+<td>措法10条の5の5第5〜7項</td>
+<td>生産工程効率化等設備</td>
+<td>確定申告書に記載＋明細書＋省令書類添付</td>
+<td class="strict">なし</td>
+</tr>
+<tr>
+<td>措法24条の2第3項</td>
+<td>少額減価償却資産</td>
+<td>確定申告書に明細書添付</td>
+<td class="strict">なし</td>
+</tr>
+<tr>
+<td>措法42条の12の4第4項</td>
+<td>雇用者給与等支給額増加の特別控除</td>
+<td>確定申告書等（＝中間申告書＋確定申告書）に控除明細書添付</td>
+<td class="strict">なし（東京地裁令和5年6月15日判決で確認）</td>
+</tr>
+</table>
+
+<h3>5-2. 「確定申告書」限定だが「やむを得ない事情」救済あり</h3>
+<table>
+<tr><th>条文</th><th>制度</th><th>救済</th></tr>
+<tr>
+<td>措法12条の2第3〜4項</td>
+<td>被災代替資産等の特別償却</td>
+<td class="rescue">4項: 確定申告書の未提出又は記載・添付欠缺でも「やむを得ない事情」→書類提出で適用可</td>
+</tr>
+<tr>
+<td>措法24条の3第2〜3項</td>
+<td>農業経営基盤強化準備金の損金算入</td>
+<td class="rescue">3項: 同上</td>
+</tr>
+<tr>
+<td>措法25条の2第2〜3項</td>
+<td>特定の基金に対する負担金等の損金算入</td>
+<td class="rescue">3項: 同上</td>
+</tr>
+<tr>
+<td>措法28条の3第10〜11項</td>
+<td>特定の事業用資産買換えの圧縮記帳</td>
+<td class="rescue">11項: 同上</td>
+</tr>
+<tr>
+<td>措法33条の5第4〜5項</td>
+<td>特定の事業用資産買換え（個人・圧縮）</td>
+<td class="rescue">5項: 同上</td>
+</tr>
+</table>
+
+<h3>5-3. CFC税制の特殊な適用除外判定構造（推定方式）</h3>
+<p>現行の措置法40条の4第3項・4項及び66条の6第3項・4項（2017年改正後）は、旧法の「適用除外記載書面の添付」要件（旧7項）を廃止し、代わりに<strong>推定方式</strong>を採用している。</p>
+<div class="note">
+現行法では、経済活動基準（事業基準・実体基準・管理支配基準・所在地国基準/非関連者基準）の充足の判定に際し、課税庁が期間を定めて書類の提示・提出を求め、<strong>「提示又は提出がないときは、該当しないものと推定する」</strong>という構造を採っている（措法40条の4第4項、66条の6第4項）。これは「添付要件」ではなく「立証責任の転換（推定）」方式である。
+</div>
+</div>
+
+<!-- ===== Section 6 ===== -->
+<h2 id="s6">6. CFC税制と外国税額控除の添付要件の交錯</h2>
+<div class="card">
+<p>CFC税制が適用される場合の二重課税調整において、外国税額控除（措法66条の7等）の適用には法69条25〜28項の添付・保存要件が別途必要となる。</p>
+
+<div class="warn">
+<strong>実務上の困難</strong>: 納税者がCFC税制の適用がないと考えて申告した場合（適用除外を主張）、外国税額控除の明細書を申告書に添付していない。課税庁がCFC合算課税を行った場合でも、法69条25項の添付要件を事後的に充足する手段がない。この問題は東京高裁令和3年11月24日判決で正面から争われ、<strong>裁判所は添付要件の厳格適用を維持</strong>した（控訴人＝株式会社A、被控訴人＝国）。
+</div>
+
+<p>判決の核心的判示:</p>
+<div class="quote">
+「法人税法６９条１５項〔現25項〕及び同法８１条の１５第９項の文言等に鑑みれば、これらの規定は、外国税額控除を受けるための要件を定めたことが明らかである。」「控訴人の不利益は、…本件各適用除外規定の適用を求めるか、外国税額控除の適用を求めるかを決定しなければならないという事実上のものにすぎず」
+</div>
+</div>
+
+<!-- ===== Section 7 ===== -->
+<h2 id="s7">7. 通則法23条（更正の請求）による救済可能性</h2>
+<div class="card">
+
+<h3>7-1. 更正の請求で添付漏れは救済されるか</h3>
+<p>通則法23条1項は、「国税に関する法律の規定に従っていなかった」場合に更正の請求を認めるが、この場合の「法律の規定に従っていなかった」は<strong>実体法上の計算誤り</strong>を意味し、手続要件（添付要件）の不充足を事後的に治癒するものではない。</p>
+
+<table>
+<tr><th>場面</th><th>更正の請求による救済</th><th>根拠</th></tr>
+<tr>
+<td>添付要件を充足したが計算に誤りがあった</td>
+<td class="rescue">可能</td>
+<td>実体法上の計算誤り。通則法23条1項1号</td>
+</tr>
+<tr>
+<td>当初申告で添付あり。更正請求で金額を変更したい</td>
+<td class="partial">場合による</td>
+<td>平成23年改正後、法68条（所得税額控除）・法23条（受取配当）等は「修正申告書又は更正請求書」が追加されており、記載額限度の範囲で変更可能</td>
+</tr>
+<tr>
+<td>当初申告で添付なし。更正請求で初めて添付して適用を求める</td>
+<td class="strict">原則不可（当初申告要件のある規定）</td>
+<td>東京地裁令和5年6月15日判決（雇用促進税制事件）。措法42条の12の4は当初申告要件あり</td>
+</tr>
+<tr>
+<td>同上（当初申告要件のない規定）</td>
+<td class="rescue">可能な場合あり</td>
+<td>法68条3項（所得税額控除）は平成23年改正で「更正請求書」を追加。最高裁平成21年7月10日判決が契機</td>
+</tr>
+</table>
+
+<h3>7-2. 最高裁平成21年7月10日第二小法廷判決（民集63巻6号1092頁）</h3>
+<div class="note">
+この判決は、改正前の法人税法68条3項（「確定申告書に…記載がある場合に限り、適用する」）の解釈につき、一定の場合に更正請求書に基づく税額控除を認め、<strong>当初申告要件の厳格解釈に風穴を開けた</strong>最重要判例である。これを受けて平成23年改正（平成23年法律第114号）で多数の規定から当初申告要件が廃止された。
+</div>
+
+<h3>7-3. 平成23年改正で当初申告要件が廃止された規定（事後的適用が可能になった規定）</h3>
+<ul>
+<li>法人税法23条7項（受取配当等の益金不算入）: 「確定申告書」→「確定申告書、修正申告書又は更正請求書」</li>
+<li>法人税法68条3項（所得税額の控除）: 同上</li>
+<li>法人税法69条25〜27項（外国税額控除）: 同上</li>
+<li>法人税法69条の2第3項（分配時調整外国税相当額控除）: 同上</li>
+<li>法人税法57条12項（欠損金繰越しの100%損金算入）: 同上</li>
+<li>法人税法59条6項（会社更生等の欠損金損金算入）: 同上</li>
+</ul>
+
+<h3>7-4. 平成23年改正後も当初申告要件が維持された規定</h3>
+<div class="warn">
+<strong>インセンティブ措置（政策税制）</strong>については、「更正の請求を含め実質的にその事後的な選択的適用を認めることは、税負担の軽減を通じ政策目的の達成を図るとの当該措置の趣旨そのものを没却するおそれがある」として、当初申告要件が維持されている（東京地裁令和5年判決12879号事件・被告主張より）。
+</div>
+<ul>
+<li>租税特別措置法の特別償却・税額控除関連規定の大部分</li>
+<li>措法42条の12の4（雇用者給与等支給額増加の特別控除）等のインセンティブ措置</li>
+</ul>
+</div>
+
+<!-- ===== Section 8 ===== -->
+<h2 id="s8">8. 当初申告要件 vs 添付要件: 平成23年改正の分水嶺</h2>
+<div class="card">
+
+<table>
+<tr><th>区分</th><th>制度趣旨</th><th>平成23年改正の効果</th><th>事後提出</th></tr>
+<tr>
+<td><strong>二重課税排除型</strong><br>（所得税額控除、外国税額控除、受取配当益金不算入）</td>
+<td>二重課税の排除。納税者に選択の余地なし（本来当然に適用されるべき制度）</td>
+<td>当初申告要件<strong>廃止</strong>。修正申告書・更正請求書でも添付可</td>
+<td class="rescue">可能</td>
+</tr>
+<tr>
+<td><strong>インセンティブ型</strong><br>（特別償却、税額控除、準備金等の政策税制）</td>
+<td>特定の政策目的達成のための税負担軽減。納税者の選択による</td>
+<td>当初申告要件<strong>維持</strong>。確定申告書にのみ添付可</td>
+<td class="strict">不可</td>
+</tr>
+</table>
+
+<div class="note">
+<strong>外国税額控除の位置付け</strong>: 外国税額控除は「二重課税排除型」に分類され、当初申告要件は廃止されたが、<strong>添付要件そのものは廃止されていない</strong>。「修正申告書又は更正請求書」に添付することが可能になっただけであり、いずれの書面にも添付しなかった場合には適用を受けられない。この点を混同する議論が散見されるが、「当初申告要件の廃止」と「添付要件の廃止」は全く異なる。
+</div>
+</div>
+
+<!-- ===== Section 9 ===== -->
+<h2 id="s9">9. 重要判例・裁決の整理</h2>
+<div class="card">
+
+<table>
+<tr><th>判決等</th><th>争点</th><th>結論</th><th>意義</th></tr>
+<tr>
+<td>最高裁H21.7.10<br>（民集63-6-1092）</td>
+<td>法68条3項の当初申告要件の射程</td>
+<td>一定の場合に更正請求による税額控除を許容</td>
+<td>平成23年改正の契機。二重課税排除制度での当初申告要件の不合理性を示唆</td>
+</tr>
+<tr>
+<td>東京高裁R3.11.24<br>（CFC外国税額控除事件・13633号）</td>
+<td>CFC合算課税時の外国税額控除の明細書未添付</td>
+<td><strong>添付要件の厳格適用</strong>。控訴棄却（国側勝訴）</td>
+<td>適用除外を主張して添付しなかった場合でも救済されない。平成23年改正後も添付自体は必要</td>
+</tr>
+<tr>
+<td>東京高裁R4（13739号関連）<br>措法40条の4第7項事件</td>
+<td>CFC適用除外記載書面の添付要件</td>
+<td>「同条7項の適用除外記載書面の添付要件を充足する場合に限り、同条3項の本件適用除外要件の充否が判断される」</td>
+<td>旧法下での適用除外記載書面の添付は実体要件の前提となる手続要件であることを確認</td>
+</tr>
+<tr>
+<td>東京地裁R5.6.15<br>（雇用促進税制事件・12879号）</td>
+<td>措法42条の12の4の当初申告要件</td>
+<td>更正請求での特別控除の適用を否定</td>
+<td>インセンティブ措置の当初申告要件の合理性を確認。法68条3項との制度趣旨の差異を明示</td>
+</tr>
+<tr>
+<td>東京地裁R4<br>（12671号・外国税額控除やむを得ない事情）</td>
+<td>所得税法95条7項の「やむを得ない事情」</td>
+<td>源泉徴収により課税関係が終了したとの誤認にはやむを得ない事情あり（一部認容）</td>
+<td>「やむを得ない事情」は「納税者の責に帰すことのできない客観的な事情」に限定</td>
+</tr>
+<tr>
+<td>東京高裁（13592号関連）<br>措法40条の4第7項事件</td>
+<td>適用除外記載書面の不添付</td>
+<td>添付がない以上、適用除外規定の適用不可</td>
+<td>旧法の添付要件は形式的要件にすぎないとの反論を排斥</td>
+</tr>
+</table>
+</div>
+
+<!-- ===== Section 10 ===== -->
+<h2 id="s10">10. 総合対照表</h2>
+<div class="card">
+
+<table>
+<tr>
+<th>規定</th>
+<th>制度</th>
+<th>添付先</th>
+<th>事後提出<br>(修正/更正)</th>
+<th>やむを得ない<br>事情救済</th>
+<th>類型</th>
+</tr>
+<tr><td colspan="6" style="background:#edf2f7; font-weight:700;">法人税法</td></tr>
+<tr>
+<td>法23条7項</td><td>受取配当益金不算入</td>
+<td>確定/修正/更正</td><td class="rescue">可</td><td>なし</td><td><span class="tag-rescue">事後可</span></td>
+</tr>
+<tr>
+<td>法23条の2第5・6項</td><td>外国子会社配当益金不算入</td>
+<td>確定/修正/更正</td><td class="rescue">可</td><td class="rescue">あり（保存）</td><td><span class="tag-rescue">事後可+救済</span></td>
+</tr>
+<tr>
+<td>法37条9・10項</td><td>寄附金（特定公益増進法人等）</td>
+<td>確定/修正/更正</td><td class="rescue">可</td><td class="rescue">あり（保存）</td><td><span class="tag-rescue">事後可+救済</span></td>
+</tr>
+<tr>
+<td>法57条10項</td><td>欠損金繰越し（一般）</td>
+<td>連続確定申告＋帳簿保存</td><td>N/A</td><td>N/A</td><td><span class="tag-mixed">別構造</span></td>
+</tr>
+<tr>
+<td>法57条12・13項</td><td>欠損金繰越し（更生等100%）</td>
+<td>確定/修正/更正</td><td class="rescue">可</td><td class="rescue">あり（添付）</td><td><span class="tag-rescue">事後可+救済</span></td>
+</tr>
+<tr>
+<td>法59条6・7項</td><td>債務免除等の欠損金損金算入</td>
+<td>確定/修正/更正</td><td class="rescue">可</td><td class="rescue">あり（省令書類添付）</td><td><span class="tag-rescue">事後可+救済</span></td>
+</tr>
+<tr>
+<td>法68条3項</td><td>所得税額の控除</td>
+<td>確定/修正/更正</td><td class="rescue">可</td><td>なし</td><td><span class="tag-rescue">事後可</span></td>
+</tr>
+<tr>
+<td>法69条25〜28項</td><td>外国税額控除</td>
+<td>確定/修正/更正（添付）<br>＋保存</td><td class="rescue">可（添付）</td><td class="rescue">あり（保存のみ）</td><td><span class="tag-mixed">添付=事後可 / 保存=救済</span></td>
+</tr>
+<tr>
+<td>法69条の2第3項</td><td>分配時調整外国税相当額控除</td>
+<td>確定/修正/更正</td><td class="rescue">可</td><td>なし</td><td><span class="tag-rescue">事後可</span></td>
+</tr>
+<tr><td colspan="6" style="background:#edf2f7; font-weight:700;">所得税法</td></tr>
+<tr>
+<td>所法57条の2第3項</td><td>特定支出控除</td>
+<td>確定/修正/更正</td><td class="rescue">可</td><td>なし</td><td><span class="tag-rescue">事後可</span></td>
+</tr>
+<tr>
+<td>所法95条10・11項</td><td>外国税額控除</td>
+<td>確定/修正/更正</td><td class="rescue">可</td><td class="partial">「特別の事情」（金額限度緩和のみ）</td><td><span class="tag-rescue">事後可</span></td>
+</tr>
+<tr><td colspan="6" style="background:#edf2f7; font-weight:700;">租税特別措置法（当初申告要件あり）</td></tr>
+<tr>
+<td>措法各種特別償却</td><td>特別償却（機械、建物等）</td>
+<td>確定申告書のみ</td><td class="strict">不可</td><td>なし</td><td><span class="tag-strict">当初申告限定</span></td>
+</tr>
+<tr>
+<td>措法各種税額控除</td><td>政策的税額控除</td>
+<td>確定申告書のみ</td><td class="strict">不可</td><td>なし</td><td><span class="tag-strict">当初申告限定</span></td>
+</tr>
+<tr>
+<td>措法12条の2等</td><td>被災代替資産等の特別償却</td>
+<td>確定申告書</td><td class="strict">不可</td><td class="rescue">あり</td><td><span class="tag-mixed">当初限定+救済</span></td>
+</tr>
+<tr><td colspan="6" style="background:#edf2f7; font-weight:700;">CFC税制（現行法）</td></tr>
+<tr>
+<td>措法40条の4第3・4項<br>措法66条の6第3・4項</td><td>経済活動基準の判定</td>
+<td>添付要件ではなく<strong>推定方式</strong></td><td>N/A</td><td>N/A</td><td><span class="tag-mixed">推定（立証責任転換）</span></td>
+</tr>
+</table>
+</div>
+
+<div class="card" style="margin-top:32px; border-top:4px solid var(--primary);">
+<h3 style="border:none; padding:0; margin:0 0 12px;">調査のまとめ</h3>
+<ol>
+<li><strong>「添付なし→適用不可」の厳格規定</strong>: 措置法の当初申告要件（特別償却・税額控除等のインセンティブ措置）が最も厳格。確定申告書にのみ添付可能で、更正の請求による事後提出は認められない。</li>
+<li><strong>「保存していれば後日でも可」の救済規定</strong>: 法人税法69条28項、23条の2第6項、37条10項等は、「保存」部分について「やむを得ない事情」があれば救済する。ただし「添付」自体の欠缺は救済しない。</li>
+<li><strong>更正の請求による事後救済</strong>: 平成23年改正により、二重課税排除型の規定（法68条、法69条、法23条等）は「修正申告書又は更正請求書」にも添付可能となり、事後的な適用が可能になった。ただし、これは「添付」を修正・更正段階で行うことを許容したのであり、「添付なし」の状態を治癒したわけではない。</li>
+<li><strong>CFC税制との交錯問題</strong>: CFC合算課税時の外国税額控除は、判例上、添付要件の厳格適用が維持されている。課税庁側が合算課税を行っても、納税者が添付していなければ救済されないという厳しい帰結となっている。</li>
+</ol>
+</div>
+
+</div>
+</body>
+</html>
