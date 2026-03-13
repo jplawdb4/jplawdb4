@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>株式会社ミトヨ 製造工程詳細リサーチ</title>
+<style>
+  :root {
+    --primary: #1a365d;
+    --secondary: #2b6cb0;
+    --accent: #ed8936;
+    --bg: #f7fafc;
+    --card: #ffffff;
+    --text: #2d3748;
+    --border: #e2e8f0;
+    --success: #38a169;
+    --info: #3182ce;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+  header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 40px 0; margin-bottom: 30px; }
+  header .container { text-align: center; }
+  header h1 { font-size: 1.8em; margin-bottom: 10px; }
+  header .subtitle { font-size: 1.1em; opacity: 0.9; }
+  header .date { font-size: 0.9em; opacity: 0.7; margin-top: 8px; }
+
+  .toc { background: var(--card); border-radius: 8px; padding: 25px 30px; margin-bottom: 30px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  .toc h2 { font-size: 1.2em; color: var(--primary); margin-bottom: 15px; border-bottom: 2px solid var(--accent); padding-bottom: 8px; }
+  .toc ol { padding-left: 20px; }
+  .toc li { margin-bottom: 5px; }
+  .toc a { color: var(--secondary); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+
+  section { background: var(--card); border-radius: 8px; padding: 30px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  h2 { font-size: 1.5em; color: var(--primary); border-left: 4px solid var(--accent); padding-left: 15px; margin-bottom: 20px; }
+  h3 { font-size: 1.2em; color: var(--secondary); margin: 20px 0 12px; }
+  h4 { font-size: 1.05em; color: var(--primary); margin: 15px 0 8px; }
+  p { margin-bottom: 12px; }
+  ul, ol { margin: 10px 0 15px 25px; }
+  li { margin-bottom: 6px; }
+
+  table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 0.92em; }
+  th { background: var(--primary); color: white; padding: 10px 12px; text-align: left; font-weight: 600; }
+  td { padding: 9px 12px; border-bottom: 1px solid var(--border); }
+  tr:nth-child(even) { background: #f8fafc; }
+  tr:hover { background: #edf2f7; }
+
+  .highlight { background: #fffbeb; border-left: 4px solid var(--accent); padding: 15px 20px; margin: 15px 0; border-radius: 0 6px 6px 0; }
+  .info-box { background: #ebf8ff; border-left: 4px solid var(--info); padding: 15px 20px; margin: 15px 0; border-radius: 0 6px 6px 0; }
+  .process-flow { background: #f0fff4; border: 1px solid #c6f6d5; border-radius: 8px; padding: 20px; margin: 15px 0; }
+  .process-step { display: flex; align-items: flex-start; margin-bottom: 12px; }
+  .step-num { background: var(--secondary); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.85em; flex-shrink: 0; margin-right: 12px; margin-top: 2px; }
+  .step-content { flex: 1; }
+  .step-arrow { text-align: center; color: var(--secondary); font-size: 1.2em; margin: 5px 0; padding-left: 42px; }
+
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.8em; font-weight: 600; margin-right: 5px; }
+  .badge-rubber { background: #fed7d7; color: #c53030; }
+  .badge-resin { background: #c6f6d5; color: #276749; }
+  .badge-metal { background: #bee3f8; color: #2b6cb0; }
+  .badge-cert { background: #e9d8fd; color: #6b46c1; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  .source-list { font-size: 0.85em; color: #718096; }
+  .source-list a { color: var(--secondary); }
+
+  @media print {
+    body { font-size: 10pt; }
+    section { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+    header { background: var(--primary) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <h1>株式会社ミトヨ（Mitoyo Co., Ltd.）製造工程詳細リサーチ</h1>
+    <div class="subtitle">自動車用ゴム・樹脂・金属部品の原材料調達から製造・品質管理・販売までの全体像</div>
+    <div class="date">調査日: 2026年3月13日</div>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- 目次 -->
+<div class="toc">
+  <h2>目次</h2>
+  <ol>
+    <li><a href="#overview">会社概要・グループ構造</a></li>
+    <li><a href="#facilities">製造拠点・設備一覧</a></li>
+    <li><a href="#products">製品カテゴリと製造方法</a></li>
+    <li><a href="#materials">原材料調達（ゴム・樹脂・金属）</a></li>
+    <li><a href="#rubber-process">ゴム部品製造工程（詳細フロー）</a></li>
+    <li><a href="#resin-process">樹脂部品製造工程</a></li>
+    <li><a href="#hose-process">ホース・配管製造工程</a></li>
+    <li><a href="#secondary">二次加工・組立工程</a></li>
+    <li><a href="#quality">品質管理体制</a></li>
+    <li><a href="#sales">販売チャネル・顧客構造</a></li>
+    <li><a href="#overseas">海外製造拠点の技術</a></li>
+    <li><a href="#sources">出典・参考情報</a></li>
+  </ol>
+</div>
+
+<!-- 1. 会社概要 -->
+<section id="overview">
+  <h2>1. 会社概要・グループ構造</h2>
+
+  <table>
+    <tr><th style="width:30%">項目</th><th>内容</th></tr>
+    <tr><td>商号</td><td>株式会社ミトヨ（Mitoyo Co., Ltd.）</td></tr>
+    <tr><td>設立</td><td>1948年12月（三洋ゴムとして創業 → 1987年に株式会社ミトヨに社名変更）</td></tr>
+    <tr><td>本社</td><td>〒104-0033 東京都中央区新川1-28-25 東京ダイヤビルディング3号館6F</td></tr>
+    <tr><td>代表者</td><td>代表取締役社長 竹島哲朗</td></tr>
+    <tr><td>資本金</td><td>1億円（連結ベース4億2,500万円）</td></tr>
+    <tr><td>売上高</td><td>連結 118億3,700万円 / 単体 97億7,500万円（2025年3月期）</td></tr>
+    <tr><td>従業員数</td><td>連結 620名 / 単体 283名（2025年3月時点）</td></tr>
+    <tr><td>事業内容</td><td>自動車用ゴム・樹脂・金属製品の製造販売、産業資材の販売</td></tr>
+    <tr><td>親会社グループ</td><td><strong>栗山ホールディングス（Kuriyama Holdings Corporation）</strong>のグループ会社</td></tr>
+    <tr><td>会員組織</td><td>日本自動車部品工業会、東部ゴム商業会、東京経営者協会</td></tr>
+  </table>
+
+  <h3>栗山グループにおける位置づけ</h3>
+  <p>ミトヨは栗山ホールディングス傘下のグループ会社として、自動車用ゴム・樹脂製品の開発・製造・販売を担当。栗山グループはゴム・プラスチック製品を軸に、北米・欧州・南米・アジア・オセアニアでグローバル展開するホース・工業用品メーカーグループである。</p>
+
+  <div class="info-box">
+    <strong>ミトヨの特徴：</strong>「メーカー機能」と「商社機能」の両方を持つハイブリッド企業。自社工場でのゴム・樹脂成形と、横浜ゴム等のプレミアムゴムメーカーの販売代理店機能を兼備。
+  </div>
+
+  <h3>グループ関連会社（ミトヨ系）</h3>
+  <table>
+    <tr><th>会社名</th><th>所在地</th><th>事業内容</th></tr>
+    <tr><td>Mitoyo Plastics (Thailand) Co., Ltd.</td><td>タイ・チャチューンサオ県</td><td>樹脂射出成形品の製造</td></tr>
+    <tr><td>Mitoyo Rubber (Thailand) Co., Ltd.</td><td>タイ・チョンブリ県</td><td>ゴム部品の製造（金属・布接着複合品）</td></tr>
+    <tr><td>Shanghai Mitoyo Co., Ltd.</td><td>中国・上海</td><td>自動車部品等の販売</td></tr>
+    <tr><td>Unika Rubber Products Sdn. Bhd.</td><td>マレーシア・ジョホールバル</td><td>ゴムシール・ガスケット等の製造</td></tr>
+  </table>
+</section>
+
+<!-- 2. 製造拠点 -->
+<section id="facilities">
+  <h2>2. 製造拠点・設備一覧</h2>
+
+  <h3>国内3工場 + 技術センター</h3>
+
+  <h4>鞍掛事業所（群馬県邑楽郡邑楽町）— ゴム成形・技術開発の中核</h4>
+  <table>
+    <tr><th>部門</th><th>設備名</th><th>台数</th></tr>
+    <tr><td rowspan="5">ゴム部門</td><td>加圧ニーダー（pressurized kneader）</td><td>2台</td></tr>
+    <tr><td>ミキシングロール（mixing roll）</td><td>2台</td></tr>
+    <tr><td>ゴム裁断機</td><td>1台</td></tr>
+    <tr><td>計量システム</td><td>1式</td></tr>
+    <tr><td>200tゴム射出成形機</td><td>3台</td></tr>
+    <tr><td rowspan="5">樹脂部門</td><td>熱板溶着機</td><td>20台</td></tr>
+    <tr><td>気密検査機</td><td>9台</td></tr>
+    <tr><td>組立機</td><td>10台</td></tr>
+    <tr><td>プレス機</td><td>1台</td></tr>
+    <tr><td>スリッター・内径加工・切断設備</td><td>各種</td></tr>
+  </table>
+  <p><span class="badge badge-cert">ISO 9001</span><span class="badge badge-cert">ISO 14001</span>（2004-2018年取得）</p>
+  <p><strong>特記：</strong>ゴム材料のR&D・品質評価を行う技術センターを併設。ゴム配合開発から成形・品質評価までの一貫体制。</p>
+
+  <h4>熊谷事業所（埼玉県熊谷市）— ホース・配管専門</h4>
+  <table>
+    <tr><th>設備名</th><th>台数</th></tr>
+    <tr><td>端末加工・成形機</td><td>2台</td></tr>
+    <tr><td>高周波ロウ付け装置</td><td>1台</td></tr>
+    <tr><td>ロボットベンダー</td><td>2台</td></tr>
+    <tr><td>ヘリウムリーク検出機</td><td>1台</td></tr>
+    <tr><td>パイプカッター、NC ベンダー、溶接設備、検査機器</td><td>複数</td></tr>
+  </table>
+  <p><span class="badge badge-cert">ISO 9001</span>（2003年取得）</p>
+  <p><strong>特記：</strong>高圧・低圧ホース・パイプの製造。自社設備設計能力を持ち、多品種の車両プラットフォームに対応。</p>
+
+  <h4>九州事業所（福岡県田川市）— 樹脂成形・ホース組立</h4>
+  <table>
+    <tr><th>部門</th><th>設備名</th><th>台数</th></tr>
+    <tr><td rowspan="3">樹脂部門</td><td>230t 射出成形機</td><td>1台</td></tr>
+    <tr><td>75t 竪型射出成形機</td><td>1台</td></tr>
+    <tr><td>溶着・乾燥・検査設備</td><td>各種</td></tr>
+    <tr><td rowspan="2">ホース・パイプ部門</td><td>ロボットベンダー</td><td>5台</td></tr>
+    <tr><td>ヘリウムリーク検出機</td><td>2台</td></tr>
+  </table>
+  <p><span class="badge badge-cert">ISO 9001</span>（樹脂: 2007年 / ホース・パイプ: 2018年取得）</p>
+</section>
+
+<!-- 3. 製品カテゴリ -->
+<section id="products">
+  <h2>3. 製品カテゴリと製造方法</h2>
+
+  <h3>A. 乗用車向け</h3>
+  <table>
+    <tr><th>製品</th><th>材料</th><th>製造方法</th><th>生産拠点</th></tr>
+    <tr>
+      <td><strong>燃料ホース</strong></td>
+      <td><span class="badge badge-rubber">ゴム</span>補強糸・ワイヤー</td>
+      <td>押出成形 → スパイラル編込み（補強糸/ワイヤー巻き）→ 加硫</td>
+      <td>鞍掛・協力工場</td>
+    </tr>
+    <tr>
+      <td><strong>フューエルリッド</strong>（燃料口カバー）</td>
+      <td><span class="badge badge-resin">樹脂</span></td>
+      <td>射出成形 → 塗装・組立</td>
+      <td>九州</td>
+    </tr>
+    <tr>
+      <td><strong>シート部品</strong></td>
+      <td><span class="badge badge-resin">樹脂</span><span class="badge badge-rubber">ゴム</span><span class="badge badge-metal">金属</span></td>
+      <td>樹脂成形品 + ゴムダンパー（ゴム-金属接着）+ シートノブ成形</td>
+      <td>鞍掛・九州</td>
+    </tr>
+    <tr>
+      <td><strong>吸気系部品</strong>（エアクリーナー、エアダクト、サウンドクリエーター）</td>
+      <td><span class="badge badge-resin">樹脂</span><span class="badge badge-rubber">ゴム</span></td>
+      <td>射出成形 → 組立</td>
+      <td>熊谷・九州</td>
+    </tr>
+    <tr>
+      <td><strong>キャニスター部品</strong>（燃料蒸発ガス制御装置）</td>
+      <td><span class="badge badge-resin">樹脂</span></td>
+      <td>射出成形</td>
+      <td>九州</td>
+    </tr>
+    <tr>
+      <td><strong>エアコンホース・パイプ</strong>（高圧/低圧）</td>
+      <td><span class="badge badge-rubber">ゴム</span><span class="badge badge-metal">金属パイプ</span></td>
+      <td>ホース組立 + パイプ曲げ加工 + 端末加工（自社設備設計）</td>
+      <td>熊谷・九州</td>
+    </tr>
+  </table>
+
+  <h3>B. 電気自動車（EV）向け</h3>
+  <table>
+    <tr><th>製品</th><th>材料</th><th>製造方法</th><th>生産拠点</th></tr>
+    <tr>
+      <td><strong>リザーブタンク</strong>（冷却水オーバーフロー容器）</td>
+      <td><span class="badge badge-resin">樹脂</span></td>
+      <td>熱板溶着 → カラー圧入 → リーク試験 → ラベル貼り</td>
+      <td>鞍掛・九州</td>
+    </tr>
+    <tr>
+      <td><strong>インパネ部品</strong>（インストルメントパネル）</td>
+      <td><span class="badge badge-resin">樹脂</span>スポンジ・ウレタン</td>
+      <td>樹脂成形 → シボ加工 → めっき → 塗装 → スポンジ/ウレタン貼付</td>
+      <td>鞍掛・九州</td>
+    </tr>
+    <tr>
+      <td><strong>エアコンホース・パイプ</strong></td>
+      <td><span class="badge badge-rubber">ゴム</span><span class="badge badge-metal">金属</span></td>
+      <td>乗用車と同仕様</td>
+      <td>熊谷・九州</td>
+    </tr>
+  </table>
+
+  <h3>C. トラック向け</h3>
+  <table>
+    <tr><th>製品</th><th>材料</th><th>製造方法</th><th>生産拠点</th></tr>
+    <tr>
+      <td><strong>尿素水タンク</strong>（SCR用NOx浄化）</td>
+      <td><span class="badge badge-resin">樹脂</span></td>
+      <td>組立 → リーク試験</td>
+      <td>鞍掛第2</td>
+    </tr>
+    <tr>
+      <td><strong>マッドフラップ</strong>（泥よけ）</td>
+      <td><span class="badge badge-rubber">ゴム</span><span class="badge badge-resin">樹脂</span></td>
+      <td>2色成形（ロゴ・文字の色分け）</td>
+      <td>鞍掛</td>
+    </tr>
+    <tr>
+      <td><strong>シート部品</strong>（ベローズカバー）</td>
+      <td><span class="badge badge-rubber">ゴム</span></td>
+      <td>ゴム成形（蛇腹構造）</td>
+      <td>鞍掛</td>
+    </tr>
+    <tr>
+      <td><strong>燃料ホース（高圧補強型）</strong></td>
+      <td><span class="badge badge-rubber">ゴム</span>補強材</td>
+      <td>押出 → 補強層巻き → 加硫</td>
+      <td>鞍掛</td>
+    </tr>
+  </table>
+
+  <h3>D. 建設機械向け</h3>
+  <table>
+    <tr><th>製品</th><th>材料</th><th>製造方法</th></tr>
+    <tr>
+      <td><strong>油圧ホース</strong>（各種圧力・径）</td>
+      <td><span class="badge badge-rubber">ゴム</span>補強材</td>
+      <td>押出 → ブレード/スパイラル補強 → 加硫</td>
+    </tr>
+    <tr>
+      <td><strong>インタークーラー用シリコーンホース</strong></td>
+      <td><span class="badge badge-rubber">シリコーンゴム</span></td>
+      <td>海外提携先でのシリコーン成形（耐熱仕様）</td>
+    </tr>
+  </table>
+
+  <h3>E. キャビンフィルター</h3>
+  <p>車室内空気の濾過フィルター。濾材（不織布等）の組込み・フレーム成形・組立を実施。OEM各社仕様に対応。</p>
+</section>
+
+<!-- 4. 原材料調達 -->
+<section id="materials">
+  <h2>4. 原材料調達（ゴム・樹脂・金属）</h2>
+
+  <h3>4-1. ゴム原材料</h3>
+  <p>自動車用ゴム部品に使用される主要ゴム種と、その用途・特性は以下の通り。ミトヨは鞍掛事業所の技術センターでゴム配合開発を行い、タイ拠点（Mitoyo Rubber Thailand）では自社開発のゴム配合処方を使用している。</p>
+
+  <table>
+    <tr><th>ゴム種</th><th>正式名称</th><th>主な特性</th><th>自動車部品での用途</th><th>主要サプライヤー（業界一般）</th></tr>
+    <tr>
+      <td><strong>NBR</strong></td>
+      <td>アクリロニトリル・ブタジエンゴム（ニトリルゴム）</td>
+      <td>耐油性に優れる。耐摩耗性良好</td>
+      <td>燃料ホース、オイルシール、ガスケット、トランスミッション部品</td>
+      <td>日本ゼオン、JSR、LANXESS</td>
+    </tr>
+    <tr>
+      <td><strong>EPDM</strong></td>
+      <td>エチレン・プロピレン・ジエンゴム</td>
+      <td>耐熱性・耐オゾン性・耐候性に優れる。石油系に弱い</td>
+      <td>ラジエーターホース、ブレーキホース、ウィンドウシール、各種ガスケット</td>
+      <td>三井化学（MITSUI EPT）、住友化学、JSR、UBE</td>
+    </tr>
+    <tr>
+      <td><strong>CR</strong></td>
+      <td>クロロプレンゴム</td>
+      <td>耐油・耐熱・耐候性のバランス良好</td>
+      <td>Vベルト、タイミングベルト、ブーツ、ホース</td>
+      <td>昭和電工、デンカ（電気化学工業）</td>
+    </tr>
+    <tr>
+      <td><strong>FKM</strong></td>
+      <td>フッ素ゴム（フロロエラストマー）</td>
+      <td>最高レベルの耐熱性・耐油性・耐薬品性。高価</td>
+      <td>クランクシャフトシール、カムシャフトシール、バルブステムシール、燃料系シール</td>
+      <td>ダイキン工業、3M/Dyneon、Chemours（Viton）</td>
+    </tr>
+    <tr>
+      <td><strong>シリコーン (VMQ)</strong></td>
+      <td>シリコーンゴム</td>
+      <td>広温度範囲(-60～+200℃)、耐熱性、人体安全</td>
+      <td>インタークーラーホース、ターボチャージャー接続、高温部シール</td>
+      <td>信越化学工業、東レ・ダウコーニング、旭化成</td>
+    </tr>
+    <tr>
+      <td><strong>HNBR</strong></td>
+      <td>水素化ニトリルゴム</td>
+      <td>NBRの耐熱性を改良。耐油性維持</td>
+      <td>燃料ホース、パワステホース、トランスミッションシール</td>
+      <td>日本ゼオン、LANXESS</td>
+    </tr>
+    <tr>
+      <td><strong>ACM</strong></td>
+      <td>アクリルゴム</td>
+      <td>耐熱性・耐油性（特にATF耐性）</td>
+      <td>ATオイルクーラーホース、トランスミッションシール、オイルポンプシール</td>
+      <td>日本ゼオン、東ソー</td>
+    </tr>
+    <tr>
+      <td><strong>ECO</strong></td>
+      <td>エピクロルヒドリンゴム</td>
+      <td>耐燃料性・耐オゾン性</td>
+      <td>燃料系部品、排出ガス制御チューブ、ダイヤフラム</td>
+      <td>ダイソー、日本ゼオン</td>
+    </tr>
+  </table>
+
+  <h4>ゴム配合剤（Compounding Additives）</h4>
+  <table>
+    <tr><th>配合剤種類</th><th>具体例</th><th>機能</th></tr>
+    <tr><td>加硫剤</td><td>硫黄、有機硫黄化合物、有機過酸化物、金属酸化物</td><td>架橋反応による弾性付与</td></tr>
+    <tr><td>加硫促進剤</td><td>チウラム系、チアゾール系、スルフェンアミド系</td><td>加硫速度の制御</td></tr>
+    <tr><td>充填剤（補強）</td><td>カーボンブラック、シリカ</td><td>強度・耐摩耗性の向上</td></tr>
+    <tr><td>充填剤（増量）</td><td>炭酸カルシウム、クレー、タルク</td><td>コスト低減・加工性改善</td></tr>
+    <tr><td>軟化剤</td><td>プロセスオイル、フタル酸エステル</td><td>加工性向上・柔軟性付与</td></tr>
+    <tr><td>老化防止剤</td><td>芳香族アミン類、フェノール類</td><td>酸化劣化・オゾン劣化防止</td></tr>
+    <tr><td>スコーチ防止剤</td><td>N-シクロヘキシルチオフタルイミド（CTP）</td><td>早期加硫の防止</td></tr>
+  </table>
+
+  <h3>4-2. 樹脂原材料</h3>
+  <p>ミトヨが扱う樹脂成形品（リザーブタンク、エアクリーナー、フューエルリッド、キャニスター部品、インパネ部品等）に使用される主な樹脂材料：</p>
+  <table>
+    <tr><th>樹脂種</th><th>主な用途</th><th>主要サプライヤー</th></tr>
+    <tr><td>PP（ポリプロピレン）</td><td>リザーブタンク、エアクリーナーケース、内装部品</td><td>日本ポリプロ、プライムポリマー</td></tr>
+    <tr><td>PA（ナイロン）</td><td>ホース継手、コネクター、高温部品</td><td>宇部興産、東レ、旭化成</td></tr>
+    <tr><td>ABS</td><td>インパネ部品、内装トリム</td><td>テクノUMG、東レ</td></tr>
+    <tr><td>POM（ポリアセタール）</td><td>ノブ、ギア、精密機構部品</td><td>ポリプラスチックス、旭化成</td></tr>
+    <tr><td>PBT</td><td>コネクター、電装部品</td><td>東レ、三菱エンジニアリングプラスチックス</td></tr>
+  </table>
+
+  <h3>4-3. 金属材料</h3>
+  <p>インサート成形用金属部品、パイプ・配管材料として：</p>
+  <ul>
+    <li><strong>アルミパイプ</strong>：エアコン配管（曲げ加工・端末加工）</li>
+    <li><strong>鋼管</strong>：油圧配管、燃料配管</li>
+    <li><strong>真鍮・銅合金</strong>：ロウ付け継手、端末金具</li>
+    <li><strong>鉄系インサート部品</strong>：ゴム-金属接着用ボンディング部品（ダンパー、マウント等）</li>
+  </ul>
+</section>
+
+<!-- 5. ゴム製造工程 -->
+<section id="rubber-process">
+  <h2>5. ゴム部品製造工程（詳細フロー）</h2>
+
+  <p>ミトヨ鞍掛事業所のゴム部門は、加圧ニーダー・ミキシングロール・200tゴム射出成形機を備え、配合から成形までの一貫製造体制を持つ。以下は自動車用ゴム部品の標準的な製造工程フローである。</p>
+
+  <div class="process-flow">
+    <div class="process-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <strong>配合設計（Formulation Design）</strong><br>
+        技術センターにて、要求特性（耐油性、耐熱性、硬度、引張強度等）に基づき、ベースポリマーの選定と配合剤の比率を決定。試作・物性試験を経て量産配合を確定。ミトヨタイ拠点では「自社開発ゴム配合処方」を使用。
+      </div>
+    </div>
+    <div class="step-arrow">&#x25BC;</div>
+
+    <div class="process-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <strong>原材料計量（Batch Weighing）</strong><br>
+        配合指示書に従い、ベースゴム（NBR, EPDM, CR等）、カーボンブラック、軟化剤、加硫剤、促進剤、老化防止剤等を正確に計量。計量システムで管理。
+      </div>
+    </div>
+    <div class="step-arrow">&#x25BC;</div>
+
+    <div class="process-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <strong>混練・精練（Mixing / Kneading）</strong><br>
+        <strong>粗練り：</strong>加圧ニーダー（バンバリーミキサー相当、2台保有）で原材料と配合剤を粗混練。高温・高圧下でポリマーに充填剤・軟化剤を分散。<br>
+        <strong>仕上練り：</strong>ミキシングロール（2台保有）で仕上げ混練。加硫剤・促進剤を添加し、均一に分散。シート状（リボン状）に圧延して次工程用に成形。品質サンプリング実施。
+      </div>
+    </div>
+    <div class="step-arrow">&#x25BC;</div>
+
+    <div class="process-step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <strong>熟成（Maturation）</strong><br>
+        混練したゴムコンパウンド（未加硫ゴム）を温度管理された保管庫で数時間～1日熟成。分子運動の安定化と配合剤の均一分散を促進。
+      </div>
+    </div>
+    <div class="step-arrow">&#x25BC;</div>
+
+    <div class="process-step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <strong>予備成形（Preforming）</strong><br>
+        金型キャビティに適した形状・重量に、ゴムシートを裁断（ゴム裁断機1台保有）または押出予備成形。射出成形の場合はスクリューで可塑化するため省略可。
+      </div>
+    </div>
+    <div class="step-arrow">&#x25BC;</div>
+
+    <div class="process-step">
+      <div class="step-num">6</div>
+      <div class="step-content">
+        <strong>加硫成形（Vulcanization Molding）</strong><br>
+        ミトヨで確認されている成形方法：
+        <ul style="margin-top:8px;">
+          <li><strong>ゴム射出成形（Injection Molding）：</strong>200t射出成形機3台。スクリューでゴムを可塑化・加熱し、加熱金型に高圧注入。温度160-180℃、加硫時間数分～20分。吸気ホース等に使用。自動化・多数個取り対応。</li>
+          <li><strong>圧縮成形（Compression Molding）：</strong>予備成形したゴムを加熱金型に配置し、プレスで圧縮。金型内で加硫。シール類、ガスケットに適用。タイ・マレーシア拠点の真空成形機（200t-300t）で実施。</li>
+          <li><strong>トランスファー成形（Transfer Molding）：</strong>ゴムをポットから金型キャビティに移送。複雑形状・インサート成形に適用。ゴム-金属ボンディング品に使用。</li>
+          <li><strong>押出成形（Extrusion）：</strong>口金（ダイ）を通してゴムを連続押出し。ホース、チューブ、ウェザーストリップ等の長尺品。押出後に加硫炉で連続加硫。</li>
+        </ul>
+      </div>
+    </div>
+    <div class="step-arrow">&#x25BC;</div>
+
+    <div class="process-step">
+      <div class="step-num">7</div>
+      <div class="step-content">
+        <strong>加硫接着（Vulcanization Bonding）— ゴム-金属接着</strong><br>
+        金属インサート部品に接着剤（プライマー + カバーコート）を塗布し、金型内でゴムと金属を同時に加硫接着。ダンパー、マウント、ダイヤフラム等の複合製品に適用。ミトヨタイ拠点は「金属・布との接着によるコンポジット製品」を得意とする。
+      </div>
+    </div>
+    <div class="step-arrow">&#x25BC;</div>
+
+    <div class="process-step">
+      <div class="step-num">8</div>
+      <div class="step-content">
+        <strong>二次加硫（Post-Cure）</strong><br>
+        FKM、シリコーン、EPDM、HNBR等の特殊ゴムは、成形後に加硫タンクで追加熱処理。残留揮発分の除去と物性の最終安定化。タイ拠点に加硫チャンバー保有。
+      </div>
+    </div>
+    <div class="step-arrow">&#x25BC;</div>
+
+    <div class="process-step">
+      <div class="step-num">9</div>
+      <div class="step-content">
+        <strong>仕上げ・バリ取り（Finishing / Deburring）</strong><br>
+        冷凍バリ取り（液体窒素で冷却しバリを脆化除去）、研磨、抜き加工。接着処理、テープ巻き等の後加工。
+      </div>
+    </div>
+    <div class="step-arrow">&#x25BC;</div>
+
+    <div class="process-step">
+      <div class="step-num">10</div>
+      <div class="step-content">
+        <strong>検査・出荷（Inspection & Shipment）</strong><br>
+        寸法検査、外観検査、物性試験（引張、硬度等）。トレーサビリティラベル付与。包装・出荷。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. 樹脂製造工程 -->
+<section id="resin-process">
+  <h2>6. 樹脂部品製造工程</h2>
+
+  <h3>6-1. 射出成形（Injection Molding）</h3>
+  <p>九州事業所に230t射出成形機1台、75t竪型射出成形機1台を保有。タイ拠点（Mitoyo Plastics Thailand）は50t～385t射出成形機20台を保有。</p>
+
+  <div class="process-flow">
+    <div class="process-step">
+      <div class="step-num">1</div>
+      <div class="step-content"><strong>原材料乾燥</strong> — 吸湿性樹脂（PA、PBT等）は成形前に予備乾燥</div>
+    </div>
+    <div class="step-arrow">&#x25BC;</div>
+    <div class="process-step">
+      <div class="step-num">2</div>
+      <div class="step-content"><strong>射出成形</strong> — ペレット状樹脂をスクリューで可塑化、金型に高圧注入。冷却固化。多色成形（マッドフラップの2色成形等）にも対応</div>
+    </div>
+    <div class="step-arrow">&#x25BC;</div>
+    <div class="process-step">
+      <div class="step-num">3</div>
+      <div class="step-content"><strong>インサート成形</strong> — 金属部品を金型内にセットし、樹脂を注入して一体成形（竪型成形機で実施）</div>
+    </div>
+    <div class="step-arrow">&#x25BC;</div>
+    <div class="process-step">
+      <div class="step-num">4</div>
+      <div class="step-content"><strong>後加工</strong> — ゲートカット、バリ取り、シボ加工、めっき、塗装、スポンジ/ウレタン貼付（インパネ部品）</div>
+    </div>
+  </div>
+
+  <h3>6-2. 熱板溶着（Heat Plate Welding）</h3>
+  <p>鞍掛事業所に熱板溶着機20台を保有。リザーブタンク（2分割成形品の溶着接合）が代表製品。</p>
+  <div class="process-flow">
+    <div class="process-step">
+      <div class="step-num">1</div>
+      <div class="step-content"><strong>上下半体の射出成形</strong></div>
+    </div>
+    <div class="step-arrow">&#x25BC;</div>
+    <div class="process-step">
+      <div class="step-num">2</div>
+      <div class="step-content"><strong>熱板溶着</strong> — 加熱された熱板で接合面を溶融し、圧着して溶着接合</div>
+    </div>
+    <div class="step-arrow">&#x25BC;</div>
+    <div class="process-step">
+      <div class="step-num">3</div>
+      <div class="step-content"><strong>カラー圧入</strong> — 金属カラー（ブッシュ）を圧入</div>
+    </div>
+    <div class="step-arrow">&#x25BC;</div>
+    <div class="process-step">
+      <div class="step-num">4</div>
+      <div class="step-content"><strong>リーク試験</strong> — 気密検査機（9台保有）で溶着部の気密性を全数検査</div>
+    </div>
+    <div class="step-arrow">&#x25BC;</div>
+    <div class="process-step">
+      <div class="step-num">5</div>
+      <div class="step-content"><strong>ラベル貼り・出荷検査</strong></div>
+    </div>
+  </div>
+
+  <h3>6-3. タイ拠点の追加加工</h3>
+  <p>Mitoyo Plastics (Thailand)では射出成形に加え、以下の二次加工を実施：</p>
+  <ul>
+    <li>パッド印刷（Pad Printing）</li>
+    <li>ホットスタンプ</li>
+    <li>レーザー加工</li>
+    <li>溶着加工</li>
+  </ul>
+</section>
+
+<!-- 7. ホース・配管 -->
+<section id="hose-process">
+  <h2>7. ホース・配管製造工程</h2>
+  <p>熊谷事業所・九州事業所で、エアコンホース・パイプの一貫製造を実施。</p>
+
+  <h3>7-1. エアコンホース・パイプ組立</h3>
+  <div class="process-flow">
+    <div class="process-step">
+      <div class="step-num">1</div>
+      <div class="step-content"><strong>パイプ切断</strong> — パイプカッターでアルミ/鋼パイプを所定長に切断</div>
+    </div>
+    <div class="step-arrow">&#x25BC;</div>
+    <div class="process-step">
+      <div class="step-num">2</div>
+      <div class="step-content"><strong>パイプ曲げ加工</strong> — ロボットベンダー（熊谷2台、九州5台）およびNCベンダーで3次元曲げ。車種ごとの複雑な配管ルートに対応</div>
+    </div>
+    <div class="step-arrow">&#x25BC;</div>
+    <div class="process-step">
+      <div class="step-num">3</div>
+      <div class="step-content"><strong>端末加工</strong> — 端末加工・成形機でフレア加工、拡管、縮管。継手接続部を成形</div>
+    </div>
+    <div class="step-arrow">&#x25BC;</div>
+    <div class="process-step">
+      <div class="step-num">4</div>
+      <div class="step-content"><strong>高周波ロウ付け</strong> — 高周波ロウ付け装置で金属継手を接合（熊谷）</div>
+    </div>
+    <div class="step-arrow">&#x25BC;</div>
+    <div class="process-step">
+      <div class="step-num">5</div>
+      <div class="step-content"><strong>ホース組立</strong> — ゴムホースとパイプ・継手のアッセンブリー。カシメ接合</div>
+    </div>
+    <div class="step-arrow">&#x25BC;</div>
+    <div class="process-step">
+      <div class="step-num">6</div>
+      <div class="step-content"><strong>ヘリウムリーク検査</strong> — ヘリウムリーク検出機（熊谷1台、九州2台）で冷媒漏れの全数検査。微小リークを高感度検出</div>
+    </div>
+    <div class="step-arrow">&#x25BC;</div>
+    <div class="process-step">
+      <div class="step-num">7</div>
+      <div class="step-content"><strong>最終検査・出荷</strong></div>
+    </div>
+  </div>
+
+  <h3>7-2. 燃料ホース製造</h3>
+  <p>補強なしのチューブから、補強糸やワイヤーをスパイラル状に巻くように編み込んだ高圧用ホースまでを製造。</p>
+  <div class="process-flow">
+    <div class="process-step">
+      <div class="step-num">1</div>
+      <div class="step-content"><strong>内管押出</strong> — 耐燃料性ゴム（NBR、FKM、ECO等）を押出成形してチューブ形成</div>
+    </div>
+    <div class="step-arrow">&#x25BC;</div>
+    <div class="process-step">
+      <div class="step-num">2</div>
+      <div class="step-content"><strong>補強層巻き</strong> — 補強糸またはワイヤーをスパイラル状に編み込み</div>
+    </div>
+    <div class="step-arrow">&#x25BC;</div>
+    <div class="process-step">
+      <div class="step-num">3</div>
+      <div class="step-content"><strong>外管押出</strong> — 耐候性ゴム（CR、EPDM等）で外管を被覆押出</div>
+    </div>
+    <div class="step-arrow">&#x25BC;</div>
+    <div class="process-step">
+      <div class="step-num">4</div>
+      <div class="step-content"><strong>連続加硫</strong> — 加硫炉で連続加硫（蒸気加硫 or 熱風加硫）</div>
+    </div>
+    <div class="step-arrow">&#x25BC;</div>
+    <div class="process-step">
+      <div class="step-num">5</div>
+      <div class="step-content"><strong>切断・端末処理・検査</strong></div>
+    </div>
+  </div>
+</section>
+
+<!-- 8. 二次加工 -->
+<section id="secondary">
+  <h2>8. 二次加工・組立工程</h2>
+
+  <p>ミトヨの各事業所で実施が確認されている二次加工工程：</p>
+
+  <table>
+    <tr><th>工程</th><th>内容</th><th>適用製品</th></tr>
+    <tr><td><strong>熱板溶着</strong></td><td>樹脂成形品の接合（溶着機20台）</td><td>リザーブタンク、尿素水タンク</td></tr>
+    <tr><td><strong>カラー圧入</strong></td><td>金属ブッシュの圧入</td><td>タンク類</td></tr>
+    <tr><td><strong>シボ加工</strong></td><td>樹脂表面にテクスチャ（梨地・レザー調等）を付与</td><td>インパネ部品</td></tr>
+    <tr><td><strong>めっき</strong></td><td>クロムめっき等の装飾・防食処理</td><td>インパネ部品、ノブ</td></tr>
+    <tr><td><strong>塗装</strong></td><td>外観・耐候性のための塗装</td><td>フューエルリッド、インパネ部品</td></tr>
+    <tr><td><strong>スポンジ/ウレタン貼付</strong></td><td>クッション材・遮音材の貼付</td><td>インパネ部品、内装部品</td></tr>
+    <tr><td><strong>高周波ロウ付け</strong></td><td>金属継手の接合</td><td>エアコン配管</td></tr>
+    <tr><td><strong>パイプ曲げ（NCベンダー/ロボット）</strong></td><td>3次元パイプ曲げ加工</td><td>エアコン配管、油圧配管</td></tr>
+    <tr><td><strong>端末加工</strong></td><td>フレア加工、拡管、縮管</td><td>ホース・パイプ端末</td></tr>
+    <tr><td><strong>ホースアッセンブリー</strong></td><td>ゴムホース＋金属パイプのカシメ組立</td><td>エアコンホース、燃料ホース</td></tr>
+    <tr><td><strong>パッド印刷</strong></td><td>ロゴ・品番の印字</td><td>各種樹脂部品（タイ拠点）</td></tr>
+    <tr><td><strong>ホットスタンプ</strong></td><td>箔押し加飾</td><td>外観部品（タイ拠点）</td></tr>
+    <tr><td><strong>レーザー加工</strong></td><td>精密マーキング・切断</td><td>各種部品（タイ拠点）</td></tr>
+    <tr><td><strong>2色成形</strong></td><td>異なる色のゴム/樹脂を一体成形</td><td>マッドフラップ（ロゴ部の色分け）</td></tr>
+  </table>
+</section>
+
+<!-- 9. 品質管理 -->
+<section id="quality">
+  <h2>9. 品質管理体制</h2>
+
+  <h3>9-1. 認証取得状況</h3>
+  <table>
+    <tr><th>拠点</th><th>ISO 9001</th><th>ISO 14001</th><th>IATF 16949</th></tr>
+    <tr><td>鞍掛事業所（群馬）</td><td>取得済（2004年）</td><td>取得済（2004年）</td><td>—</td></tr>
+    <tr><td>熊谷事業所（埼玉）</td><td>取得済（2003年）</td><td>—</td><td>—</td></tr>
+    <tr><td>九州事業所（福岡）</td><td>取得済（樹脂2007年/HP2018年）</td><td>—</td><td>—</td></tr>
+    <tr><td>Mitoyo Plastics Thailand</td><td>取得済（2013年）</td><td>取得済（2014年）</td><td><strong>取得済（2018年）</strong></td></tr>
+    <tr><td>Mitoyo Rubber Thailand</td><td>—</td><td>—</td><td><strong>取得済（2018年）</strong></td></tr>
+    <tr><td>Unika Rubber (Malaysia)</td><td>取得済（2004年）</td><td>取得済（2005年）</td><td>—</td></tr>
+  </table>
+
+  <div class="highlight">
+    <strong>注目点：</strong>IATF 16949（自動車産業品質マネジメントシステム）はタイの2拠点で取得済み。国内工場はISO 9001ベースで運用。IATF 16949は自動車OEM納入に必要な5つのコアツール（APQP, PPAP, FMEA, MSA, SPC）の運用を要求する。
+  </div>
+
+  <h3>9-2. 品質方針</h3>
+  <p>「お客様に満足いただける製品を提供するため、品質の継続的改善を推進する」を品質方針として掲げ、以下を実施：</p>
+  <ul>
+    <li>顧客ニーズに合わせた方針の定期レビュー</li>
+    <li>法令・規制要求事項の完全遵守</li>
+    <li>品質目標の設定と定期見直し</li>
+    <li>全社的な品質意識教育</li>
+  </ul>
+
+  <h3>9-3. 検査方法・試験</h3>
+  <table>
+    <tr><th>検査・試験</th><th>方法</th><th>適用製品</th></tr>
+    <tr><td><strong>気密検査（リーク試験）</strong></td><td>気密検査機9台（鞍掛）、ヘリウムリーク検出機（熊谷1台、九州2台）</td><td>リザーブタンク、エアコン配管、尿素水タンク</td></tr>
+    <tr><td><strong>寸法検査</strong></td><td>三次元測定機、ノギス、マイクロメーター、専用ゲージ</td><td>全成形品</td></tr>
+    <tr><td><strong>引張試験</strong></td><td>引張試験機による引張強度・伸び率測定</td><td>ゴム成形品、加硫接着品</td></tr>
+    <tr><td><strong>硬度測定</strong></td><td>デュロメーター（ショアA硬度）</td><td>ゴム成形品</td></tr>
+    <tr><td><strong>外観検査</strong></td><td>目視検査（成形不良、バリ、異物、表面欠陥）</td><td>全製品</td></tr>
+    <tr><td><strong>接着力試験</strong></td><td>剥離試験（ゴム-金属接着品）</td><td>ダンパー、マウント</td></tr>
+    <tr><td><strong>耐圧試験</strong></td><td>水圧/空圧による破壊・耐久試験</td><td>ホース類</td></tr>
+  </table>
+
+  <h3>9-4. IATF 16949コアツール（タイ拠点で運用）</h3>
+  <table>
+    <tr><th>ツール</th><th>内容</th></tr>
+    <tr><td><strong>APQP</strong>（先行製品品質計画）</td><td>新製品開発の段階的品質計画。設計→試作→量産準備の品質活動</td></tr>
+    <tr><td><strong>PPAP</strong>（生産部品承認プロセス）</td><td>量産開始前にOEMへ提出する品質承認書類一式（寸法記録、材料試験成績書、工程能力データ等）</td></tr>
+    <tr><td><strong>FMEA</strong>（故障モード影響分析）</td><td>設計FMEA（DFMEA）と工程FMEA（PFMEA）で潜在的故障モードを分析・対策</td></tr>
+    <tr><td><strong>SPC</strong>（統計的工程管理）</td><td>管理図（X-bar R管理図等）による工程安定性の監視。重要特性のCp/Cpk管理</td></tr>
+    <tr><td><strong>MSA</strong>（測定システム分析）</td><td>測定器・測定者のばらつき分析（ゲージR&R）。測定データの信頼性確保</td></tr>
+  </table>
+</section>
+
+<!-- 10. 販売チャネル -->
+<section id="sales">
+  <h2>10. 販売チャネル・顧客構造</h2>
+
+  <h3>10-1. 主要顧客（自動車OEM直接取引）</h3>
+  <p>ミトヨは主に東日本の自動車メーカー工場に直接供給するTier 1～Tier 2サプライヤーとして位置づけられる。公式サイトに記載された主要取引先：</p>
+
+  <div class="grid-2">
+    <div>
+      <h4>乗用車メーカー</h4>
+      <ul>
+        <li>スバル（SUBARU）</li>
+        <li>日産自動車（Nissan）</li>
+        <li>本田技研工業（Honda）</li>
+      </ul>
+    </div>
+    <div>
+      <h4>トラック・商用車メーカー</h4>
+      <ul>
+        <li>いすゞ自動車（Isuzu）</li>
+        <li>三菱ふそうトラック・バス（Mitsubishi Fuso）</li>
+        <li>UDトラックス（UD Trucks）</li>
+        <li>日野自動車（Hino）</li>
+      </ul>
+    </div>
+  </div>
+
+  <h4>その他の取引先</h4>
+  <p>産業資材部門では日立製作所、ダイムラー（Daimler）等とも取引。公式サイトには20社以上の取引先が記載されている。</p>
+
+  <h3>10-2. 販売チャネル構造</h3>
+  <table>
+    <tr><th>チャネル</th><th>内容</th></tr>
+    <tr><td><strong>OEM直接供給（Tier 1）</strong></td><td>自動車メーカーの工場に直接部品を供給。リザーブタンク、エアコン配管、燃料ホース、シート部品等。東日本のOEM工場が主要市場。</td></tr>
+    <tr><td><strong>Tier 1メーカーへの供給（Tier 2）</strong></td><td>大手Tier 1サプライヤーへの部品供給（ゴム成形品、インサート部品等のサブ部品）</td></tr>
+    <tr><td><strong>産業資材の商社機能</strong></td><td>横浜ゴム等のプレミアムゴムメーカーの販売代理店。ゴムホース、Vベルト、コンベア、シーリング材等の流通販売。</td></tr>
+    <tr><td><strong>環境設備（新規事業）</strong></td><td>工場の職場環境改善設備（冷房、換気、LED照明、太陽光）の提案・販売・施工</td></tr>
+    <tr><td><strong>海外輸出</strong></td><td>タイ・マレーシア・中国の現地法人を通じた現地OEM・Tier 1への供給。Shanghai Mitoyoは部品販売機能。</td></tr>
+  </table>
+
+  <h3>10-3. 営業拠点</h3>
+  <table>
+    <tr><th>拠点</th><th>所在地</th><th>担当エリア・機能</th></tr>
+    <tr><td>本社</td><td>東京都中央区</td><td>経営管理、営業統括</td></tr>
+    <tr><td>東松山営業所</td><td>埼玉県</td><td>北関東エリア営業</td></tr>
+    <tr><td>小山営業所</td><td>栃木県</td><td>北関東エリア営業</td></tr>
+    <tr><td>横浜営業所</td><td>神奈川県</td><td>南関東エリア営業（日産等）</td></tr>
+  </table>
+
+  <div class="info-box">
+    <strong>ビジネスフロー：</strong>提案 → 設計・開発 → 受注 → 調達 → 製造 → 品質管理 → 納品。メーカーと商社の二刀流で、自社製造品の販売に加え、仕入先（横浜ゴム等）の製品を組み合わせたソリューション提案も実施。
+  </div>
+</section>
+
+<!-- 11. 海外拠点 -->
+<section id="overseas">
+  <h2>11. 海外製造拠点の技術詳細</h2>
+
+  <h3>Mitoyo Plastics (Thailand) Co., Ltd.</h3>
+  <table>
+    <tr><th style="width:25%">項目</th><th>内容</th></tr>
+    <tr><td>所在地</td><td>タイ・チャチューンサオ県バンパコン地区</td></tr>
+    <tr><td>認証</td><td><span class="badge badge-cert">ISO 9001</span><span class="badge badge-cert">ISO 14001</span><span class="badge badge-cert">IATF 16949</span></td></tr>
+    <tr><td>主要設備</td><td>射出成形機20台（50t～385t）</td></tr>
+    <tr><td>二次加工</td><td>パッド印刷、ホットスタンプ、レーザー加工、溶着</td></tr>
+    <tr><td>主要製品</td><td>自動車メカニカル部品（ベースケース、ブロワーユニット、グロメット）、メーター部品（ハウジング、指針、文字盤）、内装トリム（アームレスト、リモートキー）、プリンター部品</td></tr>
+  </table>
+
+  <h3>Mitoyo Rubber (Thailand) Co., Ltd.</h3>
+  <table>
+    <tr><th style="width:25%">項目</th><th>内容</th></tr>
+    <tr><td>所在地</td><td>タイ・チョンブリ県パンソン地区（アマタナコン工業団地）</td></tr>
+    <tr><td>設立</td><td>2010年12月（2012年生産開始）</td></tr>
+    <tr><td>認証</td><td><span class="badge badge-cert">IATF 16949</span></td></tr>
+    <tr><td>主要設備</td><td>真空成形機（200t～250t）、ミキシングロール、加硫チャンバー、試験装置</td></tr>
+    <tr><td>主要製品</td><td>シール部品（Oリング、ガスケット、パッキン）、金属接着ゴム複合品（ダイヤフラム、ダンパー）、ブーツ、チューブ</td></tr>
+    <tr><td>技術特徴</td><td><strong>自社開発ゴム配合処方を使用。</strong>顧客仕様に合わせたカスタム材料開発。金属・布との加硫接着によるコンポジット製品が得意分野。全ゴム材料を内製化。</td></tr>
+  </table>
+
+  <h3>Unika Rubber Products Sdn. Bhd.（マレーシア）</h3>
+  <table>
+    <tr><th style="width:25%">項目</th><th>内容</th></tr>
+    <tr><td>所在地</td><td>マレーシア・ジョホールバル</td></tr>
+    <tr><td>認証</td><td><span class="badge badge-cert">ISO 9001</span><span class="badge badge-cert">ISO 14001</span></td></tr>
+    <tr><td>主要設備</td><td>ニーダー、ミキシングロール（14"～22"）、真空プレス（200t～300t）、加硫チャンバー</td></tr>
+    <tr><td>主要製品</td><td>シール・ガスケット、バルブ部品、プラグ、グロメット、ダンパー、電気部品（プリンターローラー、モーターアイソレーション）</td></tr>
+  </table>
+</section>
+
+<!-- 12. 出典 -->
+<section id="sources">
+  <h2>12. 出典・参考情報</h2>
+  <div class="source-list">
+    <h3>ミトヨ公式サイト</h3>
+    <ul>
+      <li><a href="https://mitoyonet.com" target="_blank">mitoyonet.com</a> — 公式サイト（日本語）</li>
+      <li><a href="https://en.mitoyonet.com" target="_blank">en.mitoyonet.com</a> — 公式サイト（英語）</li>
+      <li><a href="https://en.mitoyonet.com/company" target="_blank">会社概要（英語）</a></li>
+      <li><a href="https://mitoyonet.com/auto-parts" target="_blank">取扱製品（自動車部品）</a></li>
+      <li><a href="https://mitoyonet.com/domestic-base" target="_blank">国内製造拠点</a></li>
+      <li><a href="https://mitoyonet.com/international-base" target="_blank">海外製造拠点</a></li>
+      <li><a href="https://mitoyonet.com/social-report" target="_blank">CSR・品質方針</a></li>
+      <li><a href="https://mitoyonet.com/wp-content/uploads/2022/12/MITOYO_Products-Guide.pdf" target="_blank">MITOYO Products Guide (PDF)</a></li>
+    </ul>
+
+    <h3>栗山グループ</h3>
+    <ul>
+      <li><a href="https://www.kuriyama-holdings.com/en/company/group/" target="_blank">Kuriyama Holdings — Global Network（グループ会社一覧）</a></li>
+      <li><a href="https://www.kuriyama-holdings.com/en/company/organization/" target="_blank">Kuriyama Holdings — About Kuriyama Group</a></li>
+    </ul>
+
+    <h3>海外拠点詳細</h3>
+    <ul>
+      <li><a href="https://bangkokcp.com/corporateinfo/mitoyo-rubber-thailand-co-ltd/" target="_blank">Mitoyo Rubber (Thailand) — Bangkok Consulting Partners</a></li>
+    </ul>
+
+    <h3>採用・企業情報</h3>
+    <ul>
+      <li><a href="https://job.career-tasu.jp/corp/00006331/" target="_blank">キャリタス就活 — 株式会社ミトヨ</a></li>
+      <li><a href="https://www.atengineer.com/pr/mitoyo-net/company" target="_blank">@engineer — 株式会社ミトヨ会社概要</a></li>
+      <li><a href="https://www.mitoyo-net.co.jp/saiyou/" target="_blank">ミトヨ採用情報（旧サイト）</a></li>
+    </ul>
+
+    <h3>業界参考情報</h3>
+    <ul>
+      <li><a href="https://recruit.okayasu-rubber.co.jp/what-how-to-make/" target="_blank">岡安ゴム — ゴム作りの紹介（製造工程フロー）</a></li>
+      <li><a href="https://www.kotanikk.com/archives/2729" target="_blank">コタニ株式会社 — ゴム製品の製造</a></li>
+      <li><a href="https://www.fujigom.co.jp/manufacturing/rubber/395/" target="_blank">富士ゴム化成 — 自動車に使われるゴム部品</a></li>
+      <li><a href="https://www.tokyozairyo.co.jp/products/rubber/list01.html" target="_blank">東京材料 — 自動車部品用ゴム素材一覧</a></li>
+      <li><a href="https://www.zeon.co.jp/en/business/enterprise/rubber/nbr/" target="_blank">日本ゼオン — NBR製品</a></li>
+      <li><a href="https://qualiformrubbermolding.com/company/rubber-manufacturer/rubber-parts-manufacturing-process/" target="_blank">Qualiform — Rubber Parts Manufacturing Process</a></li>
+    </ul>
+  </div>
+</section>
+
+</div><!-- container -->
+
+</body>
+</html>
