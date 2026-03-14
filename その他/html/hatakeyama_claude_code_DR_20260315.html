@@ -194,25 +194,34 @@
   <table>
     <tr><th colspan="2">基本プロフィール</th></tr>
     <tr><td style="width:30%">氏名</td><td>畠山 謙人（はたけやま けんと）</td></tr>
-    <tr><td>資格</td><td>公認会計士・税理士</td></tr>
+    <tr><td>生年・出身</td><td>1987年生、滋賀県出身</td></tr>
+    <tr><td>資格</td><td>公認会計士（2010年試験合格）・税理士（2020年登録）</td></tr>
     <tr><td>学歴</td><td>和歌山大学経済学部卒業</td></tr>
-    <tr><td>職歴</td><td>大手監査法人（国内監査）→ メガベンチャー（連結決算）→ 独立</td></tr>
-    <tr><td>事務所</td><td>畠山謙人税理士事務所（freee予約でオンライン対応確認）</td></tr>
-    <tr><td>所在地</td><td>東京都（BAMBOO INCUBATOR所属）</td></tr>
+    <tr><td>職歴</td><td>鉄鋼メーカー → <strong>有限責任監査法人トーマツ（Deloitte）</strong>（上場・非上場監査）→ <strong>サイバーエージェント</strong>（連結決算、AbemaTV 4営業日決算PJ主導）→ 税理士法人赤坂共同事務所（パートナー）→ 独立</td></tr>
+    <tr><td>事務所</td><td>畠山謙人税理士事務所 / ワールドアトラス合同会社</td></tr>
+    <tr><td>所在地</td><td>京都府京都市上京区（freee税理士検索登録）。フルリモート運営</td></tr>
     <tr><td>専門領域</td><td>スタートアップ税務（Seed〜Series B）、仮想通貨・Web3会計税務</td></tr>
-    <tr><td>著書</td><td>「NFTの会計税務」</td></tr>
+    <tr><td>著書</td><td>「NFTの会計税務」（2022年, Kindle）</td></tr>
+    <tr><td>メディア</td><td>新R25インタビュー（2023年8月）、ポッドキャスト「スタートアップ税務AtoZ」（41回以上配信）</td></tr>
     <tr><td>X</td><td>@kandmybike（フォロワー5,000超）</td></tr>
     <tr><td>note</td><td>note.com/kento_0724（スタートアップ税務）</td></tr>
+    <tr><td>家庭背景</td><td>税理士一家の三代目・長男</td></tr>
   </table>
+
+  <div class="box box-purple">
+    <div class="box-title">キャリアの読み解き</div>
+    <p><strong>トーマツ（Deloitte）+ サイバーエージェント</strong>というキャリアパスは、「非エンジニアの税理士」というセルフイメージとはやや乖離がある。サイバーエージェントでは「AbemaTV 4営業日決算プロジェクト」を主導し月次決算を7営業日→4営業日に短縮した実績があり、<strong>テック企業の業務効率化に関する実践的な経験と感覚</strong>を持っている。「コードは書けないが、システム設計の勘所を理解している」人材像。</p>
+  </div>
 
   <h3>発信の特徴</h3>
   <ul>
     <li><strong>AI活用の実践者</strong>として積極的に発信。AI前提の税理士業務を持論とする</li>
     <li>note記事「税理士の仕事は、もう『AI前提』に変わっている」（2025年3月）で、顧問先からの相談がAIで代替可能であることを自問</li>
     <li>「税理士&会計士の畠山のAI活用方法」でGrok3等のAIツール活用を公開</li>
-    <li>SaaS企業の財務分析、IPO分析など<strong>テック×会計の交差点</strong>をポジショニング</li>
+    <li>SaaS企業の財務分析、IPO分析、会計不正分析（オルツ事件等）など<strong>テック×会計の交差点</strong>をポジショニング</li>
     <li>「freeeで60社の帳簿を見てる税理士が」という文脈でSaaS業界分析を発信</li>
     <li>Xでの集客に成功：顧問先はX DMと紹介経由で獲得</li>
+    <li>BAMBOO INCUBATOR（京都）、BUSO AGORA（町田）等の創業支援機関に専門家登録</li>
   </ul>
 
   <div class="box box-purple">
@@ -316,6 +325,16 @@
     </ul>
   </div>
 
+  <div class="box box-red">
+    <div class="box-title">重要発見：CronCreateの3日自動失効</div>
+    <ul>
+      <li>Claude Code内蔵の<strong>CronCreateで作成したタスクは3日で自動失効する</strong>安全装置がある</li>
+      <li>「毎晩21時に自動実行」を永続的に行うには、<strong>OSレベルのcrontab + <code>claude -p</code>ヘッドレスモード</strong>の併用が必須</li>
+      <li>例：<code>0 21 * * * claude -p "freee自動仕訳を実行" --dangerously-skip-permissions</code></li>
+      <li>この構成は記事では言及されていないが、技術的には標準的な手法</li>
+    </ul>
+  </div>
+
   <div class="box box-orange">
     <div class="box-title">注意点：無人実行の前提条件</div>
     <ul>
@@ -335,6 +354,7 @@
     <tr><td>認証</td><td>OAuth 2.0 + PKCE。トークン自動更新あり</td></tr>
     <tr><td>複数事業所</td><td><code>freee_set_current_company</code>で動的切り替え可能。ただし同時並列処理は不可（逐次切替のみ）</td></tr>
     <tr><td>レート制限</td><td><strong>300リクエスト/分/事業所</strong>。直列処理なら問題なし</td></tr>
+    <tr><td style="color:var(--red);font-weight:600">トークン有効期限</td><td style="color:var(--red)"><strong>リフレッシュトークンは90日有効・1回使い切り</strong>。60社分のトークンを継続管理するには専用の永続化基盤が必要。これは記事で全く言及されていない重大な技術課題</td></tr>
   </table>
 
   <div class="box box-blue">
@@ -586,9 +606,14 @@
     </tr>
   </table>
 
+  <div class="box box-orange">
+    <div class="box-title">批判的視点：60社はClaude Codeなしでも可能では？</div>
+    <p>五島洋税理士事務所は<strong>AI登場以前から1人で170社を担当</strong>している（パート3名あり）。その手法は「訪問しない」「メール・電話中心」「電子申告・クラウド会計の早期導入」という、ビジネスモデル設計による効率化だ。税理士1名あたりの担当件数は業界平均で20-50社であり、60社は上位だが異常値ではない。<strong>60社を1人で運営していること自体は、必ずしもClaude Codeの効果の証明にはならない</strong>。Claude Codeの貢献とビジネスモデル設計（スタートアップ特化・訪問なし・freee統一）の貢献が分離されていない。</p>
+  </div>
+
   <div class="box box-purple">
     <div class="box-title">業界における位置づけ</div>
-    <p>畠山氏は「AI活用税理士」として<strong>日本で最も具体的な実装を公開した事例の一つ</strong>。多くの「AI×税理士」記事が概念的な議論に留まる中、API構成・処理フロー・除外ルールまで公開した点は希少。ただし「全手法公開」と言いつつ<strong>コード自体は非公開</strong>であり、技術的な再現にはClaude Codeの操作スキルが必要。</p>
+    <p>畠山氏は「AI活用税理士」として<strong>日本で最も具体的な実装を公開した事例の一つ</strong>。多くの「AI×税理士」記事が概念的な議論に留まる中、API構成・処理フロー・除外ルールまで公開した点は希少。ただし「全手法公開」と言いつつ<strong>コード自体は非公式</strong>であり、技術的な再現にはClaude Codeの操作スキルが必要。</p>
   </div>
 </div>
 
@@ -803,6 +828,16 @@
   <div class="box box-red">
     <div class="box-title">⑤ 属人化リスクが最大の盲点</div>
     <p>スタッフ0人の裏返しは「この人が倒れたら60社が宙に浮く」リスク。CLAUDE.mdやスクリプトは残っても、それを運用・改修できる人間が不在になる。これは畠山氏自身も認識しているであろう構造的課題。</p>
+  </div>
+
+  <div class="box box-orange">
+    <div class="box-title">⑥ 記事で省略されている技術的課題</div>
+    <ul>
+      <li><strong>freee リフレッシュトークンの90日期限・1回使い切り制約</strong>：60社分のOAuthトークンを永続的に管理する基盤が別途必要</li>
+      <li><strong>CronCreateの3日自動失効</strong>：「毎晩21時」の永続実行にはOS cronとの組み合わせが必須</li>
+      <li><strong>仕訳の正答率・エラー率の非開示</strong>：「70%自動化」は検証不能な数字</li>
+      <li><strong>顧問先の規模・業態の非開示</strong>：スタートアップ60社の平均月間仕訳数が不明。仕訳数が少なければ「60社」のインパクトは大幅に低下</li>
+    </ul>
   </div>
 
   <h3>我々の税法研究への示唆</h3>
