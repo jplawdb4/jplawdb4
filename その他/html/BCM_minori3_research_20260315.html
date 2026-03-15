@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ベーシック・キャピタル・マネジメント（BCM）& みのり3号ファンド 調査報告</title>
+<style>
+  :root {
+    --primary: #1a365d;
+    --secondary: #2b6cb0;
+    --accent: #e53e3e;
+    --bg: #f7fafc;
+    --card: #ffffff;
+    --text: #2d3748;
+    --muted: #718096;
+    --border: #e2e8f0;
+    --highlight: #ebf8ff;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+  h1 { color: var(--primary); font-size: 1.6em; border-bottom: 3px solid var(--secondary); padding-bottom: 10px; margin: 30px 0 20px; }
+  h2 { color: var(--secondary); font-size: 1.3em; margin: 25px 0 12px; padding-left: 12px; border-left: 4px solid var(--secondary); }
+  h3 { color: var(--primary); font-size: 1.1em; margin: 18px 0 8px; }
+  .card { background: var(--card); border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 20px; margin: 15px 0; }
+  .card-highlight { border-left: 4px solid var(--accent); }
+  .card-info { border-left: 4px solid var(--secondary); }
+  .card-success { border-left: 4px solid #38a169; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.92em; }
+  th, td { padding: 8px 12px; border: 1px solid var(--border); text-align: left; }
+  th { background: var(--primary); color: white; font-weight: 600; white-space: nowrap; }
+  td { vertical-align: top; }
+  tr:nth-child(even) { background: #f8f9fa; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; font-weight: 600; margin: 2px; }
+  .tag-fund { background: #ebf8ff; color: #2b6cb0; }
+  .tag-exit { background: #f0fff4; color: #276749; }
+  .tag-invest { background: #fefcbf; color: #744210; }
+  .tag-carveout { background: #fed7e2; color: #97266d; }
+  .summary-box { background: var(--highlight); border: 1px solid #bee3f8; border-radius: 8px; padding: 16px; margin: 15px 0; }
+  .timeline { position: relative; padding-left: 30px; margin: 15px 0; }
+  .timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 3px; background: var(--secondary); }
+  .timeline-item { position: relative; margin-bottom: 15px; }
+  .timeline-item::before { content: ''; position: absolute; left: -26px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: var(--secondary); border: 2px solid white; }
+  .timeline-item.exit::before { background: #38a169; }
+  .timeline-item.invest::before { background: #d69e2e; }
+  .year { font-weight: 700; color: var(--secondary); }
+  .note { font-size: 0.88em; color: var(--muted); margin-top: 5px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+  .key-value { display: flex; margin: 5px 0; }
+  .key-value .key { min-width: 140px; font-weight: 600; color: var(--primary); flex-shrink: 0; }
+  .key-value .value { flex: 1; }
+  .section-nav { background: var(--card); border-radius: 8px; padding: 15px 20px; margin: 20px 0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  .section-nav a { display: inline-block; margin: 3px 8px; color: var(--secondary); text-decoration: none; font-size: 0.9em; }
+  .section-nav a:hover { text-decoration: underline; }
+  .pe-structure { display: flex; align-items: center; justify-content: center; gap: 0; margin: 20px 0; flex-wrap: wrap; }
+  .pe-phase { text-align: center; padding: 12px 20px; color: white; font-weight: 600; font-size: 0.9em; min-width: 120px; }
+  .pe-phase.invest { background: #d69e2e; border-radius: 8px 0 0 8px; }
+  .pe-phase.manage { background: var(--secondary); }
+  .pe-phase.harvest { background: #38a169; border-radius: 0 8px 8px 0; }
+  .pe-phase small { display: block; font-weight: 400; font-size: 0.85em; opacity: 0.9; }
+  .assessment { padding: 12px 16px; border-radius: 6px; margin: 10px 0; }
+  .assessment.normal { background: #f0fff4; border: 1px solid #c6f6d5; }
+  .assessment.long { background: #fefcbf; border: 1px solid #fefcbf; }
+  .header-banner { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 30px; border-radius: 10px; margin-bottom: 25px; }
+  .header-banner h1 { color: white; border-bottom: 2px solid rgba(255,255,255,0.3); }
+  .header-banner .subtitle { font-size: 0.95em; opacity: 0.9; margin-top: 8px; }
+  @media (max-width: 768px) {
+    .grid-2 { grid-template-columns: 1fr; }
+    .pe-phase { min-width: 100px; padding: 10px 12px; font-size: 0.8em; }
+  }
+  @media print {
+    .section-nav { display: none; }
+    .card { box-shadow: none; border: 1px solid #ddd; }
+    body { font-size: 10pt; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header-banner">
+  <h1 style="margin-top:0;">ベーシック・キャピタル・マネジメント（BCM）& みのり3号ファンド 調査報告</h1>
+  <div class="subtitle">調査日: 2026年3月15日 | 対象: BCMの会社概要、みのり3号ファンド、ミトヨへの関与、PEファンド一般論</div>
+</div>
+
+<div class="section-nav">
+  <strong>目次:</strong>
+  <a href="#sec1">1. BCM会社概要</a>
+  <a href="#sec2">2. ファンド一覧</a>
+  <a href="#sec3">3. みのり3号ファンド</a>
+  <a href="#sec4">4. BCMのミトヨへの関与</a>
+  <a href="#sec5">5. PEファンドの一般的構造</a>
+  <a href="#sec6">6. 6年保有の評価</a>
+  <a href="#sec7">7. 投資実績一覧</a>
+</div>
+
+<!-- ========== 1. BCM会社概要 ========== -->
+<h1 id="sec1">1. ベーシック・キャピタル・マネジメント株式会社（BCM）会社概要</h1>
+
+<div class="card card-info">
+  <div class="key-value"><span class="key">会社名</span><span class="value">ベーシック・キャピタル・マネジメント株式会社<br>Basic Capital Management, Limited</span></div>
+  <div class="key-value"><span class="key">設立</span><span class="value">2002年11月1日</span></div>
+  <div class="key-value"><span class="key">代表者</span><span class="value">金田 欧奈（かねだ おうな）代表取締役社長 兼 パートナー</span></div>
+  <div class="key-value"><span class="key">所在地</span><span class="value">東京都中央区京橋2-2-1 京橋エドグラン24F</span></div>
+  <div class="key-value"><span class="key">資本金</span><span class="value">57,255,000円</span></div>
+  <div class="key-value"><span class="key">登録</span><span class="value">投資助言・代理業（関東財務局長（金商）第1044号）</span></div>
+  <div class="key-value"><span class="key">業歴</span><span class="value">20年超（2002年設立〜）</span></div>
+  <div class="key-value"><span class="key">累計投資実績</span><span class="value">50社超（2002年設立以降）</span></div>
+  <div class="key-value"><span class="key">投資対象</span><span class="value">中小・中堅企業（製造業、消費財、サービス業等の中小型案件）</span></div>
+  <div class="key-value"><span class="key">投資類型</span><span class="value">事業承継、カーブアウト、新興企業成長支援</span></div>
+  <div class="key-value"><span class="key">公式サイト</span><span class="value"><a href="https://www.basic-cm.co.jp/" target="_blank">https://www.basic-cm.co.jp/</a></span></div>
+</div>
+
+<h2>代表者 金田欧奈氏の経歴</h2>
+<div class="card">
+  <div class="key-value"><span class="key">学歴</span><span class="value">東京工業大学 工学部 化学工学科 卒業</span></div>
+  <div class="key-value"><span class="key">資格</span><span class="value">米国公認会計士（CPA）、日本証券アナリスト協会検定会員、J.S.A.ソムリエ</span></div>
+  <div class="key-value"><span class="key">活動</span><span class="value">複数の上場企業で社外取締役を歴任</span></div>
+</div>
+
+<h2>BCMの特徴</h2>
+<div class="card">
+  <ul style="padding-left: 20px;">
+    <li><strong>中小型バイアウト特化</strong>: 製造業や消費財の中小型案件に注力するバイアウトファンド</li>
+    <li><strong>事業承継支援</strong>: 創業家の世代交代・脱オーナー経営を支援する案件が多い</li>
+    <li><strong>ハンズオン経営支援</strong>: 経営陣との「二人三脚」で組織構築・業績拡大を推進</li>
+    <li><strong>過去の大型案件実績</strong>: すかいらーく、ドミノピザ・ジャパン、ベルシステム24、マクロミル、ジュピターショップチャンネル等への投資実績</li>
+    <li><strong>公的機関との連携</strong>: 中小企業基盤整備機構（中小機構）やゆうちょ銀行からの出資受入実績</li>
+  </ul>
+</div>
+
+<!-- ========== 2. ファンド一覧 ========== -->
+<h1 id="sec2">2. BCM運用ファンド一覧</h1>
+
+<div class="card">
+<table>
+  <thead>
+    <tr>
+      <th>ファンド名</th>
+      <th>設立/投資助言開始</th>
+      <th>規模（判明分）</th>
+      <th>主なLP</th>
+      <th>主な投資先</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>みのり1号</strong><br>投資事業有限責任組合</td>
+      <td>2006年頃</td>
+      <td>非公開</td>
+      <td>非公開</td>
+      <td>中堅中小企業バイアウト案件</td>
+    </tr>
+    <tr>
+      <td><strong>みのり2号</strong><br>投資事業有限責任組合</td>
+      <td>2013年頃</td>
+      <td>非公開</td>
+      <td>非公開</td>
+      <td>豊創フーズ（2015年〜）、東海ステップ（2015年〜）、恵那金属製作所、ハート（〜2019年EXIT）</td>
+    </tr>
+    <tr style="background:#ebf8ff;">
+      <td><strong>みのり3号</strong><br>投資事業有限責任組合</td>
+      <td>2018〜2019年</td>
+      <td><strong>目標180億円</strong><br>（中小機構60億円出資確認）</td>
+      <td>中小企業基盤整備機構（60億円）<br>その他非公開</td>
+      <td>ミトヨ、ヒノマル、佐藤型鋼製作所、三和デンタル、マークアイ 等</td>
+    </tr>
+    <tr>
+      <td><strong>BCM-V</strong><br>投資事業有限責任組合</td>
+      <td>2020年10月30日</td>
+      <td>ゆうちょ銀行100億円<br>中小機構100億円</td>
+      <td>ゆうちょ銀行（2021年）<br>中小企業基盤整備機構（2020年）</td>
+      <td>シグニHD（2022年〜）、グラス・ワン（旧東京東フィグラ）</td>
+    </tr>
+    <tr>
+      <td><strong>BCM-VI</strong><br>投資事業有限責任組合</td>
+      <td>2024年頃</td>
+      <td>非公開<br>（ゆうちょ銀行出資あり）</td>
+      <td>ゆうちょ銀行（2024年1月）</td>
+      <td>ドーマン（2025年4月〜）、GLOBA（2025年5月〜）、トスカバノック（2025年6月〜）、めいとケア（2024年12月〜）</td>
+    </tr>
+  </tbody>
+</table>
+<p class="note">※ ファンド名は「みのりシリーズ」（1〜3号）と「BCMシリーズ」（V, VI）の二系統が確認される。命名規則の変更時期・理由は非公開。BCM-IVの存在は未確認。</p>
+</div>
+
+<!-- ========== 3. みのり3号 ========== -->
+<h1 id="sec3">3. みのり3号投資事業有限責任組合</h1>
+
+<div class="card card-highlight">
+  <h3>ファンド基本情報</h3>
+  <div class="key-value"><span class="key">正式名称</span><span class="value">みのり3号投資事業有限責任組合</span></div>
+  <div class="key-value"><span class="key">設立時期</span><span class="value">2018年後半〜2019年初頭と推定（2018年11月に初の投資案件あり）</span></div>
+  <div class="key-value"><span class="key">目標規模</span><span class="value"><strong>総額180億円</strong></span></div>
+  <div class="key-value"><span class="key">無限責任組合員(GP)</span><span class="value">ベーシック・キャピタル・マネジメント株式会社</span></div>
+  <div class="key-value"><span class="key">投資対象</span><span class="value">事業承継等の経営課題を抱える国内中堅・中小企業<br>「固有の事業基盤やきらりと光る技術やサービスを有する」企業</span></div>
+  <div class="key-value"><span class="key">中小機構出資</span><span class="value">60億円（2019年4月10日発表）</span></div>
+</div>
+
+<h2>LP（出資者）構成</h2>
+<div class="card">
+  <table>
+    <tr><th>出資者</th><th>出資額</th><th>出資時期</th></tr>
+    <tr><td>中小企業基盤整備機構（中小機構）</td><td>60億円</td><td>2019年4月</td></tr>
+    <tr><td>その他機関投資家等</td><td>約120億円（目標ベース）</td><td>非公開</td></tr>
+  </table>
+  <p class="note">※ 中小機構以外のLPは非公開。目標総額180億円に対し、中小機構が1/3を出資。残り2/3は金融機関・年金基金・事業会社等と推定されるが詳細不明。</p>
+</div>
+
+<h2>みのり3号の投資先企業（判明分）</h2>
+<div class="card">
+<table>
+  <thead>
+    <tr>
+      <th>企業名</th>
+      <th>業種</th>
+      <th>投資時期</th>
+      <th>EXIT</th>
+      <th>保有期間</th>
+      <th>類型</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>マークアイ</strong></td>
+      <td>（詳細不明）</td>
+      <td>2018年11月</td>
+      <td>不明</td>
+      <td>-</td>
+      <td><span class="tag tag-invest">投資</span></td>
+    </tr>
+    <tr style="background:#ebf8ff;">
+      <td><strong>ミトヨ</strong></td>
+      <td>自動車用ゴム・樹脂・金属製品</td>
+      <td>2019年3月</td>
+      <td>2025年4月<br>→クリヤマジャパン（61億円）</td>
+      <td><strong>約6年</strong></td>
+      <td><span class="tag tag-exit">EXIT済</span></td>
+    </tr>
+    <tr>
+      <td><strong>ヒノマル</strong></td>
+      <td>肥料・農薬・農業資材</td>
+      <td>2020年8月</td>
+      <td>2025年10月<br>→西日本鉄道</td>
+      <td><strong>約5年</strong></td>
+      <td><span class="tag tag-exit">EXIT済</span></td>
+    </tr>
+    <tr>
+      <td><strong>三和デンタル</strong></td>
+      <td>歯科技工物製造</td>
+      <td>2021年5月</td>
+      <td>不明</td>
+      <td>-</td>
+      <td><span class="tag tag-invest">保有中?</span></td>
+    </tr>
+    <tr>
+      <td><strong>佐藤型鋼製作所</strong></td>
+      <td>建築用鋼製下地材</td>
+      <td>2021年9月</td>
+      <td>2024年10月<br>→丸一鋼管</td>
+      <td><strong>約3年</strong></td>
+      <td><span class="tag tag-exit">EXIT済</span></td>
+    </tr>
+  </tbody>
+</table>
+<p class="note">※ このほかにも非公開の投資先が存在する可能性がある。上記は公開情報から確認できた案件のみ。</p>
+</div>
+
+<h2>みのり3号の運用期間推定</h2>
+<div class="card card-info">
+  <p>ファンド設立は2018年後半と推定される。PEファンドの一般的な存続期間（10年）を前提とすると:</p>
+  <ul style="padding-left: 20px; margin-top: 8px;">
+    <li><strong>投資期間</strong>: 2018年〜2023年頃（前半5年）</li>
+    <li><strong>回収期間</strong>: 2023年〜2028年頃（後半5年）</li>
+    <li><strong>ファンド満期</strong>: 2028年頃（延長条項があれば最大2030年頃まで）</li>
+  </ul>
+  <p style="margin-top: 10px;">実際に2024年〜2025年にEXIT案件が集中していることは、ファンドが回収期間に入っていることと整合する。</p>
+</div>
+
+<!-- ========== 4. ミトヨへの関与 ========== -->
+<h1 id="sec4">4. BCMのミトヨへの関与</h1>
+
+<div class="card card-highlight">
+<h3>投資の経緯</h3>
+<div class="timeline">
+  <div class="timeline-item invest">
+    <p><span class="year">2019年3月</span> — BCM（みのり3号）がミトヨに投資実行</p>
+    <p class="note">創業家による株式売却（事業承継）を支援。経営陣とともに事業の拡大を図る目的。</p>
+  </div>
+  <div class="timeline-item">
+    <p><span class="year">2019年〜2025年</span> — 6年間にわたるハンズオン支援</p>
+    <p class="note">プロパー取締役から昇格した新社長（竹島徹氏）を中心とした経営陣と、ファンドの「二人三脚」で経営改善。</p>
+  </div>
+  <div class="timeline-item">
+    <p><span class="year">2020年〜</span> — コロナ禍・半導体不足・コスト上昇への対応</p>
+    <p class="note">困難な経営環境下で「現場の活性化及び業績改善」に取り組む。</p>
+  </div>
+  <div class="timeline-item exit">
+    <p><span class="year">2025年2月14日</span> — クリヤマジャパンへの株式譲渡発表</p>
+    <p class="note">クリヤマジャパンがミトヨ発行済株式100%を取得（孫会社化）。取得価額61億円。</p>
+  </div>
+  <div class="timeline-item exit">
+    <p><span class="year">2025年4月2日</span> — 株式譲渡完了</p>
+    <p class="note">ミトヨはクリヤマグループの一員に。BCMのプレスリリースも同日公表。</p>
+  </div>
+</div>
+</div>
+
+<h2>BCMの支援内容（具体的活動）</h2>
+<div class="card card-success">
+  <h3>「事業承継を見据えた組織構築及び業績拡大策の支援」</h3>
+  <table>
+    <tr>
+      <th style="width:30%;">支援領域</th>
+      <th>具体的内容</th>
+    </tr>
+    <tr>
+      <td><strong>経営体制の構築</strong></td>
+      <td>
+        <ul style="padding-left:16px;">
+          <li>プロパー取締役から新社長への昇格を支援</li>
+          <li>脱オーナー経営に向けた経営陣の独立化</li>
+          <li>ファンドと経営陣の「二人三脚」体制の構築</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td><strong>現場の活性化</strong></td>
+      <td>
+        <ul style="padding-left:16px;">
+          <li>製造現場のオペレーション改善</li>
+          <li>組織的な意思決定プロセスの確立</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td><strong>業績改善・利益体質</strong></td>
+      <td>
+        <ul style="padding-left:16px;">
+          <li>コロナ禍、半導体不足、コスト上昇といった逆風の中で業績改善を実現</li>
+          <li>「強固な利益体質を作り上げた」（プレスリリース文言）</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td><strong>EXIT戦略</strong></td>
+      <td>
+        <ul style="padding-left:16px;">
+          <li>同業のクリヤマジャパン（建機・農機向けゴム・樹脂製品）への戦略的売却</li>
+          <li>事業シナジーを重視した譲渡先の選定</li>
+          <li>取得価額61億円でのEXIT</li>
+        </ul>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<h2>ミトヨの概要</h2>
+<div class="card">
+  <div class="key-value"><span class="key">会社名</span><span class="value">株式会社ミトヨ</span></div>
+  <div class="key-value"><span class="key">代表者</span><span class="value">竹島 徹（プロパー取締役から昇格）</span></div>
+  <div class="key-value"><span class="key">本社</span><span class="value">東京都中央区新川1-16-10</span></div>
+  <div class="key-value"><span class="key">事業内容</span><span class="value">自動車用ゴム・樹脂・金属製品、産業資材の製造・販売</span></div>
+  <div class="key-value"><span class="key">譲渡先</span><span class="value">クリヤマジャパン株式会社（クリヤマホールディングスの子会社）</span></div>
+  <div class="key-value"><span class="key">譲渡価額</span><span class="value">61億円（発行済株式100%）</span></div>
+</div>
+
+<h2>譲渡先: クリヤマジャパン</h2>
+<div class="card">
+  <div class="key-value"><span class="key">会社名</span><span class="value">クリヤマジャパン株式会社</span></div>
+  <div class="key-value"><span class="key">代表者</span><span class="value">小貫 成彦</span></div>
+  <div class="key-value"><span class="key">本社</span><span class="value">大阪市中央区城見1丁目3番7号</span></div>
+  <div class="key-value"><span class="key">事業内容</span><span class="value">建機・農機向けゴム・樹脂製品、床材の製造・販売</span></div>
+  <div class="key-value"><span class="key">M&A目的</span><span class="value">工業用ゴム・樹脂製品分野でのシナジー創出、事業拡大・市場競争力強化</span></div>
+</div>
+
+<!-- ========== 5. PEファンドの一般構造 ========== -->
+<h1 id="sec5">5. PEファンドの一般的な運用構造</h1>
+
+<div class="card">
+<h3>典型的なファンド存続期間: 10年</h3>
+<div class="pe-structure">
+  <div class="pe-phase invest">
+    投資期間<br><small>前半 4〜6年</small>
+    <small>新規投資の実行</small>
+  </div>
+  <div class="pe-phase manage">
+    運用・バリューアップ<br><small>保有期間中</small>
+    <small>経営改善・成長支援</small>
+  </div>
+  <div class="pe-phase harvest">
+    回収期間<br><small>後半 4〜5年</small>
+    <small>EXIT・分配</small>
+  </div>
+</div>
+</div>
+
+<div class="grid-2">
+<div class="card">
+  <h3>日本のPEファンドの標準構造</h3>
+  <ul style="padding-left: 20px;">
+    <li><strong>存続期間</strong>: 原則10年が一般的</li>
+    <li><strong>投資期間</strong>: 前半4〜6年（新規投資を実行する期間）</li>
+    <li><strong>回収期間</strong>: 後半4〜5年（EXITを進める期間）</li>
+    <li><strong>延長</strong>: LP総会の承認で1〜2年の延長が可能なケースが多い</li>
+    <li><strong>官民ファンド平均EXIT年数</strong>: 4.6年</li>
+  </ul>
+</div>
+<div class="card">
+  <h3>EXIT圧力の構造</h3>
+  <ul style="padding-left: 20px;">
+    <li>ファンド満期が近づくと、残存ポートフォリオのEXITが加速</li>
+    <li>「確信度の高い優良資産」は保有期間延長で対応するケースも</li>
+    <li>GP（運用者）はキャリー（成功報酬）の実現のためEXITを推進</li>
+    <li>LP（出資者）は長期資金で拘束されるため、予定通りの資金回収を求める</li>
+  </ul>
+</div>
+</div>
+
+<!-- ========== 6. 6年保有の評価 ========== -->
+<h1 id="sec6">6. ミトヨ6年保有の評価</h1>
+
+<div class="card card-info">
+<h3>6年間の保有は長いのか短いのか?</h3>
+
+<div class="assessment normal">
+  <strong>結論: やや長めだが、異常ではない。事業承継案件としては標準的。</strong>
+</div>
+
+<table>
+  <tr>
+    <th>比較基準</th>
+    <th>期間</th>
+    <th>ミトヨ（6年）との比較</th>
+  </tr>
+  <tr>
+    <td>日本のPEファンド一般的保有期間</td>
+    <td>3〜7年</td>
+    <td>範囲内（やや長め寄り）</td>
+  </tr>
+  <tr>
+    <td>官民ファンド平均EXIT年数</td>
+    <td>4.6年</td>
+    <td>約1.4年長い</td>
+  </tr>
+  <tr>
+    <td>みのり3号内の佐藤型鋼（参考）</td>
+    <td>約3年</td>
+    <td>ミトヨは2倍の保有期間</td>
+  </tr>
+  <tr>
+    <td>みのり3号内のヒノマル（参考）</td>
+    <td>約5年</td>
+    <td>ほぼ同水準</td>
+  </tr>
+  <tr>
+    <td>みのり2号の豊創フーズ（参考）</td>
+    <td>約10年（2015〜2025年）</td>
+    <td>豊創フーズはかなり長い</td>
+  </tr>
+</table>
+
+<h3 style="margin-top:15px;">6年の背景要因</h3>
+<ul style="padding-left: 20px;">
+  <li><strong>コロナ禍の影響</strong>（2020〜2022年）: EXIT環境の悪化でバリュエーションが低下し、売却時期を延期した可能性</li>
+  <li><strong>半導体不足・原材料高</strong>: 自動車部品メーカーとして直撃を受け、業績安定化に時間を要した</li>
+  <li><strong>事業承継の性質</strong>: 経営体制の移行（創業家→プロパー経営陣）には時間がかかる</li>
+  <li><strong>「強固な利益体質」の構築</strong>: BCMは利益体質の確立を待ってからEXITした（質重視の姿勢）</li>
+  <li><strong>ファンド存続期限</strong>: みのり3号の推定満期（2028年頃）に対し、十分な余裕を持ったEXIT</li>
+</ul>
+</div>
+
+<!-- ========== 7. 投資実績一覧 ========== -->
+<h1 id="sec7">7. BCM投資実績一覧（公開情報ベース）</h1>
+
+<div class="card">
+<h3>EXIT済案件（判明分）</h3>
+<table>
+  <thead>
+    <tr>
+      <th>企業名</th>
+      <th>ファンド</th>
+      <th>投資時期</th>
+      <th>EXIT時期</th>
+      <th>譲渡先</th>
+      <th>保有年数</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ハート</td>
+      <td>みのり2号</td>
+      <td>不明</td>
+      <td>2019年10月</td>
+      <td>不明</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><strong>ミトヨ</strong></td>
+      <td>みのり3号</td>
+      <td>2019年3月</td>
+      <td>2025年4月</td>
+      <td>クリヤマジャパン（61億円）</td>
+      <td><strong>6年</strong></td>
+    </tr>
+    <tr>
+      <td>佐藤型鋼製作所</td>
+      <td>みのり3号</td>
+      <td>2021年9月</td>
+      <td>2024年10月</td>
+      <td>丸一鋼管</td>
+      <td>約3年</td>
+    </tr>
+    <tr>
+      <td>豊創フーズ</td>
+      <td>みのり2号</td>
+      <td>2015年7月</td>
+      <td>2025年7月</td>
+      <td>フーデックスHD</td>
+      <td><strong>約10年</strong></td>
+    </tr>
+    <tr>
+      <td>ヒノマル</td>
+      <td>みのり3号</td>
+      <td>2020年8月</td>
+      <td>2025年10月</td>
+      <td>西日本鉄道</td>
+      <td>約5年</td>
+    </tr>
+    <tr>
+      <td>シグニHD</td>
+      <td>BCM-V</td>
+      <td>2022年3月</td>
+      <td>2025年12月</td>
+      <td>MPアグロ（メディパルG）</td>
+      <td>約3.5年</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="card">
+<h3>保有中案件（判明分、2026年3月時点）</h3>
+<table>
+  <thead>
+    <tr>
+      <th>企業名</th>
+      <th>ファンド</th>
+      <th>投資時期</th>
+      <th>業種</th>
+      <th>投資目的</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>三和デンタル</td>
+      <td>みのり3号</td>
+      <td>2021年5月</td>
+      <td>歯科技工物</td>
+      <td>事業承継</td>
+    </tr>
+    <tr>
+      <td>グラス・ワン<br>（旧東京東フィグラ）</td>
+      <td>BCM-V</td>
+      <td>不明</td>
+      <td>オフィス用間仕切りガラス</td>
+      <td>カーブアウト?</td>
+    </tr>
+    <tr>
+      <td>めいとケア</td>
+      <td>BCM-VI?</td>
+      <td>2024年12月</td>
+      <td>介護?</td>
+      <td>不明</td>
+    </tr>
+    <tr>
+      <td>YMIT HD</td>
+      <td>不明</td>
+      <td>2023年9月</td>
+      <td>不明</td>
+      <td>不明</td>
+    </tr>
+    <tr>
+      <td>ドーマン</td>
+      <td>BCM-VI</td>
+      <td>2025年4月</td>
+      <td>鉄骨ファブリケーター</td>
+      <td>事業承継</td>
+    </tr>
+    <tr>
+      <td>GLOBA</td>
+      <td>BCM-VI</td>
+      <td>2025年5月</td>
+      <td>インバウンド観光体験</td>
+      <td>事業承継</td>
+    </tr>
+    <tr>
+      <td>トスカバノック</td>
+      <td>BCM-VI</td>
+      <td>2025年6月</td>
+      <td>アパレル用タグ副資材</td>
+      <td>カーブアウト（TSI HD）</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="card">
+<h3>過去の大型案件（BCM設立初期）</h3>
+<p>BCMメンバーは以下の大型PE投資に関与した実績がある（BCM単独運用か共同投資かは不明）:</p>
+<table>
+  <tr><th>企業名</th><th>業種</th><th>備考</th></tr>
+  <tr><td>すかいらーく</td><td>外食チェーン</td><td>2011年にノムラキャピタル等から株式取得</td></tr>
+  <tr><td>ドミノピザ・ジャパン</td><td>宅配ピザ</td><td>2010年3月〜取締役就任の記録あり</td></tr>
+  <tr><td>ベルシステム24</td><td>コールセンター</td><td>2010年5月〜社外取締役就任の記録あり</td></tr>
+  <tr><td>マクロミル</td><td>マーケティングリサーチ</td><td>投資実績あり</td></tr>
+  <tr><td>ジュピターショップチャンネル</td><td>テレビ通販</td><td>投資実績あり（計7社への投資実績と記載）</td></tr>
+</table>
+<p class="note">※ これらは初期のBCMメンバーが関与した案件であり、現在の中小企業特化の投資方針とは異なる。</p>
+</div>
+
+<div class="summary-box">
+  <h3>調査まとめ</h3>
+  <ul style="padding-left: 20px;">
+    <li><strong>BCM</strong>は2002年設立の中小・中堅企業特化バイアウトファンド。50社超の投資実績。事業承継支援が主軸。</li>
+    <li><strong>みのり3号</strong>は目標180億円（中小機構60億円）のファンド。2018〜2019年設立。投資先にはミトヨ、ヒノマル、佐藤型鋼、三和デンタル等。</li>
+    <li><strong>ミトヨへの投資</strong>は2019年3月〜2025年4月の約6年。創業家の事業承継支援。クリヤマジャパンに61億円でEXIT。</li>
+    <li><strong>6年保有</strong>はPEファンドとしてやや長めだが異常ではない。コロナ禍・半導体不足の影響で長期化した可能性が高い。</li>
+    <li><strong>PEファンドの一般的存続期間</strong>は10年（投資期間5年＋回収期間5年）。ミトヨのEXITはファンド回収期間の適正な範囲内。</li>
+  </ul>
+</div>
+
+<p style="text-align:right; color:var(--muted); font-size:0.8em; margin-top:30px;">調査日: 2026-03-15 | 出典: BCM公式サイト、Yahoo!検索結果、中小機構公表資料、クリヤマジャパン開示資料</p>
+
+</div>
+</body>
+</html>
