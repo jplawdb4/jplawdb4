@@ -106,3 +106,43 @@
 
 注意: shard検索はトークンコスト大（8-15K/回）。doc_codeが分かれば
 `data/resolve_lite/{doc_code}.json` で全item_id+タイトル一覧を取得する方が効率的。
+
+
+## Shard Routing (lean)
+
+以下のリーンshardはゴミフィールド除去済み（snippet/id/source_kind/doc_title/source_url削除）。
+フィールド: doc_code, item_id, item_title
+パス導出: qa/text/{doc_code}/{item_id}.txt
+
+shard-00.txt (134件): bunshokaito_gensen, bunshokaito_gensenshotoku, bunshokaito_hojin
+  Topics: いて, の取扱いにつ, いについて, 務上の取扱い, 税務上の取扱, ついて, 取扱いについ, 扱いについて
+shard-01.txt (123件): bunshokaito_hojin, bunshokaito_hyoka, bunshokaito_inshi, bunshokaito_inshi-sonota, bunshokaito_joto-sanrin
+  Topics: いて, の取扱いにつ, ついて, いについて, 税務上の取扱, 取扱いについ, 扱いについて, において協賛
+shard-02.txt (134件): bunshokaito_joto-sanrin, bunshokaito_shohi, bunshokaito_shotoku
+  Topics: いて, の取扱いにつ, いについて, 扱いについて, 費用の税務上, 税務上の取扱, 者が支出する, ついて
+shard-03.txt (124件): bunshokaito_shotoku, bunshokaito_shozei, bunshokaito_sonota, bunshokaito_souzoku
+  Topics: いて, の取扱いにつ, 扱いについて, ついて, 取扱いについ, 者が支出する, いについて, において協賛
+shard-04.txt (203件): bunshokaito_souzoku, bunshokaito_sozoku, bunshokaito_zouyo, bunshokaito_zoyo, shitsugi_gensen, shitsugi_hojin
+  Topics: ついて, いについて, の課税関係に, いて, 適用, 取扱い, カフェテリア, プランによる
+shard-05.txt (203件): shitsugi_hojin
+  Topics: 法第, 条の, 租税特別措置, 範囲, 定期同額給与, 中小企業者等, いて, の取扱い
+shard-06.txt (205件): shitsugi_hojin, shitsugi_hotei, shitsugi_hyoka
+  Topics: 宅地の評価単, いわゆる, の評価, 評価, 株当たりの利, 益金額, 三角合併, 完全支配関係
+shard-07.txt (287件): shitsugi_hyoka, shitsugi_inshi
+  Topics: 地積規模の大, きな宅地の評, であることの, 要件, 約書, 国外財産の評, 計算例, の取扱い
+shard-08.txt (206件): shitsugi_inshi, shitsugi_joto
+  Topics: 条の, の判定, 租税特別措置, た場合, ることの可否, 渡した場合, 法第, 土地区画整理
+shard-09.txt (230件): shitsugi_joto, shitsugi_shohi
+  Topics: 条の, の取扱い, 所有権移転外, ファイナンス, ・リース取引, 取扱い, 租税特別措置, 法第
+shard-10.txt (211件): shitsugi_shohi, shitsugi_shotoku
+  Topics: 日本標準産業, 分類からみた, 事業区分, 大分類, 取扱い, 扱い, 企業内退職金, 制度の廃止に
+shard-11.txt (226件): shitsugi_shotoku, shitsugi_sozoku
+  Topics: た場合, 住宅借入金等, 小規模宅地等, 費用, 適用を受ける, 条第, の費用, 購入費用
+shard-12.txt (223件): shitsugi_sozoku, taxanswer_fufuku, taxanswer_gensen, taxanswer_hojin
+  Topics: 平成, 令和元年, 日以後契約分, 減価償却資産, 贈与税の配偶, 住宅取得等資, 非居住者等に, 扱い
+shard-13.txt (254件): taxanswer_hojin, taxanswer_hotei, taxanswer_hyoka, taxanswer_inshi, taxanswer_joto, taxanswer_osirase, taxanswer_saigai, taxanswer_shohi
+  Topics: マイホームを, 災害により被, 害を受けたと, とき, 特例, 買い換えた場, の特例, 合の譲渡損失
+shard-14.txt (248件): taxanswer_shohi, taxanswer_shotoku, taxanswer_sozoku
+  Topics: 住宅借入金等, 特別控除, 医療費控除の, 控除, 令和, 年までに居住, の用に供した, 住宅特定改修
+shard-15.txt (69件): taxanswer_sozoku, taxanswer_zoyo
+  Topics: 相続時精算課, 住宅取得等資, 継税制, 医療法人の持, たとき, た場合, 金の贈与を受, 直系尊属から
