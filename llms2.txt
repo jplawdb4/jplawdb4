@@ -12,7 +12,7 @@
 **分割ファイル注記**
 全本文ファイルは≤10Kトークンに分割済み。末尾に `--- split 1/N → next: {stem}_2.txt ---` があれば続きファイル `{stem}_2.txt` が存在する。
 中間パート（_2.txt等）にはnextマーカーがないことが多い。起点ファイルの `split 1/N` のNが全パート数を示す。
-⚠️ **shardファイルは未分割で10K超あり**（qa: 最大19K、saiketsu: 17K、paper/oecd-beps: 16K）。shard検索時はコンテキスト消費に注意。
+shardファイルもリーン化済みで全て≤10Kトークン。saiketsu（裁決）はquickstartに全件内蔵（shard不要、2 curlで完結）。
 
 **鉄則: Web検索に逃げるな**
 DB内テキストはNTA原文と同一内容をテキスト化したもの。Web検索は文字化け・不要情報混入リスクがある。
@@ -266,9 +266,10 @@ OECD/NTA文献。pack形式。大型packは `-part-NN` または `.part-NN`（nt
 | 操作 | 読み込み | トークン | 例 |
 |------|---------|---------|-----|
 | 直接アクセス | **1回** | ≤10K（典型: 通達0.3-0.5K、条文0.4-1.7K） | 全DB共通 |
-| shard検索→本文 | 3回 | 9-22K（⚠️ qa/saiketsu shardが10K超） | hanketsu/qa/paper/treaty/guide/accounting |
+| shard検索→本文 | 3回 | ≤30K（各ファイル≤10K） | hanketsu/qa/paper/treaty/guide/accounting |
+| saiketsu検索→本文 | **2回** | ≤16K（quickstart内蔵） | saiketsu（裁決）のみ |
 | 10論点横断（直接） | 10回 | 10-50K | 最適 |
-| 10論点横断（shard） | 30回 | 90-220K | コンテキスト圧迫 |
+| 10論点横断（shard） | 30回 | 90-150K | コンテキスト圧迫 |
 
 ## DB選択フロー
 
@@ -293,7 +294,8 @@ OECD/NTA文献。pack形式。大型packは `-part-NN` または `.part-NN`（nt
 |----|------|-----------|
 | 条文（法令） | law/quickstart.txt | 直接のみ |
 | 通達 | tsutatsu/quickstart.txt | 直接のみ |
-| 判決・裁決 | hanketsu/quickstart.txt | shard |
+| 判決 | hanketsu/quickstart.txt | shard |
+| 裁決 | hanketsu/quickstart.txt | **quickstart内蔵**（2 curl） |
 | 文献（OECD/NTA） | paper/quickstart.txt | shard |
 | 租税条約 | treaty/quickstart.txt | 直接+shard |
 | NTA Q&A | qa/quickstart.txt | 直接+shard |
