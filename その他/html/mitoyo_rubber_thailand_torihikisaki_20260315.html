@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mitoyo Rubber (Thailand) Co., Ltd. 取引先調査報告書</title>
+<style>
+:root {
+  --primary: #1a365d;
+  --secondary: #2b6cb0;
+  --accent: #ed8936;
+  --bg: #f7fafc;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --text: #2d3748;
+  --text-light: #718096;
+  --confirmed: #38a169;
+  --inferred: #d69e2e;
+  --speculative: #e53e3e;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+.container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; padding: 40px 20px; text-align: center; }
+header h1 { font-size: 1.6em; margin-bottom: 8px; }
+header .subtitle { font-size: 0.95em; opacity: 0.9; }
+header .date { font-size: 0.85em; opacity: 0.7; margin-top: 8px; }
+
+.legend { display: flex; gap: 20px; flex-wrap: wrap; margin: 20px 0; padding: 15px; background: var(--card); border-radius: 8px; border: 1px solid var(--border); }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.85em; }
+.dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+.dot-confirmed { background: var(--confirmed); }
+.dot-inferred { background: var(--inferred); }
+.dot-speculative { background: var(--speculative); }
+
+.section { margin: 30px 0; }
+.section-title { font-size: 1.3em; color: var(--primary); border-bottom: 3px solid var(--accent); padding-bottom: 8px; margin-bottom: 20px; }
+.subsection-title { font-size: 1.1em; color: var(--secondary); margin: 20px 0 10px; padding-left: 10px; border-left: 4px solid var(--accent); }
+
+.card { background: var(--card); border-radius: 8px; border: 1px solid var(--border); padding: 20px; margin: 15px 0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+.card h4 { color: var(--primary); margin-bottom: 8px; }
+
+table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 0.9em; }
+table th { background: var(--primary); color: #fff; padding: 10px 12px; text-align: left; font-weight: 600; }
+table td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+table tr:nth-child(even) { background: #f7fafc; }
+table tr:hover { background: #edf2f7; }
+
+.tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75em; font-weight: 600; margin: 2px; }
+.tag-confirmed { background: #c6f6d5; color: #276749; }
+.tag-inferred { background: #fefcbf; color: #975a16; }
+.tag-speculative { background: #fed7d7; color: #9b2c2c; }
+
+.info-box { background: #ebf8ff; border-left: 4px solid var(--secondary); padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+.warn-box { background: #fffbeb; border-left: 4px solid var(--inferred); padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+
+.company-profile { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.profile-item { display: flex; flex-direction: column; }
+.profile-label { font-size: 0.8em; color: var(--text-light); font-weight: 600; text-transform: uppercase; }
+.profile-value { font-size: 0.95em; }
+
+.group-chart { background: var(--card); border-radius: 8px; padding: 20px; border: 1px solid var(--border); text-align: center; }
+.group-chart .level { margin: 8px 0; }
+.group-chart .entity { display: inline-block; padding: 8px 16px; border-radius: 6px; margin: 4px; font-size: 0.85em; }
+.group-chart .parent { background: #bee3f8; border: 2px solid var(--secondary); }
+.group-chart .target { background: #fed7aa; border: 2px solid var(--accent); font-weight: 700; }
+.group-chart .sibling { background: #c6f6d5; border: 1px solid #68d391; }
+.group-chart .affiliate { background: #e9d8fd; border: 1px solid #b794f4; }
+.group-chart .arrow { font-size: 1.2em; color: var(--text-light); }
+
+.sources { font-size: 0.85em; color: var(--text-light); }
+.sources a { color: var(--secondary); }
+.sources li { margin: 4px 0; }
+
+footer { text-align: center; padding: 30px; color: var(--text-light); font-size: 0.85em; border-top: 1px solid var(--border); margin-top: 40px; }
+
+@media (max-width: 768px) {
+  .company-profile { grid-template-columns: 1fr; }
+  .legend { flex-direction: column; gap: 8px; }
+  header h1 { font-size: 1.2em; }
+  table { font-size: 0.8em; }
+}
+@media print {
+  body { font-size: 11pt; }
+  .container { max-width: 100%; }
+  header { background: #1a365d !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Mitoyo Rubber (Thailand) Co., Ltd.</h1>
+  <div class="subtitle">取引先（顧客・仕入先）調査報告書</div>
+  <div class="date">調査日: 2026年3月15日</div>
+</header>
+
+<div class="container">
+
+<!-- 凡例 -->
+<div class="legend">
+  <div class="legend-item"><span class="dot dot-confirmed"></span> 確認済み（公開情報で裏付けあり）</div>
+  <div class="legend-item"><span class="dot dot-inferred"></span> 推定（業界構造・親会社情報からの合理的推定）</div>
+  <div class="legend-item"><span class="dot dot-speculative"></span> 推測（直接的根拠なし）</div>
+</div>
+
+<!-- ===== 基本情報 ===== -->
+<div class="section">
+  <h2 class="section-title">I. 会社基本情報</h2>
+  <div class="card">
+    <div class="company-profile">
+      <div class="profile-item"><span class="profile-label">正式名称（英語）</span><span class="profile-value">MITOYO RUBBER (THAILAND) CO., LTD.</span></div>
+      <div class="profile-item"><span class="profile-label">正式名称（タイ語）</span><span class="profile-value">บริษัท มิโตโยะ รับเบอร์ (ประเทศไทย) จำกัด</span></div>
+      <div class="profile-item"><span class="profile-label">登記番号</span><span class="profile-value">0205553024631</span></div>
+      <div class="profile-item"><span class="profile-label">設立日</span><span class="profile-value">2010年11月18日（操業開始: 2012年）</span></div>
+      <div class="profile-item"><span class="profile-label">所在地</span><span class="profile-value">700/909 Moo.5, Amatanakorn Industrial Estate Phase 9, T. Nongkakha, A. Phanthong, Chonburi 20160</span></div>
+      <div class="profile-item"><span class="profile-label">TEL / FAX</span><span class="profile-value">+66-38-185-447～450 / +66-38-185-451</span></div>
+      <div class="profile-item"><span class="profile-label">Managing Director</span><span class="profile-value">山川哲三（Tetsuzo Yamakawa）</span></div>
+      <div class="profile-item"><span class="profile-label">登録資本金</span><span class="profile-value">50,000,000 THB</span></div>
+      <div class="profile-item"><span class="profile-label">企業規模</span><span class="profile-value">中規模企業（Medium-sized enterprise）</span></div>
+      <div class="profile-item"><span class="profile-label">TSIC分類</span><span class="profile-value">22199（その他のゴム製品製造）</span></div>
+      <div class="profile-item"><span class="profile-label">認証</span><span class="profile-value">IATF 16949（2018年8月取得）</span></div>
+      <div class="profile-item"><span class="profile-label">事業内容</span><span class="profile-value">ゴム部品・プラスチック部品・金属部品の製造、販売、輸入、輸出</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h4>財務データ</h4>
+    <table>
+      <tr><th>年度</th><th>総収入 (THB)</th><th>純利益 (THB)</th><th>総資産 (THB)</th><th>利益率</th></tr>
+      <tr><td>2024年（仏暦2567）</td><td>97,072,952</td><td>5,632,094</td><td>79,299,409</td><td>5.8%</td></tr>
+      <tr><td>2020年</td><td>93,220,002</td><td>9,739,363</td><td>100,907,431</td><td>10.4%</td></tr>
+    </table>
+    <p style="font-size:0.85em; color:var(--text-light);">出典: Companies House Thailand / Creden</p>
+  </div>
+
+  <div class="card">
+    <h4>主要生産品目</h4>
+    <table>
+      <tr><th>カテゴリ</th><th>製品例</th><th>用途</th></tr>
+      <tr><td>シール部品</td><td>Oリング、パッキン、ガスケット</td><td>自動車・二輪・家電</td></tr>
+      <tr><td>金具焼付品（加硫接着）</td><td>ファンボス、ダイアフラム</td><td>自動車エンジン・空調</td></tr>
+      <tr><td>防振・緩衝部品</td><td>グロメット、ダンパー、ブーツ類</td><td>自動車・電子機器</td></tr>
+      <tr><td>電子部品用ゴム</td><td>ストッパー、カバー</td><td>電子・電気機器</td></tr>
+    </table>
+    <div class="info-box">
+      <strong>自社開発コンパウンド:</strong> 全てのゴム材料に自社開発の配合処方（コンパウンド）を使用。顧客要求に応じたカスタム材料開発が可能（NBR, EPDM, CR, シリコン等）。金属・布との複合加硫接着製品も得意分野。
+    </div>
+  </div>
+</div>
+
+<!-- ===== グループ構造 ===== -->
+<div class="section">
+  <h2 class="section-title">II. ミトヨグループ構造</h2>
+
+  <div class="group-chart">
+    <div class="level"><span class="entity parent">クリヤマホールディングス株式会社（東証・上場）</span></div>
+    <div class="arrow">|</div>
+    <div class="level"><span class="entity parent">クリヤマジャパン株式会社（中核子会社）</span></div>
+    <div class="arrow">| 100%株式取得（2025年4月2日 / 61億円）</div>
+    <div class="level"><span class="entity parent">株式会社ミトヨ（東京都中央区 / 資本金4.25億円 / 従業員304名）</span></div>
+    <div class="arrow">|</div>
+    <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 10px;">
+      <span class="entity target">Mitoyo Rubber (Thailand)<br>チョンブリ県</span>
+      <span class="entity sibling">Mitoyo Plastics (Thailand)<br>チャチューンサオ県</span>
+      <span class="entity affiliate">Unika Rubber Products<br>ジョホールバル、マレーシア</span>
+      <span class="entity sibling">上海三豊杉栄商貿有限公司<br>中国・上海</span>
+    </div>
+    <div style="margin-top: 10px;">
+      <span class="entity" style="background:#feebc8; border:1px dashed #ed8936;">Thongchai Mitoyo Co., Ltd.<br>チャチューンサオ県（販売代理機能）</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h4>グループ各社概要</h4>
+    <table>
+      <tr><th>会社名</th><th>所在地</th><th>事業内容</th><th>認証</th><th>備考</th></tr>
+      <tr>
+        <td><strong>株式会社ミトヨ</strong>（親会社）</td>
+        <td>東京都中央区新川1-16-10</td>
+        <td>自動車用ゴム・樹脂・金属製品、産業資材の製造販売。ゴム商社機能（横浜ゴム等の販売代理）</td>
+        <td>-</td>
+        <td>1948年（昭和23年）設立。売上高104億円（2024年3月期）。2025年4月にクリヤマグループ入り</td>
+      </tr>
+      <tr>
+        <td><strong>Mitoyo Plastics (Thailand)</strong></td>
+        <td>1/50 Moo 5, T. Tha Sa-an, A. Bang Pakong, Chachoengsao 24130</td>
+        <td>樹脂射出成形製品（自動車内装・ボディ部品、メーター部品、プリンター部品）</td>
+        <td>ISO 9001, ISO 14001, IATF 16949</td>
+        <td>2013年4月設立。射出成形機20台（50t～385t）。2016年9月新工場移転。MD: 山川哲三</td>
+      </tr>
+      <tr>
+        <td><strong>Unika Rubber Products Sdn. Bhd.</strong></td>
+        <td>No.27&29, Jl. Kempas 4, Tampoi Indah, 81200 Johor Bahru, Malaysia</td>
+        <td>精密ゴム部品、ゴム-金属接着品（自動車・電子・電気向け）。ゴムコンパウンド製造</td>
+        <td>ISO 9001, ISO 14001</td>
+        <td>1987年設立。ミトヨとの資本提携（JV）は1996年。従業員約100名</td>
+      </tr>
+      <tr>
+        <td><strong>上海三豊杉栄商貿有限公司</strong></td>
+        <td>上海市天目西路547号 聯通国際大厦1905室</td>
+        <td>ゴム・樹脂製品の販売・貿易</td>
+        <td>-</td>
+        <td>2006年5月設立。主に商社・販売機能</td>
+      </tr>
+      <tr>
+        <td><strong>Thongchai Mitoyo Co., Ltd.</strong></td>
+        <td>20/1 Moo 1, Sanphudas Pimpawas Rd, Banpho, Chachoengsao 24140</td>
+        <td>自動車ボディ部品の販売・販売代理</td>
+        <td>-</td>
+        <td>2013年1月設立（バンコク登記）。売上161M THB（2022年）。自動車部品小売・流通</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- ===== A. 顧客（販売先） ===== -->
+<div class="section">
+  <h2 class="section-title">III-A. 顧客（販売先）</h2>
+
+  <div class="warn-box">
+    <strong>調査上の留意点:</strong> Mitoyo Rubber (Thailand) 単体の顧客リストは非公開です。以下は (1) 親会社ミトヨの公開取引先リスト、(2) BCP/業界データベースの記載、(3) 業界構造からの合理的推定を組み合わせて整理しています。確度は各項目に明記しています。
+  </div>
+
+  <h3 class="subsection-title">A-1. 親会社ミトヨの公開取引先（日本本体）</h3>
+  <div class="card">
+    <p style="margin-bottom:10px;">ミトヨ公式サイトに明記されている取引先。タイ法人への部品供給の延長線上にある取引関係の手がかりとなる。</p>
+
+    <h4>自動車部品事業部 取引先（19社）</h4>
+    <table>
+      <tr><th>#</th><th>取引先名</th><th>業種</th><th>タイ工場の有無</th><th>MRT納入の可能性</th></tr>
+      <tr><td>1</td><td>いすゞ自動車</td><td>完成車OEM（商用車）</td><td>有（Samrong / Gateway）</td><td><span class="tag tag-inferred">高（推定）</span></td></tr>
+      <tr><td>2</td><td>ヴァレオジャパン</td><td>Tier1（空調・電装）</td><td>有（チョンブリ等）</td><td><span class="tag tag-inferred">推定</span></td></tr>
+      <tr><td>3</td><td>クリヤマジャパン</td><td>グループ会社（産業資材）</td><td>有</td><td><span class="tag tag-confirmed">確認</span></td></tr>
+      <tr><td>4</td><td>坂本工業</td><td>プレス・板金部品</td><td>-</td><td><span class="tag tag-speculative">不明</span></td></tr>
+      <tr><td>5</td><td>SUBARU</td><td>完成車OEM（乗用車）</td><td>なし</td><td><span class="tag tag-speculative">低</span></td></tr>
+      <tr><td>6</td><td>タチエス</td><td>Tier1（自動車シート）</td><td>有（チョンブリ）</td><td><span class="tag tag-inferred">推定</span></td></tr>
+      <tr><td>7</td><td>タイガースポリマー</td><td>ゴム・樹脂ホース</td><td>有（ラヨーン）</td><td><span class="tag tag-inferred">推定</span></td></tr>
+      <tr><td>8</td><td>東京ラヂエーター製造</td><td>Tier1（冷却系）</td><td>-</td><td><span class="tag tag-speculative">不明</span></td></tr>
+      <tr><td>9</td><td>日産自動車</td><td>完成車OEM</td><td>有（サムットプラカーン）</td><td><span class="tag tag-inferred">推定</span></td></tr>
+      <tr><td>10</td><td>日本発条（NHK Spring）</td><td>Tier1（ばね・シート）</td><td>有</td><td><span class="tag tag-inferred">推定</span></td></tr>
+      <tr><td>11</td><td>日本フルハーフ</td><td>商用車ボディ</td><td>-</td><td><span class="tag tag-speculative">不明</span></td></tr>
+      <tr><td>12</td><td>ハイレックスコーポレーション</td><td>Tier1（コントロールケーブル）</td><td>有</td><td><span class="tag tag-inferred">推定</span></td></tr>
+      <tr><td>13</td><td>ボッシュ</td><td>Tier1（燃料噴射・ブレーキ）</td><td>有（Hemaraj等）</td><td><span class="tag tag-inferred">推定</span></td></tr>
+      <tr><td>14</td><td>マーレジャパン（MAHLE）</td><td>Tier1（フィルター・ピストン）</td><td>有</td><td><span class="tag tag-inferred">推定</span></td></tr>
+      <tr><td>15</td><td>マレリ（旧カルソニックカンセイ）</td><td>Tier1（排気系・空調）</td><td>有</td><td><span class="tag tag-inferred">推定</span></td></tr>
+      <tr><td>16</td><td>三井金属アクト</td><td>Tier1（ドアロック等）</td><td>有</td><td><span class="tag tag-inferred">推定</span></td></tr>
+      <tr><td>17</td><td>三菱ふそうトラック・バス</td><td>完成車OEM（商用車）</td><td>有（FUSO Thailand）</td><td><span class="tag tag-inferred">推定</span></td></tr>
+      <tr><td>18</td><td>ミネベアミツミ</td><td>Tier1（精密部品・モーター）</td><td>有（バンパイン等）</td><td><span class="tag tag-inferred">推定</span></td></tr>
+      <tr><td>19</td><td>UDトラックス</td><td>完成車OEM（商用車）</td><td>-</td><td><span class="tag tag-speculative">低</span></td></tr>
+    </table>
+
+    <h4 style="margin-top:20px;">産業資材事業部 取引先（20社）</h4>
+    <table>
+      <tr><th>#</th><th>取引先名</th><th>業種</th></tr>
+      <tr><td>1</td><td>いすゞ自動車</td><td>完成車OEM</td></tr>
+      <tr><td>2</td><td>伊藤忠オートモービル</td><td>商社</td></tr>
+      <tr><td>3</td><td>エピロックジャパン</td><td>鉱山・建設機械</td></tr>
+      <tr><td>4</td><td>エンビジョンAESCジャパン</td><td>車載バッテリー</td></tr>
+      <tr><td>5</td><td>OBARA 山梨工場</td><td>溶接機器</td></tr>
+      <tr><td>6</td><td>加藤製作所</td><td>建設機械</td></tr>
+      <tr><td>7</td><td>ジェイ・バス</td><td>バス製造</td></tr>
+      <tr><td>8</td><td>JFEプラントエンジ</td><td>プラントエンジニアリング</td></tr>
+      <tr><td>9</td><td>新明和工業</td><td>特装車・航空</td></tr>
+      <tr><td>10</td><td>SUBARU</td><td>完成車OEM</td></tr>
+      <tr><td>11</td><td>積水ハウス</td><td>住宅</td></tr>
+      <tr><td>12</td><td>東京ガスケット工業</td><td>ガスケット</td></tr>
+      <tr><td>13</td><td>新潟トランシス</td><td>鉄道車両</td></tr>
+      <tr><td>14</td><td>日産自動車</td><td>完成車OEM</td></tr>
+      <tr><td>15</td><td>日産トレーディング</td><td>商社</td></tr>
+      <tr><td>16</td><td>パラマウントベッド</td><td>医療機器</td></tr>
+      <tr><td>17</td><td>日立建機</td><td>建設機械</td></tr>
+      <tr><td>18</td><td>日野自動車</td><td>完成車OEM（商用車）</td></tr>
+      <tr><td>19</td><td>本田技研工業</td><td>完成車OEM</td></tr>
+      <tr><td>20</td><td>三菱重工エンジン&ターボチャージャ</td><td>エンジン</td></tr>
+    </table>
+  </div>
+
+  <h3 class="subsection-title">A-2. タイ工場（MRT）の顧客推定</h3>
+  <div class="card">
+    <p>以下はBCP（Bangkok Consulting Partners）の企業情報、業界ディレクトリ、求人情報、および親会社取引先のタイ進出状況に基づく推定顧客リストです。</p>
+
+    <h4 style="margin-top:15px;">完成車OEM（タイ工場）</h4>
+    <table>
+      <tr><th>企業名</th><th>タイ工場所在地</th><th>納入推定品目</th><th>確度</th></tr>
+      <tr><td>いすゞモータース（タイ）</td><td>Samrong / Gateway (チャチューンサオ)</td><td>商用車用Oリング、ガスケット、ダンパー</td><td><span class="tag tag-inferred">推定（親会社の最大顧客の一つ）</span></td></tr>
+      <tr><td>Nissan Motor (Thailand)</td><td>サムットプラカーン</td><td>シール部品、グロメット</td><td><span class="tag tag-inferred">推定（親会社取引先）</span></td></tr>
+      <tr><td>Honda Automobile (Thailand)</td><td>アユタヤ / プラチンブリ</td><td>ゴム部品</td><td><span class="tag tag-inferred">推定（親会社がHonda本体と取引）</span></td></tr>
+      <tr><td>三菱モーターズ（タイ）</td><td>レムチャバン</td><td>シール・防振部品</td><td><span class="tag tag-inferred">推定（親会社が三菱ふそうと取引）</span></td></tr>
+      <tr><td>日野モーターズ（タイ）</td><td>バンチャン工業団地</td><td>商用車用ゴム部品</td><td><span class="tag tag-inferred">推定（親会社が日野と取引）</span></td></tr>
+    </table>
+
+    <h4 style="margin-top:15px;">Tier1サプライヤー（タイ工場）</h4>
+    <table>
+      <tr><th>企業名</th><th>タイ工場所在地</th><th>納入推定品目</th><th>確度</th></tr>
+      <tr><td>Bosch (Thailand)</td><td>Hemaraj / Amata</td><td>燃料系シール部品、Oリング</td><td><span class="tag tag-inferred">推定（親会社取引先）</span></td></tr>
+      <tr><td>Valeo (Thailand)</td><td>チョンブリ等</td><td>空調系ゴム部品</td><td><span class="tag tag-inferred">推定（親会社取引先）</span></td></tr>
+      <tr><td>Marelli (Thailand)</td><td>チョンブリ</td><td>排気系ガスケット</td><td><span class="tag tag-inferred">推定（親会社取引先）</span></td></tr>
+      <tr><td>MAHLE (Thailand)</td><td>チョンブリ</td><td>フィルター用ゴム部品</td><td><span class="tag tag-inferred">推定（親会社取引先）</span></td></tr>
+      <tr><td>NHK Spring (Thailand)</td><td>-</td><td>防振ダンパー</td><td><span class="tag tag-inferred">推定（親会社取引先）</span></td></tr>
+      <tr><td>Tachi-S (Thailand)</td><td>チョンブリ</td><td>シート用ゴム部品</td><td><span class="tag tag-inferred">推定（親会社取引先）</span></td></tr>
+      <tr><td>Hi-Lex (Thailand)</td><td>-</td><td>ケーブル用ブーツ</td><td><span class="tag tag-inferred">推定（親会社取引先）</span></td></tr>
+      <tr><td>Mitsui Kinzoku Act (Thailand)</td><td>-</td><td>ドアロック用ゴム部品</td><td><span class="tag tag-inferred">推定（親会社取引先）</span></td></tr>
+      <tr><td>MinebeaMitsumi (Thailand)</td><td>バンパイン等</td><td>精密ゴム部品</td><td><span class="tag tag-inferred">推定（親会社取引先）</span></td></tr>
+    </table>
+
+    <h4 style="margin-top:15px;">家電メーカー</h4>
+    <table>
+      <tr><th>企業名</th><th>関連情報</th><th>確度</th></tr>
+      <tr><td>Rinnai (Thailand) Co., Ltd.</td><td>Rinnai Thailandの顧客リファレンスページにMitoyo Rubber Thailandが「Domestic Customer」として掲載</td><td><span class="tag tag-confirmed">確認済み（Rinnai公式サイト）</span></td></tr>
+    </table>
+    <div class="info-box">
+      <strong>Rinnai Thailand との関係について:</strong> Rinnai Thailand（ガス給湯器・コンロ大手）の公式サイト客先リファレンスにMitoyo Rubber Thailandが掲載されています。これはMRTがRinnaiの「顧客」（= Rinnaiから何かを調達）であるのか、逆にRinnaiが「MRTの顧客」（= MRTからゴム部品を調達）であるのかは、表記の文脈から断定困難です。ただし、MRTが家電用ゴム部品（ガスケット等）をRinnaiに納入している可能性が高いと推定されます。
+    </div>
+
+    <h4 style="margin-top:15px;">二輪メーカー（タイ工場）</h4>
+    <table>
+      <tr><th>企業名</th><th>タイ工場所在地</th><th>確度</th></tr>
+      <tr><td>A.P. Honda (Thailand)</td><td>バンチャン工業団地</td><td><span class="tag tag-inferred">推定（BCP記載の事業範囲に「motorcycle」含む）</span></td></tr>
+      <tr><td>Thai Yamaha Motor</td><td>サムットプラカーン</td><td><span class="tag tag-speculative">推測</span></td></tr>
+      <tr><td>Kawasaki Motors (Thailand)</td><td>ラヨーン</td><td><span class="tag tag-speculative">推測</span></td></tr>
+    </table>
+    <div class="info-box">
+      BCP企業情報およびMitoyo本体サイトにおいて、MRTの事業範囲に明確に「motorcycle」（二輪）が含まれています。アマタナコーン工業団地の立地とIATF 16949認証を考慮すると、少なくとも一部の二輪メーカー向け供給を行っている蓋然性は高いです。
+    </div>
+
+    <h4 style="margin-top:15px;">輸出先</h4>
+    <table>
+      <tr><th>仕向地</th><th>根拠</th><th>確度</th></tr>
+      <tr><td>日本（ミトヨ本体向け逆輸出）</td><td>グループ内取引構造。タイで製造した部品をミトヨ本体経由で日本OEMに供給</td><td><span class="tag tag-inferred">推定</span></td></tr>
+      <tr><td>マレーシア（Unika向け）</td><td>Mitoyo Plasticsがマレーシアから2社のサプライヤーと取引（Tendata）。逆方向の部品供給もあり得る</td><td><span class="tag tag-inferred">推定</span></td></tr>
+      <tr><td>中国（上海三豊向け）</td><td>上海拠点が販売・商社機能を持つ</td><td><span class="tag tag-speculative">推測</span></td></tr>
+      <tr><td>ASEAN域内</td><td>登記事業目的に「輸出」が含まれる</td><td><span class="tag tag-speculative">推測</span></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ===== B. 仕入先 ===== -->
+<div class="section">
+  <h2 class="section-title">III-B. 仕入先（サプライヤー）</h2>
+
+  <div class="warn-box">
+    <strong>注意:</strong> MRTの仕入先は非公開です。以下は自社開発コンパウンドの原材料調達に必要な合成ゴム・配合剤メーカーのタイ拠点と、業界構造からの推定です。
+  </div>
+
+  <h3 class="subsection-title">B-1. ゴム原材料（合成ゴム）の推定調達先</h3>
+  <div class="card">
+    <p>MRTは自社開発コンパウンドを使用しているため、合成ゴム原料を直接調達していると推定されます。タイ・ASEAN地域の主要合成ゴムサプライヤーは以下の通りです。</p>
+    <table>
+      <tr><th>ゴム種</th><th>用途</th><th>タイ/ASEAN拠点を持つ主要サプライヤー</th><th>確度</th></tr>
+      <tr><td>NBR（ニトリルゴム）</td><td>耐油性シール、Oリング、ガスケット</td><td>Zeon Corporation（日本）/ LANXESS（ドイツ）/ JSR→ENEOS Materials</td><td><span class="tag tag-inferred">推定</span></td></tr>
+      <tr><td>EPDM</td><td>耐候性シール、ウェザーストリップ</td><td>LANXESS / Mitsui Chemicals / Sumitomo Chemical</td><td><span class="tag tag-inferred">推定</span></td></tr>
+      <tr><td>CR（クロロプレン）</td><td>耐油・耐候性部品</td><td>Denka（旧デンカ）/ LANXESS</td><td><span class="tag tag-inferred">推定</span></td></tr>
+      <tr><td>シリコーンゴム</td><td>耐熱部品</td><td>Shin-Etsu Silicones (Thailand) / Dow Silicones</td><td><span class="tag tag-inferred">推定</span></td></tr>
+      <tr><td>NR（天然ゴム）</td><td>防振部品、ダンパー</td><td>タイ国内調達（世界最大の天然ゴム生産国）</td><td><span class="tag tag-inferred">推定</span></td></tr>
+      <tr><td>FKM（フッ素ゴム）</td><td>高耐熱・耐薬品シール</td><td>Chemours / Daikin / 3M</td><td><span class="tag tag-speculative">推測</span></td></tr>
+    </table>
+    <div class="info-box">
+      <strong>コンパウンド内製の意味:</strong> MRTは合成ゴムの生ポリマーを購入し、自社で配合剤（カーボンブラック、加硫剤、老化防止剤等）を混練してコンパウンドを製造しています。これは品質管理とコスト面で競争優位性を持つ一方、原材料調達先が多岐にわたることを意味します。
+    </div>
+  </div>
+
+  <h3 class="subsection-title">B-2. 配合剤（カーボンブラック・加硫剤等）の推定調達先</h3>
+  <div class="card">
+    <table>
+      <tr><th>配合剤</th><th>用途</th><th>タイ拠点を持つ主要サプライヤー</th><th>確度</th></tr>
+      <tr><td>カーボンブラック</td><td>補強充填剤</td><td><strong>Birla Carbon Thailand</strong>（Angthong / 年産24万トン・世界最大単一工場）<br><strong>Thai Tokai Carbon Product</strong>（Sriracha, Chonburi）<br>Cabot Corporation</td><td><span class="tag tag-inferred">推定</span></td></tr>
+      <tr><td>加硫剤（硫黄・促進剤）</td><td>架橋反応</td><td>Siam Chemical / 各種ゴム薬品商社</td><td><span class="tag tag-speculative">推測</span></td></tr>
+      <tr><td>老化防止剤</td><td>劣化防止</td><td>LANXESS / 大内新興化学工業</td><td><span class="tag tag-speculative">推測</span></td></tr>
+      <tr><td>可塑剤（DOP等）</td><td>柔軟性付与</td><td>各種化学品商社</td><td><span class="tag tag-speculative">推測</span></td></tr>
+      <tr><td>シリカ</td><td>補強充填剤</td><td>Evonik / Solvay</td><td><span class="tag tag-speculative">推測</span></td></tr>
+    </table>
+  </div>
+
+  <h3 class="subsection-title">B-3. 金属インサート部品の推定調達先</h3>
+  <div class="card">
+    <p>MRTのファンボス、ダイアフラム等の金属-ゴム加硫接着品には金属インサート部品が必要です。</p>
+    <table>
+      <tr><th>部品種</th><th>推定調達先</th><th>確度</th></tr>
+      <tr><td>プレス金属部品</td><td>アマタナコーン工業団地内の日系プレスメーカーまたはタイローカルサプライヤー</td><td><span class="tag tag-speculative">推測</span></td></tr>
+      <tr><td>切削加工品</td><td>同上</td><td><span class="tag tag-speculative">推測</span></td></tr>
+      <tr><td>ワイヤーメッシュ・布</td><td>タイ国内サプライヤー</td><td><span class="tag tag-speculative">推測</span></td></tr>
+    </table>
+    <div class="info-box">
+      アマタナコーン工業団地には約600社以上が入居（うち66%が日系企業）。金属部品の調達は同工業団地内もしくは近隣の東部臨海工業地帯で完結可能な環境にあります。
+    </div>
+  </div>
+
+  <h3 class="subsection-title">B-4. 設備・副資材</h3>
+  <div class="card">
+    <table>
+      <tr><th>設備・資材</th><th>MRT保有設備（公開情報）</th><th>推定サプライヤー</th></tr>
+      <tr><td>真空プレス</td><td>保有確認</td><td>日系プレスメーカー</td></tr>
+      <tr><td>混練ロール</td><td>保有確認（コンパウンド内製用）</td><td>日系混練機メーカー</td></tr>
+      <tr><td>二次加硫釜</td><td>保有確認</td><td>-</td></tr>
+      <tr><td>自動検査装置</td><td>保有確認</td><td>日系検査装置メーカー</td></tr>
+      <tr><td>接着剤（プライマー）</td><td>金属-ゴム接着に必要</td><td>Lord Corporation / Chemlok等</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ===== C. グループ内取引 ===== -->
+<div class="section">
+  <h2 class="section-title">III-C. グループ内取引</h2>
+
+  <h3 class="subsection-title">C-1. ミトヨ本体（日本）との取引</h3>
+  <div class="card">
+    <table>
+      <tr><th>取引類型</th><th>内容</th><th>確度</th><th>備考</th></tr>
+      <tr>
+        <td><strong>技術供与料 / ロイヤルティ</strong></td>
+        <td>ミトヨ本体からMRTへの製造技術・コンパウンド配合処方の供与に対する対価</td>
+        <td><span class="tag tag-inferred">推定</span></td>
+        <td>MRTの自社開発コンパウンドはミトヨ本体の60年以上の技術蓄積に基づく。技術供与契約の存在は合理的に推定される</td>
+      </tr>
+      <tr>
+        <td><strong>部品の逆輸出（タイ→日本）</strong></td>
+        <td>MRTで製造したゴム部品をミトヨ本体経由で日本のOEM/Tier1に供給</td>
+        <td><span class="tag tag-inferred">推定</span></td>
+        <td>低コスト生産拠点としてのタイ工場の位置づけ</td>
+      </tr>
+      <tr>
+        <td><strong>原材料・金型の供給（日本→タイ）</strong></td>
+        <td>ミトヨ本体からMRTへの金型・治工具の支給、または日本メーカー経由の原材料調達</td>
+        <td><span class="tag tag-inferred">推定</span></td>
+        <td>立上げ時および新製品投入時</td>
+      </tr>
+      <tr>
+        <td><strong>経営管理料</strong></td>
+        <td>ミトヨ本体からの経営管理サービスへの対価</td>
+        <td><span class="tag tag-speculative">推測</span></td>
+        <td>一般的な日系海外子会社の構造</td>
+      </tr>
+    </table>
+  </div>
+
+  <h3 class="subsection-title">C-2. Mitoyo Plastics (Thailand) との取引</h3>
+  <div class="card">
+    <table>
+      <tr><th>取引類型</th><th>内容</th><th>確度</th><th>備考</th></tr>
+      <tr>
+        <td><strong>複合部品の協業製造</strong></td>
+        <td>MRT（ゴム部品）+ Mitoyo Plastics（樹脂部品）の一体化製品を共同で顧客に供給</td>
+        <td><span class="tag tag-confirmed">確認</span></td>
+        <td>BCP記載: 「affiliated companies like Mitoyo Plastic Thailand to deliver quality and cost-effective solutions」</td>
+      </tr>
+      <tr>
+        <td><strong>顧客の共有</strong></td>
+        <td>同一OEM/Tier1顧客にゴム+樹脂のセットで提案・供給</td>
+        <td><span class="tag tag-inferred">推定</span></td>
+        <td>同一MD（山川哲三）が両社を統括</td>
+      </tr>
+      <tr>
+        <td><strong>管理機能の共有</strong></td>
+        <td>品質管理、購買、営業等のバックオフィス共有の可能性</td>
+        <td><span class="tag tag-speculative">推測</span></td>
+        <td>同一MDの下で効率化が図られている可能性</td>
+      </tr>
+    </table>
+    <div class="info-box">
+      <strong>Mitoyo Plastics の輸入データ（Tendata）:</strong> Mitoyo Plastics Thailandはマレーシアの2社のサプライヤーからHS Code 3926909900（プラスチック製品）、8708299300（自動車部品）、9800000060を輸入。これはUnika Rubber Products（マレーシア）からのゴム部品仕入れの可能性を示唆しています。
+    </div>
+  </div>
+
+  <h3 class="subsection-title">C-3. Thongchai Mitoyo Co., Ltd. との取引</h3>
+  <div class="card">
+    <table>
+      <tr><th>取引類型</th><th>内容</th><th>確度</th></tr>
+      <tr>
+        <td><strong>販売代理（商社機能）</strong></td>
+        <td>Thongchai Mitoyoがタイ国内の自動車ボディ部品の流通・販売を担当。MRTおよびMitoyo Plasticsの製品を販売代理する可能性</td>
+        <td><span class="tag tag-inferred">推定</span></td>
+      </tr>
+      <tr>
+        <td><strong>アフターマーケット部品供給</strong></td>
+        <td>OEM向けだけでなく、補修部品市場への販売チャネルとしてThongchai Mitoyoを活用</td>
+        <td><span class="tag tag-speculative">推測</span></td>
+      </tr>
+    </table>
+    <p style="font-size:0.85em; color:var(--text-light); margin-top:10px;">Thongchai Mitoyoは2013年設立、売上161M THB（2022年）、チャチューンサオ県を拠点にVitalSparesプラットフォームで自動車ボディ部品販売を行っている。</p>
+  </div>
+
+  <h3 class="subsection-title">C-4. Unika Rubber Products Sdn. Bhd.（マレーシア）との取引</h3>
+  <div class="card">
+    <table>
+      <tr><th>取引類型</th><th>内容</th><th>確度</th></tr>
+      <tr>
+        <td><strong>技術共有・JV関係</strong></td>
+        <td>ミトヨ本体とのJV（1996年～）。製造技術・品質管理ノウハウの共有</td>
+        <td><span class="tag tag-confirmed">確認</span></td>
+      </tr>
+      <tr>
+        <td><strong>相互供給</strong></td>
+        <td>Unikaの製品（精密ゴム部品、金属-ゴム接着品）をタイ拠点経由で供給。またはその逆</td>
+        <td><span class="tag tag-inferred">推定</span></td>
+      </tr>
+      <tr>
+        <td><strong>マレーシア市場カバー</strong></td>
+        <td>ASEAN域内での地域分担。マレーシアはUnika、タイはMRTが担当</td>
+        <td><span class="tag tag-inferred">推定</span></td>
+      </tr>
+    </table>
+    <p style="font-size:0.85em; color:var(--text-light); margin-top:10px;">Unika Rubber Products: 1987年設立、従業員約100名。CR, NBR, SBR, NR, EPDM, BUTYL, シリコン等のゴムコンパウンドを自社製造。自動車・電子・電気機器向け精密ゴム部品を生産。</p>
+  </div>
+
+  <h3 class="subsection-title">C-5. クリヤマグループとの取引（2025年4月以降の新規関係）</h3>
+  <div class="card">
+    <table>
+      <tr><th>取引類型</th><th>内容</th><th>確度</th></tr>
+      <tr>
+        <td><strong>尿素SCR関連製品の一体供給</strong></td>
+        <td>ミトヨの尿素水タンク製造技術 + クリヤマの尿素SCRタンク・モジュール事業の統合。タイのトラック市場向け</td>
+        <td><span class="tag tag-confirmed">確認（IR資料）</span></td>
+      </tr>
+      <tr>
+        <td><strong>国内外拠点の相互補完</strong></td>
+        <td>クリヤマのASEAN拠点とミトヨ/MRTのタイ拠点の物流・製造機能の相互活用</td>
+        <td><span class="tag tag-confirmed">確認（IR資料）</span></td>
+      </tr>
+      <tr>
+        <td><strong>乗用車部品分野への進出</strong></td>
+        <td>クリヤマ（従来は商用車中心）がミトヨの乗用車向け部品チャネルを活用</td>
+        <td><span class="tag tag-confirmed">確認（M&A Online記事）</span></td>
+      </tr>
+    </table>
+    <div class="info-box">
+      <strong>買収の背景:</strong> クリヤマHDは2025年4月2日にミトヨ全株式を61億円で取得。ミトヨの売上高104億円、純資産50.7億円（2024年3月期）。3年間でM&Aに最大100億円を投じる計画の中核案件。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 調査方法と限界 ===== -->
+<div class="section">
+  <h2 class="section-title">IV. 調査方法と限界</h2>
+  <div class="card">
+    <h4>使用した情報源</h4>
+    <table>
+      <tr><th>情報源</th><th>取得情報</th><th>信頼度</th></tr>
+      <tr><td>mitoyonet.com（ミトヨ公式サイト）</td><td>取引先リスト（39社）、グループ会社、製品情報、海外拠点</td><td>高</td></tr>
+      <tr><td>Bangkok Consulting Partners (BCP)</td><td>MRT企業概要、設立年、製品範囲、MD名</td><td>高</td></tr>
+      <tr><td>Companies House Thailand</td><td>登記情報、財務データ</td><td>高</td></tr>
+      <tr><td>Creden.co</td><td>財務データ（2024年）、企業価値</td><td>中</td></tr>
+      <tr><td>Tendata（貿易データ）</td><td>Mitoyo Plasticsの輸入データ（マレーシア2社）</td><td>中</td></tr>
+      <tr><td>クリヤマHD IR資料・M&Aニュース</td><td>買収詳細、シナジー効果、事業概要</td><td>高</td></tr>
+      <tr><td>ゴム報知新聞</td><td>業界報道</td><td>中</td></tr>
+      <tr><td>JobThai / 求人情報</td><td>職種（原材料受入・出荷担当）、事業範囲</td><td>中</td></tr>
+      <tr><td>VitalSpares / 業界ディレクトリ</td><td>Thongchai Mitoyo情報</td><td>中</td></tr>
+    </table>
+
+    <h4 style="margin-top:20px;">調査の限界</h4>
+    <ul style="padding-left:20px; font-size:0.9em;">
+      <li>MRT単体の顧客リスト・仕入先リストは非公開。公開データベース（Volza、Panjiva、ImportGenius等）にも有料会員限定でアクセスできず、個社レベルの貿易データは取得できなかった。</li>
+      <li>DataForThai（タイ企業DB）はログイン壁のため株主・取締役の詳細を取得できなかった。</li>
+      <li>MarkLines（自動車部品サプライヤーDB）は会員登録が必要で詳細データにアクセスできなかった。</li>
+      <li>タイにおける移転価格文書（TP文書）は非公開であり、グループ内取引の具体的な金額・料率は不明。</li>
+      <li>タイ語の企業情報データベース（DBD e-Filing等）には認証の関係でアクセスできなかった。</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== まとめ ===== -->
+<div class="section">
+  <h2 class="section-title">V. 総括</h2>
+  <div class="card">
+    <h4>確認された事実</h4>
+    <ul style="padding-left:20px; font-size:0.9em; margin-bottom:15px;">
+      <li>親会社ミトヨは日本国内で39社の取引先を公開しており、うち自動車OEM 9社（いすゞ、日産、SUBARU、Honda、ダイハツ、マツダ、日野、三菱ふそう、UDトラックス）、Tier1/部品メーカー多数と取引。</li>
+      <li>MRTは自動車・二輪・家電向けゴム部品を製造し、自社開発コンパウンドを使用。IATF 16949認証取得済み。</li>
+      <li>Mitoyo Plastics Thailandとの協業製造体制が確認されている。</li>
+      <li>2025年4月のクリヤマグループ入りにより、尿素SCR関連の一体供給体制が構築される。</li>
+      <li>Rinnai Thailandとの取引関係が公開情報で確認されている。</li>
+    </ul>
+
+    <h4>合理的推定</h4>
+    <ul style="padding-left:20px; font-size:0.9em; margin-bottom:15px;">
+      <li>親会社ミトヨの日本での取引先のうち、タイに工場を持つ企業（いすゞ、日産、Honda、ボッシュ、ヴァレオ、マーレ、マレリ等）はMRTの顧客である蓋然性が高い。特にいすゞは親会社の主要顧客であり、タイはいすゞの最大の海外生産拠点。</li>
+      <li>コンパウンド内製のため、合成ゴム原料（NBR、EPDM、CR等）およびカーボンブラック等の配合剤を複数のグローバルサプライヤーから調達していると推定。</li>
+      <li>ミトヨ本体との間に技術供与契約（ロイヤルティ）が存在すると推定。</li>
+    </ul>
+
+    <h4>追加調査が必要な項目</h4>
+    <ul style="padding-left:20px; font-size:0.9em;">
+      <li>Volza / Panjiva / ImportGenius等の有料貿易データベースによるMRTの輸出入記録の確認</li>
+      <li>タイDBD（Department of Business Development）のe-Filing経由での財務諸表・株主構成の確認</li>
+      <li>IATF 16949認証書の詳細（認証機関・スコープ）の確認</li>
+      <li>具体的な顧客名・仕入先名は、直接の企業訪問やヒアリングが最も確実</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Sources -->
+<div class="section sources">
+  <h2 class="section-title">Sources</h2>
+  <ol>
+    <li><a href="https://mitoyonet.com/" target="_blank">株式会社ミトヨ 公式サイト</a> - 取引先リスト、会社概要、海外拠点情報</li>
+    <li><a href="https://en.mitoyonet.com/company" target="_blank">Mitoyo Co., Ltd. - Company Profile (English)</a></li>
+    <li><a href="https://mitoyonet.com/international-base" target="_blank">株式会社ミトヨ - 海外拠点紹介</a> - 各拠点の製品・設備・認証情報</li>
+    <li><a href="https://mitoyonet.com/auto-parts" target="_blank">株式会社ミトヨ - 取扱製品（自動車部品）</a></li>
+    <li><a href="https://bangkokcp.com/corporateinfo/mitoyo-rubber-thailand-co-ltd/" target="_blank">Bangkok Consulting Partners - Mitoyo Rubber Thailand</a></li>
+    <li><a href="https://bangkokcp.com/corporateinfo/mitoyo-plastic-thailand-co-ltd/" target="_blank">Bangkok Consulting Partners - Mitoyo Plastic Thailand</a></li>
+    <li><a href="https://companieshouse.co.th/mitoyo-rubber-thailand-co-ltd-0205553024631" target="_blank">Companies House Thailand - MITOYO RUBBER (THAILAND)</a></li>
+    <li><a href="https://data.creden.co/company/general/0205553024631" target="_blank">Creden - Company Data</a></li>
+    <li><a href="https://www.nihon-ma.co.jp/news/20250214_3355-3/" target="_blank">M&Aニュース - クリヤマHD、ミトヨ買収へ（2025/02/14）</a></li>
+    <li><a href="https://gomuhouchi.com/tradingcompany/65257/" target="_blank">ゴム報知新聞 - クリヤマHD ミトヨ孫会社化</a></li>
+    <li><a href="https://maonline.jp/articles/kuriyama_mitoyo20250401" target="_blank">M&A Online - クリヤマ、ミトヨ子会社化で乗用車部品分野に拡大</a></li>
+    <li><a href="https://www.kuriyama.co.jp/news/p4953/" target="_blank">クリヤマジャパン - ミトヨがクリヤマグループの一員に</a></li>
+    <li><a href="https://www.tendata.com/en/buyer/mitoyo-plastics-thailand-co-ltd-THANe2c41ea7da6baf7c75f37b8987d8b302.html" target="_blank">Tendata - Mitoyo Plastics Thailand Import/Export Profile</a></li>
+    <li><a href="https://kousotsu-jobnavi.com/company.aspx?c=7618" target="_blank">高卒JobNavi - 株式会社ミトヨ</a></li>
+    <li><a href="http://unikarubber.com.my/about-us" target="_blank">Unika Rubber Products Sdn. Bhd. - About Us</a></li>
+    <li><a href="https://vitalspares.com/account/dealerdetails?id=19154" target="_blank">VitalSpares - Thongchai Mitoyo Co., Ltd.</a></li>
+    <li><a href="https://www.basic-cm.co.jp/top/news/%E6%A0%AA%E5%BC%8F%E4%BC%9A%E7%A4%BE%E3%83%9F%E3%83%88%E3%83%A8%E3%81%AE%E6%A0%AA%E5%BC%8F%E8%AD%B2%E6%B8%A1%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6/" target="_blank">Basic Capital Management - ミトヨ株式譲渡について</a></li>
+    <li><a href="https://www.jobthai.com/en/company/116998" target="_blank">JobThai - Mitoyo Rubber Thailand</a></li>
+  </ol>
+</div>
+
+</div>
+
+<footer>
+  <p>調査報告書 | 2026年3月15日作成</p>
+  <p style="font-size:0.8em; margin-top:5px;">本報告書は公開情報に基づく調査結果です。確認済み/推定/推測の区分を必ずご確認ください。</p>
+</footer>
+
+</body>
+</html>
