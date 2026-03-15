@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日本上場ゴム製品メーカー一覧 - 移転価格コンパラブル選定調査</title>
+<style>
+:root {
+  --primary: #1a365d;
+  --secondary: #2b6cb0;
+  --accent: #e53e3e;
+  --bg: #f7fafc;
+  --card-bg: #ffffff;
+  --border: #e2e8f0;
+  --text: #2d3748;
+  --text-light: #718096;
+  --green: #38a169;
+  --yellow: #d69e2e;
+  --red: #e53e3e;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: "Segoe UI", "Hiragino Sans", "Meiryo", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  padding: 20px;
+}
+.container { max-width: 1400px; margin: 0 auto; }
+h1 {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  padding: 30px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-size: 1.6em;
+}
+h1 small { display: block; font-size: 0.55em; font-weight: normal; margin-top: 8px; opacity: 0.9; }
+h2 {
+  color: var(--primary);
+  border-left: 5px solid var(--secondary);
+  padding: 10px 15px;
+  margin: 30px 0 15px;
+  background: #ebf8ff;
+  border-radius: 0 8px 8px 0;
+  font-size: 1.2em;
+}
+h3 {
+  color: var(--secondary);
+  margin: 20px 0 10px;
+  font-size: 1.05em;
+}
+.card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 25px;
+  margin-bottom: 20px;
+}
+.target-box {
+  background: #fffff0;
+  border: 2px solid var(--yellow);
+  border-radius: 12px;
+  padding: 25px;
+  margin-bottom: 25px;
+}
+.target-box h3 { color: #b7791f; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0;
+  font-size: 0.88em;
+}
+th, td {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+th {
+  background: var(--primary);
+  color: white;
+  font-weight: 600;
+  white-space: nowrap;
+}
+tr:nth-child(even) { background: #f7fafc; }
+tr:hover { background: #ebf8ff; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.8em;
+  font-weight: 600;
+}
+.badge-prime { background: #ebf8ff; color: var(--secondary); border: 1px solid var(--secondary); }
+.badge-standard { background: #fefcbf; color: #975a16; border: 1px solid #d69e2e; }
+.badge-a { background: #c6f6d5; color: #22543d; }
+.badge-b { background: #fefcbf; color: #975a16; }
+.badge-c { background: #fed7d7; color: #9b2c2c; }
+.badge-x { background: #e2e8f0; color: #4a5568; }
+.rating-high { color: var(--green); font-weight: bold; }
+.rating-mid { color: var(--yellow); font-weight: bold; }
+.rating-low { color: var(--red); font-weight: bold; }
+.note {
+  background: #ebf8ff;
+  border-left: 4px solid var(--secondary);
+  padding: 12px 16px;
+  margin: 15px 0;
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92em;
+}
+.warn {
+  background: #fffff0;
+  border-left: 4px solid var(--yellow);
+  padding: 12px 16px;
+  margin: 15px 0;
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92em;
+}
+.section-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 15px 0;
+}
+.section-nav a {
+  display: inline-block;
+  padding: 6px 14px;
+  background: var(--secondary);
+  color: white;
+  text-decoration: none;
+  border-radius: 20px;
+  font-size: 0.85em;
+  transition: background 0.2s;
+}
+.section-nav a:hover { background: var(--primary); }
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin: 15px 0;
+}
+.summary-item {
+  background: #ebf8ff;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+}
+.summary-item .number {
+  font-size: 2em;
+  font-weight: bold;
+  color: var(--secondary);
+}
+.summary-item .label {
+  font-size: 0.85em;
+  color: var(--text-light);
+}
+.comparison-table { overflow-x: auto; }
+.comparison-table table { min-width: 1200px; }
+@media print {
+  body { padding: 10px; font-size: 10pt; }
+  .card { box-shadow: none; border: 1px solid #ddd; }
+  h1 { background: var(--primary) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+@media (max-width: 768px) {
+  body { padding: 10px; }
+  h1 { font-size: 1.2em; padding: 20px; }
+  table { font-size: 0.78em; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>日本上場ゴム製品メーカー 網羅的調査
+<small>移転価格税制 比較対象企業（コンパラブル）選定のための基礎資料 | 2026年3月15日</small>
+</h1>
+
+<div class="section-nav">
+  <a href="#target">対象企業（ミトヨ）</a>
+  <a href="#overview">一覧概要</a>
+  <a href="#industrial">工業用ゴム製品（重点）</a>
+  <a href="#tire">タイヤメーカー（参考）</a>
+  <a href="#other">その他ゴム製品</a>
+  <a href="#financial">財務比較表</a>
+  <a href="#comparability">コンパラ適格性評価</a>
+  <a href="#conclusion">結論・推奨</a>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="target">1. 対象企業：株式会社ミトヨ</h2>
+<!-- ============================================================ -->
+<div class="target-box">
+  <h3>基本情報</h3>
+  <table>
+    <tr><th style="width:180px">会社名</th><td>株式会社ミトヨ（Mitoyo Co.,Ltd.）</td></tr>
+    <tr><th>設立</th><td>1948年12月</td></tr>
+    <tr><th>本社</th><td>東京都中央区新川1-28-25</td></tr>
+    <tr><th>資本金</th><td>1億円</td></tr>
+    <tr><th>上場区分</th><td>非上場（2025年4月にクリヤマジャパンが100%取得、クリヤマHDの孫会社化）</td></tr>
+    <tr><th>売上高</th><td>合算 118億3,700万円 / 単独 97億7,500万円（2025年3月期）</td></tr>
+    <tr><th>従業員数</th><td>合算 620名 / 単独 283名（2025年3月末）</td></tr>
+    <tr><th>事業内容</th><td>自動車用ゴム・樹脂・金属製品、産業資材の製造販売</td></tr>
+    <tr><th>海外拠点</th><td>タイ（プラスチック・ゴム製造2社）、マレーシア（ゴム製品製造）、中国上海（商貿会社）</td></tr>
+    <tr><th>主要製品</th><td>自動車用ゴム部品、樹脂部品、ホースアッセンブリー、産業資材</td></tr>
+  </table>
+  <div class="warn">
+    <strong>留意点：</strong>ミトヨは2025年4月にクリヤマグループに買収され、現在は非上場。移転価格のコンパラブル選定にあたっては、ミトヨの事業特性（自動車用ゴム・樹脂部品の製造、タイ・マレーシアに製造子会社、売上約100億円規模）と比較可能な企業を選定する必要がある。
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="overview">2. 日本上場ゴム製品メーカー 全18社一覧</h2>
+<!-- ============================================================ -->
+<div class="card">
+  <div class="summary-grid">
+    <div class="summary-item">
+      <div class="number">18</div>
+      <div class="label">東証上場ゴム製品銘柄数</div>
+    </div>
+    <div class="summary-item">
+      <div class="number">11</div>
+      <div class="label">プライム市場</div>
+    </div>
+    <div class="summary-item">
+      <div class="number">7</div>
+      <div class="label">スタンダード市場</div>
+    </div>
+    <div class="summary-item">
+      <div class="number">4</div>
+      <div class="label">タイヤ大手</div>
+    </div>
+  </div>
+  <p>東証の業種分類「ゴム製品」（33業種コード：3350）に属する上場企業は以下の18社である。株探の集計では一部17社とされるが、これは銘柄入替時期の差異による。</p>
+
+  <div class="comparison-table">
+  <table>
+    <tr>
+      <th>No</th><th>証券コード</th><th>会社名</th><th>市場</th><th>主要製品カテゴリ</th><th>売上規模</th>
+    </tr>
+    <tr><td>1</td><td>5108</td><td>ブリヂストン</td><td><span class="badge badge-prime">プライム</span></td><td>タイヤ</td><td>4兆4,300億円</td></tr>
+    <tr><td>2</td><td>5110</td><td>住友ゴム工業</td><td><span class="badge badge-prime">プライム</span></td><td>タイヤ</td><td>1兆2,118億円</td></tr>
+    <tr><td>3</td><td>5101</td><td>横浜ゴム</td><td><span class="badge badge-prime">プライム</span></td><td>タイヤ</td><td>1兆947億円</td></tr>
+    <tr><td>4</td><td>5105</td><td>TOYO TIRE</td><td><span class="badge badge-prime">プライム</span></td><td>タイヤ</td><td>5,653億円</td></tr>
+    <tr style="background:#fffff5"><td>5</td><td>5161</td><td>西川ゴム工業</td><td><span class="badge badge-standard">スタンダード</span></td><td>自動車用シール</td><td>1,206億円</td></tr>
+    <tr style="background:#fffff5"><td>6</td><td>5195</td><td>バンドー化学</td><td><span class="badge badge-prime">プライム</span></td><td>産業用ベルト</td><td>1,155億円</td></tr>
+    <tr style="background:#fffff5"><td>7</td><td>5122</td><td>オカモト</td><td><span class="badge badge-prime">プライム</span></td><td>コンドーム・フィルム・手袋</td><td>1,091億円</td></tr>
+    <tr style="background:#fffff5"><td>8</td><td>5192</td><td>三ツ星ベルト</td><td><span class="badge badge-prime">プライム</span></td><td>伝動ベルト</td><td>905億円</td></tr>
+    <tr style="background:#fffff5"><td>9</td><td>5186</td><td>ニッタ</td><td><span class="badge badge-prime">プライム</span></td><td>ベルト・ホース・チューブ</td><td>902億円</td></tr>
+    <tr style="background:#fffff5"><td>10</td><td>5185</td><td>フコク</td><td><span class="badge badge-prime">プライム</span></td><td>ワイパーゴム・精密ゴム部品</td><td>896億円</td></tr>
+    <tr style="background:#fffff5"><td>11</td><td>5184</td><td>ニチリン</td><td><span class="badge badge-standard">スタンダード</span></td><td>自動車用ホース</td><td>736億円</td></tr>
+    <tr style="background:#fffff5"><td>12</td><td>5121</td><td>藤倉コンポジット</td><td><span class="badge badge-prime">プライム</span></td><td>ゴム引布・防災用品・ゴルフ</td><td>413億円</td></tr>
+    <tr style="background:#fffff5"><td>13</td><td>5189</td><td>櫻護謨</td><td><span class="badge badge-standard">スタンダード</span></td><td>消防ホース・工業用ゴム</td><td>121億円</td></tr>
+    <tr style="background:#fffff5"><td>14</td><td>5103</td><td>昭和ホールディングス</td><td><span class="badge badge-standard">スタンダード</span></td><td>ゴムライニング・テニスボール・和菓子</td><td>86億円</td></tr>
+    <tr style="background:#fffff5"><td>15</td><td>5162</td><td>朝日ラバー</td><td><span class="badge badge-standard">スタンダード</span></td><td>シリコーンゴム・LED部品</td><td>76億円</td></tr>
+    <tr style="background:#fffff5"><td>16</td><td>5199</td><td>不二ラテックス</td><td><span class="badge badge-standard">スタンダード</span></td><td>コンドーム・緩衝器</td><td>71億円</td></tr>
+    <tr style="background:#fffff5"><td>17</td><td>5194</td><td>相模ゴム工業</td><td><span class="badge badge-standard">スタンダード</span></td><td>コンドーム</td><td>56億円</td></tr>
+    <tr><td>18</td><td>-</td><td>（鬼怒川ゴム工業等）</td><td>-</td><td>非上場・統合済</td><td>-</td></tr>
+  </table>
+  </div>
+  <div class="note">
+    <strong>分類の留意点：</strong>No.1-4がタイヤ大手（規模的にミトヨとの比較は困難）。No.5-17が工業用ゴム製品・その他ゴム製品メーカーで、コンパラブル候補の検討対象となる。黄色背景の企業が主要検討対象。
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="industrial">3. 工業用ゴム製品メーカー（重点調査）</h2>
+<!-- ============================================================ -->
+
+<!-- ニチリン -->
+<div class="card" id="nichirin">
+  <h3>5184 ニチリン <span class="badge badge-standard">スタンダード</span> <span class="badge badge-a">コンパラ適格性：高</span></h3>
+  <table>
+    <tr><th style="width:140px">本社</th><td>兵庫県神戸市</td><th style="width:140px">設立</th><td>1914年</td></tr>
+    <tr><th>主要製品</th><td colspan="3">自動車用ブレーキホース（二輪車用国内シェアほぼ100%）、パワステホース、エアコンホース、住宅設備用ホース</td></tr>
+    <tr><th>連結従業員数</th><td>約2,000名超</td><th>海外売上比率</th><td>約70%</td></tr>
+    <tr><th>海外拠点</th><td colspan="3">9ヶ国13拠点：タイ（1994年〜）、ベトナム、インドネシア、インド、中国、米国、メキシコ、スペイン、ブルガリア</td></tr>
+    <tr><th>主要顧客</th><td colspan="3">ホンダ系中心、各自動車メーカー（独立系サプライヤー）</td></tr>
+  </table>
+  <h3>業績推移（12月決算）</h3>
+  <table>
+    <tr><th>決算期</th><th>売上高</th><th>営業利益</th><th>営業利益率</th></tr>
+    <tr><td>2023.12</td><td class="num">706億円</td><td class="num">96億円</td><td class="num">13.6%</td></tr>
+    <tr><td>2024.12</td><td class="num">713億円</td><td class="num">91億円</td><td class="num">12.9%</td></tr>
+    <tr><td>2025.12</td><td class="num">736億円</td><td class="num">90億円</td><td class="num">12.3%</td></tr>
+  </table>
+  <div class="note">
+    <strong>コンパラとしての評価：</strong>独立系自動車用ゴムホースメーカーとして製品カテゴリが類似。タイにも製造拠点があり、海外製造比率も高い。ただし売上規模はミトヨの約7倍で、営業利益率もミトヨより高い可能性。比較可能性の差異調整が必要だが、有力な候補。
+  </div>
+</div>
+
+<!-- フコク -->
+<div class="card" id="fukoku">
+  <h3>5185 フコク <span class="badge badge-prime">プライム</span> <span class="badge badge-a">コンパラ適格性：高</span></h3>
+  <table>
+    <tr><th style="width:140px">本社</th><td>埼玉県上尾市</td><th style="width:140px">設立</th><td>1954年</td></tr>
+    <tr><th>主要製品</th><td colspan="3">自動車用ワイパーブレードラバー（世界No.1シェア）、精密ゴム部品、ゴムローラー、OA機器用ゴム</td></tr>
+    <tr><th>連結従業員数</th><td>4,594名（2024年3月末）</td><th>海外売上比率</th><td>不明（海外9ヶ国に展開）</td></tr>
+    <tr><th>海外拠点</th><td colspan="3">タイ（サイアムフコク他3社）、インドネシア、ベトナム、韓国、中国（上海・東莞・青島・南京）、メキシコ、チェコ、インド</td></tr>
+    <tr><th>主要顧客</th><td colspan="3">自動車メーカー各社（独立系サプライヤー）</td></tr>
+  </table>
+  <h3>業績推移（3月決算）</h3>
+  <table>
+    <tr><th>決算期</th><th>売上高</th><th>営業利益</th><th>営業利益率</th></tr>
+    <tr><td>2023.03</td><td class="num">823億円</td><td class="num">20億円</td><td class="num">2.4%</td></tr>
+    <tr><td>2024.03</td><td class="num">888億円</td><td class="num">36億円</td><td class="num">4.1%</td></tr>
+    <tr><td>2025.03</td><td class="num">896億円</td><td class="num">47億円</td><td class="num">5.3%</td></tr>
+  </table>
+  <div class="note">
+    <strong>コンパラとしての評価：</strong>自動車用精密ゴム部品メーカー。タイに複数の製造拠点を有し、事業構造がミトヨと類似。独立系であり、コンパラとして有力。ただし売上規模はミトヨの約9倍。
+  </div>
+</div>
+
+<!-- 西川ゴム工業 -->
+<div class="card" id="nishikawa">
+  <h3>5161 西川ゴム工業 <span class="badge badge-standard">スタンダード</span> <span class="badge badge-b">コンパラ適格性：中</span></h3>
+  <table>
+    <tr><th style="width:140px">本社</th><td>広島県広島市</td><th style="width:140px">設立</th><td>1949年</td></tr>
+    <tr><th>主要製品</th><td colspan="3">自動車用シール製品（ドアシール、バックドアシール、グラスランチャネル、ボンネットシール、充電口シール等）</td></tr>
+    <tr><th>連結従業員数</th><td>6,966名（2024年3月末）</td><th>海外売上比率</th><td>50%超</td></tr>
+    <tr><th>海外拠点</th><td colspan="3">8ヶ国12拠点（タイ、インドネシア、中国、台湾、フィリピン、ベトナム、ラオス、ミャンマー、インド等）</td></tr>
+    <tr><th>主要顧客</th><td colspan="3">マツダ（主要顧客）、トヨタ、日産、ホンダ</td></tr>
+  </table>
+  <h3>業績推移（3月決算）</h3>
+  <table>
+    <tr><th>決算期</th><th>売上高</th><th>営業利益</th><th>営業利益率</th></tr>
+    <tr><td>2023.03</td><td class="num">981億円</td><td class="num">-1億円</td><td class="num">赤字</td></tr>
+    <tr><td>2024.03</td><td class="num">1,179億円</td><td class="num">65億円</td><td class="num">5.6%</td></tr>
+    <tr><td>2025.03</td><td class="num">1,206億円</td><td class="num">73億円</td><td class="num">6.1%</td></tr>
+  </table>
+  <div class="warn">
+    <strong>コンパラとしての留意点：</strong>自動車用ゴムシール製品で事業内容は類似しているが、マツダとの取引依存度が高い可能性があり、「独立企業」としての中立性に懸念。売上規模もミトヨの約12倍で大きい。
+  </div>
+</div>
+
+<!-- 三ツ星ベルト -->
+<div class="card" id="mitsuboshi">
+  <h3>5192 三ツ星ベルト <span class="badge badge-prime">プライム</span> <span class="badge badge-b">コンパラ適格性：中</span></h3>
+  <table>
+    <tr><th style="width:140px">本社</th><td>兵庫県神戸市</td><th style="width:140px">設立</th><td>1919年</td></tr>
+    <tr><th>主要製品</th><td colspan="3">自動車用ベルト（タイミングベルト等）、産業用ベルト、搬送ベルト、OA機器用ベルト</td></tr>
+    <tr><th>連結従業員数</th><td>4,471名（2024年3月末）</td><th>海外売上比率</th><td>約54%（海外ベルト事業）</td></tr>
+    <tr><th>海外拠点</th><td colspan="3">シンガポール（1977年〜）、タイ（1987年〜）、インドネシア（1989年〜）、中国（2004年〜）、インド（2010年〜）、ベトナム（2012年〜）</td></tr>
+    <tr><th>主要顧客</th><td colspan="3">自動車メーカー、産業機械メーカー各社</td></tr>
+  </table>
+  <h3>業績推移（3月決算）</h3>
+  <table>
+    <tr><th>決算期</th><th>売上高</th><th>営業利益</th><th>営業利益率</th></tr>
+    <tr><td>2023.03</td><td class="num">829億円</td><td class="num">90億円</td><td class="num">10.9%</td></tr>
+    <tr><td>2024.03</td><td class="num">840億円</td><td class="num">77億円</td><td class="num">9.2%</td></tr>
+    <tr><td>2025.03</td><td class="num">905億円</td><td class="num">89億円</td><td class="num">9.9%</td></tr>
+  </table>
+  <div class="note">
+    <strong>コンパラとしての評価：</strong>ベルト製品が主力で、ミトヨのホース・ゴム部品とは製品が異なる。ただし自動車用ゴム製品メーカーとしての事業構造は類似。タイに製造拠点あり。営業利益率が高く（9-10%）、差異調整が必要。
+  </div>
+</div>
+
+<!-- ニッタ -->
+<div class="card" id="nitta">
+  <h3>5186 ニッタ <span class="badge badge-prime">プライム</span> <span class="badge badge-b">コンパラ適格性：中</span></h3>
+  <table>
+    <tr><th style="width:140px">本社</th><td>大阪府大阪市</td><th style="width:140px">設立</th><td>1945年</td></tr>
+    <tr><th>主要製品</th><td colspan="3">伝動用ベルト、搬送用ベルト、樹脂ホース・チューブ、自動車チューブ、精密研磨パッド、フィルタ</td></tr>
+    <tr><th>連結従業員数</th><td>2,940名（2025年3月）</td><th>海外売上比率</th><td>不明（中期計画でグローバル化推進中）</td></tr>
+    <tr><th>海外拠点</th><td colspan="3">米国（1980年〜）、ドイツ（1991年〜）、シンガポール（1994年〜）、タイ（第2工場建設中）、中国等</td></tr>
+    <tr><th>主要顧客</th><td colspan="3">自動車メーカー、産業機械メーカー、半導体メーカー</td></tr>
+  </table>
+  <h3>業績推移（3月決算）</h3>
+  <table>
+    <tr><th>決算期</th><th>売上高</th><th>営業利益</th><th>営業利益率</th></tr>
+    <tr><td>2023.03</td><td class="num">880億円</td><td class="num">49億円</td><td class="num">5.7%</td></tr>
+    <tr><td>2024.03</td><td class="num">886億円</td><td class="num">44億円</td><td class="num">5.0%</td></tr>
+    <tr><td>2025.03</td><td class="num">902億円</td><td class="num">51億円</td><td class="num">5.7%</td></tr>
+  </table>
+  <div class="note">
+    <strong>コンパラとしての評価：</strong>ベルト・ホース・チューブ製品を幅広く手掛け、事業の多角化が進んでいる。ゴム製品製造が全事業の中核とは言い切れず、コンパラとしてはやや適格性が劣る。タイ拠点は建設中。
+  </div>
+</div>
+
+<!-- バンドー化学 -->
+<div class="card" id="bando">
+  <h3>5195 バンドー化学 <span class="badge badge-prime">プライム</span> <span class="badge badge-b">コンパラ適格性：中</span></h3>
+  <table>
+    <tr><th style="width:140px">本社</th><td>兵庫県神戸市</td><th style="width:140px">設立</th><td>1906年</td></tr>
+    <tr><th>主要製品</th><td colspan="3">Vベルト（日本初の国産化）、コンベヤベルト、自動車用ベルト、精密研磨剤、ホームドア・防犯カメラ用精密ベルト</td></tr>
+    <tr><th>連結従業員数</th><td>4,023名（2024年3月末）</td><th>海外売上比率</th><td>約50%弱</td></tr>
+    <tr><th>海外拠点</th><td colspan="3">世界4極体制（日本・アジア・アメリカ・欧州）：タイ（Bando Manufacturing Thailand他）、中国、インドネシア、インド、韓国、ブラジル等</td></tr>
+    <tr><th>主要顧客</th><td colspan="3">自動車メーカー、産業機械メーカー各社</td></tr>
+  </table>
+  <h3>業績推移（3月決算）</h3>
+  <table>
+    <tr><th>決算期</th><th>売上高</th><th>営業利益</th><th>営業利益率</th></tr>
+    <tr><td>2023.03</td><td class="num">1,036億円</td><td class="num">82億円</td><td class="num">8.0%</td></tr>
+    <tr><td>2024.03</td><td class="num">1,082億円</td><td class="num">77億円</td><td class="num">7.2%</td></tr>
+    <tr><td>2025.03</td><td class="num">1,155億円</td><td class="num">34億円</td><td class="num">3.0%</td></tr>
+  </table>
+  <div class="note">
+    <strong>コンパラとしての評価：</strong>ベルト製品が主力で製品は異なるが、自動車用ゴム製品としての類似性あり。タイに製造拠点あり。2025.03は一時的要因で利益率低下。売上規模がミトヨの約10倍。
+  </div>
+</div>
+
+<!-- 藤倉コンポジット -->
+<div class="card" id="fujikura">
+  <h3>5121 藤倉コンポジット <span class="badge badge-prime">プライム</span> <span class="badge badge-b">コンパラ適格性：中</span></h3>
+  <table>
+    <tr><th style="width:140px">本社</th><td>東京都江東区</td><th style="width:140px">設立</th><td>1910年</td></tr>
+    <tr><th>主要製品</th><td colspan="3">ゴム引布・加工品、救命ボート・救命胴衣（防衛関連）、空圧制御機器、除振台、ゴルフ用カーボンシャフト</td></tr>
+    <tr><th>連結従業員数</th><td>2,315名（臨時290名）</td><th>海外売上比率</th><td>不明</td></tr>
+    <tr><th>海外拠点</th><td colspan="3">韓国ソウル（2012年〜）、中国浙江省、ベトナム・ハイフォン</td></tr>
+    <tr><th>主要顧客</th><td colspan="3">防衛省、自衛隊、各種産業メーカー</td></tr>
+    <tr><th>株主構成</th><td colspan="3">フジクラ（旧藤倉電線）の関連会社</td></tr>
+  </table>
+  <h3>業績推移（3月決算）</h3>
+  <table>
+    <tr><th>決算期</th><th>売上高</th><th>営業利益</th><th>営業利益率</th></tr>
+    <tr><td>2023.03</td><td class="num">406億円</td><td class="num">44億円</td><td class="num">10.9%</td></tr>
+    <tr><td>2024.03</td><td class="num">377億円</td><td class="num">36億円</td><td class="num">9.6%</td></tr>
+    <tr><td>2025.03</td><td class="num">413億円</td><td class="num">48億円</td><td class="num">11.6%</td></tr>
+  </table>
+  <div class="warn">
+    <strong>コンパラとしての留意点：</strong>フジクラの関連会社であり「独立企業」の要件を満たさない可能性。また防衛関連製品が収益に大きく寄与しており、事業構造がミトヨと大きく異なる。コンパラとしては慎重な判断が必要。
+  </div>
+</div>
+
+<!-- 櫻護謨 -->
+<div class="card" id="sakura">
+  <h3>5189 櫻護謨 <span class="badge badge-standard">スタンダード</span> <span class="badge badge-c">コンパラ適格性：低</span></h3>
+  <table>
+    <tr><th style="width:140px">本社</th><td>東京都渋谷区</td><th style="width:140px">設立</th><td>1896年</td></tr>
+    <tr><th>主要製品</th><td colspan="3">消防用ホース、吸水管、救助機器、航空宇宙機器用ゴム部品、工業用ゴムライニング、ゴムシール</td></tr>
+    <tr><th>連結従業員数</th><td>342名（2025年3月末）</td><th>海外売上比率</th><td>不明（海外拠点なし）</td></tr>
+    <tr><th>海外拠点</th><td colspan="3">海外製造拠点は確認されず</td></tr>
+  </table>
+  <h3>業績推移（3月決算）</h3>
+  <table>
+    <tr><th>決算期</th><th>売上高</th><th>営業利益</th><th>営業利益率</th></tr>
+    <tr><td>2023.03</td><td class="num">106億円</td><td class="num">4億円</td><td class="num">4.0%</td></tr>
+    <tr><td>2024.03</td><td class="num">133億円</td><td class="num">11億円</td><td class="num">8.5%</td></tr>
+    <tr><td>2025.03</td><td class="num">121億円</td><td class="num">6億円</td><td class="num">5.3%</td></tr>
+  </table>
+  <div class="warn">
+    <strong>コンパラとしての留意点：</strong>売上規模はミトヨと近い（121億円 vs 118億円）が、主要製品が消防・防災・航空宇宙用で自動車部品とは異なる。海外製造拠点もなく、事業構造の比較可能性が低い。
+  </div>
+</div>
+
+<!-- 朝日ラバー -->
+<div class="card" id="asahi">
+  <h3>5162 朝日ラバー <span class="badge badge-standard">スタンダード</span> <span class="badge badge-c">コンパラ適格性：低</span></h3>
+  <table>
+    <tr><th style="width:140px">本社</th><td>埼玉県さいたま市</td><th style="width:140px">設立</th><td>1970年</td></tr>
+    <tr><th>主要製品</th><td colspan="3">蛍光キャップ付きLED（ASA COLOR LED）、シリコーンレンズ、医療用ガスケット、車載スイッチ用ラバー、卓球ラケット用ラバー</td></tr>
+    <tr><th>連結従業員数</th><td>502名（連結）/ 319名（単体）</td><th>海外売上比率</th><td>不明</td></tr>
+    <tr><th>海外拠点</th><td colspan="3">米国（ARI INTERNATIONAL CORP.）、香港、中国東莞</td></tr>
+  </table>
+  <h3>業績推移（3月決算）</h3>
+  <table>
+    <tr><th>決算期</th><th>売上高</th><th>営業利益</th><th>営業利益率</th></tr>
+    <tr><td>2023.03</td><td class="num">72億円</td><td class="num">1.8億円</td><td class="num">2.6%</td></tr>
+    <tr><td>2024.03</td><td class="num">71億円</td><td class="num">1.5億円</td><td class="num">2.2%</td></tr>
+    <tr><td>2025.03</td><td class="num">76億円</td><td class="num">0.02億円</td><td class="num">0.03%</td></tr>
+  </table>
+  <div class="warn">
+    <strong>コンパラとしての留意点：</strong>シリコーンゴムとLED光学部品が主力で、ミトヨの自動車用ゴム・樹脂部品とは製品カテゴリが全く異なる。規模も小さく、コンパラとしては不適。
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="tire">4. タイヤメーカー4社（参考）</h2>
+<!-- ============================================================ -->
+<div class="card">
+  <p>タイヤメーカーは売上規模がミトヨと桁違い（数千億円〜数兆円）であり、コンパラブルとしては不適だが、業種分類上同じ「ゴム製品」に属するため参考データとして記載する。</p>
+  <table>
+    <tr><th>コード</th><th>会社名</th><th>売上高（2024.12期）</th><th>営業利益率目安</th><th>従業員数</th><th>コンパラ適格性</th></tr>
+    <tr>
+      <td>5108</td><td>ブリヂストン</td>
+      <td class="num">4兆4,300億円</td><td class="num">約10.9%</td>
+      <td>約130,000名</td>
+      <td><span class="badge badge-c">不適（規模差大）</span></td>
+    </tr>
+    <tr>
+      <td>5110</td><td>住友ゴム工業</td>
+      <td class="num">1兆2,118億円</td><td class="num">約0.9%（一時的低下）</td>
+      <td>約40,000名</td>
+      <td><span class="badge badge-c">不適（規模差大）</span></td>
+    </tr>
+    <tr>
+      <td>5101</td><td>横浜ゴム</td>
+      <td class="num">1兆947億円</td><td class="num">約12%</td>
+      <td>約33,600名</td>
+      <td><span class="badge badge-c">不適（規模差大）</span></td>
+    </tr>
+    <tr>
+      <td>5105</td><td>TOYO TIRE</td>
+      <td class="num">5,653億円</td><td class="num">約16.6%</td>
+      <td>約10,400名</td>
+      <td><span class="badge badge-c">不適（規模差大）</span></td>
+    </tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="other">5. その他ゴム製品メーカー</h2>
+<!-- ============================================================ -->
+
+<div class="card">
+  <h3>5122 オカモト <span class="badge badge-prime">プライム</span> <span class="badge badge-c">コンパラ適格性：低</span></h3>
+  <table>
+    <tr><th style="width:140px">主要製品</th><td>コンドーム、カイロ、手袋、フィルム、壁紙、粘着テープ</td></tr>
+    <tr><th>海外拠点</th><td>タイ（コンドーム・手袋工場）</td></tr>
+    <tr><th>連結従業員数</th><td>2,704名（2025年3月末）</td></tr>
+    <tr><th>売上高（2025.03）</th><td>1,091億円 | 営業利益率 8.0%</td></tr>
+  </table>
+  <p style="margin-top:8px;color:var(--red)">コンパラ不適理由：主力製品（コンドーム・カイロ・フィルム等）がミトヨの自動車用ゴム部品と全く異なる。タイ拠点があるがコンドーム製造。</p>
+</div>
+
+<div class="card">
+  <h3>5103 昭和ホールディングス <span class="badge badge-standard">スタンダード</span> <span class="badge badge-c">コンパラ適格性：低</span></h3>
+  <table>
+    <tr><th style="width:140px">主要製品</th><td>ゴムライニング防食施工、テニスボール、和菓子（食品事業）、東南アジア金融</td></tr>
+    <tr><th>従業員数</th><td>181名</td></tr>
+    <tr><th>売上高（2025.03）</th><td>86億円 | 営業利益率 0.3%</td></tr>
+  </table>
+  <p style="margin-top:8px;color:var(--red)">コンパラ不適理由：ゴム事業以外に和菓子・東南アジア金融と事業が雑多。APFグループ傘下で独立性に疑問。ゴム製品製造が主たる事業とは言えない。</p>
+</div>
+
+<div class="card">
+  <h3>5199 不二ラテックス <span class="badge badge-standard">スタンダード</span> <span class="badge badge-c">コンパラ適格性：低</span></h3>
+  <table>
+    <tr><th style="width:140px">主要製品</th><td>コンドーム、妊娠検査薬、冷却グッズ、産業機械向け緩衝器（ソフトアブソーバー）</td></tr>
+    <tr><th>従業員数</th><td>約245名（2025年3月期）</td></tr>
+    <tr><th>海外拠点</th><td>中国上海（販売拠点のみ）</td></tr>
+    <tr><th>売上高（2025.03）</th><td>71億円 | 営業利益率 2.9%</td></tr>
+  </table>
+  <p style="margin-top:8px;color:var(--red)">コンパラ不適理由：コンドーム・緩衝器が主力で、自動車用ゴム部品とは製品カテゴリが異なる。海外製造拠点もなし。</p>
+</div>
+
+<div class="card">
+  <h3>5194 相模ゴム工業 <span class="badge badge-standard">スタンダード</span> <span class="badge badge-c">コンパラ適格性：低</span></h3>
+  <table>
+    <tr><th style="width:140px">主要製品</th><td>コンドーム（サガミオリジナル001/002）、ヘルスケア用品、プラスチック製品</td></tr>
+    <tr><th>海外拠点</th><td>マレーシア（製造子会社）、フランス（販売拠点）</td></tr>
+    <tr><th>売上高（2025.03）</th><td>56億円 | 営業利益率 -0.6%（赤字）</td></tr>
+  </table>
+  <p style="margin-top:8px;color:var(--red)">コンパラ不適理由：コンドーム専業メーカーであり、自動車用ゴム部品とは全く異なる。直近期は営業赤字。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="financial">6. 財務比較一覧表</h2>
+<!-- ============================================================ -->
+<div class="card">
+  <div class="comparison-table">
+  <table>
+    <tr>
+      <th>コード</th><th>会社名</th><th>市場</th>
+      <th>売上高<br>(2025.03又は<br>2025.12)</th>
+      <th>営業利益率<br>3期平均</th>
+      <th>海外売上<br>比率</th>
+      <th>従業員数<br>(連結)</th>
+      <th>タイ<br>拠点</th>
+      <th>ASEAN<br>製造</th>
+      <th>独立<br>企業</th>
+      <th>コンパラ<br>適格性</th>
+    </tr>
+    <tr style="background:#fffff0">
+      <td>-</td><td><strong>ミトヨ（対象）</strong></td><td>非上場</td>
+      <td class="num">118億円</td><td class="num">-</td>
+      <td>-</td><td>620</td>
+      <td>有</td><td>有</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>5184</td><td><strong>ニチリン</strong></td><td>S</td>
+      <td class="num">736億円</td><td class="num"><span class="rating-high">12.9%</span></td>
+      <td>約70%</td><td>2,000超</td>
+      <td>有</td><td>有</td>
+      <td class="rating-high">独立</td>
+      <td><span class="badge badge-a">高</span></td>
+    </tr>
+    <tr>
+      <td>5185</td><td><strong>フコク</strong></td><td>P</td>
+      <td class="num">896億円</td><td class="num"><span class="rating-mid">3.9%</span></td>
+      <td>海外展開大</td><td>4,594</td>
+      <td>有</td><td>有</td>
+      <td class="rating-high">独立</td>
+      <td><span class="badge badge-a">高</span></td>
+    </tr>
+    <tr>
+      <td>5161</td><td>西川ゴム工業</td><td>S</td>
+      <td class="num">1,206億円</td><td class="num"><span class="rating-mid">3.9%</span></td>
+      <td>50%超</td><td>6,966</td>
+      <td>有</td><td>有</td>
+      <td class="rating-mid">要確認</td>
+      <td><span class="badge badge-b">中</span></td>
+    </tr>
+    <tr>
+      <td>5192</td><td>三ツ星ベルト</td><td>P</td>
+      <td class="num">905億円</td><td class="num"><span class="rating-high">10.0%</span></td>
+      <td>約54%</td><td>4,471</td>
+      <td>有</td><td>有</td>
+      <td class="rating-high">独立</td>
+      <td><span class="badge badge-b">中</span></td>
+    </tr>
+    <tr>
+      <td>5186</td><td>ニッタ</td><td>P</td>
+      <td class="num">902億円</td><td class="num"><span class="rating-mid">5.5%</span></td>
+      <td>拡大中</td><td>2,940</td>
+      <td>建設中</td><td>有(SG)</td>
+      <td class="rating-high">独立</td>
+      <td><span class="badge badge-b">中</span></td>
+    </tr>
+    <tr>
+      <td>5195</td><td>バンドー化学</td><td>P</td>
+      <td class="num">1,155億円</td><td class="num"><span class="rating-mid">6.1%</span></td>
+      <td>約50%</td><td>4,023</td>
+      <td>有</td><td>有</td>
+      <td class="rating-high">独立</td>
+      <td><span class="badge badge-b">中</span></td>
+    </tr>
+    <tr>
+      <td>5121</td><td>藤倉コンポジット</td><td>P</td>
+      <td class="num">413億円</td><td class="num"><span class="rating-high">10.7%</span></td>
+      <td>不明</td><td>2,315</td>
+      <td>無</td><td>有(VN)</td>
+      <td class="rating-low">フジクラ系</td>
+      <td><span class="badge badge-b">中</span></td>
+    </tr>
+    <tr>
+      <td>5189</td><td>櫻護謨</td><td>S</td>
+      <td class="num">121億円</td><td class="num"><span class="rating-mid">5.9%</span></td>
+      <td>不明</td><td>342</td>
+      <td>無</td><td>無</td>
+      <td class="rating-high">独立</td>
+      <td><span class="badge badge-c">低</span></td>
+    </tr>
+    <tr>
+      <td>5122</td><td>オカモト</td><td>P</td>
+      <td class="num">1,091億円</td><td class="num"><span class="rating-high">8.1%</span></td>
+      <td>不明</td><td>2,704</td>
+      <td>有</td><td>有</td>
+      <td class="rating-high">独立</td>
+      <td><span class="badge badge-c">低</span></td>
+    </tr>
+    <tr>
+      <td>5162</td><td>朝日ラバー</td><td>S</td>
+      <td class="num">76億円</td><td class="num"><span class="rating-low">1.6%</span></td>
+      <td>不明</td><td>502</td>
+      <td>無</td><td>無</td>
+      <td class="rating-high">独立</td>
+      <td><span class="badge badge-c">低</span></td>
+    </tr>
+    <tr>
+      <td>5103</td><td>昭和HD</td><td>S</td>
+      <td class="num">86億円</td><td class="num"><span class="rating-low">0.1%</span></td>
+      <td>不明</td><td>181</td>
+      <td>無</td><td>無</td>
+      <td class="rating-low">APFグループ</td>
+      <td><span class="badge badge-c">低</span></td>
+    </tr>
+    <tr>
+      <td>5199</td><td>不二ラテックス</td><td>S</td>
+      <td class="num">71億円</td><td class="num"><span class="rating-mid">3.7%</span></td>
+      <td>不明</td><td>約245</td>
+      <td>無</td><td>無</td>
+      <td class="rating-high">独立</td>
+      <td><span class="badge badge-c">低</span></td>
+    </tr>
+    <tr>
+      <td>5194</td><td>相模ゴム工業</td><td>S</td>
+      <td class="num">56億円</td><td class="num"><span class="rating-mid">6.1%</span></td>
+      <td>不明</td><td>不明</td>
+      <td>無</td><td>有(MY)</td>
+      <td class="rating-high">独立</td>
+      <td><span class="badge badge-c">低</span></td>
+    </tr>
+  </table>
+  </div>
+  <p style="margin-top:10px; font-size:0.85em; color:var(--text-light)">
+    P=プライム、S=スタンダード。営業利益率3期平均は2023-2025年度の概算値。海外売上比率は公開情報ベース。
+  </p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="comparability">7. コンパラブル適格性の詳細評価</h2>
+<!-- ============================================================ -->
+<div class="card">
+  <h3>評価基準</h3>
+  <p>移転価格税制における比較対象企業の選定にあたり、以下の基準で評価した。</p>
+  <table>
+    <tr><th style="width:60px">基準</th><th>評価項目</th><th>内容</th></tr>
+    <tr><td>1</td><td>製品の類似性</td><td>自動車用ゴム・樹脂部品の製造販売を主たる事業としているか</td></tr>
+    <tr><td>2</td><td>機能・リスクの類似性</td><td>製造機能を有し、ASEAN（特にタイ）に製造子会社を持つか</td></tr>
+    <tr><td>3</td><td>独立企業性</td><td>特定の大企業グループの子会社でなく、関連者取引比率が低いか</td></tr>
+    <tr><td>4</td><td>規模の比較可能性</td><td>売上規模の差が合理的な範囲内か（通常10倍以内が目安）</td></tr>
+    <tr><td>5</td><td>地理的類似性</td><td>日本を親会社としASEANに製造拠点を有する構造か</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h3>Tier A（有力候補）</h3>
+  <table>
+    <tr><th>企業</th><th>製品類似性</th><th>機能リスク</th><th>独立性</th><th>規模</th><th>地理的</th><th>総合評価</th></tr>
+    <tr>
+      <td><strong>ニチリン</strong></td>
+      <td class="rating-high">高（自動車用ホース）</td>
+      <td class="rating-high">高（タイ・VN・IDに製造拠点）</td>
+      <td class="rating-high">独立系</td>
+      <td class="rating-mid">6.2倍</td>
+      <td class="rating-high">高</td>
+      <td><span class="badge badge-a">最有力</span></td>
+    </tr>
+    <tr>
+      <td><strong>フコク</strong></td>
+      <td class="rating-high">高（自動車用精密ゴム部品）</td>
+      <td class="rating-high">高（タイ・ID・VNに製造拠点）</td>
+      <td class="rating-high">独立系</td>
+      <td class="rating-mid">7.6倍</td>
+      <td class="rating-high">高</td>
+      <td><span class="badge badge-a">最有力</span></td>
+    </tr>
+  </table>
+</div>
+
+<div class="card">
+  <h3>Tier B（追加候補・差異調整が必要）</h3>
+  <table>
+    <tr><th>企業</th><th>強み</th><th>懸念点</th><th>総合評価</th></tr>
+    <tr>
+      <td><strong>三ツ星ベルト</strong></td>
+      <td>自動車用ゴム製品、タイに製造拠点、独立系</td>
+      <td>ベルト製品が主力（製品差異）、営業利益率が高い（9-10%）、規模7.7倍</td>
+      <td><span class="badge badge-b">候補</span></td>
+    </tr>
+    <tr>
+      <td><strong>バンドー化学</strong></td>
+      <td>自動車用ベルト、タイに製造拠点、独立系</td>
+      <td>ベルト製品が主力（製品差異）、規模9.8倍で大きい、利益率変動大</td>
+      <td><span class="badge badge-b">候補</span></td>
+    </tr>
+    <tr>
+      <td><strong>西川ゴム工業</strong></td>
+      <td>自動車用ゴムシール、タイに製造拠点、ASEAN展開積極的</td>
+      <td>マツダ依存の可能性、規模10.2倍でやや大きい</td>
+      <td><span class="badge badge-b">候補</span></td>
+    </tr>
+    <tr>
+      <td><strong>ニッタ</strong></td>
+      <td>ベルト・ホース・チューブ、タイ拠点建設中</td>
+      <td>事業多角化（不動産等含む）、ゴム製品比率の確認必要</td>
+      <td><span class="badge badge-b">候補</span></td>
+    </tr>
+  </table>
+</div>
+
+<div class="card">
+  <h3>Tier C（不適又は要慎重判断）</h3>
+  <table>
+    <tr><th>企業</th><th>除外理由</th></tr>
+    <tr><td>ブリヂストン・住友ゴム・横浜ゴム・TOYO TIRE</td><td>タイヤメーカー。売上規模がミトヨの50〜370倍で比較不能</td></tr>
+    <tr><td>藤倉コンポジット</td><td>フジクラの関連会社で独立企業の要件に疑問。防衛関連が主力で製品差異大</td></tr>
+    <tr><td>オカモト</td><td>コンドーム・フィルム・カイロ等が主力。自動車用ゴム部品とは製品カテゴリが全く異なる</td></tr>
+    <tr><td>櫻護謨</td><td>売上規模は近いが、消防・航空宇宙用製品が主力で製品差異大。海外製造拠点なし</td></tr>
+    <tr><td>朝日ラバー</td><td>LED光学部品・シリコーンゴムが主力。自動車用ゴム部品とは異なる</td></tr>
+    <tr><td>昭和ホールディングス</td><td>ゴム事業以外に和菓子・金融。APFグループ傘下で独立性に疑問。利益率極端に低い</td></tr>
+    <tr><td>不二ラテックス</td><td>コンドーム・緩衝器が主力。自動車用ゴム部品とは異なる。海外製造拠点なし</td></tr>
+    <tr><td>相模ゴム工業</td><td>コンドーム専業。自動車用ゴム部品とは全く異なる。直近営業赤字</td></tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="conclusion">8. 結論と推奨</h2>
+<!-- ============================================================ -->
+<div class="card">
+  <h3>最終推奨コンパラブル候補</h3>
+  <table>
+    <tr><th>優先順位</th><th>企業名</th><th>理由</th><th>営業利益率（参考）</th></tr>
+    <tr style="background:#c6f6d5">
+      <td><strong>1</strong></td>
+      <td><strong>ニチリン（5184）</strong></td>
+      <td>自動車用ゴムホースの独立系メーカー。タイに製造子会社を持ち、事業構造がミトヨに最も類似。海外売上比率約70%でグローバル展開も共通</td>
+      <td>12.3〜13.6%</td>
+    </tr>
+    <tr style="background:#c6f6d5">
+      <td><strong>2</strong></td>
+      <td><strong>フコク（5185）</strong></td>
+      <td>自動車用精密ゴム部品の独立系メーカー。タイに複数製造拠点を有し、機能・リスクプロファイルがミトヨと類似</td>
+      <td>2.4〜5.3%</td>
+    </tr>
+    <tr style="background:#fefcbf">
+      <td>3</td>
+      <td>三ツ星ベルト（5192）</td>
+      <td>自動車用ベルトの独立系メーカー。タイ・ASEAN拠点。製品差異（ベルト vs ホース/部品）の調整が必要</td>
+      <td>9.2〜10.9%</td>
+    </tr>
+    <tr style="background:#fefcbf">
+      <td>4</td>
+      <td>西川ゴム工業（5161）</td>
+      <td>自動車用ゴムシール製品。ASEAN拠点充実。マツダ依存度と規模差の確認要</td>
+      <td>-0.1〜6.1%</td>
+    </tr>
+    <tr style="background:#fefcbf">
+      <td>5</td>
+      <td>バンドー化学（5195）</td>
+      <td>産業用ベルトの独立系メーカー。タイ拠点あり。製品差異と規模差の調整要</td>
+      <td>3.0〜8.0%</td>
+    </tr>
+  </table>
+</div>
+
+<div class="card">
+  <h3>次のステップ（推奨アクション）</h3>
+  <ol style="padding-left:20px; line-height:2.2">
+    <li><strong>有価証券報告書の精査</strong>：上記Tier A・B企業の有報から、関連当事者取引の比率、セグメント別情報、研究開発費（R&D比率）を確認する</li>
+    <li><strong>機能・リスク分析の深化</strong>：ミトヨとコンパラ候補企業の機能（製造/販売/R&D/品質管理）、リスク（在庫/為替/市場/信用）の詳細比較を行う</li>
+    <li><strong>データベース検索</strong>：Bureau van Dijk等の商用データベースでアジア・グローバルのコンパラブル候補も含めた網羅的検索を実施する</li>
+    <li><strong>差異調整の検討</strong>：規模差異、製品差異、地理差異に対する定量的な差異調整方法を検討する（運転資本調整、リスク調整等）</li>
+    <li><strong>非上場企業の検討</strong>：上場企業に限定せず、非上場の自動車用ゴム部品メーカー（鬼怒川ゴム工業、住友理工グループ各社等）も候補として検討する。ただし財務データの入手可能性を確認する必要がある</li>
+  </ol>
+</div>
+
+<div class="card">
+  <h3>重要な留意事項</h3>
+  <div class="warn">
+    <p><strong>1. 上場企業の限界：</strong>日本のゴム製品業種に属する上場企業は18社のみで、うちタイヤメーカー4社を除くと14社。さらにコンドーム・ベルト等の非自動車部品メーカーを除くと、ミトヨと直接的に比較可能な「自動車用ゴム・樹脂部品メーカー」は限られる。</p>
+    <p><strong>2. 規模差の問題：</strong>上場企業はいずれもミトヨ（売上118億円）より大規模。最も近い櫻護謨（121億円）は製品カテゴリが異なる。規模の差異調整が不可避。</p>
+    <p><strong>3. クリヤマグループ入り後の変化：</strong>ミトヨは2025年4月にクリヤマHDの孫会社となったため、今後は関連者取引の増加が予想される。移転価格文書化の基準期間に留意が必要。</p>
+    <p><strong>4. 海外コンパラの検討：</strong>日本国内の上場企業だけでは十分な比較対象が得られない場合、アジア（タイ、インド等）の自動車部品メーカーも検討すべき。</p>
+  </div>
+</div>
+
+<div style="text-align:center; padding:30px 0 10px; color:var(--text-light); font-size:0.85em;">
+  調査日：2026年3月15日 | データは各社直近決算期ベース（2024-2025年度）
+</div>
+
+</div>
+</body>
+</html>
