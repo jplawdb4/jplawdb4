@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLMの長いリスト読解精度に関する調査</title>
+<style>
+:root {
+  --primary: #1a365d;
+  --secondary: #2b6cb0;
+  --accent: #ed8936;
+  --bg: #f7fafc;
+  --card: #ffffff;
+  --text: #2d3748;
+  --border: #e2e8f0;
+  --green: #38a169;
+  --red: #e53e3e;
+  --yellow: #d69e2e;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+  padding: 20px;
+}
+.container { max-width: 1000px; margin: 0 auto; }
+h1 {
+  font-size: 1.6em;
+  color: var(--primary);
+  border-bottom: 3px solid var(--secondary);
+  padding-bottom: 10px;
+  margin-bottom: 8px;
+}
+.meta {
+  color: #718096;
+  font-size: 0.9em;
+  margin-bottom: 30px;
+}
+h2 {
+  font-size: 1.3em;
+  color: var(--secondary);
+  margin: 30px 0 15px;
+  padding-left: 12px;
+  border-left: 4px solid var(--accent);
+}
+h3 {
+  font-size: 1.1em;
+  color: var(--primary);
+  margin: 20px 0 10px;
+}
+.card {
+  background: var(--card);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin: 15px 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border: 1px solid var(--border);
+}
+.card.highlight {
+  border-left: 4px solid var(--accent);
+}
+.card.green { border-left: 4px solid var(--green); }
+.card.red { border-left: 4px solid var(--red); }
+.card.yellow { border-left: 4px solid var(--yellow); }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0;
+  font-size: 0.95em;
+}
+th, td {
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+th {
+  background: var(--primary);
+  color: white;
+  font-weight: 600;
+}
+tr:nth-child(even) { background: #f0f4f8; }
+.tag {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.8em;
+  font-weight: 600;
+  margin-right: 4px;
+}
+.tag-good { background: #c6f6d5; color: #276749; }
+.tag-warn { background: #fefcbf; color: #975a16; }
+.tag-bad { background: #fed7d7; color: #9b2c2c; }
+.tag-info { background: #bee3f8; color: #2a4365; }
+ul, ol { margin: 10px 0 10px 20px; }
+li { margin: 5px 0; }
+.sources {
+  margin-top: 40px;
+  padding: 20px;
+  background: #edf2f7;
+  border-radius: 8px;
+  font-size: 0.85em;
+}
+.sources a { color: var(--secondary); text-decoration: none; }
+.sources a:hover { text-decoration: underline; }
+.summary-box {
+  background: linear-gradient(135deg, #ebf8ff, #e9d8fd);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 25px 0;
+  border: 2px solid #b794f4;
+}
+.summary-box h3 { color: #553c9a; margin-top: 0; }
+.verdict {
+  font-size: 1.05em;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 6px;
+  display: inline-block;
+  margin: 5px 0;
+}
+.verdict-ok { background: #c6f6d5; color: #276749; }
+.verdict-caution { background: #fefcbf; color: #975a16; }
+.verdict-ng { background: #fed7d7; color: #9b2c2c; }
+@media print {
+  body { padding: 10px; font-size: 11pt; }
+  .card { box-shadow: none; border: 1px solid #ccc; }
+  h1 { font-size: 1.4em; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>LLMは長いリスト（数百〜数千行）から正しいレコードを見つけられるか</h1>
+<p class="meta">調査日: 2026-03-15 ｜ 対象: Claude 3.5/4系, GPT-4o等の最新モデル ｜ 学術論文・ベンチマーク結果に基づく</p>
+
+<!-- ============================== -->
+<h2>1. "Lost in the Middle" 問題の現状</h2>
+
+<div class="card highlight">
+<h3>元論文の知見 (Liu et al., 2023)</h3>
+<p>LLMは長い文脈の<strong>先頭と末尾</strong>に置かれた情報の検索精度が高く、<strong>中間部分</strong>の情報を見落としやすい。原因はRotary Position Embedding (RoPE) の長距離減衰効果にある。</p>
+</div>
+
+<div class="card green">
+<h3>最新モデルでの改善状況</h3>
+<p>Databricksの長文脈RAGベンチマーク（2024-2025）によれば:</p>
+<ul>
+<li><strong>GPT-4o、Claude 3.5 Sonnet、GPT-4o-mini</strong>は、文脈長が増加しても<strong>性能劣化がほとんど見られない</strong></li>
+<li>旧モデル（GPT-4-turbo、Claude 3 Sonnet）では16Kトークン付近で飽和していた問題が大幅に改善</li>
+<li>GPT-4oとClaude 3.5 Sonnetは<strong>32Kトークンまで一貫してRAG性能が向上</strong>し続ける</li>
+<li>o1-preview / o1-miniは全モデル中最高精度を記録</li>
+</ul>
+<p class="verdict verdict-ok">結論: 最新モデルではLost in the Middleは実質的にほぼ解消</p>
+</div>
+
+<div class="card yellow">
+<h3>明示的キーワードマッチング vs 暗黙的推論</h3>
+<table>
+<tr><th>タスク種別</th><th>難易度</th><th>説明</th></tr>
+<tr><td>明示的キーワードマッチ<br>（TSV内の特定文字列検索）</td><td><span class="tag tag-good">容易</span></td><td>Needle in a Haystackテストと本質的に同じタスク。最新モデルは99%+の精度</td></tr>
+<tr><td>暗黙的推論<br>（文脈から判断）</td><td><span class="tag tag-warn">やや困難</span></td><td>複数の情報を組み合わせる必要があり、文脈長が増すと精度低下。Sequential-NIAHでは最良のGemini 1.5でも63%程度</td></tr>
+</table>
+<p><strong>10Kトークンのリストの場合</strong>: 明示的キーワード検索であれば、最新モデルでは実用上問題にならない水準（99%+）。ただし「このリストの中で条件Xかつ条件Yを満たすものを全て列挙せよ」のような複合推論は精度が落ちる。</p>
+</div>
+
+<!-- ============================== -->
+<h2>2. Needle in a Haystack (NIAH) ベンチマーク</h2>
+
+<div class="card highlight">
+<h3>主要モデルのNIAH性能</h3>
+<table>
+<tr><th>モデル</th><th>NIAH精度</th><th>最大検証文脈長</th><th>備考</th></tr>
+<tr><td>Claude 3 Opus</td><td><span class="tag tag-good">99%+</span></td><td>200Kトークン</td><td>30種のランダムneedle/質問ペアで検証。needle挿入の人為性を指摘した事例も</td></tr>
+<tr><td>Claude 3.5 Sonnet</td><td><span class="tag tag-good">99%+</span></td><td>200Kトークン</td><td>文脈長増加による劣化がほぼ無い</td></tr>
+<tr><td>GPT-4o</td><td><span class="tag tag-good">97%+</span></td><td>128Kトークン</td><td>標準NIAHでは高精度。ただしSequential-NIAHでは低下</td></tr>
+<tr><td>Gemini 1.5 Pro</td><td><span class="tag tag-good">高精度</span></td><td>2Mトークン</td><td>極長文脈でも一貫した性能を維持</td></tr>
+</table>
+</div>
+
+<div class="card red">
+<h3>日本語でのNIAH性能（MLNeedle研究, 2024）</h3>
+<p>多言語NIAHベンチマーク（MLNeedle, arxiv:2408.10151）の知見:</p>
+<ul>
+<li><strong>非ラテン言語（日本語・中国語・アラビア語）ではNIAH精度が顕著に低下</strong></li>
+<li>英語→非ラテン言語への切替で<strong>大幅な性能ドロップ</strong>が観測</li>
+<li>特に<strong>中間位置 + 非ラテン言語</strong>の組合せが最も精度が低い</li>
+<li>8Kトークンを超えると多言語検索精度が著しく低下。32K対応を謳うモデルでも有効性能は限定的</li>
+<li>周囲のテキスト（haystack）の言語よりも、<strong>needle自体の言語</strong>が精度に強く影響</li>
+</ul>
+<p class="verdict verdict-caution">結論: 日本語テキスト内の日本語needleの検索は、英語より明確に不利。10Kトークン程度でも注意が必要</p>
+</div>
+
+<!-- ============================== -->
+<h2>3. 構造化データ（TSV/テーブル）の読解力</h2>
+
+<div class="card highlight">
+<h3>テーブルフォーマット別LLM理解度（11形式比較）</h3>
+<p>Improving Agents (2025) の11フォーマット比較ベンチマーク:</p>
+<table>
+<tr><th>フォーマット</th><th>精度</th><th>トークン効率</th><th>評価</th></tr>
+<tr><td>Markdown-KV (key: value形式)</td><td>60.7%</td><td>低（CSV比2.7倍）</td><td><span class="tag tag-good">最高精度</span></td></tr>
+<tr><td>HTML Table</td><td>~65% (with prompt)</td><td>低</td><td><span class="tag tag-good">高精度</span></td></tr>
+<tr><td>Markdown Table</td><td>中程度</td><td>中</td><td><span class="tag tag-info">バランス型</span></td></tr>
+<tr><td>CSV / TSV</td><td>~44%</td><td>高（最小トークン）</td><td><span class="tag tag-warn">精度低い</span></td></tr>
+<tr><td>JSONL</td><td>低</td><td>中</td><td><span class="tag tag-bad">非推奨</span></td></tr>
+<tr><td>Pipe-Delimited</td><td>低</td><td>低</td><td><span class="tag tag-bad">非効率</span></td></tr>
+</table>
+<p><strong>重要</strong>: TSV/CSVはトークン効率は良いが、LLMの理解精度は最も低い部類。HTML TableやMarkdown-KVが精度面で優位。</p>
+</div>
+
+<div class="card yellow">
+<h3>列フィルタリング・キーワード抽出の精度</h3>
+<ul>
+<li>LLMは本質的に<strong>線形テキスト処理</strong>を行うため、行×列の空間的関係の理解が弱い</li>
+<li>特定列のフィルタリング: <strong>可能だが完全ではない</strong>。ヘッダーの認識と各行での対応関係を正しく追跡する必要がある</li>
+<li>キーワード完全一致検索: 明示的な文字列であれば高精度（NIAHと同じメカニズム）</li>
+<li>意味的フィルタリング（「税務関連の行だけ抽出」等）: 精度が大幅に低下</li>
+</ul>
+</div>
+
+<div class="card red">
+<h3>行数増加と精度の関係</h3>
+<ul>
+<li>LLMは<strong>最初の約40行</strong>を処理した後に停止する傾向がある（Dust.tt報告）</li>
+<li>U字型位置バイアス: リストの<strong>先頭と末尾</strong>のレコードは見つけやすく、<strong>中間部分</strong>は見落としやすい</li>
+<li>ヘッダーの繰り返し（100行ごとにヘッダーを再挿入）で改善効果あり</li>
+<li>数百行を超えると、全件正確な抽出は困難。<strong>バッチ処理</strong>（1回に数十行ずつ）が推奨</li>
+</ul>
+</div>
+
+<!-- ============================== -->
+<h2>4. 実用的な上限の目安</h2>
+
+<div class="summary-box">
+<h3>タスク別の推奨行数上限</h3>
+<table>
+<tr><th>タスク</th><th>推奨上限</th><th>根拠</th></tr>
+<tr>
+<td><strong>特定キーワードの存在確認</strong><br>（「Xという文字列を含む行はあるか？」）</td>
+<td><span class="verdict verdict-ok">数百行（~500行）</span></td>
+<td>NIAHテストと同等。最新モデルは200Kトークンまで99%+。10Kトークン（約500行TSV）なら問題なし</td>
+</tr>
+<tr>
+<td><strong>特定キーワードを含む全行の列挙</strong><br>（「Xを含む行を全て抜き出せ」）</td>
+<td><span class="verdict verdict-caution">100〜200行</span></td>
+<td>全件漏れなく列挙するには注意力の持続が必要。中間部分の見落としリスクあり</td>
+</tr>
+<tr>
+<td><strong>条件付きフィルタリング</strong><br>（「A列がXかつB列 > Y のもの」）</td>
+<td><span class="verdict verdict-caution">50〜100行</span></td>
+<td>複合条件は推論負荷が高い。テーブル構造の空間理解が必要</td>
+</tr>
+<tr>
+<td><strong>集計・カウント</strong><br>（「条件Xを満たす行は何件か」）</td>
+<td><span class="verdict verdict-ng">30〜50行</span></td>
+<td>LLMのカウント能力は根本的に弱い。正確性を求めるならコード実行が必須</td>
+</tr>
+<tr>
+<td><strong>日本語テキストでの検索</strong></td>
+<td><span class="verdict verdict-caution">英語の6〜7割程度に減算</span></td>
+<td>MLNeedle研究で非ラテン言語の性能低下が確認済み。トークン化効率の差も影響</td>
+</tr>
+</table>
+</div>
+
+<!-- ============================== -->
+<h2>5. 精度を上げるための実践的テクニック</h2>
+
+<div class="card green">
+<h3>推奨アプローチ</h3>
+<ol>
+<li><strong>フォーマット選択</strong>: TSVよりMarkdown Table またはHTMLテーブルを使う（精度+16ポイント程度の差）</li>
+<li><strong>ヘッダー繰返し</strong>: 100行ごとにカラムヘッダーを再挿入する</li>
+<li><strong>バッチ分割</strong>: 数百行以上のデータは50〜100行ずつに分割して処理</li>
+<li><strong>重要情報の配置</strong>: 検索対象が分かっている場合、リストの先頭か末尾に配置</li>
+<li><strong>明示的な指示</strong>: 「全ての行を1行ずつチェックして、キーワードXを含む行を列挙せよ」のように手順を明示</li>
+<li><strong>コード生成の活用</strong>: 大量データのフィルタリングは、LLMにPythonコードを書かせて実行する方が確実</li>
+<li><strong>ハイブリッド検索</strong>: 前処理としてgrepや正規表現で候補を絞り、LLMには意味的判断のみを委ねる</li>
+</ol>
+</div>
+
+<!-- ============================== -->
+<h2>6. 総合判定</h2>
+
+<div class="summary-box">
+<h3>10Kトークン（約500行TSV）でのキーワード検索は実用可能か？</h3>
+<p style="font-size:1.1em; margin:15px 0;">
+<strong>回答: 条件付きでYes。</strong>
+</p>
+<ul>
+<li><strong>単一キーワードの存在確認</strong>: 最新モデル（Claude 3.5+, GPT-4o）であれば、10Kトークン程度なら<strong>ほぼ確実に見つけられる</strong>（99%+）</li>
+<li><strong>全件列挙</strong>: 該当行が少数（5件以下）なら高精度。該当行が多い（10件+）場合は<strong>漏れのリスクあり</strong></li>
+<li><strong>日本語の場合</strong>: 英語より精度が落ちるため、<strong>300行程度</strong>を上限の目安とする方が安全</li>
+<li><strong>TSV形式のままでは精度が低い</strong>: 可能であればMarkdown TableかHTML Tableに変換して渡すと精度向上</li>
+<li><strong>確実性が必要な場合</strong>: LLMに直接検索させるのではなく、grepやPythonコードを書かせて実行する方が圧倒的に信頼性が高い</li>
+</ul>
+</div>
+
+<!-- ============================== -->
+<div class="sources">
+<h3>Sources</h3>
+<ul>
+<li><a href="https://arxiv.org/abs/2307.03172">Liu et al. (2023) "Lost in the Middle: How Language Models Use Long Contexts" - arXiv</a></li>
+<li><a href="https://www.databricks.com/blog/long-context-rag-performance-llms">Databricks: Long Context RAG Performance of LLMs</a></li>
+<li><a href="https://www.anthropic.com/news/claude-3-family">Anthropic: Introducing the next generation of Claude (NIAH 99%+)</a></li>
+<li><a href="https://arxiv.org/abs/2408.10151">Multilingual Needle in a Haystack (MLNeedle) - arXiv:2408.10151</a></li>
+<li><a href="https://arxiv.org/html/2504.04713v2">Sequential-NIAH: Extracting Sequential Needles from Long Contexts</a></li>
+<li><a href="https://www.improvingagents.com/blog/best-input-data-format-for-llms/">Improving Agents: Which Table Format Do LLMs Understand Best? (11 Formats)</a></li>
+<li><a href="https://docs.dust.tt/docs/understanding-llm-limitations-counting-and-parsing-structured-data">Dust.tt: Understanding LLM Limitations - Counting and Parsing Structured Data</a></li>
+<li><a href="https://arxiv.org/html/2305.13062v4">Table Meets LLM: Can Large Language Models Understand Structured Table Data?</a></li>
+<li><a href="https://www.microsoft.com/en-us/research/blog/improving-llm-understanding-of-structured-data-and-exploring-advanced-prompting-methods/">Microsoft Research: Improving LLM understanding of structured data</a></li>
+<li><a href="https://pub.towardsai.net/why-language-models-are-lost-in-the-middle-629b20d86152">Towards AI: Lost in the Middle - How Context Engineering Solves AI's Long-Context Problem</a></li>
+<li><a href="https://openreview.net/forum?id=fPmScVB1Td">Found in the Middle: Plug-and-Play Positional Encoding (Ms-PoE)</a></li>
+<li><a href="https://www.databricks.com/blog/long-context-rag-capabilities-openai-o1-and-google-gemini">Databricks: Long Context RAG Capabilities of OpenAI o1 and Google Gemini</a></li>
+</ul>
+</div>
+
+</div>
+</body>
+</html>
