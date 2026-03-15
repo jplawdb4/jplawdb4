@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thongchai Mitoyo Co., Ltd. 取引先・事業関係 調査報告書</title>
+<style>
+:root {
+  --primary: #1a365d;
+  --secondary: #2c5282;
+  --accent: #e53e3e;
+  --bg: #f7fafc;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --text: #2d3748;
+  --muted: #718096;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', 'Meiryo', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+.container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; padding: 40px 20px; text-align: center; }
+header h1 { font-size: 1.8em; margin-bottom: 8px; }
+header .subtitle { font-size: 1em; opacity: 0.9; }
+header .date { font-size: 0.85em; opacity: 0.7; margin-top: 8px; }
+.card { background: var(--card); border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 24px; margin: 20px 0; border-left: 4px solid var(--secondary); }
+.card.alert { border-left-color: var(--accent); }
+.card.green { border-left-color: #38a169; }
+h2 { color: var(--primary); font-size: 1.4em; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--border); }
+h3 { color: var(--secondary); font-size: 1.15em; margin: 16px 0 8px; }
+h4 { color: #4a5568; font-size: 1em; margin: 12px 0 6px; }
+table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.92em; }
+th { background: #edf2f7; text-align: left; padding: 10px 12px; border: 1px solid var(--border); font-weight: 600; }
+td { padding: 10px 12px; border: 1px solid var(--border); vertical-align: top; }
+tr:hover td { background: #f7fafc; }
+.tag { display: inline-block; background: #ebf4ff; color: var(--secondary); padding: 2px 8px; border-radius: 4px; font-size: 0.82em; margin: 2px; }
+.tag.red { background: #fed7d7; color: #c53030; }
+.tag.green { background: #c6f6d5; color: #276749; }
+.tag.yellow { background: #fefcbf; color: #975a16; }
+.note { background: #fffff0; border: 1px solid #fefcbf; padding: 12px 16px; border-radius: 6px; margin: 12px 0; font-size: 0.9em; }
+.note::before { content: "注記: "; font-weight: 700; color: #975a16; }
+.fact::before { content: ""; font-weight: 700; color: #276749; }
+.speculation { font-style: italic; color: var(--muted); }
+.speculation::before { content: "[推測] "; font-weight: 700; color: var(--accent); font-style: normal; }
+ul, ol { padding-left: 24px; margin: 8px 0; }
+li { margin: 4px 0; }
+.org-chart { display: flex; flex-direction: column; align-items: center; gap: 8px; margin: 16px 0; }
+.org-box { background: #ebf4ff; border: 2px solid var(--secondary); border-radius: 8px; padding: 10px 20px; text-align: center; font-weight: 600; min-width: 200px; }
+.org-box.top { background: var(--primary); color: #fff; }
+.org-box.jv { background: #fed7d7; border-color: var(--accent); }
+.org-row { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+.connector { font-size: 1.5em; color: var(--muted); }
+.financial-highlight { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 16px 0; }
+.fin-box { background: #f7fafc; border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+.fin-box .value { font-size: 1.5em; font-weight: 700; color: var(--primary); }
+.fin-box .label { font-size: 0.85em; color: var(--muted); }
+.fin-box.negative .value { color: var(--accent); }
+.source-list { background: #f0fff4; border: 1px solid #c6f6d5; border-radius: 6px; padding: 12px 16px; margin-top: 8px; font-size: 0.85em; }
+.source-list a { color: var(--secondary); }
+.toc { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin: 20px 0; }
+.toc a { color: var(--secondary); text-decoration: none; }
+.toc a:hover { text-decoration: underline; }
+.toc ol { counter-reset: toc; list-style: none; padding-left: 0; }
+.toc li { counter-increment: toc; padding: 4px 0; }
+.toc li::before { content: counter(toc) ". "; font-weight: 600; color: var(--primary); }
+@media print {
+  header { background: var(--primary) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .card { break-inside: avoid; }
+  body { font-size: 11pt; }
+}
+@media (max-width: 768px) {
+  .container { padding: 10px; }
+  header h1 { font-size: 1.3em; }
+  .org-row { flex-direction: column; align-items: center; }
+  .financial-highlight { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Thongchai Mitoyo Co., Ltd.</h1>
+  <div class="subtitle">取引先・事業関係 総合調査報告書</div>
+  <div class="date">調査日: 2026年3月15日</div>
+</header>
+
+<div class="container">
+
+<div class="toc">
+<h2 style="border: none; padding: 0; margin-bottom: 12px;">目次</h2>
+<ol>
+  <li><a href="#overview">会社概要</a></li>
+  <li><a href="#structure">グループ構造・JV関係</a></li>
+  <li><a href="#tr-group">TRグループ（JVパートナー側）の詳細</a></li>
+  <li><a href="#mitoyo">ミトヨ（日本側JVパートナー）の詳細</a></li>
+  <li><a href="#customers">顧客関係</a></li>
+  <li><a href="#suppliers">仕入先・技術提携</a></li>
+  <li><a href="#financials">財務情報</a></li>
+  <li><a href="#ownership">親会社の変遷（2025年の動き）</a></li>
+  <li><a href="#conclusion">総括・留意事項</a></li>
+</ol>
+</div>
+
+<!-- ======== 1. 会社概要 ======== -->
+<div class="card" id="overview">
+<h2>1. 会社概要</h2>
+
+<table>
+<tr><th style="width:30%">正式名称</th><td>THONGCHAI MITOYO COMPANY LIMITED（บริษัท ทองไชย มิโตโย จำกัด）</td></tr>
+<tr><th>登記番号</th><td>0105556014956</td></tr>
+<tr><th>設立日</th><td>2013年1月24日</td></tr>
+<tr><th>会社種別</th><td>有限会社（บริษัทจำกัด）/ 非公開</td></tr>
+<tr><th>事業規模</th><td>中規模（Medium）</td></tr>
+<tr><th>TSIC分類</th><td>29309 — 「自動車用その他部品・付属品の製造」</td></tr>
+<tr><th>事業内容</th><td>自動車・二輪車部品、電装品コンポーネントの製造</td></tr>
+<tr><th>登記住所</th><td>1091/244-245 Phetchaburi Tad Mai Road, Makkasan, Ratchathewi, Bangkok 10400</td></tr>
+<tr><th>製造拠点</th><td>チャチューンサオ県バンパコン地区（Bang Pakong, Chachoengsao）</td></tr>
+<tr><th>登録資本金</th><td>176,800,000 THB（約7.5億円）</td></tr>
+<tr><th>現在の状態</th><td><span class="tag green">営業中</span></td></tr>
+</table>
+
+<h3>主要製品（確認済）</h3>
+<ul>
+  <li>自動車用エアコンホース・パイプ組立（A/C hose & pipe assembly）</li>
+  <li>車体部品（body parts）</li>
+  <li>プレス加工品</li>
+  <li>CNC曲げ加工品</li>
+  <li>金属成形品</li>
+</ul>
+
+<h3>製造工程（安全マニュアルより確認）</h3>
+<ul>
+  <li>切断加工（Cutting）</li>
+  <li>研磨・研削（Polishing/Grinding）</li>
+  <li>プレス加工（Press stamping）</li>
+  <li>CNC曲げ加工（CNC bending）</li>
+  <li>金属成形（Metal forming）</li>
+</ul>
+
+<div class="note">登記住所（バンコク・ラチャテウィー区）はTRグループ本社と同一住所。製造拠点はチャチューンサオ県のバンパコン地区にあり、Mitoyo Plastics (Thailand) の工場と同一エリア（いずれもBang Pakong）に位置する。</div>
+</div>
+
+<!-- ======== 2. グループ構造 ======== -->
+<div class="card" id="structure">
+<h2>2. グループ構造・JV関係</h2>
+
+<h3>Thongchai MitoyoのJV構造</h3>
+<p>Thongchai Mitoyo Co., Ltd. は、タイ側の <strong>Thongchai Industries Co., Ltd.（TRグループ）</strong> と日本側の <strong>株式会社ミトヨ（Mitoyo Co., Ltd.）</strong> の合弁会社である。</p>
+
+<div class="org-chart">
+  <div class="org-row">
+    <div class="org-box top">TRグループ<br><small>Thai Radiator Mfg. / Thongchai Industries 等</small></div>
+    <div class="org-box top">株式会社ミトヨ<br><small>Mitoyo Co., Ltd.（東京）</small><br><small>※2025年4月〜 栗山グループ傘下</small></div>
+  </div>
+  <div class="connector">&#8595; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &#8595;</div>
+  <div class="org-box jv">Thongchai Mitoyo Co., Ltd.<br><small>合弁会社（2013年設立）</small><br><small>エアコンホース・パイプ組立 / 車体部品</small></div>
+</div>
+
+<div class="note">出資比率は公開情報からは確認できなかった。タイ法制上、製造業は外国資本が過半数を保有することが可能（外国人事業法附表3に該当しない場合）。社名にThongchaiが先に来ていること、登記住所がTRグループ本社と同一であることから、タイ側（Thongchai Industries）がマジョリティの可能性がある。ただしこれは推測である。</div>
+
+<h3>関連する重要事実</h3>
+<ul>
+  <li>安全マニュアルでは「Thongchai Industries Co., Ltd. / Thongchai Mitoyo Co., Ltd.」と並記されており、両社が一体的に運営されている</li>
+  <li>Thongchai Mitoyoの登記住所はTRグループ全社の本社住所と完全一致（1091/244-245 New Petchburi Road, Makkasan, Rajthevee, Bangkok）</li>
+  <li>製造拠点はチャチューンサオ県バンパコン地区で、Mitoyo Plastics (Thailand) の工場も同地区に所在</li>
+</ul>
+</div>
+
+<!-- ======== 3. TRグループ ======== -->
+<div class="card" id="tr-group">
+<h2>3. TRグループ（JVパートナー側）の詳細</h2>
+
+<h3>3-1. TRグループの沿革</h3>
+<table>
+<tr><th>年</th><th>事項</th></tr>
+<tr><td>1967年</td><td>Thai Radiator Manufacturing Co., Ltd. 設立。タイの自動車用ラジエーターメーカーとして創業</td></tr>
+<tr><td>1977年</td><td>Thongchai Industries Co., Ltd. を子会社として設立。燃料タンク・プレス部品へ事業拡大</td></tr>
+<tr><td>1982年</td><td>Thai Radiator Manufacturing を法人再編（登記番号 0105525003892）</td></tr>
+<tr><td>〜2020年代</td><td>グループとして50年以上の操業実績。タイ有数の自動車部品メーカーグループへ成長</td></tr>
+</table>
+
+<h3>3-2. TRグループ構成企業</h3>
+<table>
+<tr><th>会社名</th><th>主要事業</th><th>備考</th></tr>
+<tr><td><strong>Thai Radiator Manufacturing Co., Ltd.</strong></td><td>ラジエーター・コンデンサー・インタークーラー等の熱交換器</td><td>グループの母体。売上 THB 9.28億（FY2022）</td></tr>
+<tr><td><strong>Thongchai Industries Co., Ltd.</strong></td><td>燃料タンク、エアタンク、プレス部品、エンジン部品、パイプ類</td><td>登記番号 0105520000963。資本金 THB 600万</td></tr>
+<tr><td><strong>Thongchai Manufacturing Co., Ltd.</strong></td><td>製造（詳細不明）</td><td>同一敷地内で操業</td></tr>
+<tr><td><strong>AGS Auto Parts Co., Ltd.</strong></td><td>チューブ加工（Tube Modification）</td><td>IATF 16949:2016認証取得</td></tr>
+<tr><td><strong>TR Technical Center Co., Ltd.</strong></td><td>技術開発・試験</td><td>グループの技術拠点</td></tr>
+<tr><td><strong>TR Asia Co., Ltd.</strong></td><td>営業・流通（推測）</td><td>詳細不明</td></tr>
+<tr><td><strong>Thongchai Mitoyo Co., Ltd.</strong></td><td>エアコンホース・パイプ組立、車体部品</td><td>ミトヨとのJV（2013年〜）</td></tr>
+</table>
+
+<div class="note">全社がバンコク本社（1091/244-245 New Petchburi Road）と、サムットプラーカーン県バンプリー郡の製造拠点（12/4 Moo 6 KM.15 Bangna-Trad Road, Bangchalong, Bangplee, Samutprakarn 10540）に集約されている。Thongchai Mitoyoのみチャチューンサオ県に製造拠点を持つ。</div>
+
+<h3>3-3. Thai Radiator Manufacturing の技術提携先</h3>
+<table>
+<tr><th>提携先</th><th>国</th><th>提携内容</th></tr>
+<tr><td>Tokyo Radiator Mfg. Co., Ltd.</td><td>日本</td><td>いすゞ向け製品の技術支援</td></tr>
+<tr><td>Behr</td><td>ドイツ</td><td>熱交換器技術</td></tr>
+<tr><td>Valeo</td><td>フランス</td><td>熱管理システム技術</td></tr>
+</table>
+
+<h3>3-4. Thongchai Industries の技術提携先</h3>
+<table>
+<tr><th>提携先</th><th>国</th><th>提携内容</th></tr>
+<tr><td><strong>臼井国際産業（Usui Kokusai Sangyo / 現 Usui Co., Ltd.）</strong></td><td>日本</td><td>高圧パイプ・燃料パイプ・ブレーキパイプ技術。Thongchai IndustriesはUsui Co., Ltd.の関連会社（affiliate）として公式に記載</td></tr>
+<tr><td><strong>Pyongsan Corporation</strong></td><td>韓国</td><td>HVAC ホース・チューブ組立技術（A/Cライン、燃料ライン、ブレーキライン）</td></tr>
+</table>
+
+<h3>3-5. Thongchai Industries の主要製品一覧</h3>
+<div style="column-count: 2; column-gap: 24px;">
+<h4>燃料系統</h4>
+<ul>
+  <li>燃料タンク（鋼製・アルミ製）</li>
+  <li>燃料パイプ</li>
+  <li>ガソリンライン</li>
+</ul>
+<h4>冷却系統</h4>
+<ul>
+  <li>アルミラジエーター（インタークーラー付）</li>
+  <li>クーラーパイプ</li>
+</ul>
+<h4>パイプ・チューブ類</h4>
+<ul>
+  <li>シャシーパイプ</li>
+  <li>ブレーキパイプ</li>
+  <li>ディーゼルライン</li>
+  <li>オイルパイプ</li>
+  <li>ナイロンチューブ</li>
+  <li>高圧・油圧パイプ</li>
+</ul>
+<h4>エアコン系統</h4>
+<ul>
+  <li>ホース・パイプ組立（A/C hose & pipe assembly）</li>
+  <li>フレキシブルホース</li>
+</ul>
+<h4>エンジン部品</h4>
+<ul>
+  <li>ファンドライブ</li>
+  <li>バキュームパイプ</li>
+  <li>オイルストレーナー</li>
+  <li>オイルクーラー</li>
+  <li>EGRパイプ</li>
+</ul>
+<h4>その他</h4>
+<ul>
+  <li>エアタンク（鋼製・アルミ製）</li>
+  <li>プレス部品・ファスナー</li>
+</ul>
+</div>
+</div>
+
+<!-- ======== 4. ミトヨ ======== -->
+<div class="card" id="mitoyo">
+<h2>4. 株式会社ミトヨ（日本側JVパートナー）の詳細</h2>
+
+<h3>4-1. 会社概要</h3>
+<table>
+<tr><th style="width:30%">正式名称</th><td>株式会社ミトヨ（Mitoyo Co., Ltd.）</td></tr>
+<tr><th>設立</th><td>1948年12月</td></tr>
+<tr><th>資本金</th><td>4億2,500万円</td></tr>
+<tr><th>本社</th><td>東京都中央区新川1-28-25 東京ダイヤビル3号館 6F</td></tr>
+<tr><th>代表者</th><td>竹島 透（代表取締役会長兼社長）</td></tr>
+<tr><th>連結従業員数</th><td>620名（2025年3月末時点）</td></tr>
+<tr><th>単体従業員数</th><td>283名（2025年3月末時点）</td></tr>
+<tr><th>連結売上高</th><td>118億3,700万円（2025年3月期）</td></tr>
+<tr><th>単体売上高</th><td>97億7,500万円（2025年3月期）</td></tr>
+<tr><th>事業内容</th><td>自動車用ゴム・プラスチック・金属製品の製造販売、産業資材</td></tr>
+</table>
+
+<h3>4-2. ミトヨの事業3本柱</h3>
+<table>
+<tr><th>事業</th><th>内容</th></tr>
+<tr><td><strong>自動車部品事業</strong></td><td>ゴム・樹脂成形品、燃料ホース、キャビンフィルター等の製造・販売</td></tr>
+<tr><td><strong>アッセンブリー事業</strong></td><td>自動車エアコン用ホース・パイプの組立製造</td></tr>
+<tr><td><strong>産業資材事業</strong></td><td>横浜ゴム代理店機能を含む一般工業用品の調達・販売、省エネ設備</td></tr>
+</table>
+
+<h3>4-3. ミトヨの主要顧客（日本国内）</h3>
+<p>以下はミトヨの公式サイトで確認された取引先OEM/Tier1：</p>
+<div>
+  <span class="tag">ISUZU（いすゞ）</span>
+  <span class="tag">NISSAN（日産）</span>
+  <span class="tag">SUBARU（スバル）</span>
+  <span class="tag">HONDA（ホンダ）</span>
+  <span class="tag">三菱ふそう（Mitsubishi Fuso）</span>
+  <span class="tag">Bosch</span>
+  <span class="tag">Marelli</span>
+</div>
+<p style="margin-top: 8px;">「東日本を中心とする自動車メーカー各社の工場」が主要納入先とされる。</p>
+
+<h3>4-4. ミトヨの海外拠点</h3>
+<table>
+<tr><th>拠点</th><th>所在地</th><th>設立</th><th>主要製品</th></tr>
+<tr><td><strong>Mitoyo Plastics (Thailand) Co., Ltd.</strong></td><td>1/50 Moo 5 Tambon Tha Sa-an, Amphur Bang Pakong, Chachoengsao 24130</td><td>2013年4月</td><td>射出成形品（自動車内装・車体部品、メーター部品）<br>ISO 9001 / ISO 14001 / IATF 16949 認証</td></tr>
+<tr><td><strong>Mitoyo Rubber (Thailand) Co., Ltd.</strong></td><td>700/909 Moo.5, Amatanakorn IE, Phanthong, Chonburi 20160</td><td>2010年12月<br>（操業開始 2012年）</td><td>ゴム部品（シール、O-ring、ガスケット、ブーツ、チューブ）<br>IATF 16949 認証</td></tr>
+<tr><td><strong>Shanghai Mitoyo Co., Ltd.</strong></td><td>上海市</td><td>―</td><td>営業・物流</td></tr>
+<tr><td><strong>Unika Rubber Products Sdn. Bhd.</strong></td><td>Johor Bahru, マレーシア</td><td>1996年〜資本提携</td><td>ガスケット、パッキン、O-ring、バルブ<br>ISO 9001 / ISO 14001</td></tr>
+</table>
+
+<div class="note">Kuriyama Holdings（栗山ホールディングス）のグループ会社一覧にはMitoyo、Mitoyo Plastics (Thailand)、Mitoyo Rubber (Thailand) は記載されているが、<strong>Thongchai Mitoyo は記載されていない</strong>。これはThongchai MitoyoがMitoyoの連結子会社ではなく、持分法適用関連会社またはJVとしての位置づけである可能性を示唆する。</div>
+</div>
+
+<!-- ======== 5. 顧客関係 ======== -->
+<div class="card" id="customers">
+<h2>5. 顧客関係</h2>
+
+<h3>5-1. 推定される主要顧客</h3>
+<p>Thongchai Mitoyo自身の顧客リストは公開されていないが、以下の根拠から顧客を推定できる：</p>
+
+<table>
+<tr><th>推定顧客</th><th>根拠</th><th>確度</th></tr>
+<tr><td><strong>Isuzu（タイいすゞ）</strong></td>
+<td>
+  <ul>
+    <li>Thai Radiator が Tokyo Radiator（いすゞ系）から技術支援を受けている</li>
+    <li>ミトヨ本体の日本での最大顧客がいすゞ</li>
+    <li>Usui（臼井）もいすゞ向け主力サプライヤー</li>
+  </ul>
+</td>
+<td><span class="tag green">高</span></td></tr>
+<tr><td><strong>Honda（タイホンダ）</strong></td>
+<td><ul><li>ミトヨの主要顧客にホンダが含まれる</li></ul></td>
+<td><span class="tag yellow">中</span></td></tr>
+<tr><td><strong>Nissan（タイ日産）</strong></td>
+<td><ul><li>ミトヨの主要顧客に日産が含まれる</li></ul></td>
+<td><span class="tag yellow">中</span></td></tr>
+<tr><td><strong>Mitsubishi Fuso / Mitsubishi Motors</strong></td>
+<td><ul><li>ミトヨの主要顧客に三菱ふそうが含まれる</li></ul></td>
+<td><span class="tag yellow">中</span></td></tr>
+<tr><td><strong>Bosch（タイ）</strong></td>
+<td><ul><li>ミトヨの主要Tier1顧客</li></ul></td>
+<td><span class="tag yellow">中</span></td></tr>
+<tr><td><strong>Marelli（タイ）</strong></td>
+<td><ul><li>ミトヨの主要Tier1顧客</li></ul></td>
+<td><span class="tag yellow">中</span></td></tr>
+</table>
+
+<p class="speculation">エアコンホース・パイプ組立はTier1（デンソー、三菱重工等のA/Cメーカー）またはOEM工場に直接納入される形態が一般的。タイにおけるデンソーやサイアムデンソー等への供給の可能性も考えられるが、直接の証拠はない。</p>
+
+<h3>5-2. 供給チェーン上の位置づけ</h3>
+<p>Thongchai Mitoyoは以下のいずれかの位置で供給していると考えられる：</p>
+<ul>
+  <li><strong>Tier2</strong>: A/Cシステムメーカー（デンソー、Valeo、Marelli等）にホース・パイプ組立品を供給</li>
+  <li><strong>Tier1</strong>: OEM工場に直接エアコンホース・パイプAssyを納入（可能性あり）</li>
+</ul>
+</div>
+
+<!-- ======== 6. 仕入先 ======== -->
+<div class="card" id="suppliers">
+<h2>6. 仕入先・技術提携</h2>
+
+<h3>6-1. 技術・ノウハウの供給元</h3>
+<table>
+<tr><th>供給元</th><th>供給内容</th><th>関係性</th></tr>
+<tr><td><strong>株式会社ミトヨ（日本）</strong></td><td>エアコンホース組立技術、ゴム・樹脂部品技術、品質管理ノウハウ</td><td>JVパートナー（出資者）</td></tr>
+<tr><td><strong>Usui Co., Ltd.（臼井、日本）</strong></td><td>高圧パイプ・金属パイプ加工技術</td><td>Thongchai Industriesの技術提携先であり、Thongchai Industriesを関連会社（affiliate）として記載</td></tr>
+<tr><td><strong>Pyongsan Corporation（韓国）</strong></td><td>HVACホース・チューブ組立技術（A/Cライン、燃料ライン、ブレーキライン）</td><td>Thongchai Industriesの技術提携先</td></tr>
+</table>
+
+<h3>6-2. 推定される原材料調達先</h3>
+<table>
+<tr><th>材料</th><th>推定調達先</th><th>根拠</th></tr>
+<tr><td>ゴムホース・ゴム部品</td><td>Mitoyo Rubber (Thailand)（チョンブリ県）<br>横浜ゴム（ミトヨが代理店）</td><td>ミトヨグループ内調達の合理性。ミトヨは横浜ゴムの販売代理店</td></tr>
+<tr><td>樹脂成形品</td><td>Mitoyo Plastics (Thailand)（チャチューンサオ県バンパコン）</td><td>同一地区に所在。射出成形品のグループ内調達</td></tr>
+<tr><td>金属パイプ</td><td>Thongchai Industries / AGS Auto Parts（サムットプラーカーン県）</td><td>TRグループ内でパイプ・チューブ加工の専門設備を保有</td></tr>
+<tr><td>アルミ・鋼材</td><td>タイ国内素材メーカー</td><td>一般的な調達経路</td></tr>
+</table>
+
+<p class="speculation">ミトヨのアッセンブリー事業は「自動車エアコン用ホース・パイプの組立製造」であり、Thongchai Mitoyoの事業とほぼ一致する。ミトヨのゴム部品技術 + Thongchai Industriesのパイプ加工技術を組み合わせる形でJVが成立したと考えるのが合理的である。</p>
+</div>
+
+<!-- ======== 7. 財務情報 ======== -->
+<div class="card alert" id="financials">
+<h2>7. 財務情報</h2>
+
+<h3>7-1. 最新財務データ（FY2024 / 仏暦2567年）</h3>
+<div class="financial-highlight">
+  <div class="fin-box">
+    <div class="label">売上高</div>
+    <div class="value">THB 1.34億</div>
+    <div class="label">133,756,129 THB</div>
+  </div>
+  <div class="fin-box negative">
+    <div class="label">純損益</div>
+    <div class="value">▲ THB 737万</div>
+    <div class="label">-7,370,828 THB（赤字）</div>
+  </div>
+  <div class="fin-box">
+    <div class="label">総資産</div>
+    <div class="value">THB 1.08億</div>
+    <div class="label">107,625,321 THB</div>
+  </div>
+  <div class="fin-box negative">
+    <div class="label">株主資本</div>
+    <div class="value">▲ THB 255万</div>
+    <div class="label">-2,552,061 THB（債務超過）</div>
+  </div>
+</div>
+
+<h3>7-2. 売上推移</h3>
+<table>
+<tr><th>年度</th><th>売上高（THB）</th><th>純損益（THB）</th><th>総資産（THB）</th><th>株主資本（THB）</th></tr>
+<tr><td>FY2020（仏暦2563）</td><td>118,671,644</td><td>-14,329,015</td><td>108,021,628</td><td>13,993,304</td></tr>
+<tr><td>FY2022（仏暦2565）</td><td><strong>161,000,000</strong></td><td>―</td><td>―</td><td>―</td></tr>
+<tr><td>FY2024（仏暦2567）</td><td><strong>133,756,129</strong></td><td>-7,370,828</td><td>107,625,321</td><td>-2,552,061</td></tr>
+</table>
+
+<div class="note">
+  <strong>財務上の重要懸念：</strong><br>
+  1. FY2024時点で株主資本がマイナス（債務超過状態）。登録資本金 THB 1.768億に対し、株主資本は ▲THB 255万（資本金比率 -1.44%）<br>
+  2. 売上はFY2022のTHB 1.61億をピークに、FY2024はTHB 1.34億へ減少（約17%減）<br>
+  3. FY2020、FY2024とも純損失を計上。継続的な赤字体質が示唆される<br>
+  4. creden.coによれば「2561〜2567年で売上減少傾向、近年は継続的な営業損失」と記載
+</div>
+
+<h3>7-3. 比較参考：関連会社の財務規模</h3>
+<table>
+<tr><th>会社名</th><th>売上高（FY2022）</th><th>比率（対Thongchai Mitoyo）</th></tr>
+<tr><td>Thai Radiator Manufacturing</td><td>THB 9.28億</td><td>約5.8倍</td></tr>
+<tr><td>Thongchai Mitoyo</td><td>THB 1.61億</td><td>1.0倍（基準）</td></tr>
+<tr><td>株式会社ミトヨ（連結）</td><td>約118億円（≒THB 28億相当）</td><td>約17倍</td></tr>
+</table>
+</div>
+
+<!-- ======== 8. 親会社の変遷 ======== -->
+<div class="card green" id="ownership">
+<h2>8. 親会社の変遷（2025年の動き）</h2>
+
+<h3>ミトヨの株式譲渡（2025年4月）</h3>
+<table>
+<tr><th style="width:25%">項目</th><th>内容</th></tr>
+<tr><td>譲渡日</td><td>2025年4月2日</td></tr>
+<tr><td>売主</td><td>Basic Capital Management（BCM）/ みのり3号投資事業有限責任組合</td></tr>
+<tr><td>買主</td><td><strong>栗山ジャパン株式会社（Kuriyama Japan Co., Ltd.）</strong></td></tr>
+<tr><td>投資期間</td><td>約6年間（BCMによるファンド投資）</td></tr>
+<tr><td>シナジー</td><td>尿素水SCRタンクの垂直統合、アジア生産拡大、農建機部品の競争力強化、地理的市場拡大</td></tr>
+</table>
+
+<h3>栗山ホールディングスについて</h3>
+<ul>
+  <li>栗山ホールディングス株式会社（Kuriyama Holdings Corporation）は産業用ホース・カップリングの大手メーカー</li>
+  <li>タイにはKuriyama (Thailand) Co., Ltd.（営業・物流）およびKuriyama-Ohji (Thailand) Ltd.（製造・販売・物流）を展開</li>
+  <li>Mitoyo取得によりアジアでのゴム・プラスチック製品の製造・販売体制を強化</li>
+</ul>
+
+<div class="note">この株式譲渡によりThongchai MitoyoのJVにおける日本側パートナーの実質的な親会社が、旧PEファンド（BCM）から栗山グループへ変更されたことになる。Thongchai Mitoyo自体の出資構造に変更があったかは不明。</div>
+</div>
+
+<!-- ======== 9. 総括 ======== -->
+<div class="card" id="conclusion">
+<h2>9. 総括・留意事項</h2>
+
+<h3>確認された事実</h3>
+<table>
+<tr><th>項目</th><th>内容</th><th>情報源の確度</th></tr>
+<tr><td>JV構造</td><td>Thongchai Industries（TRグループ） × ミトヨ の合弁会社</td><td><span class="tag green">高</span>（社名・住所・安全マニュアルから確認）</td></tr>
+<tr><td>事業内容</td><td>A/Cホース・パイプ組立、車体部品、プレス加工品</td><td><span class="tag green">高</span>（TSIC分類・事業登記・安全マニュアル）</td></tr>
+<tr><td>財務状態</td><td>売上減少傾向、継続的赤字、FY2024で債務超過</td><td><span class="tag green">高</span>（タイDBDベースのcreden.co・companieshouse.co.th）</td></tr>
+<tr><td>TRグループ構成</td><td>6社+JV1社。Thai Radiator（1967年〜）が母体</td><td><span class="tag green">高</span>（複数ソース一致）</td></tr>
+<tr><td>技術提携</td><td>Usui（日本）・Pyongsan（韓国）からの技術支援</td><td><span class="tag green">高</span>（公式プロフィール記載）</td></tr>
+<tr><td>ミトヨの親会社変更</td><td>2025年4月に栗山グループ傘下に</td><td><span class="tag green">高</span>（BCM公式リリース・栗山HD沿革）</td></tr>
+</table>
+
+<h3>未確認事項（今後の確認が必要）</h3>
+<table>
+<tr><th>項目</th><th>状態</th><th>確認方法</th></tr>
+<tr><td>ミトヨ側の持分比率</td><td><span class="tag red">未確認</span></td><td>タイDBD株主名簿、ミトヨ有価証券報告書（非上場のため困難）</td></tr>
+<tr><td>具体的な顧客名</td><td><span class="tag red">未確認</span></td><td>取引先への直接確認、業界ヒアリング</td></tr>
+<tr><td>従業員数</td><td><span class="tag red">未確認</span></td><td>タイDBD、社会保険データ</td></tr>
+<tr><td>FY2021/2023の詳細財務</td><td><span class="tag red">未確認</span></td><td>タイDBD e-Filing</td></tr>
+<tr><td>輸出の有無・輸出先</td><td><span class="tag red">未確認</span></td><td>貿易データ（Import Genius, Panjiva等）</td></tr>
+<tr><td>Usui → Thongchai Industries の出資有無</td><td><span class="tag yellow">一部確認</span></td><td>Usui Co.が「affiliate」と記載。持分比率は不明</td></tr>
+</table>
+
+<h3>CFC税制上の着眼点</h3>
+<ul>
+  <li><strong>債務超過リスク</strong>：FY2024で株主資本がマイナスとなっている。CFC税制の適用除外要件（経済活動基準）との関連で、「事業の実体」の継続性を検討する必要がある</li>
+  <li><strong>親会社変更の影響</strong>：ミトヨの親会社が栗山グループに変わったことで、Thongchai Mitoyoに対する間接的な支配関係や、移転価格ポリシーに変更が生じる可能性がある</li>
+  <li><strong>グループ内取引</strong>：ミトヨグループ内（Mitoyo Rubber Thailand、Mitoyo Plastics Thailand）からの原材料調達、TRグループ内（Thongchai Industries、AGS Auto Parts）からの金属パイプ調達が想定され、関連者間取引の範囲が広い</li>
+</ul>
+</div>
+
+<!-- ======== Sources ======== -->
+<div class="card">
+<h2>出典・情報源</h2>
+<div class="source-list">
+<h4>Thongchai Mitoyo 直接情報</h4>
+<ul>
+  <li><a href="https://companieshouse.co.th/thongchai-mitoyo-company-limited-0105556014956" target="_blank">Companies House Thailand - Thongchai Mitoyo</a></li>
+  <li><a href="https://data.creden.co/company/general/0105556014956" target="_blank">Creden.co - Thongchai Mitoyo 財務データ</a></li>
+  <li><a href="https://tracxn.com/d/legal-entities/thailand/thongchai-mitoyo-company-limited/__YuaYGagB_TXU4KkSCVKyUoIetA0YN5045kO9wXkYEjY" target="_blank">Tracxn - Thongchai Mitoyo 2025 Financials</a></li>
+  <li><a href="https://anyflip.com/aqlqt/ujwz/basic" target="_blank">Thongchai Mitoyo 安全マニュアル（AnyFlip）</a></li>
+  <li><a href="https://www.yousayhrsay.com/en/company/yousay/thongchai-mitoyo-co-ltd-248782" target="_blank">YouSayHRSay - 従業員レビュー</a></li>
+</ul>
+
+<h4>TRグループ / Thongchai Industries</h4>
+<ul>
+  <li><a href="https://fbcasean2023.jtech-showroom.com/en/company/101032/" target="_blank">Emidas - Thongchai Industries (TR Group) 製品一覧</a></li>
+  <li><a href="http://wikimapia.org/24509657/" target="_blank">Wikimapia - TR Group 工場所在地</a></li>
+  <li><a href="https://tracxn.com/d/legal-entities/thailand/thai-radiator-manufacturing-co.ltd./" target="_blank">Tracxn - Thai Radiator Manufacturing 財務</a></li>
+  <li><a href="https://www.mfg.com/manufacturer/ags-auto-parts-company-limited-ratchathewi-1362787/" target="_blank">MFG - AGS Auto Parts（IATF認証）</a></li>
+</ul>
+
+<h4>株式会社ミトヨ</h4>
+<ul>
+  <li><a href="https://en.mitoyonet.com/company" target="_blank">Mitoyo Co., Ltd. - Company Profile（英語版）</a></li>
+  <li><a href="https://mitoyonet.com/international-base" target="_blank">ミトヨ - 海外拠点紹介</a></li>
+  <li><a href="https://bangkokcp.com/corporateinfo/mitoyo-rubber-thailand-co-ltd/" target="_blank">BCP - Mitoyo Rubber (Thailand)</a></li>
+  <li><a href="https://bangkokcp.com/corporateinfo/mitoyo-plastic-thailand-co-ltd/" target="_blank">BCP - Mitoyo Plastic (Thailand)</a></li>
+  <li><a href="https://www.basic-cm.co.jp/top/news/%E6%A0%AA%E5%BC%8F%E4%BC%9A%E7%A4%BE%E3%83%9F%E3%83%88%E3%83%A8%E3%81%AE%E6%A0%AA%E5%BC%8F%E8%AD%B2%E6%B8%A1%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6/" target="_blank">BCM - ミトヨ株式譲渡リリース</a></li>
+</ul>
+
+<h4>栗山ホールディングス</h4>
+<ul>
+  <li><a href="https://www.kuriyama-holdings.com/en/company/group/" target="_blank">Kuriyama Holdings - Global Network（グループ会社一覧）</a></li>
+  <li><a href="https://www.kuriyama-holdings.com/en/company/history/" target="_blank">Kuriyama Holdings - History</a></li>
+</ul>
+
+<h4>Usui / Pyongsan（技術提携先）</h4>
+<ul>
+  <li><a href="https://www.uict.co.th/company-profile-eng/" target="_blank">USUI International Corporation (Thailand) - Company Profile</a></li>
+  <li><a href="https://koreapartsinfo.com/2022/06/10/pyongsan-co-ltd/" target="_blank">Korea Auto Parts Info - Pyongsan Co., Ltd.</a></li>
+</ul>
+</div>
+</div>
+
+</div>
+
+</body>
+</html>
