@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>使用人兼務役員の海外子会社出向における法人税法上の問題 ― 総合DR</title>
+<style>
+  :root {
+    --primary: #1a365d;
+    --secondary: #2c5282;
+    --accent: #dd6b20;
+    --danger: #c53030;
+    --success: #276749;
+    --insight: #6b46c1;
+    --bg: #f7fafc;
+    --card: #ffffff;
+    --text: #1a202c;
+    --border: #e2e8f0;
+    --light-bg: #ebf4ff;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Noto Sans JP", "Hiragino Sans", sans-serif; background: var(--bg); color: var(--text); line-height: 1.85; font-size: 15px; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+  .header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; padding: 40px 30px; border-radius: 12px; margin-bottom: 28px; }
+  .header h1 { font-size: 1.5em; margin-bottom: 8px; }
+  .header .subtitle { font-size: 1.0em; opacity: 0.9; }
+  .header .meta { margin-top: 14px; font-size: 0.82em; opacity: 0.7; }
+  .card { background: var(--card); border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); padding: 28px 32px; margin-bottom: 24px; }
+  .card h2 { color: var(--primary); font-size: 1.25em; border-bottom: 3px solid var(--secondary); padding-bottom: 8px; margin-bottom: 16px; }
+  .card h3 { color: var(--secondary); font-size: 1.05em; margin: 16px 0 10px; }
+  .card h4 { color: #4a5568; font-size: 0.98em; margin: 12px 0 8px; }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.91em; }
+  th { background: var(--primary); color: #fff; padding: 9px 13px; text-align: left; font-weight: 600; }
+  td { padding: 9px 13px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:nth-child(even) { background: #f8fafc; }
+  tr:hover { background: var(--light-bg); }
+  .alert { border-left: 5px solid var(--danger); background: #fff5f5; padding: 15px 18px; border-radius: 0 8px 8px 0; margin: 14px 0; }
+  .alert .label { color: var(--danger); font-weight: 700; font-size: 0.88em; margin-bottom: 4px; }
+  .insight { border-left: 5px solid var(--insight); background: #faf5ff; padding: 15px 18px; border-radius: 0 8px 8px 0; margin: 14px 0; }
+  .insight .label { color: var(--insight); font-weight: 700; font-size: 0.88em; margin-bottom: 4px; }
+  .success { border-left: 5px solid var(--success); background: #f0fff4; padding: 15px 18px; border-radius: 0 8px 8px 0; margin: 14px 0; }
+  .success .label { color: var(--success); font-weight: 700; font-size: 0.88em; margin-bottom: 4px; }
+  .warn { border-left: 5px solid var(--accent); background: #fffaf0; padding: 15px 18px; border-radius: 0 8px 8px 0; margin: 14px 0; }
+  .warn .label { color: var(--accent); font-weight: 700; font-size: 0.88em; margin-bottom: 4px; }
+  .toc { background: var(--light-bg); border-radius: 10px; padding: 20px 28px; margin-bottom: 24px; }
+  .toc h2 { color: var(--primary); border-bottom: none; margin-bottom: 10px; font-size: 1.1em; }
+  .toc ol { margin-left: 20px; }
+  .toc a { color: var(--secondary); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  .tag { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 0.78em; margin: 1px 3px; }
+  .tag-danger { background: #fed7d7; color: var(--danger); }
+  .tag-warn { background: #fefcbf; color: #975a16; }
+  .tag-ok { background: #c6f6d5; color: var(--success); }
+  .tag-info { background: #bee3f8; color: #2a4365; }
+  blockquote { border-left: 4px solid var(--secondary); background: #f7fafc; padding: 12px 18px; margin: 12px 0; font-size: 0.93em; color: #4a5568; }
+  ul, ol { margin: 8px 0 8px 22px; }
+  li { margin-bottom: 5px; }
+  code { background: #edf2f7; padding: 2px 6px; border-radius: 4px; font-size: 0.88em; }
+  .flow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: center; margin: 18px 0; }
+  .flow-step { background: var(--primary); color: #fff; padding: 10px 16px; border-radius: 8px; font-size: 0.85em; text-align: center; min-width: 130px; }
+  .flow-arrow { font-size: 1.3em; color: var(--secondary); font-weight: 700; }
+  .svg-wrap { background: #f5f5f5; border-radius: 10px; padding: 20px; margin: 18px 0; text-align: center; }
+  .footer { text-align: center; padding: 24px 0; font-size: 0.82em; color: #718096; border-top: 1px solid var(--border); margin-top: 30px; }
+  @media print {
+    body { background: #fff; font-size: 13px; }
+    .card { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; }
+    .header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+  @media (max-width: 768px) { .container { padding: 10px; } .card { padding: 16px; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <h1>使用人兼務役員の海外子会社出向における法人税法上の問題</h1>
+  <div class="subtitle">出向元が全額給与負担・出向先給与ゼロのパターン ― 寄附金・損金算入・源泉税・CFC税制の複合分析</div>
+  <div class="meta">分析日: 2026-03-16 ｜ 対象: 法法34条5項、37条、措法66条の4③、所法161条1項12号イ、所令285条</div>
+</div>
+
+<div class="toc">
+  <h2>目次</h2>
+  <ol>
+    <li><a href="#s1">結論サマリー</a></li>
+    <li><a href="#s2">問題の構造（取引図）</a></li>
+    <li><a href="#s3">使用人兼務役員の法的定義</a></li>
+    <li><a href="#s4">法人税法上の5つの論点</a>
+      <ol style="list-style-type: lower-alpha;">
+        <li><a href="#s4a">出向先給与ゼロと寄附金認定リスク</a></li>
+        <li><a href="#s4b">役員報酬部分の損金算入</a></li>
+        <li><a href="#s4c">使用人部分給与の損金算入</a></li>
+        <li><a href="#s4d">賞与の取扱い</a></li>
+        <li><a href="#s4e">較差補填の正当化可否</a></li>
+      </ol>
+    </li>
+    <li><a href="#s5">源泉所得税の取扱い</a></li>
+    <li><a href="#s6">CFC税制との関係</a></li>
+    <li><a href="#s7">重要判例</a></li>
+    <li><a href="#s8">推奨される実務対応</a></li>
+    <li><a href="#s9">参照条文・出典一覧</a></li>
+  </ol>
+</div>
+
+<!-- 1. 結論サマリー -->
+<div class="card" id="s1">
+  <h2>1. 結論サマリー</h2>
+
+  <div class="alert">
+    <div class="label">核心的リスク ― 複合的な税務問題が同時発生</div>
+    <p>日本親会社の<strong>使用人兼務役員</strong>が海外子会社に<strong>使用人として出向</strong>し、出向元（日本親会社）が役員報酬と使用人部分の給与を全額負担、出向先（海外子会社）からの給与支給がないパターンは、以下の複合的リスクを抱える。</p>
+  </div>
+
+  <table>
+    <tr><th>リスク項目</th><th>深刻度</th><th>根拠</th><th>概要</th></tr>
+    <tr>
+      <td><strong>寄附金認定</strong></td>
+      <td><span class="tag tag-danger">最大</span></td>
+      <td>法法37条、措法66条の4③</td>
+      <td>出向先から給与ゼロ→出向元の全額負担は出向先への経済的利益供与。国外関連者なら<strong>全額損金不算入</strong></td>
+    </tr>
+    <tr>
+      <td><strong>役員報酬の損金算入</strong></td>
+      <td><span class="tag tag-danger">高い</span></td>
+      <td>法法34条1項</td>
+      <td>出向先での使用人としての労務提供の対価を「役員報酬」として支給 → 定期同額要件・過大報酬の問題</td>
+    </tr>
+    <tr>
+      <td><strong>使用人部分の損金性</strong></td>
+      <td><span class="tag tag-warn">中程度</span></td>
+      <td>通達9-2-47</td>
+      <td>出向先の業務の対価を出向元が負担 → 較差補填の合理性説明が必要</td>
+    </tr>
+    <tr>
+      <td><strong>源泉税の二重構造</strong></td>
+      <td><span class="tag tag-warn">中程度</span></td>
+      <td>所法161条1項12号イ、所令285条</td>
+      <td>役員報酬部分は国内源泉所得（20.42%源泉徴収必要）、使用人部分は例外判定次第</td>
+    </tr>
+    <tr>
+      <td><strong>CFC税制への影響</strong></td>
+      <td><span class="tag tag-info">間接的</span></td>
+      <td>措法66条の6</td>
+      <td>管理支配基準への影響 ― 日本親会社の役員が子会社の業務に深く関与 → 実体基準に疑義</td>
+    </tr>
+  </table>
+
+  <div class="flow">
+    <div class="flow-step">寄附金リスクの回避</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">出向先からの給与負担金</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">出向契約書の整備</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">較差補填の文書化</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">源泉税の適正処理</div>
+  </div>
+</div>
+
+<!-- 2. 問題の構造 -->
+<div class="card" id="s2">
+  <h2>2. 問題の構造（取引図）</h2>
+
+  <div class="svg-wrap">
+    <svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg" style="max-width:860px;width:100%;">
+      <!-- Background -->
+      <defs>
+        <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+          <feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#00000020"/>
+        </filter>
+        <marker id="arrowR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#2c5282"/>
+        </marker>
+        <marker id="arrowL" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+          <polygon points="10 0, 0 3.5, 10 7" fill="#c53030"/>
+        </marker>
+        <marker id="arrowD" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#276749"/>
+        </marker>
+      </defs>
+
+      <!-- 日本親会社 -->
+      <rect x="50" y="60" width="300" height="170" rx="14" fill="#ffffff" stroke="#1a365d" stroke-width="2.5" filter="url(#shadow)"/>
+      <rect x="50" y="60" width="300" height="42" rx="14" fill="#1a365d"/>
+      <rect x="50" y="88" width="300" height="14" fill="#1a365d"/>
+      <text x="200" y="88" text-anchor="middle" fill="#ffffff" font-size="16" font-weight="bold">日本親会社（出向元法人）</text>
+      <text x="200" y="128" text-anchor="middle" fill="#1a202c" font-size="12.5">使用人兼務役員 A を雇用</text>
+      <text x="200" y="150" text-anchor="middle" fill="#1a202c" font-size="12.5">（取締役 兼 部長）</text>
+      <text x="200" y="178" text-anchor="middle" fill="#c53030" font-size="12" font-weight="bold">役員報酬 + 使用人給与 を全額支給</text>
+      <text x="200" y="198" text-anchor="middle" fill="#c53030" font-size="11">→ 損金算入の可否が問題</text>
+
+      <!-- 海外子会社 -->
+      <rect x="550" y="60" width="300" height="170" rx="14" fill="#ffffff" stroke="#2c5282" stroke-width="2.5" filter="url(#shadow)"/>
+      <rect x="550" y="60" width="300" height="42" rx="14" fill="#2c5282"/>
+      <rect x="550" y="88" width="300" height="14" fill="#2c5282"/>
+      <text x="700" y="88" text-anchor="middle" fill="#ffffff" font-size="16" font-weight="bold">海外子会社（出向先法人）</text>
+      <text x="700" y="128" text-anchor="middle" fill="#1a202c" font-size="12.5">A は使用人として勤務</text>
+      <text x="700" y="150" text-anchor="middle" fill="#1a202c" font-size="12.5">（出向先での役員地位なし）</text>
+      <text x="700" y="178" text-anchor="middle" fill="#c53030" font-size="12" font-weight="bold">A への給与支給 = ゼロ</text>
+      <text x="700" y="198" text-anchor="middle" fill="#c53030" font-size="11">→ 経済的利益の受益者</text>
+
+      <!-- 出向矢印 -->
+      <line x1="350" y1="120" x2="548" y2="120" stroke="#2c5282" stroke-width="2.5" marker-end="url(#arrowR)"/>
+      <text x="450" y="110" text-anchor="middle" fill="#2c5282" font-size="12" font-weight="bold">出向（使用人として）</text>
+
+      <!-- 給与負担金ゼロ -->
+      <line x1="548" y1="160" x2="352" y2="160" stroke="#c53030" stroke-width="2.5" stroke-dasharray="8,4" marker-end="url(#arrowL)"/>
+      <text x="450" y="182" text-anchor="middle" fill="#c53030" font-size="12" font-weight="bold">給与負担金 = ゼロ</text>
+
+      <!-- 使用人兼務役員 A -->
+      <rect x="310" y="300" width="280" height="100" rx="14" fill="#ffffff" stroke="#6b46c1" stroke-width="2.5" filter="url(#shadow)"/>
+      <rect x="310" y="300" width="280" height="36" rx="14" fill="#6b46c1"/>
+      <rect x="310" y="322" width="280" height="14" fill="#6b46c1"/>
+      <text x="450" y="326" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="bold">使用人兼務役員 A</text>
+      <text x="450" y="358" text-anchor="middle" fill="#1a202c" font-size="12">出向元: 取締役（役員）</text>
+      <text x="450" y="378" text-anchor="middle" fill="#1a202c" font-size="12">出向先: 使用人として勤務</text>
+
+      <!-- 親会社→A -->
+      <line x1="180" y1="232" x2="380" y2="300" stroke="#276749" stroke-width="2" marker-end="url(#arrowD)"/>
+      <text x="240" y="268" fill="#276749" font-size="11" font-weight="bold">役員報酬 + 使用人給与</text>
+      <text x="240" y="282" fill="#276749" font-size="11">（全額出向元負担）</text>
+
+      <!-- A→海外子会社 -->
+      <line x1="520" y1="300" x2="680" y2="232" stroke="#2c5282" stroke-width="2" marker-end="url(#arrowR)"/>
+      <text x="640" y="268" fill="#2c5282" font-size="11" font-weight="bold">労務提供</text>
+      <text x="640" y="282" fill="#2c5282" font-size="11">（使用人として）</text>
+
+      <!-- 問題点ボックス -->
+      <rect x="130" y="440" width="640" height="65" rx="10" fill="#fff5f5" stroke="#c53030" stroke-width="2"/>
+      <text x="450" y="466" text-anchor="middle" fill="#c53030" font-size="13" font-weight="bold">問題の核心: 労務提供を受ける出向先が対価を負担せず、出向元が全額負担</text>
+      <text x="450" y="488" text-anchor="middle" fill="#c53030" font-size="12">→ 寄附金認定リスク（法法37条）+ 国外関連者なら全額損金不算入（措法66条の4③）</text>
+    </svg>
+  </div>
+
+  <div class="insight">
+    <div class="label">構造的特殊性</div>
+    <p>通常の海外出向では、出向者は出向先でも同じ地位（使用人→使用人、役員→役員）を持つことが多い。本件は<strong>出向元では「役員」でありながら出向先では「使用人」</strong>という非対称構造を持つ。この結果、法人税法上の「役員報酬」「使用人給与」「出向者給与負担金」の3つの制度が交錯し、論点が複雑化する。</p>
+  </div>
+</div>
+
+<!-- 3. 使用人兼務役員の法的定義 -->
+<div class="card" id="s3">
+  <h2>3. 使用人兼務役員の法的定義</h2>
+
+  <h3>3-1. 法人税法34条5項の定義</h3>
+  <blockquote>
+    「役員（社長、理事長その他政令で定めるものを除く。）のうち<strong>部長、課長その他法人の使用人としての職制上の地位を有し</strong>、かつ、<strong>常時使用人としての職務に従事する</strong>もの」をいう。
+  </blockquote>
+  <p>使用人兼務役員は「役員」であり「使用人」でもあるという二面性を持つ。この二面性が、海外出向の場面で複雑な税務問題を引き起こす。</p>
+
+  <h3>3-2. 使用人兼務役員になれない者（施行令71条）</h3>
+  <table>
+    <tr><th>除外対象</th><th>具体例</th><th>根拠</th></tr>
+    <tr>
+      <td>代表取締役・代表執行役</td>
+      <td>社長、理事長</td>
+      <td>施行令71条1項1号</td>
+    </tr>
+    <tr>
+      <td>副社長、専務、常務等の肩書を持つ役員</td>
+      <td>副社長、専務取締役、常務取締役</td>
+      <td>施行令71条1項2号</td>
+    </tr>
+    <tr>
+      <td>監査役・監事</td>
+      <td>会計監査を含む</td>
+      <td>施行令71条1項3号</td>
+    </tr>
+    <tr>
+      <td>同族会社の一定の株主グループに属する役員</td>
+      <td>持株割合上位3グループで50%超を占める場合の当該グループ所属役員（さらに10%超・5%超の要件あり）</td>
+      <td>施行令71条1項4号・5号</td>
+    </tr>
+  </table>
+
+  <h3>3-3. 重要通達</h3>
+  <table>
+    <tr><th>通達番号</th><th>内容</th></tr>
+    <tr>
+      <td><code>9-2-5</code></td>
+      <td>使用人兼務役員は「法人の使用人としての<strong>職制上の地位</strong>」を有する必要がある。取締役工場長、取締役営業部長等が典型例</td>
+    </tr>
+    <tr>
+      <td><code>9-2-6</code></td>
+      <td>「<strong>常時使用人としての職務に従事する</strong>」かどうかは、実質的に判断する。名目上の地位だけでは不可</td>
+    </tr>
+    <tr>
+      <td><code>9-2-7</code></td>
+      <td>使用人分賞与の損金算入は、<strong>他の使用人に対する賞与の支給時期と同時期に支給</strong>し、かつ、<strong>適正額</strong>であることが要件</td>
+    </tr>
+  </table>
+
+  <div class="warn">
+    <div class="label">本件への適用上の問題</div>
+    <p>使用人兼務役員の「<strong>常時使用人としての職務に従事する</strong>」要件は、出向元法人における職務を前提としている。海外子会社に使用人として出向した場合、出向元での使用人としての職務に「常時」従事しているとは言い難く、<strong>出向期間中の使用人兼務役員としての地位自体が問題</strong>になりうる。</p>
+  </div>
+</div>
+
+<!-- 4. 法人税法上の5つの論点 -->
+<div class="card" id="s4">
+  <h2>4. 法人税法上の5つの論点</h2>
+
+  <!-- 4(a) -->
+  <h3 id="s4a">4(a). 出向先から給与ゼロ → 寄附金認定リスク</h3>
+
+  <div class="alert">
+    <div class="label">最大のリスク ― 寄附金認定と全額損金不算入</div>
+    <p>出向者への給与は<strong>労務提供を受ける出向先法人において負担するのが原則</strong>（基通9-2-47）。出向先が給与を一切負担しない場合、出向元が負担する給与のうち出向先が負担すべき部分は、出向先への<strong>経済的利益の供与</strong>＝寄附金と認定される。</p>
+  </div>
+
+  <h4>法法37条 ― 寄附金の損金不算入</h4>
+  <blockquote>
+    法人が「金銭その他の資産又は経済的な利益の贈与又は無償の供与」をした場合、寄附金として損金算入限度額を超える部分は損金不算入。
+  </blockquote>
+
+  <h4>措法66条の4第3項 ― 国外関連者への寄附金</h4>
+  <blockquote>
+    法人が国外関連者に対して寄附金を支出した場合、その寄附金の額は<strong>全額損金不算入</strong>とする。
+  </blockquote>
+
+  <p>海外子会社が国外関連者（50%以上の出資関係等）に該当する場合、出向元が負担する給与のうち出向先が本来負担すべき部分は<strong>全額損金不算入</strong>となる。国内の寄附金のような損金算入限度額の余地すらない。</p>
+
+  <div class="flow">
+    <div class="flow-step">出向先の給与負担 = ゼロ</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">出向元の全額負担</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">出向先への経済的利益供与</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step" style="background:#c53030;">寄附金認定<br>(国外関連者なら全額損金不算入)</div>
+  </div>
+
+  <!-- 4(b) -->
+  <h3 id="s4b">4(b). 役員報酬部分の損金算入</h3>
+
+  <p>使用人兼務役員への「役員報酬」部分は、法法34条の損金算入要件を満たす必要がある。</p>
+
+  <h4>定期同額給与（法法34条1項1号）</h4>
+  <table>
+    <tr><th>要件</th><th>本件の問題</th></tr>
+    <tr>
+      <td>支給時期が1月以下の一定の期間ごと</td>
+      <td>毎月支給であれば要件充足</td>
+    </tr>
+    <tr>
+      <td>各支給時期における支給額が同額</td>
+      <td>海外赴任手当等の変動がある場合、<strong>月ごとに金額が異なると全額損金不算入</strong>（判決13521参照）</td>
+    </tr>
+    <tr>
+      <td>事業年度の期首から3月以内の改定</td>
+      <td>出向開始時期に応じた改定が必要</td>
+    </tr>
+  </table>
+
+  <h4>過大役員報酬（法法34条2項）</h4>
+  <p>役員の職務の内容、法人の収益の状況、使用人に対する給与の支給状況、同種・類似規模の法人の役員報酬等と比較して「不相当に高額な部分」は損金不算入。出向先で<strong>使用人としてのみ勤務</strong>している期間中に、出向元での「役員」としての報酬が従前と同額であることの合理性を説明する必要がある。</p>
+
+  <div class="warn">
+    <div class="label">注意</div>
+    <p>出向により出向元での役員としての職務遂行が制限される場合、役員報酬の額が「その役員の職務の内容」に照らして過大と認定される可能性がある。特に海外赴任で出向元の経営に関与しない場合にリスクが高まる。</p>
+  </div>
+
+  <!-- 4(c) -->
+  <h3 id="s4c">4(c). 使用人部分給与の損金算入</h3>
+
+  <p>使用人兼務役員に対する「使用人としての職務に対する給与」（使用人分給与）は、過大でない限り損金算入される（法法34条1項括弧書き）。しかし本件では以下の問題がある。</p>
+
+  <table>
+    <tr><th>問題点</th><th>詳細</th></tr>
+    <tr>
+      <td><strong>使用人部分は出向先の業務の対価</strong></td>
+      <td>出向先で使用人として勤務する以上、使用人部分の給与は出向先の業務の対価。出向先が負担すべきものを出向元が負担 → 経済的利益の供与</td>
+    </tr>
+    <tr>
+      <td><strong>較差補填の範囲か</strong></td>
+      <td>通達9-2-47の較差補填として正当化するには、出向先の給与水準との差額であることの合理的説明が必要。出向先の給与がゼロでは較差補填の前提を欠く</td>
+    </tr>
+    <tr>
+      <td><strong>使用人分給与の適正額の算定</strong></td>
+      <td>出向元で「常時使用人としての職務に従事」していない状態で、使用人分給与の適正額をどう算定するか</td>
+    </tr>
+  </table>
+
+  <!-- 4(d) -->
+  <h3 id="s4d">4(d). 賞与の取扱い</h3>
+
+  <div class="insight">
+    <div class="label">通達の二重構造 ― 9-2-34と9-2-47注1(1)</div>
+    <p>出向者が出向先で役員の場合は通達9-2-34が適用されるが、本件は<strong>出向先では「使用人」</strong>であるため、9-2-34の直接適用はない。しかし出向元では「役員」であるため、賞与の取扱いには特殊な問題が生じる。</p>
+  </div>
+
+  <table>
+    <tr><th>賞与の種類</th><th>適用通達</th><th>取扱い</th></tr>
+    <tr>
+      <td>使用人兼務役員としての<strong>使用人分賞与</strong></td>
+      <td>通達9-2-7</td>
+      <td>他の使用人の支給時期と同時期に支給し、適正額であれば損金算入。ただし出向中は「常時使用人としての職務に従事」要件に疑義</td>
+    </tr>
+    <tr>
+      <td><strong>役員賞与</strong>（使用人分を超える部分）</td>
+      <td>法法34条</td>
+      <td>事前確定届出給与に該当しなければ<strong>全額損金不算入</strong></td>
+    </tr>
+    <tr>
+      <td>出向先の業務に対する賞与として出向元が負担する部分</td>
+      <td>通達9-2-47注1(1)</td>
+      <td>出向先が「経営不振等やむを得ない事情」で賞与を支給できない場合の較差補填として出向元が負担可能。ただし<strong>出向先の役員に対してはこの例外は適用されない</strong>（注1(1)の括弧書き）。本件は出向先で使用人なので適用可能性あり</td>
+    </tr>
+  </table>
+
+  <div class="warn">
+    <div class="label">実務上の注意</div>
+    <p>出向元での使用人兼務役員としての賞与と、出向先の業務に対する給与負担の区分が不明確な場合、全額が「役員賞与」として損金不算入とされるリスクがある。出向契約書と賞与支給規程で明確に区分する必要がある。</p>
+  </div>
+
+  <!-- 4(e) -->
+  <h3 id="s4e">4(e). 較差補填の正当化可否</h3>
+
+  <h4>通達9-2-47（較差補填金）</h4>
+  <blockquote>
+    出向元法人が出向先法人との給与条件の較差を補填するため出向者に対して支給した給与の額は、出向元法人の損金の額に算入する。
+  </blockquote>
+
+  <p>較差補填が認められるための条件:</p>
+  <ol>
+    <li>出向先法人が出向者に給与を支給していること（ゼロでは較差の算定が困難）</li>
+    <li>出向元と出向先の給与水準の較差が合理的に算定されていること</li>
+    <li>補填額が較差の範囲内であること</li>
+    <li>出向契約書等で較差補填の内容が具体的に定められていること</li>
+  </ol>
+
+  <div class="alert">
+    <div class="label">本件の問題</div>
+    <p>出向先の給与がゼロの場合、「較差」を観念しにくい。出向先の給与水準が仮に月額X円であるとして、出向元の給与Y円との較差（Y-X）を補填するという構成であれば、Xに相当する金額は出向先が負担すべきものとなる。<strong>出向先の給与をゼロとしたままで全額を較差補填とすることは、通達の趣旨に反し認められない</strong>と考えられる。</p>
+  </div>
+
+  <div class="success">
+    <div class="label">較差補填が認められうるケース</div>
+    <p>出向先（海外子会社）が出向者に対し、現地の給与水準に基づく給与を支給し、出向元との較差部分のみを出向元が補填する場合は、合理的な較差補填として出向元での損金算入が認められる。この場合でも、較差の算定根拠を文書化しておく必要がある。</p>
+  </div>
+</div>
+
+<!-- 5. 源泉所得税の取扱い -->
+<div class="card" id="s5">
+  <h2>5. 源泉所得税の取扱い</h2>
+
+  <h3>5-1. 基本的な枠組み</h3>
+  <p>海外勤務者（非居住者）への給与の源泉税は、その給与が「国内源泉所得」に該当するかで決まる。使用人兼務役員の場合、<strong>役員部分と使用人部分で異なる規定が適用</strong>される。</p>
+
+  <h3>5-2. 役員報酬部分 ― 所法161条1項12号イ</h3>
+  <blockquote>
+    国内源泉所得には「内国法人の役員として<strong>国外において行う勤務</strong>その他の人的役務の提供の対価」を含む（括弧書き）。
+  </blockquote>
+  <p>内国法人の役員に対する報酬は、勤務地が国内か国外かを問わず<strong>全額が国内源泉所得</strong>となる。したがって、使用人兼務役員の「役員報酬」部分は、海外勤務中であっても<strong>20.42%の源泉徴収</strong>が必要。</p>
+
+  <h3>5-3. 使用人部分 ― 所令285条1項1号の例外</h3>
+  <blockquote>
+    所得税法施行令285条1項1号: 「<strong>使用人として常時海外において勤務する</strong>場合」の給与については、国内源泉所得に含まれない（161条1項12号イの括弧書きの例外の例外）。
+  </blockquote>
+
+  <table>
+    <tr><th>給与の区分</th><th>国内源泉所得の該当性</th><th>源泉徴収</th><th>根拠</th></tr>
+    <tr>
+      <td><strong>役員報酬部分</strong></td>
+      <td><span class="tag tag-danger">該当する</span></td>
+      <td>20.42%</td>
+      <td>所法161条1項12号イ括弧書き</td>
+    </tr>
+    <tr>
+      <td><strong>使用人部分</strong>（所令285条1項1号の例外に該当する場合）</td>
+      <td><span class="tag tag-ok">該当しない</span></td>
+      <td>不要</td>
+      <td>所令285条1項1号</td>
+    </tr>
+    <tr>
+      <td><strong>使用人部分</strong>（例外に該当しない場合）</td>
+      <td><span class="tag tag-danger">該当する</span></td>
+      <td>20.42%</td>
+      <td>所法161条1項12号イ</td>
+    </tr>
+  </table>
+
+  <h3>5-4. 使用人兼務役員は所令285条の例外に該当するか</h3>
+
+  <div class="insight">
+    <div class="label">H24.5.10 裁決の厳格解釈</div>
+    <p>平成24年5月10日裁決では、「使用人として常時海外において勤務する場合」の要件が厳格に解釈されている。使用人兼務役員は「役員」でもある以上、純粋に「使用人として」勤務しているとは言い切れず、この例外に該当するかは<strong>不確実</strong>である。</p>
+  </div>
+
+  <p>判断の分かれ目:</p>
+  <ul>
+    <li>出向先で役員としての地位を有していない（使用人のみ）→ 例外該当の可能性が相対的に高い</li>
+    <li>しかし出向元では「役員」であり、役員報酬を受領している → 「使用人として常時勤務」と評価しにくい</li>
+    <li>出向元の経営に関与する会議への参加、意思決定への関与があれば「使用人として<strong>常時</strong>」の要件を満たさない可能性</li>
+  </ul>
+
+  <div class="alert">
+    <div class="label">実務上の安全策</div>
+    <p>使用人兼務役員の場合、使用人部分が所令285条の例外に該当するかの判断は困難である。<strong>安全策として全額（役員報酬部分＋使用人部分）について20.42%の源泉徴収を行う</strong>ケースが実務上多い。過納付であれば確定申告で精算可能であるが、徴収不足は不納付加算税のリスクがある。</p>
+  </div>
+
+  <h3>5-5. 源泉税のフロー</h3>
+  <div class="flow">
+    <div class="flow-step">使用人兼務役員に<br>給与支給</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">役員報酬部分<br>→ 国内源泉所得</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step" style="background:#c53030;">20.42%<br>源泉徴収（必須）</div>
+  </div>
+  <div class="flow">
+    <div class="flow-step">使用人部分</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">所令285条の<br>例外判定</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step" style="background:#dd6b20;">該当性不確実<br>→ 安全策として源泉徴収</div>
+  </div>
+</div>
+
+<!-- 6. CFC税制との関係 -->
+<div class="card" id="s6">
+  <h2>6. CFC税制との関係（管理支配基準への影響）</h2>
+
+  <h3>6-1. CFC税制の概要</h3>
+  <p>措法66条の6以下のCFC（外国子会社合算）税制は、一定の外国関係会社の所得を日本の親会社の所得に合算して課税する制度である。合算対象から除外されるための要件の一つに「<strong>管理支配基準</strong>」（事業の管理、支配及び運営を自ら行っていること）がある。</p>
+
+  <h3>6-2. 本件の影響</h3>
+  <table>
+    <tr><th>管理支配基準の要素</th><th>本件への影響</th><th>リスク</th></tr>
+    <tr>
+      <td><strong>役員の構成</strong></td>
+      <td>日本親会社の取締役が海外子会社で使用人として勤務 → 実質的な意思決定が日本側で行われている疑い</td>
+      <td><span class="tag tag-warn">要注意</span></td>
+    </tr>
+    <tr>
+      <td><strong>事業の管理・運営</strong></td>
+      <td>出向者が日本親会社の「役員」として子会社の業務に関与 → 子会社が「自ら」管理支配しているか疑義</td>
+      <td><span class="tag tag-warn">要注意</span></td>
+    </tr>
+    <tr>
+      <td><strong>給与負担の構造</strong></td>
+      <td>出向者の給与を全額日本親会社が負担 → 経済的依存関係の証拠として管理支配基準の否認材料</td>
+      <td><span class="tag tag-danger">高い</span></td>
+    </tr>
+    <tr>
+      <td><strong>取締役会の開催</strong></td>
+      <td>出向者が日本親会社の取締役として取締役会に出席 → 子会社業務と親会社経営が混然一体</td>
+      <td><span class="tag tag-warn">要注意</span></td>
+    </tr>
+  </table>
+
+  <div class="warn">
+    <div class="label">管理支配基準への影響</div>
+    <p>日本親会社の役員が海外子会社に常駐し、子会社の業務を遂行する構造は、子会社が「事業の管理、支配及び運営を<strong>自ら</strong>行っている」という要件に対して消極的に作用する。特に、子会社の他の従業員が少ない場合や、子会社のKey Managementが当該出向者である場合は、管理支配基準を満たさないと判断されるリスクが高まる。</p>
+  </div>
+
+  <h3>6-3. 実体基準との関係</h3>
+  <p>CFC税制の経済活動基準のうち「実体基準」は、事業を行うに必要な事務所等の固定施設を有していることを求める。出向者が子会社の業務を担う構造では、人的要素としての実体はあると評価される可能性があるが、給与が全額親会社負担であることは、子会社の「実体」が親会社に依存していることの証左となり、<strong>所在地国基準</strong>との関係でも消極材料となる。</p>
+</div>
+
+<!-- 7. 重要判例 -->
+<div class="card" id="s7">
+  <h2>7. 重要判例</h2>
+
+  <!-- 判決11802 -->
+  <h3>判決11802 ― 東京高裁 平成23年10月27日判決</h3>
+  <div class="alert">
+    <div class="label">出向者給与の負担原則</div>
+    <p>「出向者への給与は<strong>労務提供を受ける出向先法人において負担するのが原則</strong>。出向元の負担は合理的理由がなければ寄附金」</p>
+  </div>
+  <table>
+    <tr><th>項目</th><th>内容</th></tr>
+    <tr><td>事案概要</td><td>出向元法人が出向先法人に代わって出向者の給与を負担。出向先からの負担金なし</td></tr>
+    <tr><td>争点</td><td>出向元の給与負担が寄附金に該当するか</td></tr>
+    <tr><td>判旨</td><td>出向者への給与は<strong>労務提供の対価</strong>であり、労務提供を受ける出向先が負担すべき。出向元の負担に合理的理由がなければ出向先への経済的利益の供与（寄附金）に該当</td></tr>
+    <tr><td>本件への示唆</td><td><span class="tag tag-danger">直接関連</span> 出向先の給与ゼロ・出向元の全額負担は、この原則に正面から抵触する</td></tr>
+  </table>
+
+  <!-- 判決11545 -->
+  <h3>判決11545 ― 水戸地裁 平成22年10月29日判決</h3>
+  <div class="insight">
+    <div class="label">役員の給与負担金と役員賞与認定</div>
+    <p>「役員の給与負担金のうち<strong>定期給与超過分は役員賞与</strong> → 損金不算入」</p>
+  </div>
+  <table>
+    <tr><th>項目</th><th>内容</th></tr>
+    <tr><td>事案概要</td><td>出向先法人の役員に対する給与負担金のうち、毎月の定期給与を超える部分の取扱い</td></tr>
+    <tr><td>争点</td><td>定期給与超過分が役員賞与に該当するか</td></tr>
+    <tr><td>判旨</td><td>通達9-2-34に基づき、出向先の<strong>役員に対する給与負担金</strong>のうち定期給与超過分は<strong>役員賞与</strong>として損金不算入</td></tr>
+    <tr><td>本件への示唆</td><td><span class="tag tag-warn">間接関連</span> 本件は出向先で「使用人」だが、出向元では「役員」であるため、出向元での賞与支給が役員賞与と認定される可能性の参考になる</td></tr>
+  </table>
+
+  <!-- 判決12414 -->
+  <h3>判決12414 ― 東京地裁 平成26年2月20日判決</h3>
+  <div class="alert">
+    <div class="label">出向契約書不備 → 寄附金認定</div>
+    <p>「出向期間、勤務条件、給与・賞与・退職給与の負担等を具体的に定めるのが通常」 ― 契約書不備は寄附金認定の大きな材料</p>
+  </div>
+  <table>
+    <tr><th>項目</th><th>内容</th></tr>
+    <tr><td>事案概要</td><td>出向契約書が十分に整備されていない状態での出向元の給与負担</td></tr>
+    <tr><td>争点</td><td>出向元が出向先の従業員に支給した給与が寄附金に該当するか</td></tr>
+    <tr><td>判旨</td><td>出向契約においては「出向期間、勤務条件、給与・賞与・退職給与の負担等を<strong>具体的に定めるのが通常</strong>」。これらの定めがない場合、出向元の給与負担に合理的理由がないとして<strong>寄附金認定</strong></td></tr>
+    <tr><td>本件への示唆</td><td><span class="tag tag-danger">直接関連</span> 出向契約書に給与負担・較差補填の根拠を明記しなければ、寄附金認定リスクが極めて高い</td></tr>
+  </table>
+
+  <!-- 判決12956 -->
+  <h3>判決12956 ― 東京地裁 平成29年1月18日判決</h3>
+  <div class="insight">
+    <div class="label">使用人兼務役員の判定基準</div>
+    <p>「法人の<strong>経営に従事していると一般的・類型的に評価し得る地位</strong>にある者は、実際の職務内容に関わらず使用人兼務役員に該当しない」</p>
+  </div>
+  <table>
+    <tr><th>項目</th><th>内容</th></tr>
+    <tr><td>事案概要</td><td>法人の役員が使用人兼務役員に該当するかの判定</td></tr>
+    <tr><td>争点</td><td>実質的な職務内容と形式的な地位のいずれで判断するか</td></tr>
+    <tr><td>判旨</td><td>施行令71条の趣旨は「<strong>法人の経営に従事していると一般的・類型的に評価し得る地位</strong>」にある者を使用人兼務役員から排除することにある。判断は実際の職務遂行態様ではなく、<strong>地位</strong>（ポジション）に着目して行う</td></tr>
+    <tr><td>本件への示唆</td><td><span class="tag tag-danger">直接関連</span> 出向元での取締役としての地位が、海外出向中も維持されている限り、使用人兼務役員としての取扱いの前提（「常時使用人としての職務に従事」）に疑義が生じる</td></tr>
+  </table>
+
+  <!-- 判決13521 -->
+  <h3>判決13521 ― 松江地裁 令和3年2月8日判決</h3>
+  <div class="warn">
+    <div class="label">定期同額給与の厳格適用</div>
+    <p>「月ごとに金額が異なる手当は定期同額要件を満たさず<strong>全額</strong>損金不算入」</p>
+  </div>
+  <table>
+    <tr><th>項目</th><th>内容</th></tr>
+    <tr><td>事案概要</td><td>役員に対し毎月支給される給与のうち、変動する手当を含む部分</td></tr>
+    <tr><td>争点</td><td>月額変動部分を含む給与が定期同額給与に該当するか</td></tr>
+    <tr><td>判旨</td><td>定期同額給与は「その支給時期における支給額が<strong>同額</strong>」であることを要する。月ごとに金額が変動する手当を含む場合は<strong>全額が損金不算入</strong></td></tr>
+    <tr><td>本件への示唆</td><td><span class="tag tag-danger">直接関連</span> 海外赴任手当、為替調整手当等が変動する場合、役員報酬部分の定期同額要件を満たさず全額損金不算入のリスク。使用人部分と役員報酬部分の区分を明確にし、変動する手当は使用人部分に含める等の対策が必要</td></tr>
+  </table>
+
+  <h3>判例の総合マトリクス</h3>
+  <table>
+    <tr><th>判決番号</th><th>裁判所</th><th>核心論点</th><th>本件関連度</th></tr>
+    <tr><td>11802</td><td>東京高裁 H23.10.27</td><td>出向者給与は出向先負担が原則。違反は寄附金</td><td><span class="tag tag-danger">極めて高い</span></td></tr>
+    <tr><td>11545</td><td>水戸地裁 H22.10.29</td><td>役員の給与負担金：定期超過分は役員賞与</td><td><span class="tag tag-warn">間接関連</span></td></tr>
+    <tr><td>12414</td><td>東京地裁 H26.2.20</td><td>出向契約書不備 → 寄附金認定</td><td><span class="tag tag-danger">極めて高い</span></td></tr>
+    <tr><td>12956</td><td>東京地裁 H29.1.18</td><td>使用人兼務役員の判定は「地位」基準</td><td><span class="tag tag-danger">極めて高い</span></td></tr>
+    <tr><td>13521</td><td>松江地裁 R3.2.8</td><td>定期同額給与の厳格適用（変動手当→全額損金不算入）</td><td><span class="tag tag-danger">極めて高い</span></td></tr>
+  </table>
+</div>
+
+<!-- 8. 推奨される実務対応 -->
+<div class="card" id="s8">
+  <h2>8. 推奨される実務対応</h2>
+
+  <div class="success">
+    <div class="label">対策の基本方針</div>
+    <p>寄附金リスクを回避し、損金算入を確保するためには、<strong>出向先（海外子会社）から適正な給与負担金を支払わせる</strong>ことが最も重要。これに加え、出向契約書の整備、較差補填の文書化、源泉税の適正処理を組み合わせて対応する。</p>
+  </div>
+
+  <table>
+    <tr><th>#</th><th>対策</th><th>優先度</th><th>具体的内容</th></tr>
+    <tr>
+      <td>1</td>
+      <td><strong>出向先からの給与負担金の支払い</strong></td>
+      <td><span class="tag tag-danger">最優先</span></td>
+      <td>出向先（海外子会社）から出向元に対し、出向者の現地での使用人としての労務の対価に相当する金額を給与負担金として支払わせる。金額は現地の給与水準を参考に算定</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td><strong>出向契約書の整備</strong></td>
+      <td><span class="tag tag-danger">最優先</span></td>
+      <td>出向期間、勤務条件、給与・賞与・退職金の負担方法と金額（又は算定方法）を具体的に規定。判決12414が「通常定めるべき事項」として列挙した内容を網羅</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td><strong>較差補填の算定根拠の文書化</strong></td>
+      <td><span class="tag tag-danger">最優先</span></td>
+      <td>出向先の給与水準と出向元の給与水準の較差を具体的に算定し、補填額が較差の範囲内であることを証明する文書を作成・保管</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td><strong>役員報酬と使用人部分の区分明確化</strong></td>
+      <td><span class="tag tag-warn">重要</span></td>
+      <td>使用人兼務役員の報酬を「役員報酬」部分と「使用人給与」部分に明確に区分。取締役会決議で役員報酬の額を確定し、使用人給与は別途規定</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td><strong>役員報酬の定期同額要件の確保</strong></td>
+      <td><span class="tag tag-warn">重要</span></td>
+      <td>役員報酬部分は月額を固定し、海外赴任手当等の変動要素は使用人給与部分に含める。出向開始が事業年度中の場合は3月以内改定の手続きを遵守</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td><strong>源泉税の適正処理</strong></td>
+      <td><span class="tag tag-warn">重要</span></td>
+      <td>安全策として全額（役員報酬部分＋使用人部分）に対し20.42%の源泉徴収を実施。使用人部分が所令285条の例外に該当するとの判断に自信がある場合のみ、使用人部分の源泉を免除</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td><strong>CFC管理支配基準への影響検証</strong></td>
+      <td><span class="tag tag-info">確認</span></td>
+      <td>海外子会社がCFC税制の適用対象となりうる場合、使用人兼務役員の出向が管理支配基準に与える影響を検証。必要に応じて子会社の現地経営体制を強化</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td><strong>使用人兼務役員の地位の再検討</strong></td>
+      <td><span class="tag tag-info">検討</span></td>
+      <td>海外出向中に出向元での「使用人兼務役員」としての地位を維持する必要があるか再検討。出向中は役員を辞任し使用人として出向する方が税務処理がシンプルになる場合がある</td>
+    </tr>
+  </table>
+
+  <h3>リスク軽減のフロー</h3>
+  <div class="flow">
+    <div class="flow-step">出向先が給与負担金を<br>出向元に支払う</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">出向元は較差部分のみ<br>補填（損金算入）</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">役員報酬は定期同額を<br>維持（損金算入）</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step" style="background:#276749;">寄附金リスク回避<br>損金算入確保</div>
+  </div>
+</div>
+
+<!-- 9. 参照条文・出典一覧 -->
+<div class="card" id="s9">
+  <h2>9. 参照条文・出典一覧</h2>
+
+  <h3>法令</h3>
+  <table>
+    <tr><th>法令</th><th>条文</th><th>内容</th></tr>
+    <tr><td>法人税法</td><td>34条1項</td><td>役員給与の損金不算入（定期同額給与・事前確定届出給与・業績連動給与の3類型のみ損金算入）</td></tr>
+    <tr><td>法人税法</td><td>34条2項</td><td>過大役員給与の損金不算入</td></tr>
+    <tr><td>法人税法</td><td>34条5項</td><td>使用人兼務役員の定義</td></tr>
+    <tr><td>法人税法</td><td>37条</td><td>寄附金の損金不算入</td></tr>
+    <tr><td>法人税法施行令</td><td>71条</td><td>使用人兼務役員とされない役員（代表取締役、副社長、専務、常務、監査役、同族会社の特定株主）</td></tr>
+    <tr><td>租税特別措置法</td><td>66条の4第3項</td><td>国外関連者に対する寄附金の全額損金不算入</td></tr>
+    <tr><td>租税特別措置法</td><td>66条の6</td><td>CFC税制（外国子会社合算税制）</td></tr>
+    <tr><td>所得税法</td><td>161条1項12号イ</td><td>国内源泉所得（給与その他人的役務の提供の対価）、内国法人の役員の括弧書き</td></tr>
+    <tr><td>所得税法施行令</td><td>285条1項1号</td><td>使用人として常時海外勤務する場合の例外</td></tr>
+  </table>
+
+  <h3>通達</h3>
+  <table>
+    <tr><th>通達番号</th><th>内容</th></tr>
+    <tr><td>法基通9-2-5</td><td>使用人兼務役員の意義（職制上の地位）</td></tr>
+    <tr><td>法基通9-2-6</td><td>「常時使用人としての職務に従事する」の意義</td></tr>
+    <tr><td>法基通9-2-7</td><td>使用人兼務役員の使用人分賞与の損金算入要件</td></tr>
+    <tr><td>法基通9-2-34</td><td>出向先が役員の場合の給与負担金の取扱い</td></tr>
+    <tr><td>法基通9-2-47</td><td>出向者に対する給与の較差補填</td></tr>
+    <tr><td>法基通9-2-47 注1(1)</td><td>経営不振等やむを得ない事情での較差補填（出向先の役員を除く）</td></tr>
+  </table>
+
+  <h3>判決・裁決</h3>
+  <table>
+    <tr><th>番号</th><th>裁判所・年月日</th><th>核心論点</th></tr>
+    <tr><td>11802</td><td>東京高裁 H23.10.27</td><td>出向者給与の出向先負担原則</td></tr>
+    <tr><td>11545</td><td>水戸地裁 H22.10.29</td><td>役員の給与負担金と役員賞与認定</td></tr>
+    <tr><td>12414</td><td>東京地裁 H26.2.20</td><td>出向契約書不備と寄附金認定</td></tr>
+    <tr><td>12956</td><td>東京地裁 H29.1.18</td><td>使用人兼務役員の判定（地位基準）</td></tr>
+    <tr><td>13521</td><td>松江地裁 R3.2.8</td><td>定期同額給与の厳格適用</td></tr>
+    <tr><td>H24.5.10裁決</td><td>国税不服審判所</td><td>所令285条「使用人として常時海外勤務」の厳格解釈</td></tr>
+  </table>
+</div>
+
+<div class="footer">
+  分析日: 2026-03-16 ｜ 本資料は一般的な税務論点の整理であり、個別の税務助言を構成するものではありません。
+</div>
+
+</div>
+</body>
+</html>
