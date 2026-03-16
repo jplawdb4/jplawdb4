@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>海外赴任者への留守宅手当の法人税法上の問題 - 総合調査レポート</title>
+<style>
+:root {
+  --primary: #1a365d;
+  --secondary: #2c5282;
+  --accent: #ed8936;
+  --bg: #f7fafc;
+  --card: #ffffff;
+  --text: #2d3748;
+  --muted: #718096;
+  --border: #e2e8f0;
+  --danger: #e53e3e;
+  --success: #38a169;
+  --info: #3182ce;
+  --warning: #d69e2e;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+  font-size: 15px;
+}
+.container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+header {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  padding: 40px 20px;
+  text-align: center;
+}
+header h1 { font-size: 1.8em; margin-bottom: 10px; }
+header .subtitle { font-size: 1em; opacity: 0.9; }
+header .date { font-size: 0.85em; opacity: 0.7; margin-top: 8px; }
+
+.toc {
+  background: var(--card);
+  border-radius: 8px;
+  padding: 25px 30px;
+  margin: 25px 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.toc h2 { font-size: 1.2em; color: var(--primary); margin-bottom: 15px; border-bottom: 2px solid var(--accent); padding-bottom: 8px; }
+.toc ol { padding-left: 20px; }
+.toc li { margin: 6px 0; }
+.toc a { color: var(--info); text-decoration: none; }
+.toc a:hover { text-decoration: underline; }
+
+section {
+  background: var(--card);
+  border-radius: 8px;
+  padding: 30px;
+  margin: 25px 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+section h2 {
+  font-size: 1.4em;
+  color: var(--primary);
+  border-left: 4px solid var(--accent);
+  padding-left: 15px;
+  margin-bottom: 20px;
+}
+section h3 {
+  font-size: 1.15em;
+  color: var(--secondary);
+  margin: 20px 0 10px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--border);
+}
+section h4 {
+  font-size: 1.05em;
+  color: var(--text);
+  margin: 15px 0 8px;
+}
+
+.provision {
+  background: #f0f4f8;
+  border-left: 4px solid var(--info);
+  padding: 15px 20px;
+  margin: 15px 0;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.95em;
+}
+.provision .label {
+  font-weight: bold;
+  color: var(--info);
+  display: block;
+  margin-bottom: 5px;
+}
+.provision .note {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border);
+  color: var(--muted);
+  font-size: 0.9em;
+}
+
+.alert {
+  padding: 15px 20px;
+  border-radius: 6px;
+  margin: 15px 0;
+}
+.alert-danger {
+  background: #fff5f5;
+  border-left: 4px solid var(--danger);
+  color: #9b2c2c;
+}
+.alert-warning {
+  background: #fffff0;
+  border-left: 4px solid var(--warning);
+  color: #975a16;
+}
+.alert-info {
+  background: #ebf8ff;
+  border-left: 4px solid var(--info);
+  color: #2a4365;
+}
+.alert-success {
+  background: #f0fff4;
+  border-left: 4px solid var(--success);
+  color: #276749;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0;
+  font-size: 0.92em;
+}
+th, td {
+  padding: 10px 14px;
+  text-align: left;
+  border: 1px solid var(--border);
+}
+th {
+  background: var(--primary);
+  color: white;
+  font-weight: 600;
+}
+tr:nth-child(even) { background: #f7fafc; }
+tr:hover { background: #edf2f7; }
+
+.source-link {
+  color: var(--info);
+  text-decoration: none;
+  font-size: 0.85em;
+}
+.source-link:hover { text-decoration: underline; }
+
+.diagram {
+  background: #f8f9fa;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.flow-box {
+  display: inline-block;
+  padding: 10px 18px;
+  border-radius: 6px;
+  margin: 5px;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+.flow-arrow {
+  display: inline-block;
+  margin: 0 8px;
+  font-size: 1.5em;
+  color: var(--muted);
+  vertical-align: middle;
+}
+
+.risk-meter {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+.risk-level {
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-weight: bold;
+  margin-right: 10px;
+}
+.risk-high { background: #fed7d7; color: #9b2c2c; }
+.risk-medium { background: #fefcbf; color: #975a16; }
+.risk-low { background: #c6f6d5; color: #276749; }
+
+.summary-box {
+  background: linear-gradient(135deg, #ebf4ff, #f0f4f8);
+  border: 2px solid var(--info);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+ul { padding-left: 20px; margin: 8px 0; }
+li { margin: 4px 0; }
+
+.sources {
+  background: #f8f9fa;
+  border-top: 3px solid var(--primary);
+  padding: 25px 30px;
+  margin-top: 30px;
+}
+.sources h2 { border-left: none; padding-left: 0; }
+.sources li { margin: 6px 0; font-size: 0.9em; }
+.sources a { color: var(--info); }
+
+@media print {
+  body { font-size: 12px; }
+  section { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+  .toc { break-after: page; }
+}
+@media (max-width: 768px) {
+  .container { padding: 10px; }
+  section { padding: 15px; }
+  header h1 { font-size: 1.3em; }
+  table { font-size: 0.82em; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>海外赴任者への留守宅手当の法人税法上の問題</h1>
+  <div class="subtitle">法人税基本通達・移転価格税制・所得税法の交錯領域に関する総合調査レポート</div>
+  <div class="date">2026年3月16日 調査実施</div>
+</header>
+
+<div class="container">
+
+<!-- 目次 -->
+<nav class="toc">
+  <h2>目次</h2>
+  <ol>
+    <li><a href="#sec1">法人税基本通達の関連規定（第9款 出向者に対する給与等）</a></li>
+    <li><a href="#sec2">留守宅手当の定義と実務</a></li>
+    <li><a href="#sec3">法人税法上の問題点 ― 損金算入と寄附金認定</a></li>
+    <li><a href="#sec4">移転価格税制との関係</a></li>
+    <li><a href="#sec5">所得税法との関連（法人税への影響）</a></li>
+    <li><a href="#sec6">判例・裁決例</a></li>
+    <li><a href="#sec7">国税庁の公式見解（タックスアンサー・質疑応答）</a></li>
+    <li><a href="#sec8">実務上の相場・基準（EYモビリティサーベイ等）</a></li>
+    <li><a href="#sec9">実務チェックリストと総括</a></li>
+    <li><a href="#sources">情報源一覧</a></li>
+  </ol>
+</nav>
+
+<!-- ===== 1. 法人税基本通達 ===== -->
+<section id="sec1">
+  <h2>1. 法人税基本通達の関連規定</h2>
+  <p>出向者に対する給与の税務上の取扱いは、法人税基本通達「第9款 転籍、出向者に対する給与等」（通達9-2-44～9-2-51）で定められている。留守宅手当に直接関係するのは9-2-45～9-2-50である。</p>
+
+  <h3>1.1 通達9-2-45（出向先法人が支出する給与負担金）</h3>
+  <div class="provision">
+    <span class="label">法基通9-2-45</span>
+    法人の使用人が他の法人に出向した場合において、その出向した使用人（以下9-2-51までにおいて「出向者」という。）に対する給与を出向元法人（出向した使用人に対して給与を支給する法人をいう。以下9-2-51までにおいて同じ。）が支給することとしているため、出向先法人（出向者を受け入れている法人をいう。以下9-2-51までにおいて同じ。）が自己の負担すべき給与に相当する金額（以下9-2-47までにおいて「給与負担金」という。）を出向元法人に支出したときは、当該給与負担金の額は、当該出向先法人におけるその出向者に対する給与として取り扱う。
+  </div>
+  <div class="alert alert-info">
+    <strong>解説：</strong>給与の「出し手」がどちらであるかにかかわらず、労務の提供を受ける出向先法人が実質的な給与負担者であるという考え方が基本原則。出向先法人が出向元法人に支出する給与負担金は、出向先法人における当該出向者への給与として取り扱われる。
+  </div>
+
+  <h3>1.2 通達9-2-46（出向先法人が支出する給与負担金に係る役員給与の取扱い）</h3>
+  <div class="provision">
+    <span class="label">法基通9-2-46</span>
+    出向者が出向先法人において役員となっている場合において、次のいずれにも該当するときは、出向先法人が支出する当該役員に係る給与負担金の支出を出向先法人における当該役員に対する給与の支給として、法第34条《役員給与の損金不算入》の規定が適用される。<br>
+    (1) 当該役員に係る給与負担金の額につき当該役員に対する給与として出向先法人の株主総会、社員総会又はこれらに準ずるものの決議がされていること。<br>
+    (2) 出向契約等において当該出向者に係る出向期間及び給与負担金の額があらかじめ定められていること。
+    <div class="note">
+      （注1）本文の取扱いの適用を受ける給与負担金についての法第34条第1項第2号に規定する届出は、出向先法人がその納税地の所轄税務署長にその出向契約等に基づき支出する給与負担金に係る定めの内容について行うこととなる。<br>
+      （注2）出向先法人が給与負担金として支出した金額が出向元法人が当該出向者に支給する給与の額を超える場合のその超える部分の金額については、出向先法人にとって給与負担金としての性格はないことに留意する。
+    </div>
+  </div>
+
+  <h3>1.3 通達9-2-47（出向者に対する給与の較差補填）【最重要】</h3>
+  <div class="provision" style="border-left-color: var(--accent); background: #fffaf0;">
+    <span class="label" style="color: var(--accent);">法基通9-2-47 ★留守宅手当の根拠規定</span>
+    出向元法人が出向先法人との給与条件の較差を補填するため出向者に対して支給した給与の額（出向先法人を経て支給した金額を含む。）は、当該出向元法人の損金の額に算入する。
+    <div class="note">
+      <strong>（注）</strong>次に掲げる金額は、給与条件の較差を補填するために支給したものとする。<br>
+      <strong>1</strong> 出向先法人が経営不振等で出向者に賞与を支給することができないため出向元法人が当該出向者に対して支給する賞与の額<br>
+      <strong>2 出向先法人が海外にあるため出向元法人が支給するいわゆる留守宅手当の額</strong>
+    </div>
+  </div>
+  <div class="alert alert-warning">
+    <strong>重要ポイント：</strong>本通達は昭和44年（1969年）に創設。当時は日本企業の給与水準が海外各国より著しく高かった時代背景がある。現在は日本の相対的給与水準が低下しており（1997年世界14位→2022年25位）、通達の前提が変化している。この変化が税務調査で較差補填の適否を厳しく問われる一因となっている（EY Tax Alert 2023参照）。
+  </div>
+
+  <h3>1.4 通達9-2-48（出向先法人が支出する退職給与の負担金）</h3>
+  <div class="provision">
+    <span class="label">法基通9-2-48</span>
+    出向先法人が、出向者に対して出向元法人が支給すべき退職給与の額に充てるため、あらかじめ定めた負担区分に基づき、当該出向者の出向期間に対応する退職給与の額として合理的に計算された金額を定期的に出向元法人に支出している場合には、その支出する金額は、たとえ当該出向者が出向先法人において役員となっているときであっても、その支出をする日の属する事業年度の損金の額に算入する。
+  </div>
+
+  <h3>1.5 通達9-2-49（出向元法人を退職した場合の退職給与の負担金）</h3>
+  <div class="provision">
+    <span class="label">法基通9-2-49</span>
+    出向者が出向元法人を退職した場合において、出向先法人がその退職した出向者に対して出向元法人が支給する退職給与の額のうちその出向期間に係る部分の金額を出向元法人に支出したときは、その支出した金額は、たとえ当該出向者が出向先法人において引き続き役員又は使用人として勤務するときであっても、その支出をした日の属する事業年度の損金の額に算入する。
+  </div>
+
+  <h3>1.6 通達9-2-50（出向先法人が退職給与を負担しない場合）</h3>
+  <div class="provision">
+    <span class="label">法基通9-2-50</span>
+    出向先法人が出向者に対して出向元法人が支給すべき退職給与の額のうちその出向期間に係る部分の金額の全部又は一部を負担しない場合においても、その負担しないことにつき相当な理由があるときは、これを認める。
+  </div>
+
+  <h3>1.7 通達体系の構造図</h3>
+  <div class="diagram">
+    <svg viewBox="0 0 800 380" style="max-width:800px; width:100%;">
+      <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#4a5568"/>
+        </marker>
+      </defs>
+      <!-- Title -->
+      <text x="400" y="25" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a365d">法人税基本通達 第9款 出向者給与の通達体系</text>
+      <!-- 9-2-45 -->
+      <rect x="20" y="50" width="220" height="55" rx="6" fill="#ebf8ff" stroke="#3182ce" stroke-width="2"/>
+      <text x="130" y="72" text-anchor="middle" font-size="11" font-weight="bold" fill="#2a4365">9-2-45</text>
+      <text x="130" y="92" text-anchor="middle" font-size="10" fill="#2a4365">出向先が支出する給与負担金</text>
+      <!-- 9-2-46 -->
+      <rect x="280" y="50" width="220" height="55" rx="6" fill="#ebf8ff" stroke="#3182ce" stroke-width="2"/>
+      <text x="390" y="72" text-anchor="middle" font-size="11" font-weight="bold" fill="#2a4365">9-2-46</text>
+      <text x="390" y="92" text-anchor="middle" font-size="10" fill="#2a4365">役員の場合の給与負担金</text>
+      <!-- 9-2-47 (highlighted) -->
+      <rect x="20" y="140" width="480" height="70" rx="6" fill="#fffaf0" stroke="#ed8936" stroke-width="3"/>
+      <text x="260" y="162" text-anchor="middle" font-size="13" font-weight="bold" fill="#c05621">9-2-47 出向者に対する給与の較差補填 ★核心規定</text>
+      <text x="260" y="180" text-anchor="middle" font-size="10" fill="#975a16">（注1）経営不振時の賞与補填</text>
+      <text x="260" y="196" text-anchor="middle" font-size="11" font-weight="bold" fill="#c05621">（注2）留守宅手当 ← 本レポートの主題</text>
+      <!-- 9-2-48 -->
+      <rect x="20" y="240" width="220" height="55" rx="6" fill="#f0fff4" stroke="#38a169" stroke-width="2"/>
+      <text x="130" y="262" text-anchor="middle" font-size="11" font-weight="bold" fill="#276749">9-2-48</text>
+      <text x="130" y="282" text-anchor="middle" font-size="10" fill="#276749">退職給与の負担金（定期）</text>
+      <!-- 9-2-49 -->
+      <rect x="280" y="240" width="220" height="55" rx="6" fill="#f0fff4" stroke="#38a169" stroke-width="2"/>
+      <text x="390" y="262" text-anchor="middle" font-size="11" font-weight="bold" fill="#276749">9-2-49</text>
+      <text x="390" y="282" text-anchor="middle" font-size="10" fill="#276749">退職時の退職給与負担金</text>
+      <!-- 9-2-50 -->
+      <rect x="540" y="240" width="220" height="55" rx="6" fill="#f0fff4" stroke="#38a169" stroke-width="2"/>
+      <text x="650" y="262" text-anchor="middle" font-size="11" font-weight="bold" fill="#276749">9-2-50</text>
+      <text x="650" y="282" text-anchor="middle" font-size="10" fill="#276749">退職給与を負担しない場合</text>
+      <!-- Right box: risk -->
+      <rect x="540" y="50" width="220" height="160" rx="6" fill="#fff5f5" stroke="#e53e3e" stroke-width="2"/>
+      <text x="650" y="72" text-anchor="middle" font-size="11" font-weight="bold" fill="#9b2c2c">寄附金認定リスク</text>
+      <text x="650" y="95" text-anchor="middle" font-size="10" fill="#9b2c2c">法法37条7項</text>
+      <text x="650" y="115" text-anchor="middle" font-size="10" fill="#9b2c2c">措法66条の4③</text>
+      <text x="650" y="138" text-anchor="middle" font-size="10" fill="#9b2c2c">（国外関連者寄附金）</text>
+      <text x="650" y="165" text-anchor="middle" font-size="11" font-weight="bold" fill="#e53e3e">→ 全額損金不算入</text>
+      <text x="650" y="185" text-anchor="middle" font-size="10" fill="#9b2c2c">→ 更正期限5年</text>
+      <!-- Arrow from 9-2-47 to risk -->
+      <line x1="500" y1="175" x2="535" y2="150" stroke="#e53e3e" stroke-width="2" marker-end="url(#arrowhead)" stroke-dasharray="5,3"/>
+      <text x="518" y="145" font-size="9" fill="#e53e3e">超過分</text>
+      <!-- Legend -->
+      <rect x="20" y="325" width="15" height="15" rx="3" fill="#fffaf0" stroke="#ed8936" stroke-width="2"/>
+      <text x="42" y="337" font-size="10" fill="#4a5568">留守宅手当の根拠規定</text>
+      <rect x="220" y="325" width="15" height="15" rx="3" fill="#ebf8ff" stroke="#3182ce" stroke-width="2"/>
+      <text x="242" y="337" font-size="10" fill="#4a5568">給与負担金関連</text>
+      <rect x="400" y="325" width="15" height="15" rx="3" fill="#f0fff4" stroke="#38a169" stroke-width="2"/>
+      <text x="422" y="337" font-size="10" fill="#4a5568">退職給与関連</text>
+      <rect x="580" y="325" width="15" height="15" rx="3" fill="#fff5f5" stroke="#e53e3e" stroke-width="2"/>
+      <text x="602" y="337" font-size="10" fill="#4a5568">寄附金リスク</text>
+    </svg>
+  </div>
+</section>
+
+<!-- ===== 2. 留守宅手当の定義と実務 ===== -->
+<section id="sec2">
+  <h2>2. 留守宅手当の定義と実務</h2>
+
+  <h3>2.1 留守宅手当とは</h3>
+  <p>留守宅手当とは、海外赴任者が日本に家族を残して単身赴任する場合（又は家族帯同の場合でも日本国内に残る住居の維持等が必要な場合）に、出向元の日本親会社が支給する手当である。名称としては「留守宅手当」「海外単身赴任手当」「海外別居手当」「国内残留家族手当」などの名目が用いられる。</p>
+
+  <h4>支給目的の内訳</h4>
+  <table>
+    <tr><th>目的</th><th>内容</th></tr>
+    <tr><td>国内残留家族の生活費補填</td><td>日本に残る配偶者・子の生活費・教育費等</td></tr>
+    <tr><td>国内社会保険料相当分</td><td>厚生年金保険料の本人負担分等</td></tr>
+    <tr><td>住居維持費</td><td>日本国内の住居（持ち家のローン・賃貸等）の維持費用</td></tr>
+    <tr><td>別居に伴う追加費用</td><td>通信費、一時帰国時の渡航費等</td></tr>
+    <tr><td>労災保険料（法定福利費）</td><td>出向元法人が負担する法定福利費</td></tr>
+  </table>
+
+  <h3>2.2 支給方法</h3>
+  <ul>
+    <li><strong>通貨：</strong>為替変動リスク回避のため、通常は<strong>円貨建て</strong>で日本国内の銀行口座に振り込む</li>
+    <li><strong>支給主体：</strong>出向元法人（日本親会社）が直接支給（出向先法人を経由しない）</li>
+    <li><strong>支給頻度：</strong>月次が一般的</li>
+  </ul>
+
+  <h3>2.3 法的位置づけ</h3>
+  <div class="alert alert-info">
+    <strong>法基通9-2-47（注）2：</strong>留守宅手当は「出向先法人が海外にあるため出向元法人が支給するいわゆる留守宅手当の額」として、<strong>給与条件の較差を補填するために支給したもの</strong>とみなされる。すなわち、出向元が負担すべき固有費用であり、純粋な労務の対価ではなく「業務命令に基づき海外勤務という特殊環境に身を置くことを強いることに対する特段の配慮」としての性質を持つ。
+  </div>
+
+  <h3>2.4 給与設計方式と留守宅手当の関係</h3>
+  <table>
+    <tr><th>方式</th><th>概要</th><th>留守宅手当の位置づけ</th><th>採用率</th></tr>
+    <tr>
+      <td><strong>購買力補償方式</strong></td>
+      <td>本国での購買力と同等を赴任先で維持</td>
+      <td>ハイポタックス（みなし税）控除後の手取給与をベースに、留守宅手当は日本国内分として別枠支給</td>
+      <td>74%</td>
+    </tr>
+    <tr>
+      <td>併用方式</td>
+      <td>購買力補償＋現地給与のミックス</td>
+      <td>留守宅手当は日本側支給分に含まれる</td>
+      <td>14%</td>
+    </tr>
+    <tr>
+      <td>現地給与方式</td>
+      <td>現地同等職の給与水準に合わせる</td>
+      <td>較差が生じにくく留守宅手当の根拠が弱まる</td>
+      <td>約12%</td>
+    </tr>
+  </table>
+  <p class="source-link">出典：第8回EYモビリティサーベイ（2025年1-3月、245社回答）</p>
+</section>
+
+<!-- ===== 3. 法人税法上の問題点 ===== -->
+<section id="sec3">
+  <h2>3. 法人税法上の問題点 ― 損金算入と寄附金認定</h2>
+
+  <h3>3.1 基本原則：労務提供を受ける出向先が給与を負担</h3>
+  <p>税務上、出向者への給与は<strong>労務の提供を受ける出向先法人が負担するのが基本的な考え方</strong>である（法基通9-2-45）。日本親会社が海外子会社に出向させた社員の給与を全額負担すれば、出向先法人が負担すべき金額との差額は、国外関連者への寄附金として認定されるリスクがある。</p>
+
+  <h3>3.2 損金算入が認められる場合（較差補填）</h3>
+  <div class="provision">
+    <span class="label">損金算入の根拠：法基通9-2-47</span>
+    出向元法人が出向先法人との<strong>給与条件の較差を補填</strong>するため出向者に対して支給した給与の額は、出向元法人の損金の額に算入する。
+    <div class="note">
+      較差補填金は、雇用契約に基づくものであって贈与という性格のものではないことから、寄附金として損金不算入とすべきものではない。
+    </div>
+  </div>
+
+  <h4>較差補填として認められる具体的範囲</h4>
+  <table>
+    <tr><th>項目</th><th>認められるか</th><th>根拠</th></tr>
+    <tr><td>出向先が経営不振で支給できない賞与の補填</td><td style="color:green; font-weight:bold;">○</td><td>法基通9-2-47（注）1</td></tr>
+    <tr><td>出向先が海外にあるための留守宅手当</td><td style="color:green; font-weight:bold;">○</td><td>法基通9-2-47（注）2</td></tr>
+    <tr><td>日本と現地の給与水準の較差部分</td><td style="color:green; font-weight:bold;">○</td><td>法基通9-2-47本文</td></tr>
+    <tr><td>国内社会保険料の本人負担分</td><td style="color:green; font-weight:bold;">○</td><td>出向元固有の法定福利費</td></tr>
+    <tr><td>労災保険料（法定福利費）</td><td style="color:green; font-weight:bold;">○</td><td>出向元固有の法定福利費</td></tr>
+    <tr><td>出向先の現地相場を超える過大な負担</td><td style="color:red; font-weight:bold;">×</td><td>寄附金認定リスク</td></tr>
+    <tr><td>根拠なき定率（例：基本給の50%）の定額支給</td><td style="color:orange; font-weight:bold;">△</td><td>合理的根拠の有無による</td></tr>
+  </table>
+
+  <h3>3.3 法人税法34条・36条の適用</h3>
+  <table>
+    <tr><th>条文</th><th>内容</th><th>出向者への適用</th></tr>
+    <tr>
+      <td><strong>法法34条</strong><br>役員給与の損金不算入</td>
+      <td>定期同額給与・事前確定届出給与・業績連動給与のいずれにも該当しない役員給与は損金不算入</td>
+      <td>出向者が出向先で<strong>役員</strong>の場合、出向先法人が支出する給与負担金について法34条の適用あり（法基通9-2-46）。株主総会決議と出向契約での事前定めが必要。</td>
+    </tr>
+    <tr>
+      <td><strong>法法36条</strong><br>過大な使用人給与の損金不算入</td>
+      <td>役員の特殊関係使用人に対する不相当に高額な給与は損金不算入</td>
+      <td>出向者が出向先で<strong>使用人</strong>の場合でも、留守宅手当を含む総給与額が不相当に高額であれば適用の余地あり</td>
+    </tr>
+  </table>
+
+  <h3>3.4 寄附金認定リスク ― 最大の税務リスク</h3>
+  <div class="alert alert-danger">
+    <strong>国外関連者寄附金（措法66条の4第3項）：全額損金不算入</strong><br>
+    出向元法人（日本親会社）が出向先法人（海外子会社＝国外関連者）の負担すべき費用を代わりに負担した場合、その負担額は国外関連者に対する寄附金として認定され、<strong>全額が損金不算入</strong>となる。通常の寄附金のような損金算入限度額の計算はなく、全額が否認される点が極めて重要。
+  </div>
+
+  <h4>寄附金認定の具体的メカニズム</h4>
+  <div class="diagram">
+    <svg viewBox="0 0 800 260" style="max-width:800px; width:100%;">
+      <!-- Japanese Parent -->
+      <rect x="30" y="30" width="200" height="80" rx="8" fill="#ebf8ff" stroke="#3182ce" stroke-width="2"/>
+      <text x="130" y="60" text-anchor="middle" font-size="13" font-weight="bold" fill="#2a4365">日本親会社P社</text>
+      <text x="130" y="80" text-anchor="middle" font-size="10" fill="#2a4365">（出向元法人）</text>
+      <text x="130" y="98" text-anchor="middle" font-size="10" fill="#2a4365">年間給与480万円を全額負担</text>
+      <!-- Overseas Sub -->
+      <rect x="530" y="30" width="200" height="80" rx="8" fill="#f0fff4" stroke="#38a169" stroke-width="2"/>
+      <text x="630" y="60" text-anchor="middle" font-size="13" font-weight="bold" fill="#276749">海外子会社S社</text>
+      <text x="630" y="80" text-anchor="middle" font-size="10" fill="#276749">（出向先法人）</text>
+      <text x="630" y="98" text-anchor="middle" font-size="10" fill="#276749">負担額：0円</text>
+      <!-- Arrow -->
+      <line x1="230" y1="70" x2="525" y2="70" stroke="#4a5568" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <text x="378" y="55" text-anchor="middle" font-size="10" fill="#4a5568">出向者「甲」の労務提供</text>
+      <!-- Calculation Box -->
+      <rect x="100" y="140" width="560" height="100" rx="8" fill="#fff5f5" stroke="#e53e3e" stroke-width="2"/>
+      <text x="380" y="165" text-anchor="middle" font-size="12" font-weight="bold" fill="#9b2c2c">寄附金認定の計算</text>
+      <text x="380" y="190" text-anchor="middle" font-size="11" fill="#9b2c2c">P社負担額 480万 - 現地比準者給与 280万 = 較差補填（認容）200万</text>
+      <text x="380" y="215" text-anchor="middle" font-size="12" font-weight="bold" fill="#e53e3e">→ S社が負担すべき280万円全額が国外関連者寄附金として全額損金不算入</text>
+    </svg>
+  </div>
+  <p>上記の例では、出向者「甲」の年間給与480万円全額をP社が負担し、S社は0円負担。S社における同等職務のローカルマネージャーの平均給与が280万円である場合、較差補填として認められ得るのは480万-280万=200万円のみ。S社が負担すべき280万円をP社が代わりに負担している部分が寄附金認定の対象となる。</p>
+
+  <h3>3.5 80%支給 vs 50%支給 ― リスクの違い</h3>
+  <table>
+    <tr><th>支給パターン</th><th>リスク評価</th><th>解説</th></tr>
+    <tr>
+      <td><strong>基本給の80%を留守宅手当として支給</strong></td>
+      <td><span class="risk-level risk-high">HIGH</span></td>
+      <td>出向先（海外子会社）の給与水準が日本の基本給80%に相当するとは考えにくいケースが多い。特にアジア新興国への出向の場合、現地比準者の給与水準との乖離が大きく、較差補填として合理的に説明できない部分が寄附金認定される可能性が高い。</td>
+    </tr>
+    <tr>
+      <td><strong>基本給の50%を留守宅手当として支給</strong></td>
+      <td><span class="risk-level risk-medium">MEDIUM</span></td>
+      <td>80%よりはリスクが低いが、50%という根拠が明確でなければ問題となる。「基本給の○%」という定率方式自体が、現地の給与水準との較差を根拠としていない場合に否認リスクあり。</td>
+    </tr>
+    <tr>
+      <td><strong>現地比準者給与との較差を算定して支給</strong></td>
+      <td><span class="risk-level risk-low">LOW</span></td>
+      <td>最も安全な方法。現地の同等職務の給与テーブルを入手し、日本側給与との較差を合理的に算定して留守宅手当額を決定する。ベンチマークデータの保存が重要。</td>
+    </tr>
+  </table>
+
+  <h3>3.6 出向先法人からの給与負担金の取扱い</h3>
+  <div class="provision">
+    <span class="label">出向先法人側の処理（法基通9-2-45）</span>
+    出向先法人が出向元法人に支出した給与負担金の額は、出向先法人における出向者に対する給与として取り扱う。
+  </div>
+  <ul>
+    <li>出向先法人（海外子会社）が給与負担金を支出→出向先の損金（給与）</li>
+    <li>出向元法人（日本親会社）が給与負担金を受領→出向元の益金（ただし出向者への給与支出と相殺）</li>
+    <li>出向先法人が給与負担金として支出した金額が出向者の実際の給与額を<strong>超える</strong>場合→超過部分は「給与負担金としての性格はない」（法基通9-2-46注2）</li>
+  </ul>
+</section>
+
+<!-- ===== 4. 移転価格税制との関係 ===== -->
+<section id="sec4">
+  <h2>4. 移転価格税制との関係</h2>
+
+  <h3>4.1 出向者の給与負担は国外関連取引か</h3>
+  <p>出向者の給与負担金は、法的には出向元法人と出向先法人（海外子会社＝国外関連者）との間の取引であり、<strong>国外関連取引に該当し得る</strong>。ただし、実務上の課税処理は以下のように二つのルートに分岐する。</p>
+
+  <table>
+    <tr><th>課税ルート</th><th>根拠法令</th><th>内容</th></tr>
+    <tr>
+      <td><strong>移転価格税制</strong></td>
+      <td>措法66条の4第1項</td>
+      <td>国外関連取引の対価が独立企業間価格と異なる場合に課税。出向者の労務提供を「役務提供取引」として独立企業間価格を算定。</td>
+    </tr>
+    <tr>
+      <td><strong>国外関連者寄附金</strong></td>
+      <td>措法66条の4第3項</td>
+      <td>金銭その他の資産又は経済的な利益の贈与又は無償の供与に該当する場合、全額損金不算入。</td>
+    </tr>
+  </table>
+
+  <div class="alert alert-warning">
+    <strong>実務上の傾向：</strong>TKCのコラム（2012-13年調査事例）によれば、税務調査では調査官が「移転価格税制対象」と言及するケースが多いが、最終的には<strong>措法66条の4第3項（寄附金損金不算入）で課税されるケースが大半</strong>である。移転価格税制創設前から存在する通達9-2-47との整理は「依然として残されたまま」とされる。
+  </div>
+
+  <h3>4.2 移転価格事務運営要領（事務運営指針）の規定</h3>
+  <div class="provision">
+    <span class="label">事務運営指針3-20（国外関連者寄附金）</span>
+    法人が国外関連者に対して資産の販売、金銭の貸付け、役務の提供その他の取引を行い、かつ当該資産の販売等に係る収益の計上を行っていない場合において、当該資産の販売等が金銭その他の資産又は経済的な利益の贈与又は無償の供与に該当するときは、措置法第66条の4第3項の規定の適用がある。
+  </div>
+
+  <h4>出向者給与における事務運営指針の適用</h4>
+  <ul>
+    <li>出向者が海外子会社の業務に従事する場合、原則として海外子会社が給与全額を負担すべき</li>
+    <li>日本親会社による一部負担は例外的取扱いであり、較差補填として合理的範囲にとどまる限り、寄附金として更正される可能性は低い</li>
+    <li>較差補填額に合理的根拠がない場合→事務運営指針3-20に基づき寄附金認定</li>
+  </ul>
+
+  <h3>4.3 役務提供取引としての整理</h3>
+  <p>出向は「役務提供取引」の一形態として移転価格税制の対象となり得る。企業グループ内役務提供取引に係る移転価格事務運営指針では、簡易な算定方法として「総原価＋5%」が認められている。ただし、出向者の給与負担に直接この簡易法が適用されるかは論点がある。</p>
+
+  <h3>4.4 較差補填と移転価格の理論的整合</h3>
+  <div class="summary-box">
+    <strong>構造的な問題：</strong>
+    <ul>
+      <li>法基通9-2-47は昭和44年（1969年）に創設された<strong>法人税法上の通達</strong></li>
+      <li>移転価格税制は昭和61年（1986年）に導入された<strong>租税特別措置法上の制度</strong></li>
+      <li>両者の関係は必ずしも明確ではなく、通達で「較差補填として損金算入可」とされる金額が、移転価格税制上も独立企業間価格と整合するかは別問題</li>
+      <li>実務上は、出向先法人の比準者給与を基礎として較差補填額を算定し、それが独立企業間価格の範囲内であることを説明する必要がある</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== 5. 所得税法との関連 ===== -->
+<section id="sec5">
+  <h2>5. 所得税法との関連（法人税への影響）</h2>
+
+  <h3>5.1 非居住者の判定</h3>
+  <p>海外赴任期間が<strong>1年以上</strong>の場合、出向者は所得税法上の<strong>非居住者</strong>に該当する（所法2条1項5号）。非居住者に対しては、<strong>国内源泉所得のみ</strong>が課税対象となる。</p>
+
+  <h3>5.2 留守宅手当の国内源泉所得該当性</h3>
+  <div class="alert alert-success">
+    <strong>原則：留守宅手当は国外源泉所得 → 源泉徴収不要</strong><br>
+    留守宅手当は、海外での勤務に基因して支給される給与の一部（較差補填）であるため、日本法人が支払っていても<strong>国外源泉所得</strong>に該当する。したがって、非居住者である出向者に対する留守宅手当について、日本における源泉徴収は原則として不要。
+  </div>
+
+  <h4>判定のポイント：支払場所ではなく勤務場所</h4>
+  <table>
+    <tr><th>状況</th><th>所得分類</th><th>源泉徴収</th></tr>
+    <tr>
+      <td>通年海外勤務（日本滞在なし）→留守宅手当</td>
+      <td>国外源泉所得</td>
+      <td style="color:green; font-weight:bold;">不要</td>
+    </tr>
+    <tr>
+      <td>一時帰国中（日本国内業務に従事）の期間に対応する給与</td>
+      <td>国内源泉所得</td>
+      <td style="color:red; font-weight:bold;">必要（20.42%）</td>
+    </tr>
+    <tr>
+      <td>出向者が<strong>役員</strong>の場合（日本法人の役員兼務）</td>
+      <td>国内源泉所得（日本払い全額）</td>
+      <td style="color:red; font-weight:bold;">必要（20.42%）※滞在期間不問</td>
+    </tr>
+  </table>
+
+  <div class="alert alert-danger">
+    <strong>注意：</strong>出向者が一時帰国して日本国内の業務を行った場合、その日本滞在期間に対応する留守宅手当部分は<strong>国内源泉所得</strong>に該当し、源泉徴収（20.42%）が必要。コロナ禍以降、長期の一時帰国が増加しており、源泉徴収漏れが税務調査で指摘されるケースが増加。
+  </div>
+
+  <h3>5.3 租税条約上の取扱い（短期滞在者免税・183日ルール）</h3>
+  <p>租税条約により、以下の3要件を全て満たす場合、給与への課税が免除される可能性がある。</p>
+  <ol>
+    <li>暦年（又は12か月間）の相手国での滞在日数が<strong>183日を超えない</strong></li>
+    <li>国外の雇用主等が給与を負担</li>
+    <li>国内PEに実質的に給与を負担させない</li>
+  </ol>
+  <div class="alert alert-warning">
+    <strong>留守宅手当には短期滞在者免税の適用なし：</strong>留守宅手当は日本親会社から支給されるものであり、「国外の雇用主が給与を負担」という要件を満たさない。したがって、一時帰国時の国内源泉所得に該当する留守宅手当部分には短期滞在者免税は適用されない。
+  </div>
+
+  <h3>5.4 法人税への影響</h3>
+  <ul>
+    <li><strong>源泉徴収漏れ：</strong>法人税の問題ではないが、源泉所得税の不納付は不納付加算税・延滞税の原因となり、法人の税務コスト増大につながる</li>
+    <li><strong>海外子会社が出向者の所得税を立替→寄附金認定：</strong>海外子会社が赴任者の所得税を立て替えて日本本社に請求した場合、その支払いは寄附金とみなされ損金不算入となるリスクがある</li>
+    <li><strong>ハイポタックス方式の影響：</strong>「もし日本にいたら」のみなし税額を控除して手取り保証を行う場合、赴任先国の実効税率によって法人の実質負担が変動する</li>
+  </ul>
+</section>
+
+<!-- ===== 6. 判例・裁決例 ===== -->
+<section id="sec6">
+  <h2>6. 判例・裁決例</h2>
+  <p>留守宅手当そのものを直接の争点とする公表裁判例は現時点で多くないが、海外出向者の給与負担金・寄附金認定に関する裁決・判例は存在する。</p>
+
+  <h3>6.1 関連する裁決・判例の傾向</h3>
+  <table>
+    <tr><th>論点</th><th>判断傾向</th><th>備考</th></tr>
+    <tr>
+      <td>較差補填金の損金算入</td>
+      <td>法基通9-2-47の要件を満たす限り<strong>損金算入を認容</strong></td>
+      <td>較差補填金は「雇用契約に基づく」ものであり寄附金には当たらない</td>
+    </tr>
+    <tr>
+      <td>出向先法人への過大な経済的利益の供与</td>
+      <td>合理的理由のない出向元負担は<strong>寄附金認定</strong></td>
+      <td>現地比準者の給与水準を超える部分が問題</td>
+    </tr>
+    <tr>
+      <td>国外関連者寄附金の「寄附金」該当性</td>
+      <td>利益供与の「意思」は不要（客観的に判断）</td>
+      <td>法人税法37条の寄附金概念＝広義</td>
+    </tr>
+    <tr>
+      <td>外国所得税額の帰国後納付</td>
+      <td>平成21年10月6日裁決（裁決事例集No.78）：居住者となった後の所得として認定</td>
+      <td>海外出向社員の外国所得税の帰属時期が争点</td>
+    </tr>
+  </table>
+
+  <h3>6.2 税務調査での指摘実績</h3>
+  <div class="alert alert-warning">
+    <strong>EY 2021年サーベイ：40%の企業が過去に税務調査で較差補填について指摘を受けた。</strong><br>
+    また、TKCのコラム（2012-13年調査）によれば、<strong>約60%が寄附金課税として追徴</strong>された実例が報告されている。
+  </div>
+  <p>税務調査で否認された主な事例の特徴：</p>
+  <ul>
+    <li>出向先での同等職位の現地従業員給与より、出向元負担が過大</li>
+    <li>出向契約書や根拠資料（比準者データ等）の不備</li>
+    <li>過去に設定した較差補填額を見直さず継続（アジア地域の人件費上昇を反映していない）</li>
+    <li>「基本給の○%」という定率方式で、現地給与水準との較差に基づく根拠がない</li>
+  </ul>
+
+  <h3>6.3 寄附金の法的定義に関する判例法理</h3>
+  <p>「寄附金」に該当するためには、<strong>客観的に受贈者に財産的利益を与えるもの</strong>であれば足り、主観的に無償の意図を有していることは不要とされる（通説・判例）。国外関連者寄附金（措法66条の4第3項）に関しても同様の解釈が適用され、「出向者の能力維持のため」等の主観的理由があっても、客観的に出向先に経済的利益を供与していれば寄附金認定される。</p>
+</section>
+
+<!-- ===== 7. 国税庁の公式見解 ===== -->
+<section id="sec7">
+  <h2>7. 国税庁の公式見解</h2>
+
+  <h3>7.1 タックスアンサーNo.5241</h3>
+  <div class="provision">
+    <span class="label"><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5241.htm" class="source-link">タックスアンサーNo.5241「出向者に対する給与の較差補てん金の取扱い」</a></span>
+    出向元法人が支給する給与較差補てん金は、出向期間中であっても出向元との雇用契約が維持されているため、出向元法人の損金算入が認められる。<br><br>
+    <strong>適用される具体例：</strong><br>
+    1. 出向先が経営不振で賞与を支給できない場合の賞与補てん<br>
+    2. <strong>出向先の法人が海外にあるため、出向元の法人が留守宅手当を支給する場合</strong><br><br>
+    較差補てん金は「出向元の法人が出向者に直接支給しても、出向先の法人を通じて支給しても同様に取り扱われる」（支給経路による差異なし）。<br>
+    根拠法令：法基通9-2-47
+  </div>
+
+  <h3>7.2 タックスアンサーNo.5245</h3>
+  <div class="provision">
+    <span class="label"><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5245.htm" class="source-link">タックスアンサーNo.5245「出向先法人が支出する給与負担金に係る役員給与の取扱い」</a></span>
+    出向者が出向先法人で役員となっている場合の給与負担金の取扱いについて、法34条（役員給与の損金不算入）の適用要件を定めるもの。
+  </div>
+
+  <h3>7.3 タックスアンサーNo.2878・No.2884（所得税関連）</h3>
+  <ul>
+    <li><strong>No.2878：</strong>国内源泉所得の範囲。非居住者の給与について、国内における勤務に基因するもののみが国内源泉所得。</li>
+    <li><strong>No.2884：</strong>非居住者等に対する源泉徴収税率。国内源泉所得に該当する給与には20.42%の源泉徴収。</li>
+    <li><strong>No.2517：</strong>海外に転勤する人の年末調整と転勤後の源泉徴収。出国前に年末調整を実施。</li>
+  </ul>
+
+  <h3>7.4 経済産業省の公式資料</h3>
+  <p>経済産業省が委託した「中堅・中小企業向け国際課税セミナー」資料（令和3年度）では、海外出向者の給与負担について以下のよくある事例を挙げている。</p>
+  <ul>
+    <li><strong>事例：</strong>日本親会社が海外子会社への出向者の給与を全額負担しているケース</li>
+    <li><strong>問題：</strong>本来海外子会社が負担すべき費用を親会社が負担→国外関連者寄附金として全額損金不算入</li>
+    <li><strong>対策：</strong>較差補填として認められる範囲を明確にし、出向契約書で負担区分を事前に定める</li>
+  </ul>
+</section>
+
+<!-- ===== 8. 実務上の相場・基準 ===== -->
+<section id="sec8">
+  <h2>8. 実務上の相場・基準</h2>
+
+  <h3>8.1 第8回EYモビリティサーベイ（2025年）の数値</h3>
+  <p>2025年1月～3月実施、245社（269名回答）。日本企業の海外赴任者に関する最新の給与・手当実態調査。</p>
+
+  <h4>海外勤務手当（中央値）</h4>
+  <table>
+    <tr><th>役職</th><th>中央値</th><th>3年前比</th></tr>
+    <tr><td>部長クラス</td><td>165,000円/月</td><td>横ばい</td></tr>
+    <tr><td>課長クラス</td><td>142,000円/月</td><td>約+10%</td></tr>
+    <tr><td>一般スタッフ</td><td>110,000円/月</td><td>約+10%</td></tr>
+  </table>
+
+  <h4>単身赴任手当（留守宅手当に該当）（中央値）</h4>
+  <table>
+    <tr><th>役職</th><th>中央値</th><th>備考</th></tr>
+    <tr><td>部長クラス</td><td>100,000円/月</td><td></td></tr>
+    <tr><td>課長クラス</td><td>100,000円/月</td><td></td></tr>
+    <tr><td>一般スタッフ</td><td>90,000円/月</td><td></td></tr>
+  </table>
+  <p>支給していない企業も18%存在する。</p>
+
+  <h4>ハードシップ手当（課長クラス相当・中央値）</h4>
+  <table>
+    <tr><th>赴任先</th><th>中央値</th></tr>
+    <tr><td>ニューデリー</td><td>120,000円/月</td></tr>
+    <tr><td>ジャカルタ</td><td>75,000円/月</td></tr>
+    <tr><td>マニラ</td><td>68,000円/月</td></tr>
+    <tr><td>ハノイ</td><td>54,500円/月</td></tr>
+    <tr><td>バンコク</td><td>35,000円/月</td></tr>
+    <tr><td>北京</td><td>35,000円/月</td></tr>
+  </table>
+
+  <h4>給与体系の採用割合</h4>
+  <table>
+    <tr><th>方式</th><th>割合</th></tr>
+    <tr><td>購買力補償方式</td><td>74%</td></tr>
+    <tr><td>併用方式</td><td>14%</td></tr>
+    <tr><td>その他</td><td>12%</td></tr>
+  </table>
+
+  <h3>8.2 海外勤務手当の支給基準</h3>
+  <table>
+    <tr><th>支給基準</th><th>割合</th></tr>
+    <tr><td>役職ごとに定額で支給</td><td>32%</td></tr>
+    <tr><td>月収の一定割合</td><td>約16%</td></tr>
+    <tr><td>年収の一定割合</td><td>約16%</td></tr>
+    <tr><td>その他</td><td>36%</td></tr>
+  </table>
+
+  <h3>8.3 80%と50%でリスクはどう変わるか</h3>
+  <div class="summary-box">
+    <h4>ケーススタディ：基本給月額50万円の課長クラスの場合</h4>
+    <table>
+      <tr><th></th><th>80%支給<br>（月額40万円）</th><th>50%支給<br>（月額25万円）</th><th>現地比準者較差算定<br>（月額10万円）</th></tr>
+      <tr>
+        <td><strong>年間留守宅手当額</strong></td>
+        <td>480万円</td>
+        <td>300万円</td>
+        <td>120万円</td>
+      </tr>
+      <tr>
+        <td><strong>現地比準者給与（仮定）</strong></td>
+        <td colspan="3" style="text-align:center;">月額40万円（年480万円）※先進国の場合</td>
+      </tr>
+      <tr>
+        <td><strong>較差補填として説明可能な額</strong></td>
+        <td colspan="3" style="text-align:center;">日本給与600万 - 現地比準者480万 = 120万円</td>
+      </tr>
+      <tr>
+        <td><strong>寄附金認定リスク額</strong></td>
+        <td style="color:red; font-weight:bold;">480-120=360万円</td>
+        <td style="color:orange; font-weight:bold;">300-120=180万円</td>
+        <td style="color:green; font-weight:bold;">0円</td>
+      </tr>
+      <tr>
+        <td><strong>税務リスク</strong></td>
+        <td><span class="risk-level risk-high">HIGH</span></td>
+        <td><span class="risk-level risk-medium">MEDIUM</span></td>
+        <td><span class="risk-level risk-low">LOW</span></td>
+      </tr>
+    </table>
+    <p style="margin-top:10px; font-size:0.9em; color: var(--muted);">※新興国（アジア等）の場合、現地比準者給与がさらに低くなるため、全てのパターンでリスクが増大する。</p>
+  </div>
+</section>
+
+<!-- ===== 9. 実務チェックリストと総括 ===== -->
+<section id="sec9">
+  <h2>9. 実務チェックリストと総括</h2>
+
+  <h3>9.1 留守宅手当の税務リスク回避チェックリスト</h3>
+  <table>
+    <tr><th>#</th><th>チェック項目</th><th>重要度</th></tr>
+    <tr><td>1</td><td>出向契約書に留守宅手当の金額・負担区分を<strong>事前に明記</strong>しているか</td><td><span class="risk-level risk-high">必須</span></td></tr>
+    <tr><td>2</td><td>現地比準者（同等職務のローカル従業員）の給与データを入手・保存しているか</td><td><span class="risk-level risk-high">必須</span></td></tr>
+    <tr><td>3</td><td>留守宅手当額が日本給与と現地比準者給与の較差の範囲内であることを<strong>合理的に説明できる根拠資料</strong>があるか</td><td><span class="risk-level risk-high">必須</span></td></tr>
+    <tr><td>4</td><td>留守宅手当額を<strong>定期的に見直し</strong>ているか（現地の人件費上昇等を反映）</td><td><span class="risk-level risk-medium">重要</span></td></tr>
+    <tr><td>5</td><td>出向者が<strong>役員</strong>の場合、法法34条の要件（株主総会決議・事前確定届出等）を満たしているか</td><td><span class="risk-level risk-high">必須</span></td></tr>
+    <tr><td>6</td><td>出向者が一時帰国した場合の<strong>源泉徴収</strong>（20.42%）を適切に行っているか</td><td><span class="risk-level risk-medium">重要</span></td></tr>
+    <tr><td>7</td><td>海外子会社が出向者の所得税を立替え→本社に請求する場合、<strong>寄附金認定リスク</strong>を認識しているか</td><td><span class="risk-level risk-medium">重要</span></td></tr>
+    <tr><td>8</td><td>「基本給の○%」ではなく、<strong>現地較差に基づく合理的な算定方法</strong>を採用しているか</td><td><span class="risk-level risk-high">必須</span></td></tr>
+    <tr><td>9</td><td>出向者規程・海外赴任規程が整備され、支給基準が明確か</td><td><span class="risk-level risk-medium">重要</span></td></tr>
+    <tr><td>10</td><td>移転価格文書化（ローカルファイル等）において出向者給与の取扱いを記載しているか</td><td><span class="risk-level risk-low">推奨</span></td></tr>
+  </table>
+
+  <h3>9.2 総括 ― 論点の全体構造</h3>
+  <div class="diagram">
+    <svg viewBox="0 0 800 450" style="max-width:800px; width:100%;">
+      <!-- Central topic -->
+      <rect x="250" y="10" width="300" height="50" rx="25" fill="#ed8936" stroke="#c05621" stroke-width="2"/>
+      <text x="400" y="40" text-anchor="middle" font-size="14" font-weight="bold" fill="white">留守宅手当の法人税上の問題</text>
+
+      <!-- Branch 1: 損金算入 -->
+      <rect x="20" y="100" width="200" height="40" rx="6" fill="#c6f6d5" stroke="#38a169" stroke-width="2"/>
+      <text x="120" y="125" text-anchor="middle" font-size="11" font-weight="bold" fill="#276749">損金算入（法基通9-2-47）</text>
+      <line x1="250" y1="60" x2="120" y2="100" stroke="#38a169" stroke-width="1.5"/>
+      <text x="40" y="160" font-size="9" fill="#276749">・較差補填として認容</text>
+      <text x="40" y="175" font-size="9" fill="#276749">・出向元固有費用</text>
+      <text x="40" y="190" font-size="9" fill="#276749">・社保・留守宅手当</text>
+
+      <!-- Branch 2: 寄附金 -->
+      <rect x="560" y="100" width="220" height="40" rx="6" fill="#fed7d7" stroke="#e53e3e" stroke-width="2"/>
+      <text x="670" y="125" text-anchor="middle" font-size="11" font-weight="bold" fill="#9b2c2c">寄附金認定（措法66-4③）</text>
+      <line x1="550" y1="60" x2="670" y2="100" stroke="#e53e3e" stroke-width="1.5"/>
+      <text x="575" y="160" font-size="9" fill="#9b2c2c">・全額損金不算入</text>
+      <text x="575" y="175" font-size="9" fill="#9b2c2c">・過大負担分</text>
+      <text x="575" y="190" font-size="9" fill="#9b2c2c">・根拠なき定率支給</text>
+
+      <!-- Branch 3: 移転価格 -->
+      <rect x="30" y="240" width="200" height="40" rx="6" fill="#fefcbf" stroke="#d69e2e" stroke-width="2"/>
+      <text x="130" y="265" text-anchor="middle" font-size="11" font-weight="bold" fill="#975a16">移転価格税制</text>
+      <line x1="300" y1="60" x2="130" y2="240" stroke="#d69e2e" stroke-width="1.5"/>
+      <text x="45" y="300" font-size="9" fill="#975a16">・役務提供取引該当性</text>
+      <text x="45" y="315" font-size="9" fill="#975a16">・事務運営指針3-20</text>
+      <text x="45" y="330" font-size="9" fill="#975a16">・独立企業間価格</text>
+
+      <!-- Branch 4: 所得税 -->
+      <rect x="300" y="240" width="200" height="40" rx="6" fill="#e9d8fd" stroke="#805ad5" stroke-width="2"/>
+      <text x="400" y="265" text-anchor="middle" font-size="11" font-weight="bold" fill="#553c9a">所得税（源泉徴収）</text>
+      <line x1="400" y1="60" x2="400" y2="240" stroke="#805ad5" stroke-width="1.5"/>
+      <text x="315" y="300" font-size="9" fill="#553c9a">・非居住者→国外源泉所得</text>
+      <text x="315" y="315" font-size="9" fill="#553c9a">・一時帰国時は要源泉徴収</text>
+      <text x="315" y="330" font-size="9" fill="#553c9a">・役員は全額20.42%</text>
+
+      <!-- Branch 5: 実務 -->
+      <rect x="570" y="240" width="200" height="40" rx="6" fill="#bee3f8" stroke="#3182ce" stroke-width="2"/>
+      <text x="670" y="265" text-anchor="middle" font-size="11" font-weight="bold" fill="#2a4365">実務対応</text>
+      <line x1="500" y1="60" x2="670" y2="240" stroke="#3182ce" stroke-width="1.5"/>
+      <text x="585" y="300" font-size="9" fill="#2a4365">・比準者データ確保</text>
+      <text x="585" y="315" font-size="9" fill="#2a4365">・出向契約書整備</text>
+      <text x="585" y="330" font-size="9" fill="#2a4365">・定期的見直し</text>
+
+      <!-- Bottom conclusion -->
+      <rect x="150" y="380" width="500" height="50" rx="8" fill="#1a365d"/>
+      <text x="400" y="400" text-anchor="middle" font-size="11" fill="white">結論：留守宅手当は法基通9-2-47で損金算入が認められるが、</text>
+      <text x="400" y="418" text-anchor="middle" font-size="11" font-weight="bold" fill="#ed8936">現地比準者給与に基づく合理的な較差算定と文書化が不可欠</text>
+    </svg>
+  </div>
+
+  <h3>9.3 結論</h3>
+  <div class="summary-box">
+    <ol style="padding-left: 20px;">
+      <li><strong>留守宅手当は法基通9-2-47（注）2で較差補填として損金算入が明示的に認められている。</strong>ただし、これは「較差を補填する」限度内での話であり、白紙委任ではない。</li>
+      <li><strong>最大のリスクは国外関連者寄附金認定（措法66条の4第3項）。</strong>全額損金不算入であり、通常の寄附金のような損金算入限度額計算はない。EYの調査では40%の企業が過去に税務調査で較差補填の指摘を受けている。</li>
+      <li><strong>「基本給の○%」という定率方式は危険。</strong>現地比準者の給与水準との較差に基づく合理的な算定が必要。定率方式は根拠が曖昧になりやすい。</li>
+      <li><strong>移転価格税制との交錯。</strong>法基通9-2-47（1969年）と移転価格税制（1986年）の関係は未整理。実務上は寄附金課税ルートで処理されることが多い。</li>
+      <li><strong>所得税面では原則源泉徴収不要だが例外あり。</strong>一時帰国時の国内業務対応分と、出向者が役員の場合には源泉徴収が必要。</li>
+      <li><strong>文書化が鍵。</strong>出向契約書、比準者データ、較差算定根拠資料を整備し、定期的に見直すことが税務調査対応の最善策。</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ===== Sources ===== -->
+<section id="sources" class="sources">
+  <h2>10. 情報源一覧</h2>
+
+  <h3>国税庁公式</h3>
+  <ul>
+    <li><a href="https://www.nta.go.jp/law/tsutatsu/kihon/hojin/09/09_02_09.htm" target="_blank">第9款 転籍、出向者に対する給与等（法人税基本通達9-2-44～9-2-51全文）</a> - 国税庁</li>
+    <li><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5241.htm" target="_blank">No.5241 出向者に対する給与の較差補てん金の取扱い</a> - 国税庁タックスアンサー</li>
+    <li><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/hojin/5245.htm" target="_blank">No.5245 出向先法人が支出する給与負担金に係る役員給与の取扱い</a> - 国税庁タックスアンサー</li>
+    <li><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2878.htm" target="_blank">No.2878 国内源泉所得の範囲</a> - 国税庁タックスアンサー</li>
+    <li><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2884.htm" target="_blank">No.2884 非居住者等に対する源泉徴収の税率</a> - 国税庁タックスアンサー</li>
+    <li><a href="https://www.nta.go.jp/law/jimu-unei/hojin/010601/02.htm" target="_blank">移転価格事務運営要領（事務運営指針）第3章</a> - 国税庁</li>
+    <li><a href="https://www.nta.go.jp/law/jimu-unei/hojin/010601/00.htm" target="_blank">移転価格事務運営要領の制定について</a> - 国税庁</li>
+  </ul>
+
+  <h3>大手税務法人・専門家</h3>
+  <ul>
+    <li><a href="https://www.ey.com/ja_jp/technical/library/info-sensor/2018/info-sensor-2018-05-03" target="_blank">従業員を出向させた場合の給与に関する税務上の留意点</a> - EY Japan (2018)</li>
+    <li><a href="https://www.ey.com/ja_jp/ey-japan-tax-library/tax-alerts/2023/tax-alerts-03-29" target="_blank">モビリティコラム：較差補填の最新動向</a> - EY Japan Tax Alert (2023)</li>
+    <li><a href="https://www.ey.com/ja_jp/newsroom/2025/05/ey-japan-news-release-2025-05-09" target="_blank">第8回EYモビリティサーベイ</a> - EY Japan (2025)</li>
+    <li><a href="https://www.tkc.jp/consolidate/webcolumn/023683/" target="_blank">第3回 海外子会社への従業員の出向に係る負担（その1）</a> - TKC WEBコラム</li>
+    <li><a href="https://www.attax.co.jp/kokusai/column/post-2475/" target="_blank">較差補填はどこまで大丈夫？～税務調査でどんな指摘をされるの～</a> - アタックス税理士法人</li>
+    <li><a href="https://kaikeizine.jp/article/9079/" target="_blank">国外関連者に対する寄附金(3) 出向者に対する給与負担</a> - KaikeiZine（元国税庁国際担当官 多田恭章氏）</li>
+    <li><a href="https://www.oshikata-tp.com/information/donation/income-tax-abroad/" target="_blank">海外赴任者の所得税に対する勘違い（知らないと寄附金リスクあり）</a> - 押方移転価格会計事務所</li>
+    <li><a href="https://www.chuointernational.jp/15310104021733" target="_blank">海外子会社への出向者の出向元による給与負担</a> - 中央国際会計事務所</li>
+  </ul>
+
+  <h3>所得税・源泉徴収</h3>
+  <ul>
+    <li><a href="https://www.agsc.co.jp/ags-media/2201_gensen/" target="_blank">海外出向者に給与を支払う場合の源泉徴収制度について</a> - AGSコンサルティング</li>
+    <li><a href="https://www.rosei.jp/readers/article/88165" target="_blank">出向元が海外出向者に留守宅手当を支給する場合、源泉徴収は必要？</a> - WEB労政時報</li>
+    <li><a href="https://www.supt.jp/blog/1569/" target="_blank">海外出向者に支払う留守宅手当の税務</a> - SUパートナーズ税理士法人</li>
+    <li><a href="https://kobakaikei.com/%E5%9B%BD%E9%9A%9B%E7%A8%8E%E5%8B%99%EF%BC%88%E5%A4%96%E5%9B%BD%E6%B3%95%E4%BA%BA%E3%80%81%E9%9D%9E%E5%B1%85%E4%BD%8F%E8%80%85%E3%81%B8%E3%81%AE%E6%94%AF%E6%89%95%E3%81%84%EF%BC%89/%E6%B5%B7%E5%A4%96%E5%AD%90%E4%BC%9A%E7%A4%BE%E5%87%BA%E5%90%91%E8%80%85%E3%81%B8%E3%81%AE%E7%95%99%E5%AE%88%E5%AE%85%E6%89%8B%E5%BD%93%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6/" target="_blank">海外子会社出向者への留守宅手当について</a> - 小林徹税理士事務所</li>
+  </ul>
+
+  <h3>法令・通達原文</h3>
+  <ul>
+    <li><a href="https://www.zeiken.co.jp/hourei/HHHOU000030/9-2-47.html" target="_blank">法人税基本通達 9-2-47</a> - 税務研究会法令集</li>
+    <li><a href="https://www.zeiken.co.jp/hourei/HHHOU000000/34.html" target="_blank">法人税法 第34条 役員給与の損金不算入</a> - 税務研究会法令集</li>
+    <li><a href="https://www.zeiken.co.jp/hourei/HHHOU000000/36.html" target="_blank">法人税法 第36条 過大な使用人給与の損金不算入</a> - 税務研究会法令集</li>
+    <li><a href="https://www.zeiseiken.or.jp/faq/kokuzei/ghoujin_tna_th_a017.html" target="_blank">Q&A 外国子会社への出向者に係る出向負担金</a> - 日本税制研究所</li>
+  </ul>
+
+  <h3>経済産業省・その他政府資料</h3>
+  <ul>
+    <li><a href="https://www.meti.go.jp/policy/external_economy/toshi/kokusaisozei/itaxseminar2021/23_yokuarujirei2.pdf" target="_blank">よくある事例 日本における国際課税編</a> - 経済産業省委託事業（令和3年度）</li>
+    <li><a href="https://www.japaneselawtranslation.go.jp/en/notices/view/13" target="_blank">Commissioner's Directive on the Operation of Transfer Pricing</a> - 日本法令外国語訳DB</li>
+    <li><a href="https://www.kfs.go.jp/service/MP/02/1201000000.html" target="_blank">給与等に関する公表裁決事例</a> - 国税不服審判所</li>
+  </ul>
+
+  <h3>税務調査・実務</h3>
+  <ul>
+    <li><a href="https://www.tax-support.xyz/%E3%83%96%E3%83%AD%E3%82%B0/%E5%9B%BD%E9%9A%9B%EF%BC%88%E7%A8%8E%E5%8B%99%EF%BC%89/%E6%B5%B7%E5%A4%96%E5%AD%90%E4%BC%9A%E7%A4%BE%E3%81%AB%E5%87%BA%E5%90%91%E3%81%97%E3%81%9F%E7%A4%BE%E5%93%A1%E3%81%AE%E7%B5%A6%E4%B8%8E%E8%B2%A0%E6%8B%85%EF%BC%88%E5%9B%BD%E5%A4%96%E9%96%A2%E9%80%A3%E8%80%85%E3%81%AB%E5%AF%BE%E3%81%99%E3%82%8B%E5%AF%84%E9%99%84%E9%87%91%EF%BC%89-299" target="_blank">海外子会社に出向した社員の給与負担（国外関連者に対する寄附金）</a> - 国税OB税理士チーム</li>
+    <li><a href="https://jga-tax.jp/?p=441" target="_blank">調査での指摘の多い項目「国外関連者に対する寄附金」について</a></li>
+    <li><a href="https://www.hilco.jp/14073879009091" target="_blank">海外給与とハイポタックス（みなし税）</a> - HILCO</li>
+    <li><a href="https://www.yappango.com/keywordpage/world_overseasassignmentrules.html" target="_blank">海外赴任規定とは？作成ポイント・手当の種類・寄付金課税</a> - ヤッパン号</li>
+  </ul>
+</section>
+
+</div><!-- /.container -->
+
+</body>
+</html>
