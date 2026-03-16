@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>国外関連者に対する寄附金課税事件の分析 ― 東京地裁H21.7.29/東京高裁H22.3.25</title>
+<style>
+  :root {
+    --primary: #1a365d;
+    --secondary: #2c5282;
+    --accent: #dd6b20;
+    --danger: #c53030;
+    --success: #276749;
+    --insight: #6b46c1;
+    --bg: #f7fafc;
+    --card: #ffffff;
+    --text: #2d3748;
+    --border: #e2e8f0;
+    --light-bg: #ebf4ff;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif; background: var(--bg); color: var(--text); line-height: 1.85; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+
+  /* ヘッダー */
+  .header { background: linear-gradient(135deg, #1a365d, #2c5282); color: #fff; padding: 44px 36px; border-radius: 12px; margin-bottom: 28px; }
+  .header h1 { font-size: 1.55em; margin-bottom: 10px; line-height: 1.4; }
+  .header .subtitle { font-size: 1.0em; opacity: 0.92; }
+  .header .meta { margin-top: 16px; font-size: 0.82em; opacity: 0.72; display: flex; flex-wrap: wrap; gap: 16px; }
+
+  /* カード */
+  .card { background: var(--card); border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.07); padding: 28px 32px; margin-bottom: 24px; }
+  .card h2 { color: var(--primary); font-size: 1.28em; border-bottom: 3px solid var(--secondary); padding-bottom: 8px; margin-bottom: 18px; }
+  .card h3 { color: var(--secondary); font-size: 1.08em; margin: 20px 0 10px; }
+  .card h4 { color: #4a5568; font-size: 0.98em; margin: 14px 0 8px; }
+
+  /* テーブル */
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.9em; }
+  th { background: #1a365d; color: #fff; padding: 10px 14px; text-align: left; font-weight: 600; }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:nth-child(even) { background: #f8fafc; }
+  tr:hover { background: var(--light-bg); }
+
+  /* ボックス */
+  .alert-box { border-left: 5px solid var(--danger); background: #fff5f5; padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+  .alert-box .label { color: var(--danger); font-weight: 700; font-size: 0.88em; margin-bottom: 4px; }
+  .insight-box { border-left: 5px solid var(--insight); background: #faf5ff; padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+  .insight-box .label { color: var(--insight); font-weight: 700; font-size: 0.88em; margin-bottom: 4px; }
+  .success-box { border-left: 5px solid var(--success); background: #f0fff4; padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+  .success-box .label { color: var(--success); font-weight: 700; font-size: 0.88em; margin-bottom: 4px; }
+  .warn-box { border-left: 5px solid var(--accent); background: #fffaf0; padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+  .warn-box .label { color: var(--accent); font-weight: 700; font-size: 0.88em; margin-bottom: 4px; }
+
+  /* 引用 */
+  blockquote { border-left: 4px solid #a0aec0; background: #f7fafc; padding: 14px 20px; margin: 14px 0; font-size: 0.92em; color: #4a5568; }
+
+  /* SVG */
+  .svg-wrap { text-align: center; margin: 24px 0; overflow-x: auto; }
+
+  /* リスト */
+  ul, ol { margin: 10px 0 10px 24px; }
+  li { margin-bottom: 5px; }
+
+  /* TOC */
+  .toc { background: var(--light-bg); border-radius: 10px; padding: 22px 28px; margin-bottom: 24px; }
+  .toc h2 { color: var(--primary); border-bottom: none; margin-bottom: 12px; font-size: 1.1em; }
+  .toc ol { margin-left: 20px; }
+  .toc li { margin-bottom: 3px; }
+  .toc a { color: var(--secondary); text-decoration: none; font-size: 0.95em; }
+  .toc a:hover { text-decoration: underline; }
+
+  /* タグ */
+  .tag { display: inline-block; background: var(--light-bg); color: var(--secondary); padding: 2px 10px; border-radius: 12px; font-size: 0.78em; margin: 2px 3px; }
+  .tag-danger { background: #fed7d7; color: var(--danger); }
+  .tag-warn { background: #feebc8; color: var(--accent); }
+
+  /* コード風 */
+  code { background: #edf2f7; padding: 2px 6px; border-radius: 4px; font-size: 0.88em; }
+
+  /* ステップ */
+  .step-list { counter-reset: step-counter; list-style: none; margin-left: 0; }
+  .step-list li { counter-increment: step-counter; position: relative; padding-left: 40px; margin-bottom: 12px; }
+  .step-list li::before { content: counter(step-counter); position: absolute; left: 0; top: 0; width: 28px; height: 28px; border-radius: 50%; background: var(--secondary); color: #fff; text-align: center; line-height: 28px; font-size: 0.82em; font-weight: 700; }
+
+  /* 印刷対応 */
+  @media print {
+    body { background: #fff; font-size: 11pt; }
+    .card { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; }
+    .header { background: #1a365d !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    th { background: #1a365d !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .alert-box, .insight-box, .success-box, .warn-box { break-inside: avoid; }
+  }
+  @media (max-width: 768px) {
+    .container { padding: 12px; }
+    .card { padding: 18px 16px; }
+    .header { padding: 28px 20px; }
+    .header h1 { font-size: 1.2em; }
+    table { font-size: 0.82em; }
+    td, th { padding: 8px 10px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ヘッダー -->
+<div class="header">
+  <h1>国外関連者に対する寄附金課税事件の包括的分析</h1>
+  <div class="subtitle">東京地裁 平成21年7月29日判決（判決11252）/ 東京高裁 平成22年3月25日判決（判決11405）<br>
+  ― 出向者給与・留守宅手当への射程を含む ―</div>
+  <div class="meta">
+    <span>作成日: 2026-03-16</span>
+    <span>分析対象: 措法66条の4第3項（国外関連者寄附金）</span>
+    <span>金額規模: 229億2,500万円</span>
+  </div>
+</div>
+
+<!-- 目次 -->
+<div class="toc">
+  <h2>目次</h2>
+  <ol>
+    <li><a href="#sec1">事件の基本情報</a></li>
+    <li><a href="#sec2">事案の詳細 ― 当事者・取引構造・金額</a></li>
+    <li><a href="#sec3">国外関連者の該当性判断（実質的支配基準）</a></li>
+    <li><a href="#sec4">寄附金認定の法的論理 ―「通常の経済取引として是認できる合理的理由」の二段階判断</a></li>
+    <li><a href="#sec5">「全額損金不算入」の計算過程</a></li>
+    <li><a href="#sec6">控訴審（東京高裁）の判断</a></li>
+    <li><a href="#sec7">出向者給与・留守宅手当への射程</a></li>
+    <li><a href="#sec8">学術的評価・実務への影響</a></li>
+    <li><a href="#sec9">参照条文・出典一覧</a></li>
+  </ol>
+</div>
+
+<!-- 1. 事件の基本情報 -->
+<div class="card" id="sec1">
+  <h2>1. 事件の基本情報</h2>
+  <table>
+    <tr><th style="width:28%;">項目</th><th>第一審</th><th>控訴審</th></tr>
+    <tr><td><strong>裁判所</strong></td><td>東京地方裁判所</td><td>東京高等裁判所</td></tr>
+    <tr><td><strong>判決日</strong></td><td>平成21年（2009年）7月29日</td><td>平成22年（2010年）3月25日</td></tr>
+    <tr><td><strong>判決番号</strong></td><td>判決11252</td><td>判決11405（税務訴訟資料260号-49）</td></tr>
+    <tr><td><strong>裁判長</strong></td><td>八木一洋</td><td>青栁馨</td></tr>
+    <tr><td><strong>事件名</strong></td><td>法人税更正処分取消等請求事件<br>訴えの追加的併合申立事件</td><td>同左（控訴事件）</td></tr>
+    <tr><td><strong>結果</strong></td><td>原告請求棄却（国側勝訴）</td><td>控訴棄却（国側勝訴維持）</td></tr>
+    <tr><td><strong>処分庁</strong></td><td colspan="2">日本橋税務署長 / 東京都中央都税事務所長</td></tr>
+    <tr><td><strong>対象事業年度</strong></td><td colspan="2">平成14年3月期・平成15年3月期・平成16年3月期</td></tr>
+  </table>
+</div>
+
+<!-- 2. 事案の詳細 -->
+<div class="card" id="sec2">
+  <h2>2. 事案の詳細 ― 当事者・取引構造・金額</h2>
+
+  <h3>2.1 当事者</h3>
+  <table>
+    <tr><th style="width:20%;">当事者</th><th>概要</th></tr>
+    <tr><td><strong>原告（有限会社A）</strong></td><td>昭和49年設立。食品関連の輸出入販売を主業とするが、海外リゾート事業・航空機事業等も展開。元代表者乙が経営する「乙グループ」の一社。E株式会社の株式を大量保有。平成17年6月に解散し清算中。</td></tr>
+    <tr><td><strong>乙（元代表者）</strong></td><td>昭和57年に原告取締役就任、平成6年に代表取締役就任。Cの唯一の株主。寛文5年（1665年）創業の醸造家系。</td></tr>
+    <tr><td><strong>C社（オランダ法人）</strong></td><td>乙がオランダ法に基づき平成11年2月にD社を買収して名称変更。乙が100%出資。常務取締役は丁・戊。自動車レース関連事業（本件B事業）を実施。平成14年3月に株主総会決議により解散。</td></tr>
+    <tr><td><strong>Hグループ</strong></td><td>本件B事業のために設立された法人群。I（リヒテンシュタイン基金）、J（ルクセンブルク法人）、L（ベルギー→フランス所在のエンジン開発会社）等。</td></tr>
+  </table>
+
+  <h3>2.2 取引構造図</h3>
+  <div class="svg-wrap">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 620" style="max-width:900px;width:100%;">
+      <defs>
+        <marker id="arrowB" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#2c5282"/>
+        </marker>
+        <marker id="arrowR" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#c53030"/>
+        </marker>
+        <marker id="arrowG" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#276749"/>
+        </marker>
+        <filter id="shadow"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.12"/></filter>
+      </defs>
+
+      <!-- 背景 -->
+      <rect width="920" height="620" rx="12" fill="#f7fafc"/>
+
+      <!-- タイトル -->
+      <text x="460" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#1a365d">取引構造図：国外関連者に対する資金提供スキーム</text>
+
+      <!-- 原告 -->
+      <rect x="30" y="200" width="200" height="90" rx="10" fill="#1a365d" filter="url(#shadow)"/>
+      <text x="130" y="235" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">原告（有限会社A）</text>
+      <text x="130" y="255" text-anchor="middle" font-size="11" fill="#bee3f8">日本所在・食品輸出入業</text>
+      <text x="130" y="275" text-anchor="middle" font-size="11" fill="#bee3f8">E株式を大量保有</text>
+
+      <!-- 乙 -->
+      <rect x="30" y="60" width="200" height="70" rx="10" fill="#6b46c1" filter="url(#shadow)"/>
+      <text x="130" y="92" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">乙（元代表者）</text>
+      <text x="130" y="112" text-anchor="middle" font-size="11" fill="#e9d8fd">原告代表者 兼 C唯一の株主</text>
+
+      <!-- C社 -->
+      <rect x="370" y="200" width="200" height="90" rx="10" fill="#c53030" filter="url(#shadow)"/>
+      <text x="470" y="232" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">C社（オランダ法人）</text>
+      <text x="470" y="252" text-anchor="middle" font-size="11" fill="#fed7d7">乙100%出資</text>
+      <text x="470" y="272" text-anchor="middle" font-size="11" fill="#fed7d7">＝国外関連者</text>
+
+      <!-- Hグループ / I -->
+      <rect x="700" y="200" width="190" height="90" rx="10" fill="#dd6b20" filter="url(#shadow)"/>
+      <text x="795" y="232" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">I（基金）→ J → L</text>
+      <text x="795" y="252" text-anchor="middle" font-size="11" fill="#feebc8">リヒテンシュタイン等</text>
+      <text x="795" y="272" text-anchor="middle" font-size="11" fill="#feebc8">Hグループ（B事業実施）</text>
+
+      <!-- 銀行 -->
+      <rect x="30" y="400" width="200" height="80" rx="10" fill="#276749" filter="url(#shadow)"/>
+      <text x="130" y="432" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">F銀行（ルクセンブルク）</text>
+      <text x="130" y="452" text-anchor="middle" font-size="11" fill="#c6f6d5">64億2,500万円融資</text>
+      <text x="130" y="468" text-anchor="middle" font-size="10" fill="#c6f6d5">E株式130万株を担保取得</text>
+
+      <rect x="370" y="400" width="200" height="80" rx="10" fill="#276749" filter="url(#shadow)"/>
+      <text x="470" y="432" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">G銀行（米国）</text>
+      <text x="470" y="452" text-anchor="middle" font-size="11" fill="#c6f6d5">165億円融資</text>
+      <text x="470" y="468" text-anchor="middle" font-size="10" fill="#c6f6d5">E株式300万株を担保取得</text>
+
+      <!-- E株式売却 -->
+      <rect x="700" y="400" width="190" height="80" rx="10" fill="#2c5282" filter="url(#shadow)"/>
+      <text x="795" y="430" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">E株式売却</text>
+      <text x="795" y="450" text-anchor="middle" font-size="11" fill="#bee3f8">売却益 約210億5,850万円</text>
+      <text x="795" y="468" text-anchor="middle" font-size="10" fill="#bee3f8">→ 税負担軽減目的で清算損計上</text>
+
+      <!-- 矢印: 乙→原告 -->
+      <line x1="130" y1="130" x2="130" y2="195" stroke="#6b46c1" stroke-width="2" marker-end="url(#arrowB)"/>
+      <text x="144" y="168" font-size="10" fill="#6b46c1">代表取締役</text>
+
+      <!-- 矢印: 乙→C -->
+      <line x1="230" y1="95" x2="370" y2="230" stroke="#6b46c1" stroke-width="2" marker-end="url(#arrowB)"/>
+      <text x="290" y="146" font-size="10" fill="#6b46c1">100%出資</text>
+
+      <!-- 矢印: 原告→C（資金提供）-->
+      <line x1="230" y1="235" x2="365" y2="235" stroke="#c53030" stroke-width="3" marker-end="url(#arrowR)"/>
+      <text x="298" y="224" text-anchor="middle" font-size="11" font-weight="700" fill="#c53030">資金提供 229億2,500万円</text>
+      <text x="298" y="252" text-anchor="middle" font-size="10" fill="#c53030">（貸付名目→実質無償供与）</text>
+
+      <!-- 矢印: C→I（ローン契約）-->
+      <line x1="570" y1="245" x2="695" y2="245" stroke="#dd6b20" stroke-width="2" marker-end="url(#arrowB)"/>
+      <text x="632" y="236" text-anchor="middle" font-size="10" fill="#dd6b20">ローン契約</text>
+      <text x="632" y="262" text-anchor="middle" font-size="10" fill="#dd6b20">229億円を全額転貸</text>
+
+      <!-- 矢印: 原告→F銀行（担保提供）-->
+      <line x1="100" y1="290" x2="100" y2="395" stroke="#276749" stroke-width="2" marker-end="url(#arrowG)"/>
+      <text x="54" y="348" font-size="10" fill="#276749">E株式担保</text>
+      <text x="54" y="362" font-size="10" fill="#276749">＋保証</text>
+
+      <!-- 矢印: 原告→G銀行（担保提供）-->
+      <line x1="170" y1="290" x2="440" y2="395" stroke="#276749" stroke-width="2" marker-end="url(#arrowG)"/>
+      <text x="270" y="340" font-size="10" fill="#276749">E株式担保＋保証</text>
+
+      <!-- 矢印: F/G銀行→C（融資）-->
+      <line x1="180" y1="400" x2="390" y2="290" stroke="#2c5282" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arrowB)"/>
+      <text x="245" y="378" font-size="10" fill="#2c5282">融資</text>
+
+      <line x1="470" y1="400" x2="470" y2="295" stroke="#2c5282" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arrowB)"/>
+      <text x="484" y="355" font-size="10" fill="#2c5282">融資</text>
+
+      <!-- 原告→E株式売却 -->
+      <line x1="230" y1="270" x2="696" y2="430" stroke="#2c5282" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrowB)"/>
+      <text x="460" y="370" font-size="10" fill="#2c5282">E株式売却（210万株+390万株等）</text>
+
+      <!-- 矢印: 原告→C（債権放棄）-->
+      <line x1="230" y1="265" x2="365" y2="265" stroke="#c53030" stroke-width="2" stroke-dasharray="8,4" marker-end="url(#arrowR)"/>
+
+      <!-- 結末ボックス -->
+      <rect x="310" y="530" width="300" height="70" rx="8" fill="#fff5f5" stroke="#c53030" stroke-width="2"/>
+      <text x="460" y="555" text-anchor="middle" font-size="12" font-weight="700" fill="#c53030">結末: 債権放棄 237億9,697万円</text>
+      <text x="460" y="575" text-anchor="middle" font-size="11" fill="#c53030">C社解散 → 子会社整理損として損金計上</text>
+      <text x="460" y="590" text-anchor="middle" font-size="10" fill="#c53030">→ 課税庁: 寄附金として全額損金不算入</text>
+
+      <!-- 凡例 -->
+      <rect x="700" y="530" width="200" height="70" rx="6" fill="#fff" stroke="#e2e8f0" stroke-width="1"/>
+      <text x="710" y="550" font-size="10" font-weight="600" fill="#4a5568">凡例</text>
+      <line x1="710" y1="562" x2="740" y2="562" stroke="#c53030" stroke-width="2"/>
+      <text x="748" y="566" font-size="9" fill="#4a5568">資金・利益の移転</text>
+      <line x1="710" y1="578" x2="740" y2="578" stroke="#276749" stroke-width="2"/>
+      <text x="748" y="582" font-size="9" fill="#4a5568">担保・保証</text>
+      <line x1="710" y1="594" x2="740" y2="594" stroke="#2c5282" stroke-width="1.5" stroke-dasharray="6,3"/>
+      <text x="748" y="598" font-size="9" fill="#4a5568">融資・売却</text>
+    </svg>
+  </div>
+
+  <h3>2.3 時系列と金額</h3>
+  <table>
+    <tr><th>時期</th><th>事象</th><th>金額</th></tr>
+    <tr><td>H11.2</td><td>乙がC社（オランダ法人D）を買収、100%株主に</td><td>-</td></tr>
+    <tr><td>H11.2.3</td><td>原告・C間で「債務保証契約」締結（保証料: 融資額の年0.5%）</td><td>-</td></tr>
+    <tr><td>H12.10.25</td><td>C社がF銀行（ルクセンブルク）から借入れ。原告がE株式130万株を担保提供</td><td>64億2,500万円</td></tr>
+    <tr><td>H12.11.22</td><td>C社がG銀行（米国）から借入れ。原告がE株式300万株を担保提供</td><td>165億円</td></tr>
+    <tr><td>H12.11.16</td><td>乙が「株主の決議」に署名：「投資にはまったく利益を生まないというリスクがある」</td><td>-</td></tr>
+    <tr><td>H13.1</td><td>C社→I（ローン契約）：借入資金全額をIに転貸。「回収不能の潜在性がある」との警告記載</td><td>229億2,500万円</td></tr>
+    <tr><td>H13.6</td><td>B事業資金繰り悪化開始。丁がH14-H15年分の追加資金1.35億ドルを督促</td><td>-</td></tr>
+    <tr><td>H13.7</td><td>G銀行から追加担保要請。取締役Yがジュネーブ出張→「極めて見通しのつきにくい状況」</td><td>-</td></tr>
+    <tr><td>H13.9.10</td><td>戊がオランダの税理士Xに「E株式を売却し損金処理する所存」とFAX</td><td>-</td></tr>
+    <tr><td>H13.9.13</td><td>原告がO証券にE株式210万株を売却</td><td>90億5,225万円</td></tr>
+    <tr><td>H13.9.15</td><td>原告→C：第1回資金提供（融資契約書作成）</td><td>64億2,500万円</td></tr>
+    <tr><td>H13.10.24</td><td>原告がO証券から借入れ（E株式390万株を担保に）</td><td>約160億円</td></tr>
+    <tr><td>H13.10.25</td><td>原告→C：第2回資金提供</td><td>160億5,869万円</td></tr>
+    <tr><td>H13.11.1</td><td>丁がIの全資産を第三者に1米ドルで売却（B事業資産の実質的消滅）</td><td>1米ドル</td></tr>
+    <tr><td>H13.11.5</td><td>L社が支払停止、同14日に仏国で倒産手続申請</td><td>-</td></tr>
+    <tr><td>H13.11.26</td><td>原告→C：第3回資金提供</td><td>4億4,131万円</td></tr>
+    <tr><td>H13.12.25</td><td>取締役会：「Cで約200億円の損失を計上する予定」</td><td>-</td></tr>
+    <tr><td>H14.2.20</td><td>取締役会：Cの清算・残債務免除を承認</td><td>-</td></tr>
+    <tr><td>H14.3.4</td><td>「譲渡契約」締結。C保有資産を代物弁済後、残額を<strong>債権放棄</strong></td><td>237億9,697万円</td></tr>
+    <tr><td>H14.3.27</td><td>C社が株主総会決議により解散</td><td>-</td></tr>
+    <tr><td>H17.3.28</td><td>日本橋税務署長が更正処分・加算税賦課決定</td><td>-</td></tr>
+  </table>
+
+  <div class="alert-box">
+    <div class="label">核心的事実</div>
+    <p>原告のC社に対する債権総額は<strong>370億3,605万円</strong>。代物弁済で132億3,907万円を回収した後、残額<strong>237億9,698万円</strong>を「子会社整理損」として損金算入した。課税庁は、そのうち229億2,500万円（本件各資金提供額）を「国外関連者に対する寄附金」として<strong>全額損金不算入</strong>と認定した。</p>
+  </div>
+</div>
+
+<!-- 3. 国外関連者の該当性判断 -->
+<div class="card" id="sec3">
+  <h2>3. 国外関連者の該当性判断（実質的支配基準）</h2>
+
+  <h3>3.1 法的根拠</h3>
+  <p>原告とC社の間には<strong>50%超の直接・間接の出資関係がない</strong>（C社の株主は乙個人であり、原告法人ではない）。したがって、措法66条の4第1項の「発行済株式の50%以上を直接又は間接に保有する関係」による国外関連者認定はできない。</p>
+  <p>課税庁は、<strong>措法施行令39条の12第1項3号ハ</strong>（実質的支配基準）により国外関連者に該当すると主張した。</p>
+
+  <blockquote>
+    <strong>措法施行令39条の12第1項3号ハ</strong><br>
+    「当該他方の法人がその事業活動に必要とされる資金の<strong>相当部分</strong>を当該一方の法人からの<strong>借入れにより</strong>、又は当該一方の法人の<strong>保証を受けて調達</strong>していること」
+  </blockquote>
+
+  <h3>3.2 裁判所の認定</h3>
+  <table>
+    <tr><th>要件</th><th>認定事実</th></tr>
+    <tr><td>「事業活動に必要とされる資金」</td><td>C社の事業活動（本件B事業）のために、F銀行・G銀行から合計229億2,500万円を調達し、全額をIに転貸</td></tr>
+    <tr><td>「相当部分」</td><td>C社の負債合計2億8,629万ドルのうち、原告からの借入金が2億7,126万ドル（<strong>94.7%</strong>）。事実上の全額依存</td></tr>
+    <tr><td>「借入れにより、又は保証を受けて」</td><td>原告が保証＋E株式担保提供により調達。その後、原告自身が直接貸付け（本件各資金提供）</td></tr>
+    <tr><td>「実質的に決定できる関係」</td><td>上記の資金依存関係により、「一方の法人が他方の法人の事業の方針の全部又は一部につき実質的に決定できる関係」と認定</td></tr>
+  </table>
+
+  <div class="insight-box">
+    <div class="label">本判決の特徴</div>
+    <p>50%超の出資関係がなくとも、<strong>資金調達の依存関係</strong>のみで国外関連者と認定された点が本判決の特徴である。原告とC社は乙個人を介した間接的な関係にすぎなかったが、C社の事業資金のほぼ全額が原告の保証・貸付けに依存していたことが決定的であった。出向先法人への資金提供（出向者給与の全額負担等）についても同様の認定がなされる可能性がある。</p>
+  </div>
+</div>
+
+<!-- 4. 寄附金認定の法的論理 -->
+<div class="card" id="sec4">
+  <h2>4. 寄附金認定の法的論理 ―「通常の経済取引として是認できる合理的理由」の二段階判断</h2>
+
+  <h3>4.1 裁判所が示した判断基準</h3>
+  <blockquote>
+    「旧法人税法37条6項に定める『寄附金』とは、民法上の贈与に限らず、<strong>経済的にみて贈与と同視し得る金銭その他の資産の譲渡又は経済的利益の供与</strong>をいうものと解するべきであり、ここにいう『経済的にみて贈与と同視し得る金銭その他の資産の譲渡又は経済的利益の供与』とは、<strong>金銭その他の資産又は経済的利益を対価なく他に移転する場合であって、その行為について通常の経済取引として是認することができる合理的理由が存在しないもの</strong>を指すと解するのが相当である。」<br>
+    <span style="font-size:0.85em;color:#718096;">― 判決11252（東京地裁H21.7.29）第3の3(1)ア</span>
+  </blockquote>
+
+  <h3>4.2 二段階判断構造</h3>
+  <div class="warn-box">
+    <div class="label">二段階判断の構造</div>
+    <ol class="step-list">
+      <li><strong>第1段階：対価性の判断</strong> ― 当該取引に経済的対価があるか。形式的な貸付名目であっても、弁済を受けることを予定していなければ「対価なく他に移転する」に該当する。</li>
+      <li><strong>第2段階：合理的理由の判断</strong> ― 仮に対価がない場合でも、「通常の経済取引として是認できる合理的理由」が存在すれば寄附金に該当しない。損失の負担をしなければより大きな損失を被ることが明らかなためにやむを得ず負担した場合等が該当し得る。</li>
+    </ol>
+  </div>
+
+  <h3>4.3 本件における寄附金認定の4つの根拠</h3>
+  <table>
+    <tr><th style="width:6%;">No.</th><th style="width:22%;">根拠</th><th>裁判所の認定事実</th></tr>
+    <tr>
+      <td><strong>1</strong></td>
+      <td>B事業の経済性の欠如</td>
+      <td>
+        <ul>
+          <li>本件B事業は原告の従来の事業活動（食品輸出入業）と直接関連しない</li>
+          <li>原告がB事業で得る経済的利益は保証手数料（年0.5%）のみで、その支払実績すらない</li>
+          <li>乙自身が「投資にはまったく利益を生まないというリスクがある」と認識（H12.11.16の株主決議）</li>
+          <li>ローン契約書に「融資がハイリスクであり、回収不能の潜在性がある」旨の警告が明記</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td><strong>2</strong></td>
+      <td>回収見込みの不存在</td>
+      <td>
+        <ul>
+          <li>資金提供の利息が支払われた証拠なし</li>
+          <li>弁済期（1年後）の到来前にC社の清算・債権放棄が実行</li>
+          <li>C社の他事業継続に支障はなかったのに直ちに清算</li>
+          <li>具体的な弁済計画等が検討された証拠なし</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td><strong>3</strong></td>
+      <td>税務処理の意図</td>
+      <td>
+        <ul>
+          <li>E株式売却益約210億5,850万円の税負担軽減を企図</li>
+          <li>H13.9.10：戊がオランダ税理士に「E株式を売却し損金処理する所存」とFAX</li>
+          <li>H13.10：原告内部でE株式売却に伴う税金支払につきC清算を検討</li>
+          <li>H13.11.20取締役会：「Cを使った方策を加える方向で検討」</li>
+          <li>H13.12.25取締役会：顧問税理士から「Cの清算等について賛同を得ている」「Cで約200億円の損失を計上する予定」</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td><strong>4</strong></td>
+      <td>事業継続への努力の不足</td>
+      <td>
+        <ul>
+          <li>取締役Y、担当者Z：「書面での報告を要求していたが来ていなかった」「しつこく求めていたが受け取っていない」</li>
+          <li>原告がB事業の企画・実施に<strong>主体的に関与</strong>していた証拠なし</li>
+          <li>社内稟議書には懸念記載あるも、乙の判断をそのまま受入れ事後承認</li>
+        </ul>
+      </td>
+    </tr>
+  </table>
+
+  <h3>4.4 裁判所の結論</h3>
+  <blockquote>
+    「本件各資金提供は、形式的には消費貸借契約に基づく金銭の交付であったとしても、その実質は、<strong>Ｃに対して金銭を対価なく移転するものであり、かつ、その行為について通常の経済取引として是認することができる合理的理由は存在しない</strong>というべきである。」<br>
+    <span style="font-size:0.85em;color:#718096;">― 判決11252 第3の3(1)イ</span>
+  </blockquote>
+
+  <div class="alert-box">
+    <div class="label">重要判示</div>
+    <p>裁判所は、「貸付け」という法形式ではなく、<strong>弁済の予定・実績、事業の経済合理性、税務処理の意図、情報把握の程度</strong>を総合的に考慮して実質的に判断した。形式が貸付けであっても、弁済を受ける意図・予定がなければ「対価なく他に移転」に該当し、かつ合理的理由もないとして寄附金と認定される。</p>
+  </div>
+</div>
+
+<!-- 5. 全額損金不算入の計算過程 -->
+<div class="card" id="sec5">
+  <h2>5.「全額損金不算入」の計算過程</h2>
+
+  <h3>5.1 国外関連者寄附金の特殊性</h3>
+  <table>
+    <tr><th style="width:40%;">項目</th><th>通常の寄附金（法人税法37条2項）</th><th>国外関連者寄附金（措法66条の4第3項）</th></tr>
+    <tr><td>損金算入限度額</td><td>あり（資本金等の額×2.5/1000 + 所得金額×2.5/100）÷ 2</td><td><strong>なし（全額損金不算入）</strong></td></tr>
+    <tr><td>移転価格課税との関係</td><td>-</td><td>移転価格課税（措法66条の4第1項）の適用を受けたものを除く</td></tr>
+    <tr><td>相互協議手続</td><td>-</td><td>対象外（寄附金は独立企業間価格との差異ではないため）</td></tr>
+    <tr><td>二重課税の解消</td><td>国内完結のため問題なし</td><td><strong>極めて困難</strong>（受領側の国で対応的調整がなされない）</td></tr>
+  </table>
+
+  <h3>5.2 平成14年3月期の計算</h3>
+  <table>
+    <tr><th style="width:60%;">項目</th><th style="text-align:right;">金額</th></tr>
+    <tr><td>確定申告における欠損金額</td><td style="text-align:right;">△125億0,048万円</td></tr>
+    <tr><td><strong>国外関連者に対する寄附金の損金不算入額</strong></td><td style="text-align:right;"><strong>229億2,500万円</strong></td></tr>
+    <tr><td>国外関連者以外の寄附金の損金不算入額</td><td style="text-align:right;">8,612万円</td></tr>
+    <tr><td>寄附金の損金不算入額合計（確定申告での算入額との差）</td><td style="text-align:right;">227億9,579万円</td></tr>
+    <tr style="background:#ebf4ff;"><td><strong>更正後の課税所得金額</strong></td><td style="text-align:right;"><strong>102億9,531万円</strong></td></tr>
+    <tr><td>法人税額</td><td style="text-align:right;">30億8,795万円</td></tr>
+    <tr><td>控除所得税額</td><td style="text-align:right;">△8,776万円</td></tr>
+    <tr style="background:#fed7d7;"><td><strong>新たに納付すべき法人税額</strong></td><td style="text-align:right;"><strong>30億8,795万円</strong></td></tr>
+    <tr><td>過少申告加算税</td><td style="text-align:right;">4億6,317万円</td></tr>
+  </table>
+
+  <h3>5.3 平成15年3月期の計算</h3>
+  <table>
+    <tr><th style="width:60%;">項目</th><th style="text-align:right;">金額</th></tr>
+    <tr><td>確定申告における課税所得金額</td><td style="text-align:right;">0円</td></tr>
+    <tr><td>繰越欠損金の損金算入過大額</td><td style="text-align:right;">93億1,813万円</td></tr>
+    <tr><td>事業税の損金算入額</td><td style="text-align:right;">△9億8,807万円</td></tr>
+    <tr style="background:#ebf4ff;"><td><strong>更正後の課税所得金額</strong></td><td style="text-align:right;"><strong>83億3,006万円</strong></td></tr>
+    <tr style="background:#fed7d7;"><td><strong>納付すべき税額</strong></td><td style="text-align:right;"><strong>24億3,613万円</strong></td></tr>
+    <tr><td>過少申告加算税</td><td style="text-align:right;">3億7,473万円</td></tr>
+  </table>
+
+  <div class="alert-box">
+    <div class="label">追徴税額の規模</div>
+    <p>法人税のみで<strong>2事業年度合計 約55億円</strong>（過少申告加算税約8.4億円を含む）。これに法人事業税・法人都民税を加えると更に増加する。国外関連者寄附金は限度額計算なしの全額損金不算入であるため、通常の寄附金と比較して税務上のインパクトが格段に大きい。</p>
+  </div>
+</div>
+
+<!-- 6. 控訴審の判断 -->
+<div class="card" id="sec6">
+  <h2>6. 控訴審（東京高裁 H22.3.25）の判断</h2>
+
+  <h3>6.1 結論</h3>
+  <p>東京高等裁判所（青栁馨裁判長）は、<strong>第一審判決を全面的に引用し、控訴を棄却</strong>した。ただし、当審における控訴人の新主張に対し、以下の追加判断を示した。</p>
+
+  <h3>6.2 追加判断のポイント</h3>
+
+  <h4>(1) 「原告がCを実質的に買収した」との主張の排斥</h4>
+  <blockquote>
+    「控訴人の社内の稟議書には『乙 社長全額出資の会社設立の為Ｄを購入』と記載されており、Ｃが実質的に控訴人が買収する会社であることを示す記載はされておらず、また、控訴人の法人税確定申告書においても、関係会社としてＣは記載されていない」<br>
+    「控訴人自身が本件Ｂ事業を行っていないことは明らかというべき」
+  </blockquote>
+
+  <h4>(2) 担保提供の目的に関する認定</h4>
+  <blockquote>
+    「本件担保提供は、<strong>専らＣ社においてその事業活動に必要な資金を調達する上での便宜を図ることを企図してされたもの</strong>であり、これにより控訴人において金銭その他の資産又は経済的利益を得ることが期待されていたわけではない」<br>
+    <span style="font-size:0.85em;color:#718096;">― 判決11405 第3の2(2)</span>
+  </blockquote>
+
+  <h4>(3) 債権放棄の評価</h4>
+  <blockquote>
+    「控訴人が、同期において、このような形式的な貸付債権を放棄することは、この<strong>債権放棄による損失を計上することにより上記譲渡益に対する税負担を軽減するための便法に過ぎない</strong>とみるほかはなく、本件債権放棄について、通常の経済取引として是認することができる合理的理由を見いだすことはできない。」<br>
+    <span style="font-size:0.85em;color:#718096;">― 判決11405 第3の2(3)</span>
+  </blockquote>
+
+  <div class="success-box">
+    <div class="label">控訴審の意義</div>
+    <p>控訴審は第一審の事実認定と法的判断を全面的に維持した上で、控訴人の「投資戦略の一環」「損失回避のためやむを得ない行為」という新主張をいずれも排斥した。特に「税負担を軽減するための便法に過ぎない」との表現は、E株式売却益と債権放棄損を組み合わせたスキーム全体に対する否定的評価を端的に示している。</p>
+  </div>
+</div>
+
+<!-- 7. 出向者給与・留守宅手当への射程 -->
+<div class="card" id="sec7">
+  <h2>7. 出向者給与・留守宅手当への射程</h2>
+
+  <h3>7.1 判断基準の共通構造</h3>
+  <p>本判決で確立された「通常の経済取引として是認できる合理的理由」の二段階判断基準は、国外関連者に対するあらゆる経済的利益の供与に適用される。出向者給与の負担、留守宅手当の支給もその例外ではない。</p>
+
+  <div class="warn-box">
+    <div class="label">論理の接続</div>
+    <p>判決11802（出向者給与50%負担の寄附金認定事件）は、出向者の給与較差補填について<strong>同一の論理構造</strong>を用いている。本判決（11252/11405）の「合理的理由」テストは、出向・留守宅手当の文脈に直接適用可能である。</p>
+  </div>
+
+  <h3>7.2 射程の比較分析</h3>
+  <table>
+    <tr>
+      <th style="width:20%;">判断要素</th>
+      <th style="width:27%;">本件（資金提供事件）<br><span class="tag tag-danger">判決11252/11405</span></th>
+      <th style="width:27%;">出向者給与事件<br><span class="tag tag-warn">判決11802</span></th>
+      <th style="width:26%;">留守宅手当への適用</th>
+    </tr>
+    <tr>
+      <td><strong>対価性の有無</strong></td>
+      <td>資金回収の予定・実績なし。利息の支払もなし。形式は貸付けだが実質は無償供与。</td>
+      <td>出向先法人B社の給与水準を超える部分について、客観的根拠となる給与表等がなかった。</td>
+      <td>留守宅手当が出向先法人の役務提供に対する対価性を有するか。出向元が負担する客観的必要性の根拠が求められる。</td>
+    </tr>
+    <tr>
+      <td><strong>決定時点の認識</strong></td>
+      <td>貸付時点で既にC社清算の可能性を予測。弁済を受けることを想定していなかった。</td>
+      <td>出向者給与の較差補填を決定した時点で、B社の給与表が存在していなかった。</td>
+      <td><strong>留守宅手当の設定時に</strong>、出向先における給与水準との較差を算定する客観的根拠文書が存在するか否かが重要。</td>
+    </tr>
+    <tr>
+      <td><strong>グループメリットの抗弁</strong></td>
+      <td>「乙グループのブランドイメージ向上」→裁判所は排斥。原告の事業と直接関連せず、効果は間接的にとどまる。</td>
+      <td>「グループ経営上のメリット」→寄附金該当性を否定する理由にはならない。</td>
+      <td>「グループ全体の人材配置の最適化」等の一般的なメリット主張は、具体的かつ直接的な対価性がない限り認められない可能性が高い。</td>
+    </tr>
+    <tr>
+      <td><strong>事後的正当化</strong></td>
+      <td>事後的な「投資戦略の一環」との主張を排斥。取引時点の客観的証拠が重視された。</td>
+      <td>事後的なシミュレーション（較差算定）は認められなかった。</td>
+      <td>出向時に較差算定をせず、<strong>税務調査時に事後的に合理性を主張する</strong>ことは本判決の論理に照らして極めて困難。</td>
+    </tr>
+    <tr>
+      <td><strong>損金算入の効果</strong></td>
+      <td>全額損金不算入（限度額なし）。追徴約55億円。</td>
+      <td>較差補填額のうち合理性のない部分が寄附金認定。</td>
+      <td>国外関連者への留守宅手当全額が寄附金認定されれば、同様に<strong>全額損金不算入</strong>。</td>
+    </tr>
+  </table>
+
+  <h3>7.3 留守宅手当に関する実務的含意</h3>
+  <div class="alert-box">
+    <div class="label">留守宅手当が寄附金と認定されるリスク要因</div>
+    <ol>
+      <li><strong>出向先法人の給与体系との較差算定が未整備</strong>：本判決が示すように、「客観的根拠」のない経済的利益の供与は寄附金と認定される。出向先が負担すべき給与水準と出向元負担額の差額について、事前の較差算定資料がない場合は極めて危険。</li>
+      <li><strong>出向先法人にとっての便益が不明確</strong>：出向者が出向先法人の業務に従事しているにもかかわらず、留守宅手当を出向元が全額負担することに「通常の経済取引として是認できる合理的理由」があるかが問われる。</li>
+      <li><strong>出向元法人にとっての対価性の欠如</strong>：本判決で裁判所は、原告のC社に対する資金提供について「これにより原告において金銭その他の資産又は経済的利益を実質的に得ることが期待されていたわけではない」と認定した。同様に、留守宅手当の支払により出向元が得る具体的な経済的利益を説明できなければ寄附金リスクが生じる。</li>
+      <li><strong>出向先法人が国外関連者に該当する場合の全額損金不算入リスク</strong>：留守宅手当であっても国外関連者に対する寄附金と認定されれば、限度額計算なしの全額損金不算入となる。</li>
+    </ol>
+  </div>
+
+  <h3>7.4 防御策のチェックリスト</h3>
+  <div class="success-box">
+    <div class="label">実務対応</div>
+    <ol>
+      <li><strong>出向契約書における較差算定の明記</strong>：出向元負担額と出向先負担額の算定根拠を契約時に文書化する</li>
+      <li><strong>出向先法人の給与体系の文書化</strong>：出向先国における同等職位の給与水準を事前に調査し記録する</li>
+      <li><strong>留守宅手当の算定根拠の整備</strong>：日本の社会保険・年金維持コスト等、出向元負担に合理性がある部分を明確に区分する</li>
+      <li><strong>出向先法人の便益と出向元の対価の明確化</strong>：出向が出向元・出向先双方にもたらす具体的便益を文書化する</li>
+      <li><strong>定期的な見直し</strong>：出向条件の継続的な合理性を年次で検証し、記録を残す</li>
+    </ol>
+  </div>
+</div>
+
+<!-- 8. 学術的評価・実務への影響 -->
+<div class="card" id="sec8">
+  <h2>8. 学術的評価・実務への影響</h2>
+
+  <h3>8.1 学術的評価</h3>
+  <table>
+    <tr><th style="width:35%;">文献</th><th>要旨</th></tr>
+    <tr>
+      <td>税法学 第581号<br>「国外関連者に対する寄附金と相互協議」</td>
+      <td>国外関連者寄附金は移転価格課税と異なり相互協議手続の対象とならないため、二重課税の解消手段が限定される。本判決はこの問題構造を明確に示す事例。</td>
+    </tr>
+    <tr>
+      <td>税大ジャーナル 2025年第8号<br>池田義典「移転価格課税と国外関連者寄附金課税を再考する」</td>
+      <td>移転価格課税と寄附金課税の適用関係を再検討し、実務上は寄附金課税の方が多用される傾向を分析。</td>
+    </tr>
+    <tr>
+      <td>PwC TP-Insight 第3号<br>（2025年1月）</td>
+      <td>国外関連者寄附金課税のリスク管理と防御策について実務的観点から分析。</td>
+    </tr>
+  </table>
+
+  <h3>8.2 移転価格課税との関係</h3>
+  <table>
+    <tr><th style="width:30%;">比較項目</th><th>移転価格課税（措法66条の4第1項）</th><th>国外関連者寄附金課税（同条第3項）</th></tr>
+    <tr><td>課税の対象</td><td>独立企業間価格との<strong>差額</strong></td><td>経済的利益の<strong>全額</strong></td></tr>
+    <tr><td>損金算入限度額</td><td>独立企業間価格を超える部分のみ否認</td><td><strong>全額損金不算入</strong></td></tr>
+    <tr><td>相互協議（MAP）</td><td><strong>可能</strong>（租税条約の規定に基づく）</td><td><strong>不可</strong>（寄附金は独立企業原則の問題ではない）</td></tr>
+    <tr><td>対応的調整</td><td>相手国で対応的調整の可能性あり</td><td><strong>期待できない</strong></td></tr>
+    <tr><td>二重課税リスク</td><td>相互協議で解消可能</td><td><strong>恒久的な二重課税が生じる</strong></td></tr>
+    <tr><td>課税庁の立証負担</td><td>独立企業間価格の算定が必要</td><td>寄附金該当性のみ（対価性+合理的理由の不存在）</td></tr>
+    <tr style="background:#fed7d7;"><td><strong>納税者にとっての不利度</strong></td><td>中（解消手段あり）</td><td><strong>極めて高い</strong>（解消手段なし）</td></tr>
+  </table>
+
+  <div class="insight-box">
+    <div class="label">実務上の重要性</div>
+    <p>課税庁にとって、移転価格課税は独立企業間価格の算定に大きな労力を要するのに対し、寄附金課税は対価性と合理的理由の不存在を立証すれば足りる。本判決が示すように、<strong>課税庁は寄附金課税を移転価格課税より優先的に適用する傾向</strong>がある。納税者にとっては、相互協議による二重課税解消が期待できないため、国外関連者寄附金と認定されることは最も不利な結果となる。</p>
+  </div>
+
+  <h3>8.3 本判決の先例的価値</h3>
+  <ol>
+    <li><strong>実質的支配基準の拡張的適用</strong>：50%超の出資関係がなくとも、資金調達の依存関係のみで国外関連者と認定され得ることを示した</li>
+    <li><strong>「通常の経済取引として是認できる合理的理由」テストの定式化</strong>：寄附金該当性の判断基準として二段階テストを明確に定式化し、その後の裁判実務（判決11802等）にも影響を与えた</li>
+    <li><strong>形式と実質の乖離への対処</strong>：形式的には貸付けであっても、弁済の意図・計画・実績がなければ実質的に無償供与と認定されることを確認した</li>
+    <li><strong>税負担軽減目的の考慮</strong>：取引の経緯・内部資料から税負担軽減の意図が認められる場合、「合理的理由」の存在が否定される方向に作用することを示した</li>
+  </ol>
+</div>
+
+<!-- 9. 参照条文・出典一覧 -->
+<div class="card" id="sec9">
+  <h2>9. 参照条文・出典一覧</h2>
+
+  <h3>9.1 関係条文</h3>
+  <table>
+    <tr><th style="width:40%;">条文</th><th>内容</th></tr>
+    <tr><td>法人税法37条（旧）2項</td><td>寄附金の損金不算入（限度額超過部分）</td></tr>
+    <tr><td>法人税法37条（旧）6項</td><td>寄附金の定義（名義を問わない金銭等の贈与・無償供与）</td></tr>
+    <tr><td>法人税法37条（旧）7項</td><td>低額譲渡の場合の寄附金認定</td></tr>
+    <tr><td>法人税法施行令78条</td><td>寄附金の支出時期（未払寄附金の否認）</td></tr>
+    <tr><td><strong>租税特別措置法66条の4第1項</strong></td><td>国外関連者との取引に係る移転価格課税</td></tr>
+    <tr><td><strong>租税特別措置法66条の4第3項</strong></td><td>国外関連者に対する寄附金の<strong>全額損金不算入</strong></td></tr>
+    <tr><td><strong>措法施行令39条の12第1項3号ハ</strong></td><td>国外関連者の定義（実質的支配基準：資金調達の依存関係）</td></tr>
+    <tr><td>法人税基本通達9-4-2の4</td><td>寄附金の支払に関する取扱い</td></tr>
+    <tr><td>国税通則法65条</td><td>過少申告加算税</td></tr>
+    <tr><td>国税通則法118条・119条</td><td>税額計算の端数処理</td></tr>
+  </table>
+
+  <h3>9.2 判決・文献</h3>
+  <table>
+    <tr><th style="width:14%;">種別</th><th>出典</th><th>備考</th></tr>
+    <tr><td>判決</td><td>東京地裁 H21.7.29（判決11252）</td><td>第一審。原告請求棄却。</td></tr>
+    <tr><td>判決</td><td>東京高裁 H22.3.25（判決11405）</td><td>控訴審。控訴棄却。</td></tr>
+    <tr><td>判決</td><td>判決11802</td><td>出向者給与50%負担の寄附金認定事件。同種の判断基準を適用。</td></tr>
+    <tr><td>解説</td><td><a href="https://the-tax-lawyer.com/case/report33/" target="_blank" rel="noopener">TAX LAWYER: Report 33</a></td><td>本件の解説記事</td></tr>
+    <tr><td>解説</td><td><a href="https://kaikeizine.jp/article/26207/" target="_blank" rel="noopener">KaikeiZine: 記事26207</a></td><td>本件の概要解説</td></tr>
+    <tr><td>論文</td><td>税法学 第581号</td><td>「国外関連者に対する寄附金と相互協議」</td></tr>
+    <tr><td>論文</td><td>税大ジャーナル 2025年第8号</td><td>池田義典「移転価格課税と国外関連者寄附金課税を再考する」</td></tr>
+    <tr><td>実務誌</td><td>PwC TP-Insight 第3号（2025年1月）</td><td>国外関連者寄附金のリスク管理</td></tr>
+  </table>
+
+  <h3>9.3 原テキストファイル</h3>
+  <table>
+    <tr><th>ファイル</th><th>内容</th></tr>
+    <tr><td><code>/home/user/ai-law-db/txt/hanketsu/11252.txt</code></td><td>第一審判決全文テキスト</td></tr>
+    <tr><td><code>/home/user/ai-law-db/txt/hanketsu/11405.txt</code></td><td>控訴審判決全文テキスト</td></tr>
+  </table>
+</div>
+
+<!-- フッター -->
+<div style="text-align:center; padding:24px 0 8px; color:#a0aec0; font-size:0.78em;">
+  <p>作成日: 2026-03-16 | 分析対象: 判決11252・判決11405</p>
+</div>
+
+</div>
+</body>
+</html>
