@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ゴム製品製造タイ子会社 包括的法人税法分析 ― 移転価格・CFC・寄附金・PE</title>
+<style>
+  :root {
+    --primary: #1a5276;
+    --secondary: #2980b9;
+    --accent: #e67e22;
+    --danger: #c0392b;
+    --success: #27ae60;
+    --insight: #8e44ad;
+    --bg: #f5f5f5;
+    --card: #ffffff;
+    --text: #2c3e50;
+    --border: #dce1e6;
+    --light-bg: #eaf2f8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Noto Sans JP", "Hiragino Sans", "Meiryo", sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+
+  .header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; padding: 40px 30px; border-radius: 12px; margin-bottom: 30px; }
+  .header h1 { font-size: 1.6em; margin-bottom: 8px; }
+  .header .subtitle { font-size: 1.05em; opacity: 0.9; }
+  .header .meta { margin-top: 15px; font-size: 0.85em; opacity: 0.75; }
+
+  .card { background: var(--card); border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 28px 32px; margin-bottom: 24px; }
+  .card h2 { color: var(--primary); font-size: 1.3em; border-bottom: 3px solid var(--secondary); padding-bottom: 8px; margin-bottom: 18px; }
+  .card h3 { color: var(--secondary); font-size: 1.1em; margin: 18px 0 10px; }
+  .card h4 { color: var(--insight); font-size: 1.0em; margin: 14px 0 8px; }
+
+  table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 0.92em; }
+  th { background: var(--primary); color: #fff; padding: 10px 14px; text-align: left; font-weight: 600; }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:nth-child(even) { background: #f8fafc; }
+  tr:hover { background: var(--light-bg); }
+
+  .alert-box { border-left: 5px solid var(--danger); background: #fdf2f2; padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 15px 0; }
+  .alert-box .label { color: var(--danger); font-weight: 700; font-size: 0.9em; margin-bottom: 4px; }
+  .insight-box { border-left: 5px solid var(--insight); background: #f8f0fc; padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 15px 0; }
+  .insight-box .label { color: var(--insight); font-weight: 700; font-size: 0.9em; margin-bottom: 4px; }
+  .success-box { border-left: 5px solid var(--success); background: #f0faf4; padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 15px 0; }
+  .success-box .label { color: var(--success); font-weight: 700; font-size: 0.9em; margin-bottom: 4px; }
+  .warn-box { border-left: 5px solid var(--accent); background: #fef9f0; padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 15px 0; }
+  .warn-box .label { color: var(--accent); font-weight: 700; font-size: 0.9em; margin-bottom: 4px; }
+
+  .svg-wrap { text-align: center; margin: 20px 0; }
+
+  ul, ol { margin: 10px 0 10px 24px; }
+  li { margin-bottom: 6px; }
+
+  .toc { background: var(--light-bg); border-radius: 10px; padding: 20px 28px; margin-bottom: 24px; }
+  .toc h2 { color: var(--primary); border-bottom: none; margin-bottom: 12px; font-size: 1.1em; }
+  .toc ol { margin-left: 20px; }
+  .toc ol ol { margin-top: 4px; margin-bottom: 4px; }
+  .toc a { color: var(--secondary); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+
+  .tag { display: inline-block; background: var(--light-bg); color: var(--secondary); padding: 2px 10px; border-radius: 12px; font-size: 0.8em; margin: 2px 4px; }
+  .tag-danger { background: #fde8e8; color: var(--danger); font-weight: 700; }
+  .tag-warn { background: #fef3e2; color: var(--accent); }
+  .tag-low { background: #e8f8f0; color: var(--success); }
+
+  code { background: #eef1f5; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+
+  .risk-matrix { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 18px 0; }
+  .risk-card { border-radius: 8px; padding: 16px 18px; }
+  .risk-card.critical { background: #fdf2f2; border: 2px solid var(--danger); }
+  .risk-card.high { background: #fef9f0; border: 2px solid var(--accent); }
+  .risk-card.medium { background: var(--light-bg); border: 2px solid var(--secondary); }
+  .risk-card.low { background: #f0faf4; border: 2px solid var(--success); }
+  .risk-card h4 { margin-top: 0; }
+  .risk-card .risk-level { font-weight: 700; font-size: 0.85em; margin-bottom: 6px; }
+
+  .formula { background: #f0f4f8; border: 1px solid var(--border); border-radius: 8px; padding: 14px 20px; margin: 12px 0; font-family: "Courier New", monospace; font-size: 0.95em; text-align: center; }
+
+  .section-divider { border: none; border-top: 2px dashed var(--border); margin: 30px 0; }
+
+  @media print {
+    body { background: #fff; }
+    .card { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; }
+    .header { background: var(--primary) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+  @media (max-width: 768px) {
+    .container { padding: 10px; }
+    .card { padding: 18px; }
+    .risk-matrix { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ========== ヘッダー ========== -->
+<div class="header">
+  <h1>ゴム製品製造タイ子会社 包括的法人税法分析</h1>
+  <div class="subtitle">移転価格税制・CFC税制・寄附金課税・源泉所得税・PE認定 ― 6論点の総合リスク評価</div>
+  <div class="meta">作成日: 2026-03-16 ｜ 対象: 日本親会社P社（ゴム製品製造販売） → タイ子会社S社（100%出資・2010年設立）</div>
+</div>
+
+<!-- ========== 目次 ========== -->
+<div class="toc">
+  <h2>目次</h2>
+  <ol>
+    <li><a href="#facts">事実関係の整理と取引構造図</a></li>
+    <li><a href="#risk-overview">リスク評価サマリー</a></li>
+    <li><a href="#tp">移転価格税制（措法66条の4）</a>
+      <ol>
+        <li><a href="#tp-product">製品売買取引のALP</a></li>
+        <li><a href="#tp-royalty">無形資産・ロイヤリティの問題（最重大リスク）</a></li>
+        <li><a href="#tp-customer">顧客関連無形資産の無償移転（重大リスク）</a></li>
+        <li><a href="#tp-secondee-customer">出向者獲得顧客（10%）の帰属</a></li>
+      </ol>
+    </li>
+    <li><a href="#secondment">留守宅手当の問題</a>
+      <ol>
+        <li><a href="#secondment-ratio">70%留守宅手当の較差補填合理性</a></li>
+        <li><a href="#secondment-donation">寄附金認定リスク</a></li>
+      </ol>
+    </li>
+    <li><a href="#cfc">CFC税制（措法66条の6）</a></li>
+    <li><a href="#donation">寄附金課税（法法37条）</a></li>
+    <li><a href="#withholding">源泉所得税</a></li>
+    <li><a href="#pe">PE認定リスク</a></li>
+    <li><a href="#priority">リスク優先順位と対応策</a></li>
+    <li><a href="#refs">参照条文・出典</a></li>
+  </ol>
+</div>
+
+<!-- ========== 1. 事実関係 ========== -->
+<div class="card" id="facts">
+  <h2>1. 事実関係の整理と取引構造図</h2>
+
+  <div class="svg-wrap">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" width="900" height="520" style="max-width:100%;height:auto;">
+      <rect width="900" height="520" rx="12" fill="#f8fafc"/>
+
+      <!-- 日本親会社P -->
+      <rect x="30" y="40" width="280" height="140" rx="10" fill="#1a5276" stroke="#14415e" stroke-width="2"/>
+      <text x="170" y="72" text-anchor="middle" fill="#fff" font-size="17" font-weight="700" font-family="sans-serif">日本親会社 P社</text>
+      <text x="170" y="96" text-anchor="middle" fill="#dce6f0" font-size="12" font-family="sans-serif">ゴム製品の製造販売</text>
+      <text x="170" y="118" text-anchor="middle" fill="#e67e22" font-size="12" font-weight="600" font-family="sans-serif">100%出資（2010年設立）</text>
+      <text x="170" y="140" text-anchor="middle" fill="#dce6f0" font-size="11" font-family="sans-serif">出向者送出 / 留守宅手当70%</text>
+      <text x="170" y="160" text-anchor="middle" fill="#dce6f0" font-size="11" font-family="sans-serif">製造技術・ノウハウ保有</text>
+
+      <!-- タイ子会社S -->
+      <rect x="590" y="40" width="280" height="140" rx="10" fill="#2980b9" stroke="#1f6da0" stroke-width="2"/>
+      <text x="730" y="72" text-anchor="middle" fill="#fff" font-size="17" font-weight="700" font-family="sans-serif">タイ子会社 S社</text>
+      <text x="730" y="96" text-anchor="middle" fill="#dce6f0" font-size="12" font-family="sans-serif">ゴム製品の製造販売</text>
+      <text x="730" y="118" text-anchor="middle" fill="#dce6f0" font-size="12" font-family="sans-serif">2020年以降：自律的運営</text>
+      <text x="730" y="140" text-anchor="middle" fill="#e67e22" font-size="12" font-weight="600" font-family="sans-serif">P社技術使用 / ロイヤリティ無し</text>
+      <text x="730" y="160" text-anchor="middle" fill="#dce6f0" font-size="11" font-family="sans-serif">現地給与を出向者に支給</text>
+
+      <!-- 出向者 -->
+      <rect x="360" y="200" width="180" height="70" rx="8" fill="#8e44ad" stroke="#7d3c98" stroke-width="2"/>
+      <text x="450" y="232" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="sans-serif">出向者</text>
+      <text x="450" y="252" text-anchor="middle" fill="#e8daef" font-size="11" font-family="sans-serif">P社→S社出向</text>
+
+      <!-- P社の元顧客（80%） -->
+      <rect x="540" y="320" width="200" height="65" rx="8" fill="#ecf0f1" stroke="#c0392b" stroke-width="2"/>
+      <text x="640" y="348" text-anchor="middle" fill="#c0392b" font-size="13" font-weight="700" font-family="sans-serif">P社の元顧客</text>
+      <text x="640" y="368" text-anchor="middle" fill="#c0392b" font-size="12" font-weight="600" font-family="sans-serif">売上の 80%</text>
+
+      <!-- 出向者獲得顧客（10%） -->
+      <rect x="540" y="400" width="200" height="55" rx="8" fill="#ecf0f1" stroke="#e67e22" stroke-width="1.5"/>
+      <text x="640" y="424" text-anchor="middle" fill="#e67e22" font-size="12" font-weight="600" font-family="sans-serif">出向者獲得顧客</text>
+      <text x="640" y="442" text-anchor="middle" fill="#e67e22" font-size="12" font-family="sans-serif">売上の 10%</text>
+
+      <!-- P社向け売上（10%） -->
+      <rect x="160" y="340" width="200" height="55" rx="8" fill="#ecf0f1" stroke="#27ae60" stroke-width="1.5"/>
+      <text x="260" y="364" text-anchor="middle" fill="#27ae60" font-size="12" font-weight="600" font-family="sans-serif">P社への販売</text>
+      <text x="260" y="382" text-anchor="middle" fill="#27ae60" font-size="12" font-family="sans-serif">売上の 10%（関連者間）</text>
+
+      <!-- 矢印定義 -->
+      <defs>
+        <marker id="aOrange" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#e67e22"/></marker>
+        <marker id="aGreen" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#27ae60"/></marker>
+        <marker id="aRed" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#c0392b"/></marker>
+        <marker id="aPurple" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#8e44ad"/></marker>
+        <marker id="aBlue" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2980b9"/></marker>
+      </defs>
+
+      <!-- 出資矢印 P→S -->
+      <line x1="310" y1="80" x2="590" y2="80" stroke="#e67e22" stroke-width="2.5" marker-end="url(#aOrange)"/>
+      <text x="450" y="72" text-anchor="middle" fill="#e67e22" font-size="11" font-weight="600" font-family="sans-serif">100%出資</text>
+
+      <!-- 製造技術（点線） P→S -->
+      <line x1="310" y1="110" x2="590" y2="110" stroke="#c0392b" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#aRed)"/>
+      <text x="450" y="106" text-anchor="middle" fill="#c0392b" font-size="10" font-weight="700" font-family="sans-serif">製造技術・ノウハウ（契約なし・無償）</text>
+
+      <!-- 製品売買 S→P（10%） -->
+      <line x1="590" y1="140" x2="310" y2="140" stroke="#27ae60" stroke-width="2.5" marker-end="url(#aGreen)"/>
+      <text x="450" y="156" text-anchor="middle" fill="#27ae60" font-size="10" font-weight="600" font-family="sans-serif">製品販売 10%</text>
+
+      <!-- 出向者矢印 P→出向者 -->
+      <line x1="170" y1="180" x2="370" y2="220" stroke="#8e44ad" stroke-width="2" marker-end="url(#aPurple)"/>
+      <text x="240" y="196" fill="#8e44ad" font-size="10" font-weight="600" font-family="sans-serif">留守宅手当70%</text>
+
+      <!-- 出向者矢印 S→出向者 -->
+      <line x1="730" y1="180" x2="530" y2="220" stroke="#2980b9" stroke-width="2" marker-end="url(#aBlue)"/>
+      <text x="660" y="196" fill="#2980b9" font-size="10" font-weight="600" font-family="sans-serif">現地給与同等</text>
+
+      <!-- S社→元顧客（80%） -->
+      <line x1="730" y1="180" x2="680" y2="320" stroke="#c0392b" stroke-width="2" marker-end="url(#aRed)"/>
+      <text x="740" y="260" fill="#c0392b" font-size="10" font-weight="600" font-family="sans-serif">販売 80%</text>
+
+      <!-- S社→出向者顧客（10%） -->
+      <line x1="750" y1="180" x2="720" y2="400" stroke="#e67e22" stroke-width="1.5" marker-end="url(#aOrange)"/>
+
+      <!-- S社→P社向け（10%） -->
+      <line x1="590" y1="160" x2="360" y2="348" stroke="#27ae60" stroke-width="1.5" marker-end="url(#aGreen)"/>
+
+      <!-- 顧客移管（点線：P社→S社元顧客） -->
+      <line x1="170" y1="180" x2="560" y2="340" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <text x="330" y="280" fill="#c0392b" font-size="10" font-weight="600" font-family="sans-serif">顧客リスト移管（無償）</text>
+
+      <!-- 凡例 -->
+      <rect x="30" y="430" width="350" height="78" rx="8" fill="#fff" stroke="#dce1e6" stroke-width="1"/>
+      <text x="45" y="452" fill="#2c3e50" font-size="11" font-weight="700" font-family="sans-serif">凡例</text>
+      <line x1="45" y1="466" x2="85" y2="466" stroke="#27ae60" stroke-width="2.5"/>
+      <text x="92" y="470" fill="#2c3e50" font-size="10" font-family="sans-serif">棚卸資産取引（製品売買10%）</text>
+      <line x1="45" y1="484" x2="85" y2="484" stroke="#c0392b" stroke-width="2" stroke-dasharray="6,4"/>
+      <text x="92" y="488" fill="#2c3e50" font-size="10" font-family="sans-serif">無形資産移転（技術・顧客）← 契約なし・無償</text>
+      <line x1="200" y1="466" x2="240" y2="466" stroke="#8e44ad" stroke-width="2"/>
+      <text x="247" y="470" fill="#2c3e50" font-size="10" font-family="sans-serif">出向者給与（留守宅手当70%）</text>
+    </svg>
+  </div>
+
+  <table>
+    <tr><th style="width:28%">項目</th><th>内容</th></tr>
+    <tr><td>日本親会社P社</td><td>ゴム製品の製造販売業</td></tr>
+    <tr><td>タイ子会社S社</td><td>ゴム製品の製造子会社（2010年設立、P社100%出資）</td></tr>
+    <tr><td>出向者</td><td>P社からS社へ出向。2020年以降、S社はほぼ自律的に製造販売可能</td></tr>
+    <tr><td>S社の販売先構成</td><td>P社の元顧客<strong>80%</strong> ／ 出向者がS社で新規獲得<strong>10%</strong> ／ P社への販売<strong>10%</strong></td></tr>
+    <tr><td>出向者給与</td><td>P社：出向前給与の<strong>70%を留守宅手当</strong>として支給 ／ S社：<strong>現地給与同等</strong>を支給</td></tr>
+    <tr><td>ロイヤリティ</td><td><strong>なし</strong>（S社→P社への支払い一切なし）</td></tr>
+    <tr><td>製造技術</td><td>P社の技術をS社が使用。明示的なライセンス契約<strong>なし</strong></td></tr>
+    <tr><td>国外関連者該当性</td><td>100%出資 → 措法66条の4第5項1号で明確に該当</td></tr>
+  </table>
+</div>
+
+<!-- ========== 2. リスク評価サマリー ========== -->
+<div class="card" id="risk-overview">
+  <h2>2. リスク評価サマリー</h2>
+
+  <div class="risk-matrix">
+    <div class="risk-card critical">
+      <div class="risk-level" style="color:var(--danger);">最重大リスク</div>
+      <h4>ロイヤリティ未収受</h4>
+      <p>P社の製造技術・ノウハウをS社が無償使用。事務運営指針2-13によるみなしライセンス認定。S社売上全体×2-5%のロイヤリティをP社所得に加算されるリスク。</p>
+    </div>
+    <div class="risk-card critical">
+      <div class="risk-level" style="color:var(--danger);">最重大リスク</div>
+      <h4>顧客関連無形資産の無償移転</h4>
+      <p>S社売上の80%がP社の元顧客。P社の顧客リスト・販売網（事務運営指針2-11ハ）の無償移転に該当するリスク。</p>
+    </div>
+    <div class="risk-card high">
+      <div class="risk-level" style="color:var(--accent);">重大リスク</div>
+      <h4>留守宅手当70%の較差超過</h4>
+      <p>S社から現地給与同等を受給しつつ、P社が出向前給与の70%を留守宅手当として負担。較差補填の範囲を超過する可能性。寄附金認定リスク。</p>
+    </div>
+    <div class="risk-card medium">
+      <div class="risk-level" style="color:var(--secondary);">中程度リスク</div>
+      <h4>製品売買価格のALP</h4>
+      <p>10%のP社向け販売の独立企業間価格。80%+10%の第三者取引がCUPとして機能する可能性あるが差異調整の要否は検討必要。</p>
+    </div>
+  </div>
+
+  <table>
+    <tr><th>論点</th><th>条文</th><th>リスク</th><th>想定追徴額の規模感</th></tr>
+    <tr><td>ロイヤリティ未収受（みなしライセンス）</td><td>措法66条の4 / 指針2-13</td><td><span class="tag tag-danger">最重大</span></td><td>S社売上全体×2-5%</td></tr>
+    <tr><td>顧客関連無形資産の無償移転</td><td>措法66条の4 / 指針2-11ハ</td><td><span class="tag tag-danger">最重大</span></td><td>顧客移管対価（一時金 or 継続料率）</td></tr>
+    <tr><td>留守宅手当の較差超過</td><td>法基通9-2-47 / 措法66条の4③</td><td><span class="tag tag-warn">重大</span></td><td>超過額×損金不算入</td></tr>
+    <tr><td>製品売買価格</td><td>措法66条の4</td><td><span class="tag">中程度</span></td><td>価格差×取引量</td></tr>
+    <tr><td>CFC税制（BOI優遇時）</td><td>措法66条の6</td><td><span class="tag">中〜低</span></td><td>S社の適用対象所得</td></tr>
+    <tr><td>寄附金課税</td><td>法法37条 / 措法66条の4③</td><td><span class="tag tag-warn">重大</span></td><td>技術・顧客の無償提供額</td></tr>
+    <tr><td>源泉所得税</td><td>所法212条</td><td><span class="tag tag-low">低</span></td><td>役員兼務時のみ</td></tr>
+    <tr><td>PE認定</td><td>日タイ租税条約5条</td><td><span class="tag tag-low">低〜中</span></td><td>帰属所得次第</td></tr>
+  </table>
+</div>
+
+<hr class="section-divider">
+
+<!-- ========== 3. 移転価格税制 ========== -->
+<div class="card" id="tp">
+  <h2>3. 移転価格税制（措法66条の4）</h2>
+
+  <!-- 3-1. 製品売買 -->
+  <div id="tp-product">
+    <h3>3-1. 製品売買取引（10%のP社向け販売）のALP</h3>
+
+    <h4>内部CUPの可能性</h4>
+    <p>S社はP社以外の第三者顧客に対して売上の<strong>90%</strong>（P社元顧客80% + 出向者獲得顧客10%）を販売している。この第三者向け取引価格を内部CUP（独立価格比準法の内部比較対象取引）として、P社向け10%の価格と比較する方法が最も直接的である。</p>
+
+    <table>
+      <tr><th>比較対象</th><th>取引先</th><th>比率</th><th>CUP適格性</th></tr>
+      <tr><td>検証対象取引</td><td>S社 → P社（関連者）</td><td>10%</td><td>ー</td></tr>
+      <tr><td>内部CUP候補1</td><td>S社 → P社元顧客（第三者）</td><td>80%</td><td>製品・条件の類似性を検討</td></tr>
+      <tr><td>内部CUP候補2</td><td>S社 → 出向者獲得顧客（第三者）</td><td>10%</td><td>新規顧客向け条件との差異</td></tr>
+    </table>
+
+    <h4>差異調整の要否</h4>
+    <ul>
+      <li><strong>製品の同一性</strong>：P社向け製品と第三者向け製品が同一仕様であれば差異調整は不要ないし最小限</li>
+      <li><strong>取引数量</strong>：P社向けが大口か小口かで数量割引の差異が生じうる</li>
+      <li><strong>取引条件</strong>：決済条件（支払サイト）、引渡条件（FOB/CIF等）、品質保証範囲の差異</li>
+      <li><strong>市場の差異</strong>：P社向け（日本市場）と第三者向け（タイ国内等）の市場差異は調整対象</li>
+    </ul>
+
+    <div class="success-box">
+      <div class="label">ポジティブ要素</div>
+      <p>第三者取引が90%を占め内部CUPが豊富に存在するため、製品売買取引のALP検証は比較的容易。P社向け価格が第三者向けと同等であることを文書化できれば、この論点のリスクは低い。ただし、製品売買取引が「形式上ALP」であっても、ロイヤリティ・顧客移管という別の論点が残る点に注意。</p>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- 3-2. ロイヤリティ（最重大リスク） -->
+  <div id="tp-royalty">
+    <h3>3-2. 無形資産・ロイヤリティの問題（最重大リスク）</h3>
+
+    <div class="alert-box">
+      <div class="label">最重大リスク：みなしライセンス認定</div>
+      <p>P社の製造技術・配合ノウハウをS社が<strong>無償で使用</strong>し、ロイヤリティの支払いは<strong>ゼロ</strong>。明示的なライセンス契約も<strong>存在しない</strong>。この状態は、事務運営指針2-13が想定する「みなしライセンス」の典型的事案であり、税務調査で最も厳しく追及される論点である。</p>
+    </div>
+
+    <h4>事務運営指針2-13（みなしライセンス規定）</h4>
+    <p>事務運営指針2-13は、国外関連者との間で<strong>契約が存在しない場合であっても</strong>、無形資産の使用・移転に係る取引が行われていると認められるときは、当該取引を<strong>擬制して</strong>独立企業間価格を算定すべきことを定めている。</p>
+
+    <ul>
+      <li>契約書の有無は問わない ― <strong>実態として</strong>技術が移転・使用されていれば課税対象</li>
+      <li>P社が長年蓄積した製造技術・配合ノウハウをS社が使用している事実があれば、「ライセンス契約が存在する」ものとして取引を擬制</li>
+      <li>「無償で提供した」という抗弁は認められない ― 独立企業であれば対価を求めるはず</li>
+    </ul>
+
+    <h4>DEMPE分析</h4>
+    <p>OECD移転価格ガイドライン第6章に基づくDEMPE（Development, Enhancement, Maintenance, Protection, Exploitation）分析の結果：</p>
+
+    <table>
+      <tr><th>DEMPE機能</th><th>P社</th><th>S社</th><th>評価</th></tr>
+      <tr><td><strong>Development</strong>（開発）</td><td>製造技術・配合ノウハウの開発主体</td><td>開発に関与せず</td><td>P社に帰属</td></tr>
+      <tr><td><strong>Enhancement</strong>（改良）</td><td>継続的な技術改良</td><td>現場での工程改善のみ</td><td>主にP社</td></tr>
+      <tr><td><strong>Maintenance</strong>（維持）</td><td>品質管理基準の策定・更新</td><td>現場での品質管理実施</td><td>P社が主導</td></tr>
+      <tr><td><strong>Protection</strong>（保護）</td><td>営業秘密の管理、特許出願</td><td>NDA管理程度</td><td>P社に帰属</td></tr>
+      <tr><td><strong>Exploitation</strong>（活用）</td><td>日本市場での活用</td><td>タイ市場での製造・販売</td><td>S社が直接活用</td></tr>
+    </table>
+
+    <div class="insight-box">
+      <div class="label">DEMPE分析の帰結</div>
+      <p>D・E・M・Pの4機能がP社に帰属する一方、Exploitation（活用）はS社が行っている。独立企業であれば、技術の使用対価（ロイヤリティ）を支払うのが通常。S社の超過収益の一部はP社の無形資産に起因するものであり、相応のロイヤリティがP社に帰属すべきである。</p>
+    </div>
+
+    <h4>ロイヤリティ料率の相場</h4>
+    <table>
+      <tr><th>分野</th><th>料率範囲</th><th>中央値</th><th>備考</th></tr>
+      <tr><td>ゴム・プラスチック</td><td>2-5%</td><td>3%</td><td>配合ノウハウ含む場合は上位</td></tr>
+      <tr><td>化学品一般</td><td>2-6%</td><td>3.5%</td><td>特許有りの場合</td></tr>
+      <tr><td>自動車部品</td><td>3-5%</td><td>4%</td><td>品質保証・認証含む</td></tr>
+      <tr><td>製造プロセスのみ</td><td>1-3%</td><td>2%</td><td>特許なし・ノウハウのみ</td></tr>
+    </table>
+
+    <h4>追徴リスクの試算</h4>
+    <div class="formula">
+      みなしロイヤリティ = S社の年間売上高 × ロイヤリティ料率（2-5%）<br>
+      → P社の所得に加算（措法66条の4）<br>
+      ※ S社の売上<strong>全体</strong>（100%）が対象。P社向け10%だけではない。
+    </div>
+
+    <div class="alert-box">
+      <div class="label">重要な留意点</div>
+      <p>みなしロイヤリティはS社の売上<strong>全体に対して</strong>計算される。P社向け販売（10%）だけではなく、第三者向け販売（90%）も含めたS社の全売上が対象となる。仮にS社の年間売上が10億円、ロイヤリティ料率3%の場合、3,000万円がP社の所得に加算される計算となる。</p>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- 3-3. 顧客関連無形資産 -->
+  <div id="tp-customer">
+    <h3>3-3. 顧客関連無形資産の無償移転（重大リスク）</h3>
+
+    <div class="alert-box">
+      <div class="label">重大リスク：P社の元顧客が売上の80%</div>
+      <p>S社の売上の<strong>80%</strong>が、出向者がP社時代に開拓した顧客をS社に移管したことに起因する。これはP社の「顧客リスト」「取引網」「顧客関係」という無形資産を<strong>無償でS社に移転</strong>したことに他ならない。</p>
+    </div>
+
+    <h4>事務運営指針2-11ハ「取引網等」</h4>
+    <p>事務運営指針2-11は、調査において検討すべき無形資産として<strong>「取引先等のネットワーク」</strong>を明示的に列挙している。P社が長年にわたり構築してきた顧客基盤は、P社の重要な無形資産であり、その移転には対価が伴うべきである。</p>
+
+    <h4>顧客移管の対価の在り方</h4>
+    <table>
+      <tr><th>対価の形態</th><th>内容</th><th>適用場面</th></tr>
+      <tr><td>一時金（ルンプサム）</td><td>顧客リスト移管時に一括対価を支払う</td><td>顧客リストの完全な移転</td></tr>
+      <tr><td>継続ロイヤリティ</td><td>移管顧客からの売上×一定料率</td><td>顧客関係の継続的使用</td></tr>
+      <tr><td>コミッション</td><td>S社がP社元顧客に販売する際にP社にコミッション支払い</td><td>紹介・斡旋型の移管</td></tr>
+    </table>
+
+    <h4>顧客関係はP社の無形資産か出向者個人のものか</h4>
+    <p>出向者がP社の従業員として（P社の名刺・肩書・費用負担のもとで）顧客を開拓した場合、その顧客関係は原則として<strong>P社の無形資産</strong>に帰属する。</p>
+
+    <ul>
+      <li><strong>P社帰属の論拠</strong>：
+        <ul>
+          <li>P社の費用（給与・交通費・接待費等）で開拓した顧客関係</li>
+          <li>P社の社名・ブランド・信用力を背景に成立した取引</li>
+          <li>P社の製品を販売する過程で構築された関係</li>
+          <li>出向者が退職しても、P社として顧客関係は存続する</li>
+        </ul>
+      </li>
+      <li><strong>個人帰属の反論（弱い）</strong>：
+        <ul>
+          <li>顧客が出向者個人の人間関係に依存している場合</li>
+          <li>ただし、組織的な営業活動の結果であれば、個人帰属は認められにくい</li>
+        </ul>
+      </li>
+    </ul>
+
+    <div class="insight-box">
+      <div class="label">構造的問題</div>
+      <p>本件の構造は、P社が自社の営業資産（顧客リスト・取引関係）を、出向者という「人」を媒介にしてS社に無償で移転したものである。独立企業間であれば、このような顧客基盤の移転には相応の対価（M&Aにおけるカスタマーリレーションシップの評価に類似）が伴うはずである。80%という構成比率は、P社の顧客基盤がS社の事業の根幹を支えていることを示しており、税務当局が見過ごす可能性は低い。</p>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- 3-4. 出向者獲得顧客 -->
+  <div id="tp-secondee-customer">
+    <h3>3-4. 出向者が獲得した顧客（10%）の帰属</h3>
+
+    <p>出向者がS社に出向後に新規に獲得した顧客（売上の10%）の無形資産としての帰属は、<strong>出向契約の内容</strong>と<strong>指揮命令関係の実態</strong>に依存する。</p>
+
+    <table>
+      <tr><th>判断基準</th><th>P社帰属</th><th>S社帰属</th></tr>
+      <tr><td>指揮命令</td><td>P社の指示で営業活動 → P社の成果</td><td>S社の指示で営業活動 → S社の成果</td></tr>
+      <tr><td>費用負担</td><td>P社が営業経費を負担</td><td>S社が営業経費を負担</td></tr>
+      <tr><td>使用名義</td><td>P社の名刺・ブランドで活動</td><td>S社の名刺・ブランドで活動</td></tr>
+      <tr><td>出向契約</td><td>「P社のための営業活動も行う」と規定</td><td>「S社の業務に専念」と規定</td></tr>
+    </table>
+
+    <div class="warn-box">
+      <div class="label">出向契約の確認ポイント</div>
+      <p>出向契約書において、出向者の職務範囲・指揮命令系統・成果の帰属が明確に規定されているかを確認する必要がある。「S社の業務に専念する」旨の規定があり、S社の名義・費用で顧客を獲得していれば、当該顧客関係はS社の無形資産と整理しうる。ただし、P社が留守宅手当として出向前給与の70%を負担していることが、「P社のための活動」を示唆する事情として問題になりうる。</p>
+    </div>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<!-- ========== 4. 留守宅手当 ========== -->
+<div class="card" id="secondment">
+  <h2>4. 留守宅手当の問題</h2>
+
+  <!-- 4-1. 較差補填 -->
+  <div id="secondment-ratio">
+    <h3>4-1. 70%留守宅手当の較差補填としての合理性</h3>
+
+    <h4>トータルパッケージの分析</h4>
+    <p>較差補填（法基通9-2-47）の趣旨は、出向者が出向先で受ける給与が出向元での給与水準を<strong>下回る場合</strong>に、その差額を出向元が負担することを認めるものである。</p>
+
+    <div class="formula">
+      出向前のP社給与 = 100とすると：<br><br>
+      P社からの支給: 100 × 70% = <strong>70</strong>（留守宅手当）<br>
+      S社からの支給: <strong>現地給与同等</strong>（仮に X）<br>
+      ────────────────<br>
+      出向者の総収入: 70 + X
+    </div>
+
+    <p>ここで問題となるのは、<strong>70 + X が 100を超えるか</strong>である。</p>
+
+    <table>
+      <tr><th>シナリオ</th><th>X（S社給与）</th><th>総収入</th><th>較差補填の範囲</th></tr>
+      <tr><td>現地水準が低い場合</td><td>X = 20-30</td><td>90-100</td><td>較差の範囲内（合理的）</td></tr>
+      <tr><td>現地水準が中程度</td><td>X = 40-50</td><td>110-120</td><td><span class="tag tag-warn">超過の可能性</span></td></tr>
+      <tr><td>現地水準が日本と同等</td><td>X = 60-80</td><td>130-150</td><td><span class="tag tag-danger">明らかな超過</span></td></tr>
+    </table>
+
+    <div class="alert-box">
+      <div class="label">「現地給与と同等」の意味が鍵</div>
+      <p>S社が支給する「現地給与同等」が、タイ人従業員の一般的水準（日本の水準より大幅に低い）であれば、70%留守宅手当と合算しても較差の範囲内に収まりうる。しかし、出向者の役職・責任に見合った「日本人駐在員の現地相場」（赴任手当・住宅手当含む）であれば、トータルパッケージは出向前給与を大幅に超過し、較差補填の範囲を逸脱する。</p>
+    </div>
+
+    <h4>法基通9-2-47の較差算定</h4>
+    <p>通達9-2-47は、「出向先法人が支給する給与の額が出向元法人が支給すべき給与の額に比べて<strong>少ないため</strong>その差額を出向元法人が負担する場合」に、当該差額を出向元法人の損金の額に算入することを認める。</p>
+    <ul>
+      <li><strong>較差 = 出向前給与 − 出向先給与</strong>。この差額のみが損金算入可能</li>
+      <li>出向前給与を<strong>超える</strong>部分は較差補填ではなく、<strong>給与の上乗せ</strong>であり、損金算入の根拠を欠く</li>
+      <li>出向先が「現地給与同等」を支給済みであれば、較差 = 出向前給与 − 現地給与同等</li>
+      <li>P社の70%負担がこの較差を超過していれば、超過分は寄附金に該当</li>
+    </ul>
+
+    <h4>判決11802号（定率方式のリスク）の教訓</h4>
+    <p>判決11802号では、出向元が出向先との較差を<strong>定率</strong>（一定割合）で一律に補填する方式について、実際の較差を<strong>個別に算定</strong>せずに定率で負担することの合理性が争われた。本件のP社も「出向前給与の70%」という<strong>定率方式</strong>を採用しており、同様のリスクがある。</p>
+    <ul>
+      <li>定率方式自体が直ちに否認されるわけではないが、<strong>結果として較差を超過していれば問題</strong></li>
+      <li>較差の根拠資料（出向前給与・出向先給与・生活費差額等の算定資料）を整備しておくことが重要</li>
+      <li>毎年の見直し（現地給与の変動を反映）が行われていない場合、リスクは増大</li>
+    </ul>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- 4-2. 寄附金認定 -->
+  <div id="secondment-donation">
+    <h3>4-2. 寄附金認定リスク</h3>
+
+    <div class="alert-box">
+      <div class="label">国外関連者への寄附金 → 全額損金不算入</div>
+      <p>P社がS社（国外関連者）に対して較差補填を超える経済的利益を供与した場合、当該超過額は<strong>措法66条の4第3項</strong>により国外関連者への寄附金として<strong>全額損金不算入</strong>となる。国内寄附金のような損金算入限度額の適用はない。</p>
+    </div>
+
+    <table>
+      <tr><th>項目</th><th>寄附金非該当</th><th>寄附金該当</th></tr>
+      <tr><td>定義</td><td>較差補填の範囲内の負担</td><td>較差を超える部分</td></tr>
+      <tr><td>損金算入</td><td>全額損金算入</td><td><strong>全額損金不算入</strong>（措法66条の4③）</td></tr>
+      <tr><td>判定基準</td><td>出向前給与 − S社支給額 ≧ P社負担額</td><td>出向前給与 − S社支給額 ＜ P社負担額</td></tr>
+    </table>
+
+    <div class="warn-box">
+      <div class="label">実務上の留意点</div>
+      <p>本件では、S社が「現地給与同等」を支給しているため、出向者の基本的な生活費・報酬はS社がカバーしている可能性がある。その上でP社が出向前給与の70%を追加負担すると、<strong>出向者が出向前より経済的に有利になる</strong>状況が生じる。このような二重支給構造は、税務調査において寄附金認定の根拠となりやすい。</p>
+    </div>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<!-- ========== 5. CFC税制 ========== -->
+<div class="card" id="cfc">
+  <h2>5. CFC税制（措法66条の6）</h2>
+
+  <h3>5-1. 管理支配基準</h3>
+  <p>CFC税制の適用除外（経済活動基準）のうち、「管理支配基準」は、外国関係会社がその本店所在地国において事業の<strong>管理、支配及び運営を自ら行っている</strong>ことを要件とする。</p>
+
+  <table>
+    <tr><th>判断要素</th><th>本件の状況</th><th>評価</th></tr>
+    <tr><td>株主総会・取締役会の開催地</td><td>タイで開催されていれば充足</td><td>確認要</td></tr>
+    <tr><td>役員の実質的意思決定</td><td>2020年以降自律的運営 → 充足しやすい</td><td><span class="tag tag-low">良好</span></td></tr>
+    <tr><td>会計帳簿の保管場所</td><td>タイ国内で保管されていれば充足</td><td>確認要</td></tr>
+    <tr><td>出向者の役割</td><td>出向者が実質的に意思決定を行い日本に報告 → リスク</td><td>要精査</td></tr>
+  </table>
+
+  <div class="success-box">
+    <div class="label">2020年以降の自律的運営</div>
+    <p>事実関係によれば、2020年以降S社はほぼ自律的に製造販売が可能な状態にある。この点は管理支配基準の充足に有利に働く。ただし、出向者がP社への報告義務を負い、重要事項について実質的にP社の承認を得ている場合は、「自ら管理支配している」とは言い難い面もある。</p>
+  </div>
+
+  <h3>5-2. タイBOI優遇による実効税率低下リスク</h3>
+  <p>タイ投資委員会（BOI: Board of Investment）の投資奨励法に基づく税制優遇措置を受けている場合、法人税の免税・減税期間が生じる。</p>
+
+  <table>
+    <tr><th>BOI優遇内容</th><th>効果</th><th>CFC税制への影響</th></tr>
+    <tr><td>法人税免税（最大8年）</td><td>実効税率0%</td><td>20%基準（トリガー税率）に抵触</td></tr>
+    <tr><td>法人税50%減税（追加5年）</td><td>実効税率10%</td><td>20%基準に抵触</td></tr>
+    <tr><td>優遇なし</td><td>タイ標準税率20%</td><td>20%基準ぎりぎり → 個別計算要</td></tr>
+  </table>
+
+  <div class="warn-box">
+    <div class="label">BOI優遇の影響</div>
+    <p>2010年設立のS社がBOI奨励を受けている場合、法人税免税期間（最大8年）は既に終了しているが、50%減税期間（追加5年、最大2023年頃まで）が継続している可能性がある。減税期間中の実効税率が<strong>20%未満</strong>になれば、CFC税制のトリガー税率に抵触し、<strong>経済活動基準を全て充足しない限り</strong>S社の所得がP社に合算される。2020年以降自律的運営が可能であっても、管理支配基準の充足に疑義があれば合算リスクは残る。</p>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<!-- ========== 6. 寄附金課税 ========== -->
+<div class="card" id="donation">
+  <h2>6. 寄附金課税（法法37条）</h2>
+
+  <p>移転価格税制（措法66条の4）と寄附金課税（法法37条）は、いずれもP社からS社への所得移転を捕捉する規定であるが、適用条文と効果が異なる。</p>
+
+  <h3>6-1. 製造技術の無償提供 = 寄附金</h3>
+  <p>P社の製造技術・配合ノウハウをS社に<strong>無償で提供</strong>する行為は、P社からS社への<strong>経済的利益の無償の供与</strong>であり、法法37条の「寄附金」に該当しうる。</p>
+
+  <table>
+    <tr><th>適用条文</th><th>効果</th><th>適用関係</th></tr>
+    <tr><td>措法66条の4（移転価格税制）</td><td>独立企業間価格との差額をP社所得に加算</td><td><strong>優先適用</strong></td></tr>
+    <tr><td>法法37条（寄附金課税）</td><td>国外関連者への寄附金として全額損金不算入</td><td>移転価格と競合する場合は措法66条の4が優先</td></tr>
+    <tr><td>措法66条の4③</td><td>国外関連者への寄附金：<strong>全額損金不算入</strong></td><td>国外関連者間特有の規律</td></tr>
+  </table>
+
+  <h3>6-2. 顧客の無償移管 = 寄附金</h3>
+  <p>P社の顧客基盤（売上の80%相当）を対価なくS社に移転する行為も、同様に寄附金に該当する。顧客関係の経済的価値に相当する金額が、P社からS社への無償の供与として認定される。</p>
+
+  <div class="insight-box">
+    <div class="label">移転価格税制と寄附金課税の適用関係</div>
+    <p>実務上、国外関連者間の取引については<strong>移転価格税制が優先適用</strong>される（措法66条の4が特別法）。しかし、寄附金として損金不算入とされる場合も、措法66条の4第3項により<strong>全額損金不算入</strong>（一般の寄附金のような損金算入限度額の適用なし）となるため、いずれの条文が適用されても納税者にとって厳しい結果となる。</p>
+  </div>
+
+  <h3>6-3. 寄附金と認定されうる項目の一覧</h3>
+  <table>
+    <tr><th>項目</th><th>無償供与の内容</th><th>寄附金の額（概算）</th><th>リスク</th></tr>
+    <tr><td>製造技術・ノウハウ</td><td>ライセンス料を収受せずに技術を使用させている</td><td>S社売上×2-5%（年間相当額）</td><td><span class="tag tag-danger">最重大</span></td></tr>
+    <tr><td>顧客リスト・取引網</td><td>P社の元顧客をS社に無償移管</td><td>顧客の経済的価値（一時金評価）</td><td><span class="tag tag-danger">最重大</span></td></tr>
+    <tr><td>留守宅手当の超過分</td><td>較差補填を超える出向者給与負担</td><td>超過額（年間）</td><td><span class="tag tag-warn">重大</span></td></tr>
+  </table>
+</div>
+
+<hr class="section-divider">
+
+<!-- ========== 7. 源泉所得税 ========== -->
+<div class="card" id="withholding">
+  <h2>7. 源泉所得税</h2>
+
+  <h3>7-1. 出向者の身分による取扱いの差異</h3>
+  <table>
+    <tr><th>出向者の身分</th><th>源泉徴収の要否</th><th>根拠条文</th><th>備考</th></tr>
+    <tr><td>S社の<strong>役員を兼務</strong></td><td><strong>必要</strong>（20.42%）</td><td>所法212条、161条1項12号ロ</td><td>非居住者の役員報酬として源泉徴収義務あり。P社からの留守宅手当のうち、S社役員としての役務対価部分が対象</td></tr>
+    <tr><td>S社の<strong>使用人のみ</strong></td><td><strong>不要</strong></td><td>ー</td><td>非居住者の給与所得で、勤務地がタイのみであれば日本での源泉徴収は不要（短期滞在免税の適用がある場合を含む）</td></tr>
+  </table>
+
+  <div class="warn-box">
+    <div class="label">役員兼務の場合の留意点</div>
+    <p>出向者がS社の取締役を兼務している場合、P社が支給する留守宅手当のうちS社の役員としての職務に対応する部分は、<strong>国内源泉所得</strong>として20.42%の源泉徴収が必要となる（所法212条1項）。日タイ租税条約第15条（役員報酬条項）により、S社の役員としての報酬はタイが課税権を有するが、P社の支払時に日本での源泉徴収義務が発生する点に注意。</p>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<!-- ========== 8. PE認定 ========== -->
+<div class="card" id="pe">
+  <h2>8. PE認定リスク</h2>
+
+  <h3>8-1. P社のタイPE認定リスク</h3>
+  <p>出向者がP社の「代理人」としてタイで活動し、P社のために契約を締結する権限を有している場合、日タイ租税条約第5条第5項に基づき、P社のタイにおける<strong>恒久的施設（PE）</strong>が認定されるリスクがある。</p>
+
+  <table>
+    <tr><th>判断要素</th><th>PE認定の方向</th><th>PE非認定の方向</th></tr>
+    <tr><td>出向者の権限</td><td>P社名義で契約締結権限あり</td><td>S社の従業員として活動のみ</td></tr>
+    <tr><td>活動の独立性</td><td>P社の指示に従い活動</td><td>S社の指揮命令下で活動</td></tr>
+    <tr><td>代理人の性格</td><td>従属代理人（P社専属）</td><td>独立代理人（S社として自律）</td></tr>
+  </table>
+
+  <div class="success-box">
+    <div class="label">リスク評価</div>
+    <p>2020年以降S社が自律的に運営されている点、出向者がS社の指揮命令下で活動している点を踏まえると、P社のタイPE認定リスクは<strong>低い</strong>。ただし、出向者がP社の指示で営業活動を行い、P社名義で契約を締結している事実があれば、リスクは上昇する。</p>
+  </div>
+
+  <h3>8-2. S社の日本PE認定リスク</h3>
+  <p>逆に、S社がP社の元顧客に対して日本国内で販売活動を行っている場合（P社向け販売10%が日本市場向けの場合）、S社の日本PE認定リスクが生じうる。</p>
+
+  <ul>
+    <li>S社がP社を通じて日本顧客に販売している場合 → P社がS社の代理人として機能するか</li>
+    <li>P社が買取再販しているだけであれば、通常はPE認定リスクは低い</li>
+    <li>S社が直接日本の顧客と交渉・契約している場合 → リスク上昇</li>
+  </ul>
+
+  <div class="success-box">
+    <div class="label">リスク評価</div>
+    <p>P社向け販売（10%）がP社への卸売であり、P社がB社名義で日本国内の顧客に再販しているのであれば、S社の日本PE認定リスクは<strong>低い</strong>。ただし、S社が直接日本の最終顧客と契約し、P社が単なる物流拠点として機能している場合は、検討が必要。</p>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<!-- ========== 9. 対応策 ========== -->
+<div class="card" id="priority">
+  <h2>9. リスク優先順位と対応策</h2>
+
+  <h3>リスク優先順位（対応の緊急度順）</h3>
+  <table>
+    <tr><th>順位</th><th>リスク</th><th>緊急度</th><th>推奨対応策</th></tr>
+    <tr>
+      <td><strong>1</strong></td>
+      <td><strong>ロイヤリティ未収受</strong>（みなしライセンス・指針2-13）</td>
+      <td><span class="tag tag-danger">最優先</span></td>
+      <td>
+        <ul>
+          <li>P社・S社間で<strong>技術ライセンス契約</strong>を直ちに締結</li>
+          <li>ロイヤリティ料率：ゴム・化学分野の相場<strong>2-5%</strong>を参考に設定</li>
+          <li>DEMPE分析に基づくロイヤリティ料率の文書化</li>
+          <li>移転価格文書（ローカルファイル）にロイヤリティの算定根拠を記載</li>
+          <li>タイ側のロイヤリティ源泉税（日タイ条約15%上限）の処理も同時整備</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td><strong>2</strong></td>
+      <td><strong>顧客関連無形資産の無償移転</strong>（80%がP社元顧客）</td>
+      <td><span class="tag tag-danger">最優先</span></td>
+      <td>
+        <ul>
+          <li>顧客移管の実態を文書化（時期、態様、顧客数、売上規模）</li>
+          <li>移管対価の設定：<strong>コミッション方式</strong>（移管顧客売上の一定%）が現実的</li>
+          <li>ロイヤリティに包含する方法（技術+顧客の包括料率）も検討</li>
+          <li>過去の無償移転分について、事後的なコミッション支払いの可能性を検討</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td><strong>3</strong></td>
+      <td><strong>留守宅手当70%の較差超過</strong></td>
+      <td><span class="tag tag-warn">早急に</span></td>
+      <td>
+        <ul>
+          <li>較差の<strong>個別算定</strong>（出向前給与 − S社支給額 − 生活費差額等）</li>
+          <li>定率方式（70%）が較差の範囲内であることの<strong>検証と文書化</strong></li>
+          <li>超過している場合は留守宅手当の料率を<strong>引き下げ</strong></li>
+          <li>毎年の<strong>見直しプロセス</strong>を制度化（S社の給与水準変動を反映）</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td><strong>4</strong></td>
+      <td><strong>製品売買価格のALP</strong></td>
+      <td><span class="tag">通常</span></td>
+      <td>
+        <ul>
+          <li>内部CUP（第三者取引90%との比較）の文書化</li>
+          <li>差異調整の要否を検討し、ローカルファイルに記載</li>
+          <li>P社向け価格が第三者向けと乖離していなければリスクは限定的</li>
+        </ul>
+      </td>
+    </tr>
+  </table>
+
+  <h3>総合的な対応ロードマップ</h3>
+  <table>
+    <tr><th>時期</th><th>対応事項</th></tr>
+    <tr><td><strong>即時（1-3ヶ月）</strong></td><td>技術ライセンス契約の締結 ／ 較差補填の個別算定 ／ 顧客移管の実態調査</td></tr>
+    <tr><td><strong>短期（3-6ヶ月）</strong></td><td>移転価格文書（ローカルファイル）の整備 ／ ロイヤリティ料率の決定 ／ 顧客移管対価の設定</td></tr>
+    <tr><td><strong>中期（6-12ヶ月）</strong></td><td>CFC税制のリスク評価（BOI優遇状況の確認） ／ PE認定リスクの点検 ／ 出向契約の見直し</td></tr>
+    <tr><td><strong>継続</strong></td><td>年次レビュー（料率・較差の見直し） ／ 移転価格文書の更新 ／ 税制改正への対応</td></tr>
+  </table>
+
+  <div class="alert-box">
+    <div class="label">最重要メッセージ</div>
+    <p>本件の最大のリスクは、<strong>ロイヤリティ未収受</strong>と<strong>顧客関連無形資産の無償移転</strong>の2点に集中している。これらは税務調査で<strong>必ず</strong>指摘される事項であり、対応が遅れるほど過去の未収ロイヤリティの遡及課税リスクが拡大する。技術ライセンス契約の締結と顧客移管対価の設定を<strong>最優先で</strong>実施すべきである。製品売買価格（10%のP社向け販売）のALPは、内部CUPが豊富に存在するため、相対的にリスクは低い。</p>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<!-- ========== 10. 参照条文 ========== -->
+<div class="card" id="refs">
+  <h2>10. 参照条文・出典</h2>
+
+  <h3>法令</h3>
+  <table>
+    <tr><th>条文</th><th>内容</th></tr>
+    <tr><td>租税特別措置法66条の4</td><td>国外関連者との取引に係る課税の特例（移転価格税制）</td></tr>
+    <tr><td>租税特別措置法66条の4第3項</td><td>国外関連者に対する寄附金の損金不算入（全額損金不算入）</td></tr>
+    <tr><td>租税特別措置法66条の6</td><td>内国法人に係る特定外国子会社等の留保金額の合算課税（CFC税制）</td></tr>
+    <tr><td>法人税法37条</td><td>寄附金の損金不算入</td></tr>
+    <tr><td>所得税法212条</td><td>源泉徴収義務</td></tr>
+    <tr><td>所得税法161条1項12号ロ</td><td>非居住者の国内源泉所得（役員報酬）</td></tr>
+  </table>
+
+  <h3>通達・事務運営指針</h3>
+  <table>
+    <tr><th>通達・指針</th><th>内容</th></tr>
+    <tr><td>移転価格事務運営要領2-11</td><td>無形資産の範囲（取引先のネットワーク等を含む）</td></tr>
+    <tr><td>移転価格事務運営要領2-11ハ</td><td>「取引網等」の無形資産該当性</td></tr>
+    <tr><td>移転価格事務運営要領2-13</td><td>みなしライセンス（契約なくても取引を擬制）</td></tr>
+    <tr><td>法人税基本通達9-2-47</td><td>出向者に対する給与の較差補填</td></tr>
+  </table>
+
+  <h3>租税条約</h3>
+  <table>
+    <tr><th>条約</th><th>関連条項</th></tr>
+    <tr><td>日タイ租税条約第5条</td><td>恒久的施設（PE）の定義</td></tr>
+    <tr><td>日タイ租税条約第12条</td><td>使用料（ロイヤリティ）― 源泉地国課税15%上限</td></tr>
+    <tr><td>日タイ租税条約第15条</td><td>役員報酬</td></tr>
+  </table>
+
+  <h3>参考文献・判例</h3>
+  <ul>
+    <li>OECD移転価格ガイドライン第6章（無形資産に係る特別の考慮事項）</li>
+    <li>OECD移転価格ガイドライン第6章 DEMPEフレームワーク</li>
+    <li>判決11802号（出向者給与の較差補填・定率方式）</li>
+  </ul>
+</div>
+
+<!-- フッター -->
+<div style="text-align:center; padding: 20px 0; color: #999; font-size: 0.8em;">
+  作成日: 2026-03-16 ｜ ゴム製品製造タイ子会社 包括的法人税法分析
+</div>
+
+</div>
+</body>
+</html>
