@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>国外関連者寄附金と受贈益の整合性 ── 二国間税務処理の構造的矛盾</title>
+<style>
+  :root {
+    --primary: #1a365d;
+    --primary-light: #2c5282;
+    --accent: #c05621;
+    --accent-light: #ed8936;
+    --danger: #c53030;
+    --success: #276749;
+    --insight: #553c9a;
+    --bg: #f7fafc;
+    --card: #ffffff;
+    --border: #e2e8f0;
+    --text: #1a202c;
+    --text-light: #4a5568;
+    --text-muted: #718096;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "Noto Serif JP", "Georgia", serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.85;
+    font-size: 15px;
+  }
+  .container { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
+  header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: white;
+    padding: 3rem 2rem;
+    margin-bottom: 2rem;
+  }
+  header h1 { font-size: 1.7rem; margin-bottom: .5rem; line-height: 1.4; }
+  header .subtitle { font-size: 1rem; opacity: .85; }
+  header .meta { font-size: .85rem; opacity: .7; margin-top: 1rem; }
+
+  .card {
+    background: var(--card);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    padding: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
+  h2 {
+    font-size: 1.3rem;
+    color: var(--primary);
+    border-left: 4px solid var(--primary);
+    padding-left: .8rem;
+    margin-bottom: 1.2rem;
+  }
+  h3 {
+    font-size: 1.05rem;
+    color: var(--primary-light);
+    margin: 1.2rem 0 .6rem;
+  }
+  h4 {
+    font-size: .95rem;
+    color: var(--text);
+    margin: 1rem 0 .4rem;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: .9rem;
+  }
+  th, td { padding: .6rem .8rem; border: 1px solid var(--border); text-align: left; }
+  th { background: #edf2f7; font-weight: 600; color: var(--primary); }
+  td { vertical-align: top; }
+
+  .box { border-radius: 6px; padding: 1.2rem; margin: 1rem 0; }
+  .box-insight { background: #faf5ff; border-left: 4px solid var(--insight); }
+  .box-warning { background: #fffaf0; border-left: 4px solid var(--accent); }
+  .box-danger { background: #fff5f5; border-left: 4px solid var(--danger); }
+  .box-success { background: #f0fff4; border-left: 4px solid var(--success); }
+  .box-label { font-weight: 700; font-size: .85rem; text-transform: uppercase; letter-spacing: .05em; margin-bottom: .4rem; }
+  .box-insight .box-label { color: var(--insight); }
+  .box-warning .box-label { color: var(--accent); }
+  .box-danger .box-label { color: var(--danger); }
+  .box-success .box-label { color: var(--success); }
+
+  .journal {
+    background: #f7fafc;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem 1.2rem;
+    margin: 1rem 0;
+    font-family: "Noto Sans JP", sans-serif;
+    font-size: .9rem;
+  }
+  .journal-title { font-weight: 700; color: var(--primary); margin-bottom: .5rem; }
+  .journal table { margin: 0; }
+  .journal th { background: var(--primary); color: white; font-size: .8rem; }
+  .journal td { font-family: "Noto Sans JP", monospace; }
+  .dr, .cr { display: inline-block; min-width: 60px; text-align: right; font-weight: 600; }
+  .dr { color: var(--danger); }
+  .cr { color: var(--primary); }
+
+  .flow-diagram {
+    background: #f7fafc;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 1.2rem 0;
+    text-align: center;
+  }
+  .flow-diagram svg { max-width: 100%; height: auto; }
+
+  blockquote {
+    background: #f7fafc;
+    border-left: 3px solid var(--text-muted);
+    padding: .8rem 1rem;
+    margin: 1rem 0;
+    font-size: .9rem;
+    color: var(--text-light);
+  }
+
+  .toc { background: #edf2f7; border-radius: 6px; padding: 1.2rem 1.5rem; margin-bottom: 1.5rem; }
+  .toc h3 { margin-top: 0; color: var(--primary); }
+  .toc ol { padding-left: 1.2rem; }
+  .toc li { margin: .3rem 0; }
+  .toc a { color: var(--primary-light); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+
+  .ref { font-size: .85rem; color: var(--text-muted); }
+  .ref a { color: var(--primary-light); }
+
+  .badge {
+    display: inline-block;
+    padding: .15rem .5rem;
+    border-radius: 3px;
+    font-size: .75rem;
+    font-weight: 600;
+  }
+  .badge-ok { background: #c6f6d5; color: var(--success); }
+  .badge-ng { background: #fed7d7; color: var(--danger); }
+  .badge-warn { background: #fefcbf; color: #975a16; }
+
+  footer { text-align: center; padding: 2rem; color: var(--text-muted); font-size: .8rem; }
+
+  @media print {
+    body { font-size: 11pt; }
+    .card { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
+    header { background: var(--primary) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <h1>国外関連者寄附金と受贈益の整合性</h1>
+    <div class="subtitle">── 親会社の損金不算入とB社の受贈益は「対」になっているか</div>
+    <div class="meta">Deep Research Report | 2026-03-19 | 根拠法令・判例・OECD指針に基づく構造分析</div>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- 目次 -->
+<div class="toc">
+  <h3>目次</h3>
+  <ol>
+    <li><a href="#s1">問題の所在 ── 何が「整合的」か</a></li>
+    <li><a href="#s2">国内法における寄附金と受贈益の対応関係</a></li>
+    <li><a href="#s3">国際取引での対応関係の断絶</a></li>
+    <li><a href="#s4">仕訳で見る整合性 ── 4つのシナリオ</a></li>
+    <li><a href="#s5">OECD・租税条約上の位置づけ</a></li>
+    <li><a href="#s6">判例が示す現実</a></li>
+    <li><a href="#s7">構造的矛盾の全体像</a></li>
+    <li><a href="#s8">実務上の対応策</a></li>
+    <li><a href="#s9">結論</a></li>
+  </ol>
+</div>
+
+<!-- 1. 問題の所在 -->
+<div class="card" id="s1">
+  <h2>1. 問題の所在 ── 何が「整合的」か</h2>
+  <p>日本親会社が海外子会社B社の経費100を負担し、課税庁が国外関連者寄附金と認定した。このとき次の疑問が生じる。</p>
+
+  <div class="box box-warning">
+    <div class="box-label">核心的な問い</div>
+    <p>日本側で「寄附金（＝贈与・無償供与）」として損金不算入にした以上、B社側では「受贈益」を立てるのが論理的に対応するはず。<strong>しかし、この「対」は本当に成立しているのか？</strong></p>
+  </div>
+
+  <p>整合性を3つのレイヤーで検証する。</p>
+  <table>
+    <tr><th>レイヤー</th><th>検証内容</th></tr>
+    <tr><td><strong>会計上の整合性</strong></td><td>仕訳が借方・貸方で対をなすか</td></tr>
+    <tr><td><strong>税務上の整合性</strong></td><td>一方の損金不算入と他方の益金算入が税法上対応するか</td></tr>
+    <tr><td><strong>国際的整合性</strong></td><td>二国間で二重課税なく所得が配分されるか</td></tr>
+  </table>
+</div>
+
+<!-- 2. 国内法における対応関係 -->
+<div class="card" id="s2">
+  <h2>2. 国内法における寄附金と受贈益の対応関係</h2>
+
+  <h3>2.1 法人税法37条7項 ── 寄附金の定義</h3>
+  <blockquote>
+    「寄附金の額は、寄附金、拠出金、見舞金その他いずれの名義をもつてするかを問わず、内国法人が<strong>金銭その他の資産又は経済的な利益の贈与又は無償の供与</strong>をした場合における当該金銭の額若しくは金銭以外の資産のその贈与の時における価額又は当該経済的な利益のその供与の時における価額によるものとする。」
+  </blockquote>
+
+  <h3>2.2 法人税法25条の2 ── 受贈益の益金不算入（完全支配関係）</h3>
+  <p>完全支配関係がある<strong>国内法人間</strong>では、寄附金と受贈益の対応関係が明示的に制度化されている。</p>
+
+  <table>
+    <tr><th>条文</th><th>支出法人側</th><th>受領法人側</th><th>整合性</th></tr>
+    <tr>
+      <td>法人税法37条2項<br>＋25条の2</td>
+      <td>寄附金 → <strong>全額損金不算入</strong></td>
+      <td>受贈益 → <strong>全額益金不算入</strong></td>
+      <td><span class="badge badge-ok">整合</span></td>
+    </tr>
+  </table>
+
+  <div class="box box-success">
+    <div class="box-label">国内完全支配関係の制度設計</div>
+    <p>支出側で全額損金不算入、受領側で全額益金不算入。<strong>グループ内の資金移動を課税上「なかったこと」にする設計</strong>であり、二重課税も課税漏れも生じない。寄附金と受贈益の対応関係が完全に保たれている。</p>
+  </div>
+
+  <h3>2.3 国外関連者寄附金 ── 対応関係の断絶</h3>
+  <p>これに対し、国外関連者への寄附金（租特法66条の4第3項）では構造が根本的に異なる。</p>
+
+  <table>
+    <tr><th>条文</th><th>日本親会社側</th><th>海外子会社B側</th><th>整合性</th></tr>
+    <tr>
+      <td>租特法66条の4<br>第3項</td>
+      <td>寄附金 → <strong>全額損金不算入</strong></td>
+      <td><strong>日本法上の規定なし</strong><br>（B社所在国の税法に委ねられる）</td>
+      <td><span class="badge badge-ng">断絶</span></td>
+    </tr>
+  </table>
+
+  <h3>2.4 括弧書きの例外 ── PE保有外国法人のみ</h3>
+  <blockquote>
+    「恒久的施設を有する外国法人である国外関連者に対する寄附金の額で当該国外関連者の各事業年度の法人税法第百四十一条第一号イに掲げる国内源泉所得に係る所得の金額の計算上<strong>益金の額に算入されるもの</strong>を除く。」<br>
+    ── 租特法66条の4第3項括弧書き
+  </blockquote>
+  <p>B社が日本にPEを持ち、かつ当該寄附金がPE帰属所得として益金算入される場合<strong>のみ</strong>、損金不算入の対象から除外される。つまり、この括弧書きこそが「寄附金と受贈益の対応関係」の唯一の調整弁だが、<strong>PEを持たない通常の海外子会社には適用されない。</strong></p>
+</div>
+
+<!-- 3. 国際取引での対応関係の断絶 -->
+<div class="card" id="s3">
+  <h2>3. 国際取引での対応関係の断絶</h2>
+
+  <h3>3.1 制度比較 ── なぜ国際では断絶するか</h3>
+  <table>
+    <tr><th>項目</th><th>国内完全支配関係<br>（法37条2項＋25条の2）</th><th>国外関連者<br>（措法66条の4第3項）</th></tr>
+    <tr><td>支出側の処理</td><td>全額損金不算入</td><td>全額損金不算入</td></tr>
+    <tr><td>受領側の処理</td><td><strong>全額益金不算入</strong>（法25条の2）</td><td><strong>規定なし</strong>（相手国税法次第）</td></tr>
+    <tr><td>対応関係</td><td><span class="badge badge-ok">法律で保証</span></td><td><span class="badge badge-ng">保証なし</span></td></tr>
+    <tr><td>二重課税リスク</td><td>なし</td><td><strong>高い</strong></td></tr>
+    <tr><td>課税漏れリスク</td><td>なし</td><td><strong>あり得る</strong></td></tr>
+  </table>
+
+  <div class="box box-danger">
+    <div class="box-label">構造的問題</div>
+    <p>国内法は「自国の課税権の範囲内」でしか対応関係を設計できない。日本法がB社所在国に対して「受贈益を認識せよ（または認識するな）」と命じることは<strong>主権上不可能</strong>であり、ここに断絶が生じる。</p>
+  </div>
+
+  <h3>3.2 移転価格課税との決定的な違い</h3>
+  <table>
+    <tr><th></th><th>移転価格課税<br>（措法66条の4第1項）</th><th>国外関連者寄附金課税<br>（同第3項）</th></tr>
+    <tr><td>課税の根拠</td><td>独立企業間価格との<strong>乖離</strong></td><td>対価性の<strong>不存在</strong></td></tr>
+    <tr><td>条約上の根拠</td><td>OECD モデル<strong>9条1項</strong></td><td><strong>なし</strong>（国内法固有）</td></tr>
+    <tr><td>対応的調整</td><td>9条2項で<strong>義務的</strong></td><td><strong>対象外</strong></td></tr>
+    <tr><td>相互協議（MAP）</td><td><strong>対象</strong></td><td><strong>対象外</strong>（実務慣行）</td></tr>
+    <tr><td>二重課税解消</td><td><strong>可能</strong></td><td><strong>極めて困難</strong></td></tr>
+  </table>
+
+  <div class="box box-insight">
+    <div class="box-label">本質的な違い</div>
+    <p>移転価格課税は「二国間で所得をどう配分するか」の問題であり、条約で調整メカニズムが用意されている。一方、寄附金課税は「一方的な無償供与の否認」であり、<strong>そもそも二国間で配分すべき「所得」が存在しない</strong>と整理されるため、条約の調整メカニズムの射程外に置かれる。</p>
+  </div>
+</div>
+
+<!-- 4. 仕訳で見る整合性 -->
+<div class="card" id="s4">
+  <h2>4. 仕訳で見る整合性 ── 4つのシナリオ</h2>
+
+  <p>日本親会社がB社の経費100を負担した場合に生じ得る4つのシナリオを、仕訳レベルで検証する。</p>
+
+  <h3>シナリオ1：B社が受贈益を計上し、B社所在国で課税される場合</h3>
+  <div class="journal">
+    <div class="journal-title">日本親会社（税務調整後）</div>
+    <table>
+      <tr><th>科目</th><th>借方</th><th>科目</th><th>貸方</th></tr>
+      <tr><td>寄附金（損金不算入）</td><td class="dr">100</td><td>現金預金</td><td class="cr">100</td></tr>
+    </table>
+    <p style="font-size:.85rem;color:var(--text-muted);margin-top:.3rem;">税務上：所得加算100（全額損金不算入）</p>
+  </div>
+  <div class="journal">
+    <div class="journal-title">B社（海外子会社）</div>
+    <table>
+      <tr><th>科目</th><th>借方</th><th>科目</th><th>貸方</th></tr>
+      <tr><td>○○費用</td><td class="dr">100</td><td>受贈益</td><td class="cr">100</td></tr>
+    </table>
+    <p style="font-size:.85rem;color:var(--text-muted);margin-top:.3rem;">B社所在国で受贈益100が課税所得に算入される場合</p>
+  </div>
+  <div class="box box-danger">
+    <div class="box-label">結果：経済的二重課税</div>
+    <p>同じ100に対して日本で損金不算入（＝課税）、B社所在国で受贈益課税。<strong>二重課税が固定化し、対応的調整による解消手段がない。</strong></p>
+  </div>
+
+  <h3>シナリオ2：B社が受贈益を計上するが、B社所在国で非課税扱いの場合</h3>
+  <div class="journal">
+    <div class="journal-title">B社（海外子会社）</div>
+    <table>
+      <tr><th>科目</th><th>借方</th><th>科目</th><th>貸方</th></tr>
+      <tr><td>○○費用</td><td class="dr">100</td><td>受贈益（非課税）</td><td class="cr">100</td></tr>
+    </table>
+    <p style="font-size:.85rem;color:var(--text-muted);margin-top:.3rem;">B社所在国が親会社からの受贈益を資本的取引等として非課税扱いとする場合</p>
+  </div>
+  <div class="box box-warning">
+    <div class="box-label">結果：日本のみ課税（片面的不整合）</div>
+    <p>日本側で100が損金不算入（課税所得+100）だが、B社側では非課税。<strong>会計上の対応関係はあるが、税務上は片面的。</strong>日本からの所得流出を防ぐという措法66条の4第3項の立法趣旨からは整合的だが、グループ全体では過剰課税。</p>
+  </div>
+
+  <h3>シナリオ3：B社が受贈益を計上しない場合</h3>
+  <div class="journal">
+    <div class="journal-title">B社（海外子会社）</div>
+    <table>
+      <tr><th>科目</th><th>借方</th><th>科目</th><th>貸方</th></tr>
+      <tr><td colspan="4" style="text-align:center;color:var(--text-muted);">（仕訳なし ── B社は経費負担の事実を認識していない）</td></tr>
+    </table>
+  </div>
+  <div class="box box-warning">
+    <div class="box-label">結果：会計上も税務上も不整合</div>
+    <p>日本側では「B社への贈与」と認定しているのに、B社側では何も認識していない。<strong>贈与の一方当事者のみが認識し、他方が認識しないという論理矛盾</strong>が生じる。しかし、日本の課税庁の認定がB社所在国を拘束する法的根拠はない。</p>
+  </div>
+
+  <h3>シナリオ4：B社が既に未払金を計上済みで、債務免除として処理する場合</h3>
+  <div class="journal">
+    <div class="journal-title">B社 ── 既存仕訳（経費計上時）</div>
+    <table>
+      <tr><th>科目</th><th>借方</th><th>科目</th><th>貸方</th></tr>
+      <tr><td>○○費用</td><td class="dr">100</td><td>未払金（親会社）</td><td class="cr">100</td></tr>
+    </table>
+  </div>
+  <div class="journal">
+    <div class="journal-title">B社 ── 寄附金認定後の追加仕訳</div>
+    <table>
+      <tr><th>科目</th><th>借方</th><th>科目</th><th>貸方</th></tr>
+      <tr><td>未払金（親会社）</td><td class="dr">100</td><td>債務免除益</td><td class="cr">100</td></tr>
+    </table>
+    <p style="font-size:.85rem;color:var(--text-muted);margin-top:.3rem;">親会社からの債権放棄として処理。課税関係はB社所在国の税法による。</p>
+  </div>
+
+  <h3>4つのシナリオの比較</h3>
+  <table>
+    <tr><th>シナリオ</th><th>日本側</th><th>B社側</th><th>会計上</th><th>税務上</th><th>二重課税</th></tr>
+    <tr>
+      <td>1. 受贈益＋課税</td>
+      <td>損金不算入</td>
+      <td>受贈益課税</td>
+      <td><span class="badge badge-ok">整合</span></td>
+      <td><span class="badge badge-ng">不整合</span></td>
+      <td><strong>あり</strong></td>
+    </tr>
+    <tr>
+      <td>2. 受贈益＋非課税</td>
+      <td>損金不算入</td>
+      <td>受贈益非課税</td>
+      <td><span class="badge badge-ok">整合</span></td>
+      <td><span class="badge badge-warn">片面的</span></td>
+      <td>片面</td>
+    </tr>
+    <tr>
+      <td>3. 認識なし</td>
+      <td>損金不算入</td>
+      <td>仕訳なし</td>
+      <td><span class="badge badge-ng">不整合</span></td>
+      <td><span class="badge badge-ng">不整合</span></td>
+      <td>片面</td>
+    </tr>
+    <tr>
+      <td>4. 債務免除</td>
+      <td>損金不算入</td>
+      <td>債務免除益</td>
+      <td><span class="badge badge-ok">整合</span></td>
+      <td><span class="badge badge-warn">国次第</span></td>
+      <td>国次第</td>
+    </tr>
+  </table>
+
+  <div class="box box-insight">
+    <div class="box-label">核心的発見</div>
+    <p><strong>会計上の整合性と税務上の整合性は別問題である。</strong>B社が受贈益を計上すれば会計上は「対」になるが、それが二重課税を生むか否かはB社所在国の税法次第であり、日本法が制御できる範囲を超えている。どのシナリオでも税務上の完全な整合性は達成されない。</p>
+  </div>
+</div>
+
+<!-- 5. OECD・租税条約 -->
+<div class="card" id="s5">
+  <h2>5. OECD・租税条約上の位置づけ</h2>
+
+  <h3>5.1 OECDモデル租税条約9条（特殊関連企業条項）</h3>
+  <h4>第1項 ── 移転価格調整の根拠</h4>
+  <blockquote>
+    「両締約国の企業間の取引条件が独立企業間の条件と異なる場合、一方の締約国は、その差額を当該企業の利得に算入することができる。」
+  </blockquote>
+  <p>→ 「取引条件の差額」が対象であり、<strong>「無償供与」は射程外</strong>と解される。</p>
+
+  <h4>第2項 ── 対応的調整</h4>
+  <blockquote>
+    「一方の締約国が第1項の調整を行った場合、他方の締約国は、二重課税を排除するために適当な調整を行う。」
+  </blockquote>
+  <p>→ 第1項の調整（＝移転価格調整）に対する対応的調整であり、<strong>寄附金課税は第1項に基づく調整ではないため、第2項の対応的調整も発動しない。</strong></p>
+
+  <h3>5.2 OECD移転価格ガイドライン（2022年版）の沈黙</h3>
+  <p>OECD移転価格ガイドラインは、関連者間取引の独立企業間価格設定を対象としている。「寄附金」「無償供与」「donation」「gift」「gratuitous transfer」について<strong>明示的な記載がない</strong>。</p>
+
+  <div class="box box-insight">
+    <div class="box-label">OECDの整理</div>
+    <p>OECDは、対価を伴う取引（＝独立企業間価格で測定可能）のみを移転価格の対象としている。「対価なき供与」は各国の国内法（寄附金税制）に委ね、国際的な調整メカニズムの対象外としている。<strong>これが「整合性の断絶」の制度的根源。</strong></p>
+  </div>
+
+  <h3>5.3 相互協議（MAP）の限界</h3>
+  <table>
+    <tr><th>論点</th><th>移転価格課税の場合</th><th>寄附金課税の場合</th></tr>
+    <tr>
+      <td>MAP申立ての根拠</td>
+      <td>条約9条1項に適合しない課税</td>
+      <td><strong>条約上の根拠規定がない</strong></td>
+    </tr>
+    <tr>
+      <td>相手国の対応義務</td>
+      <td>9条2項で「調整を行う」</td>
+      <td><strong>義務なし</strong></td>
+    </tr>
+    <tr>
+      <td>実務上の運用</td>
+      <td>日本の国税庁相互協議室が対応</td>
+      <td><strong>寄附金認定は国内法事項として<br>MAP対象外とする実務慣行</strong></td>
+    </tr>
+  </table>
+</div>
+
+<!-- 6. 判例が示す現実 -->
+<div class="card" id="s6">
+  <h2>6. 判例が示す現実</h2>
+
+  <h3>6.1 判決11252/11405 ── F1エンジン事業（229億円）</h3>
+  <table>
+    <tr><th>項目</th><th>内容</th></tr>
+    <tr><td>事案</td><td>日本の有限会社Aがオランダ法人C社（乙100%出資）に229億2,500万円を資金提供・債権放棄</td></tr>
+    <tr><td>日本側</td><td>国外関連者寄附金として<strong>全額損金不算入</strong>。追徴税額約55億円（2事業年度）</td></tr>
+    <tr><td>オランダ側</td><td><strong>判決中に記載なし</strong>。対応的調整・相互協議の議論も一切なし</td></tr>
+    <tr><td>二重課税</td><td>解消手段なく<strong>固定化</strong></td></tr>
+  </table>
+
+  <div class="box box-danger">
+    <div class="box-label">判例が示す現実</div>
+    <p>229億円の寄附金認定事案において、オランダ側での処理（受贈益の認識の有無、課税の有無）は<strong>一切検討されていない</strong>。これは、国外関連者寄附金課税が本質的に「一国の課税権行使」であり、二国間の整合性が制度設計上考慮されていないことを端的に示している。</p>
+  </div>
+
+  <h3>6.2 課税庁が寄附金課税を選好する理由</h3>
+  <table>
+    <tr><th>理由</th><th>説明</th></tr>
+    <tr>
+      <td><strong>立証負担の軽さ</strong></td>
+      <td>移転価格課税：独立企業間価格の算定が必要<br>寄附金課税：「対価性の不存在」＋「合理的理由の不存在」のみ</td>
+    </tr>
+    <tr>
+      <td><strong>否認範囲の広さ</strong></td>
+      <td>移転価格：独立企業間価格との<em>差額</em>のみ否認<br>寄附金：<strong>全額</strong>損金不算入（限度額なし）</td>
+    </tr>
+    <tr>
+      <td><strong>相互協議の回避</strong></td>
+      <td>移転価格課税にすると相互協議で相手国に所得を渡す可能性あり<br>寄附金課税なら日本の課税権を100%確保</td>
+    </tr>
+  </table>
+
+  <div class="box box-warning">
+    <div class="box-label">納税者にとっての含意</div>
+    <p>課税庁にとって、寄附金認定は移転価格課税より「効率的」である。しかし、その代償として納税者側に<strong>解消不能な二重課税リスク</strong>が転嫁される構造になっている。</p>
+  </div>
+</div>
+
+<!-- 7. 構造的矛盾の全体像 -->
+<div class="card" id="s7">
+  <h2>7. 構造的矛盾の全体像</h2>
+
+  <div class="flow-diagram">
+    <svg viewBox="0 0 800 520" xmlns="http://www.w3.org/2000/svg">
+      <!-- 背景 -->
+      <rect x="0" y="0" width="800" height="520" fill="#f7fafc" rx="8"/>
+
+      <!-- 日本側 -->
+      <rect x="30" y="30" width="350" height="460" fill="#ebf8ff" rx="6" stroke="#2c5282" stroke-width="1.5"/>
+      <text x="205" y="58" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a365d">日本</text>
+
+      <!-- 相手国側 -->
+      <rect x="420" y="30" width="350" height="460" fill="#fefcbf" rx="6" stroke="#975a16" stroke-width="1.5"/>
+      <text x="595" y="58" text-anchor="middle" font-size="14" font-weight="bold" fill="#744210">B社所在国</text>
+
+      <!-- 親会社ボックス -->
+      <rect x="60" y="80" width="290" height="60" fill="white" rx="4" stroke="#2c5282" stroke-width="1.5"/>
+      <text x="205" y="105" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a365d">日本親会社</text>
+      <text x="205" y="125" text-anchor="middle" font-size="11" fill="#4a5568">B社の経費100を負担</text>
+
+      <!-- B社ボックス -->
+      <rect x="450" y="80" width="290" height="60" fill="white" rx="4" stroke="#975a16" stroke-width="1.5"/>
+      <text x="595" y="105" text-anchor="middle" font-size="13" font-weight="bold" fill="#744210">海外子会社B社</text>
+      <text x="595" y="125" text-anchor="middle" font-size="11" fill="#4a5568">経費100の負担を受ける</text>
+
+      <!-- 矢印: 経費負担 -->
+      <line x1="350" y1="110" x2="450" y2="110" stroke="#718096" stroke-width="2" marker-end="url(#arrow)"/>
+      <text x="400" y="100" text-anchor="middle" font-size="10" fill="#718096">経費負担100</text>
+
+      <!-- 課税庁認定 -->
+      <rect x="60" y="170" width="290" height="50" fill="#fff5f5" rx="4" stroke="#c53030" stroke-width="1.5"/>
+      <text x="205" y="192" text-anchor="middle" font-size="12" font-weight="bold" fill="#c53030">課税庁：国外関連者寄附金と認定</text>
+      <text x="205" y="210" text-anchor="middle" font-size="11" fill="#c53030">全額損金不算入（所得+100）</text>
+
+      <!-- B社側の3パターン -->
+      <rect x="450" y="170" width="290" height="30" fill="#fefcbf" rx="3"/>
+      <text x="595" y="191" text-anchor="middle" font-size="11" font-weight="bold" fill="#744210">B社所在国の処理は？</text>
+
+      <!-- パターンA -->
+      <rect x="450" y="210" width="290" height="40" fill="white" rx="3" stroke="#c53030" stroke-width="1"/>
+      <text x="460" y="228" font-size="10" fill="#c53030">A: 受贈益100を課税 → 二重課税</text>
+      <text x="460" y="243" font-size="9" fill="#718096">　 日本+100, B国+100 = 200の課税ベース</text>
+
+      <!-- パターンB -->
+      <rect x="450" y="260" width="290" height="40" fill="white" rx="3" stroke="#d69e2e" stroke-width="1"/>
+      <text x="460" y="278" font-size="10" fill="#975a16">B: 受贈益100を非課税 → 片面課税</text>
+      <text x="460" y="293" font-size="9" fill="#718096">　 日本+100のみ（立法趣旨からは整合）</text>
+
+      <!-- パターンC -->
+      <rect x="450" y="310" width="290" height="40" fill="white" rx="3" stroke="#d69e2e" stroke-width="1"/>
+      <text x="460" y="328" font-size="10" fill="#975a16">C: 受贈益の認識なし → 論理矛盾</text>
+      <text x="460" y="343" font-size="9" fill="#718096">　 日本は「贈与」認定、B社は認識せず</text>
+
+      <!-- 中央の壁 -->
+      <line x1="410" y1="160" x2="410" y2="470" stroke="#c53030" stroke-width="2" stroke-dasharray="6,4"/>
+      <text x="410" y="395" text-anchor="middle" font-size="10" fill="#c53030" transform="rotate(-90,410,395)">主権の壁 ── 日本法はB社所在国を拘束できない</text>
+
+      <!-- 下部：対応的調整 -->
+      <rect x="100" y="420" width="600" height="55" fill="#fff5f5" rx="4" stroke="#c53030" stroke-width="1" stroke-dasharray="4,2"/>
+      <text x="400" y="442" text-anchor="middle" font-size="12" font-weight="bold" fill="#c53030">対応的調整メカニズム</text>
+      <text x="400" y="460" text-anchor="middle" font-size="11" fill="#c53030">移転価格課税 → 条約9条2項で対応 ✓　｜　寄附金課税 → 対応規定なし ✗</text>
+
+      <!-- 矢印マーカー -->
+      <defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#718096"/></marker></defs>
+    </svg>
+  </div>
+</div>
+
+<!-- 8. 実務上の対応策 -->
+<div class="card" id="s8">
+  <h2>8. 実務上の対応策</h2>
+
+  <h3>8.1 事前の防御 ── 寄附金認定を回避する</h3>
+  <table>
+    <tr><th>対策</th><th>内容</th><th>効果</th></tr>
+    <tr>
+      <td><strong>経費負担契約の整備</strong></td>
+      <td>Cost Contribution Arrangement（CCA）やサービス契約を締結し、対価性を明確化</td>
+      <td>「無償供与」ではなく「有償取引」の土俵に持ち込む</td>
+    </tr>
+    <tr>
+      <td><strong>独立企業間価格の文書化</strong></td>
+      <td>移転価格文書（ローカルファイル）で経費負担の合理性を立証</td>
+      <td>寄附金認定ではなく移転価格課税の土俵に → MAP利用可能に</td>
+    </tr>
+    <tr>
+      <td><strong>経営上の合理的理由の記録</strong></td>
+      <td>取締役会議事録等で、B社支援の事業上の合理性を事前に文書化</td>
+      <td>「通常の経済取引として是認できる合理的理由」の立証準備</td>
+    </tr>
+  </table>
+
+  <h3>8.2 事後の対応 ── 寄附金認定を受けた場合</h3>
+  <table>
+    <tr><th>対応</th><th>内容</th><th>実効性</th></tr>
+    <tr>
+      <td><strong>不服申立て</strong></td>
+      <td>寄附金認定自体を争い、移転価格課税への変更を主張</td>
+      <td><span class="badge badge-warn">中</span>　認定が覆る可能性は低いが、試みる価値あり</td>
+    </tr>
+    <tr>
+      <td><strong>MAP申立て（25条）</strong></td>
+      <td>条約25条1項に基づき「条約に適合しない課税」としてMAP申立て</td>
+      <td><span class="badge badge-ng">低</span>　寄附金課税はMAP対象外とする実務慣行あり</td>
+    </tr>
+    <tr>
+      <td><strong>B社所在国での申告調整</strong></td>
+      <td>B社側で受贈益を認識し、所在国の控除・免除規定を活用</td>
+      <td><span class="badge badge-warn">国次第</span>　親会社からの資本的贈与として非課税扱いできる国もある</td>
+    </tr>
+  </table>
+
+  <div class="box box-success">
+    <div class="box-label">最重要ポイント</div>
+    <p>事後の対応には限界がある。<strong>最も有効な対策は、そもそも寄附金認定を受けないこと</strong>、すなわち取引に対価性と合理的理由を持たせ、「移転価格の土俵」で戦える態勢を整えておくことである。移転価格課税であれば、対応的調整と相互協議による二重課税解消の道が開かれる。</p>
+  </div>
+</div>
+
+<!-- 9. 結論 -->
+<div class="card" id="s9">
+  <h2>9. 結論</h2>
+
+  <h3>「整合性は取れているのか」への回答</h3>
+
+  <table>
+    <tr><th>レイヤー</th><th>評価</th><th>説明</th></tr>
+    <tr>
+      <td><strong>会計上</strong></td>
+      <td><span class="badge badge-ok">整合可能</span></td>
+      <td>B社が受贈益（又は債務免除益）を計上すれば、贈与の「出し手」と「受け手」が会計上対応する。</td>
+    </tr>
+    <tr>
+      <td><strong>日本税法上</strong></td>
+      <td><span class="badge badge-warn">片面的</span></td>
+      <td>日本法は自国側の損金不算入のみ規定し、B社側の処理は制度の射程外。措法66条の4第3項は「日本からの所得流出阻止」が目的であり、二国間の整合性は設計思想に含まれていない。</td>
+    </tr>
+    <tr>
+      <td><strong>国際税務上</strong></td>
+      <td><span class="badge badge-ng">不整合</span></td>
+      <td>寄附金課税には条約上の対応的調整メカニズムがなく、二国間の課税が整合する保証がない。B社所在国が受贈益を課税すれば二重課税、課税しなければ片面課税。いずれにせよ「整合」とは言えない。</td>
+    </tr>
+  </table>
+
+  <div class="box box-insight">
+    <div class="box-label">本DRの結論</div>
+    <p>日本親会社の寄附金損金不算入とB社の受贈益は、<strong>会計上は対応するが、税務上は構造的に不整合</strong>である。この不整合は制度設計に内在するものであり、個別企業の処理で解消できる性質のものではない。</p>
+    <p style="margin-top:.8rem;">根本的原因は、国外関連者寄附金課税が<strong>移転価格税制の調整メカニズム（条約9条2項・MAP）から切り離された「一国完結型の課税」</strong>であることにある。国内の完全支配関係（法37条2項＋25条の2）では寄附金と受贈益の対応関係が制度的に保証されているのに対し、国際取引では主権の壁により同様の保証が不可能となっている。</p>
+  </div>
+</div>
+
+<!-- 出典 -->
+<div class="card">
+  <h2>出典・参照法令</h2>
+  <table class="ref">
+    <tr><th>種別</th><th>出典</th></tr>
+    <tr><td>法令</td><td>租税特別措置法66条の4第3項（国外関連者寄附金の損金不算入）</td></tr>
+    <tr><td>法令</td><td>法人税法37条（寄附金の損金不算入）、同条7項（定義）、同条2項（完全支配関係）</td></tr>
+    <tr><td>法令</td><td>法人税法25条の2（受贈益の益金不算入・完全支配関係）</td></tr>
+    <tr><td>判例</td><td>東京地裁平成21年7月29日判決（判決11252） ── F1エンジン資金提供事件</td></tr>
+    <tr><td>判例</td><td>東京高裁平成22年3月25日判決（判決11405） ── 同控訴審</td></tr>
+    <tr><td>行政</td><td>国税庁 移転価格事務運営要領 別冊事例28（国外関連者寄附金）</td></tr>
+    <tr><td>OECD</td><td>OECDモデル租税条約 第9条（特殊関連企業条項）</td></tr>
+    <tr><td>OECD</td><td>OECD移転価格ガイドライン（2022年版）第4章 para 4.29-4.39</td></tr>
+    <tr><td>論文</td><td>石井孝「課税対象金額計算の問題点」税務大学校論叢83号</td></tr>
+  </table>
+</div>
+
+</div>
+
+<footer>
+  <p>Deep Research Report | 2026-03-19</p>
+</footer>
+
+</body>
+</html>
