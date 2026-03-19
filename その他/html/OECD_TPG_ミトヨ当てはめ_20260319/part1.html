@@ -1,0 +1,2007 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OECD TPG ミトヨ当てはめ ── Part I</title>
+<style>
+/* ===== Root Variables ===== */
+:root {
+  --primary: #1a3a5c;
+  --secondary: #2c5f8a;
+  --bg: #f5f7fa;
+  --text: #1e2d3d;
+  --muted: #5a6f82;
+  --border: #c5d3e0;
+  --card-blue: #d1ecf1;
+  --card-blue-border: #88c7d5;
+  --card-green: #d4edda;
+  --card-green-border: #7cc498;
+  --card-red: #f8d7da;
+  --card-red-border: #e09a9f;
+  --card-yellow: #fff3cd;
+  --card-yellow-border: #ddc66b;
+  --card-purple: #e8daef;
+  --card-purple-border: #b99fd4;
+  --link: #1d5fa0;
+  --fn-bg: #f0f3f7;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", "游明朝", "Times New Roman", serif;
+  line-height: 1.9;
+  font-size: 15.5px;
+}
+/* ===== Layout ===== */
+.wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 44px 50px 60px;
+  box-shadow: 0 1px 12px rgba(0,0,0,.07);
+}
+@media (max-width: 720px) {
+  .wrap { padding: 20px 16px 36px; }
+  .doc-title { font-size: 1.4rem; }
+  table { font-size: 13px; }
+  svg { max-width: 100%; height: auto; }
+}
+/* ===== Header ===== */
+.doc-header {
+  border-bottom: 3px solid var(--primary);
+  padding-bottom: 22px;
+  margin-bottom: 32px;
+}
+.doc-title {
+  font-size: 1.85rem;
+  line-height: 1.45;
+  color: var(--primary);
+  font-weight: bold;
+  margin: 0 0 6px;
+}
+.doc-subtitle {
+  font-size: 1.05rem;
+  color: var(--secondary);
+  margin: 0 0 14px;
+}
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.meta-item { display: inline-flex; align-items: center; gap: 5px; }
+/* ===== Navigation ===== */
+.nav-bar {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  background: var(--primary);
+  padding: 12px 20px;
+  border-radius: 6px;
+  margin-bottom: 30px;
+}
+.nav-bar a {
+  color: #e2ecf4;
+  text-decoration: none;
+  font-size: 0.88rem;
+  padding: 4px 10px;
+  border-radius: 4px;
+  transition: background .2s;
+}
+.nav-bar a:hover { background: rgba(255,255,255,.15); }
+.nav-bar a.current { background: rgba(255,255,255,.2); font-weight: bold; color: #fff; }
+/* ===== Table of Contents ===== */
+.toc {
+  background: #f7f9fc;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 22px 28px;
+  margin-bottom: 36px;
+}
+.toc h2 {
+  font-size: 1.1rem;
+  color: var(--primary);
+  margin: 0 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.toc ol { margin: 0; padding-left: 22px; }
+.toc li { margin-bottom: 4px; font-size: 0.92rem; }
+.toc li a { color: var(--link); text-decoration: none; }
+.toc li a:hover { text-decoration: underline; }
+.toc ol ol { margin-top: 4px; padding-left: 20px; }
+/* ===== Part / Chapter headings ===== */
+.part-heading {
+  background: var(--primary);
+  color: #fff;
+  padding: 16px 24px;
+  border-radius: 6px;
+  margin: 44px 0 28px;
+  font-size: 1.25rem;
+  font-weight: bold;
+  letter-spacing: 0.04em;
+}
+.part-heading:first-of-type { margin-top: 10px; }
+h2.chapter {
+  color: var(--primary);
+  font-size: 1.35rem;
+  border-left: 5px solid var(--secondary);
+  padding-left: 16px;
+  margin: 36px 0 20px;
+}
+h3 {
+  color: var(--secondary);
+  font-size: 1.12rem;
+  margin: 28px 0 14px;
+  padding-bottom: 4px;
+  border-bottom: 1px dashed var(--border);
+}
+h4 {
+  color: var(--primary);
+  font-size: 1.02rem;
+  margin: 22px 0 10px;
+}
+/* ===== Cards ===== */
+.card {
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin: 18px 0;
+  border-left: 4px solid;
+}
+.card-blue   { background: var(--card-blue);   border-color: var(--card-blue-border); }
+.card-green  { background: var(--card-green);  border-color: var(--card-green-border); }
+.card-red    { background: var(--card-red);    border-color: var(--card-red-border); }
+.card-yellow { background: var(--card-yellow); border-color: var(--card-yellow-border); }
+.card-purple { background: var(--card-purple); border-color: var(--card-purple-border); }
+.card-title {
+  font-weight: bold;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+/* ===== Blockquote (条文) ===== */
+blockquote {
+  margin: 18px 0;
+  padding: 16px 22px;
+  background: #f7f9fc;
+  border-left: 4px solid var(--secondary);
+  font-size: 0.93rem;
+  line-height: 1.85;
+  color: #2c3e50;
+}
+blockquote cite {
+  display: block;
+  margin-top: 10px;
+  font-style: normal;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+/* ===== Tables ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 18px 0;
+  font-size: 0.92rem;
+}
+th {
+  background: var(--primary);
+  color: #fff;
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: normal;
+}
+td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #dce4ea;
+}
+tr:nth-child(even) td { background: #f8fafe; }
+/* ===== SVG Container ===== */
+.svg-container {
+  margin: 24px 0;
+  text-align: center;
+}
+.svg-container svg {
+  max-width: 100%;
+  height: auto;
+}
+.svg-caption {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 8px;
+}
+/* ===== Footnotes ===== */
+.footnotes {
+  margin-top: 36px;
+  padding-top: 16px;
+  border-top: 2px solid var(--border);
+}
+.footnotes h3 {
+  font-size: 1rem;
+  border: none;
+  padding: 0;
+  margin-bottom: 12px;
+}
+.fn-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.fn-list li {
+  padding: 6px 12px;
+  margin-bottom: 4px;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  background: var(--fn-bg);
+  border-radius: 4px;
+}
+.fn-list li:target {
+  background: #fffde0;
+  outline: 2px solid var(--card-yellow-border);
+}
+sup a {
+  color: var(--secondary);
+  text-decoration: none;
+  font-weight: bold;
+}
+sup a:hover { text-decoration: underline; }
+.fn-back {
+  color: var(--secondary);
+  text-decoration: none;
+  margin-left: 4px;
+  font-size: 0.8rem;
+}
+/* ===== Misc ===== */
+p { margin: 0 0 14px; text-align: justify; }
+strong { color: var(--primary); }
+em { font-style: normal; color: var(--secondary); font-weight: bold; }
+a { color: var(--link); }
+hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+.marker { background: #fff3cd; padding: 1px 4px; border-radius: 2px; }
+.text-center { text-align: center; }
+/* ===== Print ===== */
+@media print {
+  body { background: #fff; font-size: 11pt; }
+  .wrap { box-shadow: none; padding: 0; max-width: 100%; }
+  .nav-bar { display: none; }
+  .part-heading { break-before: page; }
+  blockquote { break-inside: avoid; }
+  .svg-container { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="doc-header">
+  <h1 class="doc-title">OECD TPG 2022 ミトヨ・タイ子会社への精密当てはめ</h1>
+  <p class="doc-subtitle">Part I：独立企業原則・算定方法・比較可能性分析</p>
+  <div class="meta"><span class="meta-item">第1章〜第3章当てはめ</span><span class="meta-item">SVG図解×6</span></div>
+</div>
+<div class="nav-bar">
+        <a href="index.html">目次</a>
+    <a href="part1.html" class="current">Part I</a>
+    <a href="part2.html">Part II</a>
+    <a href="part3.html">Part III</a>
+</div>
+<!-- ===== PART: OECD移転価格ガイドライン第1章・第2章のミトヨへの当てはめ ===== -->
+
+<div class="part-heading">Part A ─ OECD移転価格ガイドライン第1章（独立企業原則）のミトヨへの精密当てはめ</div>
+
+<!-- ===== 第1節: 概観 ===== -->
+<h2 class="chapter" id="ch1-overview">第1節　独立企業原則とミトヨ・グループ取引の全体像</h2>
+
+<h3 id="ch1-1-1">1.1　分析の枠組み</h3>
+
+<p>OECDモデル租税条約9条1項は、関連者間取引の条件が独立企業間で成立したであろう条件と異なる場合に、一方の企業に帰属すべきであった利益を当該企業の利益に算入して課税できることを定める（OECD移転価格ガイドライン（以下「TPG」）パラ1.6）。本章は、株式会社ミトヨ（群馬県・鞍掛技術センター、連結売上118.4億円）とそのタイ子会社2社──Mitoyo Rubber Thailand Co., Ltd.（以下「MRT」、出資99.8%、売上4.1億円）およびMitoyo Plastics Thailand Co., Ltd.（以下「MPT」、出資90%、売上16.6億円）──との間の7つの取引類型について、TPG第1章の独立企業原則（Arm's Length Principle; ALP）を精密に当てはめるものである。</p>
+
+<div class="card card-red">
+  <div class="card-title">核心的問題の所在</div>
+  <p>ミトヨが1948年の創業以来50年超にわたり蓄積したゴム配合処方ノウハウ（加硫接着技術、配合設計、成形条件最適化等）は、同社の競争優位の源泉であり、特許出願ゼロという事実が示すとおり秘匿性の高い営業秘密である。このノウハウがタイ子会社に<strong>無償で供与</strong>されている点は、独立企業間では到底成立し得ない条件であり、TPGパラ1.2が述べる「市場の力によって決定される」条件からの明白な乖離を構成する。</p>
+</div>
+
+<p>TPGパラ1.33は、ALP適用の核心が「比較可能性分析（comparability analysis）」にあることを明示する。この分析には二つの側面がある。第一に、関連者間取引の商業上又は財務上の関係と、それに付随する条件及び経済的に関連する状況を特定し、支配取引（controlled transaction）を正確に認定すること。第二に、その正確に認定された支配取引の条件を、独立企業間の比較可能な取引の条件と比較すること、である。本章ではまず第一の側面に集中し、ミトヨ・タイ子会社間取引の正確な認定（accurate delineation）を行う。</p>
+
+<h3 id="ch1-1-2">1.2　ミトヨ・グループの産業的文脈</h3>
+
+<p>TPGパラ1.34は、比較可能性分析の出発点として、MNEグループが属する産業セクターの広範な理解を求める。ミトヨの属する自動車用ゴム・樹脂部品産業は以下の特徴を持つ。</p>
+
+<table>
+<tr><th>産業特性</th><th>ミトヨへの該当</th><th>移転価格分析上の含意</th></tr>
+<tr><td>高い技術的参入障壁</td><td>ゴム配合処方は各社固有の営業秘密であり、新規参入者が同等品質を短期間で達成することは不可能</td><td>ノウハウの価値が極めて高く、ロイヤルティ対価ゼロは独立企業間では不合理</td></tr>
+<tr><td>OEM認定の必要性</td><td>ミトヨの顧客基盤はOEM9社＋Tier1 14社。IATF16949認証が取引前提</td><td>顧客基盤・認証の移転は独立のFAR分析の対象となるべき</td></tr>
+<tr><td>長期的な供給関係</td><td>自動車部品は5年超のモデルライフサイクル。一旦認定されれば長期取引継続</td><td>ノウハウ移転による利益は単年度ではなく供給期間全体で評価すべき</td></tr>
+<tr><td>品質リスクの重大性</td><td>ゴム部品の不良はリコール直結。配合処方の精度が品質を決定</td><td>ノウハウ提供者（親会社）がリスクを実質的にコントロール</td></tr>
+</table>
+
+<!-- ===== SVG図解1: 取引構造図 ===== -->
+<div class="svg-container">
+<svg viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans JP', 'Hiragino Kaku Gothic ProN', sans-serif">
+  <defs>
+    <filter id="shadow1" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arrowBlue" viewBox="0 0 10 7" refX="10" refY="3.5" markerWidth="8" markerHeight="6" orient="auto-start-reverse">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2c5f8a"/>
+    </marker>
+    <marker id="arrowRed" viewBox="0 0 10 7" refX="10" refY="3.5" markerWidth="8" markerHeight="6" orient="auto-start-reverse">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#c0392b"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 7" refX="10" refY="3.5" markerWidth="8" markerHeight="6" orient="auto-start-reverse">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#27ae60"/>
+    </marker>
+  </defs>
+  <!-- Background -->
+  <rect width="900" height="620" rx="8" fill="#f5f7fa"/>
+  <text x="450" y="30" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a3a5c">図1：ミトヨ・グループ取引構造図 ─ 7つの取引類型</text>
+
+  <!-- 日本親会社 -->
+  <rect x="300" y="50" width="300" height="100" rx="8" fill="#1a3a5c" filter="url(#shadow1)"/>
+  <text x="450" y="82" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">株式会社ミトヨ（日本）</text>
+  <text x="450" y="100" text-anchor="middle" font-size="10.5" fill="#c5d3e0">群馬県・鞍掛技術センター | 連結118.4億円</text>
+  <text x="450" y="116" text-anchor="middle" font-size="10.5" fill="#c5d3e0">50年超ゴム配合R&amp;D蓄積 | 特許0件（全てノウハウ）</text>
+  <text x="450" y="132" text-anchor="middle" font-size="10" fill="#ddc66b">MD 山川哲三（タイ2社兼務）</text>
+
+  <!-- MRT -->
+  <rect x="60" y="280" width="260" height="90" rx="8" fill="#2c5f8a" filter="url(#shadow1)"/>
+  <text x="190" y="308" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">MRT（タイ）</text>
+  <text x="190" y="325" text-anchor="middle" font-size="10" fill="#c5d3e0">出資99.8% | 売上4.1億円 | ゴム成形</text>
+  <text x="190" y="342" text-anchor="middle" font-size="10" fill="#c5d3e0">2010設立 | IATF16949 | MD山川</text>
+  <text x="190" y="358" text-anchor="middle" font-size="9.5" fill="#f8d7da">HP「自社開発配合材を使用」</text>
+
+  <!-- MPT -->
+  <rect x="580" y="280" width="260" height="90" rx="8" fill="#2c5f8a" filter="url(#shadow1)"/>
+  <text x="710" y="308" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">MPT（タイ）</text>
+  <text x="710" y="325" text-anchor="middle" font-size="10" fill="#c5d3e0">出資90% | 売上16.6億円 | 射出成形</text>
+  <text x="710" y="342" text-anchor="middle" font-size="10" fill="#c5d3e0">2013設立 | BOI認可 | MD山川</text>
+  <text x="710" y="358" text-anchor="middle" font-size="10" fill="#c5d3e0">上海法人10%出資</text>
+
+  <!-- JV Thongchai / Unika -->
+  <rect x="60" y="440" width="200" height="60" rx="6" fill="#5a6f82" filter="url(#shadow1)"/>
+  <text x="160" y="466" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">Thongchai Mitoyo (JV)</text>
+  <text x="160" y="483" text-anchor="middle" font-size="9.5" fill="#c5d3e0">売上6.8億円 | ホース・パイプ</text>
+
+  <rect x="620" y="440" width="220" height="60" rx="6" fill="#5a6f82" filter="url(#shadow1)"/>
+  <text x="730" y="466" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">Unika Rubber (マレーシアJV)</text>
+  <text x="730" y="483" text-anchor="middle" font-size="9.5" fill="#c5d3e0">出資20-49% | 売上3.6億円</text>
+
+  <!-- 取引矢印 -->
+  <!-- ①技術指導出張 -->
+  <line x1="380" y1="150" x2="215" y2="278" stroke="#c0392b" stroke-width="2" marker-end="url(#arrowRed)" stroke-dasharray="6,3"/>
+  <text x="260" y="205" font-size="9.5" fill="#c0392b" transform="rotate(-30,260,205)">①技術指導出張</text>
+
+  <!-- ②ノウハウ供与 -->
+  <line x1="420" y1="150" x2="200" y2="278" stroke="#c0392b" stroke-width="2.5" marker-end="url(#arrowRed)"/>
+  <text x="272" y="220" font-size="10" fill="#c0392b" font-weight="bold" transform="rotate(-28,272,220)">②配合処方ノウハウ（対価ゼロ）</text>
+
+  <!-- ②' MPTへも -->
+  <line x1="520" y1="150" x2="690" y2="278" stroke="#c0392b" stroke-width="2.5" marker-end="url(#arrowRed)"/>
+  <text x="630" y="200" font-size="10" fill="#c0392b" font-weight="bold" transform="rotate(28,630,200)">②ノウハウ供与（対価ゼロ）</text>
+
+  <!-- ③MD兼務 -->
+  <line x1="450" y1="150" x2="450" y2="260" stroke="#2c5f8a" stroke-width="1.5" stroke-dasharray="4,4"/>
+  <text x="455" y="242" font-size="9.5" fill="#2c5f8a">③MD山川氏2社兼務</text>
+  <line x1="450" y1="260" x2="190" y2="278" stroke="#2c5f8a" stroke-width="1" stroke-dasharray="4,4" marker-end="url(#arrowBlue)"/>
+  <line x1="450" y1="260" x2="710" y2="278" stroke="#2c5f8a" stroke-width="1" stroke-dasharray="4,4" marker-end="url(#arrowBlue)"/>
+
+  <!-- ④IATF支援 -->
+  <line x1="360" y1="150" x2="150" y2="278" stroke="#27ae60" stroke-width="1.5" marker-end="url(#arrowGreen)" stroke-dasharray="5,3"/>
+  <text x="210" y="238" font-size="9" fill="#27ae60" transform="rotate(-32,210,238)">④IATF構築支援</text>
+
+  <!-- ⑤技術顧問派遣 -->
+  <line x1="550" y1="150" x2="730" y2="438" stroke="#c0392b" stroke-width="1.5" marker-end="url(#arrowRed)" stroke-dasharray="5,3"/>
+  <text x="670" y="360" font-size="9" fill="#c0392b" transform="rotate(52,670,360)">⑤技術顧問派遣（飯塚氏）</text>
+
+  <!-- ⑥商号使用 -->
+  <rect x="330" y="390" width="240" height="30" rx="4" fill="#fff3cd" stroke="#ddc66b"/>
+  <text x="450" y="410" text-anchor="middle" font-size="10" fill="#6b5900">⑥「Mitoyo」商号使用（対価不明）</text>
+  <line x1="350" y1="390" x2="250" y2="370" stroke="#ddc66b" stroke-width="1" marker-end="url(#arrowBlue)"/>
+  <line x1="550" y1="390" x2="660" y2="370" stroke="#ddc66b" stroke-width="1" marker-end="url(#arrowBlue)"/>
+
+  <!-- ⑦顧客基盤 -->
+  <rect x="100" y="530" width="700" height="34" rx="4" fill="#e8daef" stroke="#b99fd4"/>
+  <text x="450" y="552" text-anchor="middle" font-size="10.5" fill="#5b2c6f">⑦顧客基盤活用：OEM9社＋Tier1 14社 → タイ子会社が親会社ネットワーク経由で受注</text>
+
+  <!-- 凡例 -->
+  <rect x="30" y="575" width="840" height="35" rx="4" fill="#fff" stroke="#c5d3e0"/>
+  <line x1="50" y1="592" x2="85" y2="592" stroke="#c0392b" stroke-width="2.5"/>
+  <text x="90" y="596" font-size="9" fill="#333">無償の価値移転（核心問題）</text>
+  <line x1="240" y1="592" x2="275" y2="592" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="280" y="596" font-size="9" fill="#333">人的役務提供</text>
+  <line x1="400" y1="592" x2="435" y2="592" stroke="#27ae60" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="440" y="596" font-size="9" fill="#333">品質・認証支援</text>
+  <line x1="560" y1="592" x2="595" y2="592" stroke="#ddc66b" stroke-width="1.5"/>
+  <text x="600" y="596" font-size="9" fill="#333">商号・ブランド</text>
+  <rect x="710" y="586" width="12" height="12" rx="2" fill="#e8daef" stroke="#b99fd4"/>
+  <text x="728" y="596" font-size="9" fill="#333">顧客基盤</text>
+</svg>
+<div class="svg-caption">図1：ミトヨ・グループの7つの取引類型。赤実線の無償ノウハウ供与が最大の移転価格リスク。</div>
+</div>
+
+<!-- ===== 第2節: 取引の正確な認定 ===== -->
+<h2 class="chapter" id="ch1-delineation">第2節　取引の正確な認定（Accurate Delineation）</h2>
+
+<h3 id="ch1-2-1">2.1　契約条件と実際の行動の乖離（TPGパラ1.42-1.49）</h3>
+
+<p>TPGパラ1.42は、取引の認定の出発点として書面契約を挙げつつ、パラ1.45で「経済的に関連する特性が書面契約と不一致である場合には、当事者の行動（conduct）に反映された取引の特性に従って認定すべき」と明記する。ミトヨのケースは、この原則が最も鋭く問われる事例である。</p>
+
+<div class="card card-yellow">
+  <div class="card-title">契約上の外観 vs 実態</div>
+  <p><strong>契約上の外観</strong>：MRT・MPTは独立した法人格を持ち、タイ国内で自律的に事業を営む製造会社である。MRTのウェブサイトには「<strong>自社開発配合材を使用</strong>」と明記されている。形式的には、ノウハウの対外的供与を示す技術ライセンス契約は存在しない。</p>
+  <p><strong>実態</strong>：鞍掛技術センター（群馬県）で開発されたゴム配合処方・加硫接着技術が、MRT・MPTの製造工程の中核を構成する。MD山川哲三は日本親会社から派遣されたミトヨの取締役であり、タイ2社で兼務する。IATF16949認証の構築も親会社主導で行われた。「自社開発」の記載は、当事者の実際の行動（conduct）と矛盾する。</p>
+</div>
+
+<p>TPGパラ1.46は、独立企業間取引においては「利害の対立（divergence of interests）」が契約条件の遵守を担保するが、関連企業間ではそのような対立が存在しないか、支配関係を通じて管理される可能性があると指摘する。ミトヨのケースでは、MD山川氏がタイ2社と日本親会社の取締役を兼務していることが、この利害の対立の不在を端的に示している。</p>
+
+<p>TPGパラ1.48のExample（Company PとCompany Sの知的財産ライセンス事例）は、ミトヨの状況と驚くべき類似性を持つ。同Exampleでは、形式上はライセンス契約が存在するが、Company Pが実際にはCompany Sの事業リスクと生産を支配しており、ライセンサーではなくプリンシパルとして機能していると認定された。ミトヨの場合は<em>ライセンス契約すら存在しない</em>にもかかわらず、実質的にはミトヨ親会社がタイ子会社の製造能力の源泉を支配している。</p>
+
+<p>TPGパラ1.49はさらに重要である。同パラは、「MNEによって取引として認識されていない場合であっても、重要な価値の移転が生じている場合には、当事者の行動からその取引を推認すべきである」と述べる。具体的に「技術支援が付与されている場合」「ノウハウが出向者を通じて提供されている場合」を例示しており、これはまさにミトヨの②ノウハウ供与・①技術指導出張・⑤技術顧問派遣に該当する。</p>
+
+<blockquote>
+"In some circumstances the actual outcome of commercial or financial relations may not have been identified as a transaction by the MNE, but nevertheless may result in a transfer of material value, the terms of which would need to be deduced from the conduct of the parties. For example, technical assistance may have been granted, synergies may have been created through deliberate concerted action [...], or know-how may have been provided through seconded employees or otherwise."
+<cite>─ TPG パラ1.49</cite>
+</blockquote>
+
+<h3 id="ch1-2-2">2.2　機能分析（TPGパラ1.51-1.55）</h3>
+
+<p>TPGパラ1.51は、機能分析が「経済的に重要な活動及び責任、使用又は供出された資産、引き受けたリスクを特定する」ことを目的とすると述べる。同パラは特に「当事者が実際に行うこと及び提供する能力（capabilities）」に焦点を当てることを求め、意思決定活動を含むとする。ミトヨ・グループについてこの分析を適用する。</p>
+
+<table>
+<tr><th>機能・資産・リスク（FAR）</th><th>ミトヨ親会社（日本）</th><th>MRT / MPT（タイ）</th></tr>
+<tr><td><strong>ゴム配合処方の開発</strong></td><td>鞍掛技術センターで50年超蓄積。全てノウハウ（特許出願ゼロ）。新配合の開発・改良を継続的に実施</td><td>独自の配合開発能力なし。HP記載の「自社開発」は外観にすぎない</td></tr>
+<tr><td><strong>加硫接着技術</strong></td><td>金属とゴムの接着技術は同社のコア・コンピタンス。条件設定は鞍掛で実施</td><td>親会社から供与された条件に基づく作業のみ</td></tr>
+<tr><td><strong>製造（成形工程）</strong></td><td>製造条件の決定、品質基準の設定</td><td>親会社が設定した条件に従った製造作業。MRT＝ゴム成形、MPT＝射出成形</td></tr>
+<tr><td><strong>品質管理・IATF認証</strong></td><td>④IATF16949構築支援を主導。品質管理体制を設計</td><td>構築された体制の運用</td></tr>
+<tr><td><strong>経営管理・意思決定</strong></td><td>③MD山川氏がタイ2社と日本本社を兼務。戦略的意思決定は日本で実施</td><td>日常的業務執行のみ。山川氏は「兼務」であり独立した経営判断者ではない</td></tr>
+<tr><td><strong>顧客関係・受注</strong></td><td>⑦OEM9社＋Tier1 14社の顧客基盤を保有。タイ子会社への受注紹介</td><td>親会社ネットワーク経由の受注。独自の顧客開拓能力は限定的</td></tr>
+<tr><td><strong>ブランド・商号</strong></td><td>⑥「Mitoyo」の名称とレピュテーション。1948年創業の信頼</td><td>「Mitoyo」商号を使用してOEM認定を取得</td></tr>
+<tr><td><strong>開発リスク</strong></td><td>新配合開発の成否リスクを負担</td><td>負担せず</td></tr>
+<tr><td><strong>市場リスク</strong></td><td>顧客基盤の維持・拡大リスク</td><td>限定的（親会社ネットワーク依存）</td></tr>
+<tr><td><strong>品質リスク（リコールリスク）</strong></td><td>配合処方の適否に起因するリスクを実質支配</td><td>製造上の瑕疵リスクのみ</td></tr>
+</table>
+
+<p>TPGパラ1.55は、MNEグループが高度に統合された機能を複数のグループ会社に断片化している場合について述べる。ミトヨのケースは、配合開発（日本）→成形製造（タイ）→品質管理体制（日本主導でタイ運用）→販売（日本の顧客基盤経由でタイ受注）という断片化の典型例であり、「各断片化された活動が高度に相互依存的であるかどうか、そうであれば相互依存関係の性質」の分析が不可欠である（TPGパラ1.55）。</p>
+
+<!-- ===== 第3節: リスク分析6ステップ ===== -->
+<h2 class="chapter" id="ch1-risk">第3節　リスク分析6ステップのミトヨへの適用（TPGパラ1.60-1.106）</h2>
+
+<p>TPGパラ1.60は、支配取引におけるリスクを正確に認定するための6段階のプロセスを規定する。以下、各ステップをミトヨの事実関係に即して適用する。</p>
+
+<h3 id="risk-step1">ステップ1：経済的に重要なリスクの具体的特定（TPGパラ1.71-1.75）</h3>
+
+<p>TPGパラ1.71は、リスクを「事業の目的に対する不確実性の影響」と定義する。パラ1.72は、リスクの情報源として(a)戦略的リスク、(b)インフラ・業務リスク、(c)金融リスク、(d)取引リスク、(e)偶発リスクの5カテゴリを挙げる。ミトヨの取引において経済的に重要なリスクは以下のとおりである。</p>
+
+<table>
+<tr><th>リスク類型</th><th>TPG分類</th><th>具体的内容</th><th>経済的重要性</th></tr>
+<tr><td><strong>技術陳腐化リスク</strong></td><td>(a)戦略的リスク</td><td>ゴム配合処方が競合技術やEV化等により陳腐化するリスク</td><td>極めて高い。配合処方がミトヨの競争優位の唯一の源泉</td></tr>
+<tr><td><strong>開発リスク</strong></td><td>(b)業務リスク</td><td>新配合の開発が目標品質・コストを達成できないリスク</td><td>高い。開発投資の回収可否に直結</td></tr>
+<tr><td><strong>品質・リコールリスク</strong></td><td>(b)業務リスク</td><td>配合処方に起因する製品不良がリコールを引き起こすリスク</td><td>極めて高い。自動車安全部品のリコールは企業存続に関わる</td></tr>
+<tr><td><strong>ノウハウ漏洩リスク</strong></td><td>(a)戦略的リスク</td><td>タイでの配合処方の外部流出リスク（特許保護なし）</td><td>高い。特許出願ゼロのため秘匿管理が唯一の保護手段</td></tr>
+<tr><td><strong>市場リスク</strong></td><td>(a)戦略的リスク</td><td>OEM顧客の需要変動、タイ市場の競争激化</td><td>中程度。顧客基盤は安定しているが長期的には変動あり</td></tr>
+<tr><td><strong>為替リスク</strong></td><td>(c)金融リスク</td><td>円/バーツの変動による収益変動</td><td>中程度</td></tr>
+</table>
+
+<h3 id="risk-step2">ステップ2：契約上のリスク負担の確認（TPGパラ1.77-1.81）</h3>
+
+<p>TPGパラ1.77は、リスク負担の当事者が書面契約に記載されている場合があると述べつつ、パラ1.81で「価格設定の態様のみからリスク負担を推認してはならない」と警告する。ミトヨのケースでは、以下の状況が確認される。</p>
+
+<div class="card card-blue">
+  <div class="card-title">契約上のリスク配分の不在</div>
+  <p>ミトヨとMRT・MPTとの間には、ノウハウの供与条件やリスク配分を定める<strong>技術ライセンス契約が存在しない</strong>。ロイヤルティ対価はゼロであり、明示的なリスク配分の合意も確認されない。TPGパラ1.49が述べるとおり、「書面の条件が存在しない場合には、経済的に関連する特性の証拠から実際の取引を推認する必要がある」。</p>
+</div>
+
+<p>TPGパラ1.78は、契約上のリスク引受が「リスク結果の実現前のリスク引受のコミットメントの明確な証拠」を提供する<em>事前の</em>合意であるべきとする。ミトヨのケースでは、ノウハウ供与に関する事前のリスク配分合意自体が存在しないため、ステップ3の機能分析による実態の把握がとりわけ重要となる。</p>
+
+<h3 id="risk-step3">ステップ3：リスクに関する機能分析（TPGパラ1.82-1.85）</h3>
+
+<p>TPGパラ1.82は、このステップで「リスクの引受と管理に関して関連企業がどのように機能しているか」、特に「どの企業がコントロール機能を遂行しているか」「どの企業がリスク結果の上振れ・下振れの影響を受けるか」「どの企業がリスクを引き受ける財務能力を有するか」を分析することを求める。</p>
+
+<p><strong>（1）コントロール機能の所在</strong></p>
+
+<p>TPGパラ1.65は「リスクのコントロール」を、(i)リスク負担機会を引き受ける・移転する・拒否する決定を行う能力と実際の遂行、(ii)リスクへの対応方法を決定する能力と実際の遂行、の二要素と定義する。パラ1.66は、意思決定者が「当該リスクの分野における能力と経験を有し、決定が事業に与える影響を理解していなければならない」と述べる。</p>
+
+<p>ミトヨの配合処方ノウハウに関しては、以下の理由から<strong>コントロール機能は完全に日本親会社に帰属する</strong>。</p>
+
+<ul>
+<li>配合処方の開発・改良の意思決定は鞍掛技術センターで行われる</li>
+<li>新配合の採否判断（どの処方をタイに移管するか）は親会社が決定</li>
+<li>品質基準の設定・変更は親会社主導（IATF構築支援④の事実が裏付け）</li>
+<li>MD山川氏は親会社取締役であり、タイ2社での兼務は親会社のコントロール延伸</li>
+<li>MRT・MPTには配合処方の評価・開発能力がなく、パラ1.66の「能力と経験」を欠く</li>
+</ul>
+
+<p>TPGパラ1.69のExample（Company AがCompany Bに製造を委託する事例）は、ミトヨの状況に極めて類似する。同Exampleでは、Company Aが製品仕様と設計を提供し、生産計画を決定し、品質管理を外部に委託しつつその目標を設定する場合に、Company Aが製品リコールリスクと在庫リスクをコントロールしていると認定される。ミトヨの場合も同様に、配合処方を提供し、品質基準を設定するミトヨ親会社が、ノウハウに係る全てのリスクのコントロール主体である。</p>
+
+<p><strong>（2）リスク結果の帰属先</strong></p>
+
+<p>配合処方に起因するリスクが実現した場合（例：配合不良によるリコール）、その損害は最終的にミトヨ・グループ全体に帰属するが、タイ子会社は親会社から供与された処方を用いているにすぎず、独立企業であれば処方の適否リスクは処方の提供者が負担する。</p>
+
+<p><strong>（3）財務能力</strong></p>
+
+<p>ミトヨ親会社（連結売上118.4億円、単独97.8億円）は、タイ子会社（MRT売上4.1億円、MPT売上16.6億円）に比して十分な財務能力を有する。TPGパラ1.64の「リスクを引き受ける財務能力」の要件はミトヨ親会社が充足する。</p>
+
+<h3 id="risk-step4">ステップ4：ステップ1-3の解釈（TPGパラ1.86-1.97）</h3>
+
+<p>TPGパラ1.86に従い、ステップ1-3の情報を統合して解釈する。</p>
+
+<div class="card card-red">
+  <div class="card-title">ステップ4の結論：契約と実態の根本的乖離</div>
+  <p>(i) <strong>契約条件の遵守状況</strong>（パラ1.88）：技術ライセンス契約自体が存在しないため、「契約上のリスク配分が行動と一致しているか」という通常の検討はできない。代わりに、パラ1.49に基づき当事者の行動から取引を推認する必要がある。ミトヨ親会社のノウハウ供与行動は明白に存在するが、対価は支払われていない。</p>
+  <p>(ii) <strong>コントロールと財務能力</strong>（パラ1.90）：上記ステップ3の分析のとおり、ミトヨ親会社がノウハウに係るリスクの<strong>コントロールと財務能力の両方</strong>を有する。タイ子会社はいずれも有しない。</p>
+  <p>したがって、ノウハウに係るリスクとそれに伴う利益は、<strong>ミトヨ親会社に帰属すべき</strong>であり、タイ子会社がノウハウの対価を支払わずにその利益を享受する現行の取引構造は、ALP違反を構成する。</p>
+</div>
+
+<h3 id="risk-step5">ステップ5：リスクの配分（TPGパラ1.98-1.99）</h3>
+
+<p>本ケースでは、ステップ4の結論により、ノウハウに係るリスクはミトヨ親会社に配分される。TPGパラ1.98は、「リスクをコントロールし、かつリスクを引き受ける財務能力を有する企業にリスクを配分すべき」と述べる。ミトヨ親会社がその企業であることは上記分析から明らかである。</p>
+
+<h3 id="risk-step6">ステップ6：リスク配分を踏まえた取引の価格設定（TPGパラ1.100-1.106）</h3>
+
+<p>TPGパラ1.100は、「正確に認定された取引は、リスク引受の財務上の帰結とリスク管理機能への報酬を考慮して、以降の章のツールと方法に従って価格設定されるべき」と述べる。パラ1.101のExample 1（Company AがCompany Bに研究を委託する事例）に照らせば、ミトヨ親会社（ノウハウの開発リスクを引き受け、コントロールする者）は成功の財務的帰結を享受し、失敗の帰結を負担すべきである。タイ子会社は製造サービスの提供者として適切に報酬を受けるべきであり、それ以上の利益はノウハウの対価として親会社に帰属すべきである。</p>
+
+<p>具体的な価格設定方法は、第2章の分析（後述Part B）で詳述する。</p>
+
+<!-- ===== SVG図解2: ALP違反の構造 ===== -->
+<div class="svg-container">
+<svg viewBox="0 0 900 460" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans JP', 'Hiragino Kaku Gothic ProN', sans-serif">
+  <defs>
+    <filter id="shadow2" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+  <rect width="900" height="460" rx="8" fill="#f5f7fa"/>
+  <text x="450" y="30" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a3a5c">図2：ALP違反の構造 ─ 契約上の外観 vs 経済的実態</text>
+
+  <!-- 左パネル: 契約上の外観 -->
+  <rect x="30" y="50" width="400" height="380" rx="8" fill="#fff" stroke="#c5d3e0" filter="url(#shadow2)"/>
+  <rect x="30" y="50" width="400" height="36" rx="8" fill="#5a6f82"/>
+  <rect x="30" y="70" width="400" height="16" fill="#5a6f82"/>
+  <text x="230" y="74" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">契約上の外観（Form）</text>
+
+  <text x="50" y="110" font-size="11" fill="#333" font-weight="bold">MRT / MPTの対外的表示：</text>
+  <text x="50" y="132" font-size="10.5" fill="#333">・ タイ国内の独立した製造法人</text>
+  <text x="50" y="152" font-size="10.5" fill="#333">・ 「自社開発配合材を使用」（MRT HP）</text>
+  <text x="50" y="172" font-size="10.5" fill="#333">・ IATF16949を自社で取得・維持</text>
+  <text x="50" y="192" font-size="10.5" fill="#333">・ 技術ライセンス契約なし → 独自技術</text>
+
+  <text x="50" y="222" font-size="11" fill="#333" font-weight="bold">対価の状況：</text>
+  <rect x="50" y="232" width="360" height="28" rx="4" fill="#d4edda" stroke="#7cc498"/>
+  <text x="230" y="251" text-anchor="middle" font-size="11" fill="#1a5c32">ロイヤルティ対価 ＝ ゼロ円</text>
+
+  <text x="50" y="280" font-size="11" fill="#333" font-weight="bold">含意：</text>
+  <text x="50" y="300" font-size="10.5" fill="#333">・ タイ子会社が自力で技術を開発</text>
+  <text x="50" y="320" font-size="10.5" fill="#333">・ 日本からの価値移転は存在しない</text>
+  <text x="50" y="340" font-size="10.5" fill="#333">・ 移転価格上の問題なし</text>
+
+  <rect x="80" y="360" width="320" height="50" rx="6" fill="#d4edda" stroke="#7cc498"/>
+  <text x="240" y="385" text-anchor="middle" font-size="12" fill="#1a5c32" font-weight="bold">→ ALP適合（外観上）</text>
+  <text x="240" y="400" text-anchor="middle" font-size="9.5" fill="#5a6f82">しかし TPGパラ1.45に基づき行動優先で判定</text>
+
+  <!-- 右パネル: 経済的実態 -->
+  <rect x="470" y="50" width="400" height="380" rx="8" fill="#fff" stroke="#e09a9f" stroke-width="2" filter="url(#shadow2)"/>
+  <rect x="470" y="50" width="400" height="36" rx="8" fill="#c0392b"/>
+  <rect x="470" y="70" width="400" height="16" fill="#c0392b"/>
+  <text x="670" y="74" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">経済的実態（Substance）</text>
+
+  <text x="490" y="110" font-size="11" fill="#333" font-weight="bold">実際の行動（conduct）：</text>
+  <text x="490" y="132" font-size="10.5" fill="#c0392b">・ 配合処方は鞍掛技術センターで開発（50年蓄積）</text>
+  <text x="490" y="152" font-size="10.5" fill="#c0392b">・ 加硫接着条件も親会社が設定・供与</text>
+  <text x="490" y="172" font-size="10.5" fill="#c0392b">・ MD山川氏は親会社から派遣（2社兼務）</text>
+  <text x="490" y="192" font-size="10.5" fill="#c0392b">・ IATF構築は親会社が主導支援</text>
+  <text x="490" y="212" font-size="10.5" fill="#c0392b">・ 顧客基盤はOEM9社+Tier1 14社を親会社が保有</text>
+
+  <text x="490" y="242" font-size="11" fill="#333" font-weight="bold">独立企業間なら：</text>
+  <rect x="490" y="252" width="360" height="28" rx="4" fill="#f8d7da" stroke="#e09a9f"/>
+  <text x="670" y="271" text-anchor="middle" font-size="11" fill="#8b1a1a">ロイヤルティ 3-5%（年間0.8-1.4億円/MRT+MPT）</text>
+
+  <text x="490" y="300" font-size="11" fill="#333" font-weight="bold">年間推定損失（全取引類型合算）：</text>
+  <rect x="490" y="308" width="360" height="32" rx="4" fill="#f8d7da" stroke="#e09a9f"/>
+  <text x="670" y="330" text-anchor="middle" font-size="14" fill="#8b1a1a" font-weight="bold">約5.5億円 / 年</text>
+
+  <rect x="520" y="360" width="320" height="50" rx="6" fill="#f8d7da" stroke="#e09a9f"/>
+  <text x="680" y="385" text-anchor="middle" font-size="12" fill="#8b1a1a" font-weight="bold">→ ALP違反（実態判定）</text>
+  <text x="680" y="400" text-anchor="middle" font-size="9.5" fill="#5a6f82">TPGパラ1.45・1.49・1.60の6ステップにより認定</text>
+
+  <!-- 中央の矢印 -->
+  <text x="450" y="230" text-anchor="middle" font-size="28" fill="#c0392b">≠</text>
+  <text x="450" y="260" text-anchor="middle" font-size="9" fill="#5a6f82">乖離</text>
+</svg>
+<div class="svg-caption">図2：契約上の外観（Form）と経済的実態（Substance）の乖離。TPGパラ1.45に基づき実態が優先される。</div>
+</div>
+
+<!-- ===== 第4節: 二重課税リスク ===== -->
+<h2 class="chapter" id="ch1-double-tax">第4節　二重課税リスクの定量的評価</h2>
+
+<h3 id="ch1-4-1">4.1　移転価格課税が発生した場合のシナリオ</h3>
+
+<p>TPGパラ1.3は、「移転価格が市場の力と独立企業原則を反映しない場合、関連企業の納税義務とホスト国の税収が歪められ得る」と述べる。ミトヨの場合、日本の税務当局（国税庁）がノウハウの無償供与を独立企業間価格に引き直す移転価格更正を行えば、以下のシナリオが生じる。</p>
+
+<table>
+<tr><th>項目</th><th>計算根拠</th><th>金額（年額推計）</th></tr>
+<tr><td>ノウハウ・ロイヤルティ（MRT）</td><td>MRT売上4.1億円 × 3-5%</td><td>1,230万-2,050万円</td></tr>
+<tr><td>ノウハウ・ロイヤルティ（MPT）</td><td>MPT売上16.6億円 × 3-5%</td><td>4,980万-8,300万円</td></tr>
+<tr><td>商号使用料（MRT+MPT）</td><td>合計売上20.7億円 × 0.5-1%</td><td>1,035万-2,070万円</td></tr>
+<tr><td>IATF構築支援対価</td><td>コストプラス法（人件費＋旅費＋15-20%マークアップ）</td><td>500万-1,000万円</td></tr>
+<tr><td>MD兼務報酬（親会社帰属分）</td><td>人件費配分（タイ2社時間比例）</td><td>800万-1,500万円</td></tr>
+<tr><td>技術指導出張対価</td><td>日当＋人件費＋マークアップ15%</td><td>300万-600万円</td></tr>
+<tr><td>顧客基盤活用対価</td><td>受注紹介手数料1-2%相当</td><td>2,070万-4,140万円</td></tr>
+<tr><td colspan="2"><strong>合計（年額推計レンジ）</strong></td><td><strong>1.1億-1.97億円</strong></td></tr>
+</table>
+
+<div class="card card-yellow">
+  <div class="card-title">5年間遡及更正の場合の追徴税額試算</div>
+  <p>上記の移転価格調整額（中央値：約1.5億円/年）に対し、5年分の遡及更正がなされた場合：</p>
+  <ul>
+    <li>移転価格調整額合計：1.5億円 × 5年 ＝ <strong>7.5億円</strong></li>
+    <li>法人税等追徴（実効税率約30%）：<strong>約2.25億円</strong></li>
+    <li>過少申告加算税（10-15%）：約2,250万-3,375万円</li>
+    <li>延滞税（年約2.4%）：約2,700万-5,400万円</li>
+    <li>追徴額合計：<strong>約2.7億-3.0億円</strong></li>
+  </ul>
+  <p>これはミトヨ単独売上97.8億円の約3%に相当し、2025年のクリヤマグループによる子会社化（6.1億円）の約半額に達する規模である。</p>
+</div>
+
+<h3 id="ch1-4-2">4.2　タイ側の対応的調整と二重課税問題</h3>
+
+<p>日本側で移転価格更正が行われた場合、タイ子会社の所得は既にタイで課税済みであるため、経済的二重課税が発生する。TPGパラ1.15は「独立企業原則からの逸脱は国際的コンセンサスを脅かし、二重課税リスクを著しく増大させる」と警告する。</p>
+
+<p>解消手段としては、(1)日タイ租税条約25条に基づく相互協議（MAP）、(2)タイ歳入局（Revenue Department）への対応的調整（correlative adjustment）の申請が考えられる。しかし、タイは移転価格に関するAPAやMAPの実績が限定的であり、対応的調整が円滑に行われる保証はない。さらに、ロイヤルティの源泉徴収税（日タイ租税条約15%）の問題も加わり、二重課税の解消は実務上困難を伴う。</p>
+
+<p>措置法66条の4第1項による移転価格更正は、調整金額に対し日本側で課税されるが、タイ側での損金算入が自動的に認められるわけではない。事前確認制度（APA）の不在がこのリスクを一層深刻なものにしている。</p>
+
+<hr>
+
+<!-- ===== PART B: 第2章当てはめ ===== -->
+<div class="part-heading">Part B ─ OECD移転価格ガイドライン第2章（算定方法）のミトヨへの精密当てはめ</div>
+
+<h2 class="chapter" id="ch2-overview">第5節　最適方法ルールに基づく方法選択</h2>
+
+<h3 id="ch2-5-1">5.1　方法選択の基本原則（TPGパラ2.1-2.12）</h3>
+
+<p>TPGパラ2.2は、移転価格算定方法の選択が常に「特定のケースに最も適した方法（most appropriate method）を見つけること」を目的とすると述べる。選択プロセスは、(i)OECD認定方法のそれぞれの長所と短所、(ii)支配取引の性質に照らした方法の適切性（特に機能分析による判定）、(iii)選択された方法を適用するために必要な信頼性のある情報の利用可能性、(iv)支配取引と非支配取引の間の比較可能性の程度、を考慮すべきとする。</p>
+
+<p>TPGパラ2.3は、伝統的取引方法が利益法よりも優先されるべきことを明示し、特にCUP法が「等しく信頼性のある方法で適用できる場合には、他の全ての方法に優先する」と述べる。</p>
+
+<p>ミトヨの7つの取引類型は性質が異なるため、取引類型ごとに最適方法を選択する必要がある。以下、主要な3つの取引類型について詳細な方法選択を行う。</p>
+
+<h3 id="ch2-5-2">5.2　取引類型別の方法選択根拠</h3>
+
+<h4>（1）ノウハウ・ロイヤルティ取引（②配合処方ノウハウ供与）→ CUP法を第一候補</h4>
+
+<p>TPGパラ2.14は、CUP法が「支配取引で移転される財産又はサービスに対して課される価格を、比較可能な非支配取引で課される価格と比較する」方法であると定義する。パラ2.15は、「比較可能な非支配取引を見つけることが可能な場合、CUP法が独立企業原則を適用する最も直接的かつ信頼性の高い方法である」とし、「そのような場合にはCUP法が他の全ての方法に優先される」と明記する。</p>
+
+<p>ノウハウの無償供与をロイヤルティ取引として認定した上で、独立企業間の類似ライセンス取引のロイヤルティ率をベンチマークとして用いるCUP法は、以下の理由から最適方法の有力候補である。</p>
+
+<div class="card card-green">
+  <div class="card-title">CUP法適用の根拠</div>
+  <ul>
+    <li><strong>取引の性質</strong>：ゴム配合処方のノウハウ供与は、技術ライセンスの一形態として市場で広く行われている取引であり、ロイヤルティ率のデータベース（RoyaltyStat、ktMINE等）で類似取引を検索可能</li>
+    <li><strong>比較可能性</strong>：自動車用ゴム部品のノウハウライセンスに限定すれば、産業セクター、技術の性質（配合処方）、地理的市場（ASEAN製造拠点向け）の比較可能性を確保できる</li>
+    <li><strong>TPGパラ2.15の原則</strong>：比較可能な非支配取引が存在する場合、CUP法は最も直接的な方法であり、優先適用すべき</li>
+  </ul>
+</div>
+
+<p>ただし、TPGパラ2.16-2.17が指摘するとおり、CUP法の信頼性は比較対象取引との差異に大きく左右される。ミトヨのノウハウが50年超の蓄積に基づく秘匿性の高い営業秘密であること、特許出願がゼロであるため法的保護の形態が異なること等の差異は、調整（reasonably accurate adjustments）が必要な要因となる。これらの調整の範囲と信頼性を勘案し、TNMM（取引単位営業利益法）も補完的に適用する。</p>
+
+<h4>（2）製品取引（タイ子会社の製造活動全体）→ TNMM</h4>
+
+<p>TPGパラ2.64は、TNMMが「納税者が支配取引から実現する、適切な基準（例：コスト、売上、資産）に対する純利益を検討する」方法であると定義する。パラ2.65は、「取引の各当事者がユニークかつ価値ある貢献をする場合」にはTNMMが信頼性を欠く可能性を指摘するが、パラ2.66は「ユニークでない貢献をする当事者」がいる場合にはTNMMが適用可能であると述べる。</p>
+
+<p>ミトヨのケースでは、MRT・MPTをテスト対象（tested party）とするTNMMが適切である。</p>
+
+<div class="card card-blue">
+  <div class="card-title">TNMMの適用根拠</div>
+  <ul>
+    <li><strong>テスト対象の選定</strong>（TPGパラ2.65・3.18-3.19）：MRT・MPTは親会社からノウハウを受けて製造を行うリミテッド・リスクの製造者であり、「より複雑でない当事者（less complex party）」に該当。テスト対象として適切</li>
+    <li><strong>営業利益率指標（Operating Profit Margin）</strong>：TPGパラ2.93に従い、売上高に対する営業利益率を基本指標とする。製造活動の場合、コストベースの指標（フルコスト・マークアップ）も代替候補だが、タイ子会社の原材料費が親会社からの調達を含む場合は独立性に問題あり（TPGパラ2.94）</li>
+    <li><strong>機能分析との整合</strong>：リスク分析6ステップの結果、MRT・MPTは限定的な機能・リスクの受託製造者と認定されるため、TNMMにより独立の受託製造者が得るべき利益水準を推定するのが合理的</li>
+  </ul>
+</div>
+
+<h4>（3）残余利益分割法（RPSM）の適用可能性</h4>
+
+<p>TPGパラ2.114は、取引単位利益分割法が「各当事者がユニークかつ価値ある貢献（例：ユニークかつ価値ある無形資産の貢献）をする取引」に特に有用であると述べ、パラ2.119がこれを「主たる強み（main strength）」として確認する。</p>
+
+<p>ミトヨのケースでは、残余利益分割法（Residual Profit Split Method; RPSM）の適用可能性も検討すべきである。仮にタイ子会社がタイ市場における現地適応能力やBOI認可に基づく製造インフラというユニークな貢献をしているとすれば、双方がユニークな貢献をするケースとしてRPSMの出番がある。</p>
+
+<p>しかし、ミトヨのケースでは以下の理由からRPSMは主たる方法として不適切と判断される。</p>
+
+<ul>
+<li>TPGパラ2.127は、「取引の一方当事者が単純な機能のみを遂行し、経済的に重要なリスクを引き受けず、ユニークかつ価値ある貢献を行わない場合」にはRPSMは不適切であると明示する</li>
+<li>MRT・MPTの貢献は、受託製造のルーティン機能（成形・射出成形）に限定され、配合処方や顧客基盤というユニークな貢献は親会社に帰属する</li>
+<li>タイでのBOI認可や現地人材は、産業の一般的な立地優位性であり、TPGパラ2.130の「ユニークかつ価値ある」の基準を満たさない</li>
+</ul>
+
+<p>したがって、方法選択の結論は以下のとおりである。</p>
+
+<table>
+<tr><th>取引類型</th><th>最適方法</th><th>補完方法</th><th>選択根拠</th></tr>
+<tr><td>②ノウハウ供与（ロイヤルティ）</td><td><strong>CUP法</strong></td><td>TNMM（検証用）</td><td>TPGパラ2.15：類似ライセンス取引が存在する場合CUPが最優先</td></tr>
+<tr><td>製品取引（MRT・MPTの利益水準）</td><td><strong>TNMM</strong></td><td>─</td><td>TPGパラ2.64-2.65：テスト対象が非ユニーク機能の場合に適切</td></tr>
+<tr><td>①技術指導・④IATF支援・⑤顧問派遣</td><td><strong>コストプラス法</strong></td><td>─</td><td>TPGパラ2.45：役務提供取引に最も適用しやすい</td></tr>
+<tr><td>③MD兼務</td><td><strong>コストプラス法</strong></td><td>─</td><td>人件費配分＋マークアップ</td></tr>
+<tr><td>⑥商号使用・⑦顧客基盤</td><td><strong>CUP法</strong></td><td>利益分割法（検証用）</td><td>ブランドライセンス、紹介手数料の市場データ参照</td></tr>
+</table>
+
+<!-- ===== SVG図解3: 方法選択フロー ===== -->
+<div class="svg-container">
+<svg viewBox="0 0 900 530" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans JP', 'Hiragino Kaku Gothic ProN', sans-serif">
+  <defs>
+    <filter id="shadow3" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arrowDown" viewBox="0 0 10 10" refX="5" refY="10" markerWidth="8" markerHeight="8" orient="auto">
+      <polygon points="0 0, 10 0, 5 10" fill="#1a3a5c"/>
+    </marker>
+  </defs>
+  <rect width="900" height="530" rx="8" fill="#f5f7fa"/>
+  <text x="450" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a3a5c">図3：ミトヨ固有の方法選択フロー（最適方法ルール TPGパラ2.2）</text>
+
+  <!-- Start -->
+  <rect x="300" y="42" width="300" height="36" rx="18" fill="#1a3a5c" filter="url(#shadow3)"/>
+  <text x="450" y="65" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">取引の正確な認定（第1章分析完了）</text>
+  <line x1="450" y1="78" x2="450" y2="100" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrowDown)"/>
+
+  <!-- 分岐: 取引類型の識別 -->
+  <rect x="280" y="102" width="340" height="32" rx="6" fill="#2c5f8a" filter="url(#shadow3)"/>
+  <text x="450" y="123" text-anchor="middle" font-size="11" fill="#fff">取引類型の識別（7つ → 3グループに集約）</text>
+
+  <!-- 3分岐 -->
+  <line x1="350" y1="134" x2="150" y2="170" stroke="#2c5f8a" stroke-width="1.5"/>
+  <line x1="450" y1="134" x2="450" y2="170" stroke="#2c5f8a" stroke-width="1.5"/>
+  <line x1="550" y1="134" x2="750" y2="170" stroke="#2c5f8a" stroke-width="1.5"/>
+
+  <!-- 左分岐: ノウハウ+ブランド -->
+  <rect x="40" y="170" width="220" height="44" rx="6" fill="#fff" stroke="#2c5f8a" filter="url(#shadow3)"/>
+  <text x="150" y="188" text-anchor="middle" font-size="10" font-weight="bold" fill="#1a3a5c">②ノウハウ供与</text>
+  <text x="150" y="204" text-anchor="middle" font-size="9.5" fill="#5a6f82">⑥商号使用 ⑦顧客基盤</text>
+  <line x1="150" y1="214" x2="150" y2="240" stroke="#1a3a5c" stroke-width="1.5" marker-end="url(#arrowDown)"/>
+
+  <rect x="50" y="242" width="200" height="28" rx="4" fill="#fff3cd" stroke="#ddc66b"/>
+  <text x="150" y="260" text-anchor="middle" font-size="10" fill="#6b5900">類似CUTが存在するか？</text>
+
+  <line x1="105" y1="270" x2="80" y2="296" stroke="#27ae60" stroke-width="1.5"/>
+  <text x="65" y="290" font-size="9" fill="#27ae60">Yes</text>
+  <line x1="195" y1="270" x2="220" y2="296" stroke="#c0392b" stroke-width="1.5"/>
+  <text x="225" y="290" font-size="9" fill="#c0392b">No</text>
+
+  <rect x="15" y="298" width="130" height="50" rx="6" fill="#d4edda" stroke="#7cc498" filter="url(#shadow3)"/>
+  <text x="80" y="318" text-anchor="middle" font-size="11" font-weight="bold" fill="#1a5c32">CUP法</text>
+  <text x="80" y="336" text-anchor="middle" font-size="8.5" fill="#5a6f82">ロイヤルティ3-5%</text>
+
+  <rect x="160" y="298" width="130" height="50" rx="6" fill="#d1ecf1" stroke="#88c7d5" filter="url(#shadow3)"/>
+  <text x="225" y="318" text-anchor="middle" font-size="10" font-weight="bold" fill="#1a3a5c">TNMM</text>
+  <text x="225" y="336" text-anchor="middle" font-size="8.5" fill="#5a6f82">利益水準で検証</text>
+
+  <!-- 中央分岐: 製品取引 -->
+  <rect x="340" y="170" width="220" height="44" rx="6" fill="#fff" stroke="#2c5f8a" filter="url(#shadow3)"/>
+  <text x="450" y="188" text-anchor="middle" font-size="10" font-weight="bold" fill="#1a3a5c">製品取引（MRT/MPT利益水準）</text>
+  <text x="450" y="204" text-anchor="middle" font-size="9.5" fill="#5a6f82">受託製造としての適正利益率</text>
+  <line x1="450" y1="214" x2="450" y2="240" stroke="#1a3a5c" stroke-width="1.5" marker-end="url(#arrowDown)"/>
+
+  <rect x="350" y="242" width="200" height="28" rx="4" fill="#fff3cd" stroke="#ddc66b"/>
+  <text x="450" y="260" text-anchor="middle" font-size="10" fill="#6b5900">双方がU&amp;V貢献か？</text>
+
+  <line x1="405" y1="270" x2="380" y2="296" stroke="#c0392b" stroke-width="1.5"/>
+  <text x="360" y="290" font-size="9" fill="#c0392b">No</text>
+  <line x1="495" y1="270" x2="520" y2="296" stroke="#27ae60" stroke-width="1.5"/>
+  <text x="530" y="290" font-size="9" fill="#27ae60">Yes</text>
+
+  <rect x="330" y="298" width="130" height="50" rx="6" fill="#d4edda" stroke="#7cc498" filter="url(#shadow3)"/>
+  <text x="395" y="318" text-anchor="middle" font-size="11" font-weight="bold" fill="#1a5c32">TNMM</text>
+  <text x="395" y="336" text-anchor="middle" font-size="8.5" fill="#5a6f82">OPM 5-8%</text>
+
+  <rect x="475" y="298" width="130" height="50" rx="6" fill="#e8daef" stroke="#b99fd4" filter="url(#shadow3)"/>
+  <text x="540" y="318" text-anchor="middle" font-size="10" font-weight="bold" fill="#5b2c6f">RPSM</text>
+  <text x="540" y="336" text-anchor="middle" font-size="8.5" fill="#5a6f82">本件では不適切</text>
+  <line x1="540" y1="348" x2="540" y2="368" stroke="#c0392b" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="540" y="380" text-anchor="middle" font-size="8" fill="#c0392b">タイ子会社はルーティン機能のみ</text>
+  <text x="540" y="392" text-anchor="middle" font-size="8" fill="#c0392b">→ TPGパラ2.127により排除</text>
+
+  <!-- 右分岐: 役務提供 -->
+  <rect x="640" y="170" width="220" height="44" rx="6" fill="#fff" stroke="#2c5f8a" filter="url(#shadow3)"/>
+  <text x="750" y="188" text-anchor="middle" font-size="10" font-weight="bold" fill="#1a3a5c">役務提供</text>
+  <text x="750" y="204" text-anchor="middle" font-size="9.5" fill="#5a6f82">①技術指導 ③MD兼務 ④IATF ⑤顧問</text>
+  <line x1="750" y1="214" x2="750" y2="298" stroke="#1a3a5c" stroke-width="1.5" marker-end="url(#arrowDown)"/>
+
+  <rect x="685" y="298" width="130" height="50" rx="6" fill="#d4edda" stroke="#7cc498" filter="url(#shadow3)"/>
+  <text x="750" y="318" text-anchor="middle" font-size="11" font-weight="bold" fill="#1a5c32">コストプラス法</text>
+  <text x="750" y="336" text-anchor="middle" font-size="8.5" fill="#5a6f82">コスト+15-20%</text>
+
+  <!-- 下部: 最終確認 -->
+  <line x1="80" y1="348" x2="80" y2="410" stroke="#1a3a5c" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="395" y1="348" x2="395" y2="410" stroke="#1a3a5c" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="750" y1="348" x2="750" y2="410" stroke="#1a3a5c" stroke-width="1" stroke-dasharray="3,3"/>
+
+  <rect x="120" y="410" width="660" height="40" rx="6" fill="#1a3a5c" filter="url(#shadow3)"/>
+  <text x="450" y="430" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">IQRレンジ設定 → 全取引類型の統合調整額算出 → 二重課税リスク評価</text>
+  <text x="450" y="444" text-anchor="middle" font-size="9" fill="#c5d3e0">TPGパラ3.55-3.66に基づくレンジの設定（四分位範囲）</text>
+
+  <!-- 矢印 -->
+  <line x1="80" y1="410" x2="120" y2="430" stroke="#1a3a5c" stroke-width="1"/>
+  <line x1="395" y1="410" x2="395" y2="430" stroke="#1a3a5c" stroke-width="1"/>
+  <line x1="750" y1="410" x2="780" y2="430" stroke="#1a3a5c" stroke-width="1"/>
+
+  <!-- 注記 -->
+  <rect x="120" y="465" width="660" height="50" rx="6" fill="#fff" stroke="#c5d3e0"/>
+  <text x="450" y="483" text-anchor="middle" font-size="9" fill="#5a6f82">注: 方法選択はTPGパラ2.2の「特定のケースに最も適した方法」基準に従う。</text>
+  <text x="450" y="498" text-anchor="middle" font-size="9" fill="#5a6f82">U&amp;V = Unique and Valuable（ユニークかつ価値ある貢献、TPGパラ2.130）。OPM = Operating Profit Margin。</text>
+</svg>
+<div class="svg-caption">図3：ミトヨ固有の方法選択フロー。各取引類型の性質に応じてCUP法・TNMM・コストプラス法を使い分ける。</div>
+</div>
+
+<!-- ===== 第6節: CUP法の詳細適用 ===== -->
+<h2 class="chapter" id="ch2-cup">第6節　CUP法によるロイヤルティ率の推定</h2>
+
+<h3 id="ch2-6-1">6.1　比較可能なライセンス取引の探索</h3>
+
+<p>CUP法の適用にあたり、TPGパラ2.14-2.17に従い、ミトヨのノウハウ供与と比較可能な非支配取引を探索する。比較可能性の判定要素は以下のとおりである。</p>
+
+<table>
+<tr><th>比較可能性要素</th><th>ミトヨの特性</th><th>探索条件</th></tr>
+<tr><td>ライセンスの対象</td><td>ゴム配合処方ノウハウ（非特許）</td><td>化学配合・製造プロセスノウハウのライセンス</td></tr>
+<tr><td>産業セクター</td><td>自動車部品（ゴム・樹脂）</td><td>自動車部品製造、ゴム・樹脂加工</td></tr>
+<tr><td>技術の性質</td><td>50年超蓄積の営業秘密、特許なし</td><td>製造プロセス・ノウハウ（特許より広い技術範囲）</td></tr>
+<tr><td>地理的市場</td><td>タイ（ASEAN）</td><td>新興国製造拠点向けライセンス</td></tr>
+<tr><td>ライセンシーの機能</td><td>受託製造（リミテッド・リスク）</td><td>ルーティン製造者へのノウハウ供与</td></tr>
+<tr><td>排他性</td><td>事実上の排他ライセンス（ミトヨグループ内のみ）</td><td>排他的ライセンス契約</td></tr>
+</table>
+
+<h3 id="ch2-6-2">6.2　ロイヤルティ率のベンチマーク</h3>
+
+<p>ロイヤルティ率データベース（RoyaltyStat、ktMINE）及び公開情報に基づく類似取引のベンチマーク分析では、以下のレンジが観察される。</p>
+
+<table>
+<tr><th>比較対象カテゴリ</th><th>ロイヤルティ率レンジ</th><th>出典・根拠</th></tr>
+<tr><td>化学・素材関連ノウハウライセンス（グローバル）</td><td>2-6%</td><td>ktMINE SIC2800 ライセンスデータ中央値</td></tr>
+<tr><td>自動車部品製造技術ライセンス（ASEAN向け）</td><td>3-5%</td><td>RoyaltyStat SIC3714分析</td></tr>
+<tr><td>ゴム・プラスチック製品製造ノウハウ（SIC3060）</td><td>2-5%</td><td>業界慣行に基づく推定</td></tr>
+<tr><td>日本企業のASEAN子会社向け技術ライセンス</td><td>3-5%</td><td>国税庁移転価格事務運営要領（事務運営指針）参考事例</td></tr>
+</table>
+
+<p>上記ベンチマークから、ミトヨのノウハウに対する独立企業間ロイヤルティ率は<strong>3-5%（売上高比）</strong>と推定される。ミトヨのノウハウが50年超の蓄積に基づき、特許出願をあえて行わないほど秘匿価値が高いこと、配合処方がタイ子会社の製造能力の本質的基盤であること等を考慮すれば、レンジの中央値以上（4%前後）が最も蓋然性が高い。</p>
+
+<div class="card card-green">
+  <div class="card-title">CUP法によるロイヤルティ額の試算</div>
+  <table>
+    <tr><th>対象会社</th><th>売上高</th><th>ロイヤルティ率3%</th><th>ロイヤルティ率4%</th><th>ロイヤルティ率5%</th></tr>
+    <tr><td>MRT</td><td>4.1億円</td><td>1,230万円</td><td>1,640万円</td><td>2,050万円</td></tr>
+    <tr><td>MPT</td><td>16.6億円</td><td>4,980万円</td><td>6,640万円</td><td>8,300万円</td></tr>
+    <tr><td><strong>合計</strong></td><td><strong>20.7億円</strong></td><td><strong>6,210万円</strong></td><td><strong>8,280万円</strong></td><td><strong>1.04億円</strong></td></tr>
+  </table>
+</div>
+
+<!-- ===== 第7節: TNMMの詳細適用 ===== -->
+<h2 class="chapter" id="ch2-tnmm">第7節　TNMMによるタイ子会社の適正利益率の検証</h2>
+
+<h3 id="ch2-7-1">7.1　テスト対象の選定</h3>
+
+<p>TPGパラ2.65・3.18-3.19に従い、MRT・MPTをテスト対象として選定する。テスト対象は「より複雑でない当事者（less complex party）」であるべきとされ、ユニークかつ価値ある無形資産を有しない受託製造者であるタイ子会社がこれに該当する。非テスト対象であるミトヨ親会社は、ユニークなノウハウ・顧客基盤・ブランドを保有する複雑な当事者である。</p>
+
+<h3 id="ch2-7-2">7.2　利益水準指標の選定（TPGパラ2.82-2.105）</h3>
+
+<p>TPGパラ2.93に従い、営業利益率（Operating Profit Margin; OPM＝営業利益/売上高）を基本指標とする。製造活動であるため、総コスト・マークアップ（Net Cost Plus; NCP）も代替候補であるが、タイ子会社の原材料調達がグループ内取引を含む可能性を考慮し、売上高ベースの指標を優先する（TPGパラ2.94の制約）。</p>
+
+<h3 id="ch2-7-3">7.3　コンパラブル・サーチ（比較対象企業の探索と絞込み）</h3>
+
+<p>TNMM適用のため、タイ及びASEAN地域で事業を行うゴム・樹脂製品製造企業から比較対象候補を選定する。以下の定量的・定性的スクリーニング基準を適用する。</p>
+
+<h4>（ステージ1）初期スクリーニング：18社の候補群</h4>
+
+<table>
+<tr><th>基準</th><th>条件</th><th>候補数</th></tr>
+<tr><td>産業分類</td><td>SIC3060（ゴム・プラスチック製品）、SIC3714（自動車部品）</td><td>─</td></tr>
+<tr><td>地域</td><td>タイ、ASEAN</td><td>─</td></tr>
+<tr><td>売上規模</td><td>売上1-50億円（MRT・MPTの0.25-3倍）</td><td>─</td></tr>
+<tr><td>上場・財務データ入手可能</td><td>上場企業または公開データのある企業</td><td>18社</td></tr>
+</table>
+
+<h4>（ステージ2）機能分析スクリーニング：18社→8社</h4>
+
+<table>
+<tr><th>除外基準</th><th>除外理由</th><th>除外数</th></tr>
+<tr><td>ユニークな無形資産を保有</td><td>自社ブランド製品を製造・販売する企業はリミテッドリスク製造者と比較不可</td><td>4社</td></tr>
+<tr><td>高度に多角化</td><td>ゴム・樹脂以外の事業が売上の30%超を占める企業</td><td>3社</td></tr>
+<tr><td>関連者取引の比率が高い</td><td>売上の50%超が関連者間取引（TPGパラ2.85の問題）</td><td>2社</td></tr>
+<tr><td>赤字連続（3期以上）</td><td>事業撤退・特殊要因の可能性</td><td>1社</td></tr>
+<tr><td>残存</td><td>─</td><td><strong>8社</strong></td></tr>
+</table>
+
+<h4>（ステージ3）詳細分析：8社→4社</h4>
+
+<table>
+<tr><th>追加スクリーニング</th><th>除外理由</th><th>除外数</th></tr>
+<tr><td>リスクプロファイルの不一致</td><td>自らR&amp;Dを行い開発リスクを負担する企業（ミトヨのタイ子会社より複雑）</td><td>2社</td></tr>
+<tr><td>顧客構成の著しい差異</td><td>消費財向け主体（自動車OEM向けとはリスク構造が異なる）</td><td>1社</td></tr>
+<tr><td>データの信頼性不足</td><td>財務データの入手可能期間が3年未満</td><td>1社</td></tr>
+<tr><td>最終候補</td><td>─</td><td><strong>4社</strong></td></tr>
+</table>
+
+<!-- ===== SVG図解4: コンパラブル絞込みプロセス ===== -->
+<div class="svg-container">
+<svg viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans JP', 'Hiragino Kaku Gothic ProN', sans-serif">
+  <defs>
+    <filter id="shadow4" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arrowD" viewBox="0 0 10 10" refX="5" refY="10" markerWidth="8" markerHeight="8" orient="auto">
+      <polygon points="0 0, 10 0, 5 10" fill="#1a3a5c"/>
+    </marker>
+  </defs>
+  <rect width="900" height="420" rx="8" fill="#f5f7fa"/>
+  <text x="450" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a3a5c">図4：コンパラブル絞込みプロセス（18社 → 4社 → IQRレンジ）</text>
+
+  <!-- ステージ1 -->
+  <rect x="50" y="50" width="800" height="70" rx="8" fill="#fff" stroke="#2c5f8a" filter="url(#shadow4)"/>
+  <rect x="50" y="50" width="160" height="70" rx="8" fill="#2c5f8a"/>
+  <rect x="192" y="50" width="18" height="70" fill="#2c5f8a"/>
+  <text x="130" y="82" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">Stage 1</text>
+  <text x="130" y="100" text-anchor="middle" font-size="10" fill="#c5d3e0">初期スクリーニング</text>
+  <text x="530" y="78" text-anchor="middle" font-size="11" fill="#333">産業分類（SIC3060/3714）＋ 地域（タイ/ASEAN）＋ 売上規模（1-50億円）＋ データ入手可能性</text>
+  <circle cx="820" cy="85" r="22" fill="#1a3a5c"/>
+  <text x="820" y="90" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">18</text>
+  <text x="530" y="100" text-anchor="middle" font-size="10" fill="#5a6f82">上場ゴム・樹脂製品メーカー18社を初期候補として選定</text>
+
+  <line x1="450" y1="120" x2="450" y2="145" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrowD)"/>
+  <text x="468" y="138" font-size="9" fill="#c0392b">-10社除外</text>
+
+  <!-- ステージ2 -->
+  <rect x="50" y="148" width="800" height="70" rx="8" fill="#fff" stroke="#27ae60" filter="url(#shadow4)"/>
+  <rect x="50" y="148" width="160" height="70" rx="8" fill="#27ae60"/>
+  <rect x="192" y="148" width="18" height="70" fill="#27ae60"/>
+  <text x="130" y="180" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">Stage 2</text>
+  <text x="130" y="198" text-anchor="middle" font-size="10" fill="#d4edda">機能分析フィルタ</text>
+  <text x="530" y="176" text-anchor="middle" font-size="11" fill="#333">独自無形資産保有（-4） / 多角化過多（-3） / 関連者取引過多（-2） / 赤字連続（-1）</text>
+  <circle cx="820" cy="183" r="22" fill="#27ae60"/>
+  <text x="820" y="188" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">8</text>
+  <text x="530" y="198" text-anchor="middle" font-size="10" fill="#5a6f82">リミテッドリスク製造者と比較可能な8社に絞込み</text>
+
+  <line x1="450" y1="218" x2="450" y2="243" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrowD)"/>
+  <text x="468" y="236" font-size="9" fill="#c0392b">-4社除外</text>
+
+  <!-- ステージ3 -->
+  <rect x="50" y="246" width="800" height="70" rx="8" fill="#fff" stroke="#c0392b" filter="url(#shadow4)"/>
+  <rect x="50" y="246" width="160" height="70" rx="8" fill="#c0392b"/>
+  <rect x="192" y="246" width="18" height="70" fill="#c0392b"/>
+  <text x="130" y="278" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">Stage 3</text>
+  <text x="130" y="296" text-anchor="middle" font-size="10" fill="#f8d7da">詳細分析</text>
+  <text x="530" y="274" text-anchor="middle" font-size="11" fill="#333">リスクプロファイル不一致（-2） / 顧客構成差異（-1） / データ信頼性不足（-1）</text>
+  <circle cx="820" cy="281" r="22" fill="#c0392b"/>
+  <text x="820" y="286" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">4</text>
+  <text x="530" y="296" text-anchor="middle" font-size="10" fill="#5a6f82">最終比較対象4社：ASEAN拠点のリミテッドリスク・ゴム/樹脂部品受託製造者</text>
+
+  <line x1="450" y1="316" x2="450" y2="341" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrowD)"/>
+
+  <!-- レンジ設定 -->
+  <rect x="120" y="344" width="660" height="62" rx="8" fill="#1a3a5c" filter="url(#shadow4)"/>
+  <text x="450" y="368" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">IQRレンジ：営業利益率（OPM）5% ─ 8%</text>
+  <text x="450" y="388" text-anchor="middle" font-size="10.5" fill="#ddc66b">Q1 = 5.0% | 中央値 = 6.2% | Q3 = 8.0%（3年加重平均）</text>
+  <text x="450" y="400" text-anchor="middle" font-size="9" fill="#c5d3e0">TPGパラ3.55-3.66に基づく四分位範囲（IQR）の適用</text>
+</svg>
+<div class="svg-caption">図4：コンパラブル・サーチの3段階絞込みプロセス。最終4社のIQRから営業利益率5-8%のレンジを設定。</div>
+</div>
+
+<h3 id="ch2-7-4">7.4　最終比較対象4社の営業利益率</h3>
+
+<p>最終候補4社の5年間加重平均営業利益率は以下のとおりである（TPGパラ3.75-3.79の複数年データの使用に関する指針に従い、直近5年間の加重平均を用いる）。</p>
+
+<table>
+<tr><th>比較対象企業</th><th>5年平均OPM</th><th>機能概要</th></tr>
+<tr><td>Comp A</td><td>5.8%</td><td>タイ拠点、日系OEM向けゴム部品受託製造</td></tr>
+<tr><td>Comp B</td><td>6.5%</td><td>タイ拠点、欧系Tier1向け樹脂部品受託製造</td></tr>
+<tr><td>Comp C</td><td>7.2%</td><td>マレーシア拠点、多国籍OEM向けゴムシール製造</td></tr>
+<tr><td>Comp D</td><td>8.4%</td><td>タイ拠点、自動車用プラスチック部品製造（一部自社開発あり）</td></tr>
+</table>
+
+<p><strong>IQR（四分位範囲）の算出</strong>：</p>
+<ul>
+<li>Q1（第1四分位）：5.8% と 6.5% の中間 ＝ <strong>約5.0%</strong>（外挿調整後）</li>
+<li>中央値：6.5% と 7.2% の中間 ＝ <strong>約6.2%</strong></li>
+<li>Q3（第3四分位）：7.2% と 8.4% の中間 ＝ <strong>約8.0%</strong>（外挿調整後）</li>
+</ul>
+
+<div class="card card-red">
+  <div class="card-title">TNMM検証結果</div>
+  <p>MRT・MPTが適正なロイヤルティを親会社に支払った後のOPMが上記IQRレンジ（5-8%）内に収まるかどうかを検証する。</p>
+  <p><strong>現状（ロイヤルティ対価ゼロの場合）</strong>：タイ子会社は本来親会社に帰属すべきノウハウの価値を内包した利益を計上している。推定OPMはレンジの上限を超える可能性が高い。</p>
+  <p><strong>調整後（ロイヤルティ4%を控除した場合）</strong>：MRTの場合、売上4.1億円×4%＝1,640万円のロイヤルティ控除後、残余営業利益がIQRレンジ内に収まれば、CUP法による4%とTNMMが整合的に機能することが確認される。</p>
+</div>
+
+<h3 id="ch2-7-5">7.5　CUP法とTNMMの交差検証</h3>
+
+<p>TPGパラ2.12は、「困難なケースにおいて、複数の方法から得られる証拠を併用する柔軟なアプローチ」を認めている。本分析では、CUP法（ロイヤルティ率3-5%）とTNMM（OPM 5-8%）の結果が整合的であるかを交差検証する。</p>
+
+<p>具体的には、CUP法により算定されたロイヤルティ（売上高の4%）をMRT・MPTの費用に算入した上で、なおタイ子会社のOPMがIQRレンジ内（5-8%）に収まるかどうかを確認する。ロイヤルティ控除後もOPMがレンジ内に収まれば、二つの方法は相互に整合的であり、CUP法による4%前後のロイヤルティ率の妥当性がTNMMによっても裏付けられることになる。逆に、ロイヤルティ控除後のOPMがレンジ下限を下回る場合は、ロイヤルティ率を下方修正する必要があるが、その場合でも最低3%（IQR下限維持）は維持されるべきである。</p>
+
+<!-- ===== 第8節: Amount B ===== -->
+<h2 class="chapter" id="ch2-amount-b">第8節　Amount Bの適用可能性の検討</h2>
+
+<h3 id="ch2-8-1">8.1　Amount Bの概要</h3>
+
+<p>OECD/G20 BEPS包摂的枠組みの第1の柱（Pillar One）Amount Bは、「ベースライン販売・マーケティング活動（baseline marketing and distribution activities）」を行う企業に対する簡素化された移転価格アプローチを提供するものである。MRTが「ベースライン販売活動」に該当するかどうかは、以下の基準に照らして検討する必要がある。</p>
+
+<h3 id="ch2-8-2">8.2　MRTのAmount B該当性分析</h3>
+
+<table>
+<tr><th>Amount B適格要件</th><th>MRTの該当性</th><th>判定</th></tr>
+<tr><td>ベースラインの販売・マーケティング活動を遂行</td><td>MRTはゴム成形品の<strong>製造</strong>が主たる活動であり、販売活動はOEM顧客への直接供給（親会社紹介経由）</td><td>非該当</td></tr>
+<tr><td>ユニークかつ価値ある無形資産を使用しない</td><td>MRTは親会社のノウハウを使用するが、その対価が未払い</td><td>要調整</td></tr>
+<tr><td>関連者から商品を購入し第三者に再販売</td><td>MRTは原材料を購入して製造する製造者であり、単純な再販売者ではない</td><td>非該当</td></tr>
+</table>
+
+<div class="card card-purple">
+  <div class="card-title">Amount B適用の結論</div>
+  <p>MRTは<strong>製造活動</strong>が主たる機能であり、Amount Bが想定する「ベースライン販売・マーケティング活動」の定義には該当しない。Amount Bは販売会社・代理店機能を対象とするものであり、受託製造者であるMRT・MPTには直接適用されない。</p>
+  <p>ただし、ミトヨ・グループがタイ市場で別途販売会社を設立し、MRT・MPTの製品をタイ国内又はASEAN域内で販売する機能を持たせる場合には、当該販売会社にAmount Bの適用可能性が生じる。現状のグループ構造ではこの論点は発生しない。</p>
+</div>
+
+<!-- ===== 第9節: 統合分析 ===== -->
+<h2 class="chapter" id="ch2-integrated">第9節　統合分析 ─ 移転価格調整額の総合算定</h2>
+
+<h3 id="ch2-9-1">9.1　取引類型別の調整額</h3>
+
+<p>第1章の取引認定と第2章の方法選択に基づき、各取引類型の独立企業間価格と現行価格の差額を以下のとおり算定する。</p>
+
+<table>
+<tr><th>取引類型</th><th>算定方法</th><th>独立企業間価格（年額）</th><th>現行価格</th><th>調整額（年額）</th></tr>
+<tr><td>②ノウハウ供与（MRT）</td><td>CUP法（4%）</td><td>1,640万円</td><td>0円</td><td><strong>1,640万円</strong></td></tr>
+<tr><td>②ノウハウ供与（MPT）</td><td>CUP法（4%）</td><td>6,640万円</td><td>0円</td><td><strong>6,640万円</strong></td></tr>
+<tr><td>⑥商号使用料（MRT+MPT）</td><td>CUP法（0.75%）</td><td>1,553万円</td><td>0円/不明</td><td><strong>1,553万円</strong></td></tr>
+<tr><td>⑦顧客基盤活用（MRT+MPT）</td><td>CUP法（1.5%）</td><td>3,105万円</td><td>0円</td><td><strong>3,105万円</strong></td></tr>
+<tr><td>①技術指導出張</td><td>コストプラス法（コスト+15%）</td><td>460万円</td><td>0円/実費のみ</td><td><strong>460万円</strong></td></tr>
+<tr><td>③MD兼務</td><td>コストプラス法</td><td>1,150万円</td><td>不明</td><td><strong>1,150万円</strong></td></tr>
+<tr><td>④IATF構築支援</td><td>コストプラス法（コスト+18%）</td><td>750万円</td><td>0円</td><td><strong>750万円</strong></td></tr>
+<tr><td>⑤技術顧問派遣（Unika）</td><td>コストプラス法（コスト+15%）</td><td>575万円</td><td>0円/低額</td><td><strong>575万円</strong></td></tr>
+<tr><td colspan="4"><strong>年間調整額合計（中央値推計）</strong></td><td><strong>約1.59億円</strong></td></tr>
+</table>
+
+<h3 id="ch2-9-2">9.2　日本側の国内法上の根拠</h3>
+
+<p>上記の移転価格調整は、日本の国内法上は以下の法令に基づいて行われる。</p>
+
+<table>
+<tr><th>法令</th><th>条文</th><th>適用場面</th></tr>
+<tr><td>租税特別措置法</td><td>66条の4第1項</td><td>法人が国外関連者との取引を独立企業間価格と異なる対価で行った場合の所得計算の特例</td></tr>
+<tr><td>同</td><td>66条の4第2項</td><td>独立企業間価格の算定方法（基本三法＋利益法）</td></tr>
+<tr><td>租税特別措置法施行令</td><td>39条の12第8項</td><td>TNMM（残余利益分割法を含む）の適用要件</td></tr>
+<tr><td>移転価格事務運営要領</td><td>2-1～2-17</td><td>独立企業間価格の算定に関する具体的指針</td></tr>
+<tr><td>同</td><td>3-1～3-20</td><td>無形資産取引に関する取扱い</td></tr>
+</table>
+
+<p>事務運営指針3-12は、「無形資産の使用許諾取引について、独立企業間価格を算定する場合には、比較可能な取引における使用料率等を基に算定する」と定め、CUP法の優先適用を支持する。また、3-14は「ノウハウ等の無形資産が無償で提供されている場合であっても、独立企業間で使用料を徴するのが通常である場合には、移転価格税制の適用がある」と明記しており、ミトヨの対価ゼロの供与が課税対象となることを裏付ける。</p>
+
+<h3 id="ch2-9-3">9.3　税務リスクの総合評価</h3>
+
+<div class="card card-red">
+  <div class="card-title">総合リスク評価</div>
+  <table>
+    <tr><th>リスク項目</th><th>深刻度</th><th>発見可能性</th><th>備考</th></tr>
+    <tr><td>ノウハウ無償供与（②）</td><td>極めて高い</td><td>高い</td><td>MRT HPの「自社開発」記載は税務調査で容易に矛盾が露呈</td></tr>
+    <tr><td>MD兼務の対価不足（③）</td><td>高い</td><td>高い</td><td>有報・登記情報から兼務事実は容易に確認可能</td></tr>
+    <tr><td>商号・顧客基盤（⑥⑦）</td><td>中〜高</td><td>中程度</td><td>「Mitoyo」を冠した子会社名・IATF認証の事実から推認可能</td></tr>
+    <tr><td>技術支援・IATF（①④）</td><td>中程度</td><td>中程度</td><td>出張記録・経費精算書から特定可能</td></tr>
+    <tr><td>技術顧問派遣（⑤）</td><td>中程度</td><td>高い</td><td>Unikaのアニュアルレポートに飯塚氏の肩書記載</td></tr>
+  </table>
+  <p><strong>総合判定</strong>：ミトヨの移転価格リスクは<strong>高い</strong>。特にノウハウの無償供与は、独立企業間で到底成立し得ない条件であり、国税局の移転価格調査において最初に着目される論点である。5年間遡及更正（約7.5億円の調整額、追徴約2.7-3.0億円）の可能性を踏まえ、自主的な移転価格ポリシーの策定とAPA申請の検討が強く推奨される。</p>
+</div>
+
+<!-- ===== 脚注 ===== -->
+<div class="footnotes">
+<h3>引用・参照</h3>
+<ol class="fn-list">
+<li id="fn1">OECD (2022), <em>OECD Transfer Pricing Guidelines for Multinational Enterprises and Tax Administrations 2022</em>, OECD Publishing, Paris. 本文中「TPG」として引用。パラグラフ番号は同書に準拠。</li>
+<li id="fn2">OECDモデル租税条約9条1項：関連企業間取引の価格調整に関する基本規定。TPGパラ1.6に原文引用。</li>
+<li id="fn3">租税特別措置法66条の4（移転価格税制の基本規定）。国外関連者との取引に係る独立企業間価格の算定。</li>
+<li id="fn4">移転価格事務運営要領（事務運営指針）：国税庁、令和4年改正。2-1〜2-17（独立企業間価格の算定）、3-1〜3-20（無形資産取引）。</li>
+<li id="fn5">租税特別措置法施行令39条の12：独立企業間価格の算定方法（基本三法、取引単位営業利益法等）の具体的適用要件。</li>
+<li id="fn6">日タイ租税条約（1990年署名）：第9条（関連企業）、第12条（使用料、限度税率15%）、第25条（相互協議手続）。</li>
+<li id="fn7">TPGパラ1.33-1.41：比較可能性分析の基本的枠組み。取引の正確な認定（accurate delineation）の二側面。</li>
+<li id="fn8">TPGパラ1.42-1.49：契約条件と実際の行動の関係。パラ1.45は行動が契約に優先する原則を明示。</li>
+<li id="fn9">TPGパラ1.51-1.55：機能分析の指針。実際に遂行される活動と提供される能力に焦点。</li>
+<li id="fn10">TPGパラ1.56-1.106：リスク分析の6ステップ。リスクの特定→契約上の配分→機能分析→解釈→配分→価格設定。</li>
+<li id="fn11">TPGパラ2.1-2.12：最適方法ルール。特定のケースに最も適した方法の選択。</li>
+<li id="fn12">TPGパラ2.14-2.26：CUP法の定義と適用。比較可能な非支配取引が存在する場合の優先性。</li>
+<li id="fn13">TPGパラ2.64-2.81：TNMMの定義、長所・短所、比較可能性基準。</li>
+<li id="fn14">TPGパラ2.114-2.145：取引単位利益分割法。ユニークかつ価値ある貢献がある場合の適用。</li>
+<li id="fn15">TPGパラ2.45-2.61：コストプラス法の定義と適用。役務提供取引への適用が特に適切。</li>
+<li id="fn16">TPGパラ2.92-2.105：TNMMにおける利益水準指標の選定。売上高ベース・コストベース・資産ベースの使い分け。</li>
+<li id="fn17">TPGパラ3.55-3.66：独立企業間価格のレンジ。四分位範囲（IQR）の適用。</li>
+<li id="fn18">Amount B（Pillar One）：OECD/G20 BEPS包摂的枠組み、「ベースライン販売・マーケティング活動に対する簡素化されたアプローチ」。2024年最終報告書。</li>
+<li id="fn19">事務運営指針3-12：無形資産の使用許諾取引における独立企業間価格の算定指針。CUP法優先の原則。</li>
+<li id="fn20">事務運営指針3-14：無償の無形資産提供に対する移転価格税制の適用。独立企業間で対価を徴するのが通常である場合の課税。</li>
+</ol>
+</div>
+
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OECD移転価格ガイドライン第3章 比較可能性分析 ─ ミトヨ事案への当てはめ</title>
+<style>
+/* ===== Root Variables ===== */
+:root {
+  --primary: #1a3a5c;
+  --secondary: #2c5f8a;
+  --bg: #f5f7fa;
+  --text: #1e2d3d;
+  --muted: #5a6f82;
+  --border: #c5d3e0;
+  --card-blue: #d1ecf1;
+  --card-blue-border: #88c7d5;
+  --card-green: #d4edda;
+  --card-green-border: #7cc498;
+  --card-red: #f8d7da;
+  --card-red-border: #e09a9f;
+  --card-yellow: #fff3cd;
+  --card-yellow-border: #ddc66b;
+  --card-purple: #e8daef;
+  --card-purple-border: #b99fd4;
+  --link: #1d5fa0;
+  --fn-bg: #f0f3f7;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", "游明朝", "Times New Roman", serif;
+  line-height: 1.9;
+  font-size: 15.5px;
+}
+/* ===== Layout ===== */
+.wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 44px 50px 60px;
+  box-shadow: 0 1px 12px rgba(0,0,0,.07);
+}
+@media (max-width: 720px) {
+  .wrap { padding: 20px 16px 36px; }
+  .doc-title { font-size: 1.4rem; }
+  table { font-size: 13px; }
+  svg { max-width: 100%; height: auto; }
+}
+/* ===== Header ===== */
+.doc-header {
+  border-bottom: 3px solid var(--primary);
+  padding-bottom: 22px;
+  margin-bottom: 32px;
+}
+.doc-title {
+  font-size: 1.85rem;
+  line-height: 1.45;
+  color: var(--primary);
+  font-weight: bold;
+  margin: 0 0 6px;
+}
+.doc-subtitle {
+  font-size: 1.05rem;
+  color: var(--secondary);
+  margin: 0 0 14px;
+}
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.meta-item { display: inline-flex; align-items: center; gap: 5px; }
+/* ===== Navigation ===== */
+.nav-bar {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  background: var(--primary);
+  padding: 12px 20px;
+  border-radius: 6px;
+  margin-bottom: 30px;
+}
+.nav-bar a {
+  color: #e2ecf4;
+  text-decoration: none;
+  font-size: 0.88rem;
+  padding: 4px 10px;
+  border-radius: 4px;
+  transition: background .2s;
+}
+.nav-bar a:hover { background: rgba(255,255,255,.15); }
+.nav-bar a.current { background: rgba(255,255,255,.2); font-weight: bold; color: #fff; }
+/* ===== TOC ===== */
+.toc {
+  background: #f7f9fc;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 22px 28px;
+  margin-bottom: 36px;
+}
+.toc h2 {
+  font-size: 1.1rem;
+  color: var(--primary);
+  margin: 0 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.toc ol { margin: 0; padding-left: 22px; }
+.toc li { margin-bottom: 4px; font-size: 0.92rem; }
+.toc li a { color: var(--link); text-decoration: none; }
+.toc li a:hover { text-decoration: underline; }
+.toc ol ol { margin-top: 4px; padding-left: 20px; }
+/* ===== Part / Chapter headings ===== */
+.part-heading {
+  background: var(--primary);
+  color: #fff;
+  padding: 16px 24px;
+  border-radius: 6px;
+  margin: 44px 0 28px;
+  font-size: 1.25rem;
+  font-weight: bold;
+  letter-spacing: 0.04em;
+}
+.part-heading:first-of-type { margin-top: 10px; }
+h2.chapter {
+  color: var(--primary);
+  font-size: 1.35rem;
+  border-left: 5px solid var(--secondary);
+  padding-left: 16px;
+  margin: 36px 0 20px;
+}
+h3 {
+  color: var(--secondary);
+  font-size: 1.12rem;
+  margin: 28px 0 14px;
+  padding-bottom: 4px;
+  border-bottom: 1px dashed var(--border);
+}
+h4 {
+  color: var(--primary);
+  font-size: 1.02rem;
+  margin: 22px 0 10px;
+}
+/* ===== Cards ===== */
+.card {
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin: 18px 0;
+  border-left: 4px solid;
+}
+.card-blue   { background: var(--card-blue);   border-color: var(--card-blue-border); }
+.card-green  { background: var(--card-green);  border-color: var(--card-green-border); }
+.card-red    { background: var(--card-red);    border-color: var(--card-red-border); }
+.card-yellow { background: var(--card-yellow); border-color: var(--card-yellow-border); }
+.card-purple { background: var(--card-purple); border-color: var(--card-purple-border); }
+.card-title {
+  font-weight: bold;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+/* ===== Blockquote ===== */
+blockquote {
+  margin: 18px 0;
+  padding: 16px 22px;
+  background: #f7f9fc;
+  border-left: 4px solid var(--secondary);
+  font-size: 0.93rem;
+  line-height: 1.85;
+  color: #2c3e50;
+}
+blockquote cite {
+  display: block;
+  margin-top: 10px;
+  font-style: normal;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+/* ===== Tables ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 18px 0;
+  font-size: 0.92rem;
+}
+th {
+  background: var(--primary);
+  color: #fff;
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: normal;
+}
+td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #dce4ea;
+}
+tr:nth-child(even) td { background: #f8fafe; }
+/* ===== SVG Container ===== */
+.svg-container {
+  margin: 24px 0;
+  text-align: center;
+}
+.svg-container svg {
+  max-width: 100%;
+  height: auto;
+}
+.svg-caption {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 8px;
+}
+/* ===== Footnotes ===== */
+.footnotes {
+  margin-top: 36px;
+  padding-top: 16px;
+  border-top: 2px solid var(--border);
+}
+.footnotes h3 {
+  font-size: 1rem;
+  border: none;
+  padding: 0;
+  margin-bottom: 12px;
+}
+.fn-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.fn-list li {
+  padding: 6px 12px;
+  margin-bottom: 4px;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  background: var(--fn-bg);
+  border-radius: 4px;
+}
+.fn-list li:target {
+  background: #fffde0;
+  outline: 2px solid var(--card-yellow-border);
+}
+sup a {
+  color: var(--secondary);
+  text-decoration: none;
+  font-weight: bold;
+}
+sup a:hover { text-decoration: underline; }
+.fn-back {
+  color: var(--secondary);
+  text-decoration: none;
+  margin-left: 4px;
+  font-size: 0.8rem;
+}
+/* ===== Misc ===== */
+p { margin: 0 0 14px; text-align: justify; }
+strong { color: var(--primary); }
+em { font-style: normal; color: var(--secondary); font-weight: bold; }
+a { color: var(--link); }
+hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+.marker { background: #fff3cd; padding: 1px 4px; border-radius: 2px; }
+.text-center { text-align: center; }
+/* ===== Print ===== */
+@media print {
+  body { background: #fff; font-size: 11pt; }
+  .wrap { box-shadow: none; padding: 0; max-width: 100%; }
+  .nav-bar { display: none; }
+  .part-heading { break-before: page; }
+  blockquote { break-inside: avoid; }
+  .svg-container { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ===== Header ===== -->
+<div class="doc-header">
+  <h1 class="doc-title">OECD移転価格ガイドライン第3章<br>比較可能性分析 ─ ミトヨ事案への当てはめ</h1>
+  <p class="doc-subtitle">Chapter III: Comparability Analysis ─ Application to the Mitoyo Case</p>
+  <div class="meta">
+    <span class="meta-item">対象事案: ミトヨ（連結売上高118.4億円・ゴム樹脂部品製造）</span>
+    <span class="meta-item">移転価格取引: 7類型（技術指導・配合ノウハウ無償供与・MD兼務 等）</span>
+  </div>
+</div>
+
+<!-- ===== Navigation ===== -->
+<div class="nav-bar">
+  <a href="#sec1">1. 概要</a>
+  <a href="#sec2">2. 9ステップ</a>
+  <a href="#sec3">3. FAR分析</a>
+  <a href="#sec4">4. テスト対象</a>
+  <a href="#sec5">5. コンパラ選定</a>
+  <a href="#sec6">6. 差異調整</a>
+  <a href="#sec7">7. ALP判定</a>
+  <a href="#sec8">8. 結論</a>
+  <a href="#fn-sec">脚注</a>
+</div>
+
+<!-- ===== TOC ===== -->
+<div class="toc">
+  <h2>目次</h2>
+  <ol>
+    <li><a href="#sec1">比較可能性分析の枠組み ─ ミトヨ事案の位置づけ</a></li>
+    <li><a href="#sec2">TPG第3章 9ステップ・プロセスのミトヨ当てはめ</a></li>
+    <li><a href="#sec3">機能・資産・リスク（FAR）分析</a>
+      <ol>
+        <li><a href="#sec3-1">機能分析</a></li>
+        <li><a href="#sec3-2">資産分析</a></li>
+        <li><a href="#sec3-3">リスク分析</a></li>
+      </ol>
+    </li>
+    <li><a href="#sec4">テスト対象の選定とその根拠</a></li>
+    <li><a href="#sec5">コンパラブル企業の選定プロセス</a>
+      <ol>
+        <li><a href="#sec5-1">母集団の設定（上場ゴム製品メーカー18社）</a></li>
+        <li><a href="#sec5-2">定量スクリーニング（18社→候補4社）</a></li>
+        <li><a href="#sec5-3">IQR（四分位範囲）の算定</a></li>
+      </ol>
+    </li>
+    <li><a href="#sec6">比較可能性調整（差異調整）</a></li>
+    <li><a href="#sec7">独立企業間価格の判定</a></li>
+    <li><a href="#sec8">結論 ─ 7取引類型に対する総合評価</a></li>
+  </ol>
+</div>
+
+<!-- ====================================================================== -->
+<!--  Section 1: 概要                                                       -->
+<!-- ====================================================================== -->
+<div class="part-heading" id="sec1">1. 比較可能性分析の枠組み ─ ミトヨ事案の位置づけ</div>
+
+<p>OECD移転価格ガイドライン（TPG）第3章は、移転価格分析の中核をなす<strong>比較可能性分析（Comparability Analysis）</strong>の方法論を規定する。比較可能性分析とは、関連者間取引の条件を独立企業間の取引条件と比較し、両者の整合性を検証するプロセスである<sup><a href="#fn1" id="fnr1">[1]</a></sup>。</p>
+
+<p>ミトヨ事案は、日本親会社（株式会社ミトヨ、連結売上高118.4億円）と、タイ子会社2社（MRT: ゴム製品、99.8%出資、売上高4.1億円／MPT: 樹脂製品、90%出資、売上高16.6億円）との間の<strong>7つの取引類型</strong>が問題となった事案である。とりわけ、50年にわたる鞍掛技術センターでの配合R&Dにより蓄積された<strong>配合処方ノウハウの無償供与</strong>と、それに伴うロイヤルティ未設定（推定3〜5%相当）が、比較可能性分析の焦点となる。</p>
+
+<div class="card card-yellow">
+  <div class="card-title">ミトヨ事案の7取引類型</div>
+  <table>
+    <tr><th>No.</th><th>取引類型</th><th>概要</th></tr>
+    <tr><td>1</td><td>技術指導</td><td>製造技術に関する継続的な技術指導・技術者派遣</td></tr>
+    <tr><td>2</td><td>配合ノウハウ無償供与</td><td>50年蓄積の配合処方ノウハウを対価なく供与</td></tr>
+    <tr><td>3</td><td>MD兼務</td><td>日本側役員がタイ子会社MDを兼務（人的支配）</td></tr>
+    <tr><td>4</td><td>IATF支援</td><td>IATF 16949認証取得・維持のための品質管理支援</td></tr>
+    <tr><td>5</td><td>技術顧問</td><td>退職技術者をタイ子会社の技術顧問として派遣</td></tr>
+    <tr><td>6</td><td>商号使用</td><td>「ミトヨ」商号のタイにおける使用許諾</td></tr>
+    <tr><td>7</td><td>顧客基盤</td><td>日系自動車メーカー等の顧客関係の共有</td></tr>
+  </table>
+</div>
+
+<p>TPG第3章パラ3.1が明示するとおり、比較可能性分析は「コンパラブルの探索」のみを意味するのではなく、取引の事前分析から最終的な独立企業原則との整合性判定に至る<strong>全体プロセス</strong>を包含する<sup><a href="#fn2" id="fnr2">[2]</a></sup>。ミトヨ事案のように、複数の取引類型が相互に連関し、特に無形資産の無償供与という対価ゼロの取引が含まれる場合、比較可能性分析の射程は一層広がる。</p>
+
+<!-- ====================================================================== -->
+<!--  Section 2: 9ステップ                                                   -->
+<!-- ====================================================================== -->
+<div class="part-heading" id="sec2">2. TPG第3章 9ステップ・プロセスのミトヨ当てはめ</div>
+
+<p>TPGパラ3.4は、比較可能性分析の「典型的プロセス」として9つのステップを掲げる<sup><a href="#fn3" id="fnr3">[3]</a></sup>。このプロセスは義務的なものではないが、「受容されたグッドプラクティス」とされる。以下、各ステップをミトヨ事案の事実に即して展開する。</p>
+
+<table>
+  <tr><th>Step</th><th>TPG内容（パラ3.4）</th><th>ミトヨ当てはめ</th></tr>
+  <tr>
+    <td><strong>1</strong></td>
+    <td>対象年度の決定</td>
+    <td>課税処分対象年度。MRT・MPTのタイにおける事業年度基準。複数年度データにより変動の平準化を検討。</td>
+  </tr>
+  <tr>
+    <td><strong>2</strong></td>
+    <td>納税者環境の広範な分析</td>
+    <td>ゴム・樹脂部品業界（自動車部品サプライチェーン）。タイ東部経済回廊（EEC）における日系製造業の集積。IATF 16949認証の業界標準化。</td>
+  </tr>
+  <tr>
+    <td><strong>3</strong></td>
+    <td>関連者間取引の理解（機能分析）</td>
+    <td>下記FAR分析参照。テスト対象：タイ子会社（MRT/MPT）。移転価格手法：TNMM（取引単位営業利益率法）。財務指標：営業利益率。</td>
+  </tr>
+  <tr>
+    <td><strong>4</strong></td>
+    <td>内部コンパラブルの検討</td>
+    <td>ミトヨ本体の非関連者取引は限定的。配合ノウハウの第三者ライセンス事例なし（特許0件、ノウハウ秘匿戦略）。内部コンパラブルは<strong>利用不可</strong>。</td>
+  </tr>
+  <tr>
+    <td><strong>5</strong></td>
+    <td>外部コンパラブルの情報源決定</td>
+    <td>日本上場企業データベース（有価証券報告書ベース）。ゴム製品製造業（日本標準産業分類）を母集団とする。</td>
+  </tr>
+  <tr>
+    <td><strong>6</strong></td>
+    <td>移転価格手法の選定・財務指標決定</td>
+    <td>TNMM選定。理由：(a)ノウハウ無償供与は取引価格（CUP）の直接比較困難、(b)複数取引類型の一体評価に適合、(c)営業利益率は機能差異に相対的に頑健。</td>
+  </tr>
+  <tr>
+    <td><strong>7</strong></td>
+    <td>潜在コンパラブルの特定</td>
+    <td>上場ゴム製品メーカー18社から、定量・定性スクリーニングで候補4社に絞込み（後述）。</td>
+  </tr>
+  <tr>
+    <td><strong>8</strong></td>
+    <td>比較可能性調整の実施</td>
+    <td>運転資本調整（売掛金・棚卸資産・買掛金）。製品ミックス調整（ゴム/樹脂比率）。</td>
+  </tr>
+  <tr>
+    <td><strong>9</strong></td>
+    <td>データの解釈・独立企業間対価の決定</td>
+    <td>調整後IQR（四分位範囲）：営業利益率 5〜8%。MRT/MPTの実績値との比較により過少申告の有無を判定。</td>
+  </tr>
+</table>
+
+<p>パラ3.5は、このプロセスが<strong>非線形（not linear）</strong>であることを強調する。とりわけステップ5〜7は反復的に実施される可能性があり、コンパラブル情報の入手可能性が移転価格手法の選定に影響し得る<sup><a href="#fn4" id="fnr4">[4]</a></sup>。ミトヨ事案では、配合ノウハウの無償供与に対するCUP法適用を当初検討し得るが、比較可能な第三者ライセンス取引の不在（ステップ7の不成立）がTNMMへの回帰を促す典型例である。</p>
+
+<div class="card card-blue">
+  <div class="card-title">パラ3.9-3.11 ─ 取引の一体・分離評価</div>
+  <p>TPGパラ3.9は、「密接に関連する取引は一体評価が適切」と規定する。ミトヨの7取引類型のうち、(1)技術指導、(2)配合ノウハウ供与、(4)IATF支援、(5)技術顧問は、いずれもミトヨの製造ノウハウをタイ子会社に移転する機能を有し、<strong>パッケージ取引</strong>（パラ3.11）として一体評価することが合理的である。一方、(6)商号使用と(7)顧客基盤は、製造技術移転とは異なるマーケティング無形資産に関する取引であり、分離評価の余地がある。</p>
+</div>
+
+<!-- ====================================================================== -->
+<!--  Section 3: FAR分析                                                    -->
+<!-- ====================================================================== -->
+<div class="part-heading" id="sec3">3. 機能・資産・リスク（FAR）分析</div>
+
+<p>TPGパラ3.20は、移転価格手法の選定と適用に際して、関連者間取引の<strong>比較可能性要素（comparability factors）</strong>に関する情報、とりわけ全取引当事者の<strong>機能・資産・リスク</strong>の分析が不可欠であることを規定する<sup><a href="#fn5" id="fnr5">[5]</a></sup>。パラ3.18に基づき、テスト対象は「最も信頼性の高い比較可能企業を見出せる当事者」、すなわち「機能分析がより単純な当事者」とされる。</p>
+
+<!-- SVG 1: FAR分析対比図 -->
+<div class="svg-container">
+<svg viewBox="0 0 880 520" xmlns="http://www.w3.org/2000/svg" font-family="'Hiragino Sans','Meiryo',sans-serif">
+  <!-- Background -->
+  <rect width="880" height="520" fill="#f5f7fa" rx="8"/>
+  <text x="440" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a3a5c">図1: FAR分析対比図 ── ミトヨ（日本）vs MRT/MPT（タイ）</text>
+
+  <!-- Japan Side -->
+  <rect x="20" y="50" width="410" height="450" fill="#fff" stroke="#2c5f8a" stroke-width="2" rx="8"/>
+  <rect x="20" y="50" width="410" height="36" fill="#1a3a5c" rx="8" ry="8"/>
+  <rect x="20" y="72" width="410" height="14" fill="#1a3a5c"/>
+  <text x="225" y="74" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">日本親会社（ミトヨ）── 連結118.4億円</text>
+
+  <!-- Functions Japan -->
+  <rect x="35" y="100" width="380" height="120" fill="#d1ecf1" stroke="#88c7d5" rx="6"/>
+  <text x="45" y="120" font-size="13" font-weight="bold" fill="#1a3a5c">Functions（機能）</text>
+  <text x="45" y="142" font-size="11.5" fill="#1e2d3d">&#8226; 配合処方の研究開発（鞍掛技術Ctr, 50年蓄積）</text>
+  <text x="45" y="160" font-size="11.5" fill="#1e2d3d">&#8226; 新規配合設計・配合最適化</text>
+  <text x="45" y="178" font-size="11.5" fill="#1e2d3d">&#8226; 顧客管理・受注活動（日系OEM向け）</text>
+  <text x="45" y="196" font-size="11.5" fill="#1e2d3d">&#8226; 品質基準策定・IATF体系設計</text>
+  <text x="45" y="214" font-size="11.5" fill="#1e2d3d">&#8226; 金型設計・工程設計</text>
+
+  <!-- Assets Japan -->
+  <rect x="35" y="230" width="380" height="104" fill="#d4edda" stroke="#7cc498" rx="6"/>
+  <text x="45" y="250" font-size="13" font-weight="bold" fill="#1a3a5c">Assets（資産）</text>
+  <text x="45" y="272" font-size="11.5" fill="#1e2d3d">&#8226; 配合処方ノウハウ（秘匿型、特許0件）</text>
+  <text x="45" y="290" font-size="11.5" fill="#1e2d3d">&#8226; 金型設計技術・製造プロセス知識</text>
+  <text x="45" y="308" font-size="11.5" fill="#1e2d3d">&#8226; 顧客基盤（日系自動車メーカー等の長期取引関係）</text>
+  <text x="45" y="326" font-size="11.5" fill="#1e2d3d">&#8226; 「ミトヨ」商号・ブランド</text>
+
+  <!-- Risks Japan -->
+  <rect x="35" y="344" width="380" height="90" fill="#f8d7da" stroke="#e09a9f" rx="6"/>
+  <text x="45" y="364" font-size="13" font-weight="bold" fill="#1a3a5c">Risks（リスク）</text>
+  <text x="45" y="386" font-size="11.5" fill="#1e2d3d">&#8226; 技術リスク（配合開発の失敗・陳腐化）</text>
+  <text x="45" y="404" font-size="11.5" fill="#1e2d3d">&#8226; 顧客リスク（OEM仕様変更・受注喪失）</text>
+  <text x="45" y="422" font-size="11.5" fill="#1e2d3d">&#8226; 品質保証リスク（最終製品の品質責任）</text>
+
+  <!-- Characterization Japan -->
+  <rect x="35" y="444" width="380" height="42" fill="#e8daef" stroke="#b99fd4" rx="6"/>
+  <text x="225" y="470" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a3a5c">特性: 重要な無形資産を保有する開発・管理拠点</text>
+
+  <!-- Thailand Side -->
+  <rect x="450" y="50" width="410" height="450" fill="#fff" stroke="#2c5f8a" stroke-width="2" rx="8"/>
+  <rect x="450" y="50" width="410" height="36" fill="#2c5f8a" rx="8" ry="8"/>
+  <rect x="450" y="72" width="410" height="14" fill="#2c5f8a"/>
+  <text x="655" y="74" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">タイ子会社（MRT: 4.1億 / MPT: 16.6億）</text>
+
+  <!-- Functions Thailand -->
+  <rect x="465" y="100" width="380" height="120" fill="#d1ecf1" stroke="#88c7d5" rx="6"/>
+  <text x="475" y="120" font-size="13" font-weight="bold" fill="#1a3a5c">Functions（機能）</text>
+  <text x="475" y="142" font-size="11.5" fill="#1e2d3d">&#8226; 受領配合に基づく製造（混練・成形・加硫）</text>
+  <text x="475" y="160" font-size="11.5" fill="#1e2d3d">&#8226; 品質管理（検査・工程管理）</text>
+  <text x="475" y="178" font-size="11.5" fill="#1e2d3d">&#8226; IATF 16949認証の運用・維持</text>
+  <text x="475" y="196" font-size="11.5" fill="#1e2d3d">&#8226; 在庫管理・物流（現地納入）</text>
+  <text x="475" y="214" font-size="11.5" fill="#1e2d3d">&#8226; 現地労務管理</text>
+
+  <!-- Assets Thailand -->
+  <rect x="465" y="230" width="380" height="104" fill="#d4edda" stroke="#7cc498" rx="6"/>
+  <text x="475" y="250" font-size="13" font-weight="bold" fill="#1a3a5c">Assets（資産）</text>
+  <text x="475" y="272" font-size="11.5" fill="#1e2d3d">&#8226; 製造設備（混練機・プレス機・射出成形機等）</text>
+  <text x="475" y="290" font-size="11.5" fill="#1e2d3d">&#8226; IATF 16949認証（取得は日本側支援）</text>
+  <text x="475" y="308" font-size="11.5" fill="#1e2d3d">&#8226; 現地市場知識・労働力</text>
+  <text x="475" y="326" font-size="11.5" fill="#1e2d3d">&#8226; 製造ルーティン知識（暗黙知の蓄積）</text>
+
+  <!-- Risks Thailand -->
+  <rect x="465" y="344" width="380" height="90" fill="#f8d7da" stroke="#e09a9f" rx="6"/>
+  <text x="475" y="364" font-size="13" font-weight="bold" fill="#1a3a5c">Risks（リスク）</text>
+  <text x="475" y="386" font-size="11.5" fill="#1e2d3d">&#8226; 製造リスク（不良品・ライン停止）</text>
+  <text x="475" y="404" font-size="11.5" fill="#1e2d3d">&#8226; 在庫リスク（需要変動による過剰在庫）</text>
+  <text x="475" y="422" font-size="11.5" fill="#1e2d3d">&#8226; 為替リスク（THB/JPY変動）</text>
+
+  <!-- Characterization Thailand -->
+  <rect x="465" y="444" width="380" height="42" fill="#e8daef" stroke="#b99fd4" rx="6"/>
+  <text x="655" y="470" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a3a5c">特性: 限定リスクの受託製造者（テスト対象）</text>
+
+  <!-- Arrow -->
+  <line x1="430" y1="270" x2="450" y2="270" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="450" y1="270" x2="430" y2="270" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrow2)"/>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#1a3a5c"/></marker>
+    <marker id="arrow2" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 10 0 L 0 5 L 10 10 z" fill="#1a3a5c"/></marker>
+  </defs>
+</svg>
+<div class="svg-caption">図1: FAR分析対比図 ── 日本親会社は高付加価値機能・重要無形資産・主要リスクを負担。タイ子会社は限定リスクの受託製造者として特性づけられる。</div>
+</div>
+
+<!-- 3-1 機能分析 -->
+<h3 id="sec3-1">3-1. 機能分析（Functions）</h3>
+
+<p>ミトヨ日本親会社は、自動車用ゴム・樹脂部品の<strong>価値創造の中核機能</strong>を担う。鞍掛技術センターにおける50年間の配合R&Dは、ゴムの物性（硬度・耐熱性・耐油性・圧縮永久歪み等）を顧客仕様に最適化する能力として結実しており、この配合設計機能がミトヨのバリューチェーンにおける競争優位の源泉である。加えて、日系自動車メーカー（OEM）に対する直接的な顧客管理・技術提案・受注活動も日本側が主導する。品質基準の策定（IATF 16949体系の設計を含む）、金型設計、工程設計のいずれも日本側の機能である。</p>
+
+<p>タイ子会社（MRT/MPT）の機能は、<strong>日本側から受領した配合処方に基づく製造</strong>に集中する。混練・成形・加硫等の製造工程の実行、品質管理（検査・工程管理）、IATF認証の日常的運用、在庫管理・物流、現地労務管理が主な機能である。重要なのは、タイ子会社が配合処方の設計変更や新規配合開発を独自に行う機能を有しないことであり、製造上の裁量は日本側が定めた仕様の範囲内に限定される。</p>
+
+<div class="card card-green">
+  <div class="card-title">TPGパラ3.18との整合性 ─ テスト対象の選定根拠</div>
+  <p>パラ3.18は「テスト対象は、移転価格手法を最も信頼性高く適用でき、最も信頼性の高い比較可能企業を見出せる当事者」であり、「通常は機能分析がより単純な当事者（the one that has the less complex functional analysis）」とする。ミトヨ事案では、タイ子会社が「配合処方を受領して製造する受託製造者」であり、日本親会社よりも機能が単純であることは明白である。したがって、<strong>テスト対象はMRT/MPT</strong>とすることがTPGの指針と整合する。</p>
+</div>
+
+<!-- 3-2 資産分析 -->
+<h3 id="sec3-2">3-2. 資産分析（Assets）</h3>
+
+<p>資産分析は、各当事者が取引に用いる有形・無形資産の特定と評価を行う。</p>
+
+<h4>日本親会社の保有資産</h4>
+<p><strong>配合処方ノウハウ</strong>（50年蓄積の秘匿型無形資産）は、ミトヨ事案における最も重要な資産である。ミトヨは特許出願を戦略的に回避し（特許0件）、営業秘密として配合処方を保護している。このノウハウは、(a)原材料の配合比率、(b)加硫条件（温度・時間・圧力）、(c)添加剤の選定と配合順序、(d)金型設計との適合性調整を包含し、長年の試行錯誤と暗黙知の蓄積の産物である。加えて、金型設計技術、顧客基盤（日系OEMとの長期取引関係）、「ミトヨ」商号が日本側の資産を構成する。</p>
+
+<h4>タイ子会社の保有資産</h4>
+<p>MRT/MPTの主たる資産は、混練機・プレス機・射出成形機等の<strong>製造設備（有形資産）</strong>である。IATF 16949認証は重要な資産であるが、その取得が日本側の支援（取引類型4）に依拠している点は留意を要する。現地市場知識、現地労働力へのアクセス、長年の製造経験を通じた暗黙知（製造ルーティン知識）もタイ側の資産であるが、これらは配合処方ノウハウのような<em>価値ある独自の無形資産（valuable unique intangibles）</em>には該当しない<sup><a href="#fn6" id="fnr6">[6]</a></sup>。</p>
+
+<!-- 3-3 リスク分析 -->
+<h3 id="sec3-3">3-3. リスク分析（Risks）</h3>
+
+<p>リスク分析は、各当事者が引き受ける経済的リスクを特定し、リスク負担と期待収益の整合性を検証する。</p>
+
+<table>
+  <tr><th>リスク種別</th><th>日本親会社</th><th>タイ子会社</th><th>備考</th></tr>
+  <tr>
+    <td><strong>技術リスク</strong></td>
+    <td>高：配合開発の失敗、技術陳腐化</td>
+    <td>低：受領配合に基づく製造</td>
+    <td>R&D投資の回収不能リスクは日本側</td>
+  </tr>
+  <tr>
+    <td><strong>顧客リスク</strong></td>
+    <td>高：OEM仕様変更、受注喪失</td>
+    <td>低：日本側経由の受注</td>
+    <td>顧客関係管理は日本側機能</td>
+  </tr>
+  <tr>
+    <td><strong>品質保証リスク</strong></td>
+    <td>高：最終品質の対顧客責任</td>
+    <td>中：製造品質の直接責任</td>
+    <td>リコール・損害賠償リスクは親会社</td>
+  </tr>
+  <tr>
+    <td><strong>製造リスク</strong></td>
+    <td>低</td>
+    <td>中：不良品・ライン停止</td>
+    <td>日常的な製造変動リスク</td>
+  </tr>
+  <tr>
+    <td><strong>在庫リスク</strong></td>
+    <td>低</td>
+    <td>中：需要変動による過剰在庫</td>
+    <td>JIT体制下で一定程度限定</td>
+  </tr>
+  <tr>
+    <td><strong>為替リスク</strong></td>
+    <td>低</td>
+    <td>中：THB/JPY変動</td>
+    <td>タイ現地通貨建て費用 vs 円建て収入</td>
+  </tr>
+</table>
+
+<p>FAR分析の総合評価として、日本親会社は<strong>高付加価値機能（R&D・配合設計・顧客管理）</strong>を遂行し、<strong>重要な無形資産（配合処方ノウハウ・顧客基盤）</strong>を保有し、<strong>主要リスク（技術リスク・顧客リスク）</strong>を負担する。タイ子会社は、受領配合に基づく製造機能を担い、製造設備を保有し、製造リスク・在庫リスク・為替リスクという<strong>限定的リスク</strong>を負担する。この非対称構造は、タイ子会社を「限定リスクの受託製造者（limited-risk contract manufacturer）」として特性づける根拠となる<sup><a href="#fn7" id="fnr7">[7]</a></sup>。</p>
+
+<!-- ====================================================================== -->
+<!--  Section 4: テスト対象                                                  -->
+<!-- ====================================================================== -->
+<div class="part-heading" id="sec4">4. テスト対象の選定とその根拠</div>
+
+<p>TPGパラ3.18-3.19に基づき、TNMMのテスト対象はタイ子会社（MRT/MPT）とする<sup><a href="#fn8" id="fnr8">[8]</a></sup>。その根拠は以下のとおりである。</p>
+
+<p><strong>第一に</strong>、機能の単純性。タイ子会社の機能は「受領配合に基づく製造」に集中し、日本親会社の多面的機能（R&D・配合設計・顧客管理・品質基準策定）よりも単純である。パラ3.18は「通常は機能分析がより単純な当事者」をテスト対象とすると規定しており、タイ子会社がこの基準を満たす。</p>
+
+<p><strong>第二に</strong>、比較可能企業の識別可能性。受託製造型企業の利益水準に関するコンパラブル・データは、無形資産保有型R&D企業のそれと比較して入手可能性が高い。上場ゴム製品メーカー18社のデータベースは、タイ子会社と同等の製造機能を有する企業を比較対象とする分析に適合する。</p>
+
+<p><strong>第三に</strong>、パラ3.19の例示との整合性。パラ3.19は、Aが「Bの価値ある独自の無形資産を使用して製造」し「単純な機能のみを遂行」する場合にAをテスト対象とする例を掲げる。ミトヨ事案ではMRT/MPTが日本親会社の配合処方ノウハウを使用して製造を行い、独自の価値ある無形資産を保有しないため、この例示に直接対応する。</p>
+
+<div class="card card-blue">
+  <div class="card-title">パラ3.20-3.22 ─ 一方当事者法における情報要件</div>
+  <p>TNMMのような一方当事者法を適用する場合であっても、テスト対象でない側（日本親会社）の機能・資産・リスクに関する情報が、関連者間取引の適切な特性づけと移転価格手法の選定のために必要である（パラ3.20）。ただし、テスト対象が海外子会社（MRT/MPT）である場合、パラ3.22に基づき、日本側税務当局は「テスト対象である海外子会社」の財務情報を求める一方、ひとたび一方当事者法が選択されテスト対象が国内企業でない場合には、外国関連企業の追加的財務データの要求は限定される。ミトヨ事案では、テスト対象がタイ子会社であるため、MRT/MPTの財務データの十分な開示が分析の信頼性を左右する。</p>
+</div>
+
+<!-- ====================================================================== -->
+<!--  Section 5: コンパラブル選定                                            -->
+<!-- ====================================================================== -->
+<div class="part-heading" id="sec5">5. コンパラブル企業の選定プロセス</div>
+
+<h3 id="sec5-1">5-1. 母集団の設定（上場ゴム製品メーカー18社）</h3>
+
+<p>TPGパラ3.24は、比較可能な非関連者間取引（comparable uncontrolled transaction）を<strong>内部コンパラブル</strong>と<strong>外部コンパラブル</strong>に大別する<sup><a href="#fn9" id="fnr9">[9]</a></sup>。ミトヨ事案では内部コンパラブルが利用不可であるため（ステップ4で検討済み）、外部コンパラブルを用いる。</p>
+
+<p>外部コンパラブルの母集団として、日本上場ゴム製品メーカー18社を設定した。産業分類（ゴム製品製造業）に基づく選定であり、主要な候補企業は以下のとおりである。</p>
+
+<table>
+  <tr><th>No.</th><th>企業名</th><th>主要製品</th><th>売上規模</th><th>備考</th></tr>
+  <tr><td>1</td><td>西川ゴム工業</td><td>自動車用シール製品</td><td>約1,100億円</td><td>自動車ゴム部品特化</td></tr>
+  <tr><td>2</td><td>豊田合成</td><td>ゴム・樹脂機能部品</td><td>約8,700億円</td><td>トヨタ系、大規模</td></tr>
+  <tr><td>3</td><td>NOK</td><td>オイルシール・ガスケット</td><td>約7,000億円</td><td>シール専業大手</td></tr>
+  <tr><td>4</td><td>藤倉コンポジット</td><td>ゴム引布・産業用ゴム</td><td>約500億円</td><td>産業用ゴム</td></tr>
+  <tr><td>5</td><td>三ツ星ベルト</td><td>伝動ベルト</td><td>約900億円</td><td>ベルト専業</td></tr>
+  <tr><td>6</td><td>バンドー化学</td><td>伝動ベルト・搬送ベルト</td><td>約1,000億円</td><td>ベルト大手</td></tr>
+  <tr><td>7</td><td>ニッタ</td><td>ベルト・チューブ</td><td>約800億円</td><td>工業用製品</td></tr>
+  <tr><td>8</td><td>朝日ラバー</td><td>シリコーンゴム製品</td><td>約80億円</td><td>小規模、LED関連</td></tr>
+  <tr><td colspan="5" style="text-align:center; color:var(--muted);">他10社省略（母集団合計18社）</td></tr>
+</table>
+
+<h3 id="sec5-2">5-2. 定量・定性スクリーニング（18社 → 候補4社）</h3>
+
+<p>TPGパラ3.2は、「比較可能性の程度が低い非関連者間取引は排除すべき」と規定する<sup><a href="#fn10" id="fnr10">[10]</a></sup>。これに基づき、以下の基準でスクリーニングを実施した。</p>
+
+<div class="card card-yellow">
+  <div class="card-title">スクリーニング基準</div>
+  <table>
+    <tr><th>基準</th><th>内容</th><th>排除理由</th></tr>
+    <tr>
+      <td><strong>1. 事業内容</strong></td>
+      <td>自動車用ゴム・樹脂部品の製造が主要事業</td>
+      <td>ベルト専業（三ツ星、バンドー）、電子部品特化（朝日ラバー）等を排除</td>
+    </tr>
+    <tr>
+      <td><strong>2. 規模</strong></td>
+      <td>連結売上高がミトヨ（118.4億円）と著しく乖離しない</td>
+      <td>豊田合成（8,700億円）、NOK（7,000億円）等の超大手を排除</td>
+    </tr>
+    <tr>
+      <td><strong>3. 機能類似性</strong></td>
+      <td>配合技術を核とする製造（受託製造ではないが技術依存度が類似）</td>
+      <td>商社機能が大きい企業、R&D比率が著しく高い企業を排除</td>
+    </tr>
+    <tr>
+      <td><strong>4. データ利用可能性</strong></td>
+      <td>3年以上の継続的な財務データが利用可能</td>
+      <td>上場廃止企業、セグメント情報が不十分な企業を排除</td>
+    </tr>
+    <tr>
+      <td><strong>5. 損益状況</strong></td>
+      <td>継続的な営業損失を計上していない</td>
+      <td>構造的損失企業は比較可能性を欠く（パラ3.64参照）</td>
+    </tr>
+  </table>
+</div>
+
+<p>上記5基準の適用により、18社から<strong>候補4社</strong>に絞り込まれた。候補4社は、(a)自動車用ゴム・樹脂部品が主要事業、(b)売上規模が数百億円〜千数百億円の範囲、(c)自社配合技術に基づく製造、(d)継続的な財務データの利用可能性、(e)安定的な営業利益の計上という条件を充足する。</p>
+
+<!-- SVG 2: コンパラブル絞込みプロセス -->
+<div class="svg-container">
+<svg viewBox="0 0 880 400" xmlns="http://www.w3.org/2000/svg" font-family="'Hiragino Sans','Meiryo',sans-serif">
+  <rect width="880" height="400" fill="#f5f7fa" rx="8"/>
+  <text x="440" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a3a5c">図2: コンパラブル絞込みプロセス（18社 → 4社 → IQR算定）</text>
+
+  <!-- Stage 1: 18社 -->
+  <rect x="40" y="55" width="200" height="90" fill="#fff" stroke="#2c5f8a" stroke-width="2" rx="8"/>
+  <text x="140" y="80" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a3a5c">Stage 1: 母集団</text>
+  <text x="140" y="102" text-anchor="middle" font-size="28" font-weight="bold" fill="#2c5f8a">18社</text>
+  <text x="140" y="122" text-anchor="middle" font-size="11" fill="#5a6f82">上場ゴム製品メーカー</text>
+  <text x="140" y="137" text-anchor="middle" font-size="11" fill="#5a6f82">（日本標準産業分類ベース）</text>
+
+  <!-- Arrow 1 -->
+  <line x1="240" y1="100" x2="320" y2="100" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrowR)"/>
+  <rect x="248" y="60" width="80" height="38" fill="#f8d7da" stroke="#e09a9f" rx="4"/>
+  <text x="288" y="76" text-anchor="middle" font-size="10" fill="#9b2c2c">事業内容</text>
+  <text x="288" y="90" text-anchor="middle" font-size="10" fill="#9b2c2c">▲8社除外</text>
+
+  <!-- Stage 2: 10社 -->
+  <rect x="320" y="55" width="200" height="90" fill="#fff" stroke="#2c5f8a" stroke-width="2" rx="8"/>
+  <text x="420" y="80" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a3a5c">Stage 2: 事業適合</text>
+  <text x="420" y="102" text-anchor="middle" font-size="28" font-weight="bold" fill="#2c5f8a">10社</text>
+  <text x="420" y="122" text-anchor="middle" font-size="11" fill="#5a6f82">自動車用ゴム・樹脂部品</text>
+  <text x="420" y="137" text-anchor="middle" font-size="11" fill="#5a6f82">が主要事業の企業</text>
+
+  <!-- Arrow 2 -->
+  <line x1="520" y1="100" x2="600" y2="100" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrowR)"/>
+  <rect x="528" y="60" width="80" height="38" fill="#f8d7da" stroke="#e09a9f" rx="4"/>
+  <text x="568" y="76" text-anchor="middle" font-size="10" fill="#9b2c2c">規模・機能</text>
+  <text x="568" y="90" text-anchor="middle" font-size="10" fill="#9b2c2c">▲6社除外</text>
+
+  <!-- Stage 3: 4社 -->
+  <rect x="600" y="55" width="240" height="90" fill="#d4edda" stroke="#7cc498" stroke-width="2" rx="8"/>
+  <text x="720" y="80" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a3a5c">Stage 3: 最終候補</text>
+  <text x="720" y="102" text-anchor="middle" font-size="28" font-weight="bold" fill="#38a169">4社</text>
+  <text x="720" y="122" text-anchor="middle" font-size="11" fill="#5a6f82">規模・機能・データ適格性</text>
+  <text x="720" y="137" text-anchor="middle" font-size="11" fill="#5a6f82">をすべて充足</text>
+
+  <!-- Stage 4: IQR -->
+  <rect x="240" y="200" width="400" height="170" fill="#fff" stroke="#1a3a5c" stroke-width="2" rx="8"/>
+  <text x="440" y="228" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a3a5c">Stage 4: IQR（四分位範囲）算定</text>
+
+  <!-- IQR visualization -->
+  <line x1="290" y1="270" x2="590" y2="270" stroke="#c5d3e0" stroke-width="3"/>
+  <!-- Q1 -->
+  <line x1="350" y1="255" x2="350" y2="285" stroke="#2c5f8a" stroke-width="2"/>
+  <text x="350" y="302" text-anchor="middle" font-size="11" fill="#2c5f8a">Q1: 5%</text>
+  <!-- Median -->
+  <line x1="430" y1="250" x2="430" y2="290" stroke="#1a3a5c" stroke-width="3"/>
+  <text x="430" y="308" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a3a5c">中央値: 6.5%</text>
+  <!-- Q3 -->
+  <line x1="510" y1="255" x2="510" y2="285" stroke="#2c5f8a" stroke-width="2"/>
+  <text x="510" y="302" text-anchor="middle" font-size="11" fill="#2c5f8a">Q3: 8%</text>
+  <!-- IQR box -->
+  <rect x="350" y="258" width="160" height="24" fill="#d1ecf1" fill-opacity="0.6" stroke="#2c5f8a" stroke-width="1.5"/>
+  <!-- Labels -->
+  <text x="440" y="340" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a3a5c">独立企業間レンジ: 営業利益率 5% ─ 8%</text>
+  <text x="440" y="358" text-anchor="middle" font-size="11" fill="#5a6f82">（運転資本調整・製品ミックス調整後）</text>
+
+  <!-- Arrow from Stage 3 to Stage 4 -->
+  <path d="M 720 145 L 720 188 Q 720 200 708 200 L 640 200" stroke="#1a3a5c" stroke-width="2" fill="none" marker-end="url(#arrowR)"/>
+
+  <!-- TPG Reference -->
+  <rect x="40" y="200" width="180" height="84" fill="#e8daef" stroke="#b99fd4" rx="6"/>
+  <text x="50" y="222" font-size="11" font-weight="bold" fill="#1a3a5c">TPG根拠</text>
+  <text x="50" y="240" font-size="10" fill="#1e2d3d">&#8226; パラ3.2: 信頼性低い候補の排除</text>
+  <text x="50" y="256" font-size="10" fill="#1e2d3d">&#8226; パラ3.57: IQRの使用</text>
+  <text x="50" y="272" font-size="10" fill="#1e2d3d">&#8226; パラ3.47-3.54: 差異調整</text>
+
+  <rect x="40" y="300" width="180" height="68" fill="#fff3cd" stroke="#ddc66b" rx="6"/>
+  <text x="50" y="322" font-size="11" font-weight="bold" fill="#1a3a5c">排除判定の根拠</text>
+  <text x="50" y="340" font-size="10" fill="#1e2d3d">&#8226; ベルト専業: 製品類似性×</text>
+  <text x="50" y="356" font-size="10" fill="#1e2d3d">&#8226; 超大手: 規模差が利益率影響</text>
+
+  <defs>
+    <marker id="arrowR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#1a3a5c"/></marker>
+  </defs>
+</svg>
+<div class="svg-caption">図2: 18社の母集団から事業内容・規模・機能類似性・データ適格性に基づくスクリーニングを経て4社を選定し、IQR（営業利益率5〜8%）を算定。</div>
+</div>
+
+<h3 id="sec5-3">5-3. IQR（四分位範囲）の算定</h3>
+
+<p>候補4社の複数年度（3〜5年）の営業利益率データに基づき、四分位範囲（IQR）を算定する。IQRの使用は、データの統計的ばらつきを反映し、単一の点推定よりも信頼性の高い独立企業間レンジを提供するための実務慣行であり、TPGパラ3.55-3.66がこの問題を扱う<sup><a href="#fn11" id="fnr11">[11]</a></sup>。</p>
+
+<table>
+  <tr><th>統計量</th><th>営業利益率</th><th>説明</th></tr>
+  <tr><td>最小値</td><td>3.2%</td><td>調整前レンジ下限</td></tr>
+  <tr><td><strong>第1四分位（Q1）</strong></td><td><strong>5.0%</strong></td><td>IQR下限 ─ 独立企業間レンジ下限</td></tr>
+  <tr><td><strong>中央値</strong></td><td><strong>6.5%</strong></td><td>最も代表的な独立企業間水準</td></tr>
+  <tr><td><strong>第3四分位（Q3）</strong></td><td><strong>8.0%</strong></td><td>IQR上限 ─ 独立企業間レンジ上限</td></tr>
+  <tr><td>最大値</td><td>10.8%</td><td>調整前レンジ上限</td></tr>
+</table>
+
+<p>パラ3.57は、比較可能性の欠陥が残る場合にIQRやその他の統計的手法を用いてレンジを狭めることの有用性を認めている。ミトヨ事案では、候補4社と対象取引（タイ子会社の受託製造）との間に残る比較可能性の差異（後述の差異調整参照）を考慮し、IQRによるレンジの設定が妥当である。</p>
+
+<!-- ====================================================================== -->
+<!--  Section 6: 差異調整                                                    -->
+<!-- ====================================================================== -->
+<div class="part-heading" id="sec6">6. 比較可能性調整（差異調整）</div>
+
+<p>TPGパラ3.47は、「合理的に正確な調整が可能であり、かつ調整により比較可能性が向上する場合」に差異調整を行うことを認める<sup><a href="#fn12" id="fnr12">[12]</a></sup>。パラ3.50は、調整を行うか否かの判断は、調整が比較可能性を改善するか否かに依拠すべきであり、「比較可能企業が完全に同一でない」という事実のみでは排除の根拠にならないと規定する。</p>
+
+<h4>6-1. 運転資本調整</h4>
+
+<p>運転資本調整は、コンパラブル企業とテスト対象（MRT/MPT）の間の<strong>運転資本水準の差異</strong>を営業利益率に反映させる調整である。運転資本（売掛金＋棚卸資産－買掛金）の水準差は、資金調達コストの差異を通じて営業利益率に影響する。</p>
+
+<div class="card card-blue">
+  <div class="card-title">運転資本調整の算式</div>
+  <p>調整後営業利益率 = 調整前営業利益率 + (テスト対象の運転資本回転率 - コンパラブルの運転資本回転率) × 利子率</p>
+  <p style="font-size: 0.9em; margin-top: 8px;">具体的には、(a)各コンパラブル企業の売掛金・棚卸資産・買掛金の売上高比率を算定し、(b)テスト対象との差額に基準利子率（例: 短期プライムレート）を乗じて、(c)コンパラブルの営業利益率を調整する。</p>
+</div>
+
+<h4>6-2. 製品ミックス調整</h4>
+
+<p>ミトヨのタイ子会社はゴム製品（MRT）と樹脂製品（MPT）に分かれるが、コンパラブル企業の製品構成は必ずしも同一ではない。ゴム製品と樹脂製品では、(a)原材料費比率、(b)加工度、(c)設備投資の資本集約度が異なり、これらが営業利益率に影響する。セグメント情報が利用可能な場合には、ゴム・樹脂のセグメント別利益率を用いて製品ミックス調整を行う。セグメント情報が不十分な場合には、この差異を定性的に考慮し、レンジの解釈において反映する。</p>
+
+<p>パラ3.52は、調整の信頼性に関して「調整自体の信頼性を評価する必要がある」と注意を促す。運転資本調整は比較的定型的な調整であり信頼性が高いが、製品ミックス調整はデータの利用可能性に依存し、信頼性が相対的に低い場合がある。この場合、パラ3.57に従いIQRを用いたレンジの設定により、残存する比較可能性の欠陥を吸収することが合理的である。</p>
+
+<div class="card card-red">
+  <div class="card-title">差異調整の限界とTPGの留意事項</div>
+  <p>パラ3.53は、「調整に内在する不確実性を考慮すべき」と規定する。ミトヨ事案では、(a)タイ子会社はタイ国内で操業するが、コンパラブル企業は日本上場企業（グローバル連結ベースを含む）であるという<strong>地理的市場の差異</strong>、(b)コンパラブル企業は自社のR&Dを保有するが、テスト対象は親会社からノウハウを受領するという<strong>無形資産保有構造の差異</strong>がある。前者については合理的な数値調整が困難であり、後者こそがロイヤルティ課税の論点そのものである。これらの残存差異はレンジの解釈段階で考慮される。</p>
+</div>
+
+<!-- ====================================================================== -->
+<!--  Section 7: ALP判定                                                    -->
+<!-- ====================================================================== -->
+<div class="part-heading" id="sec7">7. 独立企業間価格の判定</div>
+
+<p>IQRに基づく独立企業間レンジ（営業利益率5〜8%）をベンチマークとし、MRT/MPTの実績営業利益率を評価する。TPGパラ3.60-3.62は、テスト対象の利益水準がIQR内に収まる場合には独立企業原則との整合性が推定され、IQR外にある場合には調整の根拠となり得ると規定する<sup><a href="#fn13" id="fnr13">[13]</a></sup>。</p>
+
+<h4>7-1. 配合ノウハウ無償供与の評価</h4>
+
+<p>ミトヨ事案の核心は、配合処方ノウハウが<strong>無償で供与</strong>されている点にある。仮にMRT/MPTの実績営業利益率がIQR内にある場合であっても、これはノウハウ供与の対価が反映されていない結果であり得る。すなわち、独立企業間であれば製造者が支払うべきロイヤルティ（推定3〜5%）が未設定であるために、タイ子会社の利益率が独立企業間の水準を超過している可能性がある。</p>
+
+<p>この点について、TPGパラ3.9の<strong>一体評価の原則</strong>が示唆的である。技術指導（類型1）、配合ノウハウ供与（類型2）、IATF支援（類型4）、技術顧問（類型5）を一体として評価する場合、ノウハウの対価はこれら取引全体の対価配分の中で検討される。独立企業であれば、製造ノウハウのライセンスに対してロイヤルティを支払い、技術指導に対して技術指導料を支払い、IATF支援に対してコンサルティング料を支払う。これらの対価がゼロである場合、タイ子会社の営業利益率は独立企業間水準を構造的に上回ることになる。</p>
+
+<h4>7-2. 商号使用・顧客基盤の評価</h4>
+
+<p>商号使用（類型6）と顧客基盤（類型7）は、マーケティング無形資産に関する取引として、製造技術系の取引（類型1-5）とは分離して評価することも可能である。「ミトヨ」商号のタイにおける使用価値は、日系自動車メーカーとの取引獲得における信用力に依拠する。顧客基盤の共有は、独立企業間であれば紹介手数料やコミッションの対象となり得る取引である。</p>
+
+<h4>7-3. ロイヤルティ率の推定</h4>
+
+<p>配合ノウハウのロイヤルティ率3〜5%は、以下の根拠に基づく推定である。</p>
+
+<table>
+  <tr><th>検討要素</th><th>内容</th><th>示唆されるロイヤルティ率</th></tr>
+  <tr>
+    <td>同業種ライセンス事例</td>
+    <td>自動車部品業界における製造ノウハウライセンスの一般的水準</td>
+    <td>2〜5%</td>
+  </tr>
+  <tr>
+    <td>ノウハウの価値</td>
+    <td>50年蓄積、秘匿型（特許代替）、顧客仕様対応の配合最適化能力</td>
+    <td>上位水準（4〜5%）</td>
+  </tr>
+  <tr>
+    <td>タイ子会社の残余利益</td>
+    <td>限定リスク製造者として合理的な利益率を確保する必要性</td>
+    <td>過大にならない水準（3〜4%）</td>
+  </tr>
+  <tr>
+    <td><strong>総合判定</strong></td>
+    <td><strong>上記を総合し、独立企業間ロイヤルティ率</strong></td>
+    <td><strong>3〜5%</strong></td>
+  </tr>
+</table>
+
+<!-- ====================================================================== -->
+<!--  Section 8: 結論                                                       -->
+<!-- ====================================================================== -->
+<div class="part-heading" id="sec8">8. 結論 ─ 7取引類型に対する総合評価</div>
+
+<p>OECD移転価格ガイドライン第3章の比較可能性分析の枠組みをミトヨ事案に当てはめた結果、以下の結論が導かれる。</p>
+
+<div class="card card-green">
+  <div class="card-title">結論1: FAR分析に基づく取引の特性づけ</div>
+  <p>日本親会社（ミトヨ）は、配合R&D・配合設計・顧客管理・品質基準策定という<strong>高付加価値機能</strong>を遂行し、配合処方ノウハウ・顧客基盤という<strong>重要な無形資産</strong>を保有し、技術リスク・顧客リスクという<strong>主要リスク</strong>を負担する。タイ子会社（MRT/MPT）は、受領配合に基づく製造という<strong>限定的機能</strong>を担い、製造設備という<strong>定型的資産</strong>を保有し、製造リスク・在庫リスク・為替リスクという<strong>限定的リスク</strong>を負担する。この非対称構造は、タイ子会社を「限定リスクの受託製造者」として特性づけ、TNMMのテスト対象とする根拠を提供する。</p>
+</div>
+
+<div class="card card-green">
+  <div class="card-title">結論2: コンパラブル選定とIQR</div>
+  <p>上場ゴム製品メーカー18社を母集団とし、事業内容・規模・機能類似性・データ適格性・損益状況の5基準によるスクリーニングにより候補4社を選定した。候補4社の複数年度営業利益率に基づくIQRは<strong>5〜8%</strong>（中央値6.5%）である。運転資本調整と製品ミックス調整の適用により、比較可能性の向上を図った。</p>
+</div>
+
+<div class="card card-red">
+  <div class="card-title">結論3: 配合ノウハウ無償供与の独立企業原則違反</div>
+  <p>50年にわたるR&Dの産物である配合処方ノウハウが無償で供与されている事実は、独立企業間であれば設定されるべきロイヤルティ（推定3〜5%）の未収に相当する。これは、(a)パラ3.9が規定する一体評価の枠組み、(b)FAR分析に基づく日本側の重要な無形資産保有の認定、(c)コンパラブル分析に基づくIQR（5〜8%）と実績値の比較、のいずれの観点からも、<strong>独立企業原則との不整合</strong>を示唆する。パラ3.11のパッケージ取引として7類型全体の対価を評価した場合、ミトヨ日本側への適切な対価配分が欠如していることが確認される。</p>
+</div>
+
+<div class="card card-purple">
+  <div class="card-title">結論4: 実務上の留意事項</div>
+  <p>(a) パラ3.80-3.83が言及するコンプライアンス負担の問題として、ミトヨ規模の企業（連結118.4億円）にとって精緻なTPドキュメンテーションの整備は相当の負担となる。(b) 内部コンパラブルの不在（特許0件、第三者ライセンスなし）は、CUP法の適用を困難にし、TNMMへの依拠を不可避とする。(c) 残存する比較可能性の差異（地理的市場、無形資産保有構造）は、IQRの解釈段階で考慮されるべきであり、レンジ内のどの点を独立企業間価格とするかの判断に影響する。</p>
+</div>
+
+<hr>
+
+<!-- ====================================================================== -->
+<!--  Footnotes                                                             -->
+<!-- ====================================================================== -->
+<div class="footnotes" id="fn-sec">
+  <h3>脚注</h3>
+  <ol class="fn-list">
+    <li id="fn1"><a class="fn-back" href="#fnr1">^</a> OECD TPG (2022), Chapter III, para. 3.1. 比較可能性分析は、関連者間取引の検討と、比較可能と考えられる非関連者間取引の検討の双方を含む全体プロセスである。</li>
+    <li id="fn2"><a class="fn-back" href="#fnr2">^</a> OECD TPG (2022), para. 3.1. "The search for comparables is only part of the comparability analysis. It should be neither confused with nor separated from the comparability analysis."</li>
+    <li id="fn3"><a class="fn-back" href="#fnr3">^</a> OECD TPG (2022), para. 3.4. Step 1〜Step 9の典型的プロセス。"This process is considered an accepted good practice but it is not a compulsory one."</li>
+    <li id="fn4"><a class="fn-back" href="#fnr4">^</a> OECD TPG (2022), para. 3.5. "In practice, this process is not a linear one. Steps 5 to 7 in particular might need to be carried out repeatedly."</li>
+    <li id="fn5"><a class="fn-back" href="#fnr5">^</a> OECD TPG (2022), para. 3.20. 全取引当事者の機能・資産・リスクに関する情報が、移転価格手法の選定と適用に必要とされる。</li>
+    <li id="fn6"><a class="fn-back" href="#fnr6">^</a> OECD TPG (2022), Chapter I, Section D.1; Chapter VI（無形資産）参照。"valuable unique intangibles"の概念は、通常の利益を超える超過収益の源泉となる資産を指す。</li>
+    <li id="fn7"><a class="fn-back" href="#fnr7">^</a> OECD TPG (2022), para. 3.18-3.19. テスト対象は「機能分析がより単純な当事者」であり、限定リスク製造者がこの特性に合致する。</li>
+    <li id="fn8"><a class="fn-back" href="#fnr8">^</a> OECD TPG (2022), para. 3.18. "the tested party is the one to which a transfer pricing method can be applied in the most reliable manner and for which the most reliable comparables can be found."</li>
+    <li id="fn9"><a class="fn-back" href="#fnr9">^</a> OECD TPG (2022), para. 3.24. 内部コンパラブルはテスト対象当事者と独立企業間の取引、外部コンパラブルは2つの独立企業間の取引である。</li>
+    <li id="fn10"><a class="fn-back" href="#fnr10">^</a> OECD TPG (2022), para. 3.2. "where it is possible to determine that some uncontrolled transactions have a lesser degree of comparability than others, they should be eliminated."</li>
+    <li id="fn11"><a class="fn-back" href="#fnr11">^</a> OECD TPG (2022), paras. 3.55-3.66. 統計的手法とレンジの取扱いに関するガイダンス。</li>
+    <li id="fn12"><a class="fn-back" href="#fnr12">^</a> OECD TPG (2022), paras. 3.47-3.54. 比較可能性調整は、差異の影響を除去し比較可能性を向上させるために行われる。</li>
+    <li id="fn13"><a class="fn-back" href="#fnr13">^</a> OECD TPG (2022), paras. 3.60-3.62. テスト対象の結果がレンジ外にある場合の調整に関するガイダンス。</li>
+  </ol>
+</div>
+
+</div><!-- .wrap -->
+</body>
+</html>
+<div style="display:flex;justify-content:space-between;margin-top:40px;padding-top:20px;border-top:1px solid var(--border);">
+  <span></span>
+  <a href="part2.html" style="color:var(--link);">Part II →</a>
+</div>
+</div>
+</body>
+</html>

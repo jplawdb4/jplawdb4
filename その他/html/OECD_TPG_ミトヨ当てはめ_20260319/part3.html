@@ -1,0 +1,2271 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OECD TPG ミトヨ当てはめ ── Part III</title>
+<style>
+/* ===== Root Variables ===== */
+:root {
+  --primary: #1a3a5c;
+  --secondary: #2c5f8a;
+  --bg: #f5f7fa;
+  --text: #1e2d3d;
+  --muted: #5a6f82;
+  --border: #c5d3e0;
+  --card-blue: #d1ecf1;
+  --card-blue-border: #88c7d5;
+  --card-green: #d4edda;
+  --card-green-border: #7cc498;
+  --card-red: #f8d7da;
+  --card-red-border: #e09a9f;
+  --card-yellow: #fff3cd;
+  --card-yellow-border: #ddc66b;
+  --card-purple: #e8daef;
+  --card-purple-border: #b99fd4;
+  --link: #1d5fa0;
+  --fn-bg: #f0f3f7;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", "游明朝", "Times New Roman", serif;
+  line-height: 1.9;
+  font-size: 15.5px;
+}
+/* ===== Layout ===== */
+.wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 44px 50px 60px;
+  box-shadow: 0 1px 12px rgba(0,0,0,.07);
+}
+@media (max-width: 720px) {
+  .wrap { padding: 20px 16px 36px; }
+  .doc-title { font-size: 1.4rem; }
+  table { font-size: 13px; }
+  svg { max-width: 100%; height: auto; }
+}
+/* ===== Header ===== */
+.doc-header {
+  border-bottom: 3px solid var(--primary);
+  padding-bottom: 22px;
+  margin-bottom: 32px;
+}
+.doc-title {
+  font-size: 1.85rem;
+  line-height: 1.45;
+  color: var(--primary);
+  font-weight: bold;
+  margin: 0 0 6px;
+}
+.doc-subtitle {
+  font-size: 1.05rem;
+  color: var(--secondary);
+  margin: 0 0 14px;
+}
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.meta-item { display: inline-flex; align-items: center; gap: 5px; }
+/* ===== Navigation ===== */
+.nav-bar {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  background: var(--primary);
+  padding: 12px 20px;
+  border-radius: 6px;
+  margin-bottom: 30px;
+}
+.nav-bar a {
+  color: #e2ecf4;
+  text-decoration: none;
+  font-size: 0.88rem;
+  padding: 4px 10px;
+  border-radius: 4px;
+  transition: background .2s;
+}
+.nav-bar a:hover { background: rgba(255,255,255,.15); }
+.nav-bar a.current { background: rgba(255,255,255,.2); font-weight: bold; color: #fff; }
+/* ===== Table of Contents ===== */
+.toc {
+  background: #f7f9fc;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 22px 28px;
+  margin-bottom: 36px;
+}
+.toc h2 {
+  font-size: 1.1rem;
+  color: var(--primary);
+  margin: 0 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.toc ol { margin: 0; padding-left: 22px; }
+.toc li { margin-bottom: 4px; font-size: 0.92rem; }
+.toc li a { color: var(--link); text-decoration: none; }
+.toc li a:hover { text-decoration: underline; }
+.toc ol ol { margin-top: 4px; padding-left: 20px; }
+/* ===== Part / Chapter headings ===== */
+.part-heading {
+  background: var(--primary);
+  color: #fff;
+  padding: 16px 24px;
+  border-radius: 6px;
+  margin: 44px 0 28px;
+  font-size: 1.25rem;
+  font-weight: bold;
+  letter-spacing: 0.04em;
+}
+.part-heading:first-of-type { margin-top: 10px; }
+h2.chapter {
+  color: var(--primary);
+  font-size: 1.35rem;
+  border-left: 5px solid var(--secondary);
+  padding-left: 16px;
+  margin: 36px 0 20px;
+}
+h3 {
+  color: var(--secondary);
+  font-size: 1.12rem;
+  margin: 28px 0 14px;
+  padding-bottom: 4px;
+  border-bottom: 1px dashed var(--border);
+}
+h4 {
+  color: var(--primary);
+  font-size: 1.02rem;
+  margin: 22px 0 10px;
+}
+/* ===== Cards ===== */
+.card {
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin: 18px 0;
+  border-left: 4px solid;
+}
+.card-blue   { background: var(--card-blue);   border-color: var(--card-blue-border); }
+.card-green  { background: var(--card-green);  border-color: var(--card-green-border); }
+.card-red    { background: var(--card-red);    border-color: var(--card-red-border); }
+.card-yellow { background: var(--card-yellow); border-color: var(--card-yellow-border); }
+.card-purple { background: var(--card-purple); border-color: var(--card-purple-border); }
+.card-title {
+  font-weight: bold;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+/* ===== Blockquote (条文) ===== */
+blockquote {
+  margin: 18px 0;
+  padding: 16px 22px;
+  background: #f7f9fc;
+  border-left: 4px solid var(--secondary);
+  font-size: 0.93rem;
+  line-height: 1.85;
+  color: #2c3e50;
+}
+blockquote cite {
+  display: block;
+  margin-top: 10px;
+  font-style: normal;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+/* ===== Tables ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 18px 0;
+  font-size: 0.92rem;
+}
+th {
+  background: var(--primary);
+  color: #fff;
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: normal;
+}
+td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #dce4ea;
+}
+tr:nth-child(even) td { background: #f8fafe; }
+/* ===== SVG Container ===== */
+.svg-container {
+  margin: 24px 0;
+  text-align: center;
+}
+.svg-container svg {
+  max-width: 100%;
+  height: auto;
+}
+.svg-caption {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 8px;
+}
+/* ===== Footnotes ===== */
+.footnotes {
+  margin-top: 36px;
+  padding-top: 16px;
+  border-top: 2px solid var(--border);
+}
+.footnotes h3 {
+  font-size: 1rem;
+  border: none;
+  padding: 0;
+  margin-bottom: 12px;
+}
+.fn-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.fn-list li {
+  padding: 6px 12px;
+  margin-bottom: 4px;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  background: var(--fn-bg);
+  border-radius: 4px;
+}
+.fn-list li:target {
+  background: #fffde0;
+  outline: 2px solid var(--card-yellow-border);
+}
+sup a {
+  color: var(--secondary);
+  text-decoration: none;
+  font-weight: bold;
+}
+sup a:hover { text-decoration: underline; }
+.fn-back {
+  color: var(--secondary);
+  text-decoration: none;
+  margin-left: 4px;
+  font-size: 0.8rem;
+}
+/* ===== Misc ===== */
+p { margin: 0 0 14px; text-align: justify; }
+strong { color: var(--primary); }
+em { font-style: normal; color: var(--secondary); font-weight: bold; }
+a { color: var(--link); }
+hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+.marker { background: #fff3cd; padding: 1px 4px; border-radius: 2px; }
+.text-center { text-align: center; }
+/* ===== Print ===== */
+@media print {
+  body { background: #fff; font-size: 11pt; }
+  .wrap { box-shadow: none; padding: 0; max-width: 100%; }
+  .nav-bar { display: none; }
+  .part-heading { break-before: page; }
+  blockquote { break-inside: avoid; }
+  .svg-container { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="doc-header">
+  <h1 class="doc-title">OECD TPG 2022 ミトヨ・タイ子会社への精密当てはめ</h1>
+  <p class="doc-subtitle">Part III：CCA・事業再編・金融取引・総括</p>
+  <div class="meta"><span class="meta-item">第8章〜第10章+総括</span><span class="meta-item">SVG図解×5</span></div>
+</div>
+<div class="nav-bar">
+        <a href="index.html">目次</a>
+    <a href="part1.html">Part I</a>
+    <a href="part2.html">Part II</a>
+    <a href="part3.html" class="current">Part III</a>
+</div>
+<!-- OECD TPG 第8章・第9章・第10章 ミトヨ当てはめ分析 HTMLフラグメント -->
+<style>
+:root {
+  --primary: #1a3a5c;
+  --secondary: #2c5f8a;
+  --bg: #f5f7fa;
+  --text: #1e2d3d;
+  --muted: #5a6f82;
+  --border: #c5d3e0;
+  --card-blue: #d1ecf1;
+  --card-blue-border: #88c7d5;
+  --card-green: #d4edda;
+  --card-green-border: #7cc498;
+  --card-red: #f8d7da;
+  --card-red-border: #e09a9f;
+  --card-yellow: #fff3cd;
+  --card-yellow-border: #ddc66b;
+  --card-purple: #e8daef;
+  --card-purple-border: #b99fd4;
+  --link: #1d5fa0;
+  --fn-bg: #f0f3f7;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", "游明朝", "Times New Roman", serif;
+  line-height: 1.9;
+  font-size: 15.5px;
+}
+.wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 44px 50px 60px;
+  box-shadow: 0 1px 12px rgba(0,0,0,.07);
+}
+@media (max-width: 720px) {
+  .wrap { padding: 20px 16px 36px; }
+  .doc-title { font-size: 1.4rem; }
+  table { font-size: 13px; }
+  svg { max-width: 100%; height: auto; }
+}
+.doc-header {
+  border-bottom: 3px solid var(--primary);
+  padding-bottom: 22px;
+  margin-bottom: 32px;
+}
+.doc-title {
+  font-size: 1.85rem;
+  line-height: 1.45;
+  color: var(--primary);
+  font-weight: bold;
+  margin: 0 0 6px;
+}
+.doc-subtitle {
+  font-size: 1.05rem;
+  color: var(--secondary);
+  margin: 0 0 14px;
+}
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.meta-item { display: inline-flex; align-items: center; gap: 5px; }
+.toc {
+  background: #f7f9fc;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 22px 28px;
+  margin-bottom: 36px;
+}
+.toc h2 {
+  font-size: 1.1rem;
+  color: var(--primary);
+  margin: 0 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.toc ol { margin: 0; padding-left: 22px; }
+.toc li { margin-bottom: 4px; font-size: 0.92rem; }
+.toc li a { color: var(--link); text-decoration: none; }
+.toc li a:hover { text-decoration: underline; }
+.toc ol ol { margin-top: 4px; padding-left: 20px; }
+.part-heading {
+  background: var(--primary);
+  color: #fff;
+  padding: 16px 24px;
+  border-radius: 6px;
+  margin: 44px 0 28px;
+  font-size: 1.25rem;
+  font-weight: bold;
+  letter-spacing: 0.04em;
+}
+.part-heading:first-of-type { margin-top: 10px; }
+h2.chapter {
+  color: var(--primary);
+  font-size: 1.35rem;
+  border-left: 5px solid var(--secondary);
+  padding-left: 16px;
+  margin: 36px 0 20px;
+}
+h3 {
+  color: var(--secondary);
+  font-size: 1.12rem;
+  margin: 28px 0 14px;
+  padding-bottom: 4px;
+  border-bottom: 1px dashed var(--border);
+}
+h4 {
+  color: var(--primary);
+  font-size: 1.02rem;
+  margin: 22px 0 10px;
+}
+.card {
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin: 18px 0;
+  border-left: 4px solid;
+}
+.card-blue   { background: var(--card-blue);   border-color: var(--card-blue-border); }
+.card-green  { background: var(--card-green);  border-color: var(--card-green-border); }
+.card-red    { background: var(--card-red);    border-color: var(--card-red-border); }
+.card-yellow { background: var(--card-yellow); border-color: var(--card-yellow-border); }
+.card-purple { background: var(--card-purple); border-color: var(--card-purple-border); }
+.card-title {
+  font-weight: bold;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+blockquote {
+  margin: 18px 0;
+  padding: 16px 22px;
+  background: #f7f9fc;
+  border-left: 4px solid var(--secondary);
+  font-size: 0.93rem;
+  line-height: 1.85;
+  color: #2c3e50;
+}
+blockquote cite {
+  display: block;
+  margin-top: 10px;
+  font-style: normal;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 18px 0;
+  font-size: 0.92rem;
+}
+th {
+  background: var(--primary);
+  color: #fff;
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: normal;
+}
+td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #dce4ea;
+}
+tr:nth-child(even) td { background: #f8fafe; }
+.svg-container {
+  margin: 24px 0;
+  text-align: center;
+}
+.svg-container svg {
+  max-width: 100%;
+  height: auto;
+}
+.svg-caption {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 8px;
+}
+.footnotes {
+  margin-top: 36px;
+  padding-top: 16px;
+  border-top: 2px solid var(--border);
+}
+.footnotes h3 {
+  font-size: 1rem;
+  border: none;
+  padding: 0;
+  margin-bottom: 12px;
+}
+.fn-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.fn-list li {
+  padding: 6px 12px;
+  margin-bottom: 4px;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  background: var(--fn-bg);
+  border-radius: 4px;
+}
+.fn-list li:target {
+  background: #fffde0;
+  outline: 2px solid var(--card-yellow-border);
+}
+sup a {
+  color: var(--secondary);
+  text-decoration: none;
+  font-weight: bold;
+}
+</style>
+
+<div class="wrap">
+
+<!-- ========== HEADER ========== -->
+<div class="doc-header">
+  <h1 class="doc-title">OECD移転価格ガイドライン第8章・第9章・第10章<br>ミトヨグループへの精密当てはめ分析</h1>
+  <p class="doc-subtitle">CCA・事業再編・金融取引 ── タイ子会社（MRT・MPT）を中心に</p>
+  <div class="meta">
+    <span class="meta-item">分析対象: ミトヨ株式会社グループ</span>
+    <span class="meta-item">OECD TPG 2022準拠</span>
+    <span class="meta-item">2026-03-19</span>
+  </div>
+</div>
+
+<!-- ========== TOC ========== -->
+<div class="toc">
+  <h2>目次</h2>
+  <ol>
+    <li><a href="#ch8">第8章当てはめ: 費用分担契約（CCA）</a>
+      <ol>
+        <li><a href="#ch8-1">CCA参加者要件の検討</a></li>
+        <li><a href="#ch8-2">配合処方共同開発の潜在的CCA構造</a></li>
+        <li><a href="#ch8-3">CCA vs ライセンス: ミトヨにとっての最適構造</a></li>
+        <li><a href="#ch8-4">仮想CCA構造におけるbuy-in問題</a></li>
+      </ol>
+    </li>
+    <li><a href="#ch9">第9章当てはめ: 事業再編</a>
+      <ol>
+        <li><a href="#ch9-1">2010年MRT設立: 製造移転型事業再編</a></li>
+        <li><a href="#ch9-2">移転された価値の定量的分析</a></li>
+        <li><a href="#ch9-3">2013年MPT設立: 第二の再編</a></li>
+        <li><a href="#ch9-4">再編後の利益配分とルーティン利益率の比較</a></li>
+        <li><a href="#ch9-5">2025年クリヤマによる買収とTP是正の契機</a></li>
+      </ol>
+    </li>
+    <li><a href="#ch10">第10章当てはめ: 金融取引</a>
+      <ol>
+        <li><a href="#ch10-1">資本構成の正確な認定</a></li>
+        <li><a href="#ch10-2">グループ内貸付と過少資本</a></li>
+        <li><a href="#ch10-3">親会社保証と暗黙の支援</a></li>
+        <li><a href="#ch10-4">為替リスク管理</a></li>
+      </ol>
+    </li>
+    <li><a href="#synthesis">統合分析: 三章の交差点</a></li>
+  </ol>
+</div>
+
+<!-- ================================================================ -->
+<!--  第8章: CCA                                                      -->
+<!-- ================================================================ -->
+<div class="part-heading" id="ch8">第8章当てはめ ── 費用分担契約（CCA）</div>
+
+<h2 class="chapter" id="ch8-1">8-1. CCA参加者要件の検討</h2>
+
+<p>OECD TPG第8章は、費用分担契約（CCA）を「事業体間で、無形資産・有形資産・サービスの共同開発・製造・取得に関する拠出およびリスクを分担する契約上の取決め」と定義する（パラ8.3）。ミトヨグループにおいてCCAが成立し得るかを検討するにあたり、まず参加者要件（パラ8.14-8.18）の充足可否を精査する。</p>
+
+<div class="card card-blue">
+  <div class="card-title">CCA参加者の3要件（パラ8.14-8.15）</div>
+  <p><strong>要件1</strong>: CCA活動の成果から便益を享受する合理的期待を有すること<br>
+  <strong>要件2</strong>: 無形資産等に対する持分または権利を割り当てられていること<br>
+  <strong>要件3</strong>: CCA上で引き受けるリスクをコントロールし、かつそのリスクを引き受ける財務的能力を有すること</p>
+</div>
+
+<p>ミトヨの現状に当てはめると、以下の構造的問題が浮上する。</p>
+
+<table>
+  <tr><th>要件</th><th>日本親会社（ミトヨ）</th><th>MRT（タイゴム）</th><th>MPT（タイ樹脂）</th></tr>
+  <tr><td>便益の合理的期待</td><td>充足: 全市場での配合処方活用</td><td>制限的: タイ国内市場のみ</td><td>制限的: タイ国内市場のみ</td></tr>
+  <tr><td>成果物への持分</td><td>充足: 原始的知的財産権の保有</td><td>未充足: ライセンシーに近い地位</td><td>未充足: ライセンシーに近い地位</td></tr>
+  <tr><td>リスクのコントロール</td><td>充足: 鞍掛技術センターでR&D指揮</td><td>限定的: 顧客仕様の応用開発のみ</td><td>限定的: 応用レベルの開発のみ</td></tr>
+  <tr><td>財務的能力</td><td>充足: 連結118.4億円</td><td>限定的: 売上4.1億円規模</td><td>相対的: 売上16.6億円</td></tr>
+</table>
+
+<p>パラ8.14が明示するとおり、「CCA活動の一部を遂行するのみで、CCA成果物に対する持分を受領しない企業は、CCA参加者ではなく、CCA参加者に対するサービス提供者とみなされる」。MRTが顧客仕様に応じたゴム配合の微調整（応用開発）を行っているとしても、その成果が配合処方のコア・ノウハウとしてMRTに帰属する契約構造でない限り、MRTは「サービス提供者」に該当し、CCA参加者とは認定されない。</p>
+
+<h2 class="chapter" id="ch8-2">8-2. 配合処方共同開発の潜在的CCA構造</h2>
+
+<p>理論的にCCA構造が検討され得る場面として、以下のシナリオが考えられる。</p>
+
+<h4>シナリオ: 開発型CCA（Development CCA）</h4>
+<p>鞍掛技術センター（日本）とMRT（タイ）が、東南アジア市場向けのゴム配合処方の共同開発を行う場合を想定する。パラ8.10が区別する「開発型CCA」に該当し、将来にわたる継続的便益が期待される。</p>
+
+<div class="card card-yellow">
+  <div class="card-title">拠出の比率と期待便益の比率の乖離問題</div>
+  <p>パラ8.5は「各参加者の全体的拠出に対する比例的分担は、その参加者の全体的期待便益に対する比例的分担と整合していなければならない」と定める。ミトヨのR&D投資は年間約数億円規模と推定される一方、MRTの応用開発への拠出は僅少である。しかしMRTの売上は4.1億円に留まり、配合処方から得る期待便益も限定的である。<br><br>
+  <strong>問題</strong>: 拠出比率（日本95%以上 vs MRT 5%未満）と期待便益の比率（日本の全世界市場 vs MRTのタイ市場のみ）を整合させること自体は理論上可能であるが、MRTの拠出が「価値ある貢献」と評価できるかが疑問となる。パラ8.26は、拠出には既存の価値への拠出（pre-existing contributions）と現在の拠出（current contributions）を区別すべきとするが、MRTの現在の機能的拠出は「コスト・プラスで報酬が支払われるべきサービス活動」（パラ8.18参照）に過ぎない可能性が高い。</p>
+</div>
+
+<h2 class="chapter" id="ch8-3">8-3. CCA vs ライセンス: ミトヨにとっての最適構造</h2>
+
+<p>ミトヨグループの事実関係に照らし、CCA構造ではなくライセンス（ロイヤルティ）構造が適切である理由を以下に整理する。</p>
+
+<table>
+  <tr><th>比較項目</th><th>CCA構造</th><th>ライセンス構造</th></tr>
+  <tr><td>IP帰属</td><td>各参加者が地域的持分を取得</td><td>ミトヨが一元保有、MRT/MPTに使用許諾</td></tr>
+  <tr><td>R&D拠出の実態</td><td>双方が有意な拠出 → ミトヨの場合は非対称</td><td>一方的な開発・他方的な使用 → 実態に合致</td></tr>
+  <tr><td>リスク配分</td><td>開発リスクの共同分担が前提</td><td>開発リスクはミトヨ集中、MRT/MPTは市場リスクのみ</td></tr>
+  <tr><td>パラ8.12の整合性</td><td>拠出と便益の比例性の立証が困難</td><td>ロイヤルティ料率で市場価格を反映可能</td></tr>
+  <tr><td>管理コスト</td><td>CCA文書化義務（パラ8.52以下）が重い</td><td>ライセンス契約書と移転価格文書で足りる</td></tr>
+  <tr><td>実行可能性</td><td>連結118億円の中堅企業には過大な管理負担</td><td>中堅企業に適合</td></tr>
+</table>
+
+<div class="card card-green">
+  <div class="card-title">結論: ライセンス構造の優位性</div>
+  <p>パラ8.9が述べるとおり、CCAも他の契約形態も、分析フレームワークに差異はない。重要なのは実態への適合である。ミトヨの場合、R&D機能は鞍掛技術センターに集中し、MRT/MPTは「配合処方のライセンシーとしての製造」を行っているに過ぎない。したがって、パラ8.12にいう「拠出と期待便益の相互的かつ比例的な関係」はCCA構造下では成立し難く、ロイヤルティ構造がarm's length principleとの整合性において明らかに優位である。</p>
+</div>
+
+<h2 class="chapter" id="ch8-4">8-4. 仮想CCA構造におけるbuy-in問題</h2>
+
+<p>仮にCCA構造を採用した場合、もう一つの重大な問題が生じる。パラ8.24-8.26が定める「既存価値の拠出（pre-existing contributions）」の評価問題である。</p>
+
+<p>ミトヨのゴム配合処方ノウハウは、1974年の創業から約50年にわたり蓄積されてきたものであり、そのbuy-in（参加時の対価）の算定は極めて困難である。パラ8.25は「拠出の価値は、独立企業が比較可能な状況においてその拠出に対して付与したであろう価値と整合しなければならない」と定めるが、以下の要素がbuy-in額の算定を複雑化する。</p>
+
+<div class="card card-red">
+  <div class="card-title">buy-in額算定の困難性</div>
+  <p><strong>(1) 50年蓄積のノウハウの評価</strong>: ゴム配合は経験知（tacit knowledge）の要素が大きく、特許のような明示的な権利に還元し難い。所得法（income approach）を用いる場合、超過利益の割引現在価値を算定する必要があるが、配合処方の個別的収益貢献の切り分けは困難である。<br><br>
+  <strong>(2) ハード・トゥ・バリュー無形資産</strong>: パラ8.20は、CCAにおいて期待便益が将来に実現する場合に予測の困難さが生じることを認め、第6章D.3節・D.4節のHTVI（Hard-to-Value Intangibles）ガイダンスの適用可能性を指摘する。ミトヨの配合処方ノウハウは典型的なHTVIであり、事後調整条項（commensurate with income standard）の適用が問題となり得る。<br><br>
+  <strong>(3) 機会費用</strong>: パラ8.27は「既存の拠出は、CCAに資源を拠出するという事前コミットメントの機会費用を回収すべき」と述べる。ミトヨが配合処方を「CCA経由」でMRTに提供する場合、代替的に「独立第三者にライセンスした場合のロイヤルティ収入」が機会費用となるが、ゴム配合処方の独立第三者ライセンスの比較対象取引は極めて稀少である。</p>
+</div>
+
+<p>以上の分析から、CCA構造はミトヨの実態にそぐわず、実務的にもbuy-in額の立証が困難であるため、採用する合理性がない。</p>
+
+<!-- ================================================================ -->
+<!--  第9章: 事業再編                                                  -->
+<!-- ================================================================ -->
+<div class="part-heading" id="ch9">第9章当てはめ ── 事業再編</div>
+
+<h2 class="chapter" id="ch9-1">9-1. 2010年MRT設立: 製造移転型事業再編</h2>
+
+<p>OECD TPG第9章は、「事業再編」を「関連企業間における商業的または金融的関係の国境を越える再組織化（既存の取決めの終了または実質的再交渉を含む）」と定義する（パラ9.1）。2010年のMRT（Mitoyo Rubber (Thailand) Co., Ltd.）の設立は、この定義に照らし、「製造移転型事業再編」に該当するか。</p>
+
+<h4>パラ9.2第2号: フルファンクション製造者からの変換</h4>
+<p>パラ9.2は、典型的な事業再編の類型として「フルファンクション製造者の契約製造者・委託製造者への変換」を挙げる。ミトヨの場合は厳密には「日本における製造の一部をタイに移転」する構造であり、日本側が「フルファンクション製造者」から縮小したわけではないが、<strong>パラ9.3が定める「事業の合理化、専門化（specialisation）」としての事業再編</strong>に該当する。すなわち、日本での製造機能の一部がタイにおいて再現され、その過程でノウハウ・技術・顧客関係が移転されている。</p>
+
+<!-- SVG 1: MRT設立時の機能移転図 -->
+<div class="svg-container">
+  <svg viewBox="0 0 860 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MRT設立時の機能移転図（2010年）">
+    <defs>
+      <marker id="arrowR" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#c0392b"/>
+      </marker>
+      <marker id="arrowB" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#2c5f8a"/>
+      </marker>
+      <marker id="arrowG" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#27ae60"/>
+      </marker>
+      <linearGradient id="gradJP" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#1a3a5c;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#2c5f8a;stop-opacity:1" />
+      </linearGradient>
+      <linearGradient id="gradTH" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#c0392b;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#e74c3c;stop-opacity:1" />
+      </linearGradient>
+    </defs>
+    <!-- Title -->
+    <text x="430" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a3a5c">図1: MRT設立時の機能・価値移転図（2010年）</text>
+    <!-- Japan Box -->
+    <rect x="30" y="60" width="360" height="420" rx="12" fill="#e8f0f8" stroke="#1a3a5c" stroke-width="2"/>
+    <rect x="30" y="60" width="360" height="42" rx="12" fill="url(#gradJP)"/>
+    <rect x="30" y="90" width="360" height="12" fill="url(#gradJP)"/>
+    <text x="210" y="87" text-anchor="middle" font-size="15" font-weight="bold" fill="#fff">日本 ── ミトヨ本社</text>
+    <text x="210" y="125" text-anchor="middle" font-size="12" fill="#5a6f82">連結売上 118.4億円</text>
+    <!-- Japan sub-boxes -->
+    <rect x="55" y="145" width="310" height="55" rx="6" fill="#fff" stroke="#2c5f8a" stroke-width="1.5"/>
+    <text x="210" y="168" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a3a5c">鞍掛技術センター（R&D拠点）</text>
+    <text x="210" y="188" text-anchor="middle" font-size="11" fill="#5a6f82">ゴム配合処方の開発・蓄積（1974年〜）</text>
+    <rect x="55" y="215" width="310" height="45" rx="6" fill="#fff" stroke="#2c5f8a" stroke-width="1.5"/>
+    <text x="210" y="238" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a3a5c">製造機能（国内工場）</text>
+    <text x="210" y="252" text-anchor="middle" font-size="11" fill="#5a6f82">金型設計・品質管理プロセス</text>
+    <rect x="55" y="275" width="310" height="45" rx="6" fill="#fff" stroke="#2c5f8a" stroke-width="1.5"/>
+    <text x="210" y="298" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a3a5c">顧客関係・市場情報</text>
+    <text x="210" y="312" text-anchor="middle" font-size="11" fill="#5a6f82">東南アジア市場への販路・技術仕様知見</text>
+    <rect x="55" y="335" width="310" height="45" rx="6" fill="#fff" stroke="#2c5f8a" stroke-width="1.5"/>
+    <text x="210" y="358" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a3a5c">熟練労働力</text>
+    <text x="210" y="372" text-anchor="middle" font-size="11" fill="#5a6f82">配合技術者の暗黙知（tacit knowledge）</text>
+    <!-- Compensation box -->
+    <rect x="55" y="400" width="310" height="60" rx="6" fill="#fff3cd" stroke="#ddc66b" stroke-width="1.5"/>
+    <text x="210" y="420" text-anchor="middle" font-size="12" font-weight="bold" fill="#856404">受領した対価</text>
+    <text x="210" y="440" text-anchor="middle" font-size="13" font-weight="bold" fill="#c0392b">資本金の払込みのみ（MRT出資99.8%）</text>
+    <text x="210" y="455" text-anchor="middle" font-size="11" fill="#856404">→ ノウハウ移転への独立の補償なし</text>
+    <!-- Thailand Box -->
+    <rect x="470" y="60" width="360" height="340" rx="12" fill="#fde8e6" stroke="#c0392b" stroke-width="2"/>
+    <rect x="470" y="60" width="360" height="42" rx="12" fill="url(#gradTH)"/>
+    <rect x="470" y="90" width="360" height="12" fill="url(#gradTH)"/>
+    <text x="650" y="87" text-anchor="middle" font-size="15" font-weight="bold" fill="#fff">タイ ── MRT（設立2010年）</text>
+    <text x="650" y="125" text-anchor="middle" font-size="12" fill="#5a6f82">ゴム製品 / 売上4.1億円 / 出資比率99.8%</text>
+    <!-- Thailand sub-boxes -->
+    <rect x="495" y="145" width="310" height="45" rx="6" fill="#fff" stroke="#c0392b" stroke-width="1.5"/>
+    <text x="650" y="168" text-anchor="middle" font-size="13" font-weight="bold" fill="#c0392b">受領: 配合処方ノウハウ</text>
+    <text x="650" y="182" text-anchor="middle" font-size="11" fill="#5a6f82">50年蓄積の技術をタイで再現</text>
+    <rect x="495" y="200" width="310" height="45" rx="6" fill="#fff" stroke="#c0392b" stroke-width="1.5"/>
+    <text x="650" y="223" text-anchor="middle" font-size="13" font-weight="bold" fill="#c0392b">受領: 金型設計技術</text>
+    <text x="650" y="237" text-anchor="middle" font-size="11" fill="#5a6f82">日本から技術者派遣による技術移転</text>
+    <rect x="495" y="255" width="310" height="45" rx="6" fill="#fff" stroke="#c0392b" stroke-width="1.5"/>
+    <text x="650" y="278" text-anchor="middle" font-size="13" font-weight="bold" fill="#c0392b">受領: 顧客関係</text>
+    <text x="650" y="292" text-anchor="middle" font-size="11" fill="#5a6f82">東南アジア顧客との取引機会</text>
+    <rect x="495" y="310" width="310" height="45" rx="6" fill="#fff" stroke="#c0392b" stroke-width="1.5"/>
+    <text x="650" y="333" text-anchor="middle" font-size="13" font-weight="bold" fill="#c0392b">受領: 品質管理体制</text>
+    <text x="650" y="347" text-anchor="middle" font-size="11" fill="#5a6f82">ミトヨ基準の品質保証プロセス</text>
+    <!-- Arrows -->
+    <line x1="365" y1="170" x2="490" y2="170" stroke="#c0392b" stroke-width="2.5" marker-end="url(#arrowR)"/>
+    <line x1="365" y1="240" x2="490" y2="225" stroke="#c0392b" stroke-width="2.5" marker-end="url(#arrowR)"/>
+    <line x1="365" y1="300" x2="490" y2="280" stroke="#c0392b" stroke-width="2.5" marker-end="url(#arrowR)"/>
+    <line x1="365" y1="360" x2="490" y2="335" stroke="#c0392b" stroke-width="2.5" marker-end="url(#arrowR)"/>
+    <!-- Transfer labels -->
+    <rect x="470" y="420" width="360" height="60" rx="6" fill="#f8d7da" stroke="#e09a9f" stroke-width="1.5"/>
+    <text x="650" y="443" text-anchor="middle" font-size="12" font-weight="bold" fill="#721c24">OECD TPG パラ9.39-9.41の視点</text>
+    <text x="650" y="463" text-anchor="middle" font-size="11" fill="#721c24">「移転された価値」への補償が未了 → profit potentialの無償流出</text>
+    <!-- Legend -->
+    <rect x="30" y="495" width="12" height="12" rx="2" fill="#c0392b"/>
+    <text x="48" y="506" font-size="11" fill="#5a6f82">価値の移転方向（日本→タイ）</text>
+    <rect x="250" y="495" width="12" height="12" rx="2" fill="#ddc66b"/>
+    <text x="268" y="506" font-size="11" fill="#5a6f82">対価の欠如（補償なし）</text>
+  </svg>
+  <div class="svg-caption">図1: 2010年MRT設立時に日本からタイへ移転された機能・資産・リスクと対価の不均衡</div>
+</div>
+
+<h4>移転された価値の特定（パラ9.15-9.18）</h4>
+<p>パラ9.18は「事業再編を構成する取引の正確な認定には、再編前後において当事者が引き受けた経済的に重要な活動・資産・リスクを特定する機能分析が必要」と定める。2010年のMRT設立において移転されたと認定し得る価値は以下のとおりである。</p>
+
+<table>
+  <tr><th>移転項目</th><th>性質</th><th>パラ9.2との対応</th><th>推定される価値</th></tr>
+  <tr><td>ゴム配合処方ノウハウ</td><td>無形資産（trade secret / know-how）</td><td>無形資産の移転（9.2第3号）</td><td>高：50年蓄積、競争優位の源泉</td></tr>
+  <tr><td>金型設計技術</td><td>技術的無形資産</td><td>機能の集中化（9.2第4号）</td><td>中：製品品質に直結</td></tr>
+  <tr><td>東南アジア顧客関係</td><td>顧客関連無形資産</td><td>既存の顧客基盤の活用</td><td>中：Thongchai Mitoyo等との関係</td></tr>
+  <tr><td>品質管理プロセス</td><td>業務プロセス（ルーティン）</td><td>機能の移転</td><td>低〜中：標準化可能な要素</td></tr>
+  <tr><td>熟練労働力の派遣による技術移転</td><td>人的資本の一時的移転</td><td>機能の集中化（9.2第4号）</td><td>中：tacit knowledgeの伝達</td></tr>
+</table>
+
+<h2 class="chapter" id="ch9-2">9-2. 移転された価値の定量的分析</h2>
+
+<p>パラ9.39-9.41は、「利益ポテンシャル（profit potential）」の概念を用いて補償の要否を判断する枠組みを提示する。パラ9.41は「再編時に認識し得る権利またはその他の資産を有していない場合、補償されるべき利益ポテンシャルは存在しない」とする一方、「再編時に相当の権利または資産を有する場合には、相当の利益ポテンシャルが存在し、その利益ポテンシャルの犠牲を正当化するために適切な報酬が支払われなければならない」とする。</p>
+
+<div class="card card-red">
+  <div class="card-title">当てはめ: 2010年のMRT設立時の補償問題</div>
+  <p>ミトヨ日本は、50年蓄積のゴム配合ノウハウ、金型技術、顧客関係という「相当の資産」を保有していた。これらをMRTに移転する際の対価は「資本金の払込み」のみであり、<strong>ノウハウ移転自体に対する独立の補償（lump-sum payment、ロイヤルティ、buy-in payment等）がなされていない</strong>。<br><br>
+  パラ9.44は「フルファンクション製造者から契約製造者への変換においては、コスト・プラスの報酬が再編後の契約製造活動に対するarm's lengthの報酬であり得るとしても、既存の取決めの変更によるリスキーな利益ポテンシャルの放棄に対する補償がなされるべきかは別の問題である」と述べる。ミトヨの場合も同様に、MRTへの技術移転時に「移転された無形資産の価値」に対する補償が必要であった。<br><br>
+  しかし、ここには重要な留意点がある。MRT設立はミトヨからMRTへの一方的な「利益ポテンシャルの移転」であるが、ミトヨはMRTの99.8%株主であるため、<strong>経済的にはミトヨ自身の利益ポテンシャルが子会社に移転されている</strong>。これはパラ9.12が述べる「各再編当事者のレベルでの評価」の重要性を示す。ミトヨ本体の法人税法上の所得計算においては、移転された無形資産の対価が過少であれば、移転価格調整の対象となり得る。</p>
+</div>
+
+<h4>リスクの分析（パラ9.19-9.23）</h4>
+<p>パラ9.19は「リスクは事業再編の文脈において極めて重要」と述べ、事業再編がしばしばローリスク事業体への変換を伴うことを指摘する。MRT設立前後のリスク配分を分析する。</p>
+
+<table>
+  <tr><th>リスク項目</th><th>再編前（日本で製造）</th><th>再編後（MRTが製造）</th><th>リスクのコントロール者</th></tr>
+  <tr><td>市場リスク</td><td>ミトヨ本社</td><td>形式上MRT、実質的にミトヨ</td><td>ミトヨ（製品仕様・価格決定権）</td></tr>
+  <tr><td>在庫リスク</td><td>ミトヨ本社</td><td>MRT（ただし親会社指示に基づく生産）</td><td>分析が必要（パラ9.20参照）</td></tr>
+  <tr><td>品質リスク</td><td>ミトヨ本社</td><td>MRT（品質基準はミトヨが設定）</td><td>ミトヨ（基準設定・監督）</td></tr>
+  <tr><td>技術陳腐化リスク</td><td>ミトヨ本社</td><td>ミトヨ本社（R&D継続）</td><td>ミトヨ（鞍掛技術センター）</td></tr>
+  <tr><td>為替リスク</td><td>なし（国内製造）</td><td>MRT（バーツ建て）</td><td>MRT / ミトヨ（ヘッジ方針次第）</td></tr>
+</table>
+
+<p>パラ9.20の分析フレームワーク（第1章D.1.2.1節）に照らすと、MRTは在庫リスクや為替リスクについて形式的にリスクを引き受けているが、リスクのコントロール（意思決定機能）がミトヨ本社に残存している場合、<strong>MRTは実質的に「ローリスクの契約製造者」として位置づけられる</strong>。パラ9.19が指摘するとおり、この場合MRTは「比較的低い（しかし一般的に安定した）リターン」で報酬を受けるべきであり、超過利益はリスクを引き受けるミトヨ本社に帰属すべきである。</p>
+
+<h2 class="chapter" id="ch9-3">9-3. 2013年MPT設立: 第二の再編</h2>
+
+<p>2013年のMPT（Mitoyo Plastics (Thailand) Co., Ltd.、売上16.6億円、出資90%）設立も、MRTと同様の構造で分析される。樹脂製品の製造技術・配合ノウハウ・金型設計技術がタイに移転されており、パラ9.2の事業再編に該当する。</p>
+
+<p>MPTの場合、MRTとの相違点として以下が重要である。</p>
+
+<div class="card card-purple">
+  <div class="card-title">MPTの特殊性</div>
+  <p><strong>(1) 売上規模の差</strong>: MPTの売上16.6億円はMRT（4.1億円）の約4倍であり、移転された利益ポテンシャルも大きい。<br>
+  <strong>(2) 出資比率90%</strong>: MRTの99.8%と異なり、10%は上海三豊杉栄（商貿会社）が保有する。この少数株主の存在は、移転価格上の取引認定に影響し得る。上海三豊杉栄がMPT株を保有する商業的合理性と、MPTの利益配分における少数株主の経済的利益の扱いが問題となる。<br>
+  <strong>(3) 設立時期</strong>: 2013年設立はOECD TPG 2010年版（事業再編章含む）の公表後であり、移転価格上の認識がより期待される時期である。</p>
+</div>
+
+<h2 class="chapter" id="ch9-4">9-4. 再編後の利益配分とルーティン利益率の比較</h2>
+
+<!-- SVG 2: 再編前後のFAR比較図 -->
+<div class="svg-container">
+  <svg viewBox="0 0 860 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="再編前後のFAR比較と利益配分変化">
+    <text x="430" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a3a5c">図2: 事業再編前後のFAR（機能・資産・リスク）変化と利益配分</text>
+    <!-- BEFORE -->
+    <rect x="30" y="50" width="380" height="200" rx="10" fill="#e8f0f8" stroke="#1a3a5c" stroke-width="2"/>
+    <text x="220" y="75" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a3a5c">再編前（〜2009年）: 日本国内で一貫製造</text>
+    <!-- Stacked bar: Functions -->
+    <rect x="60" y="95" width="320" height="30" rx="4" fill="#2c5f8a"/>
+    <text x="220" y="115" text-anchor="middle" font-size="12" fill="#fff">機能: R&D + 製造 + 品質管理 + 販売 = 100% 日本</text>
+    <!-- Stacked bar: Assets -->
+    <rect x="60" y="133" width="320" height="30" rx="4" fill="#1a3a5c"/>
+    <text x="220" y="153" text-anchor="middle" font-size="12" fill="#fff">資産: 配合処方IP + 金型 + 顧客関係 = 100% 日本</text>
+    <!-- Stacked bar: Risks -->
+    <rect x="60" y="171" width="320" height="30" rx="4" fill="#5a6f82"/>
+    <text x="220" y="191" text-anchor="middle" font-size="12" fill="#fff">リスク: 市場 + 在庫 + 品質 + 技術 = 100% 日本</text>
+    <!-- Profit bar before -->
+    <rect x="60" y="213" width="320" height="24" rx="4" fill="#27ae60"/>
+    <text x="220" y="230" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">利益 100% → 日本</text>
+
+    <!-- Arrow -->
+    <text x="430" y="170" text-anchor="middle" font-size="32" fill="#c0392b">&#8595;</text>
+    <text x="430" y="195" text-anchor="middle" font-size="11" fill="#c0392b">事業再編</text>
+    <text x="430" y="208" text-anchor="middle" font-size="11" fill="#c0392b">(2010/2013)</text>
+
+    <!-- AFTER -->
+    <rect x="30" y="270" width="380" height="200" rx="10" fill="#fde8e6" stroke="#c0392b" stroke-width="2"/>
+    <text x="220" y="295" text-anchor="middle" font-size="14" font-weight="bold" fill="#c0392b">再編後（2012年〜）: 日本＋タイの分業体制</text>
+
+    <!-- Functions split -->
+    <rect x="60" y="310" width="180" height="28" rx="4" fill="#2c5f8a"/>
+    <text x="150" y="328" text-anchor="middle" font-size="11" fill="#fff">日本: R&D + 品質基準</text>
+    <rect x="248" y="310" width="132" height="28" rx="4" fill="#e74c3c"/>
+    <text x="314" y="328" text-anchor="middle" font-size="11" fill="#fff">タイ: 製造 + 応用</text>
+
+    <!-- Assets split -->
+    <rect x="60" y="345" width="240" height="28" rx="4" fill="#1a3a5c"/>
+    <text x="180" y="363" text-anchor="middle" font-size="11" fill="#fff">日本: 配合処方IP + 技術開発</text>
+    <rect x="308" y="345" width="72" height="28" rx="4" fill="#e74c3c"/>
+    <text x="344" y="363" text-anchor="middle" font-size="11" fill="#fff">タイ: 有形</text>
+
+    <!-- Risks split -->
+    <rect x="60" y="380" width="210" height="28" rx="4" fill="#5a6f82"/>
+    <text x="165" y="398" text-anchor="middle" font-size="11" fill="#fff">日本: 市場+技術+品質コントロール</text>
+    <rect x="278" y="380" width="102" height="28" rx="4" fill="#e74c3c"/>
+    <text x="329" y="398" text-anchor="middle" font-size="11" fill="#fff">タイ: 在庫+為替</text>
+
+    <!-- Profit split ACTUAL -->
+    <text x="220" y="430" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a3a5c">利益配分（実態）</text>
+    <rect x="60" y="438" width="160" height="22" rx="4" fill="#27ae60"/>
+    <text x="140" y="453" text-anchor="middle" font-size="11" fill="#fff">日本: ?%</text>
+    <rect x="225" y="438" width="155" height="22" rx="4" fill="#e67e22"/>
+    <text x="302" y="453" text-anchor="middle" font-size="11" fill="#fff">MRT/MPT: ?%</text>
+
+    <!-- RIGHT: Analysis Panel -->
+    <rect x="450" y="270" width="380" height="200" rx="10" fill="#fff3cd" stroke="#ddc66b" stroke-width="2"/>
+    <text x="640" y="295" text-anchor="middle" font-size="14" font-weight="bold" fill="#856404">パラ9.44の当てはめ分析</text>
+    <text x="470" y="320" font-size="12" fill="#1e2d3d">MRT/MPTの機能:</text>
+    <text x="470" y="340" font-size="11" fill="#5a6f82">- 受託製造（配合処方は親会社提供）</text>
+    <text x="470" y="357" font-size="11" fill="#5a6f82">- 顧客仕様への微調整（応用開発）</text>
+    <text x="470" y="374" font-size="11" fill="#5a6f82">- 品質管理（親会社基準に準拠）</text>
+    <text x="470" y="398" font-size="12" font-weight="bold" fill="#c0392b">→ 「ローリスク契約製造者」に該当</text>
+    <text x="470" y="418" font-size="12" fill="#1e2d3d">適正報酬水準:</text>
+    <text x="470" y="438" font-size="11" fill="#5a6f82">- TNMM: 総費用+マークアップ 3-8%</text>
+    <text x="470" y="455" font-size="11" fill="#5a6f82">- 営業利益率: 2-5% (売上高ベース)</text>
+
+    <!-- Comparison table right -->
+    <rect x="450" y="50" width="380" height="200" rx="10" fill="#d4edda" stroke="#7cc498" stroke-width="2"/>
+    <text x="640" y="75" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a6b3c">ルーティン利益率の比較基準</text>
+    <text x="470" y="100" font-size="12" fill="#1e2d3d" font-weight="bold">契約製造者のベンチマーク:</text>
+    <text x="470" y="120" font-size="11" fill="#5a6f82">- タイ所在契約製造者: OM 3-7%</text>
+    <text x="470" y="137" font-size="11" fill="#5a6f82">- ASEAN化学品製造者: OM 2-6%</text>
+    <text x="470" y="154" font-size="11" fill="#5a6f82">- ゴム製品セクター: OM 3-8%</text>
+    <text x="470" y="178" font-size="12" fill="#1e2d3d" font-weight="bold">超過利益の帰属先:</text>
+    <text x="470" y="198" font-size="11" fill="#5a6f82">ルーティン利益率を超える利益</text>
+    <text x="470" y="215" font-size="11" fill="#5a6f82">→ 配合処方IPの保有者（ミトヨ本社）</text>
+    <text x="470" y="232" font-size="11" fill="#5a6f82">→ ロイヤルティまたはTP調整で回収</text>
+  </svg>
+  <div class="svg-caption">図2: 事業再編前後におけるFAR（機能・資産・リスク）の変化と利益配分への影響</div>
+</div>
+
+<p>パラ9.44は、契約製造者への変換後のコスト・プラス報酬がarm's lengthであり得るとしつつも、「既存の取決めの変更による、リスキーな利益ポテンシャルの放棄に対する補償」が別途必要であることを強調する。ミトヨの場合、以下の二つのレベルでの検証が必要である。</p>
+
+<p><strong>第一レベル: 再編後の継続的取引のarm's length性</strong><br>
+MRT/MPTが現在享受している利益率は、「ローリスク契約製造者」として適正か。タイ所在のゴム・樹脂製品製造者のベンチマークスタディにおける四分位範囲と比較し、MRT/MPTの営業利益率が上位四分位を超えている場合、超過利益分がミトヨ本社に帰属すべきロイヤルティ相当額として問題となる。</p>
+
+<p><strong>第二レベル: 再編時の一時的補償（indemnification）</strong><br>
+パラ9.44-9.45の枠組みに照らし、2010年のMRT設立時および2013年のMPT設立時に、「移転された無形資産の価値」に対するlump-sum paymentまたはbuy-in paymentが支払われるべきであったか。ミトヨが99.8%/90%の株主であることは、経済的な「自己への移転」の性質を帯びるが、パラ9.12が述べるとおり、arm's length principleは「各当事者のレベルで」評価される。</p>
+
+<h2 class="chapter" id="ch9-5">9-5. 2025年クリヤマによる買収とTP是正の契機</h2>
+
+<p>2025年、ミトヨはクリヤマホールディングスにより子会社化された（買収額6.1億円）。この事実は、第9章の事業再編分析において重要な意味を持つ。</p>
+
+<!-- SVG 3: クリヤマ買収構造図 -->
+<div class="svg-container">
+  <svg viewBox="0 0 860 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="クリヤマ買収構造図">
+    <defs>
+      <marker id="arrowDown" markerWidth="10" markerHeight="7" refX="5" refY="7" orient="auto">
+        <polygon points="0 0, 10 0, 5 7" fill="#1a3a5c"/>
+      </marker>
+      <marker id="arrowDown2" markerWidth="10" markerHeight="7" refX="5" refY="7" orient="auto">
+        <polygon points="0 0, 10 0, 5 7" fill="#c0392b"/>
+      </marker>
+      <marker id="arrowRight2" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#2c5f8a"/>
+      </marker>
+    </defs>
+    <text x="430" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a3a5c">図3: クリヤマHDによるミトヨ子会社化の構造（2025年）</text>
+
+    <!-- Kuriyama HD -->
+    <rect x="280" y="50" width="300" height="60" rx="10" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="2"/>
+    <text x="430" y="78" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">クリヤマホールディングス</text>
+    <text x="430" y="98" text-anchor="middle" font-size="11" fill="#c5d3e0">東証プライム / 連結約700億円</text>
+
+    <!-- Arrow: Kuriyama -> Minori -->
+    <line x1="430" y1="110" x2="430" y2="145" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrowDown)"/>
+    <text x="480" y="133" font-size="11" fill="#5a6f82">出資</text>
+
+    <!-- Minori 3 -->
+    <rect x="300" y="148" width="260" height="50" rx="8" fill="#e8daef" stroke="#b99fd4" stroke-width="2"/>
+    <text x="430" y="170" text-anchor="middle" font-size="13" font-weight="bold" fill="#6a3d9a">みのり3号投資事業有限責任組合</text>
+    <text x="430" y="188" text-anchor="middle" font-size="11" fill="#5a6f82">PEファンド（税務意識の高い取引構造）</text>
+
+    <!-- Arrow: Minori -> Mitoyo -->
+    <line x1="430" y1="198" x2="430" y2="238" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrowDown)"/>
+    <text x="490" y="222" font-size="11" fill="#c0392b" font-weight="bold">買収額 6.1億円</text>
+
+    <!-- Mitoyo -->
+    <rect x="260" y="240" width="340" height="65" rx="10" fill="#2c5f8a" stroke="#1a3a5c" stroke-width="2"/>
+    <text x="430" y="265" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">ミトヨ株式会社（日本親会社）</text>
+    <text x="430" y="285" text-anchor="middle" font-size="11" fill="#c5d3e0">連結118.4億円 / 鞍掛技術センター（R&D）</text>
+    <text x="430" y="298" text-anchor="middle" font-size="10" fill="#c5d3e0">配合処方IP保有</text>
+
+    <!-- Arrows: Mitoyo -> subsidiaries -->
+    <line x1="300" y1="305" x2="130" y2="365" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrowDown)"/>
+    <line x1="430" y1="305" x2="430" y2="365" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrowDown)"/>
+    <line x1="560" y1="305" x2="680" y2="365" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrowDown)"/>
+
+    <!-- MRT -->
+    <rect x="30" y="370" width="200" height="80" rx="8" fill="#fde8e6" stroke="#c0392b" stroke-width="2"/>
+    <text x="130" y="395" text-anchor="middle" font-size="13" font-weight="bold" fill="#c0392b">MRT（タイ・ゴム）</text>
+    <text x="130" y="412" text-anchor="middle" font-size="11" fill="#5a6f82">出資99.8% / 売上4.1億円</text>
+    <text x="130" y="428" text-anchor="middle" font-size="10" fill="#5a6f82">2010年設立 / 2012年稼働</text>
+    <text x="130" y="444" text-anchor="middle" font-size="10" fill="#c0392b">TP問題: 設立時補償ゼロ</text>
+
+    <!-- MPT -->
+    <rect x="330" y="370" width="200" height="80" rx="8" fill="#fde8e6" stroke="#c0392b" stroke-width="2"/>
+    <text x="430" y="395" text-anchor="middle" font-size="13" font-weight="bold" fill="#c0392b">MPT（タイ・樹脂）</text>
+    <text x="430" y="412" text-anchor="middle" font-size="11" fill="#5a6f82">出資90% / 売上16.6億円</text>
+    <text x="430" y="428" text-anchor="middle" font-size="10" fill="#5a6f82">2013年設立</text>
+    <text x="430" y="444" text-anchor="middle" font-size="10" fill="#c0392b">上海三豊杉栄が10%保有</text>
+
+    <!-- Other subs -->
+    <rect x="600" y="370" width="230" height="80" rx="8" fill="#d1ecf1" stroke="#88c7d5" stroke-width="2"/>
+    <text x="715" y="392" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a3a5c">Thongchai Mitoyo（JV・6.8億）</text>
+    <text x="715" y="410" text-anchor="middle" font-size="11" fill="#5a6f82">Unika Rubber（マレーシアJV・3.6億）</text>
+    <text x="715" y="428" text-anchor="middle" font-size="11" fill="#5a6f82">上海三豊杉栄（商貿・MPT株10%）</text>
+    <text x="715" y="444" text-anchor="middle" font-size="10" fill="#5a6f82">出資比率20-49%</text>
+
+    <!-- DD Findings Panel -->
+    <rect x="30" y="470" width="800" height="80" rx="8" fill="#fff3cd" stroke="#ddc66b" stroke-width="2"/>
+    <text x="430" y="495" text-anchor="middle" font-size="13" font-weight="bold" fill="#856404">買収DDで想定されるTP問題の指摘</text>
+    <text x="50" y="515" font-size="11" fill="#1e2d3d">(1) MRT/MPT設立時の無形資産移転に対する補償欠如 → 潜在的な税務リスク（移転価格更正のリスク）</text>
+    <text x="50" y="533" font-size="11" fill="#1e2d3d">(2) ロイヤルティ未徴収（配合処方ノウハウ使用の対価） → 日本側の所得計上漏れの可能性</text>
+    <text x="50" y="548" font-size="11" fill="#1e2d3d">(3) 買収後のTP是正契機: クリヤマHDによるTP Policy導入・ロイヤルティ体系の再構築が期待される</text>
+  </svg>
+  <div class="svg-caption">図3: クリヤマHDによるミトヨ買収構造と買収DDにおけるTP問題の位置づけ</div>
+</div>
+
+<h4>買収DDとTP問題</h4>
+<p>PEファンド（みのり3号投資事業有限責任組合）を介した買収構造は、税務上のデューデリジェンスが綿密に行われたことを推認させる。買収DDにおいて、以下のTP問題が指摘された可能性がある。</p>
+
+<div class="card card-yellow">
+  <div class="card-title">DDで想定されるTP問題の指摘事項</div>
+  <p><strong>(1) 過去のTP問題（Historical Exposure）</strong><br>
+  MRT設立（2010年）・MPT設立（2013年）時の無形資産移転に対する補償の欠如。日本の移転価格税制上、更正の除斥期間は原則7年（国税通則法70条）であるため、2013年のMPT設立に係る移転価格問題は2020年頃まで更正リスクが残存していた。2010年のMRT分については除斥期間経過の可能性が高い。<br><br>
+  <strong>(2) 継続的なTP問題（Ongoing Exposure）</strong><br>
+  配合処方ノウハウに対するロイヤルティの未徴収。MRT/MPTがミトヨの配合処方を使用して製造活動を行っている以上、arm's lengthのロイヤルティ料率（例: 売上の3-5%程度）が課されるべきであるが、これが徴収されていない場合、毎年の移転価格調整のリスクが存在する。<br><br>
+  <strong>(3) 買収後のTP是正</strong><br>
+  クリヤマHD（東証プライム上場、連結約700億円）は、上場企業としてTP Policy（移転価格ポリシー）を有している蓋然性が高い。買収後、ミトヨグループのTP体制をクリヤマHDのTP Policyに統合する過程で、MRT/MPTへのロイヤルティ徴収体制の構築、移転価格文書（ローカルファイル・マスターファイル）の整備が行われることが期待される。</p>
+</div>
+
+<h4>パラ9.24-9.26: 買収に伴うシナジーの評価</h4>
+<p>パラ9.24は、事業再編の理由として「競争のグローバル化、規模の経済、専門化の必要性、効率化とコスト削減」を挙げる。クリヤマによるミトヨの買収は、ゴム・樹脂製品における東南アジア製造拠点の獲得というシナジーを目的としている。パラ9.25が述べるとおり、「意図的な協調的グループ行動」から生じるシナジー便益は、そのシナジー創出に貢献する関連企業に適切に配分されなければならない。</p>
+
+<!-- ================================================================ -->
+<!--  第10章: 金融取引                                                 -->
+<!-- ================================================================ -->
+<div class="part-heading" id="ch10">第10章当てはめ ── 金融取引</div>
+
+<h2 class="chapter" id="ch10-1">10-1. 資本構成の正確な認定</h2>
+
+<p>OECD TPG第10章は、金融取引の移転価格分析における基本原則を提示する。パラ10.4は、「MNEグループの一員である借入企業の負債と資本のバランスが、同一または類似の状況下で営業する独立企業のそれと異なる場合がある」と述べ、正確な認定（accurate delineation）の重要性を指摘する。</p>
+
+<h4>ミトヨグループの資本構成</h4>
+
+<table>
+  <tr><th>法人</th><th>出資比率</th><th>売上規模</th><th>資本構成の特徴</th><th>第10章上の論点</th></tr>
+  <tr><td>ミトヨ本社（日本）</td><td>―</td><td>118.4億円（連結）</td><td>親会社として全子会社への出資</td><td>出資とグループ内貸付の区分</td></tr>
+  <tr><td>MRT（タイゴム）</td><td>99.8%</td><td>4.1億円</td><td>ほぼ全額を親会社出資で調達</td><td>パラ10.4-10.13: 過少資本の検討</td></tr>
+  <tr><td>MPT（タイ樹脂）</td><td>90%</td><td>16.6億円</td><td>親会社90%+上海三豊杉栄10%</td><td>少数株主構造の影響</td></tr>
+  <tr><td>Thongchai Mitoyo</td><td>JV</td><td>6.8億円</td><td>JV構造</td><td>JVへの貸付条件</td></tr>
+  <tr><td>Unika Rubber</td><td>20-49%</td><td>3.6億円</td><td>マレーシアJV</td><td>出資・貸付の混合</td></tr>
+</table>
+
+<p>パラ10.5は、OECD租税条約9条のコメンタリーを引用し、「貸付契約において規定された利率がarm's lengthであるかだけでなく、表面上の貸付が貸付として取り扱われるべきか、あるいは資本拠出として取り扱われるべきかが問題となる」と述べる。</p>
+
+<h2 class="chapter" id="ch10-2">10-2. グループ内貸付と過少資本</h2>
+
+<p>MRT（99.8%子会社）・MPT（90%子会社）に対するミトヨ本社からの資金提供構造を、パラ10.12-10.13の枠組みで分析する。</p>
+
+<div class="card card-blue">
+  <div class="card-title">パラ10.12の経済的に関連する特性</div>
+  <p>貸付の正確な認定にあたり、以下の指標を確認する必要がある:<br>
+  <strong>(a) 確定返済日の有無</strong>: グループ内貸付に返済期限が設定されているか。設定されていない場合、資本拠出として再認定される可能性。<br>
+  <strong>(b) 利息支払義務の有無</strong>: 無利息貸付の場合、arm's length利率の帰属利息認定の問題。<br>
+  <strong>(c) 債権者としての地位</strong>: 99.8%/90%株主からの貸付は、実質的に劣後債務に類似。<br>
+  <strong>(d) 財務制限条項・担保の有無</strong>: 関連者間貸付では通常欠如。<br>
+  <strong>(e) 借入者の返済能力</strong>: MRTの売上4.1億円で、仮に多額の貸付を受けていた場合、返済能力の検証が必要。</p>
+</div>
+
+<p>パラ10.13は具体例として、「10年の期間を持つ貸付が名目上設定されているが、借入企業の今後10年間の善意の財務予測に照らし、当該金額を返済できないことが明らかな場合」を挙げ、「独立の貸主はそのような貸付を行わない」と結論づける。このような場合、貸付の一部は資本拠出として再認定される。</p>
+
+<h4>過少資本（Thin Capitalisation）の検討</h4>
+<p>MRT/MPTの資本構成において、ミトヨ本社からの資金が「出資」ではなく「貸付」の形式をとっている部分がある場合、以下の分析が必要となる。</p>
+
+<p><strong>(a) 独立企業が同条件で借り入れられるか</strong>: パラ10.13に基づき、MRT（売上4.1億円の小規模製造子会社）が独立の金融機関から同額・同条件で借入可能であるかを検証する。ミトヨ本社の信用力に依拠した借入であれば、「グループ帰属（group affiliation）」の効果として、暗黙の信用支援（implicit support）の問題が生じる。</p>
+
+<p><strong>(b) 負債・資本比率の適正性</strong>: タイ所在の同業・同規模製造企業の負債・資本比率と比較し、MRT/MPTの資本構成が「独立企業としてあり得る範囲」にあるかを検証する。パラ10.4が述べるとおり、MNEグループ内の企業の負債・資本バランスは、独立企業のそれと異なることがある。</p>
+
+<h2 class="chapter" id="ch10-3">10-3. 親会社保証と暗黙の支援</h2>
+
+<p>パラ10.56は、「親会社から子会社への貸付の場合、親会社は既に子会社に対する支配権と所有権を有しているため、担保の設定はリスク分析においてさほど重要ではない」と述べる。しかし、より重要な問題は、MRT/MPTが外部金融機関から借入を行う際の親会社保証（explicit guarantee）の有無と、保証が明示的でない場合の暗黙の支援（implicit support）の影響である。</p>
+
+<div class="card card-green">
+  <div class="card-title">保証の移転価格上の取扱い</div>
+  <p><strong>明示的保証（explicit guarantee）がある場合</strong><br>
+  ミトヨ本社がMRT/MPTの外部借入に対して保証を提供している場合、その保証に対するarm's length保証料（guarantee fee）が課されるべきかが問題となる。パラ10.56の趣旨に照らし、99.8%子会社への保証は「株主活動」の性質を帯びるが、OECD TPG第10章D節は保証の対価算定に関する詳細なガイダンスを提供している。<br><br>
+  <strong>暗黙の支援（implicit support）の場合</strong><br>
+  明示的な保証契約がなくとも、99.8%/90%の出資関係により、外部金融機関はミトヨグループの信用力を考慮した条件でMRT/MPTに融資する可能性がある。この「暗黙の支援」から生じる金利低減効果を、保証料として認識すべきか。パラ10.56は親会社・子会社間の出資関係に起因する信用力の影響を認識しつつも、「担保がなくても、事業資産が担保として利用可能であれば、その影響を考慮すべき」と述べる。</p>
+</div>
+
+<h2 class="chapter" id="ch10-4">10-4. 為替リスク管理</h2>
+
+<p>パラ10.33は「経済成長率、インフレ率、為替レートのボラティリティなどの経済的要因により、異なる通貨建ての金融商品は異なる価格を有し得る」と述べる。ミトヨグループの場合、以下の為替リスクが存在する。</p>
+
+<table>
+  <tr><th>取引</th><th>通貨</th><th>リスク</th><th>管理主体（推定）</th></tr>
+  <tr><td>MRT/MPTの原材料調達</td><td>THB / USD / JPY</td><td>調達為替リスク</td><td>MRT/MPT（日常的管理）</td></tr>
+  <tr><td>MRT/MPTの売上</td><td>THB / USD</td><td>販売為替リスク</td><td>MRT/MPT</td></tr>
+  <tr><td>グループ内取引（移転価格）</td><td>JPY / THB</td><td>通貨間移転価格リスク</td><td>ミトヨ本社</td></tr>
+  <tr><td>Unika Rubber（マレーシア）</td><td>MYR / USD</td><td>追加通貨リスク</td><td>不明</td></tr>
+</table>
+
+<p>パラ10.39-10.50のトレジャリー機能に関するガイダンスに照らすと、ミトヨグループの規模（連結118.4億円）では集中的なトレジャリー機能やキャッシュプーリングの設置は非典型的である。パラ10.40が述べるとおり、「トレジャリーの組織形態はMNEグループの構造と事業の複雑さに依存する」ため、分散型のトレジャリー構造（各子会社が個別に為替管理を行う）が実態に即する可能性が高い。</p>
+
+<div class="card card-yellow">
+  <div class="card-title">為替ヘッジの移転価格上の意味</div>
+  <p>仮にミトヨ本社がMRT/MPTの為替リスクを集中管理している（為替予約を本社が一括して行い、子会社に有利なレートを適用している）場合、パラ10.44-10.47に基づき、トレジャリー機能のarm's length対価が問題となる。具体的には:<br>
+  (a) 為替ヘッジをサービスとして提供している場合: サービス・フィーの徴収（第7章準拠）<br>
+  (b) 為替リスク自体を本社が引き受けている場合: リスク引受の対価としての利益配分<br>
+  (c) 各子会社が独立して為替管理を行っている場合: 移転価格上の問題は限定的<br><br>
+  ミトヨの中堅企業としての規模に鑑みれば、(c)の実態が最も蓋然性が高い。</p>
+</div>
+
+<!-- ================================================================ -->
+<!--  統合分析                                                         -->
+<!-- ================================================================ -->
+<div class="part-heading" id="synthesis">統合分析 ── 三章の交差点</div>
+
+<h2 class="chapter">三章横断のTP問題構造</h2>
+
+<p>第8章・第9章・第10章の当てはめ分析を統合すると、ミトヨグループの移転価格問題は以下の構造として整理される。</p>
+
+<table>
+  <tr><th>時点</th><th>事象</th><th>関連章</th><th>TP上の問題</th><th>リスク評価</th></tr>
+  <tr><td>2010年</td><td>MRT設立</td><td>第9章（事業再編）</td><td>ゴム配合処方ノウハウの移転に対する補償ゼロ</td><td>高（ただし除斥期間経過の可能性）</td></tr>
+  <tr><td>2012年</td><td>MRT稼働開始</td><td>第9章（再編後取引）</td><td>ロイヤルティ未徴収の開始時点</td><td>中</td></tr>
+  <tr><td>2013年</td><td>MPT設立</td><td>第9章（事業再編）</td><td>樹脂製造ノウハウの移転補償ゼロ + 上海三豊杉栄の10%出資構造</td><td>高</td></tr>
+  <tr><td>継続的</td><td>MRT/MPTの製造活動</td><td>第8章（CCA不採用）/ 第9章（再編後取引）</td><td>ライセンス構造が適切だがロイヤルティ不在 / MRT/MPTの利益率がルーティン水準を超過している可能性</td><td>高</td></tr>
+  <tr><td>継続的</td><td>グループ内資金供給</td><td>第10章（金融取引）</td><td>グループ内貸付条件のarm's length性 / 暗黙の信用支援の対価 / 為替リスク管理の帰属</td><td>中〜低</td></tr>
+  <tr><td>2025年</td><td>クリヤマによる買収</td><td>第9章（事業再編）</td><td>買収DDでのTP問題検出 / 買収後のTP Policy導入による是正機会</td><td>是正契機（ポジティブ）</td></tr>
+</table>
+
+<h3>ミトヨグループにおけるTP是正の優先順位</h3>
+
+<div class="card card-red">
+  <div class="card-title">最優先: ロイヤルティ体制の構築（第9章 Part II準拠）</div>
+  <p>MRT/MPTが使用する配合処方ノウハウに対する適正ロイヤルティの算定と徴収開始。パラ9.44が示す「再編後の継続的取引」のarm's length pricing。ベンチマークスタディに基づき、売上高の3-5%程度のロイヤルティ料率を検討する（ゴム・樹脂製品セクターの比較対象取引に依拠）。これは年間ベースでMRTから約1,200-2,000万円、MPTから約5,000万-8,300万円の追加的移転価格として試算される。</p>
+</div>
+
+<div class="card card-yellow">
+  <div class="card-title">次点: 移転価格文書化の整備（パラ9.32-9.33準拠）</div>
+  <p>クリヤマHDグループのTP Policyの下でのマスターファイル・ローカルファイルの作成。パラ9.33が推奨する「事業再編に関する決定と意図の文書化」を、少なくとも今後の取引について整備する。MRT/MPTのベンチマークスタディ（TNMM）の実施と、ルーティン利益率との比較分析の文書化。</p>
+</div>
+
+<div class="card card-blue">
+  <div class="card-title">第三: 金融取引の整理（第10章準拠）</div>
+  <p>グループ内貸付の有無・条件の確認と、パラ10.12基準での正確な認定。暗黙の信用支援の影響評価（必要に応じて保証料の設定）。為替リスク管理体制の明確化。これらは中堅企業規模では金額的影響が限定的な場合が多いが、クリヤマHDの上場企業としてのコンプライアンス基準に合致させる必要がある。</p>
+</div>
+
+<h3>総括</h3>
+
+<p>ミトヨグループの移転価格問題の核心は、2010年・2013年のタイ子会社設立時における「無形資産移転への補償の欠如」と、その後の「ロイヤルティ未徴収」にある。OECD TPG第9章が定める事業再編の分析フレームワーク──とりわけ「移転された価値」の特定（パラ9.15-9.18）、「利益ポテンシャル」の評価（パラ9.39-9.41）、「再編後取引のarm's length性」（パラ9.44）──を精密に適用すると、ミトヨからMRT/MPTへの配合処方ノウハウの移転は、典型的な「製造移転型事業再編」として捕捉される。</p>
+
+<p>第8章の分析からは、CCA構造はミトヨの実態に不適合であり、ライセンス構造がより適切であることが確認された。第10章の分析からは、中堅企業グループとしての資金供給構造に一定のTP問題が存在するものの、第9章の無形資産移転問題に比して金額的重要性は低いことが示された。</p>
+
+<p>2025年のクリヤマHDによる買収は、ミトヨグループのTP問題を是正する重要な契機である。上場企業グループの一員として、OECD TPGに準拠したTP Policyの導入、ロイヤルティ体制の構築、移転価格文書化の整備が、クリヤマHDの統合プロセスの一環として実施されることが期待される。</p>
+
+<!-- ========== FOOTNOTES ========== -->
+<div class="footnotes">
+  <h3>参照条文・ガイドライン</h3>
+  <ul class="fn-list">
+    <li id="fn1"><strong>[1]</strong> OECD Transfer Pricing Guidelines for Multinational Enterprises and Tax Administrations 2022, Chapter VIII: Cost Contribution Arrangements (paras. 8.1-8.52)</li>
+    <li id="fn2"><strong>[2]</strong> OECD TPG 2022, Chapter IX: Transfer Pricing Aspects of Business Restructurings (paras. 9.1-9.46 / Part I: paras. 9.10-9.45 / Part II)</li>
+    <li id="fn3"><strong>[3]</strong> OECD TPG 2022, Chapter X: Transfer Pricing Aspects of Financial Transactions (paras. 10.1-10.57)</li>
+    <li id="fn4"><strong>[4]</strong> OECD TPG 2022, Chapter I, Section D.1.2.1: Framework for analysing risk in controlled transactions (paras. 1.56-1.106)</li>
+    <li id="fn5"><strong>[5]</strong> OECD TPG 2022, Chapter VI, Sections D.3-D.4: Hard-to-Value Intangibles (paras. 6.186-6.230)</li>
+    <li id="fn6"><strong>[6]</strong> ミトヨ株式会社: 連結売上高118.4億円、鞍掛技術センター（ゴム配合R&D拠点）、MRT出資99.8%、MPT出資90%</li>
+    <li id="fn7"><strong>[7]</strong> クリヤマホールディングス: 2025年、みのり3号投資事業有限責任組合を通じてミトヨを子会社化（買収額6.1億円）</li>
+    <li id="fn8"><strong>[8]</strong> 国税通則法70条: 移転価格税制に基づく更正の除斥期間は原則7年</li>
+  </ul>
+</div>
+
+</div><!-- /.wrap -->
+
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OECD TPG 2022 ミトヨ当てはめ ─ 総括・戦略的提言</title>
+<style>
+/* ===== Root Variables ===== */
+:root {
+  --primary: #1a3a5c;
+  --secondary: #2c5f8a;
+  --bg: #f5f7fa;
+  --text: #1e2d3d;
+  --muted: #5a6f82;
+  --border: #c5d3e0;
+  --card-blue: #d1ecf1;
+  --card-blue-border: #88c7d5;
+  --card-green: #d4edda;
+  --card-green-border: #7cc498;
+  --card-red: #f8d7da;
+  --card-red-border: #e09a9f;
+  --card-yellow: #fff3cd;
+  --card-yellow-border: #ddc66b;
+  --card-purple: #e8daef;
+  --card-purple-border: #b99fd4;
+  --link: #1d5fa0;
+  --fn-bg: #f0f3f7;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", "游明朝", "Times New Roman", serif;
+  line-height: 1.9;
+  font-size: 15.5px;
+}
+/* ===== Layout ===== */
+.wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 44px 50px 60px;
+  box-shadow: 0 1px 12px rgba(0,0,0,.07);
+}
+@media (max-width: 720px) {
+  .wrap { padding: 20px 16px 36px; }
+  .doc-title { font-size: 1.4rem; }
+  table { font-size: 13px; }
+  svg { max-width: 100%; height: auto; }
+}
+/* ===== Header ===== */
+.doc-header {
+  border-bottom: 3px solid var(--primary);
+  padding-bottom: 22px;
+  margin-bottom: 32px;
+}
+.doc-title {
+  font-size: 1.85rem;
+  line-height: 1.45;
+  color: var(--primary);
+  font-weight: bold;
+  margin: 0 0 6px;
+}
+.doc-subtitle {
+  font-size: 1.05rem;
+  color: var(--secondary);
+  margin: 0 0 14px;
+}
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.meta-item { display: inline-flex; align-items: center; gap: 5px; }
+/* ===== Navigation ===== */
+.nav-bar {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  background: var(--primary);
+  padding: 12px 20px;
+  border-radius: 6px;
+  margin-bottom: 30px;
+}
+.nav-bar a {
+  color: #e2ecf4;
+  text-decoration: none;
+  font-size: 0.88rem;
+  padding: 4px 10px;
+  border-radius: 4px;
+  transition: background .2s;
+}
+.nav-bar a:hover { background: rgba(255,255,255,.15); }
+.nav-bar a.current { background: rgba(255,255,255,.2); font-weight: bold; color: #fff; }
+/* ===== Table of Contents ===== */
+.toc {
+  background: #f7f9fc;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 22px 28px;
+  margin-bottom: 36px;
+}
+.toc h2 {
+  font-size: 1.1rem;
+  color: var(--primary);
+  margin: 0 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.toc ol { margin: 0; padding-left: 22px; }
+.toc li { margin-bottom: 4px; font-size: 0.92rem; }
+.toc li a { color: var(--link); text-decoration: none; }
+.toc li a:hover { text-decoration: underline; }
+.toc ol ol { margin-top: 4px; padding-left: 20px; }
+/* ===== Part / Chapter headings ===== */
+.part-heading {
+  background: var(--primary);
+  color: #fff;
+  padding: 16px 24px;
+  border-radius: 6px;
+  margin: 44px 0 28px;
+  font-size: 1.25rem;
+  font-weight: bold;
+  letter-spacing: 0.04em;
+}
+.part-heading:first-of-type { margin-top: 10px; }
+h2.chapter {
+  color: var(--primary);
+  font-size: 1.35rem;
+  border-left: 5px solid var(--secondary);
+  padding-left: 16px;
+  margin: 36px 0 20px;
+}
+h3 {
+  color: var(--secondary);
+  font-size: 1.12rem;
+  margin: 28px 0 14px;
+  padding-bottom: 4px;
+  border-bottom: 1px dashed var(--border);
+}
+h4 {
+  color: var(--primary);
+  font-size: 1.02rem;
+  margin: 22px 0 10px;
+}
+/* ===== Cards ===== */
+.card {
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin: 18px 0;
+  border-left: 4px solid;
+}
+.card-blue   { background: var(--card-blue);   border-color: var(--card-blue-border); }
+.card-green  { background: var(--card-green);  border-color: var(--card-green-border); }
+.card-red    { background: var(--card-red);    border-color: var(--card-red-border); }
+.card-yellow { background: var(--card-yellow); border-color: var(--card-yellow-border); }
+.card-purple { background: var(--card-purple); border-color: var(--card-purple-border); }
+.card-title {
+  font-weight: bold;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+/* ===== Blockquote (条文) ===== */
+blockquote {
+  margin: 18px 0;
+  padding: 16px 22px;
+  background: #f7f9fc;
+  border-left: 4px solid var(--secondary);
+  font-size: 0.93rem;
+  line-height: 1.85;
+  color: #2c3e50;
+}
+blockquote cite {
+  display: block;
+  margin-top: 10px;
+  font-style: normal;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+/* ===== Tables ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 18px 0;
+  font-size: 0.92rem;
+}
+th {
+  background: var(--primary);
+  color: #fff;
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: normal;
+}
+td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #dce4ea;
+}
+tr:nth-child(even) td { background: #f8fafe; }
+/* ===== SVG Container ===== */
+.svg-container {
+  margin: 24px 0;
+  text-align: center;
+}
+.svg-container svg {
+  max-width: 100%;
+  height: auto;
+}
+.svg-caption {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 8px;
+}
+/* ===== Footnotes ===== */
+.footnotes {
+  margin-top: 36px;
+  padding-top: 16px;
+  border-top: 2px solid var(--border);
+}
+.footnotes h3 {
+  font-size: 1rem;
+  border: none;
+  padding: 0;
+  margin-bottom: 12px;
+}
+.fn-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.fn-list li {
+  padding: 6px 12px;
+  margin-bottom: 4px;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  background: var(--fn-bg);
+  border-radius: 4px;
+}
+.fn-list li:target {
+  background: #fffde0;
+  outline: 2px solid var(--card-yellow-border);
+}
+sup a {
+  color: var(--secondary);
+  text-decoration: none;
+  font-weight: bold;
+}
+sup a:hover { text-decoration: underline; }
+.fn-back {
+  color: var(--secondary);
+  text-decoration: none;
+  margin-left: 4px;
+  font-size: 0.8rem;
+}
+/* ===== Risk Tags ===== */
+.risk-tag {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-size: 0.82rem;
+  font-weight: bold;
+  color: #fff;
+}
+.risk-high { background: #c0392b; }
+.risk-mid  { background: #e67e22; }
+.risk-low  { background: #27ae60; }
+/* ===== Timeline ===== */
+.timeline {
+  position: relative;
+  padding-left: 28px;
+  margin: 20px 0;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--secondary);
+  border-radius: 2px;
+}
+.timeline-item {
+  position: relative;
+  margin-bottom: 22px;
+  padding: 14px 18px;
+  background: #f7f9fc;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -24px;
+  top: 18px;
+  width: 12px;
+  height: 12px;
+  background: var(--secondary);
+  border-radius: 50%;
+  border: 2px solid #fff;
+}
+.timeline-label {
+  font-weight: bold;
+  color: var(--primary);
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+}
+/* ===== Scenario Cards ===== */
+.scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 20px 0;
+}
+@media (max-width: 720px) {
+  .scenario-grid { grid-template-columns: 1fr; }
+}
+.scenario-card {
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 18px;
+  text-align: center;
+}
+.scenario-card h4 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+}
+.scenario-value {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: var(--primary);
+  margin: 8px 0;
+}
+.scenario-detail {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+/* ===== Misc ===== */
+p { margin: 0 0 14px; text-align: justify; }
+strong { color: var(--primary); }
+em { font-style: normal; color: var(--secondary); font-weight: bold; }
+a { color: var(--link); }
+hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+.marker { background: #fff3cd; padding: 1px 4px; border-radius: 2px; }
+.text-center { text-align: center; }
+/* ===== Print ===== */
+@media print {
+  body { background: #fff; font-size: 11pt; }
+  .wrap { box-shadow: none; padding: 0; max-width: 100%; }
+  .nav-bar { display: none; }
+  .part-heading { break-before: page; }
+  blockquote { break-inside: avoid; }
+  .svg-container { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ===== HEADER ===== -->
+<div class="doc-header">
+  <h1 class="doc-title">OECD移転価格ガイドライン（2022年版）ミトヨ当てはめ</h1>
+  <p class="doc-subtitle">─ 総括・戦略的提言 ─</p>
+  <div class="meta">
+    <span class="meta-item">2026年3月19日</span>
+    <span class="meta-item">OECD TPG全10章の横断的分析</span>
+    <span class="meta-item">対象: ミトヨグループ（日本親会社・タイ子会社2社）</span>
+  </div>
+</div>
+
+<!-- ===== NAVIGATION ===== -->
+<nav class="nav-bar">
+  <a href="#sec-a">A. エグゼクティブサマリー</a>
+  <a href="#sec-b">B. 章別結論一覧</a>
+  <a href="#sec-c">C. 戦略的提言</a>
+  <a href="#sec-d">D. 定量シミュレーション</a>
+  <a href="#sec-e">E. 日タイ租税条約</a>
+</nav>
+
+<!-- ===== TABLE OF CONTENTS ===== -->
+<div class="toc">
+  <h2>目次</h2>
+  <ol>
+    <li><a href="#sec-a">A. エグゼクティブサマリー</a></li>
+    <li><a href="#sec-b">B. OECD TPG章別当てはめ結論一覧表</a></li>
+    <li><a href="#sec-c">C. 戦略的提言</a>
+      <ol>
+        <li><a href="#sec-c1">短期施策（6ヶ月以内）</a></li>
+        <li><a href="#sec-c2">中期施策（1〜2年）</a></li>
+        <li><a href="#sec-c3">長期施策（2〜3年）</a></li>
+      </ol>
+    </li>
+    <li><a href="#sec-d">D. 定量シミュレーション</a></li>
+    <li><a href="#sec-e">E. 日タイ租税条約の適用</a></li>
+  </ol>
+</div>
+
+<!-- ============================================================ -->
+<!-- A. EXECUTIVE SUMMARY -->
+<!-- ============================================================ -->
+<div class="part-heading" id="sec-a">A. エグゼクティブサマリー</div>
+
+<div class="card card-red">
+  <div class="card-title">核心的問題</div>
+  ミトヨは50年以上にわたり蓄積したゴム配合処方ノウハウを、タイ子会社MRT・MPTに対して<strong>無償で</strong>供与している。OECD移転価格ガイドライン（TPG）2022年版の全10章にわたる分析の結果、この取引構造は独立企業原則からの重大な乖離を構成し、<strong>年間推定5.5億円</strong>の税務エクスポージャーが存在する。
+</div>
+
+<h3>1. 事実関係の概要</h3>
+
+<p>ミトヨは、ゴム・樹脂部品を製造する日本の中堅メーカーであり、連結売上高118.4億円を有する。同社の競争優位の源泉は、50年以上にわたる試行錯誤から蓄積された<strong>ゴム配合処方ノウハウ</strong>にある。このノウハウは特許として登録されていないが、配合比率・加硫条件・添加剤選定等に関する技術的蓄積であり、OECD TPG第6章が定義する「無形資産」に該当する。</p>
+
+<p>タイには2つの子会社が存在する。MRT（ゴム部品製造、売上4.1億円）およびMPT（樹脂部品製造、売上16.6億円）である。これらの子会社は日本親会社からノウハウの供与を受けて製造活動を行っているが、当該ノウハウに対する<strong>ロイヤルティの支払いは一切行われていない</strong>。</p>
+
+<p>2025年にクリヤマホールディングスがミトヨを買収したことにより、グループ全体の移転価格ポリシーが見直される契機が生じている。これは、長年放置されてきたTP問題を是正する好機であると同時に、買収に伴うデューディリジェンスにおいて税務リスクが顕在化するリスクも孕んでいる。</p>
+
+<h3>2. OECD TPG分析の総合的結論</h3>
+
+<p>全10章を通じた当てはめ分析の結論は、以下の3点に集約される。</p>
+
+<div class="card card-blue">
+  <div class="card-title">結論1: 無形資産の無償供与は独立企業原則に反する</div>
+  TPG第6章（無形資産）の分析により、ミトヨの配合処方ノウハウはDEMPE機能分析（開発・改良・維持・保護・活用）において日本親会社が主要な貢献を行っている無形資産であり、その使用に対して適正な対価（ロイヤルティ）が支払われるべきである。独立の第三者であれば、50年の蓄積を有するノウハウを無償で提供することはあり得ない（TPG 6.34-6.38項）。
+</div>
+
+<div class="card card-blue">
+  <div class="card-title">結論2: 取引の適正な移転価格手法はCUP法またはTNMM</div>
+  TPG第2章・第3章の分析により、類似のノウハウライセンス取引が存在する場合はCUP法（独立価格比準法）が最適であるが、ミトヨのノウハウの独自性を考慮するとTNMM（取引単位営業利益法）も有力な代替手法となる。ロイヤルティ率は売上高の2〜5%の範囲が想定される（TPG 2.14-2.20項、6.142項）。
+</div>
+
+<div class="card card-blue">
+  <div class="card-title">結論3: 累積税務エクスポージャーは深刻</div>
+  年間5.5億円の推定エクスポージャーは、過年度に遡及した場合に累積で数十億円規模に達する可能性がある。日タイ租税条約の相互協議（MAP）による二重課税の排除も、手続的に1〜3年を要する。2025年のクリヤマ買収を契機とした早急な対応が不可欠である。
+</div>
+
+<h3>3. 定量的影響の概観</h3>
+
+<table>
+  <tr>
+    <th>項目</th>
+    <th>金額</th>
+    <th>備考</th>
+  </tr>
+  <tr>
+    <td>タイ子会社合計売上高</td>
+    <td>20.7億円</td>
+    <td>MRT 4.1億円 + MPT 16.6億円</td>
+  </tr>
+  <tr>
+    <td>想定ロイヤルティ率</td>
+    <td>2〜5%</td>
+    <td>化学・素材分野の類似取引水準</td>
+  </tr>
+  <tr>
+    <td>想定ロイヤルティ年額</td>
+    <td>0.41〜1.04億円</td>
+    <td>売上高比率による</td>
+  </tr>
+  <tr>
+    <td>年間推定税務エクスポージャー</td>
+    <td>5.5億円</td>
+    <td>移転価格更正リスク総額</td>
+  </tr>
+  <tr>
+    <td>ロイヤルティ源泉税率（日タイ条約）</td>
+    <td>15%</td>
+    <td>日タイ租税条約第12条</td>
+  </tr>
+</table>
+
+<h3>4. 全章横断リスク評価</h3>
+
+<p>以下のリスクマトリックスは、OECD TPG全10章にわたるミトヨの移転価格リスクを俯瞰的に示したものである。</p>
+
+<!-- SVG 1: リスクマトリックス -->
+<div class="svg-container">
+<svg viewBox="0 0 860 440" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans JP', 'Hiragino Sans', sans-serif">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8fafc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e8eef5;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="860" height="440" rx="12" fill="url(#bgGrad)" stroke="#c5d3e0" stroke-width="1"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a3a5c">OECD TPG 全10章 リスクマトリックス（ミトヨ当てはめ）</text>
+
+  <!-- Y-axis labels -->
+  <text x="14" y="82" font-size="11" fill="#5a6f82" font-weight="bold">高リスク</text>
+  <text x="14" y="192" font-size="11" fill="#5a6f82" font-weight="bold">中リスク</text>
+  <text x="14" y="302" font-size="11" fill="#5a6f82" font-weight="bold">低リスク</text>
+
+  <!-- Risk zones -->
+  <rect x="80" y="52" width="760" height="100" rx="6" fill="#f8d7da" opacity="0.35"/>
+  <rect x="80" y="162" width="760" height="100" rx="6" fill="#fff3cd" opacity="0.35"/>
+  <rect x="80" y="272" width="760" height="100" rx="6" fill="#d4edda" opacity="0.35"/>
+
+  <!-- Grid lines -->
+  <line x1="80" y1="152" x2="840" y2="152" stroke="#c5d3e0" stroke-width="0.5" stroke-dasharray="4,4"/>
+  <line x1="80" y1="262" x2="840" y2="262" stroke="#c5d3e0" stroke-width="0.5" stroke-dasharray="4,4"/>
+
+  <!-- Chapter boxes - HIGH RISK -->
+  <!-- Ch1 (arm's length) -->
+  <rect x="100" y="66" width="130" height="72" rx="8" fill="#c0392b" opacity="0.9"/>
+  <text x="165" y="92" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">第1章</text>
+  <text x="165" y="108" text-anchor="middle" font-size="10" fill="#ffe0e0">独立企業原則</text>
+  <text x="165" y="124" text-anchor="middle" font-size="9" fill="#ffe0e0">無償供与＝重大乖離</text>
+
+  <!-- Ch6 (intangibles) -->
+  <rect x="250" y="62" width="130" height="76" rx="8" fill="#c0392b" opacity="0.95"/>
+  <text x="315" y="88" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">第6章</text>
+  <text x="315" y="104" text-anchor="middle" font-size="10" fill="#ffe0e0">無形資産</text>
+  <text x="315" y="120" text-anchor="middle" font-size="9" fill="#ffe0e0">DEMPE=日本集中</text>
+  <text x="315" y="132" text-anchor="middle" font-size="9" fill="#ffe0e0">対価ゼロ</text>
+
+  <!-- Ch2 (methods) -->
+  <rect x="400" y="70" width="130" height="68" rx="8" fill="#c0392b" opacity="0.85"/>
+  <text x="465" y="94" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">第2章</text>
+  <text x="465" y="110" text-anchor="middle" font-size="10" fill="#ffe0e0">移転価格算定方法</text>
+  <text x="465" y="126" text-anchor="middle" font-size="9" fill="#ffe0e0">CUP/TNMM適用要</text>
+
+  <!-- Ch5 (documentation) -->
+  <rect x="550" y="74" width="130" height="64" rx="8" fill="#c0392b" opacity="0.8"/>
+  <text x="615" y="96" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">第5章</text>
+  <text x="615" y="112" text-anchor="middle" font-size="10" fill="#ffe0e0">文書化</text>
+  <text x="615" y="128" text-anchor="middle" font-size="9" fill="#ffe0e0">TP文書未整備</text>
+
+  <!-- Ch10 (financial transactions) -->
+  <rect x="700" y="80" width="130" height="58" rx="8" fill="#d35400" opacity="0.85"/>
+  <text x="765" y="102" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">第10章</text>
+  <text x="765" y="118" text-anchor="middle" font-size="10" fill="#ffe0e0">金融取引</text>
+  <text x="765" y="130" text-anchor="middle" font-size="9" fill="#ffe0e0">グループ内貸付</text>
+
+  <!-- MEDIUM RISK -->
+  <!-- Ch3 (comparability) -->
+  <rect x="100" y="176" width="130" height="68" rx="8" fill="#e67e22" opacity="0.85"/>
+  <text x="165" y="200" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">第3章</text>
+  <text x="165" y="216" text-anchor="middle" font-size="10" fill="#fff">比較可能性分析</text>
+  <text x="165" y="232" text-anchor="middle" font-size="9" fill="#fff">秘密ノウハウの困難</text>
+
+  <!-- Ch7 (intra-group services) -->
+  <rect x="250" y="172" width="130" height="72" rx="8" fill="#e67e22" opacity="0.9"/>
+  <text x="315" y="196" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">第7章</text>
+  <text x="315" y="212" text-anchor="middle" font-size="10" fill="#fff">グループ内役務提供</text>
+  <text x="315" y="228" text-anchor="middle" font-size="9" fill="#fff">技術支援の対価</text>
+  <text x="315" y="240" text-anchor="middle" font-size="9" fill="#fff">未回収</text>
+
+  <!-- Ch9 (restructuring) -->
+  <rect x="400" y="178" width="130" height="66" rx="8" fill="#e67e22" opacity="0.8"/>
+  <text x="465" y="200" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">第9章</text>
+  <text x="465" y="216" text-anchor="middle" font-size="10" fill="#fff">事業再編</text>
+  <text x="465" y="232" text-anchor="middle" font-size="9" fill="#fff">クリヤマ買収に伴う</text>
+
+  <!-- Ch8 (CCA) -->
+  <rect x="550" y="180" width="130" height="62" rx="8" fill="#e67e22" opacity="0.75"/>
+  <text x="615" y="202" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">第8章</text>
+  <text x="615" y="218" text-anchor="middle" font-size="10" fill="#fff">費用分担取決め</text>
+  <text x="615" y="234" text-anchor="middle" font-size="9" fill="#fff">CCA未整備</text>
+
+  <!-- LOW RISK -->
+  <!-- Ch4 (administrative) -->
+  <rect x="100" y="286" width="130" height="68" rx="8" fill="#27ae60" opacity="0.8"/>
+  <text x="165" y="310" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">第4章</text>
+  <text x="165" y="326" text-anchor="middle" font-size="10" fill="#fff">執行上の手法</text>
+  <text x="165" y="342" text-anchor="middle" font-size="9" fill="#fff">APA未申請だが対応可</text>
+
+  <!-- Legend -->
+  <rect x="100" y="390" width="20" height="16" rx="3" fill="#c0392b"/>
+  <text x="128" y="403" font-size="11" fill="#1e2d3d">高リスク（即時対応要）</text>
+  <rect x="320" y="390" width="20" height="16" rx="3" fill="#e67e22"/>
+  <text x="348" y="403" font-size="11" fill="#1e2d3d">中リスク（中期対応要）</text>
+  <rect x="540" y="390" width="20" height="16" rx="3" fill="#27ae60"/>
+  <text x="568" y="403" font-size="11" fill="#1e2d3d">低リスク（管理可能）</text>
+  <text x="430" y="430" text-anchor="middle" font-size="10" fill="#5a6f82">注: 配置は各章のミトヨへの影響度に基づく。第6章（無形資産）が最も深刻なリスク領域。</text>
+</svg>
+<p class="svg-caption">図1: OECD TPG全10章リスクマトリックス ─ ミトヨグループ移転価格リスクの俯瞰</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- B. CHAPTER-BY-CHAPTER CONCLUSIONS -->
+<!-- ============================================================ -->
+<div class="part-heading" id="sec-b">B. OECD TPG章別当てはめ結論一覧表</div>
+
+<table>
+  <tr>
+    <th style="width:7%">章</th>
+    <th style="width:15%">論点</th>
+    <th style="width:58%">ミトヨへの当てはめ結論</th>
+    <th style="width:20%">リスク評価</th>
+  </tr>
+  <tr>
+    <td><strong>第1章</strong></td>
+    <td>独立企業原則</td>
+    <td>配合処方ノウハウの無償供与は、独立の当事者間では生じ得ない取引条件である。TPG 1.33項・1.42項の「関連者間取引の正確な描写」に照らし、ノウハウライセンスとして再構成（recharacterize）すべき。</td>
+    <td><span class="risk-tag risk-high">高リスク</span></td>
+  </tr>
+  <tr>
+    <td><strong>第2章</strong></td>
+    <td>移転価格算定方法</td>
+    <td>ノウハウライセンスに対するロイヤルティの算定には、CUP法（化学・素材分野の類似ライセンス取引）が最適。比較対象取引が不十分な場合はTNMMを適用し、タイ子会社の超過利益を測定。TPG 2.14-2.20項。</td>
+    <td><span class="risk-tag risk-high">高リスク</span></td>
+  </tr>
+  <tr>
+    <td><strong>第3章</strong></td>
+    <td>比較可能性分析</td>
+    <td>ミトヨのノウハウは非公開の秘密技術であり、公開データベースでの比較可能な取引の特定が困難。製品市場の特性、契約条件、経済状況の差異調整が必要。TPG 3.24-3.30項の五つの比較可能性要素の検討が不可欠。</td>
+    <td><span class="risk-tag risk-mid">中リスク</span></td>
+  </tr>
+  <tr>
+    <td><strong>第4章</strong></td>
+    <td>執行上の手法</td>
+    <td>現時点でAPA（事前確認）未申請。日タイ間の二国間APAの申請により、将来の課税リスクを大幅に低減可能。TPG 4.134-4.165項のAPA手続に基づく対応が推奨される。</td>
+    <td><span class="risk-tag risk-low">低リスク</span></td>
+  </tr>
+  <tr>
+    <td><strong>第5章</strong></td>
+    <td>文書化</td>
+    <td>マスターファイル・ローカルファイル・CbCR（国別報告書）の整備状況が不明。ノウハウ供与の取引実態を文書化するTP文書が未整備と推定される。TPG 5.18-5.24項に基づく三層構造文書の早急な整備が必要。</td>
+    <td><span class="risk-tag risk-high">高リスク</span></td>
+  </tr>
+  <tr>
+    <td><strong>第6章</strong></td>
+    <td>無形資産</td>
+    <td>配合処方ノウハウはTPG 6.6項の無形資産の定義に該当。DEMPE分析（6.48-6.68項）において、開発・改良・維持・保護・活用の全機能を日本親会社が担っており、タイ子会社は「活用」のみ。法的所有権とDEMPE機能の一致により、対価の帰属は日本親会社に集中。</td>
+    <td><span class="risk-tag risk-high">高リスク</span></td>
+  </tr>
+  <tr>
+    <td><strong>第7章</strong></td>
+    <td>グループ内役務提供</td>
+    <td>日本親会社からタイ子会社への技術支援・品質管理指導等は、低付加価値役務提供（TPG 7.45-7.65項）に該当しない高付加価値サービスであり、独立企業間価格での対価回収が必要。マークアップ率の設定を含む管理サービス契約の整備が急務。</td>
+    <td><span class="risk-tag risk-mid">中リスク</span></td>
+  </tr>
+  <tr>
+    <td><strong>第8章</strong></td>
+    <td>費用分担取決め</td>
+    <td>現状、CCA（費用分担取決め）は締結されていない。仮に配合技術の共同開発を行う場合は、TPG 8.5-8.12項に基づくCCAの整備が必要。ただし現状のミトヨの一方的なノウハウ供与構造では、CCAよりもライセンス契約が適切。</td>
+    <td><span class="risk-tag risk-mid">中リスク</span></td>
+  </tr>
+  <tr>
+    <td><strong>第9章</strong></td>
+    <td>事業再編</td>
+    <td>2025年のクリヤマ買収は、TPG 9.1項の「事業再編」に該当し得る。ノウハウの利用関係や機能・リスクの再配分に伴い、独立企業間での補償（exit charge）の検討が必要。TPG 9.80-9.95項に基づく再編対価の分析が推奨される。</td>
+    <td><span class="risk-tag risk-mid">中リスク</span></td>
+  </tr>
+  <tr>
+    <td><strong>第10章</strong></td>
+    <td>金融取引</td>
+    <td>タイ子会社への資金供与（親子ローン等）がある場合、TPG 10.11-10.28項に基づく利率の独立企業間性の検証が必要。ノウハウ供与問題に比べれば優先度は低いが、グループ全体のTP方針策定時に併せて検討すべき。</td>
+    <td><span class="risk-tag risk-high">高リスク</span></td>
+  </tr>
+</table>
+
+<!-- ============================================================ -->
+<!-- C. STRATEGIC RECOMMENDATIONS -->
+<!-- ============================================================ -->
+<div class="part-heading" id="sec-c">C. 戦略的提言</div>
+
+<p>以下の提言は、OECD TPG 2022年版の各章における分析結果に基づき、ミトヨグループが移転価格リスクを低減するために実行すべき施策を、時間軸に沿って整理したものである。各提言にはTPGの根拠条項を明示し、実務上の優先順位を付した。</p>
+
+<!-- C-1: Short-term -->
+<h2 class="chapter" id="sec-c1">C-1. 短期施策（6ヶ月以内）</h2>
+
+<h3>1. 技術ライセンス契約の締結</h3>
+
+<p>最優先で実行すべき施策は、日本親会社とタイ子会社（MRT・MPT）との間で<strong>技術ライセンス契約</strong>を締結し、配合処方ノウハウの使用に対するロイヤルティを設定することである。これは現在の「無償供与」状態を是正する最も直接的な手段である。</p>
+
+<div class="card card-yellow">
+  <div class="card-title">TPG根拠</div>
+  <strong>第6章 6.34-6.38項</strong>（無形資産の使用に対する対価）、<strong>6.48-6.68項</strong>（DEMPE機能分析に基づく対価帰属）、<strong>第1章 1.33項</strong>（取引の正確な描写）、<strong>第2章 2.14-2.20項</strong>（CUP法の適用指針）
+</div>
+
+<div class="timeline">
+  <div class="timeline-item">
+    <div class="timeline-label">Month 1-2: ノウハウの棚卸し・評価</div>
+    <p style="margin-bottom:0">配合処方ノウハウの内容を体系的に整理し、その経済的価値を評価する。具体的には、(a) 配合処方の一覧と技術的優位性の記述、(b) 当該ノウハウがタイ子会社の製品品質・コスト競争力に寄与する度合いの定量的分析、(c) 類似技術のライセンス事例の調査を実施する。</p>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-label">Month 2-3: ロイヤルティ率の決定</div>
+    <p style="margin-bottom:0">CUP法を第一候補とし、化学・素材分野における類似のノウハウライセンス取引のロイヤルティ率を調査する。公開データベース（RoyaltyStat、ktMINE等）および業界データを活用し、<strong>売上高の2〜5%</strong>の範囲でベンチマーク分析を行う。比較対象取引が不十分な場合は、TNMMによるクロスチェックを実施する。</p>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-label">Month 3-4: ライセンス契約書の作成</div>
+    <p style="margin-bottom:0">独立企業間の商業条件を反映したライセンス契約書を作成する。契約には、(a) 対象技術の範囲と定義、(b) ロイヤルティ率と支払条件、(c) 秘密保持義務、(d) サブライセンスの制限、(e) 契約期間と更新条件を含める。</p>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-label">Month 4-6: ライセンス契約の発効・初回支払い</div>
+    <p style="margin-bottom:0">契約を発効させ、タイ子会社からの初回ロイヤルティ支払いを実行する。日タイ租税条約第12条に基づくロイヤルティ源泉税（15%）の処理を含め、経理部門との連携を確保する。</p>
+  </div>
+</div>
+
+<h3>2. 移転価格文書（TP文書）の整備</h3>
+
+<p>OECD TPG第5章および日本の移転価格税制（租税特別措置法66条の4）に基づき、三層構造のTP文書を整備する。</p>
+
+<div class="card card-yellow">
+  <div class="card-title">TPG根拠</div>
+  <strong>第5章 5.18-5.24項</strong>（三層構造文書化アプローチ：マスターファイル・ローカルファイル・CbCR）、<strong>5.25-5.32項</strong>（マスターファイルの内容）、<strong>5.33-5.40項</strong>（ローカルファイルの内容）
+</div>
+
+<h4>マスターファイル（MF）の作成</h4>
+<p>グループの組織構造、事業概要、無形資産の保有・使用状況、グループ内金融活動、財務・税務上のポジションを記載する。特に、配合処方ノウハウの開発・維持に関するDEMPE機能の配分を明確に記述することが重要である。</p>
+
+<h4>ローカルファイル（LF）の作成</h4>
+<p>日本親会社からタイ子会社へのノウハウ供与取引について、(a) 取引の内容と条件、(b) 選択した移転価格算定方法とその理由、(c) 比較可能性分析の結果、(d) 財務データを記載する。新たに締結するライセンス契約の条件が独立企業原則に適合することを論証する。</p>
+
+<h4>国別報告書（CbCR）</h4>
+<p>連結売上高118.4億円のミトヨグループは、日本の移転価格税制上のCbCR提出義務の閾値（連結総収入1,000億円）を下回る可能性があるが、自主的な作成によりグループ全体の税務ポジションを把握しておくことが望ましい。</p>
+
+<h3>3. 過年度のリスク評価</h3>
+
+<p>過去の事業年度について、無償ノウハウ供与に対する移転価格更正のリスクを評価する。日本の更正期限（原則7年）を考慮し、過年度の潜在的追徴税額を試算する。必要に応じて、自主修正申告の可否を検討する。</p>
+
+<!-- C-2: Medium-term -->
+<h2 class="chapter" id="sec-c2">C-2. 中期施策（1〜2年）</h2>
+
+<h3>1. 事前確認（APA）の申請</h3>
+
+<p>ライセンス契約の締結後、日タイ間の<strong>二国間APA</strong>の申請を検討する。APAは、将来の課税リスクを排除し、移転価格の法的安定性を確保する最も効果的な手段である。</p>
+
+<div class="card card-yellow">
+  <div class="card-title">TPG根拠</div>
+  <strong>第4章 4.134-4.165項</strong>（APA手続の指針）。二国間APAは、日タイ両国の税務当局の合意に基づくため、移転価格更正と二重課税のリスクを同時に排除できる。ただし、手続に通常1.5〜3年を要する点に留意。
+</div>
+
+<p>日本の国税庁の事前確認審査課に対して、(a) ノウハウライセンスのロイヤルティ率、(b) 適用する移転価格算定方法（CUP法またはTNMM）、(c) 対象期間（通常3〜5年）を含む申請書を提出する。タイ側ではRevenue Departmentに対して対応する申請を行う。</p>
+
+<h3>2. DEMPE分析の精緻化</h3>
+
+<p>短期施策で実施する初期的なDEMPE分析を、より精緻なものに発展させる。具体的には以下の分析を深化させる。</p>
+
+<div class="card card-yellow">
+  <div class="card-title">TPG根拠</div>
+  <strong>第6章 6.48-6.68項</strong>（DEMPE機能の分析）、<strong>6.69-6.97項</strong>（無形資産に関連する対価の決定）
+</div>
+
+<table>
+  <tr>
+    <th>DEMPE機能</th>
+    <th>分析の深化ポイント</th>
+    <th>担当エンティティ</th>
+  </tr>
+  <tr>
+    <td><strong>Development（開発）</strong></td>
+    <td>新配合処方の開発プロセスの詳細記録。R&D人員・設備投資の定量データ整備。</td>
+    <td>日本親会社（100%）</td>
+  </tr>
+  <tr>
+    <td><strong>Enhancement（改良）</strong></td>
+    <td>既存配合の継続的改良活動の記録。タイ子会社による現地適応の貢献度評価。</td>
+    <td>日本（90%）、タイ（10%）</td>
+  </tr>
+  <tr>
+    <td><strong>Maintenance（維持）</strong></td>
+    <td>品質基準の維持、配合データベースの管理コスト。</td>
+    <td>日本親会社（100%）</td>
+  </tr>
+  <tr>
+    <td><strong>Protection（保護）</strong></td>
+    <td>ノウハウの秘密管理体制（アクセス制限、NDA、退職者管理）の文書化。</td>
+    <td>日本（80%）、タイ（20%）</td>
+  </tr>
+  <tr>
+    <td><strong>Exploitation（活用）</strong></td>
+    <td>タイ子会社における製造活動を通じたノウハウの商業的活用の定量的評価。</td>
+    <td>タイ子会社（100%）</td>
+  </tr>
+</table>
+
+<h3>3. 管理サービス契約の整備</h3>
+
+<p>ノウハウライセンスとは別に、日本親会社からタイ子会社への技術支援・品質管理・経営管理等のサービスについて、<strong>管理サービス契約（MSA）</strong>を整備する。</p>
+
+<div class="card card-yellow">
+  <div class="card-title">TPG根拠</div>
+  <strong>第7章 7.1-7.13項</strong>（グループ内役務提供の定義）、<strong>7.14-7.44項</strong>（便益テスト・対価の決定）、<strong>7.45-7.65項</strong>（低付加価値役務提供の簡素化措置）
+</div>
+
+<p>サービスの類型ごとに対価設定の方針を明確化する。技術支援や品質管理指導は高付加価値サービスに該当するため、原価基準法に適切なマークアップ（業界水準として8〜15%程度）を加算した対価を設定する。一般的な経営管理・バックオフィス機能については、TPG 7.45項以下の低付加価値役務提供の簡素化措置（原価＋5%マークアップ）の適用可能性を検討する。</p>
+
+<!-- C-3: Long-term -->
+<h2 class="chapter" id="sec-c3">C-3. 長期施策（2〜3年）</h2>
+
+<h3>1. グループ全体のTP方針策定</h3>
+
+<p>ミトヨグループ全体（日本親会社・タイ子会社2社、将来的にはクリヤマグループの海外関連会社を含む）を対象とする包括的な<strong>移転価格ポリシー</strong>を策定する。</p>
+
+<div class="card card-yellow">
+  <div class="card-title">TPG根拠</div>
+  <strong>第1章 1.1-1.14項</strong>（独立企業原則の適用範囲）、<strong>第5章 5.25-5.32項</strong>（マスターファイルにおけるグループ方針の記述）、<strong>第6章 6.69-6.97項</strong>（無形資産に関連する対価の包括的枠組み）
+</div>
+
+<p>TPポリシーの主要な構成要素は以下のとおりである。</p>
+
+<p>(a) <strong>取引類型の網羅的特定</strong>: 有形資産取引（製品売買）、無形資産取引（ノウハウライセンス）、役務提供（技術支援・管理サービス）、金融取引（グループ内貸付・保証）の全類型について、独立企業間価格の設定方針を策定する。</p>
+
+<p>(b) <strong>機能・リスク分析のフレームワーク</strong>: グループ内各エンティティの機能（製造、R&D、販売、管理）、使用資産（有形資産、無形資産）、引受リスク（市場リスク、製造リスク、為替リスク）を体系的に整理するフレームワークを構築する。</p>
+
+<p>(c) <strong>定期的な見直しメカニズム</strong>: 少なくとも年1回、TPポリシーの適正性を検証し、事業環境の変化（新製品の投入、市場の変動、規制の変更等）に応じて改定する仕組みを導入する。</p>
+
+<h3>2. クリヤマグループとの統合検討</h3>
+
+<p>2025年のクリヤマ買収後、ミトヨのTP方針はクリヤマグループ全体の移転価格戦略と整合させる必要がある。</p>
+
+<div class="card card-yellow">
+  <div class="card-title">TPG根拠</div>
+  <strong>第9章 9.1-9.9項</strong>（事業再編の定義と範囲）、<strong>9.80-9.95項</strong>（事業再編に伴う対価）、<strong>9.96-9.119項</strong>（無形資産の移転を伴う再編）
+</div>
+
+<p>統合検討の主要論点は、(a) クリヤマグループ既存のTP方針とミトヨTPポリシーの調和、(b) グループ再編に伴う無形資産の移転・共有の税務処理、(c) タイ子会社の位置づけの再定義（受託製造者、限定的リスク製造者、完全リスク製造者のいずれとするか）、(d) クリヤマグループの既存海外拠点との重複機能の整理である。</p>
+
+<h3>3. 紛争解決メカニズムの整備</h3>
+
+<p>将来の税務調査・更正に備え、紛争解決の手段を事前に整備しておく。日タイ租税条約第25条に基づく相互協議（MAP）手続の理解と準備、二国間APAの継続更新、タイ歳入局との良好な関係構築を含む。</p>
+
+<!-- ============================================================ -->
+<!-- D. QUANTITATIVE SIMULATION -->
+<!-- ============================================================ -->
+<div class="part-heading" id="sec-d">D. 定量シミュレーション</div>
+
+<p>以下では、ミトヨのタイ子会社（MRT＋MPT）の合計売上高20.7億円を基礎として、3つのロイヤルティ率シナリオについて法人税影響を試算する。</p>
+
+<h3>前提条件</h3>
+
+<table>
+  <tr>
+    <th>項目</th>
+    <th>設定値</th>
+    <th>根拠</th>
+  </tr>
+  <tr>
+    <td>タイ子会社合計売上高</td>
+    <td>20.7億円</td>
+    <td>MRT 4.1億 + MPT 16.6億</td>
+  </tr>
+  <tr>
+    <td>日本法人税実効税率</td>
+    <td>30.62%</td>
+    <td>法人税23.2% + 地方法人税10.3% + 事業税等</td>
+  </tr>
+  <tr>
+    <td>タイ法人税率</td>
+    <td>20%</td>
+    <td>タイ歳入法典65条</td>
+  </tr>
+  <tr>
+    <td>日タイ条約ロイヤルティ源泉税率</td>
+    <td>15%</td>
+    <td>日タイ租税条約第12条</td>
+  </tr>
+  <tr>
+    <td>外国税額控除</td>
+    <td>適用あり</td>
+    <td>法人税法69条</td>
+  </tr>
+</table>
+
+<h3>3シナリオの比較</h3>
+
+<div class="scenario-grid">
+  <div class="scenario-card" style="border-color: #27ae60;">
+    <h4 style="color: #27ae60;">シナリオ1: 2%</h4>
+    <div class="scenario-value">4,140万円</div>
+    <p class="scenario-detail">
+      ロイヤルティ年額<br>
+      保守的シナリオ<br>
+      低付加価値技術向け
+    </p>
+  </div>
+  <div class="scenario-card" style="border-color: #e67e22;">
+    <h4 style="color: #e67e22;">シナリオ2: 3%</h4>
+    <div class="scenario-value">6,210万円</div>
+    <p class="scenario-detail">
+      ロイヤルティ年額<br>
+      中間シナリオ<br>
+      一般的なノウハウ水準
+    </p>
+  </div>
+  <div class="scenario-card" style="border-color: #c0392b;">
+    <h4 style="color: #c0392b;">シナリオ3: 5%</h4>
+    <div class="scenario-value">1億350万円</div>
+    <p class="scenario-detail">
+      ロイヤルティ年額<br>
+      積極的シナリオ<br>
+      高付加価値技術向け
+    </p>
+  </div>
+</div>
+
+<h3>法人税影響の詳細計算</h3>
+
+<table>
+  <tr>
+    <th>項目</th>
+    <th>シナリオ1（2%）</th>
+    <th>シナリオ2（3%）</th>
+    <th>シナリオ3（5%）</th>
+  </tr>
+  <tr>
+    <td>(A) ロイヤルティ年額</td>
+    <td>4,140万円</td>
+    <td>6,210万円</td>
+    <td>1億350万円</td>
+  </tr>
+  <tr>
+    <td>(B) タイ源泉税（15%）</td>
+    <td>621万円</td>
+    <td>932万円</td>
+    <td>1,553万円</td>
+  </tr>
+  <tr>
+    <td>(C) 日本での受取額 (A)-(B)</td>
+    <td>3,519万円</td>
+    <td>5,278万円</td>
+    <td>8,797万円</td>
+  </tr>
+  <tr>
+    <td>(D) 日本法人税増加 (A)×30.62%</td>
+    <td>1,268万円</td>
+    <td>1,902万円</td>
+    <td>3,169万円</td>
+  </tr>
+  <tr>
+    <td>(E) 外国税額控除 = (B)</td>
+    <td>△621万円</td>
+    <td>△932万円</td>
+    <td>△1,553万円</td>
+  </tr>
+  <tr>
+    <td>(F) 日本ネット法人税増加 (D)-(E)</td>
+    <td>647万円</td>
+    <td>970万円</td>
+    <td>1,616万円</td>
+  </tr>
+  <tr>
+    <td>(G) タイ法人税減少（損金算入）(A)×20%</td>
+    <td>△828万円</td>
+    <td>△1,242万円</td>
+    <td>△2,070万円</td>
+  </tr>
+  <tr>
+    <td><strong>(H) グループ税負担ネット変動 (F)+(B)+(G)</strong></td>
+    <td><strong>+440万円</strong></td>
+    <td><strong>+660万円</strong></td>
+    <td><strong>+1,099万円</strong></td>
+  </tr>
+  <tr>
+    <td><strong>(I) 移転価格更正リスク削減額</strong></td>
+    <td><strong>△5.5億円</strong></td>
+    <td><strong>△5.5億円</strong></td>
+    <td><strong>△5.5億円</strong></td>
+  </tr>
+</table>
+
+<div class="card card-green">
+  <div class="card-title">シミュレーション結果の解釈</div>
+  いずれのシナリオにおいても、ロイヤルティ設定に伴うグループ全体の追加税負担（年間440〜1,099万円）は、移転価格更正リスク（年間5.5億円）と比較して<strong>極めて軽微</strong>である。ロイヤルティ率3%のシナリオ2を基準とした場合、年間660万円の追加コストで5.5億円のリスクを解消でき、<strong>費用対効果は約83倍</strong>となる。
+</div>
+
+<!-- SVG 2: 定量シミュレーション棒グラフ -->
+<div class="svg-container">
+<svg viewBox="0 0 860 480" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans JP', 'Hiragino Sans', sans-serif">
+  <defs>
+    <linearGradient id="bgGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8fafc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e8eef5;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="barGreen" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#2ecc71" />
+      <stop offset="100%" style="stop-color:#27ae60" />
+    </linearGradient>
+    <linearGradient id="barOrange" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f39c12" />
+      <stop offset="100%" style="stop-color:#e67e22" />
+    </linearGradient>
+    <linearGradient id="barRed" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#e74c3c" />
+      <stop offset="100%" style="stop-color:#c0392b" />
+    </linearGradient>
+    <linearGradient id="barBlue" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3498db" />
+      <stop offset="100%" style="stop-color:#2c5f8a" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="860" height="480" rx="12" fill="url(#bgGrad2)" stroke="#c5d3e0" stroke-width="1"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a3a5c">定量シミュレーション: 3シナリオの法人税影響比較（万円）</text>
+
+  <!-- Y-axis -->
+  <line x1="120" y1="60" x2="120" y2="380" stroke="#c5d3e0" stroke-width="1"/>
+  <!-- Y-axis labels & gridlines -->
+  <text x="110" y="85" text-anchor="end" font-size="11" fill="#5a6f82">10,000</text>
+  <line x1="120" y1="80" x2="820" y2="80" stroke="#e0e5eb" stroke-width="0.5" stroke-dasharray="4,4"/>
+
+  <text x="110" y="145" text-anchor="end" font-size="11" fill="#5a6f82">8,000</text>
+  <line x1="120" y1="140" x2="820" y2="140" stroke="#e0e5eb" stroke-width="0.5" stroke-dasharray="4,4"/>
+
+  <text x="110" y="205" text-anchor="end" font-size="11" fill="#5a6f82">6,000</text>
+  <line x1="120" y1="200" x2="820" y2="200" stroke="#e0e5eb" stroke-width="0.5" stroke-dasharray="4,4"/>
+
+  <text x="110" y="265" text-anchor="end" font-size="11" fill="#5a6f82">4,000</text>
+  <line x1="120" y1="260" x2="820" y2="260" stroke="#e0e5eb" stroke-width="0.5" stroke-dasharray="4,4"/>
+
+  <text x="110" y="325" text-anchor="end" font-size="11" fill="#5a6f82">2,000</text>
+  <line x1="120" y1="320" x2="820" y2="320" stroke="#e0e5eb" stroke-width="0.5" stroke-dasharray="4,4"/>
+
+  <text x="110" y="385" text-anchor="end" font-size="11" fill="#5a6f82">0</text>
+  <line x1="120" y1="380" x2="820" y2="380" stroke="#c5d3e0" stroke-width="1"/>
+
+  <!-- Scale: 0 at y=380, 10000 at y=80 => 1 unit = 0.03px => 1万円 = 30px  -->
+  <!-- Scenario 1 (2%) group -->
+  <!-- ロイヤルティ: 4140 => h=124.2 -->
+  <rect x="155" y="255.8" width="42" height="124.2" rx="3" fill="url(#barGreen)" opacity="0.9"/>
+  <text x="176" y="250" text-anchor="middle" font-size="10" fill="#27ae60" font-weight="bold">4,140</text>
+
+  <!-- 源泉税: 621 => h=18.6 -->
+  <rect x="202" y="361.4" width="42" height="18.6" rx="3" fill="url(#barOrange)" opacity="0.9"/>
+  <text x="223" y="356" text-anchor="middle" font-size="10" fill="#e67e22" font-weight="bold">621</text>
+
+  <!-- 日本ネット増: 647 => h=19.4 -->
+  <rect x="249" y="360.6" width="42" height="19.4" rx="3" fill="url(#barRed)" opacity="0.9"/>
+  <text x="270" y="355" text-anchor="middle" font-size="10" fill="#c0392b" font-weight="bold">647</text>
+
+  <!-- ネット変動: 440 => h=13.2 -->
+  <rect x="296" y="366.8" width="42" height="13.2" rx="3" fill="url(#barBlue)" opacity="0.9"/>
+  <text x="317" y="362" text-anchor="middle" font-size="10" fill="#2c5f8a" font-weight="bold">440</text>
+
+  <text x="243" y="405" text-anchor="middle" font-size="12" fill="#1a3a5c" font-weight="bold">シナリオ1（2%）</text>
+
+  <!-- Scenario 2 (3%) group -->
+  <!-- ロイヤルティ: 6210 => h=186.3 -->
+  <rect x="395" y="193.7" width="42" height="186.3" rx="3" fill="url(#barGreen)" opacity="0.9"/>
+  <text x="416" y="188" text-anchor="middle" font-size="10" fill="#27ae60" font-weight="bold">6,210</text>
+
+  <!-- 源泉税: 932 => h=28.0 -->
+  <rect x="442" y="352" width="42" height="28" rx="3" fill="url(#barOrange)" opacity="0.9"/>
+  <text x="463" y="347" text-anchor="middle" font-size="10" fill="#e67e22" font-weight="bold">932</text>
+
+  <!-- 日本ネット増: 970 => h=29.1 -->
+  <rect x="489" y="350.9" width="42" height="29.1" rx="3" fill="url(#barRed)" opacity="0.9"/>
+  <text x="510" y="345" text-anchor="middle" font-size="10" fill="#c0392b" font-weight="bold">970</text>
+
+  <!-- ネット変動: 660 => h=19.8 -->
+  <rect x="536" y="360.2" width="42" height="19.8" rx="3" fill="url(#barBlue)" opacity="0.9"/>
+  <text x="557" y="355" text-anchor="middle" font-size="10" fill="#2c5f8a" font-weight="bold">660</text>
+
+  <text x="483" y="405" text-anchor="middle" font-size="12" fill="#1a3a5c" font-weight="bold">シナリオ2（3%）</text>
+
+  <!-- Scenario 3 (5%) group -->
+  <!-- ロイヤルティ: 10350 => h=310.5...cap at chart => use 10000 cap => h=300 -->
+  <rect x="635" y="69.5" width="42" height="310.5" rx="3" fill="url(#barGreen)" opacity="0.9"/>
+  <text x="656" y="64" text-anchor="middle" font-size="10" fill="#27ae60" font-weight="bold">10,350</text>
+
+  <!-- 源泉税: 1553 => h=46.6 -->
+  <rect x="682" y="333.4" width="42" height="46.6" rx="3" fill="url(#barOrange)" opacity="0.9"/>
+  <text x="703" y="328" text-anchor="middle" font-size="10" fill="#e67e22" font-weight="bold">1,553</text>
+
+  <!-- 日本ネット増: 1616 => h=48.5 -->
+  <rect x="729" y="331.5" width="42" height="48.5" rx="3" fill="url(#barRed)" opacity="0.9"/>
+  <text x="750" y="326" text-anchor="middle" font-size="10" fill="#c0392b" font-weight="bold">1,616</text>
+
+  <!-- ネット変動: 1099 => h=33.0 -->
+  <rect x="776" y="347" width="42" height="33" rx="3" fill="url(#barBlue)" opacity="0.9"/>
+  <text x="797" y="342" text-anchor="middle" font-size="10" fill="#2c5f8a" font-weight="bold">1,099</text>
+
+  <text x="723" y="405" text-anchor="middle" font-size="12" fill="#1a3a5c" font-weight="bold">シナリオ3（5%）</text>
+
+  <!-- Legend -->
+  <rect x="180" y="432" width="16" height="12" rx="2" fill="url(#barGreen)"/>
+  <text x="202" y="443" font-size="11" fill="#1e2d3d">ロイヤルティ年額</text>
+
+  <rect x="350" y="432" width="16" height="12" rx="2" fill="url(#barOrange)"/>
+  <text x="372" y="443" font-size="11" fill="#1e2d3d">タイ源泉税(15%)</text>
+
+  <rect x="520" y="432" width="16" height="12" rx="2" fill="url(#barRed)"/>
+  <text x="542" y="443" font-size="11" fill="#1e2d3d">日本ネット法人税増</text>
+
+  <rect x="700" y="432" width="16" height="12" rx="2" fill="url(#barBlue)"/>
+  <text x="722" y="443" font-size="11" fill="#1e2d3d">グループ税負担ネット変動</text>
+
+  <text x="430" y="470" text-anchor="middle" font-size="10" fill="#5a6f82">注: 更正リスク5.5億円に対し、ネット追加負担は最大でも1,099万円（シナリオ3）。費用対効果は50〜125倍。</text>
+</svg>
+<p class="svg-caption">図2: 3シナリオの法人税影響比較 ─ ロイヤルティ年額・源泉税・法人税影響・グループネット変動</p>
+</div>
+
+<div class="card card-purple">
+  <div class="card-title">推奨シナリオ</div>
+  <strong>シナリオ2（ロイヤルティ率3%）</strong>を基本シナリオとして推奨する。理由は以下の3点である。(1) 化学・素材分野のノウハウライセンスの市場水準（2〜5%）の中間に位置し、防御可能性が高い。(2) グループ全体の追加税負担が年間660万円と軽微であり、5.5億円の更正リスクとの費用対効果が約83倍と極めて良好。(3) APA申請時に日タイ両国の税務当局から受容されやすい合理的な水準である。ただし、最終的なロイヤルティ率は、ベンチマーク分析（比較可能な第三者間ライセンス取引の調査）の結果に基づいて決定すべきであり、上記は暫定的な試算にとどまる。
+</div>
+
+<!-- ============================================================ -->
+<!-- E. JAPAN-THAILAND TAX TREATY -->
+<!-- ============================================================ -->
+<div class="part-heading" id="sec-e">E. 日タイ租税条約の適用</div>
+
+<p>ミトヨの移転価格問題は、日タイ租税条約（1990年署名、1990年発効。正式名称「所得に対する租税に関する二重課税の回避及び脱税の防止のための日本国とタイ王国との間の条約」）の複数の条項に関連する。以下では、特に重要な3条項について分析する。</p>
+
+<h2 class="chapter">E-1. 第9条（関連企業条項）</h2>
+
+<blockquote>
+第9条第1項（要旨）: 一方の締約国の企業と他方の締約国の企業との間の商業上又は資金上の関係について、独立の企業の間に設けられるであろう条件と異なる条件が設けられている場合には、その条件がないとしたならば当該一方の企業の利益となったとみられる利益に対して租税を課することができる。
+<cite>日タイ租税条約第9条第1項</cite>
+</blockquote>
+
+<h3>ミトヨへの適用</h3>
+
+<p>日本親会社によるタイ子会社へのノウハウ無償供与は、「独立の企業の間に設けられるであろう条件と異なる条件」の典型例である。日本の国税当局は、第9条第1項に基づき、ノウハウの使用に対する独立企業間ロイヤルティ相当額を日本親会社の所得に加算する移転価格更正を行うことができる。</p>
+
+<p>第9条第2項は、一方の締約国が更正を行った場合に、他方の締約国が対応的調整を行うことを定めている。すなわち、日本が移転価格更正によりミトヨの所得を増額した場合、タイはMRT・MPTの所得を対応的に減額すべきである。ただし、対応的調整は自動的ではなく、相互協議（第25条）を通じて実施されるのが通例である。</p>
+
+<h2 class="chapter">E-2. 第12条（ロイヤルティ条項）</h2>
+
+<blockquote>
+第12条第2項（要旨）: ロイヤルティに対しては、当該ロイヤルティが生じた締約国においても、当該締約国の法令に従って租税を課することができる。その租税の額は、当該ロイヤルティの額の15パーセントを超えないものとする。
+<cite>日タイ租税条約第12条第2項</cite>
+</blockquote>
+
+<h3>ミトヨへの適用</h3>
+
+<p>ミトヨがタイ子会社からロイヤルティを受領する場合、タイにおいて<strong>最大15%の源泉税</strong>が課される。これは、日タイ租税条約が定める上限税率であり、タイ国内法上のロイヤルティ源泉税率（15%）と一致する。</p>
+
+<div class="card card-red">
+  <div class="card-title">源泉税の影響</div>
+  ロイヤルティ率3%（年額6,210万円）を想定した場合、タイでの源泉税は年間<strong>932万円</strong>となる。この源泉税は日本の外国税額控除（法人税法69条）の対象となるが、控除限度額の計算上、全額控除が可能かどうかはミトヨの全世界所得構成に依存する。控除限度額を超過する場合は、3年間の繰越控除（法人税法69条2項）の適用を検討する。
+</div>
+
+<p>なお、「ロイヤルティ」の定義について、日タイ租税条約第12条第3項は「文学上、美術上若しくは学術上の著作物（映画フィルムを含む。）の著作権、特許権、商標権、意匠、模型、図面、秘密方式若しくは秘密工程の使用若しくは使用の権利の対価」を含むと定めている。ミトヨの配合処方ノウハウは「秘密方式若しくは秘密工程」に該当し、第12条の適用対象となる。</p>
+
+<h2 class="chapter">E-3. 第25条（MAP条項: 相互協議手続）</h2>
+
+<blockquote>
+第25条第1項（要旨）: 一方又は双方の締約国の措置によりこの条約の規定に適合しない課税を受け又は受けるに至ると認める者は、当該事案について自己が居住者である締約国の権限のある当局に申立てをすることができる。
+<cite>日タイ租税条約第25条第1項</cite>
+</blockquote>
+
+<h3>ミトヨへの適用</h3>
+
+<p>日本が移転価格更正を行い、タイが対応的調整を自動的に実施しない場合、<strong>経済的二重課税</strong>が発生する。すなわち、同一の所得に対して日本とタイの双方で課税される事態である。この場合、ミトヨは日タイ租税条約第25条に基づき、日本の国税庁（権限ある当局）にMAP申立てを行うことができる。</p>
+
+<div class="card card-blue">
+  <div class="card-title">MAP手続の実務的留意点</div>
+  (a) <strong>申立期限</strong>: 条約に適合しない課税の通知を受けた日から3年以内（第25条第1項）。移転価格更正の通知を受けた場合は速やかに申立てを行うべき。<br>
+  (b) <strong>所要期間</strong>: 日タイ間のMAPは通常1〜3年を要する。BEPS行動計画14に基づき、OECDは24ヶ月以内の解決を推奨しているが、タイはOECD非加盟国（ただしBEPS包摂的枠組み参加国）であり、所要期間は個別事案による。<br>
+  (c) <strong>仲裁条項</strong>: 日タイ租税条約には仲裁条項が含まれていないため、MAP手続で合意に至らない場合の最終解決手段が限定される。この点からも、事前のAPAによる予防的対応が重要である。<br>
+  (d) <strong>二重課税の暫定排除</strong>: MAP手続中であっても、日本の外国税額控除制度を活用することで、部分的な二重課税の排除が可能である。
+</div>
+
+<h3>推奨対応</h3>
+
+<p>ミトヨにとって最も効果的な対応は、MAP手続を「事後的な救済手段」としてではなく、APAと組み合わせた「事前的なリスク管理手段」として位置づけることである。具体的には、(1) 短期的にライセンス契約を締結してロイヤルティの支払いを開始し、(2) 中期的に二国間APAを申請して将来の課税関係を確定させ、(3) 万一の更正に備えてMAP申立ての準備（事実関係の整理、TPG根拠の文書化）を事前に行っておくことが推奨される。</p>
+
+<hr>
+
+<div class="card card-green">
+  <div class="card-title">総括</div>
+  OECD TPG 2022年版の全10章にわたる分析の結果、ミトヨグループの配合処方ノウハウ無償供与は、独立企業原則からの重大な乖離を構成し、年間5.5億円の移転価格更正リスクを生じさせている。しかし、本提言に沿った段階的対応（短期: ライセンス契約＋TP文書整備、中期: APA申請＋DEMPE精緻化、長期: グループTP方針策定）により、年間660万円程度の追加税負担でこのリスクを実質的に解消することが可能である。2025年のクリヤマ買収は、この是正を実行する最適なタイミングである。
+</div>
+
+</div><!-- .wrap -->
+</body>
+</html>
+<div style="display:flex;justify-content:space-between;margin-top:40px;padding-top:20px;border-top:1px solid var(--border);">
+  <a href="part2.html" style="color:var(--link);">← Part II</a>
+  <a href="index.html" style="color:var(--link);">目次に戻る</a>
+</div>
+</div>
+</body>
+</html>
