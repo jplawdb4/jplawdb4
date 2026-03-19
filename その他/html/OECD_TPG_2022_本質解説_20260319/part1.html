@@ -1,0 +1,2086 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OECD TPG 2022 本質解説 ── Part I：基盤</title>
+<style>
+
+/* ===== Root Variables ===== */
+:root {
+  --primary: #1a3a5c;
+  --secondary: #2c5f8a;
+  --bg: #f5f7fa;
+  --text: #1e2d3d;
+  --muted: #5a6f82;
+  --border: #c5d3e0;
+  --card-blue: #d1ecf1;
+  --card-blue-border: #88c7d5;
+  --card-green: #d4edda;
+  --card-green-border: #7cc498;
+  --card-red: #f8d7da;
+  --card-red-border: #e09a9f;
+  --card-yellow: #fff3cd;
+  --card-yellow-border: #ddc66b;
+  --card-purple: #e8daef;
+  --card-purple-border: #b99fd4;
+  --link: #1d5fa0;
+  --fn-bg: #f0f3f7;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", "游明朝", "Times New Roman", serif;
+  line-height: 1.9;
+  font-size: 15.5px;
+}
+/* ===== Layout ===== */
+.wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 44px 50px 60px;
+  box-shadow: 0 1px 12px rgba(0,0,0,.07);
+}
+@media (max-width: 720px) {
+  .wrap { padding: 20px 16px 36px; }
+  .doc-title { font-size: 1.4rem; }
+  table { font-size: 13px; }
+  svg { max-width: 100%; height: auto; }
+}
+/* ===== Header ===== */
+.doc-header {
+  border-bottom: 3px solid var(--primary);
+  padding-bottom: 22px;
+  margin-bottom: 32px;
+}
+.doc-title {
+  font-size: 1.85rem;
+  line-height: 1.45;
+  color: var(--primary);
+  font-weight: bold;
+  margin: 0 0 6px;
+}
+.doc-subtitle {
+  font-size: 1.05rem;
+  color: var(--secondary);
+  margin: 0 0 14px;
+}
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.meta-item { display: inline-flex; align-items: center; gap: 5px; }
+/* ===== Navigation ===== */
+.nav-bar {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  background: var(--primary);
+  padding: 12px 20px;
+  border-radius: 6px;
+  margin-bottom: 30px;
+}
+.nav-bar a {
+  color: #e2ecf4;
+  text-decoration: none;
+  font-size: 0.88rem;
+  padding: 4px 10px;
+  border-radius: 4px;
+  transition: background .2s;
+}
+.nav-bar a:hover { background: rgba(255,255,255,.15); }
+.nav-bar a.current { background: rgba(255,255,255,.2); font-weight: bold; color: #fff; }
+/* ===== Table of Contents ===== */
+.toc {
+  background: #f7f9fc;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 22px 28px;
+  margin-bottom: 36px;
+}
+.toc h2 {
+  font-size: 1.1rem;
+  color: var(--primary);
+  margin: 0 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.toc ol { margin: 0; padding-left: 22px; }
+.toc li { margin-bottom: 4px; font-size: 0.92rem; }
+.toc li a { color: var(--link); text-decoration: none; }
+.toc li a:hover { text-decoration: underline; }
+.toc ol ol { margin-top: 4px; padding-left: 20px; }
+/* ===== Part / Chapter headings ===== */
+.part-heading {
+  background: var(--primary);
+  color: #fff;
+  padding: 16px 24px;
+  border-radius: 6px;
+  margin: 44px 0 28px;
+  font-size: 1.25rem;
+  font-weight: bold;
+  letter-spacing: 0.04em;
+}
+.part-heading:first-of-type { margin-top: 10px; }
+h2.chapter {
+  color: var(--primary);
+  font-size: 1.35rem;
+  border-left: 5px solid var(--secondary);
+  padding-left: 16px;
+  margin: 36px 0 20px;
+}
+h3 {
+  color: var(--secondary);
+  font-size: 1.12rem;
+  margin: 28px 0 14px;
+  padding-bottom: 4px;
+  border-bottom: 1px dashed var(--border);
+}
+h4 {
+  color: var(--primary);
+  font-size: 1.02rem;
+  margin: 22px 0 10px;
+}
+/* ===== Cards ===== */
+.card {
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin: 18px 0;
+  border-left: 4px solid;
+}
+.card-blue   { background: var(--card-blue);   border-color: var(--card-blue-border); }
+.card-green  { background: var(--card-green);  border-color: var(--card-green-border); }
+.card-red    { background: var(--card-red);    border-color: var(--card-red-border); }
+.card-yellow { background: var(--card-yellow); border-color: var(--card-yellow-border); }
+.card-purple { background: var(--card-purple); border-color: var(--card-purple-border); }
+.card-title {
+  font-weight: bold;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+/* ===== Blockquote (条文) ===== */
+blockquote {
+  margin: 18px 0;
+  padding: 16px 22px;
+  background: #f7f9fc;
+  border-left: 4px solid var(--secondary);
+  font-size: 0.93rem;
+  line-height: 1.85;
+  color: #2c3e50;
+}
+blockquote cite {
+  display: block;
+  margin-top: 10px;
+  font-style: normal;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+/* ===== Tables ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 18px 0;
+  font-size: 0.92rem;
+}
+th {
+  background: var(--primary);
+  color: #fff;
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: normal;
+}
+td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #dce4ea;
+}
+tr:nth-child(even) td { background: #f8fafe; }
+/* ===== SVG Container ===== */
+.svg-container {
+  margin: 24px 0;
+  text-align: center;
+}
+.svg-container svg {
+  max-width: 100%;
+  height: auto;
+}
+.svg-caption {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 8px;
+}
+/* ===== Footnotes ===== */
+.footnotes {
+  margin-top: 36px;
+  padding-top: 16px;
+  border-top: 2px solid var(--border);
+}
+.footnotes h3 {
+  font-size: 1rem;
+  border: none;
+  padding: 0;
+  margin-bottom: 12px;
+}
+.fn-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.fn-list li {
+  padding: 6px 12px;
+  margin-bottom: 4px;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  background: var(--fn-bg);
+  border-radius: 4px;
+}
+.fn-list li:target {
+  background: #fffde0;
+  outline: 2px solid var(--card-yellow-border);
+}
+sup a {
+  color: var(--secondary);
+  text-decoration: none;
+  font-weight: bold;
+}
+sup a:hover { text-decoration: underline; }
+.fn-back {
+  color: var(--secondary);
+  text-decoration: none;
+  margin-left: 4px;
+  font-size: 0.8rem;
+}
+/* ===== Misc ===== */
+p { margin: 0 0 14px; text-align: justify; }
+strong { color: var(--primary); }
+em { font-style: normal; color: var(--secondary); font-weight: bold; }
+a { color: var(--link); }
+hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+.marker { background: #fff3cd; padding: 1px 4px; border-radius: 2px; }
+.text-center { text-align: center; }
+/* ===== Print ===== */
+@media print {
+  body { background: #fff; font-size: 11pt; }
+  .wrap { box-shadow: none; padding: 0; max-width: 100%; }
+  .nav-bar { display: none; }
+  .part-heading { break-before: page; }
+  blockquote { break-inside: avoid; }
+  .svg-container { break-inside: avoid; }
+}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="doc-header">
+  <h1 class="doc-title">OECD移転価格ガイドライン2022 本質解説</h1>
+  <p class="doc-subtitle">Part I：基盤 ── 独立企業原則と算定方法</p>
+  <div class="meta">
+    <span class="meta-item">第0章〜第2章</span>
+    <span class="meta-item">SVG図解×7</span>
+  </div>
+</div>
+
+<div class="nav-bar">
+    <a href="index.html">目次</a>
+    <a href="part1.html" class="current">Part I</a>
+    <a href="part2.html">Part II</a>
+    <a href="part3.html">Part III</a>
+    <a href="part4.html">Part IV</a>
+    <a href="part5.html">Part V</a>
+</div>
+
+<h2 class="chapter" id="ch0">第0章　読者への道しるべ ── OECDガイドラインの全体像と読み方</h2>
+
+<p class="chapter-intro">
+OECD移転価格ガイドライン2022年版（以下「TPG 2022」）は、全10章・約700頁に及ぶ国際移転価格の基本文書である。1979年報告書を起源とし、1995年に現行体系が成立して以降、BEPS行動計画（2015年）を含む数次の大改訂を経て現在の姿に至った。本章は、この巨大な文書を効率的に読み解くための「道しるべ」として、全体構造・各章の論点・章間の相互参照・主要用語・改訂の系譜を整理する。実務家が「いま必要な章」に最短で辿り着き、研究者が文書全体の論理構造を俯瞰するための地図である。
+</p>
+
+<!-- ===== 1. ガイドラインの成立と改訂の系譜 ===== -->
+<h3 id="ch0-history">0.1　ガイドラインの成立と改訂の系譜</h3>
+
+<p>
+TPGの直接の前身は、1979年の報告書「Transfer Pricing and Multinational Enterprises」である。これを全面改訂し、1995年6月27日にOECD財政委員会が承認、同年7月13日にOECD理事会が公表を承認したのが現行ガイドラインの原型である。以来、25年以上にわたり漸進的な拡充と改訂が繰り返されてきた。
+</p>
+
+<div class="card-blue">
+<h4>改訂の主要マイルストーン</h4>
+<table>
+<thead>
+<tr><th>年</th><th>改訂内容</th><th>反映先</th></tr>
+</thead>
+<tbody>
+<tr><td>1995</td><td>現行ガイドライン原版の承認・公表</td><td>全体</td></tr>
+<tr><td>1996</td><td>無形資産・役務提供に関する報告書の追加</td><td>第VI章・第VII章</td></tr>
+<tr><td>1997</td><td>費用分担取極（CCA）に関する報告書の追加、モニタリング手続ガイドライン</td><td>第VIII章・附属書</td></tr>
+<tr><td>1999</td><td>事前確認取極（APA）に関するMAP手続ガイドライン</td><td>附属書</td></tr>
+<tr><td>2008–2009</td><td>第IV章の改訂、前書き・序文の更新</td><td>第IV章</td></tr>
+<tr><td>2010</td><td>第I～III章の大幅改訂、事業再編に関する第IX章の新設</td><td>第I～III章・第IX章</td></tr>
+<tr><td>2013</td><td>セーフハーバー規定（第IV章E節）の改訂、二国間セーフハーバーMOU雛形の追加</td><td>第IV章</td></tr>
+<tr><td>2015–2016</td><td>BEPS行動計画8-10（価値創造との整合）・行動計画13（文書化・CbCR）の反映。第I・II・V～IX章の大幅改訂</td><td>第I・II・V～IX章</td></tr>
+<tr><td>2017</td><td>第IX章の追加改訂（事業再編ガイダンス確定）</td><td>第IX章</td></tr>
+<tr><td>2018</td><td>利益分割法（第II章C節）の改訂、評価困難な無形資産（HTVI）アプローチの追加</td><td>第II章・第VI章附属書</td></tr>
+<tr><td>2020</td><td>金融取引に関する第X章の新設</td><td>第X章・第I章D.1.2.2節</td></tr>
+<tr><td>2022</td><td>前書き・序文・用語集・第I～IX章・附属書の全面更新を経て2022年版として統合出版</td><td>全体</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>
+この改訂史が示すように、TPGは「一度作って完成」の静的文書ではなく、国際課税環境の変化に応じて継続的に進化する「リビング・ドキュメント」である。特に2015年のBEPS改訂は、独立企業原則の適用に「価値創造」の視点を明示的に組み込んだ点で画期的であり、それ以前と以後では文書の性格が相当に異なる。2020年の金融取引章（第X章）の追加は、従来カバーされていなかった分野への拡張を示すものであり、今後もさらなる拡充が予告されている。
+</p>
+
+<!-- ===== 2. 全10章の構造マップ ===== -->
+<h3 id="ch0-structure">0.2　全10章の構造マップ</h3>
+
+<p>
+TPG 2022の10章は、大きく4つの機能ブロックに分類できる。以下のSVG図は各章の位置づけと主要な相互参照関係を視覚的に示す。
+</p>
+
+<div class="svg-container">
+  <svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <polygon points="0 0, 8 3, 0 6" fill="#666"/>
+      </marker>
+      <marker id="arrowBlue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <polygon points="0 0, 8 3, 0 6" fill="#3b82f6"/>
+      </marker>
+      <marker id="arrowGreen" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+        <polygon points="0 0, 8 3, 0 6" fill="#16a34a"/>
+      </marker>
+      <style>
+        .block-label { font: bold 13px sans-serif; fill: #374151; }
+        .ch-box { rx: 6; ry: 6; stroke-width: 1.5; }
+        .ch-title { font: bold 11px sans-serif; fill: #1e293b; }
+        .ch-sub { font: 9.5px sans-serif; fill: #475569; }
+        .ref-line { stroke-width: 1.2; fill: none; }
+        .block-bg { rx: 10; ry: 10; opacity: 0.08; }
+      </style>
+    </defs>
+
+    <!-- Block backgrounds -->
+    <rect class="block-bg" x="20" y="30" width="860" height="100" fill="#3b82f6"/>
+    <rect class="block-bg" x="20" y="150" width="860" height="100" fill="#f59e0b"/>
+    <rect class="block-bg" x="20" y="270" width="540" height="120" fill="#8b5cf6"/>
+    <rect class="block-bg" x="580" y="270" width="300" height="120" fill="#ef4444"/>
+    <rect class="block-bg" x="20" y="410" width="860" height="100" fill="#16a34a"/>
+
+    <!-- Block labels -->
+    <text class="block-label" x="35" y="50" fill="#3b82f6">A. 基本原則・方法論</text>
+    <text class="block-label" x="35" y="170" fill="#d97706">B. 比較可能性・紛争解決・文書化</text>
+    <text class="block-label" x="35" y="290" fill="#7c3aed">C. 特殊論点（無形資産・役務・CCA）</text>
+    <text class="block-label" x="595" y="290" fill="#dc2626">D. 取引類型別</text>
+    <text class="block-label" x="35" y="430" fill="#16a34a">E. 金融取引</text>
+
+    <!-- Chapter I -->
+    <rect class="ch-box" x="40" y="58" width="250" height="60" fill="#dbeafe" stroke="#3b82f6"/>
+    <text class="ch-title" x="55" y="78">Ch.I 独立企業原則</text>
+    <text class="ch-sub" x="55" y="93">ALP定義・GFA批判・正確な取引の描写</text>
+    <text class="ch-sub" x="55" y="106">リスク分析・D.1節（金融→Ch.X連携）</text>
+
+    <!-- Chapter II -->
+    <rect class="ch-box" x="320" y="58" width="250" height="60" fill="#dbeafe" stroke="#3b82f6"/>
+    <text class="ch-title" x="335" y="78">Ch.II 移転価格算定方法</text>
+    <text class="ch-sub" x="335" y="93">CUP・再販売価格・原価基準法</text>
+    <text class="ch-sub" x="335" y="106">TNMM・利益分割法（PSM）</text>
+
+    <!-- Chapter III -->
+    <rect class="ch-box" x="40" y="178" width="250" height="60" fill="#fef3c7" stroke="#d97706"/>
+    <text class="ch-title" x="55" y="198">Ch.III 比較可能性分析</text>
+    <text class="ch-sub" x="55" y="213">5つの比較可能性要素・タイミング問題</text>
+    <text class="ch-sub" x="55" y="226">コンプライアンス論点</text>
+
+    <!-- Chapter IV -->
+    <rect class="ch-box" x="320" y="178" width="250" height="60" fill="#fef3c7" stroke="#d97706"/>
+    <text class="ch-title" x="335" y="198">Ch.IV 紛争回避・解決の行政手法</text>
+    <text class="ch-sub" x="335" y="213">MAP・対応的調整・APA</text>
+    <text class="ch-sub" x="335" y="226">セーフハーバー・仲裁</text>
+
+    <!-- Chapter V -->
+    <rect class="ch-box" x="600" y="178" width="250" height="60" fill="#fef3c7" stroke="#d97706"/>
+    <text class="ch-title" x="615" y="198">Ch.V 文書化</text>
+    <text class="ch-sub" x="615" y="213">三層構造：マスターファイル</text>
+    <text class="ch-sub" x="615" y="226">ローカルファイル・CbCR</text>
+
+    <!-- Chapter VI -->
+    <rect class="ch-box" x="40" y="298" width="160" height="80" fill="#ede9fe" stroke="#7c3aed"/>
+    <text class="ch-title" x="50" y="318">Ch.VI 無形資産</text>
+    <text class="ch-sub" x="50" y="333">定義・DEMPE分析</text>
+    <text class="ch-sub" x="50" y="348">HTVI・評価手法</text>
+    <text class="ch-sub" x="50" y="363">移転・使用許諾</text>
+
+    <!-- Chapter VII -->
+    <rect class="ch-box" x="220" y="298" width="160" height="80" fill="#ede9fe" stroke="#7c3aed"/>
+    <text class="ch-title" x="230" y="318">Ch.VII グループ内役務</text>
+    <text class="ch-sub" x="230" y="333">便益テスト</text>
+    <text class="ch-sub" x="230" y="348">株主活動の除外</text>
+    <text class="ch-sub" x="230" y="363">低付加価値役務</text>
+
+    <!-- Chapter VIII -->
+    <rect class="ch-box" x="400" y="298" width="160" height="80" fill="#ede9fe" stroke="#7c3aed"/>
+    <text class="ch-title" x="410" y="318">Ch.VIII CCA</text>
+    <text class="ch-sub" x="410" y="333">費用分担取極の概念</text>
+    <text class="ch-sub" x="410" y="348">ALP適用・貢献度</text>
+    <text class="ch-sub" x="410" y="363">加入・脱退・終了</text>
+
+    <!-- Chapter IX -->
+    <rect class="ch-box" x="600" y="298" width="250" height="80" fill="#fee2e2" stroke="#dc2626"/>
+    <text class="ch-title" x="615" y="318">Ch.IX 事業再編</text>
+    <text class="ch-sub" x="615" y="333">Part I: 再編自体の対価</text>
+    <text class="ch-sub" x="615" y="348">Part II: 再編後の取引の対価</text>
+    <text class="ch-sub" x="615" y="363">ロケーション・セービング</text>
+
+    <!-- Chapter X -->
+    <rect class="ch-box" x="40" y="438" width="400" height="60" fill="#dcfce7" stroke="#16a34a"/>
+    <text class="ch-title" x="55" y="458">Ch.X 金融取引</text>
+    <text class="ch-sub" x="55" y="473">トレジャリー機能・グループ内貸付・保証・キャプティブ保険</text>
+    <text class="ch-sub" x="55" y="488">Ch.I D.1節との相互作用（正確な取引の描写）</text>
+
+    <!-- Annexes -->
+    <rect class="ch-box" x="480" y="438" width="370" height="60" fill="#f3f4f6" stroke="#6b7280"/>
+    <text class="ch-title" x="495" y="458">附属書群</text>
+    <text class="ch-sub" x="495" y="473">利益分割法設例・比較可能性設例・セーフハーバーMOU</text>
+    <text class="ch-sub" x="495" y="488">APA手続・文書化テンプレ・HTVI指針・CCA設例</text>
+
+    <!-- Cross-reference arrows -->
+    <!-- Ch.I → Ch.II -->
+    <path class="ref-line" d="M290,88 L320,88" stroke="#3b82f6" marker-end="url(#arrowBlue)"/>
+    <!-- Ch.I → Ch.III -->
+    <path class="ref-line" d="M165,118 L165,178" stroke="#666" marker-end="url(#arrowhead)"/>
+    <!-- Ch.II → Ch.III -->
+    <path class="ref-line" d="M445,118 L300,178" stroke="#666" marker-end="url(#arrowhead)" stroke-dasharray="4,3"/>
+    <!-- Ch.III → Ch.IV -->
+    <path class="ref-line" d="M290,208 L320,208" stroke="#d97706" marker-end="url(#arrowhead)"/>
+    <!-- Ch.IV → Ch.V -->
+    <path class="ref-line" d="M570,208 L600,208" stroke="#d97706" marker-end="url(#arrowhead)"/>
+    <!-- Ch.I → Ch.X (D.1節) -->
+    <path class="ref-line" d="M100,118 L100,438" stroke="#16a34a" marker-end="url(#arrowGreen)" stroke-dasharray="6,3"/>
+    <!-- Ch.I → Ch.VI -->
+    <path class="ref-line" d="M200,118 L120,298" stroke="#666" marker-end="url(#arrowhead)" stroke-dasharray="4,3"/>
+    <!-- Ch.VI → Ch.VIII -->
+    <path class="ref-line" d="M200,338 L400,338" stroke="#7c3aed" marker-end="url(#arrowhead)" stroke-dasharray="4,3"/>
+    <!-- Ch.IX → Ch.I (リスク分析) -->
+    <path class="ref-line" d="M680,298 L680,120 L570,92" stroke="#dc2626" marker-end="url(#arrowhead)" stroke-dasharray="4,3"/>
+    <!-- Ch.X → Ch.I D.1 -->
+    <path class="ref-line" d="M240,438 L240,120" stroke="#16a34a" marker-end="url(#arrowGreen)" stroke-dasharray="6,3"/>
+
+    <!-- Legend -->
+    <rect x="620" y="530" width="260" height="55" fill="#fff" stroke="#d1d5db" rx="4"/>
+    <line x1="635" y1="545" x2="665" y2="545" stroke="#666" stroke-width="1.2"/>
+    <text x="672" y="549" style="font:10px sans-serif;fill:#374151">章間の主要参照</text>
+    <line x1="635" y1="563" x2="665" y2="563" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="6,3"/>
+    <text x="672" y="567" style="font:10px sans-serif;fill:#374151">Ch.I D.1節 ↔ Ch.X 連携</text>
+    <line x1="635" y1="578" x2="665" y2="578" stroke="#666" stroke-width="1.2" stroke-dasharray="4,3"/>
+    <text x="672" y="582" style="font:10px sans-serif;fill:#374151">補完的参照（方法論等）</text>
+  </svg>
+  <div class="svg-caption">図0-1：OECDガイドライン全体構造</div>
+</div>
+
+<!-- ===== 3. 各章の概要と担当論点 ===== -->
+<h3 id="ch0-chapters">0.3　各章の概要と担当論点</h3>
+
+<h4>ブロックA：基本原則・方法論（第I章・第II章）</h4>
+
+<p>
+<strong>第I章「独立企業原則」（The Arm's Length Principle）</strong>は、ガイドライン全体の理論的基盤を構築する最重要章である。OECD加盟国が採用する独立企業原則（ALP）の定義（OECDモデル租税条約第9条）を出発点に、グローバル定式配分（Global Formulary Apportionment: GFA）を代替案として検討しつつ退け、ALPの優位性を論証する。続いて、ALPの実務適用に関する詳細なガイダンスを展開する。D節は特に重要であり、「正確な取引の描写（accurate delineation of transactions）」という概念を通じて、契約形式ではなく経済的実態に即した分析を要求する。D.1節のリスク分析フレームワークは、第IX章（事業再編）・第X章（金融取引）の分析前提となる。
+</p>
+
+<p>
+<strong>第II章「移転価格算定方法」（Transfer Pricing Methods）</strong>は、三部構成で5つの移転価格算定方法を体系的に解説する。Part Iで最適方法の選択原則を示し、Part IIで伝統的取引基準法（独立価格比準法CUP、再販売価格基準法、原価基準法）を、Part IIIで取引単位利益法（取引単位営業利益法TNMM、利益分割法PSM）を詳述する。2018年改訂で利益分割法の適用指針が大幅に精緻化された点は特に注目に値する。附属書には粗利益指標と純利益指標の感度分析、および利益分割法の設例が含まれる。
+</p>
+
+<div class="card-green">
+<h4>ポイント：「最適方法」選択の実務的意味</h4>
+<p>
+TPGは「最適方法（most appropriate method）」の選択を求めるが、厳格な優先順位は設けていない。方法選択は、取引の性質、比較可能なデータの入手可能性、各方法の長所・短所を総合的に考慮して行う。ただし、信頼性の高い内部CUPが存在する場合には、CUPが他の方法に優先するとの実務的コンセンサスが存在する（第II章パラ2.3参照）。
+</p>
+</div>
+
+<h4>ブロックB：比較可能性・紛争解決・文書化（第III章・第IV章・第V章）</h4>
+
+<p>
+<strong>第III章「比較可能性分析」（Comparability Analysis）</strong>は、ALPの実務適用における中核的技術である比較可能性分析を詳述する。比較可能性の5要素（取引の対象である資産・役務の特性、機能分析、契約条件、経済状況、事業戦略）を体系化し、比較対象取引の選定プロセス（9ステップ・プロセス）を示す。タイミング問題（複数年度データの使用等）およびコンプライアンス上の論点（情報の非対称性等）も取り扱う。附属書には運転資本調整の設例が含まれる。
+</p>
+
+<p>
+<strong>第IV章「移転価格紛争の回避・解決のための行政上のアプローチ」</strong>は、移転価格実務の「後工程」を包括的にカバーする。移転価格に関するコンプライアンス慣行、対応的調整と相互協議手続（MAP）、同時税務調査、セーフハーバー、事前確認取極（APA）、仲裁手続を順に解説する。2013年改訂でセーフハーバーに対する評価が大きく転換され、適切に設計されたセーフハーバーはコンプライアンス負担の軽減と予測可能性の向上に貢献しうることが認められた。附属書には二国間セーフハーバーMOU雛形およびMAP-APA手続ガイドラインが含まれる。
+</p>
+
+<p>
+<strong>第V章「文書化」（Documentation）</strong>は、BEPS行動計画13を受けた2015年改訂で全面的に書き換えられた章であり、三層構造の文書化アプローチ（マスターファイル、ローカルファイル、国別報告書CbCR）を定める。附属書にはマスターファイル・ローカルファイルの記載事項一覧、CbCRのテンプレート、およびCbCR実施パッケージが含まれる。
+</p>
+
+<div class="card-yellow">
+<h4>日本法ノート：三層構造と日本の文書化義務</h4>
+<p>
+日本の移転価格税制では、租税特別措置法第66条の4第6項・同施行規則第22条の10に基づくローカルファイル相当の「独立企業間価格を算定するために必要な書類」の作成・保存義務がある。また、特定多国籍企業グループの構成会社等に対しては、国別報告事項（CbCR）の提供義務（租特法第66条の4の4）およびマスターファイル（事業概況報告事項：租特法第66条の4の5）の提供義務が課されている。TPG第V章の三層構造が日本国内法に直接反映されている例である。
+</p>
+</div>
+
+<h4>ブロックC：特殊論点（第VI章・第VII章・第VIII章）</h4>
+
+<p>
+<strong>第VI章「無形資産に関する特別の考慮事項」</strong>は、2015年BEPS改訂で最も大きく変容した章の一つである。無形資産の定義・識別から始まり、DEMPE分析（開発Development・改良Enhancement・維持Maintenance・保護Protection・活用Exploitation）を通じた所得帰属の判定、無形資産の使用・移転に関する取引の分析、そして評価困難な無形資産（HTVI）アプローチを詳述する。法的所有権だけでは移転価格上の所得帰属を決定しないという原則は、この章の中核的メッセージである。附属書には詳細な設例およびHTVI適用ガイダンスが含まれる。
+</p>
+
+<p>
+<strong>第VII章「グループ内役務提供に関する特別の考慮事項」</strong>は、グループ内役務の対価に関する問題を取り扱う。「便益テスト」（受領者にとって役務が提供されたか）、株主活動の除外、重複活動の取扱い等を整理した上で、2015年改訂で追加された「低付加価値グループ内役務」の簡素化アプローチ（原価＋5%マークアップ）を詳述する。
+</p>
+
+<p>
+<strong>第VIII章「費用分担取極」（Cost Contribution Arrangements: CCA）</strong>は、複数のグループ企業が無形資産等の共同開発・取得の費用とリスクを分担する取極を扱う。CCAの概念定義、ALPの適用（参加者の貢献と期待される便益の比例性）、加入・脱退・終了時の取扱い、文書化の推奨事項を順に解説する。
+</p>
+
+<h4>ブロックD：取引類型別（第IX章）</h4>
+
+<p>
+<strong>第IX章「事業再編の移転価格側面」</strong>は、二部構成で事業再編を分析する。Part Iは再編「自体」の対価（再編に伴う何らかの価値の移転に対する独立企業間対価の有無・水準）を、Part IIは再編「後」の取引に対する移転価格の決定を扱う。2010年に新章として追加され、2017年にさらに改訂された。第I章D節のリスク分析フレームワークを前提とし、ロケーション・セービングの帰属問題にも言及する。
+</p>
+
+<h4>ブロックE：金融取引（第X章）</h4>
+
+<p>
+<strong>第X章「金融取引の移転価格側面」</strong>は、2020年に新設されたTPG最新の章である。トレジャリー機能（グループ内貸付・キャッシュプーリング等）、金融保証、キャプティブ保険を対象とする。冒頭で第I章D.1節との相互作用を詳述しており、金融取引においても「正確な取引の描写」が出発点であることを強調する。貸付の利率設定におけるリスク・フリー・レートの考え方、保証料の算定方法、キャプティブ保険の移転価格分析などが実務上の主要論点である。
+</p>
+
+<div class="card-red">
+<h4>注意：第I章D.1節と第X章の「二重構造」</h4>
+<p>
+金融取引の移転価格分析は、第X章だけを読めばよいわけではない。第I章D.1.2.2節には、2020年改訂で金融取引に関する記述が追加されており、特に「関連者間貸付において貸主が実際にリスクをコントロールしているか」の分析は第I章D.1節のリスク分析フレームワークに基づく。第X章と第I章D.1節を往復して読む必要がある。
+</p>
+</div>
+
+<!-- ===== 4. 章間の主要な相互参照 ===== -->
+<h3 id="ch0-crossref">0.4　章間の主要な相互参照</h3>
+
+<p>
+TPGの各章は独立して読めるように構成されているが、実際にはきわめて密接な相互参照関係がある。以下は特に重要な参照リンクである。
+</p>
+
+<table>
+<thead>
+<tr><th>参照元</th><th>参照先</th><th>内容</th></tr>
+</thead>
+<tbody>
+<tr><td>第I章 D.1節（リスク分析）</td><td>第IX章（事業再編）</td><td>リスクの引受・コントロール・資金力の分析フレームワークが事業再編分析の前提</td></tr>
+<tr><td>第I章 D.1.2.2節</td><td>第X章（金融取引）</td><td>金融取引における「正確な取引の描写」の基礎</td></tr>
+<tr><td>第II章 Part III（TNMM・PSM）</td><td>第III章（比較可能性分析）</td><td>取引単位利益法の適用には比較可能性分析が不可欠</td></tr>
+<tr><td>第III章（集約・分離の原則）</td><td>第II章 PSM</td><td>取引の集約が認められる場合の判定基準は利益分割法の適用範囲に直結</td></tr>
+<tr><td>第VI章（DEMPE分析）</td><td>第VIII章（CCA）</td><td>CCA参加者の貢献度分析にDEMPE機能の分析が必要</td></tr>
+<tr><td>第VI章（無形資産の移転）</td><td>第IX章（事業再編）</td><td>事業再編に伴う無形資産の移転に関する分析は両章を横断</td></tr>
+<tr><td>第VII章（低付加価値役務）</td><td>第V章（文書化）</td><td>簡素化アプローチを適用する場合の文書化要件</td></tr>
+<tr><td>第IX章 Part I（再編の対価）</td><td>第I章 D節（取引の否認）</td><td>取引の非認定（non-recognition）の判定基準</td></tr>
+<tr><td>第X章 B節</td><td>第I章 D.1節</td><td>金融取引の正確な描写は第I章の枠組みに従う</td></tr>
+</tbody>
+</table>
+
+<div class="card-purple">
+<h4>洞察：「第I章中心主義」の構造</h4>
+<p>
+上記の相互参照関係を分析すると、TPGの構造は第I章を中核とする「ハブ・アンド・スポーク」型であることが分かる。第I章のD節（特にD.1節のリスク分析フレームワーク）が理論的基盤を提供し、各論章（第VI・IX・X章等）がそれを具体的な取引類型に適用するという設計である。したがって、どの論点を分析する場合でも、まず第I章の理解が必須となる。これは2015年BEPS改訂で「価値創造」概念を第I章に組み込んだことの構造的帰結でもある。
+</p>
+</div>
+
+<!-- ===== 5. Key Terms一覧 ===== -->
+<h3 id="ch0-keyterms">0.5　Key Terms 一覧</h3>
+
+<p>
+以下は、TPG 2022の用語集（Glossary）に定義されている主要用語を、機能分類別に整理した一覧である。ガイドラインの議論を正確に理解するためには、これらの用語の定義を踏まえて読む必要がある。
+</p>
+
+<table>
+<thead>
+<tr><th>分類</th><th>用語（英語）</th><th>用語（日本語）</th><th>主な関連章</th></tr>
+</thead>
+<tbody>
+<tr><td rowspan="4">基本概念</td><td>Arm's length principle</td><td>独立企業原則</td><td>第I章</td></tr>
+<tr><td>Associated enterprises</td><td>関連企業</td><td>第I章</td></tr>
+<tr><td>Controlled transactions</td><td>関連者間取引</td><td>全章共通</td></tr>
+<tr><td>Arm's length range</td><td>独立企業間価格の幅</td><td>第III章</td></tr>
+
+<tr><td rowspan="6">算定方法</td><td>Comparable uncontrolled price (CUP) method</td><td>独立価格比準法</td><td>第II章</td></tr>
+<tr><td>Resale price method</td><td>再販売価格基準法</td><td>第II章</td></tr>
+<tr><td>Cost plus method</td><td>原価基準法</td><td>第II章</td></tr>
+<tr><td>Transactional net margin method (TNMM)</td><td>取引単位営業利益法</td><td>第II章</td></tr>
+<tr><td>Profit split method</td><td>利益分割法</td><td>第II章</td></tr>
+<tr><td>Global formulary apportionment</td><td>グローバル定式配分</td><td>第I章</td></tr>
+
+<tr><td rowspan="3">比較可能性</td><td>Comparability analysis</td><td>比較可能性分析</td><td>第III章</td></tr>
+<tr><td>Functional analysis</td><td>機能分析</td><td>第I・III章</td></tr>
+<tr><td>Comparable uncontrolled transaction</td><td>比較可能な非関連者間取引</td><td>第III章</td></tr>
+
+<tr><td rowspan="5">調整・紛争解決</td><td>Primary adjustment</td><td>一次的調整</td><td>第IV章</td></tr>
+<tr><td>Corresponding adjustment</td><td>対応的調整</td><td>第IV章</td></tr>
+<tr><td>Secondary adjustment</td><td>二次的調整</td><td>第IV章</td></tr>
+<tr><td>Compensating adjustment</td><td>補償的調整</td><td>第IV章</td></tr>
+<tr><td>Mutual agreement procedure (MAP)</td><td>相互協議手続</td><td>第IV章</td></tr>
+
+<tr><td rowspan="4">無形資産・役務</td><td>Marketing intangible</td><td>マーケティング無形資産</td><td>第VI章</td></tr>
+<tr><td>Trade intangible</td><td>取引用無形資産</td><td>第VI章</td></tr>
+<tr><td>Unique and valuable contributions</td><td>独自かつ価値ある貢献</td><td>第II・VI章</td></tr>
+<tr><td>Intra-group service</td><td>グループ内役務</td><td>第VII章</td></tr>
+
+<tr><td rowspan="4">CCA・再編</td><td>Cost contribution arrangement (CCA)</td><td>費用分担取極</td><td>第VIII章</td></tr>
+<tr><td>Buy-in / Buy-out payment</td><td>加入対価 / 脱退対価</td><td>第VIII章</td></tr>
+<tr><td>Profit potential</td><td>利益ポテンシャル</td><td>第IX章</td></tr>
+<tr><td>Balancing payment</td><td>均衡化支払</td><td>第VIII章</td></tr>
+
+<tr><td rowspan="3">略語</td><td>APA</td><td>事前確認取極</td><td>第IV章</td></tr>
+<tr><td>BEPS</td><td>税源浸食と利益移転</td><td>全章共通</td></tr>
+<tr><td>CbCR</td><td>国別報告書</td><td>第V章</td></tr>
+</tbody>
+</table>
+
+<!-- ===== 6. 読み方ガイド ===== -->
+<h3 id="ch0-howto">0.6　目的別・読み方ガイド</h3>
+
+<p>
+700頁超のTPGを通読する必要はない。以下に、目的別の推奨読順を示す。
+</p>
+
+<h4>（1）移転価格の基礎を理解したい場合</h4>
+<p>
+第I章（ALPの基本）→ 第II章 Part I（方法選択の原則）→ 第III章 A節（比較可能性分析の基本プロセス）の順に読む。これでTPGの理論骨格を把握できる。分量にして約120頁だが、基本原則はこの3章に凝縮されている。
+</p>
+
+<h4>（2）特定の取引類型の分析をしたい場合</h4>
+<p>
+第I章 D節（正確な取引の描写）を前提知識として読んだ上で、該当する各論章に進む。
+</p>
+<ul>
+<li><strong>無形資産取引</strong>：第VI章 → 必要に応じて第VIII章（CCAが関連する場合）</li>
+<li><strong>グループ内役務</strong>：第VII章 → 低付加価値役務なら同章D節を重点的に</li>
+<li><strong>事業再編</strong>：第I章 D.1節（リスク分析）→ 第IX章</li>
+<li><strong>金融取引</strong>：第I章 D.1節 → 第X章</li>
+</ul>
+
+<h4>（3）移転価格紛争に備えたい場合</h4>
+<p>
+第IV章（紛争回避・解決の行政手法全般）→ 第V章（文書化義務の内容と範囲）の順に読む。APAを検討している場合は第IV章F節と附属書IIを精読する。
+</p>
+
+<h4>（4）文書化実務に携わる場合</h4>
+<p>
+第V章本文 → 附属書I～IV（テンプレートと実施パッケージ）→ 第III章A節（比較可能性分析のプロセスはローカルファイル作成の基礎）。
+</p>
+
+<h4>（5）研究者として体系的に理解したい場合</h4>
+<p>
+第I章から第X章まで順番に読むことを推奨する。ただし、各章の理論的接続を意識しながら読むことが重要である。特に2015年BEPS改訂の前後で論理構造が変化している箇所（第I章D節、第VI章、第VIII章等）に注意を払うべきである。
+</p>
+
+<div class="card-green">
+<h4>ポイント：附属書の活用</h4>
+<p>
+TPGの附属書は単なる補足資料ではなく、本文の理解に不可欠な設例・テンプレート・手続規定を含む。特に第II章附属書II（利益分割法の設例）、第VI章附属書I（無形資産の設例）、第V章附属書I～IV（文書化テンプレート）は本文と一体として読むべきである。
+</p>
+</div>
+
+<!-- ===== 7. TPG 2022の位置づけと限界 ===== -->
+<h3 id="ch0-context">0.7　TPG 2022の位置づけと法的性格</h3>
+
+<p>
+TPGの法的性格を正確に理解することは、実務上も研究上もきわめて重要である。TPGは条約でも法律でもなく、OECDが発行するソフトロー（勧告的文書）である。しかし、序文パラグラフ16が述べるとおり、OECD加盟国はその国内移転価格実務においてTPGに従うことが奨励されており、納税者も自らの移転価格がALPに適合するかを評価する際にTPGに従うことが奨励されている。
+</p>
+
+<p>
+実際に、多くのOECD加盟国の課税当局および裁判所がTPGを解釈指針として参照しており、事実上の国際標準として機能している。OECDモデル租税条約第9条のコメンタリーがTPGを参照していることも、その権威を裏付ける。ただし、TPGの記述が直接に法的拘束力を持つわけではなく、各国の国内法の規定が最終的な準拠法となる。
+</p>
+
+<p>
+また、TPG 2022は「完成版」ではない。前書き（Foreword）が明示するとおり、ガイドラインは今後も追加ガイダンスによる補充と定期的な改訂が予定されている。デジタル経済、Amount B（簡素化された移転価格アプローチ）、BEPS 2.0の第一の柱など、現在進行中の国際課税改革がTPGの将来の改訂に影響を与えることは確実である。
+</p>
+
+<div class="card-blue">
+<h4>TPG 2022の主要データ</h4>
+<table>
+<thead>
+<tr><th>項目</th><th>内容</th></tr>
+</thead>
+<tbody>
+<tr><td>正式名称</td><td>OECD Transfer Pricing Guidelines for Multinational Enterprises and Tax Administrations 2022</td></tr>
+<tr><td>発行日</td><td>2022年1月</td></tr>
+<tr><td>ISBN（PDF版）</td><td>978-92-64-92191-7</td></tr>
+<tr><td>ISSN（オンライン版）</td><td>2076-9717</td></tr>
+<tr><td>引用方法</td><td>OECD (2022), OECD Transfer Pricing Guidelines for Multinational Enterprises and Tax Administrations 2022, OECD Publishing, Paris</td></tr>
+<tr><td>DOI</td><td>https://doi.org/10.1787/0e655865-en</td></tr>
+<tr><td>構成</td><td>全10章＋用語集＋略語表＋附属書群</td></tr>
+<tr><td>起源</td><td>Transfer Pricing and Multinational Enterprises (1979)</td></tr>
+<tr><td>最新の主要改訂</td><td>BEPS行動計画8-10/13の反映（2015年）、金融取引章の追加（2020年）</td></tr>
+<tr><td>承認機関</td><td>OECD財政委員会（Committee on Fiscal Affairs）</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3 id="ch0-abbreviations">0.8　本書で使用される略語</h3>
+
+<p>
+TPG 2022で頻出する略語を以下に整理する。本文中で初出時に定義されるものも多いが、章を跨いで読む場合には以下の一覧を参照されたい。
+</p>
+
+<table>
+<thead>
+<tr><th>略語</th><th>英語</th><th>日本語</th></tr>
+</thead>
+<tbody>
+<tr><td>ALP</td><td>Arm's Length Principle</td><td>独立企業原則</td></tr>
+<tr><td>APA</td><td>Advance Pricing Arrangement</td><td>事前確認取極</td></tr>
+<tr><td>BEPS</td><td>Base Erosion and Profit Shifting</td><td>税源浸食と利益移転</td></tr>
+<tr><td>CbCR</td><td>Country-by-Country Report</td><td>国別報告書</td></tr>
+<tr><td>CCA</td><td>Cost Contribution Arrangement</td><td>費用分担取極</td></tr>
+<tr><td>CFC</td><td>Controlled Foreign Company</td><td>外国子会社合算税制対象会社</td></tr>
+<tr><td>CUP</td><td>Comparable Uncontrolled Price</td><td>独立価格比準法</td></tr>
+<tr><td>DEMPE</td><td>Development, Enhancement, Maintenance, Protection, Exploitation</td><td>開発・改良・維持・保護・活用</td></tr>
+<tr><td>DTC</td><td>Double Taxation Convention</td><td>二重課税防止条約</td></tr>
+<tr><td>GFA</td><td>Global Formulary Apportionment</td><td>グローバル定式配分</td></tr>
+<tr><td>HTVI</td><td>Hard-to-Value Intangibles</td><td>評価困難な無形資産</td></tr>
+<tr><td>MAP</td><td>Mutual Agreement Procedure</td><td>相互協議手続</td></tr>
+<tr><td>MNE</td><td>Multinational Enterprise</td><td>多国籍企業</td></tr>
+<tr><td>MOU</td><td>Memorandum of Understanding</td><td>覚書</td></tr>
+<tr><td>PSM</td><td>Profit Split Method</td><td>利益分割法</td></tr>
+<tr><td>R&D</td><td>Research and Development</td><td>研究開発</td></tr>
+<tr><td>TIEA</td><td>Tax Information Exchange Agreement</td><td>租税情報交換協定</td></tr>
+<tr><td>TNMM</td><td>Transactional Net Margin Method</td><td>取引単位営業利益法</td></tr>
+</tbody>
+</table>
+
+<div class="card-purple">
+<h4>洞察：TPGの「時間軸」を意識した読み方</h4>
+<p>
+TPG 2022を読む際に見落としがちなのが、各パラグラフが「いつ書かれ（改訂され）たか」という時間軸である。例えば、第I章の一部は2010年改訂版がベースであり、D節のリスク分析フレームワークは2015年BEPS改訂で追加されたものである。第II章の利益分割法に関するC節は2018年に改訂されている。第X章は2020年に全くの新規追加である。これらの「地層」を意識することで、文書内の微妙なトーンの違いや、論点の進化を正しく捉えることができる。改訂の系譜は前書き（Foreword）に詳細に記録されており、各改訂の承認日とOECD文書番号まで追跡可能である。
+</p>
+</div>
+
+
+<!-- Chapter 1: The Arm's Length Principle -->
+<h2 class="chapter" id="ch1">第1章 独立企業原則（The Arm's Length Principle）</h2>
+
+<!-- ============================================================ -->
+<!-- A. 導入 -->
+<!-- ============================================================ -->
+<h3 id="ch1-A">A. 独立企業原則の基本思想と理論的根拠</h3>
+
+<p>独立企業原則（Arm's Length Principle, 以下「ALP」）は、OECDメンバー国が移転価格税制の国際標準として合意した基本原則であり、多国籍企業（MNE）グループと各国税務当局の双方が遵守すべき規範である（para. 1.1）。その本質は、関連者間取引の条件を、独立した企業同士が同等の取引を行った場合に設定するであろう条件と比較し、乖離がある場合には課税所得を調整するという点にある。</p>
+
+<p>独立した企業間の取引では、取引条件（価格、サービスの提供条件等）は通常、市場メカニズムによって決定される。しかし関連企業間の取引では、外部市場の圧力が直接的に作用しない場合がある。ここで重要なのは、税務当局が「関連企業は常に利益操作を行っている」と自動的に推定すべきではないという点である（para. 1.2）。ALPに基づく移転価格調整は、脱税や租税回避の問題とは区別されるべきであり、当事者に租税回避の意図がなくとも調整が行われうる。</p>
+
+<blockquote>
+<p>"Tax administrations should not automatically assume that associated enterprises have sought to manipulate their profits. There may be a genuine difficulty in accurately determining a market price in the absence of market forces or when adopting a particular commercial strategy." (para. 1.2)</p>
+</blockquote>
+
+<div class="card card-blue">
+<div class="card-title">ALPの基本構造</div>
+<div class="card-body">
+<p>ALPの適用は以下の2段階で構成される（para. 1.33）。</p>
+<ol>
+<li><strong>取引の正確な認定（accurate delineation）</strong>：関連企業間の商業的・財務的関係を特定し、経済的に重要な特性を分析して、実際の取引を正確に画定する。</li>
+<li><strong>比較可能性分析（comparability analysis）</strong>：認定された取引の条件を、独立企業間の比較可能な取引の条件と比較する。</li>
+</ol>
+</div>
+</div>
+
+<p>ALPが国際標準として支持される主要な理由は、MNEグループの構成員と独立企業との間で課税上の広範な均衡（broad parity）を確保できる点にある。ALPは関連企業と独立企業をより対等な立場に置くことで、いずれの企業類型にも税制上の有利・不利を生じさせず、経済的決定から税務上の考慮を排除し、国際的な貿易・投資の成長を促進する（para. 1.8）。</p>
+
+<blockquote>
+<p>"A major reason is that the arm's length principle provides broad parity of tax treatment for members of MNE groups and independent enterprises." (para. 1.8)</p>
+</blockquote>
+
+<p>もっとも、ALPには実務上の限界も認識されている。関連企業は独立企業が行わないような取引に従事することがあり（para. 1.11）、情報の入手困難性（para. 1.13）、管理負担の増大（para. 1.12）といった課題が存在する。しかしOECDは、これらの困難にもかかわらず、ALPが大多数の事案で有効に機能し、正当かつ現実的な代替案が存在しないとの結論を維持している（para. 1.15）。</p>
+
+<div class="card card-green">
+<div class="card-title">ポイント：ALPの理論的優位性</div>
+<div class="card-body">
+<p>ALPは「独立企業間取引」という市場ベンチマークを基礎とするため、開放市場の機能を最も忠実に近似する。この「個別的分析（separate entity approach）」は、MNEグループの各構成員を独立した事業体として扱い、取引ごとの経済的実質に即した所得配分を可能にする。</p>
+</div>
+</div>
+
+<div class="card card-yellow">
+<div class="card-title">日本法ノート：措置法66条の4</div>
+<div class="card-body">
+<p>日本の移転価格税制は租税特別措置法66条の4に規定される。同条は、法人がその国外関連者との取引において独立企業間価格と異なる価格で取引を行った場合に、独立企業間価格に基づいて所得を再計算することを規定しており、OECDガイドラインのALPを国内法化したものである。日本はOECDガイドラインを移転価格の実務上の解釈指針として重視するが、国内法との乖離が生じる場面もある。</p>
+</div>
+</div>
+
+<!-- SVG 1: ALP概念図 -->
+<div class="svg-container">
+<svg viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg" style="max-width:800px;width:100%;height:auto;">
+  <defs>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#dc2626"/>
+    </marker>
+  </defs>
+  <!-- 背景 -->
+  <rect width="800" height="420" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+  <!-- タイトル -->
+  <text x="400" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e293b">独立企業原則（ALP）概念図：関連者取引 vs 独立企業間取引</text>
+  <!-- 左パネル：関連者取引 -->
+  <rect x="30" y="55" width="355" height="340" rx="8" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.5"/>
+  <text x="207" y="80" text-anchor="middle" font-size="14" font-weight="bold" fill="#991b1b">関連者間取引（Controlled Transaction）</text>
+  <rect x="60" y="100" width="140" height="60" rx="6" fill="#fff" stroke="#f87171" stroke-width="1.5"/>
+  <text x="130" y="127" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">親会社 P</text>
+  <text x="130" y="145" text-anchor="middle" font-size="10" fill="#64748b">Country A</text>
+  <rect x="215" y="100" width="140" height="60" rx="6" fill="#fff" stroke="#f87171" stroke-width="1.5"/>
+  <text x="285" y="127" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">子会社 S</text>
+  <text x="285" y="145" text-anchor="middle" font-size="10" fill="#64748b">Country B</text>
+  <line x1="200" y1="120" x2="213" y2="120" stroke="#dc2626" stroke-width="2" marker-end="url(#arrowRed)"/>
+  <text x="207" y="112" text-anchor="middle" font-size="9" fill="#dc2626">取引</text>
+  <!-- 操作された価格 -->
+  <rect x="80" y="185" width="250" height="55" rx="6" fill="#fee2e2" stroke="#f87171" stroke-dasharray="4"/>
+  <text x="205" y="205" text-anchor="middle" font-size="11" fill="#991b1b">移転価格：$60（操作された価格）</text>
+  <text x="205" y="225" text-anchor="middle" font-size="10" fill="#991b1b">→ 利益が低税率国に移転される</text>
+  <!-- 支配関係 -->
+  <rect x="100" y="260" width="210" height="50" rx="6" fill="#fff1f2" stroke="#fecaca"/>
+  <text x="205" y="282" text-anchor="middle" font-size="11" fill="#7f1d1d">支配関係（control relationship）</text>
+  <text x="205" y="298" text-anchor="middle" font-size="10" fill="#991b1b">市場メカニズムが直接作用しない</text>
+  <line x1="130" y1="160" x2="130" y2="260" stroke="#f87171" stroke-width="1" stroke-dasharray="4"/>
+  <line x1="285" y1="160" x2="285" y2="260" stroke="#f87171" stroke-width="1" stroke-dasharray="4"/>
+  <!-- 右パネル：独立企業間取引 -->
+  <rect x="415" y="55" width="355" height="340" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+  <text x="592" y="80" text-anchor="middle" font-size="14" font-weight="bold" fill="#166534">独立企業間取引（Uncontrolled Transaction）</text>
+  <rect x="440" y="100" width="140" height="60" rx="6" fill="#fff" stroke="#4ade80" stroke-width="1.5"/>
+  <text x="510" y="127" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">企業 X</text>
+  <text x="510" y="145" text-anchor="middle" font-size="10" fill="#64748b">独立企業</text>
+  <rect x="600" y="100" width="140" height="60" rx="6" fill="#fff" stroke="#4ade80" stroke-width="1.5"/>
+  <text x="670" y="127" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">企業 Y</text>
+  <text x="670" y="145" text-anchor="middle" font-size="10" fill="#64748b">独立企業</text>
+  <line x1="580" y1="120" x2="598" y2="120" stroke="#16a34a" stroke-width="2" marker-end="url(#arrowBlue)"/>
+  <text x="590" y="112" text-anchor="middle" font-size="9" fill="#16a34a">取引</text>
+  <!-- 市場価格 -->
+  <rect x="465" y="185" width="250" height="55" rx="6" fill="#dcfce7" stroke="#4ade80" stroke-dasharray="4"/>
+  <text x="590" y="205" text-anchor="middle" font-size="11" fill="#166534">市場価格：$100（独立企業間価格）</text>
+  <text x="590" y="225" text-anchor="middle" font-size="10" fill="#166534">→ 市場メカニズムにより決定</text>
+  <!-- 対等な関係 -->
+  <rect x="485" y="260" width="210" height="50" rx="6" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="590" y="282" text-anchor="middle" font-size="11" fill="#14532d">利害の対立（divergence of interests）</text>
+  <text x="590" y="298" text-anchor="middle" font-size="10" fill="#166534">各当事者が自己利益を追求</text>
+  <!-- 下部比較矢印 -->
+  <rect x="280" y="370" width="240" height="36" rx="18" fill="#2563eb" opacity="0.9"/>
+  <text x="400" y="393" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">ALP：両者の条件を比較・調整</text>
+</svg>
+<div class="svg-caption">図1：ALP概念図 — 関連者間取引の条件を独立企業間取引の条件と比較し、乖離がある場合に利益を調整する</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- B. 歴史的発展 -->
+<!-- ============================================================ -->
+<h3 id="ch1-history">B. 歴史的発展：1979年から2022年への軌跡</h3>
+
+<p>ALPの国際標準としての地位は、OECDモデル租税条約第9条第1項に基づく。同条は、関連企業間の商業的・財務的関係において、独立企業間とは異なる条件が設定された場合、本来一方の企業に帰属すべきであった利益を当該企業の利益に算入して課税できることを規定する（para. 1.6）。</p>
+
+<blockquote>
+<p>"[Where] conditions are made or imposed between the two [associated] enterprises in their commercial or financial relations which differ from those which would be made between independent enterprises, then any profits which would, but for those conditions, have accrued to one of the enterprises, but, by reason of those conditions, have not so accrued, may be included in the profits of that enterprise and taxed accordingly." (Article 9(1), OECD Model Tax Convention)</p>
+</blockquote>
+
+<p>OECDの移転価格に関する指針は、以下のように段階的に発展してきた。</p>
+
+<div class="card card-blue">
+<div class="card-title">ALPの歴史的展開</div>
+<div class="card-body">
+<table>
+<thead>
+<tr><th>年</th><th>文書・出来事</th><th>主な進展</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>1979年</strong></td><td>OECD移転価格報告書</td><td>ALPの国際標準としての最初の体系的な指針。伝統的取引基準法（CUP法、再販売価格基準法、原価基準法）を確立。</td></tr>
+<tr><td><strong>1995年</strong></td><td>OECD移転価格ガイドライン初版</td><td>1979年報告書を大幅に拡充。取引単位営業利益法（TNMM）と利益分割法を導入。比較可能性分析のフレームワークを整備。</td></tr>
+<tr><td><strong>2010年</strong></td><td>2010年改訂版</td><td>第I章〜第III章を大幅改訂。比較可能性分析の手順を精緻化。利益分割法の適用指針を更新。</td></tr>
+<tr><td><strong>2015-2017年</strong></td><td>BEPS行動計画8-10</td><td>無形資産・リスク・資本の指針を抜本改訂。取引の正確な認定（accurate delineation）を中核概念として導入。リスク分析の6ステップフレームワークを新設。</td></tr>
+<tr><td><strong>2022年</strong></td><td>OECD移転価格ガイドライン2022年版</td><td>BEPS成果物を統合した最新の包括的ガイドライン。第X章（金融取引）を新設。リスクフリーリターン・リスク調整後リターンの指針を明確化。</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<p>とりわけBEPS行動計画8-10による2015-2017年の改訂は、ALPの適用方法論に根本的な変化をもたらした。従来は契約条件に大きく依拠していた分析が、「取引の正確な認定」を通じて、当事者の実際の行動（conduct of the parties）を重視する方向へとシフトした。これはMNEが契約上のリスク配分と実際の機能・意思決定を乖離させることで税負担を軽減する手法への対応である。</p>
+
+<!-- ============================================================ -->
+<!-- C. ALPと定式配分の比較 -->
+<!-- ============================================================ -->
+<h3 id="ch1-C">C. ALPと定式配分方式（Formulary Apportionment）の比較</h3>
+
+<p>定式配分方式（global formulary apportionment）は、ALPの代替として時折提唱されてきた方式である。MNEグループの全世界利益を連結ベースで確定し、費用・資産・給与・売上高等の所定の算式に基づいて各法域に機械的に配分する手法である（para. 1.17）。</p>
+
+<div class="card card-red">
+<div class="card-title">注意：定式配分方式の3要素</div>
+<div class="card-body">
+<ol>
+<li><strong>課税単位の決定</strong>：MNEグループのどの子会社・支店が全世界課税対象となるかの画定</li>
+<li><strong>全世界利益の正確な算定</strong>：グループ連結ベースでの所得計算</li>
+<li><strong>配分算式の設定</strong>：費用（costs）、資産（assets）、給与（payroll）、売上高（sales）等の組み合わせに基づく算式</li>
+</ol>
+</div>
+</div>
+
+<p>定式配分方式の推進論者は、（1）管理上の利便性と予測可能性の向上、（2）高度に統合されたMNEの経済的実態への適合性を主張する（para. 1.19-1.20）。しかしOECDメンバー国はこれを受け入れず、以下の理由から否定している。</p>
+
+<p><strong>第一に、二重課税と単一課税の確保が困難である</strong>（para. 1.22-1.24）。定式配分方式の実現には、算式の内容、グループの範囲、全世界的な課税標準の測定方法、共通の会計基準等について、すべての主要な法域間での合意が必要となる。このような多国間合意の達成は極めて困難であり、一部の法域のみが採用した場合、MNEは二つの全く異なるシステムへの対応を強いられ、あらゆる事案で二重課税（または課税不足）が発生する可能性がある。</p>
+
+<p><strong>第二に、所定の算式は恣意的であり市場条件を無視する</strong>（para. 1.25）。費用・資産・給与・売上高に基づく算式は、各構成要素の通貨単位あたりの利益率を暗黙のうちに一律に設定するものであり、機能・資産・リスク・効率性の差異を考慮しない。結果として、独立企業であれば損失を被るはずの事業体に利益を配分する可能性がある。</p>
+
+<p><strong>第三に、コンプライアンスコストはALPよりも増大しうる</strong>（para. 1.27）。MNEグループ全体の情報を、各法域の通貨・会計基準に基づいて収集・提示する必要があるため、実際の文書化・遵守要件は個別企業アプローチよりも負担が大きい。</p>
+
+<blockquote>
+<p>"[A] formula based on a combination of cost, assets, payroll, and sales implicitly imputes a fixed rate of profit per currency unit of each component to every member of the group and in every tax jurisdiction, regardless of differences in functions, assets, risks, and efficiencies." (para. 1.25)</p>
+</blockquote>
+
+<div class="card card-purple">
+<div class="card-title">洞察：ALPと定式配分の根本的対立</div>
+<div class="card-body">
+<p>ALPと定式配分の対立は、移転価格の根幹に関わる哲学的対立を反映している。ALPは「個別的取引分析」を通じて各事業体の経済的貢献を個別に評価するのに対し、定式配分は「統合的企業観」に基づきグループ全体の利益を機械的に配分する。2022年ガイドラインは従来通りALPを支持するが、OECD/G20包摂的枠組みの「第1の柱（Pillar One）」は利益Aの配分に関して部分的に定式的要素を含むものであり、完全な二項対立は崩れつつある。しかし第1の柱の下でも、残余利益の大部分はALPに基づいて配分される。</p>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- D. 取引の正確な認定 -->
+<!-- ============================================================ -->
+<h3 id="ch1-D1">D. 取引の正確な認定（Accurate Delineation of the Actual Transaction）</h3>
+
+<p>ALPの適用において最も重要な出発点は、関連企業間の取引を正確に認定する（accurately delineate）ことである。これは、当事者間の商業的・財務的関係を特定し、その関係に付随する経済的に重要な特性を分析するプロセスである（para. 1.33）。</p>
+
+<p>このプロセスは広範な理解から出発する。まず、MNEグループが事業を展開する産業セクターの理解（採掘、医薬品、奢侈品等）、当該セクターの業績に影響を与える要因の把握が必要となる。その上で、各MNEがグループ内でどのように機能しているか（製造会社、販売会社等）を特定し、関連企業との商業的・財務的関係を分析する（para. 1.34-1.35）。</p>
+
+<h4>経済的に重要な特性（5つのカテゴリー）</h4>
+
+<p>取引の正確な認定に必要な比較可能性要因は、以下の5つのカテゴリーに大別される（para. 1.36）。</p>
+
+<div class="card card-blue">
+<div class="card-title">5つの比較可能性要因</div>
+<div class="card-body">
+<ol>
+<li><strong>取引の契約条件</strong>（D.1.1）</li>
+<li><strong>各当事者が遂行する機能</strong>（使用資産・引受リスクを含む）、MNEグループ全体の価値創造との関係（D.1.2）</li>
+<li><strong>移転される財産またはサービスの特性</strong>（D.1.3）</li>
+<li><strong>当事者の経済的状況と市場環境</strong>（D.1.4）</li>
+<li><strong>当事者のビジネス戦略</strong>（D.1.5）</li>
+</ol>
+</div>
+</div>
+
+<p>独立企業は、取引を評価する際に、自らに現実的に利用可能な他の選択肢（options realistically available）と比較する。そして、より明確に魅力的な代替手段がない場合にのみ当該取引に参入する（para. 1.38）。この「現実的に利用可能な選択肢」の概念は、ALPの適用全体を貫く核心的思考であり、すべての移転価格算定方法の基礎となっている（para. 1.40）。</p>
+
+<!-- ============================================================ -->
+<!-- D.1.1 契約条件と実際の行動 -->
+<!-- ============================================================ -->
+<h3 id="ch1-D11">D.1. 契約条件と当事者の実際の行動の関係</h3>
+
+<p>関連企業間取引は書面契約によって形式化されることが多く、契約は取引の認定における出発点（starting point）を提供する（para. 1.42）。しかし、書面契約のみでは移転価格分析に必要なすべての情報を提供できない場合が多い（para. 1.43）。</p>
+
+<p>ここで決定的に重要なのが、<strong>契約条件と当事者の実際の行動（conduct of the parties）との関係</strong>である。ガイドラインは以下の3つの場面を区別する。</p>
+
+<div class="card card-green">
+<div class="card-title">契約と行動の3パターン</div>
+<div class="card-body">
+<ol>
+<li><strong>契約が行動を補完する場合</strong>：契約が経済的に重要な特性を明示的にも黙示的にも規定していない場合、他の4カテゴリーの分析によって契約内容を補完する（para. 1.43）。</li>
+<li><strong>契約と行動が矛盾する場合</strong>：経済的に重要な特性が契約と矛盾する場合、<strong>当事者の実際の行動に基づいて取引を認定する</strong>（para. 1.45）。</li>
+<li><strong>書面契約が存在しない場合</strong>：実際の行動から取引内容を推認する。MNEが認識していない取引（例：技術支援の提供、シナジーの創出）が存在する場合も含む（para. 1.49）。</li>
+</ol>
+</div>
+</div>
+
+<blockquote>
+<p>"If the characteristics of the transaction that are economically relevant are inconsistent with the written contract between the associated enterprises, the actual transaction should generally be delineated for purposes of the transfer pricing analysis in accordance with the characteristics of the transaction reflected in the conduct of the parties." (para. 1.45)</p>
+</blockquote>
+
+<p>独立企業間取引では利害の対立（divergence of interests）が存在するため、（i）契約条件は両当事者の利益を反映し、（ii）当事者は相互に契約条件の遵守を求め、（iii）契約条件の事後的な無視・修正は両当事者の利益になる場合にのみ行われる。しかし関連企業間ではこのような利害の対立が存在しないか、支配関係を通じて管理される場合がある（para. 1.46）。このため、関連企業の実際の行動が契約条件と実質的に一致しているかの検証が特に重要となる。</p>
+
+<p>ガイドラインは具体例を用いてこの原則を説明する。例えば、親会社Pが子会社Sに知的財産のライセンスを付与する書面契約が存在するが、実際にはPがSの顧客交渉を行い、定期的な技術サポートを提供し、顧客がPを共同契約当事者として含むことを要求するような場合、Pはライセンサーではなくプリンシパルとして機能しており、書面契約に基づく取引認定は不適切となる（para. 1.48）。</p>
+
+<!-- ============================================================ -->
+<!-- D.1.2 リスク分析フレームワーク -->
+<!-- ============================================================ -->
+<h3 id="ch1-risk">E. リスクの分析フレームワーク（6ステップ）</h3>
+
+<p>機能分析は、各当事者が引き受ける重要なリスクの特定・分析なしには不完全である（para. 1.56）。通常、開放市場においてリスクの増大は期待リターンの増加により補償される。ただし実際のリターンは、リスクが顕在化する程度に応じて増加する場合もしない場合もある。リスクの水準と引受けは、移転価格分析の結果を左右する経済的に重要な特性である（para. 1.56）。</p>
+
+<p>2022年ガイドラインは、関連者間取引におけるリスクを分析するための体系的な<strong>6ステップのフレームワーク</strong>を提示する（para. 1.60）。</p>
+
+<div class="card card-blue">
+<div class="card-title">リスク分析6ステップ・フレームワーク</div>
+<div class="card-body">
+<table>
+<thead>
+<tr><th>ステップ</th><th>内容</th><th>参照</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>1</strong></td><td>経済的に重要なリスクを具体的に特定する（identify economically significant risks with specificity）</td><td>D.1.2.1.1</td></tr>
+<tr><td><strong>2</strong></td><td>取引条件の下で、経済的に重要なリスクが契約上どのように各関連企業に配分されているかを確認する</td><td>D.1.2.1.2</td></tr>
+<tr><td><strong>3</strong></td><td>機能分析を通じて、取引当事者である関連企業がリスクの引受け・管理に関してどのように行動しているかを分析する（統制機能、リスク軽減機能、リスク結果の帰趨、財務的能力）</td><td>D.1.2.1.3</td></tr>
+<tr><td><strong>4</strong></td><td>ステップ1-3の情報を解釈し、契約上のリスク配分が当事者の行動等と整合的かを判定する（(i)契約条件の遵守、(ii)リスク引受者がリスクを統制し財務的能力を有するか）</td><td>D.1.2.1.4</td></tr>
+<tr><td><strong>5</strong></td><td>リスクを引き受ける当事者がリスクを統制していないか財務的能力を欠く場合、統制と財務的能力の両方を有する企業にリスクを配分する</td><td>D.1.2.1.5</td></tr>
+<tr><td><strong>6</strong></td><td>リスク配分の結果を踏まえ、財務的帰結とリスク管理機能への適切な報酬を考慮した上で取引の価格を設定する</td><td>D.1.2.1.6</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<h4>リスクの統制（Control over Risk）</h4>
+
+<p>リスクの統制は、リスク管理（risk management）の概念と密接に関連するが、同一ではない。ガイドラインは以下の3要素からリスク管理を定義する（para. 1.61）。</p>
+<ol>
+<li>リスク負担の機会を引き受ける、移転する、または拒否する<strong>意思決定能力</strong>と、その意思決定の<strong>実際の遂行</strong></li>
+<li>リスクに<strong>対応するかどうか、どのように対応するかの意思決定能力</strong>と、その遂行</li>
+<li>リスクの結果に影響を与える措置を講じる<strong>リスク軽減能力</strong>と、その実際の遂行</li>
+</ol>
+
+<p>このうち、リスクの<strong>統制（control）</strong>は上記の(i)と(ii)を含む概念であり、(iii)の日常的リスク軽減活動は外部委託可能である（para. 1.65）。重要なのは、統制には<strong>能力（capability）と機能的遂行（functional performance）の両方</strong>が必要であるということである。単なる形式的な承認（取締役会での形式的決議、書類への署名等）は、統制の行使とはみなされない（para. 1.66）。</p>
+
+<blockquote>
+<p>"Neither a mere formalising of the outcome of decision-making in the form of, for example, meetings organised for formal approval of decisions that were made in other locations, minutes of a board meeting and signing of the documents relating to the decision [...] qualifies as the exercise of a decision-making function sufficient to demonstrate control over a risk." (para. 1.66)</p>
+</blockquote>
+
+<h4>リスクの引受け（Risk Assumption）と財務的能力</h4>
+
+<p>リスクの引受けは、リスクのアップサイド（正の結果）とダウンサイド（負の結果）の双方の帰結を受け入れることを意味する。リスク管理を行うことは、必ずしもリスクを引き受けることを意味しない（para. 1.63）。</p>
+
+<p>財務的能力（financial capacity）は、リスクを引き受けるための資金へのアクセス、リスク軽減機能への支払い能力、リスクが顕在化した場合の結果を負担する能力として定義される（para. 1.64）。</p>
+
+<h4>リスクのカテゴリー</h4>
+
+<p>ガイドラインは、不確実性の源泉に基づくリスクの非排他的な分類フレームワークを提示する（para. 1.72）。</p>
+
+<div class="card card-blue">
+<div class="card-title">リスクの5分類</div>
+<div class="card-body">
+<ul>
+<li><strong>(a) 戦略リスク・市場リスク</strong>：経済環境、政治・規制、競争、技術革新、社会・環境変化に起因する外部リスク</li>
+<li><strong>(b) インフラ・オペレーショナルリスク</strong>：事業遂行に関する不確実性（プロセスの有効性、製品の市場投入時期、供給チェーンリスク等）</li>
+<li><strong>(c) 金融リスク</strong>：流動性・キャッシュフロー管理、財務能力、信用力に関するリスク</li>
+<li><strong>(d) 取引リスク</strong>：商取引における価格設定・支払条件に関するリスク</li>
+<li><strong>(e) 偶発リスク（hazard risks）</strong>：事故・自然災害等の外部事象による損害・損失のリスク</li>
+</ul>
+</div>
+</div>
+
+<!-- SVG 2: 利益移転メカニズム -->
+<div class="svg-container">
+<svg viewBox="0 0 800 460" xmlns="http://www.w3.org/2000/svg" style="max-width:800px;width:100%;height:auto;">
+  <defs>
+    <marker id="arrGreen" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/>
+    </marker>
+    <marker id="arrOrange" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ea580c"/>
+    </marker>
+    <marker id="arrGray" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/>
+    </marker>
+  </defs>
+  <rect width="800" height="460" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="400" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e293b">利益移転メカニズム：移転価格操作による利益シフト</text>
+
+  <!-- 高税率国 A -->
+  <rect x="30" y="60" width="230" height="300" rx="8" fill="#fef9c3" stroke="#facc15" stroke-width="1.5"/>
+  <text x="145" y="85" text-anchor="middle" font-size="13" font-weight="bold" fill="#854d0e">高税率国 A（税率30%）</text>
+  <rect x="60" y="105" width="170" height="70" rx="6" fill="#fff" stroke="#eab308" stroke-width="1.5"/>
+  <text x="145" y="132" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">親会社 P</text>
+  <text x="145" y="152" text-anchor="middle" font-size="10" fill="#64748b">知的財産の所有者</text>
+  <!-- 利益の圧縮を示す -->
+  <rect x="60" y="200" width="170" height="60" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-dasharray="4"/>
+  <text x="145" y="222" text-anchor="middle" font-size="11" fill="#92400e">申告利益：$20M</text>
+  <text x="145" y="242" text-anchor="middle" font-size="10" fill="#b45309">（本来 $60M のはず）</text>
+  <rect x="55" y="280" width="180" height="30" rx="4" fill="#fde047"/>
+  <text x="145" y="300" text-anchor="middle" font-size="11" font-weight="bold" fill="#713f12">税額：$6M → $18M 減少</text>
+
+  <!-- 低税率国 B -->
+  <rect x="540" y="60" width="230" height="300" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="655" y="85" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e40af">低税率国 B（税率5%）</text>
+  <rect x="570" y="105" width="170" height="70" rx="6" fill="#fff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="655" y="132" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">子会社 S</text>
+  <text x="655" y="152" text-anchor="middle" font-size="10" fill="#64748b">ペーパーカンパニー</text>
+  <!-- 膨張した利益 -->
+  <rect x="570" y="200" width="170" height="60" rx="6" fill="#dbeafe" stroke="#60a5fa" stroke-dasharray="4"/>
+  <text x="655" y="222" text-anchor="middle" font-size="11" fill="#1e3a8a">申告利益：$40M</text>
+  <text x="655" y="242" text-anchor="middle" font-size="10" fill="#2563eb">（実態に基づく貢献は限定的）</text>
+  <rect x="565" y="280" width="180" height="30" rx="4" fill="#93c5fd"/>
+  <text x="655" y="300" text-anchor="middle" font-size="11" font-weight="bold" fill="#1e3a8a">税額：$2M（大幅軽減）</text>
+
+  <!-- 中央の取引フロー -->
+  <rect x="280" y="90" width="240" height="55" rx="6" fill="#fff" stroke="#94a3b8" stroke-width="1"/>
+  <text x="400" y="112" text-anchor="middle" font-size="11" fill="#475569">製品の流れ（市場価値 $100）</text>
+  <text x="400" y="130" text-anchor="middle" font-size="11" font-weight="bold" fill="#dc2626">移転価格：$40（過少設定）</text>
+  <line x1="230" y1="135" x2="278" y2="115" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrGray)"/>
+  <line x1="520" y1="115" x2="538" y2="135" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrGray)"/>
+
+  <!-- ロイヤルティの還流 -->
+  <rect x="290" y="165" width="220" height="45" rx="6" fill="#fef2f2" stroke="#fca5a5"/>
+  <text x="400" y="183" text-anchor="middle" font-size="11" fill="#991b1b">ロイヤルティ：$30M（過大設定）</text>
+  <text x="400" y="198" text-anchor="middle" font-size="10" fill="#b91c1c">S → P（利益の名目的移転）</text>
+  <line x1="540" y1="190" x2="512" y2="190" stroke="#ea580c" stroke-width="1.5" marker-end="url(#arrOrange)"/>
+
+  <!-- 結果ボックス -->
+  <rect x="150" y="385" width="500" height="60" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+  <text x="400" y="407" text-anchor="middle" font-size="13" font-weight="bold" fill="#991b1b">ALP違反の結果</text>
+  <text x="400" y="428" text-anchor="middle" font-size="11" fill="#7f1d1d">高税率国Aの課税ベースが侵食され、低税率国Bに利益が人為的に移転される</text>
+  <!-- 矢印 -->
+  <line x1="145" y1="340" x2="290" y2="390" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="5" marker-end="url(#arrOrange)"/>
+  <line x1="655" y1="340" x2="510" y2="390" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="5" marker-end="url(#arrOrange)"/>
+</svg>
+<div class="svg-caption">図2：利益移転メカニズム — 移転価格の過少・過大設定により、高税率国から低税率国へ利益が人為的にシフトされる構造</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- ステップ4-6の詳細 -->
+<!-- ============================================================ -->
+<h4>ステップ4の解釈と実例</h4>
+
+<p>ステップ4は、ステップ1-3で収集した情報を解釈し、契約上のリスク配分と当事者の実際の行動の整合性を判定する段階である。契約上リスクを引き受ける当事者が、（i）実際の行動においてもその契約条件を適用し、かつ（ii）リスクを統制し財務的能力を有する場合は、リスク配分は確認される（para. 1.87）。</p>
+
+<p>ガイドラインの例示（Example 1, para. 1.83）では、A社が開発リスクを引き受けB社に研究を委託する場面が描かれる。A社は開発リスクに関する意思決定を行い（研究の種類、目的、予算の決定、進捗評価等）、B社は研究サービスを遂行するがA社の活動に関する意思決定能力を持たない。この場合、A社が開発リスクを統制し、B社はサービス遂行の適格性リスクのみを統制する。両社の契約上のリスク配分は実態と整合し、ステップ5に進む必要はない。</p>
+
+<p>しかし、契約上B社が開発リスクを引き受けると規定されている場合であっても、B社が開発リスクの評価能力を持たず、A社の活動に関する意思決定を行わないのであれば、B社はリスクを統制しておらず、ステップ5の適用が必要となる（para. 1.90）。</p>
+
+<h4>ステップ5：リスクの再配分</h4>
+
+<p>ステップ4(ii)においてリスクを引き受ける当事者がリスクを統制していないか財務的能力を欠く場合、リスクは統制と財務的能力の両方を有する企業に配分される。複数の関連企業がこの要件を満たす場合、<strong>最も統制を行使する企業</strong>にリスクが配分され、他の統制活動を行う当事者は適切に報酬を受ける（para. 1.98）。</p>
+
+<h4>ステップ6：リスク配分に基づく価格設定</h4>
+
+<p>リスクの引受けは適切な期待リターンによって補償されるべきであり、リスク軽減は適切に報酬される。リスクを引き受けかつ軽減する納税者は、引受けのみまたは軽減のみの納税者よりも大きな期待リターンを得る権利がある（para. 1.100）。</p>
+
+<div class="card card-red">
+<div class="card-title">注意：リスクフリーリターンとリスク調整後リターン</div>
+<div class="card-body">
+<p>リスクを統制する能力を欠くファンダー（資金提供者）は、<strong>リスクフリーリターン</strong>（risk-free return）を超える報酬を得る権利がない（para. 1.103, 1.108）。リスクフリーリターンの近似値としては、同一通貨建ての高格付け政府証券の金利が参照される（para. 1.110-1.111）。</p>
+<p>一方、資金提供に伴う<strong>金融リスク</strong>を統制する（しかし事業運営リスクは引き受けない）ファンダーは、リスクフリーリターンに金融リスクプレミアムを加算した<strong>リスク調整後リターン</strong>（risk-adjusted return）を得る権利がある（para. 1.117-1.122）。</p>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 二重課税と二重非課税 -->
+<!-- ============================================================ -->
+<h3 id="ch1-double-tax">F. 二重課税と二重非課税の問題</h3>
+
+<p>ALPの不適切な適用は、二重課税または二重非課税を引き起こす可能性がある。移転価格が市場メカニズムとALPを反映しない場合、関連企業の納税義務と各法域の税収が歪められる（para. 1.3）。</p>
+
+<p>二重課税は、二つ以上の法域が同一の所得に対して課税を主張する場合に発生する。これは移転価格調整において、一方の法域が利益を増額調整する一方、他方の法域が対応的調整（corresponding adjustment）を行わない場合に典型的に生じる。OECDモデル租税条約第9条第2項は、この対応的調整の義務を規定するが、実務では必ずしもスムーズに機能しない。</p>
+
+<!-- SVG 3: 二重課税発生フロー -->
+<div class="svg-container">
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" style="max-width:800px;width:100%;height:auto;">
+  <defs>
+    <marker id="arrDark" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#475569"/>
+    </marker>
+    <marker id="arrRd" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#dc2626"/>
+    </marker>
+  </defs>
+  <rect width="800" height="500" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="400" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e293b">二重課税発生フロー：国A・国Bの課税主張の衝突</text>
+
+  <!-- フェーズ1: 取引 -->
+  <text x="400" y="62" text-anchor="middle" font-size="13" font-weight="bold" fill="#475569">Phase 1：関連者間取引</text>
+  <rect x="80" y="75" width="260" height="70" rx="6" fill="#fff" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="210" y="100" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">親会社 P（国A所在）</text>
+  <text x="210" y="120" text-anchor="middle" font-size="10" fill="#64748b">部品を製造、子会社Sに$40で販売</text>
+  <text x="210" y="135" text-anchor="middle" font-size="10" fill="#64748b">独立企業間価格は$70</text>
+  <rect x="460" y="75" width="260" height="70" rx="6" fill="#fff" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="590" y="100" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">子会社 S（国B所在）</text>
+  <text x="590" y="120" text-anchor="middle" font-size="10" fill="#64748b">部品を$40で仕入れ、$100で外販</text>
+  <text x="590" y="135" text-anchor="middle" font-size="10" fill="#64748b">申告利益 $60（ALP下では $30）</text>
+  <line x1="340" y1="105" x2="458" y2="105" stroke="#475569" stroke-width="2" marker-end="url(#arrDark)"/>
+  <text x="400" y="95" text-anchor="middle" font-size="10" fill="#dc2626" font-weight="bold">$40（過少）</text>
+
+  <!-- フェーズ2: 国Aの調整 -->
+  <text x="400" y="175" text-anchor="middle" font-size="13" font-weight="bold" fill="#475569">Phase 2：国Aの移転価格調整</text>
+  <rect x="120" y="190" width="560" height="65" rx="8" fill="#fef9c3" stroke="#eab308" stroke-width="1.5"/>
+  <text x="400" y="215" text-anchor="middle" font-size="12" fill="#854d0e"><tspan font-weight="bold">国A税務当局</tspan>：「独立企業間価格は$70であるから、Pの利益を$30増額調整する」</text>
+  <text x="400" y="240" text-anchor="middle" font-size="11" fill="#92400e">P社の課税所得：$10 → $40（$30の増額）→ 追加税額発生</text>
+
+  <!-- フェーズ3: 国Bの対応 -->
+  <text x="400" y="285" text-anchor="middle" font-size="13" font-weight="bold" fill="#475569">Phase 3：国Bの対応（2パターン）</text>
+
+  <!-- パターンA: 対応的調整あり -->
+  <rect x="40" y="300" width="340" height="90" rx="8" fill="#dcfce7" stroke="#4ade80" stroke-width="1.5"/>
+  <text x="210" y="322" text-anchor="middle" font-size="12" font-weight="bold" fill="#166534">パターンA：対応的調整あり</text>
+  <text x="210" y="342" text-anchor="middle" font-size="11" fill="#166534">国Bが$30の減額調整を実施</text>
+  <text x="210" y="362" text-anchor="middle" font-size="11" fill="#166534">→ S社の課税所得：$60 → $30</text>
+  <text x="210" y="380" text-anchor="middle" font-size="11" font-weight="bold" fill="#166534">二重課税は解消</text>
+
+  <!-- パターンB: 対応的調整なし -->
+  <rect x="420" y="300" width="340" height="90" rx="8" fill="#fef2f2" stroke="#f87171" stroke-width="1.5"/>
+  <text x="590" y="322" text-anchor="middle" font-size="12" font-weight="bold" fill="#991b1b">パターンB：対応的調整なし</text>
+  <text x="590" y="342" text-anchor="middle" font-size="11" fill="#991b1b">国Bは減額調整を拒否</text>
+  <text x="590" y="362" text-anchor="middle" font-size="11" fill="#991b1b">→ S社の課税所得：$60のまま</text>
+  <text x="590" y="380" text-anchor="middle" font-size="11" font-weight="bold" fill="#991b1b">$30が二重課税される</text>
+
+  <!-- 結果ボックス -->
+  <rect x="420" y="415" width="340" height="70" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+  <text x="590" y="438" text-anchor="middle" font-size="12" font-weight="bold" fill="#dc2626">二重課税の発生</text>
+  <text x="590" y="458" text-anchor="middle" font-size="10" fill="#7f1d1d">国A：$40に課税 + 国B：$60に課税</text>
+  <text x="590" y="474" text-anchor="middle" font-size="10" fill="#7f1d1d">合計 $100 &gt; 真の全世界利益 $60</text>
+  <line x1="590" y1="390" x2="590" y2="413" stroke="#ef4444" stroke-width="2" marker-end="url(#arrRd)"/>
+
+  <rect x="40" y="415" width="340" height="70" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+  <text x="210" y="438" text-anchor="middle" font-size="12" font-weight="bold" fill="#16a34a">正常な課税</text>
+  <text x="210" y="458" text-anchor="middle" font-size="10" fill="#14532d">国A：$40に課税 + 国B：$30に課税</text>
+  <text x="210" y="474" text-anchor="middle" font-size="10" fill="#14532d">合計 $70 → ALPに基づく適正配分</text>
+  <line x1="210" y1="390" x2="210" y2="413" stroke="#22c55e" stroke-width="2" marker-end="url(#arrDark)"/>
+</svg>
+<div class="svg-caption">図3：二重課税発生フロー — 国Aが移転価格調整を行い、国Bが対応的調整を行わない場合、同一所得に二重の課税が生じる</div>
+</div>
+
+<p>定式配分方式に移行した場合、二重課税のリスクはさらに深刻化する。すべての主要法域が同一の算式に合意しない限り、MNEは二つの異なるシステムの下で利益を計算する義務を負い、「あらゆる事案で二重課税（または課税不足）が発生する可能性がある」（para. 1.24）。ALPからの逸脱は「健全な理論的基礎を放棄し、国際的合意を脅かし、二重課税のリスクを実質的に増大させる」（para. 1.15）。</p>
+
+<div class="card card-purple">
+<div class="card-title">洞察：二重非課税の問題</div>
+<div class="card-body">
+<p>二重課税の裏返しとして、二重非課税（double non-taxation）の問題も存在する。関連企業間の利益配分が、いずれの法域でも課税されない「隙間」を生じさせる場合である。BEPS行動計画はこの問題に正面から取り組み、特に行動計画2（ハイブリッドミスマッチ）、行動計画6（条約濫用防止）、行動計画8-10（移転価格）を通じて、二重非課税の排除を目指した。2022年ガイドラインにおけるリスク分析の6ステップや取引の非認定に関する規定も、実質を伴わない利益移転による二重非課税を防止する機能を有する。</p>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 取引の非認定 -->
+<!-- ============================================================ -->
+<h3 id="ch1-D2">G. 取引の非認定（Non-Recognition）の限定的適用</h3>
+
+<p>前述のとおり、ALPの適用においては、あくまでも正確に認定された実際の取引に対して価格設定を行うことが原則である。税務当局は、以下の例外的状況に該当しない限り、実際の取引を否認したり他の取引に置き換えたりすべきではない（para. 1.141）。</p>
+
+<blockquote>
+<p>"A tax administration should not disregard the actual transaction or substitute other transactions for it unless the exceptional circumstances described in the following paragraphs 1.142-1.145 apply." (para. 1.141)</p>
+</blockquote>
+
+<p>非認定が許容される場合は、正確に認定された取引の全体的な構成が、比較可能な状況下で商業的に合理的に行動する独立企業が採用したであろう構成と異なり、そのために両当事者の観点から受容可能な価格の決定が妨げられる場合である（para. 1.142）。</p>
+
+<div class="card card-red">
+<div class="card-title">注意：非認定の適用制限</div>
+<div class="card-body">
+<p>ガイドラインは非認定の適用を厳格に制限している。</p>
+<ul>
+<li>非認定は争訟の原因となり二重課税を生じさせうるため、最大限の努力を払って実際の取引を認定し、ALPに基づく価格設定を行うべきである</li>
+<li>ALPに基づく価格設定が<strong>困難であるというだけ</strong>では非認定の根拠にはならない</li>
+<li>独立企業間で<strong>同一の取引が見られないというだけ</strong>では非認定の根拠にはならない（para. 1.142）</li>
+<li>関連企業は独立企業よりもはるかに多様な取引を行う能力を有し、健全な事業上の理由からそうすることがある</li>
+<li>非認定の鍵となる問いは、「実際の取引が、比較可能な経済的状況下で非関連者間の取引に見られる<strong>商業的合理性（commercial rationality）</strong>を有しているか」である（para. 1.143）</li>
+</ul>
+</div>
+</div>
+
+<p>非認定の基準を例証するものとして、ガイドラインは以下の2例を挙げる。</p>
+
+<p><strong>例1（para. 1.146-1.147）</strong>：S1社は洪水多発地域に所在する製造業者であり、関連企業S2社が保険を提供し、在庫・不動産・設備の価値の80%に相当する年間保険料を支払う。当該地域では第三者の保険会社が保険を引き受けない（保険市場が存在しない）。S1社にとって、移転や無保険の方が現実的に利用可能なより魅力的な選択肢であり、この取引は商業的に不合理である。非認定が適用され、S1社は保険を購入していないものとして扱われる。</p>
+
+<p><strong>例2（para. 1.148）</strong>：S1社がS2社に対し、今後20年間のすべての将来的な無形資産への無制限の権利を一括払いで移転する。いずれの当事者にとっても、S1社が20年間にどのような開発活動を行うか不確実であり、その潜在的成果の評価は完全に投機的であるため、支払額が適正な評価を反映するかの信頼できる手段がない。商業的に不合理であるため、取引構造は移転価格分析の目的で修正される。代替構造は、経済的に重要な特性（機能・資産・リスク）に基づいて決定される。</p>
+
+<div class="card card-green">
+<div class="card-title">ポイント：非認定と代替取引の設計原則</div>
+<div class="card-body">
+<p>移転価格の目的で取引を代替する場合、代替構造は「実際に行われた取引の事実にできる限り近く」、かつ「取引締結時点で両当事者が受容可能な商業的に合理的な期待結果を達成する」ものでなければならない（para. 1.144）。これは、税務当局による恣意的な取引再構成を防止し、ALPの信頼性を維持するための重要な制約である。</p>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 補足的論点 -->
+<!-- ============================================================ -->
+<h3 id="ch1-supplementary">H. 補足的論点</h3>
+
+<h4>H.1 損失を計上する関連企業の問題</h4>
+
+<p>関連企業がMNEグループ全体として利益を上げている中で恒常的に損失を計上している場合、移転価格の精査が必要となりうる（para. 1.149）。独立企業であれば無期限に損失を甘受することはなく、最終的にはそのような条件での事業を停止する。対照的に、関連企業は損失を計上していてもMNEグループ全体の利益に貢献する限り事業を継続しうる。</p>
+
+<p>ただし、市場浸透戦略（market penetration strategy）に基づく合理的期間の損失は、ALPと整合しうる。しかし特に低い価格は限定的な期間のみ許容され、合理的期間を超えて継続する場合には移転価格調整が適切となりうる（para. 1.151）。</p>
+
+<h4>H.2 政府の介入と市場条件</h4>
+
+<p>価格統制、金利規制、為替管理、補助金等の政府介入は、原則として特定の法域の市場条件として扱われる（para. 1.152）。独立企業であれば通常は支払がブロックされる取引に参入しないことから、このような状況でのALPの適用には困難が伴う（para. 1.155）。</p>
+
+<h4>H.3 ロケーションセービングと地域的市場特性</h4>
+
+<p>特定の地域で事業を行うことによるコスト削減（location savings）や、市場の特性（市場規模、競争状況、消費者の購買力等）は、比較可能性分析において考慮すべき経済的状況である（para. 1.159-1.164）。信頼性の高いローカル市場の比較対象が利用可能な場合、それが最も信頼性の高い指標となり、ロケーションセービングのための特別な比較可能性調整は不要である（para. 1.162）。</p>
+
+<h4>H.4 組織化された労働力（Assembled Workforce）</h4>
+
+<p>特にスキルや経験を有する従業員グループの存在は、サービスの価格や効率性に影響を与える比較可能性要因である（para. 1.172）。事業再編等で組織化された労働力が移転される場合、採用・研修コストの節約が移転対価に反映されるべき場合がある（para. 1.173）。ただし、従業員の移転・出向が秘密の製法やノウハウ等の無形資産の移転を伴う場合は、第VI章に基づく別途の分析が必要である（para. 1.175）。</p>
+
+<h4>H.5 MNEグループのシナジー</h4>
+
+<p>MNEグループのシナジー（統合的購買力、規模の経済、統合管理等）は比較可能性の問題を生じさせる。ガイドラインは、グループ関連による<strong>偶発的利益（incidental benefits）</strong>と、<strong>意図的な協調行動（deliberate concerted action）</strong>によるシナジーを明確に区別する（para. 1.178-1.179）。</p>
+
+<div class="card card-blue">
+<div class="card-title">シナジーの取扱いルール</div>
+<div class="card-body">
+<ul>
+<li><strong>偶発的利益</strong>（グループへの帰属のみから生じる利益）：グループ内サービスとは認められず、補償は不要（para. 1.178）。例：グループの信用力による借入金利の低下。</li>
+<li><strong>意図的協調行動によるシナジー</strong>（一括購入の交渉等）：重要かつ識別可能な構造的優位性を生じさせる場合、シナジーの利益は各構成員の寄与に応じて配分されるべきである（para. 1.182）。</li>
+</ul>
+</div>
+</div>
+
+<p>例えば、グループ全体の購買力を活用して一括購入割引を交渉する場合、中央購買機能を提供する企業はサービス報酬を得るべきであり、割引の利益は購入量に応じて各グループ構成員に配分されるべきである（para. 1.188-1.189）。</p>
+
+<div class="card card-yellow">
+<div class="card-title">日本法ノート：シナジーと寄与度利益分割法</div>
+<div class="card-body">
+<p>日本の移転価格実務においても、MNEグループのシナジー効果の配分は重要な論点である。特に、日本企業が有するブランド力や技術力が海外関連企業の利益に寄与している場合、その寄与度の測定と利益配分が問題となる。日本の国税庁は、寄与度利益分割法（contribution profit split method）の適用に際して、グループシナジーの適切な配分を重視する傾向にある。</p>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 小括 -->
+<!-- ============================================================ -->
+<h3 id="ch1-summary">I. 小括</h3>
+
+<p>OECDガイドライン2022年版第1章は、ALPの理論的基礎から実務的適用方法まで、移転価格税制の根幹を包括的に規定する。その要点を以下に整理する。</p>
+
+<div class="card card-green">
+<div class="card-title">第1章の核心的命題</div>
+<div class="card-body">
+<ol>
+<li><strong>ALPは国際標準である</strong>：OECDモデル租税条約第9条に基づき、関連企業間取引を独立企業間取引と比較するアプローチは、正当かつ現実的な代替案が存在しない国際的合意として維持されている。</li>
+<li><strong>定式配分方式は否定される</strong>：理論・実装・実務のいずれの観点からも受容不能であり、二重課税リスクの増大、市場条件の無視、コンプライアンスコストの増大をもたらす。</li>
+<li><strong>取引の正確な認定が核心である</strong>：BEPS後の最大の進展として、契約形式ではなく当事者の実際の行動（conduct of the parties）に基づく取引の認定が確立された。5つの比較可能性要因の分析が不可欠である。</li>
+<li><strong>リスク分析は6ステップで体系化された</strong>：リスクの特定→契約上の配分→機能分析→解釈→再配分→価格設定の体系的プロセスにより、実質的なリスク統制と財務的能力を有する当事者にリスクが配分される。</li>
+<li><strong>非認定は限定的である</strong>：取引の非認定は例外的措置であり、商業的合理性を有する取引は、たとえ独立企業間で同一の取引が見られなくとも尊重される。</li>
+<li><strong>二重課税の防止がALPの制度的目標である</strong>：ALPからの逸脱は国際的合意を脅かし、二重課税のリスクを実質的に増大させる。対応的調整と相互協議手続はこの目標のための制度的保障である。</li>
+</ol>
+</div>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- CHAPTER 2: TRANSFER PRICING METHODS -->
+<!-- OECD Transfer Pricing Guidelines 2022 — HTML Fragment -->
+<!-- ============================================================ -->
+
+<h2 class="chapter" id="ch2">第2章　移転価格算定方法（Chapter II: Transfer Pricing Methods）</h2>
+
+<!-- ===== TABLE OF CONTENTS ===== -->
+<div class="toc">
+  <h2>第2章 目次</h2>
+  <ol>
+    <li><a href="#ch2-1">2.1　最適方法ルール（Most Appropriate Method）</a></li>
+    <li><a href="#ch2-2">2.2　伝統的取引基準法</a>
+      <ol>
+        <li><a href="#ch2-2-1">2.2.1　独立価格比準法（CUP法）</a></li>
+        <li><a href="#ch2-2-2">2.2.2　再販売価格基準法（RP法）</a></li>
+        <li><a href="#ch2-2-3">2.2.3　原価基準法（CP法）</a></li>
+      </ol>
+    </li>
+    <li><a href="#ch2-3">2.3　取引単位利益法</a>
+      <ol>
+        <li><a href="#ch2-3-1">2.3.1　取引単位営業利益法（TNMM）</a></li>
+        <li><a href="#ch2-3-2">2.3.2　利益分割法（PS法）</a></li>
+      </ol>
+    </li>
+    <li><a href="#ch2-svg">図解：5手法の選択フローチャート</a></li>
+    <li><a href="#ch2-compare">図解：手法比較表</a></li>
+    <li><a href="#ch2-4">2.4　レンジの概念と四分位範囲</a></li>
+    <li><a href="#ch2-range-svg">図解：四分位レンジの視覚化</a></li>
+    <li><a href="#ch2-5">2.5　複数年データの使用</a></li>
+    <li><a href="#ch2-6">2.6　Amount B（ベースライン・マーケティング・販売活動）</a></li>
+  </ol>
+</div>
+
+<!-- ============================================================ -->
+<!-- 2.1 最適方法ルール -->
+<!-- ============================================================ -->
+
+<h3 id="ch2-1">2.1　最適方法ルール（Most Appropriate Method）</h3>
+
+<p>OECD移転価格ガイドライン2022（以下「TPG」）第2章は、独立企業間価格の算定に用いる5つの方法を体系的に規定する。第2章の冒頭でTPGが提示する最も重要な原則が<strong>「最適方法ルール」（most appropriate method rule）</strong>である。これは、個々の事案において最も適切な方法を選択するという要請であり、特定の方法を一律に優先するという階層的アプローチ（best method rule）とは本質的に異なる。</p>
+
+<blockquote>
+  The selection of a transfer pricing method always aims at finding the most appropriate method for a particular case. For this purpose, the selection process should take account of the respective strengths and weaknesses of the OECD recognised methods; the appropriateness of the method considered in view of the nature of the controlled transaction, determined in particular through a functional analysis; the availability of reliable information (in particular on uncontrolled comparables) needed to apply the selected method and/or other methods; and the degree of comparability between controlled and uncontrolled transactions, including the reliability of comparability adjustments that may be needed to eliminate material differences between them.
+  <cite>TPG para. 2.2</cite>
+</blockquote>
+
+<p>パラグラフ2.2が列挙する4つの選択基準は、すべての方法選択の基盤となる。</p>
+
+<table>
+  <tr><th>選択基準</th><th>内容</th><th>実務上の意味</th></tr>
+  <tr><td><strong>(1) 各手法の長所・短所</strong></td><td>OECD認定5手法それぞれの構造的特性</td><td>手法の理論的妥当性を事案に照らして評価</td></tr>
+  <tr><td><strong>(2) 取引の性質との適合性</strong></td><td>機能分析を通じて判定される取引の本質</td><td>製造・販売・役務・無形資産の別に応じた方法選択</td></tr>
+  <tr><td><strong>(3) 信頼性ある情報の入手可能性</strong></td><td>特に非関連者間比較対象取引に関するデータ</td><td>データベース・内部CUPの有無が決定的要因</td></tr>
+  <tr><td><strong>(4) 比較可能性の程度</strong></td><td>関連者間取引と非関連者間取引の類似性</td><td>比較可能性調整の信頼性を含めた総合評価</td></tr>
+</table>
+
+<p>もっとも、TPGは伝統的取引基準法（Traditional Transaction Methods）と取引単位利益法（Transactional Profit Methods）の間に<strong>柔軟な優先順位</strong>を設けている。パラグラフ2.3は、伝統的取引基準法が「独立企業間条件を確立する最も直接的な手段」であるとし、同等の信頼性をもって適用できる場合には伝統的取引基準法を優先すべきとする。さらに、CUP法と他の方法が同等の信頼性で適用可能な場合には、CUP法が最優先される。</p>
+
+<blockquote>
+  Traditional transaction methods are regarded as the most direct means of establishing whether conditions in the commercial and financial relations between associated enterprises are arm's length. [...] where, taking account of the criteria described in paragraph 2.2, a traditional transaction method and a transactional profit method can be applied in an equally reliable manner, the traditional transaction method is preferable to the transactional profit method.
+  <cite>TPG para. 2.3</cite>
+</blockquote>
+
+<div class="card card-yellow">
+  <div class="card-title">日本法との対応：措令39条の12 ── 独立企業間価格の算定方法</div>
+  <p>日本の租税特別措置法施行令39条の12は、独立企業間価格の算定方法として、独立価格比準法（CUP法）、再販売価格基準法（RP法）、原価基準法（CP法）、および利益分割法・取引単位営業利益法を規定する。2011年（平成23年）税制改正で「最も適切な方法」の選定が明文化され（措法66条の4第2項）、OECDの最適方法ルールと整合する体系が構築された。ただし、日本法では「最も適切な方法」の選定にあたり「独立企業間価格を算定するための最も適切な方法」（ベスト・メソッド・ルール）として、比較対象取引の選定と方法の選択を一体的に評価することが求められる。</p>
+</div>
+
+<p>重要なのは、パラグラフ2.8が強調するように、最適方法ルールは「すべての方法を網羅的に分析・テストすること」を意味しない。実務上は、good practiceとして最適方法の選定とプロセスを文書化することが求められる（para. 2.8）。また、パラグラフ2.9は、MNEグループがOECD認定5手法以外の方法（"other methods"）を用いる自由を留保しつつ、その場合にはOECD認定手法がなぜ不適切であるかの説明が必要であるとする。</p>
+
+<div class="card card-red">
+  <div class="card-title">よくある誤解：「階層ルール」の誤読</div>
+  <p>TPGを「CUP法が常に最優先される」と読む実務家は少なくないが、これは誤りである。パラグラフ2.3の優先順位は<strong>同等の信頼性</strong>（equally reliable manner）という条件付きである。CUP法の適用に十分な比較可能性が確保できない場合には、TNMMや利益分割法の方がより適切となり得る。「すべてのケースに適する単一の方法は存在しない」（para. 2.2末尾）という宣言を忘れてはならない。また、特定の方法が不適切であることを証明する必要もない（para. 2.2: "nor is it necessary to prove that a particular method is not suitable"）。</p>
+</div>
+
+<h4>複数手法の併用（Use of More Than One Method）</h4>
+
+<p>パラグラフ2.12は、独立企業原則は単一取引に対して複数の方法の適用を要求しないとしつつ、困難な事案では柔軟なアプローチとして複数の方法による証拠を併用することを認める。ただし、不必要に複数方法を要求することは納税者に「著しい負担」（significant burden）を課すため、避けるべきとする。</p>
+
+<!-- ============================================================ -->
+<!-- 2.2 伝統的取引基準法 -->
+<!-- ============================================================ -->
+
+<h3 id="ch2-2">2.2　伝統的取引基準法（Traditional Transaction Methods）</h3>
+
+<p>TPGの第2章Part IIは、3つの伝統的取引基準法を詳述する。これらは、<strong>価格</strong>（CUP法）または<strong>粗利益率</strong>（RP法・CP法）を非関連者間取引と直接比較するという点で、最も直接的なアプローチである。</p>
+
+<!-- ===== CUP法 ===== -->
+<h4 id="ch2-2-1">2.2.1　独立価格比準法（CUP法：Comparable Uncontrolled Price Method）</h4>
+
+<p>CUP法は、移転価格算定方法の中で最も直接的かつ信頼性の高い方法とされる。その構造は単純明快である。関連者間取引における価格を、比較可能な非関連者間取引における価格と比較し、差異があれば独立企業間条件が満たされていない可能性を示す（para. 2.14）。</p>
+
+<blockquote>
+  The CUP method compares the price charged for property or services transferred in a controlled transaction to the price charged for property or services transferred in a comparable uncontrolled transaction in comparable circumstances. If there is any difference between the two prices, this may indicate that the conditions of the commercial and financial relations of the associated enterprises are not arm's length.
+  <cite>TPG para. 2.14</cite>
+</blockquote>
+
+<p>CUP法の比較可能性要件は厳格である。パラグラフ2.15は2つの条件を示す。(a) 比較される取引間の差異が市場価格に重大な影響を与えないこと、または(b) 合理的に正確な調整（reasonably accurate adjustments）によってその差異の影響を排除できること。この条件を満たす比較対象取引を見出せる場合、CUP法は「すべての方法の中で最も好ましい」（para. 2.15）。</p>
+
+<p><strong>コモディティ取引への適用</strong>は、CUP法の重要な適用場面である。パラグラフ2.18-2.22は、コモディティ（quoted priceが参照基準として用いられる現物商品）の取引にCUP法を適用する際の詳細なガイダンスを提供する。ここで「quoted price」とは、国際的または国内のコモディティ取引所市場における商品価格、あるいは独立当事者が取引価格決定の参照として使用する認知された透明な価格報告機関・統計機関・政府の価格設定機関から得られる価格をいう（para. 2.18）。</p>
+
+<p>コモディティ取引で特に重要なのが<strong>pricing date</strong>（価格決定日）の問題である（para. 2.22）。関連企業が合意した価格決定日の信頼性ある証拠を納税者が提供でき、かつそれが当事者の実際の行動と整合する場合、税務当局はその合意日を尊重すべきとされる。しかし、書面上の合意が実際の行動と不整合である場合、税務当局は第1章Section Dの指針に基づき異なる価格決定日を認定し得る。納税者が信頼性ある証拠を提供できない場合、税務当局は船荷証券（bill of lading）上の出荷日をpricing dateとみなすことができる。</p>
+
+<div class="card card-green">
+  <div class="card-title">CUP法の適用が特に適切な場面</div>
+  <p><strong>(1) 内部CUP</strong>：同一の納税者が、同一製品を関連者と非関連者の双方に販売している場合（最も信頼性が高い）。<strong>(2) コモディティ取引</strong>：石油、鉱物、農産物等で公開市場価格（quoted price）が存在する場合。<strong>(3) 金融取引</strong>：利率・為替レート等の市場ベンチマークが容易に入手可能な場合（ただし第10章を参照）。<strong>(4) ロイヤルティ</strong>：比較可能なライセンス契約のロイヤルティ率が入手可能な場合（ただし第6章の無形資産評価を参照）。</p>
+</div>
+
+<p>TPGはCUP法の適用例を具体的に示す（paras. 2.23-2.26）。コロンビア産未ブランドコーヒー豆の取引において、ブラジル産コーヒー豆の取引を比較対象として用い得るかという例示は示唆的である（para. 2.24）。産地の違いが市場価格にプレミアムまたはディスカウントをもたらすかを検証し、合理的に正確な調整が可能であればCUP法は適用可能であるが、調整が困難であれば「より間接的な方法の選択が必要となり得る」（para. 2.24）。</p>
+
+<!-- ===== RP法 ===== -->
+<h4 id="ch2-2-2">2.2.2　再販売価格基準法（RP法：Resale Price Method）</h4>
+
+<p>RP法は、関連企業から購入した製品が非関連企業に再販売される価格（再販売価格）から、適切な粗利益率（resale price margin）を控除して独立企業間価格を算定する方法である（para. 2.27）。控除される粗利益率は、再販売者が自己の販売機能・その他の営業費用をカバーし、引き受けた機能・使用資産・負担リスクに照らして適切な利益を得るための金額である。</p>
+
+<blockquote>
+  The resale price method begins with the price at which a product that has been purchased from an associated enterprise is resold to an independent enterprise. This price (the resale price) is then reduced by an appropriate gross margin on this price (the "resale price margin") representing the amount out of which the reseller would seek to cover its selling and other operating expenses and, in the light of the functions performed (taking into account assets used and risks assumed), make an appropriate profit.
+  <cite>TPG para. 2.27</cite>
+</blockquote>
+
+<p>RP法の特徴は、<strong>製品差異への感度がCUP法より低い</strong>ことにある（paras. 2.29-2.30）。粗利益率は特定の機能に対する粗報酬（gross compensation）を表すため、製品差異よりも機能差異がより重要となる。トースターの販売とブレンダーの販売では、消費者にとっての代替性は低くとも、販売機能が同一であれば類似の利益水準が期待される（para. 2.30）。</p>
+
+<p>RP法が<strong>最も有用な場面</strong>は、再販売者が製品に実質的な付加価値を加えていないマーケティング・販売活動（para. 2.27）である。逆に、再販売前に製品が加工・組立されてその同一性が失われる場合や、再販売者が無形資産（商標・トレードネーム等）の創出・維持に実質的に寄与している場合には、RP法の適用は困難となる（para. 2.35）。</p>
+
+<p>粗利益率の大きさは再販売者の活動水準に左右される。最小限の転送エージェント機能しか果たさない場合は小さなマージンが適切であり、独占販売権を有し高度なマーケティング活動を行う場合はより大きなマージンが正当化される（paras. 2.37-2.38）。また、中間会社（intermediate company）を経由する場合、当該中間会社が経済的に重要なリスクを負担しておらず経済的機能も果たしていないのであれば、その会社に帰属する利益要素は合理的にMNEグループ内の他の場所に帰属させるべきとされる（para. 2.39）。</p>
+
+<div class="card card-green">
+  <div class="card-title">RP法の選択ポイント</div>
+  <p><strong>適している場面</strong>：単純な販売・流通活動、ブランド品の再販売（ブランド所有者が別法人）、仲介・ブローカー活動。<strong>適さない場面</strong>：製品の加工・組立を伴う場合、再販売者が無形資産を所有・創出している場合、購入から再販売までに相当な時間が経過している場合（para. 2.36）。<strong>会計処理の一貫性</strong>：粗利益率の算定にあたり、R&D費用が売上原価に含まれるか営業費用に含まれるかといった会計処理の差異に対する調整が必要（para. 2.41）。</p>
+</div>
+
+<!-- ===== CP法 ===== -->
+<h4 id="ch2-2-3">2.2.3　原価基準法（CP法：Cost Plus Method）</h4>
+
+<p>CP法は、関連者間取引において資産譲渡者またはサービス提供者が負担した原価に適切なコスト・プラス・マークアップを加算して独立企業間価格を算定する方法である（para. 2.45）。半製品の関連者間販売、共同施設契約、長期売買契約、役務提供取引に最も有用とされる。</p>
+
+<blockquote>
+  The cost plus method begins with the costs incurred by the supplier of property (or services) in a controlled transaction for property transferred or services provided to an associated purchaser. An appropriate cost plus mark-up is then added to this cost, to make an appropriate profit in light of the functions performed and the market conditions.
+  <cite>TPG para. 2.45</cite>
+</blockquote>
+
+<p>CP法の比較可能性分析は、CUP法ほど厳格な製品類似性を要求しないが（para. 2.47）、<strong>原価ベースの比較可能性</strong>が重要となる。パラグラフ2.50は、比較対象がリース資産を用いているのに対して検証対象が自己所有資産を用いている場合等には、原価ベースの調整が必要であると指摘する。</p>
+
+<p>CP法の適用上の最大の難点は<strong>原価の決定</strong>である（para. 2.49）。企業は長期的には原価をカバーしなければ存続できないが、個別年度の適切な利益を原価が決定するとは限らない。価値ある発見がなされたが研究原価は少額であるという場合（para. 2.49末尾）のように、原価と市場価格に明確な関連がないケースが存在する。</p>
+
+<p>原価の3つのカテゴリーは以下のとおりである（para. 2.53）。</p>
+
+<table>
+  <tr><th>カテゴリー</th><th>内容</th><th>CP法との関係</th></tr>
+  <tr><td><strong>(1) 直接製造原価</strong></td><td>原材料費等、製品・サービスの生産に直接要する費用</td><td>CP法の原価ベースに通常含まれる</td></tr>
+  <tr><td><strong>(2) 間接製造原価</strong></td><td>修繕部門費等、生産プロセスに密接に関連するが複数の製品・サービスに共通する費用</td><td>CP法の原価ベースに通常含まれる</td></tr>
+  <tr><td><strong>(3) 営業費用</strong></td><td>一般管理費・監督費等、企業全体の運営費用</td><td>純利益法に移行する場合に考慮。CP法では一部含める場合あり（para. 2.52）</td></tr>
+</table>
+
+<p>パラグラフ2.54は、CP法が直接原価と間接原価に対するマークアップを計算するのに対し、純利益法は営業費用も含めた利益を計算する点で区別されるとする。ただし、実務上は3カテゴリーの境界を数学的に正確に画定することは困難であり、CP法の適用においても一部の営業費用が考慮される場合がある（para. 2.52）。</p>
+
+<p>CP法の適用例として、TPGはパラグラフ2.60でカントリーDの契約製造子会社（contract manufacturer）の事例を紹介する。すべてのコンポーネント・ノウハウが親会社から提供され、品質リスクのみを負担する純粋な契約製造機能に対し、組立活動に関連するすべての原価が原価ベースとなる。パラグラフ2.61の契約研究の事例では、すべてのリスクを委託者が負担し、無形資産の所有権も委託者に帰属する場合、受託研究者の原価に対するマークアップは「研究の革新性と複雑性」を反映すべきとされる。</p>
+
+<div class="card card-yellow">
+  <div class="card-title">日本法との対応：原価基準法と「最も適切な方法」</div>
+  <p>日本法では、原価基準法は措令39条の12第8項に規定される。実務上、来料加工（委託加工）型の製造取引で多用されるが、日本の国税庁移転価格ガイドブック（事務運営指針）も、原価の範囲・マークアップ率の設定・会計処理の一貫性に関して、OECDガイドラインと同趣旨の留意事項を定めている。日本独自の論点としては、出向者のコスト配分（移転価格事務運営要領2-10）がCP法適用時に頻出する。</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- SVG 1: 5手法選択フローチャート -->
+<!-- ============================================================ -->
+
+<h3 id="ch2-svg">図解：5手法の選択フローチャート</h3>
+
+<div class="svg-container">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 680" font-family="'Helvetica Neue', Arial, 'Noto Sans JP', sans-serif">
+  <defs>
+    <linearGradient id="fc-header" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#1a3a5c"/>
+      <stop offset="100%" style="stop-color:#2c5f8a"/>
+    </linearGradient>
+    <filter id="fc-shadow">
+      <feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#00000018"/>
+    </filter>
+    <marker id="fc-arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#2c5f8a"/>
+    </marker>
+    <marker id="fc-arrow-g" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#388e3c"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <rect x="0" y="0" width="900" height="48" rx="6" fill="url(#fc-header)"/>
+  <text x="450" y="31" text-anchor="middle" fill="#fff" font-size="16" font-weight="bold">移転価格算定方法の選択フロー（OECD TPG 2022 第2章準拠）</text>
+
+  <!-- Start: 取引の機能分析 -->
+  <rect x="310" y="68" width="280" height="44" rx="22" fill="#e3f2fd" stroke="#1565c0" stroke-width="1.5" filter="url(#fc-shadow)"/>
+  <text x="450" y="95" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a3a5c">取引の機能分析（FAR分析）</text>
+  <line x1="450" y1="112" x2="450" y2="140" stroke="#2c5f8a" stroke-width="1.5" marker-end="url(#fc-arrow)"/>
+
+  <!-- Decision 1: 比較可能な非関連者間価格が存在するか -->
+  <polygon points="450,142 620,185 450,228 280,185" fill="#fff3cd" stroke="#ddc66b" stroke-width="1.5" filter="url(#fc-shadow)"/>
+  <text x="450" y="180" text-anchor="middle" font-size="11" fill="#5d4e0e">比較可能な非関連者間</text>
+  <text x="450" y="195" text-anchor="middle" font-size="11" fill="#5d4e0e">「価格」が存在するか？</text>
+
+  <!-- Yes -> CUP -->
+  <line x1="620" y1="185" x2="740" y2="185" stroke="#388e3c" stroke-width="1.5" marker-end="url(#fc-arrow-g)"/>
+  <text x="670" y="178" font-size="10" fill="#388e3c" font-weight="bold">Yes</text>
+  <rect x="740" y="167" width="140" height="36" rx="6" fill="#c8e6c9" stroke="#388e3c" stroke-width="1.5" filter="url(#fc-shadow)"/>
+  <text x="810" y="189" text-anchor="middle" font-size="12" font-weight="bold" fill="#1b5e20">CUP法</text>
+  <text x="810" y="214" text-anchor="middle" font-size="9" fill="#5a6f82">para. 2.14-2.26</text>
+
+  <!-- No -> Decision 2 -->
+  <line x1="450" y1="228" x2="450" y2="258" stroke="#2c5f8a" stroke-width="1.5" marker-end="url(#fc-arrow)"/>
+  <text x="462" y="248" font-size="10" fill="#c62828" font-weight="bold">No</text>
+
+  <!-- Decision 2: 粗利益率で比較可能か -->
+  <polygon points="450,260 620,303 450,346 280,303" fill="#fff3cd" stroke="#ddc66b" stroke-width="1.5" filter="url(#fc-shadow)"/>
+  <text x="450" y="298" text-anchor="middle" font-size="11" fill="#5d4e0e">粗利益率（Gross Margin）</text>
+  <text x="450" y="313" text-anchor="middle" font-size="11" fill="#5d4e0e">で比較可能か？</text>
+
+  <!-- Yes -> RP/CP分岐 -->
+  <line x1="620" y1="303" x2="700" y2="303" stroke="#388e3c" stroke-width="1.5" marker-end="url(#fc-arrow-g)"/>
+  <text x="650" y="296" font-size="10" fill="#388e3c" font-weight="bold">Yes</text>
+
+  <!-- RP法 -->
+  <rect x="700" y="275" width="180" height="56" rx="6" fill="#c8e6c9" stroke="#388e3c" stroke-width="1.5" filter="url(#fc-shadow)"/>
+  <text x="790" y="296" text-anchor="middle" font-size="11" font-weight="bold" fill="#1b5e20">販売側 → RP法</text>
+  <text x="790" y="312" text-anchor="middle" font-size="11" font-weight="bold" fill="#1b5e20">供給側 → CP法</text>
+  <text x="790" y="340" text-anchor="middle" font-size="9" fill="#5a6f82">para. 2.27-2.61</text>
+
+  <!-- No -> Decision 3 -->
+  <line x1="450" y1="346" x2="450" y2="376" stroke="#2c5f8a" stroke-width="1.5" marker-end="url(#fc-arrow)"/>
+  <text x="462" y="366" font-size="10" fill="#c62828" font-weight="bold">No</text>
+
+  <!-- Decision 3: 各当事者がユニークで価値ある貢献をしているか -->
+  <polygon points="450,378 640,428 450,478 260,428" fill="#fff3cd" stroke="#ddc66b" stroke-width="1.5" filter="url(#fc-shadow)"/>
+  <text x="450" y="419" text-anchor="middle" font-size="11" fill="#5d4e0e">各当事者が</text>
+  <text x="450" y="434" text-anchor="middle" font-size="11" fill="#5d4e0e">ユニークで価値ある貢献？</text>
+
+  <!-- No -> TNMM -->
+  <line x1="260" y1="428" x2="170" y2="428" stroke="#388e3c" stroke-width="1.5" marker-end="url(#fc-arrow-g)"/>
+  <text x="222" y="421" font-size="10" fill="#c62828" font-weight="bold">No</text>
+  <rect x="20" y="408" width="150" height="40" rx="6" fill="#bbdefb" stroke="#1565c0" stroke-width="1.5" filter="url(#fc-shadow)"/>
+  <text x="95" y="432" text-anchor="middle" font-size="12" font-weight="bold" fill="#0d47a1">TNMM</text>
+  <text x="95" y="460" text-anchor="middle" font-size="9" fill="#5a6f82">para. 2.64-2.113</text>
+
+  <!-- Yes -> PS法 -->
+  <line x1="640" y1="428" x2="730" y2="428" stroke="#388e3c" stroke-width="1.5" marker-end="url(#fc-arrow-g)"/>
+  <text x="670" y="421" font-size="10" fill="#388e3c" font-weight="bold">Yes</text>
+  <rect x="730" y="408" width="150" height="40" rx="6" fill="#e1bee7" stroke="#8e24aa" stroke-width="1.5" filter="url(#fc-shadow)"/>
+  <text x="805" y="432" text-anchor="middle" font-size="12" font-weight="bold" fill="#4a148c">利益分割法</text>
+  <text x="805" y="460" text-anchor="middle" font-size="9" fill="#5a6f82">para. 2.114-2.183</text>
+
+  <!-- TNMM詳細 -->
+  <line x1="95" y1="448" x2="95" y2="500" stroke="#1565c0" stroke-width="1" stroke-dasharray="4"/>
+  <rect x="10" y="500" width="230" height="80" rx="6" fill="#f7f9fc" stroke="#c5d3e0" stroke-width="1"/>
+  <text x="125" y="520" text-anchor="middle" font-size="10" fill="#1a3a5c" font-weight="bold">TNMM利益指標の選択</text>
+  <text x="125" y="538" text-anchor="middle" font-size="9.5" fill="#5a6f82">・売上高営業利益率（販売活動）</text>
+  <text x="125" y="553" text-anchor="middle" font-size="9.5" fill="#5a6f82">・総費用営業利益率（役務・製造）</text>
+  <text x="125" y="568" text-anchor="middle" font-size="9.5" fill="#5a6f82">・資産利益率（資本集約活動）</text>
+
+  <!-- PS法詳細 -->
+  <line x1="805" y1="448" x2="805" y2="500" stroke="#8e24aa" stroke-width="1" stroke-dasharray="4"/>
+  <rect x="680" y="500" width="200" height="80" rx="6" fill="#f3e5f5" stroke="#ce93d8" stroke-width="1"/>
+  <text x="780" y="520" text-anchor="middle" font-size="10" fill="#4a148c" font-weight="bold">利益分割の3アプローチ</text>
+  <text x="780" y="538" text-anchor="middle" font-size="9.5" fill="#5a6f82">・貢献度分析</text>
+  <text x="780" y="553" text-anchor="middle" font-size="9.5" fill="#5a6f82">・残余分析</text>
+  <text x="780" y="568" text-anchor="middle" font-size="9.5" fill="#5a6f82">・比較利益分割</text>
+
+  <!-- 注記 -->
+  <rect x="180" y="610" width="540" height="50" rx="6" fill="#f0f3f7" stroke="#c5d3e0" stroke-width="1"/>
+  <text x="450" y="632" text-anchor="middle" font-size="10" fill="#5a6f82">注：本フローは概念的な判断順序を示す。実際には para. 2.2 の4基準に基づく</text>
+  <text x="450" y="648" text-anchor="middle" font-size="10" fill="#5a6f82">総合的評価により最適方法が選択される（単一方法が全事案に適合するわけではない）。</text>
+</svg>
+<div class="svg-caption">図2-1：移転価格算定方法の選択フロー（paras. 2.1-2.12に基づく概念図）</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 2.3 取引単位利益法 -->
+<!-- ============================================================ -->
+
+<h3 id="ch2-3">2.3　取引単位利益法（Transactional Profit Methods）</h3>
+
+<p>TPGの第2章Part IIIは、2つの取引単位利益法 ── 取引単位営業利益法（TNMM）と利益分割法 ── を詳述する。これらは、取引から生じる利益を分析することで独立企業間条件の充足を検証する方法であり、OECD租税条約モデル第9条との整合性が求められる（para. 2.62）。</p>
+
+<!-- ===== TNMM ===== -->
+<h4 id="ch2-3-1">2.3.1　取引単位営業利益法（TNMM：Transactional Net Margin Method）</h4>
+
+<p>TNMMは、関連者間取引から納税者が実現する純利益を、適切な基準（原価、売上高、資産等）に対する割合として分析する方法である（para. 2.64）。その運用メカニズムはRP法やCP法と類似するが、粗利益ではなく<strong>営業利益</strong>を用いる点が異なる。</p>
+
+<blockquote>
+  The transactional net margin method examines the net profit relative to an appropriate base (e.g. costs, sales, assets) that a taxpayer realises from a controlled transaction (or transactions that are appropriate to aggregate under the principles of paragraphs 3.9-3.12).
+  <cite>TPG para. 2.64</cite>
+</blockquote>
+
+<p><strong>TNMMの強み</strong>（paras. 2.68-2.69）として、以下が挙げられる。</p>
+
+<table>
+  <tr><th>強み</th><th>内容</th></tr>
+  <tr><td><strong>取引差異への耐性</strong></td><td>純利益指標は、CUP法の価格やRP/CP法の粗利益率と比較して、取引の差異の影響を受けにくい（para. 2.68）</td></tr>
+  <tr><td><strong>機能差異への耐性</strong></td><td>機能の差異は往々にして営業費用の差異として反映されるため、粗利益率には幅広い差異が生じても、純利益指標は広く類似した水準を示し得る（para. 2.68）</td></tr>
+  <tr><td><strong>一方当事者のみの分析</strong></td><td>検証対象（tested party）の財務指標のみを分析すれば足り、取引の全参加者を共通基盤で分析する必要がない（para. 2.69）</td></tr>
+  <tr><td><strong>費用分類問題の回避</strong></td><td>売上原価と営業費用の分類が不明確な場合でも、純利益指標はこの問題を回避し得る（para. 2.68末尾）</td></tr>
+</table>
+
+<p><strong>TNMMの弱み</strong>（paras. 2.70-2.73）も同様に重要である。純利益指標は、競争上の地位、経営効率、個別の事業戦略、代替品の脅威、原価構造の差異、資本コスト、事業経験の度合い（スタートアップか成熟企業か）等、粗利益や価格には影響しないか間接的にしか影響しない要因の影響を受け得る（para. 2.77）。また、TNMMの一方当事者分析の性質上、移転価格に無関係な要因が純利益に影響し、分析の全体的信頼性を損ない得る（para. 2.72）。</p>
+
+<div class="card card-red">
+  <div class="card-title">よくある誤解：TNMMの安易な適用</div>
+  <p>TNMMは実務上最も頻繁に用いられる方法であるが、TPGは繰り返しその安易な適用に警告を発している（paras. 2.74, 2.80, 2.185）。「伝統的取引基準法に確立されたセーフガードがTNMMの適用において看過される」（para. 2.185）という懸念は、多くの法域で共有されている。TNMMを適用する場合でも、パラグラフ2.2の選択基準に沿った比較可能性分析は不可欠であり、検証対象と比較対象の純利益指標に重大な影響を与える差異がある場合には調整が必要である。</p>
+</div>
+
+<h4>利益指標（Net Profit Indicator）の選択</h4>
+
+<p>TNMMの適用において中心的な問題が、適切な利益指標の選択である。TPGは利益指標の分母（denominator）について詳細なガイダンスを提供する（paras. 2.92-2.105）。</p>
+
+<table>
+  <tr><th>利益指標</th><th>分母</th><th>適用場面</th><th>根拠</th></tr>
+  <tr><td><strong>売上高営業利益率</strong></td><td>売上高</td><td>関連者からの仕入品を非関連者に再販売する活動（販売活動）</td><td>para. 2.96</td></tr>
+  <tr><td><strong>総費用営業利益率</strong></td><td>総費用（直接・間接・配賦）</td><td>役務提供・製造活動</td><td>paras. 2.98-2.102</td></tr>
+  <tr><td><strong>資産利益率</strong></td><td>営業資産</td><td>資本集約的な製造・公益事業・金融活動</td><td>paras. 2.103-2.104</td></tr>
+  <tr><td><strong>Berry Ratio</strong></td><td>営業費用に対する粗利益</td><td>仲介活動（関連者から購入→関連者に再販売）</td><td>paras. 2.106-2.108</td></tr>
+</table>
+
+<p>分母選択の3原則は以下のとおりである（paras. 2.92-2.95）。(1) 機能分析と整合的であること、特にリスク配分を反映すること。(2) 関連者間取引から合理的に独立していること（検証対象である関連者間取引のコストや売上自体を分母にすることは不可）。(3) 信頼性をもって一貫した方法で測定可能であること。</p>
+
+<p><strong>Berry Ratio</strong>（paras. 2.106-2.108）は特殊な利益指標である。粗利益を営業費用で除した比率であり、(a) 機能の価値が営業費用に比例し、(b) 機能の価値が取扱製品の価値（売上高）に比例せず、(c) 検証対象取引以外に重要な機能（製造機能等）を果たしていない場合に限り適切とされる。関連企業間のみで仲介取引を行う場合に特に有用である（para. 2.108）。</p>
+
+<!-- ===== 利益分割法 ===== -->
+<h4 id="ch2-3-2">2.3.2　利益分割法（PS法：Transactional Profit Split Method）</h4>
+
+<p>利益分割法は、関連者間取引から生じる利益を特定し、経済的に妥当な基準に基づいて関連企業間で分割する方法である（para. 2.114）。独立企業であれば合意したであろう利益配分を近似することを目的とする。TNMMが一方当事者のみを分析する「片面的方法」（one-sided method）であるのに対し、利益分割法は<strong>全当事者の貢献を直接評価する「両面的方法」</strong>（two-sided method）である点が根本的に異なる。</p>
+
+<blockquote>
+  The transactional profit split method seeks to establish arm's length outcomes or test reported outcomes for controlled transactions in order to approximate the results that would have been achieved between independent enterprises engaging in a comparable transaction or transactions. The method first identifies the profits to be split from the controlled transactions — the relevant profits — and then splits them between the associated enterprises on an economically valid basis that approximates the division of profits that would have been agreed at arm's length.
+  <cite>TPG para. 2.114</cite>
+</blockquote>
+
+<h4>利益分割法が最適方法となる場面</h4>
+
+<p>利益分割法の適用が最も適切となる指標は、パラグラフ2.125-2.142で詳述される。</p>
+
+<table>
+  <tr><th>指標</th><th>内容</th><th>参照</th></tr>
+  <tr><td><strong>ユニークで価値ある貢献</strong></td><td>各当事者がユニークかつ価値ある貢献（例：固有の無形資産）をしている場合 ── 最も明確な指標</td><td>paras. 2.126, 2.130</td></tr>
+  <tr><td><strong>高度な事業統合</strong></td><td>一方当事者の機能遂行・資産使用・リスク負担が他方当事者のそれと相互に連結し、独立して評価できない場合</td><td>paras. 2.133-2.138</td></tr>
+  <tr><td><strong>経済的に重要なリスクの共同負担</strong></td><td>当事者が同一の経済的に重要なリスクを共同で負担するか、密接に関連する経済的に重要なリスクを別個に負担する場合</td><td>paras. 2.139-2.142</td></tr>
+</table>
+
+<p>逆に、一方当事者が単純機能のみを遂行し経済的に重要なリスクを負担せずユニークで価値ある貢献もしていない場合には、利益分割法は通常不適切である（para. 2.127）。利益（リスクの顕在化の影響を受ける）の分配は、そのような単純な貢献に対する独立企業間対価を表さないからである。</p>
+
+<h4>利益分割の3つのアプローチ</h4>
+
+<p>TPGは利益分割の適用において3つのアプローチを提示する（paras. 2.149-2.153）。</p>
+
+<p><strong>(1) 貢献度分析（Contribution Analysis）</strong>（para. 2.150）：関連取引から生じる総利益を、各当事者の<strong>相対的な貢献の価値</strong>に基づいて分割する。比較対象データが利用可能であればそれに基づくが、利用不可能な場合にはMNEグループの内部データ（機能分析に基づく相対的貢献度）を代替指標として用いる。</p>
+
+<p><strong>(2) 残余分析（Residual Analysis）</strong>（para. 2.152）：2段階のアプローチである。第1段階で、比較可能な非関連者間取引によりベンチマーク可能な<strong>定型的貢献</strong>（通常、伝統的取引基準法またはTNMMにより報酬決定）に対する利益を配分する。第2段階で、<strong>残余利益</strong>（ユニークで価値ある貢献、高度統合、経済的に重要なリスクの共同負担に起因する利益）を貢献度分析と同様の方法で当事者間に分割する。</p>
+
+<p><strong>(3) 比較利益分割（Comparable Profit Split）</strong>（para. 2.167）：比較可能な非関連者間取引（例：ジョイントベンチャー、製薬共同研究、共同マーケティング契約）における実際の利益分割割合を参照する方法。信頼性ある比較対象の発見が困難な場合が多い。</p>
+
+<div class="card card-green">
+  <div class="card-title">利益分割法の選択ポイント：残余分析の実務的有用性</div>
+  <p>残余分析は、各当事者の貢献の一部が定型的（ベンチマーク可能）で一部がユニークである場合に特に有用である。例えば、関連者が高度な製造機能（固有の製造ノウハウに基づく）と基本的な販売機能（定型的な販売活動）を組み合わせている場合、販売機能に対するリターンをTNMMでベンチマークし、残余利益を製造ノウハウの相対的価値に基づいて分割する。この2段階アプローチにより、ユニークな貢献のみに焦点を当てた分割が可能となり、分析の信頼性が向上する。</p>
+</div>
+
+<h4>分割対象利益の決定</h4>
+
+<p>利益分割法の適用においては、分割対象となる「関連利益」（relevant profits）の決定が不可欠である（paras. 2.154-2.165）。最も一般的には<strong>営業利益</strong>が分割対象となるが、正確に画定された取引（accurately delineated transaction）の性質に応じて、粗利益が適切な場合もある。</p>
+
+<p>パラグラフ2.163-2.164は、利益水準の選択基準を明確にする。市場リスク（売上高・価格に影響）のみを共有し、生産・調達リスク（粗利益水準に影響）も共有する場合は<strong>粗利益</strong>の分割が適切であり、さらにバリューチェーン全体のリスクを共有する場合は<strong>営業利益</strong>の分割が適切である。</p>
+
+<p><strong>実績利益と予測利益</strong>の区別も重要である（paras. 2.158-2.161）。経済的に重要なリスクを共同で負担している場合には、リスクの顕在化を反映する<strong>実績利益</strong>（actual profits）の分割が適切である。一方、ユニークで価値ある貢献はあるが経済的に重要なリスクは一方当事者のみが負担する場合には、<strong>予測利益</strong>（anticipated profits）の分割がより適切となる（para. 2.160）。</p>
+
+<h4>利益分割ファクター</h4>
+
+<p>利益分割の基準となるファクター（profit splitting factors）は、各当事者の利益創出への<strong>相対的貢献</strong>を反映するよう設計されなければならない（para. 2.166）。TPGはファクターの選定について以下の原則を示す。</p>
+
+<table>
+  <tr><th>原則</th><th>内容</th><th>参照</th></tr>
+  <tr><td><strong>移転価格方針からの独立性</strong></td><td>客観的データ（非関連者への売上高等）に基づくべきで、関連者間取引の対価（関連者への売上高等）に基づくべきではない</td><td>para. 2.166</td></tr>
+  <tr><td><strong>検証可能性</strong></td><td>ファクターは検証可能でなければならない</td><td>para. 2.166</td></tr>
+  <tr><td><strong>データの裏付け</strong></td><td>比較対象データ、内部データ、またはその両方により支持されること</td><td>para. 2.166</td></tr>
+</table>
+
+<p>具体的なファクターとしては、<strong>資産ベース</strong>（営業資産、固定資産、無形資産、para. 2.171）、<strong>費用ベース</strong>（研究開発費、マーケティング費用、para. 2.181）、<strong>従業員報酬</strong>（価値創造に関与する主要機能の従業員の報酬、para. 2.172）等が挙げられる。ただし、費用が無形資産の価値の適切な指標となるとは限らず（para. 6.142参照）、リスク加重（risk-weighting）の考慮が必要となる場合がある（para. 2.181）。</p>
+
+<!-- ============================================================ -->
+<!-- SVG 2: 手法比較表 -->
+<!-- ============================================================ -->
+
+<h3 id="ch2-compare">図解：5手法の比較</h3>
+
+<div class="svg-container">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 620" font-family="'Helvetica Neue', Arial, 'Noto Sans JP', sans-serif">
+  <defs>
+    <linearGradient id="ct-header" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#1a3a5c"/>
+      <stop offset="100%" style="stop-color:#2c5f8a"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Title -->
+  <rect x="0" y="0" width="920" height="44" rx="6" fill="url(#ct-header)"/>
+  <text x="460" y="28" text-anchor="middle" fill="#fff" font-size="15" font-weight="bold">OECD認定5手法の比較一覧（TPG 2022 第2章準拠）</text>
+
+  <!-- Column Headers -->
+  <rect x="0" y="50" width="130" height="40" fill="#2c5f8a"/>
+  <text x="65" y="74" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">手法</text>
+  <rect x="130" y="50" width="140" height="40" fill="#2c5f8a"/>
+  <text x="200" y="74" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">比較対象</text>
+  <rect x="270" y="50" width="170" height="40" fill="#2c5f8a"/>
+  <text x="355" y="74" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">利益指標</text>
+  <rect x="440" y="50" width="180" height="40" fill="#2c5f8a"/>
+  <text x="530" y="74" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">主な適用場面</text>
+  <rect x="620" y="50" width="150" height="40" fill="#2c5f8a"/>
+  <text x="695" y="74" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">強み</text>
+  <rect x="770" y="50" width="150" height="40" fill="#2c5f8a"/>
+  <text x="845" y="74" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">弱み</text>
+
+  <!-- Row 1: CUP -->
+  <rect x="0" y="90" width="130" height="90" fill="#e8f5e9" stroke="#c8e6c9"/>
+  <text x="65" y="118" text-anchor="middle" font-size="12" font-weight="bold" fill="#1b5e20">CUP法</text>
+  <text x="65" y="136" text-anchor="middle" font-size="9" fill="#5a6f82">独立価格比準法</text>
+  <text x="65" y="152" text-anchor="middle" font-size="8.5" fill="#5a6f82">para. 2.14-2.26</text>
+  <rect x="130" y="90" width="140" height="90" fill="#f8fafe" stroke="#dce4ea"/>
+  <text x="200" y="120" text-anchor="middle" font-size="10" fill="#1e2d3d">取引価格</text>
+  <text x="200" y="136" text-anchor="middle" font-size="10" fill="#1e2d3d">（Price）</text>
+  <rect x="270" y="90" width="170" height="90" fill="#f8fafe" stroke="#dce4ea"/>
+  <text x="355" y="120" text-anchor="middle" font-size="10" fill="#1e2d3d">価格そのもの</text>
+  <text x="355" y="136" text-anchor="middle" font-size="10" fill="#1e2d3d">を直接比較</text>
+  <rect x="440" y="90" width="180" height="90" fill="#f8fafe" stroke="#dce4ea"/>
+  <text x="530" y="112" text-anchor="middle" font-size="10" fill="#1e2d3d">コモディティ取引</text>
+  <text x="530" y="128" text-anchor="middle" font-size="10" fill="#1e2d3d">内部CUPが存在</text>
+  <text x="530" y="144" text-anchor="middle" font-size="10" fill="#1e2d3d">金融取引・ライセンス</text>
+  <rect x="620" y="90" width="150" height="90" fill="#f8fafe" stroke="#dce4ea"/>
+  <text x="695" y="120" text-anchor="middle" font-size="10" fill="#1e2d3d">最も直接的</text>
+  <text x="695" y="136" text-anchor="middle" font-size="10" fill="#1e2d3d">信頼性最高</text>
+  <rect x="770" y="90" width="150" height="90" fill="#f8fafe" stroke="#dce4ea"/>
+  <text x="845" y="120" text-anchor="middle" font-size="10" fill="#1e2d3d">製品差異に敏感</text>
+  <text x="845" y="136" text-anchor="middle" font-size="10" fill="#1e2d3d">比較対象の発見困難</text>
+
+  <!-- Row 2: RP -->
+  <rect x="0" y="180" width="130" height="90" fill="#e3f2fd" stroke="#bbdefb"/>
+  <text x="65" y="208" text-anchor="middle" font-size="12" font-weight="bold" fill="#0d47a1">RP法</text>
+  <text x="65" y="226" text-anchor="middle" font-size="9" fill="#5a6f82">再販売価格基準法</text>
+  <text x="65" y="242" text-anchor="middle" font-size="8.5" fill="#5a6f82">para. 2.27-2.44</text>
+  <rect x="130" y="180" width="140" height="90" fill="#fff" stroke="#dce4ea"/>
+  <text x="200" y="210" text-anchor="middle" font-size="10" fill="#1e2d3d">粗利益率</text>
+  <text x="200" y="226" text-anchor="middle" font-size="10" fill="#1e2d3d">（Gross Margin）</text>
+  <rect x="270" y="180" width="170" height="90" fill="#fff" stroke="#dce4ea"/>
+  <text x="355" y="210" text-anchor="middle" font-size="10" fill="#1e2d3d">再販売マージン</text>
+  <text x="355" y="226" text-anchor="middle" font-size="10" fill="#1e2d3d">（売上総利益/売上高）</text>
+  <rect x="440" y="180" width="180" height="90" fill="#fff" stroke="#dce4ea"/>
+  <text x="530" y="210" text-anchor="middle" font-size="10" fill="#1e2d3d">販売・流通活動</text>
+  <text x="530" y="226" text-anchor="middle" font-size="10" fill="#1e2d3d">付加価値が少ない再販</text>
+  <rect x="620" y="180" width="150" height="90" fill="#fff" stroke="#dce4ea"/>
+  <text x="695" y="210" text-anchor="middle" font-size="10" fill="#1e2d3d">製品差異に</text>
+  <text x="695" y="226" text-anchor="middle" font-size="10" fill="#1e2d3d">CUPより耐性</text>
+  <rect x="770" y="180" width="150" height="90" fill="#fff" stroke="#dce4ea"/>
+  <text x="845" y="210" text-anchor="middle" font-size="10" fill="#1e2d3d">加工後の再販に</text>
+  <text x="845" y="226" text-anchor="middle" font-size="10" fill="#1e2d3d">不適（同一性喪失）</text>
+
+  <!-- Row 3: CP -->
+  <rect x="0" y="270" width="130" height="90" fill="#e8f5e9" stroke="#c8e6c9"/>
+  <text x="65" y="298" text-anchor="middle" font-size="12" font-weight="bold" fill="#1b5e20">CP法</text>
+  <text x="65" y="316" text-anchor="middle" font-size="9" fill="#5a6f82">原価基準法</text>
+  <text x="65" y="332" text-anchor="middle" font-size="8.5" fill="#5a6f82">para. 2.45-2.61</text>
+  <rect x="130" y="270" width="140" height="90" fill="#f8fafe" stroke="#dce4ea"/>
+  <text x="200" y="300" text-anchor="middle" font-size="10" fill="#1e2d3d">粗利益マークアップ</text>
+  <text x="200" y="316" text-anchor="middle" font-size="10" fill="#1e2d3d">（Cost Plus Mark-up）</text>
+  <rect x="270" y="270" width="170" height="90" fill="#f8fafe" stroke="#dce4ea"/>
+  <text x="355" y="300" text-anchor="middle" font-size="10" fill="#1e2d3d">原価に対する</text>
+  <text x="355" y="316" text-anchor="middle" font-size="10" fill="#1e2d3d">粗利益の割合</text>
+  <rect x="440" y="270" width="180" height="90" fill="#f8fafe" stroke="#dce4ea"/>
+  <text x="530" y="293" text-anchor="middle" font-size="10" fill="#1e2d3d">半製品販売</text>
+  <text x="530" y="309" text-anchor="middle" font-size="10" fill="#1e2d3d">契約製造</text>
+  <text x="530" y="325" text-anchor="middle" font-size="10" fill="#1e2d3d">役務提供</text>
+  <rect x="620" y="270" width="150" height="90" fill="#f8fafe" stroke="#dce4ea"/>
+  <text x="695" y="300" text-anchor="middle" font-size="10" fill="#1e2d3d">供給側から</text>
+  <text x="695" y="316" text-anchor="middle" font-size="10" fill="#1e2d3d">直接的に検証</text>
+  <rect x="770" y="270" width="150" height="90" fill="#f8fafe" stroke="#dce4ea"/>
+  <text x="845" y="300" text-anchor="middle" font-size="10" fill="#1e2d3d">原価と市場価格の</text>
+  <text x="845" y="316" text-anchor="middle" font-size="10" fill="#1e2d3d">乖離の問題</text>
+
+  <!-- Row 4: TNMM -->
+  <rect x="0" y="360" width="130" height="90" fill="#e3f2fd" stroke="#bbdefb"/>
+  <text x="65" y="388" text-anchor="middle" font-size="12" font-weight="bold" fill="#0d47a1">TNMM</text>
+  <text x="65" y="406" text-anchor="middle" font-size="9" fill="#5a6f82">取引単位営業利益法</text>
+  <text x="65" y="422" text-anchor="middle" font-size="8.5" fill="#5a6f82">para. 2.64-2.113</text>
+  <rect x="130" y="360" width="140" height="90" fill="#fff" stroke="#dce4ea"/>
+  <text x="200" y="390" text-anchor="middle" font-size="10" fill="#1e2d3d">営業利益率</text>
+  <text x="200" y="406" text-anchor="middle" font-size="10" fill="#1e2d3d">（Net Profit Indicator）</text>
+  <rect x="270" y="360" width="170" height="90" fill="#fff" stroke="#dce4ea"/>
+  <text x="355" y="383" text-anchor="middle" font-size="10" fill="#1e2d3d">売上高営業利益率</text>
+  <text x="355" y="399" text-anchor="middle" font-size="10" fill="#1e2d3d">総費用営業利益率</text>
+  <text x="355" y="415" text-anchor="middle" font-size="10" fill="#1e2d3d">資産利益率 等</text>
+  <rect x="440" y="360" width="180" height="90" fill="#fff" stroke="#dce4ea"/>
+  <text x="530" y="390" text-anchor="middle" font-size="10" fill="#1e2d3d">片面的方法が適切</text>
+  <text x="530" y="406" text-anchor="middle" font-size="10" fill="#1e2d3d">粗利益データ不足時</text>
+  <rect x="620" y="360" width="150" height="90" fill="#fff" stroke="#dce4ea"/>
+  <text x="695" y="383" text-anchor="middle" font-size="10" fill="#1e2d3d">取引・機能差異に</text>
+  <text x="695" y="399" text-anchor="middle" font-size="10" fill="#1e2d3d">最も耐性が高い</text>
+  <text x="695" y="415" text-anchor="middle" font-size="10" fill="#1e2d3d">データ入手容易</text>
+  <rect x="770" y="360" width="150" height="90" fill="#fff" stroke="#dce4ea"/>
+  <text x="845" y="383" text-anchor="middle" font-size="10" fill="#1e2d3d">安易な適用への</text>
+  <text x="845" y="399" text-anchor="middle" font-size="10" fill="#1e2d3d">懸念（para. 2.185）</text>
+  <text x="845" y="415" text-anchor="middle" font-size="10" fill="#1e2d3d">多要因の影響</text>
+
+  <!-- Row 5: PS -->
+  <rect x="0" y="450" width="130" height="90" fill="#f3e5f5" stroke="#e1bee7"/>
+  <text x="65" y="478" text-anchor="middle" font-size="12" font-weight="bold" fill="#4a148c">利益分割法</text>
+  <text x="65" y="496" text-anchor="middle" font-size="9" fill="#5a6f82">Profit Split</text>
+  <text x="65" y="512" text-anchor="middle" font-size="8.5" fill="#5a6f82">para. 2.114-2.183</text>
+  <rect x="130" y="450" width="140" height="90" fill="#f8fafe" stroke="#dce4ea"/>
+  <text x="200" y="480" text-anchor="middle" font-size="10" fill="#1e2d3d">分割対象利益</text>
+  <text x="200" y="496" text-anchor="middle" font-size="10" fill="#1e2d3d">（営業利益 or 粗利益）</text>
+  <rect x="270" y="450" width="170" height="90" fill="#f8fafe" stroke="#dce4ea"/>
+  <text x="355" y="480" text-anchor="middle" font-size="10" fill="#1e2d3d">貢献度 or 残余</text>
+  <text x="355" y="496" text-anchor="middle" font-size="10" fill="#1e2d3d">ベースでの利益配分</text>
+  <rect x="440" y="450" width="180" height="90" fill="#f8fafe" stroke="#dce4ea"/>
+  <text x="530" y="473" text-anchor="middle" font-size="10" fill="#1e2d3d">各者がユニークな貢献</text>
+  <text x="530" y="489" text-anchor="middle" font-size="10" fill="#1e2d3d">高度に統合された取引</text>
+  <text x="530" y="505" text-anchor="middle" font-size="10" fill="#1e2d3d">リスク共同負担</text>
+  <rect x="620" y="450" width="150" height="90" fill="#f8fafe" stroke="#dce4ea"/>
+  <text x="695" y="480" text-anchor="middle" font-size="10" fill="#1e2d3d">両面的方法</text>
+  <text x="695" y="496" text-anchor="middle" font-size="10" fill="#1e2d3d">柔軟な適応性</text>
+  <rect x="770" y="450" width="150" height="90" fill="#f8fafe" stroke="#dce4ea"/>
+  <text x="845" y="480" text-anchor="middle" font-size="10" fill="#1e2d3d">適用の複雑性</text>
+  <text x="845" y="496" text-anchor="middle" font-size="10" fill="#1e2d3d">データ要件が高い</text>
+
+  <!-- Legend -->
+  <rect x="20" y="560" width="880" height="46" rx="6" fill="#f0f3f7" stroke="#c5d3e0" stroke-width="1"/>
+  <rect x="40" y="573" width="14" height="14" rx="3" fill="#e8f5e9" stroke="#c8e6c9"/>
+  <text x="60" y="585" font-size="10" fill="#5a6f82">伝統的取引基準法（価格/粗利益率で比較）</text>
+  <rect x="310" y="573" width="14" height="14" rx="3" fill="#e3f2fd" stroke="#bbdefb"/>
+  <text x="330" y="585" font-size="10" fill="#5a6f82">取引単位利益法（営業利益/利益配分で比較）</text>
+  <rect x="610" y="573" width="14" height="14" rx="3" fill="#f3e5f5" stroke="#e1bee7"/>
+  <text x="630" y="585" font-size="10" fill="#5a6f82">利益分割法（両面的方法）</text>
+</svg>
+<div class="svg-caption">図2-2：OECD認定5手法の比較一覧</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 2.4 レンジの概念と四分位範囲 -->
+<!-- ============================================================ -->
+
+<h3 id="ch2-4">2.4　レンジの概念と四分位範囲</h3>
+
+<p>独立企業間価格の算定において、単一の「正解」が導かれることは稀である。比較可能性分析を通じて得られる結果は通常、複数の数値から成る<strong>レンジ</strong>（range）を形成する。TPGの第3章（paras. 3.55-3.66）はレンジの概念を詳述するが、第2章の文脈でもレンジの理解は不可欠である。</p>
+
+<p>パラグラフ2.12は、困難なケースでは複数の方法による結果のレンジが生じ得るとし、パラグラフ2.79はTNMMに関して、レンジの使用が潜在的な不正確性をある程度緩和し得るが、検証対象に固有の要因による利益の増減を説明できない場合があると指摘する。</p>
+
+<p><strong>四分位範囲</strong>（interquartile range）は、比較可能性の質が完全でない場合に用いられる統計的手法である。比較対象のデータを昇順に並べ、第1四分位（25パーセンタイル）から第3四分位（75パーセンタイル）の範囲を独立企業間レンジとして採用する。この手法は、極端な値（外れ値）の影響を排除し、比較可能性の不完全さを補完する機能を果たす。</p>
+
+<p>TPGパラグラフ3.57は、比較可能性分析を通じてレンジ内のすべての数値が同等の信頼性を有する場合には全範囲（full range）が独立企業間レンジとなるが、そうでない場合には統計的手法（四分位範囲を含む）によるレンジの絞り込みが比較可能性の向上に寄与し得るとする。パラグラフ3.62は、検証対象の価格・利益がレンジ内に収まる場合は税務当局による調整は行わないことが適切であり、レンジ外に外れる場合はレンジ内の最も適切な点（通常は中央値またはレンジの適切な位置）への調整が行われるべきとする。</p>
+
+<!-- ============================================================ -->
+<!-- SVG 3: レンジ概念図 -->
+<!-- ============================================================ -->
+
+<h3 id="ch2-range-svg">図解：四分位レンジの概念</h3>
+
+<div class="svg-container">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" font-family="'Helvetica Neue', Arial, 'Noto Sans JP', sans-serif">
+  <defs>
+    <linearGradient id="rg-header" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#1a3a5c"/>
+      <stop offset="100%" style="stop-color:#2c5f8a"/>
+    </linearGradient>
+    <linearGradient id="rg-iqr" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#c8e6c9;stop-opacity:0.8"/>
+      <stop offset="100%" style="stop-color:#a5d6a7;stop-opacity:0.8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Title -->
+  <rect x="0" y="0" width="800" height="44" rx="6" fill="url(#rg-header)"/>
+  <text x="400" y="28" text-anchor="middle" fill="#fff" font-size="15" font-weight="bold">四分位レンジの概念図（Interquartile Range）</text>
+
+  <!-- Axis -->
+  <line x1="80" y1="220" x2="720" y2="220" stroke="#1a3a5c" stroke-width="2"/>
+  <text x="400" y="248" text-anchor="middle" font-size="11" fill="#5a6f82">利益指標（営業利益率等）の数直線</text>
+
+  <!-- Full range whisker line -->
+  <line x1="120" y1="180" x2="120" y2="220" stroke="#78909c" stroke-width="1.5"/>
+  <line x1="120" y1="200" x2="250" y2="200" stroke="#78909c" stroke-width="1.5"/>
+  <line x1="680" y1="180" x2="680" y2="220" stroke="#78909c" stroke-width="1.5"/>
+  <line x1="560" y1="200" x2="680" y2="200" stroke="#78909c" stroke-width="1.5"/>
+
+  <!-- Interquartile box -->
+  <rect x="250" y="150" width="310" height="100" rx="4" fill="url(#rg-iqr)" stroke="#388e3c" stroke-width="2"/>
+
+  <!-- Median line -->
+  <line x1="410" y1="150" x2="410" y2="250" stroke="#c62828" stroke-width="2.5"/>
+  <text x="410" y="142" text-anchor="middle" font-size="11" font-weight="bold" fill="#c62828">中央値</text>
+  <text x="410" y="270" text-anchor="middle" font-size="10" fill="#c62828">（Median）</text>
+
+  <!-- Q1 label -->
+  <line x1="250" y1="150" x2="250" y2="250" stroke="#388e3c" stroke-width="1.5"/>
+  <text x="250" y="142" text-anchor="middle" font-size="10" font-weight="bold" fill="#388e3c">Q1</text>
+  <text x="250" y="270" text-anchor="middle" font-size="9" fill="#388e3c">第1四分位</text>
+  <text x="250" y="282" text-anchor="middle" font-size="9" fill="#388e3c">(25%ile)</text>
+
+  <!-- Q3 label -->
+  <line x1="560" y1="150" x2="560" y2="250" stroke="#388e3c" stroke-width="1.5"/>
+  <text x="560" y="142" text-anchor="middle" font-size="10" font-weight="bold" fill="#388e3c">Q3</text>
+  <text x="560" y="270" text-anchor="middle" font-size="9" fill="#388e3c">第3四分位</text>
+  <text x="560" y="282" text-anchor="middle" font-size="9" fill="#388e3c">(75%ile)</text>
+
+  <!-- Min/Max labels -->
+  <text x="120" y="170" text-anchor="middle" font-size="9" fill="#78909c">最小値</text>
+  <text x="680" y="170" text-anchor="middle" font-size="9" fill="#78909c">最大値</text>
+
+  <!-- IQR Label -->
+  <line x1="260" y1="120" x2="550" y2="120" stroke="#1b5e20" stroke-width="1" marker-end="url(#fc-arrow-g)"/>
+  <line x1="550" y1="120" x2="260" y2="120" stroke="#1b5e20" stroke-width="1"/>
+  <text x="405" y="112" text-anchor="middle" font-size="11" font-weight="bold" fill="#1b5e20">四分位範囲（IQR）= 独立企業間レンジ</text>
+
+  <!-- Data points as dots -->
+  <circle cx="120" cy="200" r="5" fill="#78909c"/>
+  <circle cx="180" cy="200" r="5" fill="#78909c"/>
+  <circle cx="280" cy="200" r="5" fill="#388e3c"/>
+  <circle cx="330" cy="200" r="5" fill="#388e3c"/>
+  <circle cx="370" cy="200" r="5" fill="#388e3c"/>
+  <circle cx="410" cy="200" r="6" fill="#c62828"/>
+  <circle cx="450" cy="200" r="5" fill="#388e3c"/>
+  <circle cx="500" cy="200" r="5" fill="#388e3c"/>
+  <circle cx="540" cy="200" r="5" fill="#388e3c"/>
+  <circle cx="620" cy="200" r="5" fill="#78909c"/>
+  <circle cx="680" cy="200" r="5" fill="#78909c"/>
+
+  <!-- Annotation boxes -->
+  <rect x="40" y="310" width="220" height="90" rx="6" fill="#f8d7da" stroke="#e09a9f" stroke-width="1"/>
+  <text x="150" y="332" text-anchor="middle" font-size="10" font-weight="bold" fill="#721c24">レンジ外（調整対象）</text>
+  <text x="150" y="350" text-anchor="middle" font-size="9.5" fill="#721c24">検証対象の利益がIQR外に</text>
+  <text x="150" y="365" text-anchor="middle" font-size="9.5" fill="#721c24">ある場合、中央値または</text>
+  <text x="150" y="380" text-anchor="middle" font-size="9.5" fill="#721c24">IQR内の適切な点に調整</text>
+
+  <rect x="290" y="310" width="220" height="90" rx="6" fill="#d4edda" stroke="#7cc498" stroke-width="1"/>
+  <text x="400" y="332" text-anchor="middle" font-size="10" font-weight="bold" fill="#155724">レンジ内（調整不要）</text>
+  <text x="400" y="350" text-anchor="middle" font-size="9.5" fill="#155724">検証対象の利益がIQR内に</text>
+  <text x="400" y="365" text-anchor="middle" font-size="9.5" fill="#155724">ある場合、税務当局による</text>
+  <text x="400" y="380" text-anchor="middle" font-size="9.5" fill="#155724">調整は適切でない</text>
+
+  <rect x="540" y="310" width="220" height="90" rx="6" fill="#fff3cd" stroke="#ddc66b" stroke-width="1"/>
+  <text x="650" y="332" text-anchor="middle" font-size="10" font-weight="bold" fill="#856404">Full Rangeの意義</text>
+  <text x="650" y="350" text-anchor="middle" font-size="9.5" fill="#856404">すべての比較対象が同等の</text>
+  <text x="650" y="365" text-anchor="middle" font-size="9.5" fill="#856404">信頼性を持つ場合は</text>
+  <text x="650" y="380" text-anchor="middle" font-size="9.5" fill="#856404">全範囲が独立企業間レンジ</text>
+</svg>
+<div class="svg-caption">図2-3：四分位レンジの概念（TPG paras. 3.55-3.66に基づく）</div>
+</div>
+
+<div class="card card-yellow">
+  <div class="card-title">日本法との対応：四分位範囲と更正処分</div>
+  <p>日本の移転価格税制の実務において、四分位範囲（interquartile range）は事実上の標準的手法として確立している。移転価格事務運営要領2-3は「独立企業間価格の幅」（レンジ）の概念を認めつつ、検証対象の利益がレンジ外に位置する場合の更正処分について規定する。日本の実務では、レンジ外の場合に<strong>中央値</strong>（median）への調整が一般的であるが、TPGはレンジ内の「最も適切な点」とするにとどまり、中央値への調整を義務づけてはいない（para. 3.62）。</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- 2.5 複数年データの使用 -->
+<!-- ============================================================ -->
+
+<h3 id="ch2-5">2.5　複数年データの使用</h3>
+
+<p>移転価格分析における複数年データ（multiple year data）の使用は、TPG第3章（paras. 3.75-3.79）で詳述されるが、第2章の各手法の適用と密接に関連する。</p>
+
+<p>複数年データを使用する根拠は以下のとおりである。(1) 検証対象の事業活動は単年度では理解できない場合がある（例：製品ライフサイクル、事業戦略の影響）。(2) 比較対象のデータに年度間の変動がある場合、複数年の平均を用いることで比較の信頼性が向上する。(3) TNMMの適用において、単年度の営業利益が異常値を示す場合に複数年平均が有用である（para. 2.71参照）。</p>
+
+<p>ただし、複数年データの使用には留意点がある。(1) 検証対象年度のデータが他の年度と比較可能であること（市場環境・ビジネスモデルの変化がないこと）。(2) 複数年データの使用が比較可能性を実際に改善するかどうかの検証が必要。(3) 事後的な情報（hindsight）を用いた分析を回避すること（para. 3.74）。利益分割法においても、分割ファクターを決定する際に関連する期間のデータ（単年度か累積か）の選択が結果に重大な影響を与え得る（para. 2.183）。</p>
+
+<!-- ============================================================ -->
+<!-- 2.6 Amount B -->
+<!-- ============================================================ -->
+
+<h3 id="ch2-6">2.6　Amount B（ベースライン・マーケティング・販売活動）</h3>
+
+<p>Amount Bは、OECD/G20 BEPS包摂的枠組み（Inclusive Framework）の第1の柱（Pillar One）における要素の一つとして開発された概念であり、2024年にTPGに組み込まれた。「ベースライン・マーケティング及び販売活動」（baseline marketing and distribution activities）に対する独立企業間リターンを簡素化された方法で決定することを目的とする。</p>
+
+<p>Amount Bの核心は、MNEグループの販売法域における関連企業が果たす<strong>定型的な販売・マーケティング機能</strong>（qualifying transactions）に対して、簡素化・合理化されたベンチマークを適用する点にある。これにより、途上国を含むキャパシティの限られた法域においても移転価格コンプライアンスの確実性を高め、二重課税・二重非課税のリスクを低減することが意図されている。</p>
+
+<p>Amount Bの主要要素は以下のとおりである。</p>
+
+<table>
+  <tr><th>要素</th><th>内容</th></tr>
+  <tr><td><strong>適格取引</strong></td><td>関連者からの卸売販売（wholesale distribution）に従事する販売法域の関連企業で、「ベースライン活動」に該当する場合。高度な機能、ユニークで価値ある無形資産の使用、重大な経済的リスクの負担がないこと</td></tr>
+  <tr><td><strong>算定方法</strong></td><td>TNMMに基づく簡素化アプローチ。売上高営業利益率を用いる。利益率マトリックス（産業分類・資産集約度・営業費用集約度を考慮）によりベンチマーク利益率を決定</td></tr>
+  <tr><td><strong>適用範囲</strong></td><td>原則として包摂的枠組み参加国・地域に適用。ただし、各国は国内法化の要否を選択可能</td></tr>
+  <tr><td><strong>Data pointsとレンジ</strong></td><td>OECD作成のデータセットに基づき、産業・地域別の報酬水準を「利益率マトリックス」として提供。キャップ制と最低利益率も設定</td></tr>
+</table>
+
+<div class="card card-green">
+  <div class="card-title">Amount Bの実務的意義</div>
+  <p>Amount Bは、移転価格紛争の大多数を占める「定型的販売活動のベンチマーキング」を標準化することで、以下の実務的利益を目指す。(1) 途上国の税務当局が独自のベンチマーキング・データベースを持たない場合でも、統一的な基準による課税が可能。(2) 納税者にとっての移転価格文書化の負担軽減。(3) 二重課税の予防（利益率マトリックスが国際的に合意されているため）。ただし、Amount Bの具体的利益率水準や適用範囲は引き続き政治的交渉の対象であり、各国の国内法化の進展を注視する必要がある。</p>
+</div>
+
+<div class="card card-yellow">
+  <div class="card-title">日本法との関連：Amount Bの国内法化</div>
+  <p>日本はOECD/G20包摂的枠組みの参加国として、Amount Bの議論に関与している。2024年時点で日本はAmount Bの国内法化の方向性を明確にしていないが、既存の移転価格税制（措法66条の4）との整合性の検討が進められている。日本の実務では、TNMMによる販売活動のベンチマーキングが既に広く行われており、Amount Bの利益率マトリックスがこれに追加的な指針を提供する可能性がある。</p>
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+<!-- まとめ -->
+<!-- ============================================================ -->
+
+<h3 id="ch2-summary">第2章の構造的意義</h3>
+
+<p>TPG第2章は、独立企業原則を実現するための<strong>方法論的基盤</strong>を提供する。その構造的意義は以下に集約される。</p>
+
+<p><strong>第一に</strong>、最適方法ルール（para. 2.2）は、形式的な方法の階層に依拠するのではなく、個別事案の事実と状況に即した実質的判断を要求する。4つの選択基準（手法の長所・短所、取引の性質、情報の利用可能性、比較可能性の程度）は、機械的適用を排し、経済的実態に即した分析を促進する。</p>
+
+<p><strong>第二に</strong>、5つの手法は相互に排他的ではなく、連続的なスペクトラムを形成する。CUP法が最も直接的な方法として位置づけられつつも、情報の利用可能性に応じてRP/CP法、TNMM、利益分割法へと移行する。TNMMの広範な適用は実務的現実であるが、TPGは繰り返しその安易な適用に警鐘を鳴らしている。</p>
+
+<p><strong>第三に</strong>、利益分割法は、各当事者がユニークで価値ある貢献をする取引、高度に統合された取引、経済的に重要なリスクを共同負担する取引に対して、独自の解決手段を提供する。BEPS以降の経済環境において、デジタル経済やグローバルバリューチェーンの深化に伴い、利益分割法の重要性は増大している。</p>
+
+<p><strong>第四に</strong>、Amount Bの導入は、移転価格方法論の「民主化」 ── すなわち、キャパシティの限られた法域においても移転価格ルールの実効的適用を可能にする ── という方向性を示す。</p>
+
+<blockquote>
+  No one method is suitable in every possible situation, nor is it necessary to prove that a particular method is not suitable under the circumstances.
+  <cite>TPG para. 2.2</cite>
+</blockquote>
+
+<div class="card card-red">
+  <div class="card-title">実務家への注意：方法選択の文書化の重要性</div>
+  <p>TPGは方法選択プロセスの文書化を「good practice」として推奨する（para. 2.8）。日本の移転価格文書化制度（ローカルファイル）においても、方法の選択理由は文書化の中核をなす。「TNMMを選択した」ではなく、「なぜTNMMが最適方法であるか ── CUP法・RP法・CP法が適用困難である理由を含めて ── 」を論理的に説明する能力が、移転価格紛争における最初の防衛線となる。パラグラフ2.2の4基準に沿った構造的な説明が求められる。</p>
+</div>
+
+
+<div style="display:flex;justify-content:space-between;margin-top:40px;padding-top:20px;border-top:1px solid var(--border);">
+  <span></span>
+  <a href="part2.html" style="color:var(--link);">Part II →</a>
+</div>
+
+</div>
+</body>
+</html>

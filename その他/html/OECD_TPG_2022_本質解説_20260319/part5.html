@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OECD TPG 2022 本質解説 ── Part V：統合</title>
+<style>
+/* ===== Root Variables ===== */
+:root {
+  --primary: #1a3a5c;
+  --secondary: #2c5f8a;
+  --bg: #f5f7fa;
+  --text: #1e2d3d;
+  --muted: #5a6f82;
+  --border: #c5d3e0;
+  --card-blue: #d1ecf1;
+  --card-blue-border: #88c7d5;
+  --card-green: #d4edda;
+  --card-green-border: #7cc498;
+  --card-red: #f8d7da;
+  --card-red-border: #e09a9f;
+  --card-yellow: #fff3cd;
+  --card-yellow-border: #ddc66b;
+  --card-purple: #e8daef;
+  --card-purple-border: #b99fd4;
+  --link: #1d5fa0;
+  --fn-bg: #f0f3f7;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", "游明朝", "Times New Roman", serif;
+  line-height: 1.9;
+  font-size: 15.5px;
+}
+/* ===== Layout ===== */
+.wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 44px 50px 60px;
+  box-shadow: 0 1px 12px rgba(0,0,0,.07);
+}
+@media (max-width: 720px) {
+  .wrap { padding: 20px 16px 36px; }
+  .doc-title { font-size: 1.4rem; }
+  table { font-size: 13px; }
+  svg { max-width: 100%; height: auto; }
+}
+/* ===== Header ===== */
+.doc-header {
+  border-bottom: 3px solid var(--primary);
+  padding-bottom: 22px;
+  margin-bottom: 32px;
+}
+.doc-title {
+  font-size: 1.85rem;
+  line-height: 1.45;
+  color: var(--primary);
+  font-weight: bold;
+  margin: 0 0 6px;
+}
+.doc-subtitle {
+  font-size: 1.05rem;
+  color: var(--secondary);
+  margin: 0 0 14px;
+}
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.meta-item { display: inline-flex; align-items: center; gap: 5px; }
+/* ===== Navigation ===== */
+.nav-bar {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  background: var(--primary);
+  padding: 12px 20px;
+  border-radius: 6px;
+  margin-bottom: 30px;
+}
+.nav-bar a {
+  color: #e2ecf4;
+  text-decoration: none;
+  font-size: 0.88rem;
+  padding: 4px 10px;
+  border-radius: 4px;
+  transition: background .2s;
+}
+.nav-bar a:hover { background: rgba(255,255,255,.15); }
+.nav-bar a.current { background: rgba(255,255,255,.2); font-weight: bold; color: #fff; }
+/* ===== Table of Contents ===== */
+.toc {
+  background: #f7f9fc;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 22px 28px;
+  margin-bottom: 36px;
+}
+.toc h2 {
+  font-size: 1.1rem;
+  color: var(--primary);
+  margin: 0 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.toc ol { margin: 0; padding-left: 22px; }
+.toc li { margin-bottom: 4px; font-size: 0.92rem; }
+.toc li a { color: var(--link); text-decoration: none; }
+.toc li a:hover { text-decoration: underline; }
+.toc ol ol { margin-top: 4px; padding-left: 20px; }
+/* ===== Part / Chapter headings ===== */
+.part-heading {
+  background: var(--primary);
+  color: #fff;
+  padding: 16px 24px;
+  border-radius: 6px;
+  margin: 44px 0 28px;
+  font-size: 1.25rem;
+  font-weight: bold;
+  letter-spacing: 0.04em;
+}
+.part-heading:first-of-type { margin-top: 10px; }
+h2.chapter {
+  color: var(--primary);
+  font-size: 1.35rem;
+  border-left: 5px solid var(--secondary);
+  padding-left: 16px;
+  margin: 36px 0 20px;
+}
+h3 {
+  color: var(--secondary);
+  font-size: 1.12rem;
+  margin: 28px 0 14px;
+  padding-bottom: 4px;
+  border-bottom: 1px dashed var(--border);
+}
+h4 {
+  color: var(--primary);
+  font-size: 1.02rem;
+  margin: 22px 0 10px;
+}
+/* ===== Cards ===== */
+.card {
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin: 18px 0;
+  border-left: 4px solid;
+}
+.card-blue   { background: var(--card-blue);   border-color: var(--card-blue-border); }
+.card-green  { background: var(--card-green);  border-color: var(--card-green-border); }
+.card-red    { background: var(--card-red);    border-color: var(--card-red-border); }
+.card-yellow { background: var(--card-yellow); border-color: var(--card-yellow-border); }
+.card-purple { background: var(--card-purple); border-color: var(--card-purple-border); }
+.card-title {
+  font-weight: bold;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+/* ===== Blockquote (条文) ===== */
+blockquote {
+  margin: 18px 0;
+  padding: 16px 22px;
+  background: #f7f9fc;
+  border-left: 4px solid var(--secondary);
+  font-size: 0.93rem;
+  line-height: 1.85;
+  color: #2c3e50;
+}
+blockquote cite {
+  display: block;
+  margin-top: 10px;
+  font-style: normal;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+/* ===== Tables ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 18px 0;
+  font-size: 0.92rem;
+}
+th {
+  background: var(--primary);
+  color: #fff;
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: normal;
+}
+td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #dce4ea;
+}
+tr:nth-child(even) td { background: #f8fafe; }
+/* ===== SVG Container ===== */
+.svg-container {
+  margin: 24px 0;
+  text-align: center;
+}
+.svg-container svg {
+  max-width: 100%;
+  height: auto;
+}
+.svg-caption {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 8px;
+}
+/* ===== Footnotes ===== */
+.footnotes {
+  margin-top: 36px;
+  padding-top: 16px;
+  border-top: 2px solid var(--border);
+}
+.footnotes h3 {
+  font-size: 1rem;
+  border: none;
+  padding: 0;
+  margin-bottom: 12px;
+}
+.fn-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.fn-list li {
+  padding: 6px 12px;
+  margin-bottom: 4px;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  background: var(--fn-bg);
+  border-radius: 4px;
+}
+.fn-list li:target {
+  background: #fffde0;
+  outline: 2px solid var(--card-yellow-border);
+}
+sup a {
+  color: var(--secondary);
+  text-decoration: none;
+  font-weight: bold;
+}
+sup a:hover { text-decoration: underline; }
+.fn-back {
+  color: var(--secondary);
+  text-decoration: none;
+  margin-left: 4px;
+  font-size: 0.8rem;
+}
+/* ===== Misc ===== */
+p { margin: 0 0 14px; text-align: justify; }
+strong { color: var(--primary); }
+/* ===== Glossary table ===== */
+.glossary-table td:first-child {
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 600;
+  white-space: nowrap;
+  width: 32%;
+}
+.glossary-table td:nth-child(2) {
+  width: 22%;
+}
+.glossary-table td:nth-child(3) {
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+/* ===== Print ===== */
+@media print {
+  body { background: #fff; font-size: 11pt; }
+  .wrap { box-shadow: none; padding: 0; max-width: 100%; }
+  .nav-bar { display: none; }
+  .part-heading { break-before: page; }
+  svg { max-width: 100% !important; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ===== HEADER ===== -->
+<div class="doc-header">
+  <h1 class="doc-title">OECD移転価格ガイドライン2022 本質解説</h1>
+  <p class="doc-subtitle">Part V：統合 &mdash; 横断テーマと将来展望</p>
+  <div class="meta">
+    <span class="meta-item">第11章・付録A〜C</span>
+    <span class="meta-item">SVG図解&times;1</span>
+    <span class="meta-item">2026-03-19</span>
+  </div>
+</div>
+
+<!-- ===== NAVIGATION ===== -->
+<div class="nav-bar">
+  <a href="index.html">目次</a>
+  <a href="part1.html">Part I</a>
+  <a href="part2.html">Part II</a>
+  <a href="part3.html">Part III</a>
+  <a href="part4.html">Part IV</a>
+  <a href="part5.html" class="current">Part V</a>
+</div>
+
+<!-- ===== TABLE OF CONTENTS ===== -->
+<div class="toc">
+  <h2>Part V 目次</h2>
+  <ol>
+    <li><a href="#ch11">第11章　横断的統合と将来展望</a>
+      <ol>
+        <li><a href="#ch11-1">11.1　全10章を貫く3つの横断テーマ</a></li>
+        <li><a href="#ch11-2">11.2　独立企業原則の限界と進化</a></li>
+        <li><a href="#ch11-3">11.3　Amount B ── ベースライン配分活動の標準化</a></li>
+        <li><a href="#ch11-4">11.4　Pillar One / Pillar Two との関係</a></li>
+        <li><a href="#ch11-5">11.5　デジタル経済への対応</a></li>
+        <li><a href="#ch11-6">11.6　実務フローチャート</a></li>
+        <li><a href="#ch11-7">11.7　結語 ── ガイドラインの未来</a></li>
+      </ol>
+    </li>
+    <li><a href="#appA">付録A　用語集（英日対照50項目）</a></li>
+    <li><a href="#appB">付録B　条文対照表（OECD TPG × 日本法）</a></li>
+    <li><a href="#appC">付録C　参考文献</a></li>
+  </ol>
+</div>
+
+<!-- ============================================================ -->
+<!--  第11章  横断的統合と将来展望                                    -->
+<!-- ============================================================ -->
+<div class="part-heading" id="ch11">第11章　横断的統合と将来展望</div>
+
+<!-- 11.1 -->
+<h2 class="chapter" id="ch11-1">11.1　全10章を貫く3つの横断テーマ</h2>
+
+<p>OECD移転価格ガイドライン2022（以下「TPG」）は全10章・600頁超の体系であるが、その全体を貫く横断テーマは大きく3つに集約される。<strong>価値創造（Value Creation）</strong>、<strong>実質主義（Substance over Form）</strong>、そして<strong>二重課税の排除（Elimination of Double Taxation）</strong>である。この3テーマはBEPS（税源浸食と利益移転）プロジェクトの成果として2015年以降のガイドライン改訂で強化され、2022年版で完成形に近づいた。</p>
+
+<h3>（1）価値創造 ── 利益は「どこで何をしたか」に帰属する</h3>
+
+<p>BEPSアクション8-10の標語「利益を価値創造の場に帰属させる（Aligning Transfer Pricing Outcomes with Value Creation）」は、TPG全体の通奏低音である。第1章の独立企業原則（ALP）は、関連者間取引の価格を独立当事者間で成立する条件と比較するものであるが、その実質は「経済的に意味のある活動を行い、リスクを管理し、資産を用いている場所」に利益を帰属させるという思想に収斂する。</p>
+
+<p>第6章（無形資産）におけるDEMPE分析（Development, Enhancement, Maintenance, Protection, Exploitation）は、この思想の最も精緻な具体化である。法的所有者であっても、無形資産の開発・改良・維持・保護・活用に実質的に貢献していなければ、当該無形資産からの超過収益に対する権利を主張できない。同様に、第9章（事業再編）では、リスクの契約上の配分と実際の管理能力の乖離が問題とされ、第10章（金融取引）でも、キャピタルの提供者がリスク管理機能を伴わなければ、リスクフリー・リターン以上の報酬を得る根拠を欠くとされる。</p>
+
+<div class="card card-green">
+  <div class="card-title">横断的構造の要約</div>
+  <p style="margin:0;">価値創造の原則は、無形資産（第6章）、グループ内役務提供（第7章）、費用分担契約（第8章）、事業再編（第9章）、金融取引（第10章）のすべてで一貫して適用される。各章を個別に理解するだけでは不十分であり、「機能・資産・リスク（FAR）の実質的担い手に利益を帰属させる」という統一原理を把握する必要がある。</p>
+</div>
+
+<h3>（2）実質主義 ── 取引の「正確な描写」</h3>
+
+<p>第1章D.1節における「取引の正確な描写（Accurate Delineation of the Actual Transaction）」の概念は、2015年改訂で大幅に強化された。これは、関連者間取引の移転価格分析において、契約書面上の条件だけでなく、当事者の実際の行為（conduct of the parties）に基づいて取引を特定すべきことを意味する。</p>
+
+<p>具体的には、以下の5要素を総合的に分析する。</p>
+
+<table>
+<tr><th>比較可能性要素</th><th>内容</th><th>関連章</th></tr>
+<tr><td>契約条件</td><td>書面上の合意内容と実際の履行の一致度</td><td>第1章 D.1.1</td></tr>
+<tr><td>機能分析（FAR）</td><td>機能の遂行、資産の使用・拠出、リスクの引受</td><td>第1章 D.1.2</td></tr>
+<tr><td>移転される財・役務の特性</td><td>物品の物理的特性、役務の範囲、無形資産の種類</td><td>第1章 D.1.3</td></tr>
+<tr><td>経済的状況</td><td>市場の地理的位置、規模、競争水準、規制環境</td><td>第1章 D.1.4</td></tr>
+<tr><td>事業戦略</td><td>イノベーション志向、リスク選好、市場参入戦略</td><td>第1章 D.1.5</td></tr>
+</table>
+
+<p>この5要素分析は、第3章（比較可能性分析）の「9ステッププロセス」の基盤となり、第2章（移転価格算定方法の選定）における「最も適切な方法」の判断にも直結する。取引の実質が契約条件と著しく異なる場合、税務当局は取引を「認識しない（non-recognition）」ことすら可能であるが、これは例外的な措置であり、合理的な商業目的を持つ取引の否認は抑制される（TPG 1.122-1.125）。</p>
+
+<h3>（3）二重課税の排除 ── 制度的安全装置</h3>
+
+<p>移転価格調整はその性質上、一方の国における所得の増額が他方の国における所得の減額を必要とする。この対応的調整（corresponding adjustment）が円滑に行われなければ、経済的二重課税が生じる。TPGは第4章全体をこの問題に充て、相互協議手続（MAP）、事前確認制度（APA）、セーフハーバー、同時調査、仲裁といった多層的な紛争解決メカニズムを定めている。</p>
+
+<div class="card card-blue">
+  <div class="card-title">二重課税排除の重層構造</div>
+  <p style="margin:0;">（1）予防段階：APA（二国間・多国間）、セーフハーバー、文書化（第5章のマスターファイル・ローカルファイル・CbCR）<br>（2）調整段階：対応的調整（OECDモデル租税条約9条2項）、MAP（同25条）<br>（3）最終解決：仲裁（BEPS防止措置実施条約（MLI）を含む）</p>
+</div>
+
+<p>第5章の三層文書化制度（マスターファイル・ローカルファイル・国別報告書（CbCR））も、二重課税の予防と紛争の早期解決に寄与する。グループ全体の事業構造と個別取引の双方に透明性をもたらすことで、税務当局間の情報の非対称性を緩和し、不必要な調整を防ぐことが意図されている。</p>
+
+<div class="card card-yellow">
+  <div class="card-title">日本法との対応</div>
+  <p style="margin:0;">日本の移転価格税制は租税特別措置法66条の4を中核とし、独立企業間価格の算定方法（措令39条の12）、文書化義務（措令39条の12の5）、事前確認制度（措令39条の12の6）を規定する。対応的調整は租税条約に基づく相互協議により行われ、措法66条の4の2が更正に伴う納税の猶予を定める。更正期間は措法66条の4の3により7年に延長されている。</p>
+</div>
+
+
+<!-- 11.2 -->
+<h2 class="chapter" id="ch11-2">11.2　独立企業原則の限界と進化</h2>
+
+<p>独立企業原則（ALP）は国際的移転価格の基本標準として半世紀にわたり機能してきたが、その限界も広く認識されている。TPG自身が第1章（1.10-1.13項）において、ALPの実務上の困難を率直に認めている。</p>
+
+<h3>（1）比較対象取引の不存在</h3>
+
+<p>高度に統合された多国籍企業の内部取引には、独立当事者間では類似の取引が存在しないケースが少なくない。とりわけユニークな無形資産の移転、高度に統合されたグローバル・バリューチェーンにおける機能配分、特殊な金融取引（キャッシュ・プーリング、キャプティブ保険等）については、信頼性の高い比較対象の入手が構造的に困難である。</p>
+
+<p>TPGはこの問題に対し、利益分割法（第2章Part III-C）を推奨する。各当事者がユニークかつ価値のある貢献（unique and valuable contributions）を行い、事業活動が高度に統合されている場合には、利益分割法が「最も適切な方法」となりうる。残余利益分割法（residual analysis）は、まず定型的機能に対するベンチマーク報酬を配分し、残余利益をユニークな貢献の相対的価値に応じて分割するアプローチであり、比較対象の不在を補完する仕組みである。</p>
+
+<h3>（2）ALPの概念的限界と定式配分の拒否</h3>
+
+<p>グローバル定式配分（Global Formulary Apportionment）は、ALPの代替案として繰り返し提案されてきた。この方式は多国籍企業グループの全世界利益を、売上・資産・人件費等の所定の配賦基準に基づき機械的に各国に配分するものである。TPG第1章C節（1.16-1.32項）は、この方式を明確に拒否している。理由として、（a）国際的合意の実現困難性、（b）配賦基準の操作可能性、（c）個別企業の事実関係を無視する恣意性、が挙げられている。</p>
+
+<div class="card card-purple">
+  <div class="card-title">ALPの進化 ── 定式配分の部分的取り込み</div>
+  <p style="margin:0;">しかし皮肉なことに、ALPは進化の過程で定式配分の要素を部分的に取り込んでいる。利益分割法における利益配分比率の算定、Amount Bにおけるベースライン活動の定型的報酬の設定、さらにはセーフハーバー制度の拡充は、いずれも「取引ごとの比較」というALPの純粋形態からの逸脱であり、実務的妥協と税の確実性（tax certainty）の追求の産物である。ALPは「原則を維持しつつ運用を柔軟化する」方向に進化しているといえる。</p>
+</div>
+
+<h3>（3）情報の非対称性と執行コスト</h3>
+
+<p>税務当局は納税者の内部情報へのアクセスが構造的に制限されており、納税者は自らに有利な比較対象のみを選択的に提示する誘因を持つ。TPGはこの問題に対し、三層文書化（第5章）と税務調査における実務指針（第4章B節）で対応するが、執行コストの問題は残る。特に発展途上国の税務当局は、高度な移転価格分析を実施する人材と技術的資源が不足しており、ALPの形式的適用が実質的な不公平を生む可能性がある。この文脈において、Amount Bの導入は途上国の執行能力を補完する制度として重要な意義を持つ。</p>
+
+
+<!-- 11.3 -->
+<h2 class="chapter" id="ch11-3">11.3　Amount B ── ベースライン配分活動の標準化</h2>
+
+<p>Amount Bは、OECD/G20包摂的枠組み（Inclusive Framework on BEPS）において、Pillar Oneの一要素として開発された制度である。その目的は、販売子会社等が行う<strong>ベースライン・マーケティング・配分活動（baseline marketing and distribution activities）</strong>に対し、定型的な独立企業間報酬を設定することである。</p>
+
+<h3>（1）制度の概要</h3>
+
+<p>Amount Bは、一定の要件を満たす配分（distribution）活動について、国・産業・機能の組合せに応じた収益性指標（営業利益率等）のマトリクスを提供する。対象となる取引は、関連者から購入した有形商品の非関連者への卸売販売（buy-sell distribution）および代理人・コミッショネア型の販売活動である。当該活動が「ベースライン活動」の定義に該当する場合、企業は個別の比較可能性分析を実施することなく、マトリクス上の報酬水準を適用することができる。</p>
+
+<div class="card card-green">
+  <div class="card-title">Amount Bの適用要件（主要なもの）</div>
+  <p style="margin:0;">（a）対象は関連者間の卸売配分取引<br>（b）販売者がユニークかつ価値のある無形資産を所有・使用していないこと<br>（c）年間売上高に対する営業費用の比率が一定の閾値以内であること<br>（d）業種・地域に応じた定型報酬マトリクスの適用<br>（e）セーフハーバー的性質を持つが、対応的調整の義務は維持</p>
+</div>
+
+<h3>（2）意義と課題</h3>
+
+<p>Amount Bの最大の意義は、<strong>税の確実性（tax certainty）</strong>の向上と<strong>紛争の予防</strong>にある。従来、各国の税務当局は独自のベンチマーク分析に基づいて配分活動の適正報酬を算定しており、同一の取引について国ごとに異なる結論が導かれることが頻繁に生じていた。Amount Bはこの不統一を解消し、特に比較対象データベースへのアクセスが限定される発展途上国にとって、予測可能な課税標準を提供する。</p>
+
+<p>他方、課題も指摘されている。第一に、ベースライン活動の範囲画定が困難な場合がある（例：付随的なアフターサービスや軽微なマーケティング機能の付加）。第二に、定型報酬が特定の市場環境（ロケーション・セービング、市場プレミアム等）を十分に反映しない可能性がある。第三に、Amount Bの適用を選択する国と選択しない国の間で、二重課税・二重非課税の新たなリスクが生じうる。</p>
+
+<div class="card card-red">
+  <div class="card-title">実務上の注意</div>
+  <p style="margin:0;">Amount Bは各国の任意適用であり、2026年3月時点で全ての国が導入しているわけではない。日本は制度設計を慎重に検討中であり、既存のAPA制度との整合性が論点となっている。実務家は、相手国がAmount Bを採用しているか否かを個別に確認する必要がある。</p>
+</div>
+
+
+<!-- 11.4 -->
+<h2 class="chapter" id="ch11-4">11.4　Pillar One / Pillar Two との関係</h2>
+
+<h3>（1）Pillar One（第1の柱）── 課税権の再配分</h3>
+
+<p>Pillar Oneは、大規模かつ高収益の多国籍企業グループについて、物理的拠点の有無にかかわらず市場国（market jurisdiction）に新たな課税権を配分するものである。Amount Aは、グループの連結利益のうち通常利益を超える部分（残余利益）の一定割合を、売上に基づいて市場国に配分する制度であり、従来のALPに基づく移転価格制度の枠外で機能する。</p>
+
+<p>この点でPillar Oneは、TPGが拒否したグローバル定式配分の一部を、限定的な範囲で制度化したものと位置づけることができる。ただし、Amount Aの対象は年間売上高200億ユーロ超かつ利益率10%超の企業グループに限定されており（将来的な閾値引下げの可能性あり）、一般的な移転価格案件には影響しない。</p>
+
+<h3>（2）Pillar Two（第2の柱）── グローバル最低税率</h3>
+
+<p>Pillar TwoのGloBEルール（Global Anti-Base Erosion Rules）は、大規模多国籍企業グループの実効税率が管轄区域ごとに最低税率（15%）を下回る場合に、親会社国または他の関係国で追加課税（トップアップ税）を行う制度である。</p>
+
+<p>移転価格との関係は次の2つの側面で生じる。</p>
+
+<table>
+<tr><th>側面</th><th>内容</th></tr>
+<tr><td><strong>相互作用</strong></td><td>移転価格の調整は各国の課税所得を変動させ、それがGloBEルールにおける実効税率の計算に影響する。移転価格調整により低税率国の利益が増加すれば、当該国のETR（実効税率）が低下し、トップアップ税が増加する可能性がある。</td></tr>
+<tr><td><strong>BEPS誘因の減殺</strong></td><td>GloBEルールの存在により、低税率国への利益移転のインセンティブが構造的に減少する。最低税率15%がフロアとなることで、移転価格操作による税負担軽減の余地が限定される。これは中長期的にTPGの執行環境を改善する可能性がある。</td></tr>
+</table>
+
+<div class="card card-purple">
+  <div class="card-title">TPGとPillar One / Twoの関係性</div>
+  <p style="margin:0;">TPGは引き続き移転価格の基本的枠組みとして機能する。Pillar OneのAmount Aは「ALPの補完」であり代替ではない。Pillar TwoはALPの適用結果に対する「税率のフロア」として機能する。三者は排他的ではなく重層的に作用し、いずれもBEPS対策という共通目標に向かう異なるアプローチである。</p>
+</div>
+
+
+<!-- 11.5 -->
+<h2 class="chapter" id="ch11-5">11.5　デジタル経済への対応</h2>
+
+<p>デジタル経済は移転価格制度にとって最大の構造的挑戦である。物理的拠点を介さずにグローバルに事業を展開するプラットフォーム企業、データの収集・処理を通じて価値を創造するビジネスモデル、そしてユーザー参加型の価値創造は、いずれもALPの前提である「独立企業間の比較可能な取引」の存在を困難にする。</p>
+
+<h3>（1）TPGの現行対応</h3>
+
+<p>TPG 2022は、デジタル経済に特化した独立の章を設けていない。これはOECDの基本的立場――「デジタル経済を一般経済から切り離すことはできない」（BEPSアクション1最終報告書）――を反映している。デジタル特有の問題は、既存の各章の枠組み内で対処されている。</p>
+
+<table>
+<tr><th>論点</th><th>TPGにおける対応</th></tr>
+<tr><td>データの価値評価</td><td>第6章の無形資産分析の枠組み内。データが「無形資産」に該当するか否かは事実関係による（6.6-6.12項）。</td></tr>
+<tr><td>プラットフォーム機能の報酬</td><td>第1章の機能分析・リスク分析の枠組み。プラットフォーム運営者のDEMPE機能を実質的に分析。</td></tr>
+<tr><td>ユーザー参加</td><td>直接の対応規定なし。Pillar OneのAmount Aが市場国への利益配分で間接的に対応。</td></tr>
+<tr><td>自動化された意思決定</td><td>第1章のリスク管理機能の分析において、アルゴリズムによる意思決定の設計・監督・修正を行う主体に着目。</td></tr>
+</table>
+
+<h3>（2）残された課題</h3>
+
+<p>デジタル経済に関しては、TPGの枠組みだけでは解決しきれない構造的問題が残る。第一に、<strong>ネットワーク効果</strong>から生じる超過利益の帰属問題である。ユーザー数の増加がプラットフォームの価値を非線形的に高める場合、その価値増分を機能分析の枠組みでどの主体に帰属させるかは明確でない。第二に、<strong>データの越境移転</strong>に対する移転価格の適用である。ユーザーデータの収集・加工・活用が複数の法域にまたがる場合、各段階の価値貢献の定量化は極めて困難である。第三に、<strong>ロケーション・スペシフィック・アドバンテージ</strong>（市場の規模、消費者の購買力、デジタルインフラの充実度）の評価である。</p>
+
+<div class="card card-blue">
+  <div class="card-title">今後の展望</div>
+  <p style="margin:0;">OECDは今後もTPGの継続的改訂を通じてデジタル経済の課題に対応する方針を示している。Pillar OneのAmount Aが実現すれば市場国課税権の問題は部分的に解決されるが、移転価格の微視的分析（取引単位のALP適用）のレベルでは、デジタル特有のビジネスモデルに対応した追加的ガイダンスの策定が今後の課題として残される。</p>
+</div>
+
+
+<!-- 11.6 SVG -->
+<h2 class="chapter" id="ch11-6">11.6　実務フローチャート ── 移転価格案件のワークフロー</h2>
+
+<p>以下のフローチャートは、移転価格案件の実務ワークフローを7段階で示したものである。各段階はTPGの該当章と対応している。</p>
+
+<div class="svg-container">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 680" role="img" aria-label="移転価格案件の実務ワークフロー">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2c5f8a"/>
+    </marker>
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#1a3a5c"/>
+      <stop offset="100%" style="stop-color:#2c5f8a"/>
+    </linearGradient>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="108%">
+      <feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <!-- Title -->
+  <rect x="160" y="10" width="500" height="44" rx="8" fill="url(#headerGrad)"/>
+  <text x="410" y="38" text-anchor="middle" fill="#fff" font-size="16" font-weight="bold" font-family="sans-serif">移転価格案件　実務ワークフロー</text>
+
+  <!-- Step 1: 案件受任 -->
+  <rect x="260" y="75" width="300" height="56" rx="28" fill="#e8f4fd" stroke="#2c5f8a" stroke-width="2" filter="url(#shadow)"/>
+  <text x="410" y="98" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a3a5c" font-family="sans-serif">Step 1：案件受任・事実関係の把握</text>
+  <text x="410" y="117" text-anchor="middle" font-size="11" fill="#5a6f82" font-family="sans-serif">TPG 第1章 D.1節（取引の正確な描写）</text>
+  <line x1="410" y1="131" x2="410" y2="155" stroke="#2c5f8a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Step 2: 機能分析 -->
+  <rect x="260" y="155" width="300" height="56" rx="28" fill="#d4edda" stroke="#7cc498" stroke-width="2" filter="url(#shadow)"/>
+  <text x="410" y="178" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a3a5c" font-family="sans-serif">Step 2：機能分析（FAR分析）</text>
+  <text x="410" y="197" text-anchor="middle" font-size="11" fill="#5a6f82" font-family="sans-serif">TPG 第1章 D.1.2節 / 第3章 A節</text>
+  <line x1="410" y1="211" x2="410" y2="235" stroke="#2c5f8a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Step 3: 方法選択 -->
+  <rect x="260" y="235" width="300" height="56" rx="28" fill="#fff3cd" stroke="#ddc66b" stroke-width="2" filter="url(#shadow)"/>
+  <text x="410" y="258" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a3a5c" font-family="sans-serif">Step 3：最適方法の選択</text>
+  <text x="410" y="277" text-anchor="middle" font-size="11" fill="#5a6f82" font-family="sans-serif">TPG 第2章 Part I（最も適切な方法）</text>
+  <line x1="410" y1="291" x2="410" y2="315" stroke="#2c5f8a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Step 4: 比較対象検索 -->
+  <rect x="260" y="315" width="300" height="56" rx="28" fill="#e8daef" stroke="#b99fd4" stroke-width="2" filter="url(#shadow)"/>
+  <text x="410" y="338" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a3a5c" font-family="sans-serif">Step 4：比較対象取引の検索</text>
+  <text x="410" y="357" text-anchor="middle" font-size="11" fill="#5a6f82" font-family="sans-serif">TPG 第3章（比較可能性分析・9ステップ）</text>
+  <line x1="410" y1="371" x2="410" y2="395" stroke="#2c5f8a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Step 5: レンジ設定 -->
+  <rect x="260" y="395" width="300" height="56" rx="28" fill="#d1ecf1" stroke="#88c7d5" stroke-width="2" filter="url(#shadow)"/>
+  <text x="410" y="418" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a3a5c" font-family="sans-serif">Step 5：独立企業間レンジの設定</text>
+  <text x="410" y="437" text-anchor="middle" font-size="11" fill="#5a6f82" font-family="sans-serif">TPG 第3章 A.7節（四分位レンジ）</text>
+  <line x1="410" y1="451" x2="410" y2="475" stroke="#2c5f8a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Step 6: 文書化 -->
+  <rect x="260" y="475" width="300" height="56" rx="28" fill="#f8d7da" stroke="#e09a9f" stroke-width="2" filter="url(#shadow)"/>
+  <text x="410" y="498" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a3a5c" font-family="sans-serif">Step 6：文書化（TP Documentation）</text>
+  <text x="410" y="517" text-anchor="middle" font-size="11" fill="#5a6f82" font-family="sans-serif">TPG 第5章（Master File / Local File / CbCR）</text>
+  <line x1="410" y1="531" x2="410" y2="555" stroke="#2c5f8a" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Step 7: 紛争予防 -->
+  <rect x="260" y="555" width="300" height="56" rx="28" fill="#e8f4fd" stroke="#2c5f8a" stroke-width="2" filter="url(#shadow)"/>
+  <text x="410" y="578" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a3a5c" font-family="sans-serif">Step 7：紛争予防・解決</text>
+  <text x="410" y="597" text-anchor="middle" font-size="11" fill="#5a6f82" font-family="sans-serif">TPG 第4章（MAP / APA / 仲裁）</text>
+
+  <!-- Side annotations -->
+  <rect x="20" y="155" width="210" height="36" rx="6" fill="#f7f9fc" stroke="#c5d3e0" stroke-width="1"/>
+  <text x="125" y="178" text-anchor="middle" font-size="10.5" fill="#1a3a5c" font-family="sans-serif">特殊取引 → 第6〜10章を参照</text>
+  <line x1="230" y1="183" x2="260" y2="183" stroke="#c5d3e0" stroke-width="1" stroke-dasharray="4"/>
+
+  <rect x="590" y="395" width="210" height="50" rx="6" fill="#fff3cd" stroke="#ddc66b" stroke-width="1"/>
+  <text x="695" y="414" text-anchor="middle" font-size="10.5" fill="#1a3a5c" font-family="sans-serif">Amount B適用可能な場合</text>
+  <text x="695" y="432" text-anchor="middle" font-size="10.5" fill="#1a3a5c" font-family="sans-serif">→ 定型報酬マトリクスを使用</text>
+  <line x1="560" y1="423" x2="590" y2="423" stroke="#ddc66b" stroke-width="1" stroke-dasharray="4"/>
+
+  <!-- Feedback arrow -->
+  <path d="M 560 583 Q 620 583 620 400 Q 620 200 560 103" fill="none" stroke="#e09a9f" stroke-width="1.5" stroke-dasharray="6" marker-end="url(#arrow)"/>
+  <text x="640" y="350" font-size="10" fill="#e09a9f" font-family="sans-serif" transform="rotate(-90,640,350)">フィードバック・見直し</text>
+
+  <!-- Legend -->
+  <rect x="20" y="630" width="780" height="40" rx="6" fill="#f7f9fc" stroke="#c5d3e0" stroke-width="1"/>
+  <circle cx="50" cy="650" r="6" fill="#e8f4fd" stroke="#2c5f8a" stroke-width="1.5"/>
+  <text x="62" y="654" font-size="10" fill="#1a3a5c" font-family="sans-serif">開始/終了</text>
+  <circle cx="150" cy="650" r="6" fill="#d4edda" stroke="#7cc498" stroke-width="1.5"/>
+  <text x="162" y="654" font-size="10" fill="#1a3a5c" font-family="sans-serif">分析</text>
+  <circle cx="225" cy="650" r="6" fill="#fff3cd" stroke="#ddc66b" stroke-width="1.5"/>
+  <text x="237" y="654" font-size="10" fill="#1a3a5c" font-family="sans-serif">判断</text>
+  <circle cx="300" cy="650" r="6" fill="#e8daef" stroke="#b99fd4" stroke-width="1.5"/>
+  <text x="312" y="654" font-size="10" fill="#1a3a5c" font-family="sans-serif">検索</text>
+  <circle cx="375" cy="650" r="6" fill="#d1ecf1" stroke="#88c7d5" stroke-width="1.5"/>
+  <text x="387" y="654" font-size="10" fill="#1a3a5c" font-family="sans-serif">定量化</text>
+  <circle cx="465" cy="650" r="6" fill="#f8d7da" stroke="#e09a9f" stroke-width="1.5"/>
+  <text x="477" y="654" font-size="10" fill="#1a3a5c" font-family="sans-serif">文書化</text>
+  <text x="570" y="654" font-size="10" fill="#e09a9f" font-family="sans-serif">--- フィードバック</text>
+</svg>
+<p class="svg-caption">図11-1：移転価格案件の実務ワークフロー（TPG各章との対応関係）</p>
+</div>
+
+
+<!-- 11.7 -->
+<h2 class="chapter" id="ch11-7">11.7　結語 ── ガイドラインの未来</h2>
+
+<p>OECD移転価格ガイドラインは、1979年報告書を起源とし、1995年版、2010年改訂、2015年BEPS改訂、2017年改訂、2018年利益分割法改訂、2020年金融取引追加、そして2022年版に至るまで、継続的に進化してきた。この進化は、国際経済の変容に対する制度的応答である。</p>
+
+<p>今後のTPGの発展方向として、以下の4点が予見される。</p>
+
+<p><strong>第一に、税の確実性（tax certainty）の追求</strong>である。Amount Bの導入、セーフハーバーの拡充、APAの多国間化は、いずれも「紛争を予防し、予測可能性を高める」方向への制度的収斂を示している。実務家と税務当局の双方にとって、事後的な紛争解決よりも事前の合意形成が効率的であることが、経験的に裏付けられてきた。</p>
+
+<p><strong>第二に、デジタル経済への適応</strong>である。Pillar Oneの実施状況、AIを活用した事業モデルの進化、データの経済的価値の増大は、TPGの分析枠組みに対する継続的な更新圧力を生み出す。</p>
+
+<p><strong>第三に、途上国の参加拡大</strong>である。包摂的枠組みには140以上の国・地域が参加しており、OECD加盟国中心の従来の制度設計から、より広範な利害関係者を包含する方向に移行しつつある。Amount Bはその具体的成果の一つである。</p>
+
+<p><strong>第四に、GloBEルールとの相互作用</strong>である。最低税率の導入は、移転価格操作の経済的インセンティブを構造的に変化させる。GloBEルール下では、低税率国への利益移転は必ずしも税負担の軽減に直結しないため、移転価格紛争の性質自体が変容する可能性がある。</p>
+
+<div class="card card-green">
+  <div class="card-title">本解説書の位置づけ</div>
+  <p style="margin:0;">本解説書（Part I〜V）は、OECD移転価格ガイドライン2022の構造と思想を、実務家・研究者が体系的に理解するための手引きとして作成された。各Partの内容はTPG原文への入口であり、個別の案件については必ずTPG原文の該当箇所を参照されたい。移転価格は「正確な科学ではなく、判断の行使を必要とする」分野であり（TPG 1.13項）、本解説書もその精神に基づいて理解されることを期待する。</p>
+</div>
+
+
+<!-- ============================================================ -->
+<!--  付録A  用語集                                                 -->
+<!-- ============================================================ -->
+<div class="part-heading" id="appA">付録A　用語集 ── 英日対照50項目</div>
+
+<p>以下の用語集は、TPG 2022のGlossaryおよびBEPS関連文書に基づく主要50項目の英日対照表である。実務上の参照用に、各用語の定義概要を付した。</p>
+
+<table class="glossary-table">
+<tr><th style="width:32%;">英語</th><th style="width:22%;">日本語</th><th>定義概要</th></tr>
+<tr><td>Arm's Length Principle (ALP)</td><td>独立企業原則</td><td>関連者間取引の条件を独立当事者間で成立する条件と比較する国際標準（OECDモデル租税条約9条）</td></tr>
+<tr><td>Comparable Uncontrolled Price (CUP) Method</td><td>独立価格比準法</td><td>関連者間取引の価格を比較可能な非関連者間取引の価格と直接比較する方法</td></tr>
+<tr><td>Resale Price Method (RPM)</td><td>再販売価格基準法</td><td>再販売者が独立企業として得るべき粗利益率を基に移転価格を算定する方法</td></tr>
+<tr><td>Cost Plus Method (CPM)</td><td>原価基準法</td><td>供給者の原価に適切なマークアップを加算して移転価格を算定する方法</td></tr>
+<tr><td>Transactional Net Margin Method (TNMM)</td><td>取引単位営業利益法</td><td>比較可能な非関連者取引の純利益指標と関連者取引のそれを比較する方法</td></tr>
+<tr><td>Profit Split Method (PSM)</td><td>利益分割法</td><td>関連者間取引の合算利益を経済的に妥当な基準で分割する方法</td></tr>
+<tr><td>Comparability Analysis</td><td>比較可能性分析</td><td>関連者間取引と非関連者間取引の条件を比較する分析プロセス</td></tr>
+<tr><td>Functional Analysis / FAR Analysis</td><td>機能分析（FAR分析）</td><td>各当事者の機能（Functions）、資産（Assets）、リスク（Risks）を特定・評価する分析</td></tr>
+<tr><td>Accurate Delineation (of Transaction)</td><td>取引の正確な描写</td><td>契約条件と当事者の実際の行為に基づき取引の実質を特定すること</td></tr>
+<tr><td>Safe Harbour</td><td>セーフハーバー</td><td>一定の要件を満たす場合に簡素化された移転価格ルールを適用できる制度</td></tr>
+<tr><td>Mutual Agreement Procedure (MAP)</td><td>相互協議手続</td><td>租税条約に基づき二重課税を解消するための税務当局間の協議手続</td></tr>
+<tr><td>Advance Pricing Arrangement (APA)</td><td>事前確認制度</td><td>将来の関連者間取引の移転価格算定方法について事前に税務当局と合意する制度</td></tr>
+<tr><td>Master File</td><td>マスターファイル</td><td>多国籍企業グループの事業概要・移転価格方針等を記載する統一文書</td></tr>
+<tr><td>Local File</td><td>ローカルファイル</td><td>各国の関連者間取引の詳細と移転価格分析を記載する文書</td></tr>
+<tr><td>Country-by-Country Report (CbCR)</td><td>国別報告書</td><td>管轄区域ごとの所得・税額・経済活動指標を報告する文書</td></tr>
+<tr><td>Intangible</td><td>無形資産</td><td>有形資産・金融資産ではないが、商業活動に使用され経済的価値を有するもの</td></tr>
+<tr><td>DEMPE Functions</td><td>DEMPE機能</td><td>無形資産の開発（Development）・改良（Enhancement）・維持（Maintenance）・保護（Protection）・活用（Exploitation）</td></tr>
+<tr><td>Hard-to-Value Intangibles (HTVI)</td><td>評価困難な無形資産</td><td>移転時点で信頼性の高い比較対象がなく、将来キャッシュフローの予測が不確実な無形資産</td></tr>
+<tr><td>Intra-Group Services (IGS)</td><td>グループ内役務提供</td><td>多国籍企業グループ内の一法人が他の法人に提供する役務</td></tr>
+<tr><td>Low Value-Adding IGS</td><td>低付加価値グループ内役務</td><td>グループの中核事業に直接関係しない支援的性質の役務（経理、法務、人事等）</td></tr>
+<tr><td>Cost Contribution Arrangement (CCA)</td><td>費用分担契約</td><td>無形資産等の共同開発・取得のために複数の関連者が費用と成果を分担する取決め</td></tr>
+<tr><td>Business Restructuring</td><td>事業再編</td><td>多国籍企業グループ内で機能・資産・リスクの国際的再配分を行うこと</td></tr>
+<tr><td>Financial Transaction</td><td>金融取引</td><td>グループ内の融資、保証、キャッシュ・プーリング、キャプティブ保険等の金融取引</td></tr>
+<tr><td>Cash Pooling</td><td>キャッシュ・プーリング</td><td>グループ内の余剰資金と資金需要を集約し効率的に管理する仕組み</td></tr>
+<tr><td>Captive Insurance</td><td>キャプティブ保険</td><td>親会社グループのリスクを引き受けるために設立されたグループ内保険子会社</td></tr>
+<tr><td>Risk-Free Rate</td><td>リスクフリー・レート</td><td>リスク管理機能を伴わない資本提供者に帰属する最低限の報酬率</td></tr>
+<tr><td>Risk-Adjusted Return</td><td>リスク調整後リターン</td><td>引受リスクに応じた適切な報酬率</td></tr>
+<tr><td>Balancing Payment</td><td>調整支払</td><td>CCAにおいて各参加者の拠出割合と期待便益割合を一致させるための支払</td></tr>
+<tr><td>Expected Benefits</td><td>期待便益</td><td>CCA参加者が当該取決めから得ると見込まれる経済的利益</td></tr>
+<tr><td>Amount B</td><td>Amount B（定型報酬）</td><td>ベースライン配分活動に対する定型的な独立企業間報酬を設定する制度</td></tr>
+<tr><td>Pillar One</td><td>第1の柱</td><td>市場国に新たな課税権を配分するOECD/G20の国際課税改革の枠組み</td></tr>
+<tr><td>Pillar Two</td><td>第2の柱</td><td>グローバル最低税率（15%）を導入するOECD/G20の国際課税改革の枠組み</td></tr>
+<tr><td>GloBE Rules</td><td>GloBEルール</td><td>Global Anti-Base Erosion Rules。Pillar Twoの中核ルール</td></tr>
+<tr><td>Transfer of Value</td><td>価値の移転</td><td>事業再編に伴う機能・資産・リスクの国際的移動とその対価</td></tr>
+<tr><td>Shareholder Activity</td><td>株主活動</td><td>親会社が株主としての地位のみに基づき行う活動（子会社への役務提供に該当しない）</td></tr>
+<tr><td>Duplicative Activity</td><td>重複活動</td><td>子会社が既に自ら実施している活動と重複する親会社の活動</td></tr>
+<tr><td>Location Savings</td><td>ロケーション・セービング</td><td>特定の地理的立地から生じるコスト優位性（低賃金、低原材料コスト等）</td></tr>
+<tr><td>Market Premium</td><td>マーケット・プレミアム</td><td>特定市場の特性（高い購買力、市場規模等）から生じる超過利益</td></tr>
+<tr><td>Synergy</td><td>シナジー</td><td>グループ所属に起因する規模の経済・統合効果</td></tr>
+<tr><td>Arm's Length Range</td><td>独立企業間レンジ</td><td>独立企業間価格として許容される数値の範囲</td></tr>
+<tr><td>Interquartile Range (IQR)</td><td>四分位範囲</td><td>比較対象データの第1四分位から第3四分位までの範囲</td></tr>
+<tr><td>Most Appropriate Method</td><td>最も適切な方法</td><td>事案の状況に照らし最も信頼性の高い移転価格算定方法</td></tr>
+<tr><td>Contractual Terms</td><td>契約条件</td><td>関連者間取引の書面上の合意条件（実際の行為と整合的か確認が必要）</td></tr>
+<tr><td>Economic Circumstances</td><td>経済的状況</td><td>市場環境、競争水準、規制、為替等の取引を取り巻く経済的条件</td></tr>
+<tr><td>Business Strategies</td><td>事業戦略</td><td>市場浸透戦略、リスク選好、イノベーション政策等の企業の戦略的判断</td></tr>
+<tr><td>Functional Analysis</td><td>機能分析</td><td>取引当事者が遂行する経済的に重要な活動と責任を特定する分析</td></tr>
+<tr><td>Comparability Adjustment</td><td>比較可能性調整</td><td>比較対象取引と検証対象取引の差異を除去するための定量的調整</td></tr>
+<tr><td>Corresponding Adjustment</td><td>対応的調整</td><td>一方の国の移転価格更正に対応して他方の国が行う課税所得の減額調整</td></tr>
+<tr><td>Secondary Adjustment</td><td>二次的調整</td><td>移転価格の一次的調整の結果生じる利益配分の不一致を解消するための擬制取引</td></tr>
+<tr><td>Tax Certainty</td><td>税の確実性</td><td>納税者と税務当局の双方にとっての課税結果の予測可能性</td></tr>
+</table>
+
+
+<!-- ============================================================ -->
+<!--  付録B  条文対照表                                             -->
+<!-- ============================================================ -->
+<div class="part-heading" id="appB">付録B　条文対照表 ── OECD TPG × 日本法</div>
+
+<p>以下の表は、TPG 2022の各章の主要テーマと、それに対応する日本の国内法条文との対照を示す。日本の移転価格税制は租税特別措置法（措法）66条の4を中核とし、同施行令（措令）39条の12系に詳細規定を置く。</p>
+
+<table>
+<tr><th>TPG 章</th><th>主要テーマ</th><th>日本法の対応条文</th><th>備考</th></tr>
+<tr>
+  <td><strong>第1章</strong><br>独立企業原則</td>
+  <td>ALP、取引の正確な描写、グローバル定式配分の拒否</td>
+  <td>措法66条の4第1項<br>措令39条の12</td>
+  <td>日本法のALPは措法66条の4第1項に規定。「国外関連者との取引」が対象</td>
+</tr>
+<tr>
+  <td><strong>第2章</strong><br>移転価格算定方法</td>
+  <td>CUP法、RP法、CP法、TNMM、利益分割法</td>
+  <td>措法66条の4第2項<br>措令39条の12第8項</td>
+  <td>日本法は「最適方法ルール」（best method rule）を採用（2011年税制改正）</td>
+</tr>
+<tr>
+  <td><strong>第3章</strong><br>比較可能性分析</td>
+  <td>9ステッププロセス、比較対象選定、レンジ</td>
+  <td>措法66条の4第2項<br>措通66の4(3)-1〜</td>
+  <td>比較可能性の判断基準は通達で詳細を規定</td>
+</tr>
+<tr>
+  <td><strong>第4章</strong><br>紛争解決</td>
+  <td>MAP、APA、セーフハーバー、仲裁</td>
+  <td>措令39条の12の6（APA）<br>租税条約25条（MAP）<br>措法66条の4の2（納税猶予）</td>
+  <td>日本は二国間APAの実績が世界トップクラス</td>
+</tr>
+<tr>
+  <td><strong>第5章</strong><br>文書化</td>
+  <td>マスターファイル、ローカルファイル、CbCR</td>
+  <td>措法66条の4の5（MF・CbCR）<br>措令39条の12の5（LF）</td>
+  <td>LFは措令で同時文書化義務を規定。MF・CbCRは2016年度税制改正で導入</td>
+</tr>
+<tr>
+  <td><strong>第6章</strong><br>無形資産</td>
+  <td>無形資産の定義、DEMPE分析、HTVI</td>
+  <td>措令39条の12の4</td>
+  <td>2019年度改正で無形資産取引に関する規定を整備</td>
+</tr>
+<tr>
+  <td><strong>第7章</strong><br>グループ内役務</td>
+  <td>役務の便益テスト、低付加価値IGS</td>
+  <td>措法66条の4第2項<br>措通66の4(4)-1〜</td>
+  <td>株主活動の判定基準は通達で規定</td>
+</tr>
+<tr>
+  <td><strong>第8章</strong><br>費用分担契約</td>
+  <td>CCAの概念、期待便益、調整支払</td>
+  <td>措法66条の4第2項<br>措通66の4(8)-1〜</td>
+  <td>CCA固有の法律条文は限定的。通達・事務運営指針で対応</td></tr>
+<tr>
+  <td><strong>第9章</strong><br>事業再編</td>
+  <td>リスクの再配分、価値の移転、補償</td>
+  <td>措法66条の4第1項・第2項</td>
+  <td>事業再編固有の条文なし。既存のALP規定の適用で対処</td>
+</tr>
+<tr>
+  <td><strong>第10章</strong><br>金融取引</td>
+  <td>グループ内融資、保証、キャッシュ・プーリング、キャプティブ保険</td>
+  <td>措法66条の4第1項・第2項<br>措法66条の5（過少資本）<br>措法66条の5の2（過大支払利子）</td>
+  <td>金融取引は移転価格・過少資本・過大支払利子の3制度が交錯</td>
+</tr>
+</table>
+
+<div class="card card-yellow">
+  <div class="card-title">条文体系の特徴</div>
+  <p style="margin:0;">日本の移転価格税制は、TPGの10章構成とは異なり、措法66条の4を中核とする統一的条文構造を採っている。TPGの各章で論じられる個別テーマ（無形資産、役務提供、事業再編等）は、法律レベルでは同一条文の適用問題として処理され、具体的な判断基準は施行令・通達・事務運営指針に委ねられている。このため、TPGの体系的理解は、日本法の解釈指針として極めて重要な意義を持つ。</p>
+</div>
+
+
+<!-- ============================================================ -->
+<!--  付録C  参考文献                                               -->
+<!-- ============================================================ -->
+<div class="part-heading" id="appC">付録C　参考文献</div>
+
+<h3>一次資料（OECD公式文書）</h3>
+
+<table>
+<tr><th style="width:45%;">文献名</th><th>発行年</th><th>備考</th></tr>
+<tr><td>OECD Transfer Pricing Guidelines for Multinational Enterprises and Tax Administrations 2022</td><td>2022</td><td>本解説書の主たる対象。ISBN 978-92-64-52691-4</td></tr>
+<tr><td>BEPS Actions 8-10: Aligning Transfer Pricing Outcomes with Value Creation (Final Reports)</td><td>2015</td><td>2015年BEPS最終報告書。TPG 2017/2022改訂の基盤</td></tr>
+<tr><td>BEPS Action 13: Transfer Pricing Documentation and Country-by-Country Reporting</td><td>2015</td><td>三層文書化制度の設計文書</td></tr>
+<tr><td>BEPS Action 1: Addressing the Tax Challenges of the Digital Economy (Final Report)</td><td>2015</td><td>デジタル経済への対応の出発点</td></tr>
+<tr><td>Pillar One &ndash; Amount B (Inclusive Framework Report)</td><td>2024</td><td>ベースライン配分活動の定型報酬に関する報告書</td></tr>
+<tr><td>GloBE Model Rules (Pillar Two)</td><td>2021</td><td>グローバル最低税率（15%）のモデルルール</td></tr>
+<tr><td>OECD Model Tax Convention on Income and on Capital (2017 Condensed Version)</td><td>2017</td><td>OECDモデル租税条約。第9条・第25条が移転価格に直接関係</td></tr>
+</table>
+
+<h3>日本法関連</h3>
+
+<table>
+<tr><th style="width:45%;">文献名</th><th>備考</th></tr>
+<tr><td>租税特別措置法（昭和32年法律第26号）66条の4〜66条の4の5</td><td>移転価格税制の中核規定</td></tr>
+<tr><td>租税特別措置法施行令39条の12〜39条の12の6</td><td>独立企業間価格の算定方法等の詳細規定</td></tr>
+<tr><td>移転価格事務運営要領（事務運営指針）</td><td>国税庁。実務運用の基本指針</td></tr>
+<tr><td>相互協議の手続について（事務運営指針）</td><td>国税庁。MAP手続の実務指針</td></tr>
+</table>
+
+<h3>学術文献・実務書</h3>
+
+<table>
+<tr><th style="width:45%;">文献名</th><th>備考</th></tr>
+<tr><td>中里実ほか編『国際課税の理論と実務』（有斐閣）</td><td>日本の国際課税法の体系書</td></tr>
+<tr><td>増井良啓・宮崎裕子『国際租税法〔第4版〕』（東京大学出版会, 2019）</td><td>国際租税法の標準的教科書</td></tr>
+<tr><td>駒宮史博『移転価格税制 ── 独立企業間価格の算定と実務』（大蔵財務協会）</td><td>実務家向け解説書</td></tr>
+</table>
+
+
+<!-- ===== FOOTER NAV ===== -->
+<div style="display:flex;justify-content:space-between;margin-top:40px;padding-top:20px;border-top:2px solid var(--border);">
+  <a href="part4.html" style="color:var(--link);text-decoration:none;font-weight:bold;">&larr; Part IV</a>
+  <a href="index.html" style="color:var(--link);text-decoration:none;font-weight:bold;">目次に戻る</a>
+</div>
+
+</div><!-- /.wrap -->
+</body>
+</html>
