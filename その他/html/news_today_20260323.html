@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>今日のニュース ディープリサーチ（2026年3月23日）</title>
+<style>
+:root {
+  --bg: #0a0a0f;
+  --card: #12121a;
+  --card-border: #1e1e2e;
+  --accent: #6366f1;
+  --accent-light: #818cf8;
+  --text: #e2e8f0;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+  --highlight: #fbbf24;
+  --success: #34d399;
+  --warning: #f59e0b;
+  --danger: #f87171;
+  --info: #38bdf8;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Segoe UI', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+}
+.hero {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  padding: 50px 40px 40px;
+  text-align: center;
+  border-bottom: 2px solid var(--accent);
+}
+.hero h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 8px; }
+.hero .date { color: var(--text-muted); font-size: 1rem; }
+.container { max-width: 960px; margin: 0 auto; padding: 30px 20px; }
+
+/* Breaking banner */
+.breaking {
+  background: linear-gradient(90deg, rgba(248,113,113,0.15), rgba(248,113,113,0.05));
+  border-left: 4px solid var(--danger);
+  padding: 16px 20px;
+  margin-bottom: 30px;
+  border-radius: 0 8px 8px 0;
+}
+.breaking-label {
+  color: var(--danger);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+
+/* Section */
+.section { margin-bottom: 36px; }
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--card-border);
+}
+.section-icon {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.section-header h2 { font-size: 1.4rem; font-weight: 600; }
+
+/* Cards */
+.card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 14px;
+}
+.card h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--accent-light);
+}
+.card p { color: var(--text-muted); margin-bottom: 6px; }
+.card ul { padding-left: 20px; color: var(--text-muted); }
+.card li { margin-bottom: 4px; }
+
+/* Tags */
+.tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 2px 10px;
+  border-radius: 12px;
+  margin-right: 6px;
+  margin-top: 8px;
+}
+.tag-danger { background: rgba(248,113,113,0.15); color: var(--danger); }
+.tag-warning { background: rgba(245,158,11,0.15); color: var(--warning); }
+.tag-info { background: rgba(56,189,248,0.15); color: var(--info); }
+.tag-success { background: rgba(52,211,153,0.15); color: var(--success); }
+
+/* Market data */
+.market-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.market-item {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+}
+.market-item .label { font-size: 0.8rem; color: var(--text-dim); margin-bottom: 4px; }
+.market-item .value { font-size: 1.5rem; font-weight: 700; }
+.market-item .change { font-size: 0.85rem; margin-top: 4px; }
+.down { color: var(--danger); }
+.up { color: var(--success); }
+
+/* Sources */
+.sources {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-top: 30px;
+}
+.sources h3 { font-size: 1rem; color: var(--text-dim); margin-bottom: 10px; }
+.sources a { color: var(--accent-light); text-decoration: none; font-size: 0.9rem; }
+.sources a:hover { text-decoration: underline; }
+.sources li { margin-bottom: 6px; list-style: none; }
+.sources li::before { content: '→ '; color: var(--text-dim); }
+
+footer {
+  text-align: center;
+  padding: 30px 20px;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  border-top: 1px solid var(--card-border);
+  margin-top: 20px;
+}
+@media print {
+  body { background: #fff; color: #000; }
+  .card { border: 1px solid #ccc; }
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>Daily News Deep Research</h1>
+  <div class="date">2026年3月23日（月）</div>
+</div>
+
+<div class="container">
+
+  <!-- Breaking News -->
+  <div class="breaking">
+    <div class="breaking-label">BREAKING</div>
+    <strong>日経平均1,857円安の暴落 ── 中東情勢緊迫化で「トリプル安」</strong>
+  </div>
+
+  <!-- 1. 中東情勢 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(248,113,113,0.15);">⚔</div>
+      <h2>中東情勢・イラン危機</h2>
+    </div>
+
+    <div class="card">
+      <h3>イラン情勢の継続的緊迫化</h3>
+      <ul>
+        <li>ホルムズ海峡封鎖の影響が3月に入り4週目に突入、収束の兆しなし</li>
+        <li>UAE各地へのミサイル・無人機攻撃が継続</li>
+        <li>トランプ大統領がイランの発電施設へのさらなる攻撃可能性に言及</li>
+        <li>ホワイトハウスはイランとの交渉開始の機会を模索</li>
+      </ul>
+      <span class="tag tag-danger">地政学リスク</span>
+      <span class="tag tag-warning">原油高</span>
+    </div>
+
+    <div class="card">
+      <h3>原油市場への影響</h3>
+      <p>NY原油先物が1バレル＝100ドルの大台を再突破。日本はエネルギー輸入依存度が高く、経済への打撃は深刻。</p>
+      <p>日本政府はガソリン価格高騰対策として約50億ドル（約7,950億円）を割り当てる方針（共同通信報道）。</p>
+      <span class="tag tag-danger">原油100ドル超</span>
+      <span class="tag tag-info">政府対策</span>
+    </div>
+
+    <div class="card">
+      <h3>人道支援</h3>
+      <p>日本赤十字社が「イラン及び周辺国人道危機救援金」の募集を開始（3月16日〜）。</p>
+      <p>国際赤十字・赤新月社連盟は約4,000万スイスフラン（約81億円）規模の緊急救援アピールを発出。約500万人を対象に16ヶ月間の支援計画。</p>
+      <span class="tag tag-success">人道支援</span>
+    </div>
+  </div>
+
+  <!-- 2. マーケット -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(248,113,113,0.15);">📉</div>
+      <h2>金融市場</h2>
+    </div>
+
+    <div class="market-grid">
+      <div class="market-item">
+        <div class="label">日経平均株価</div>
+        <div class="value down">51,515</div>
+        <div class="change down">▼ 1,857円 (−3.5%)</div>
+      </div>
+      <div class="market-item">
+        <div class="label">TOPIX</div>
+        <div class="value down">3,494</div>
+        <div class="change down">▼ 3.2%</div>
+      </div>
+      <div class="market-item">
+        <div class="label">ドル/円</div>
+        <div class="value down">159.5</div>
+        <div class="change down">円安進行（160円介入ラインに接近）</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>株式市場 ── 売り一色</h3>
+      <ul>
+        <li>連休中の米株安・原油高止まり・トランプ発言で大幅続落</li>
+        <li>テクノロジー・金融・消費セクターが下落主導</li>
+        <li>主な下落銘柄：Advantest −5.4%、三菱UFJ −4.6%、Kioxia −4.4%、東京エレクトロン −3%、ファストリ −3.6%</li>
+        <li>2ヶ月以上ぶりの安値水準</li>
+      </ul>
+      <span class="tag tag-danger">大幅続落</span>
+    </div>
+
+    <div class="card">
+      <h3>為替 ── 円安加速</h3>
+      <ul>
+        <li>ドル円は159円台前半、160円の介入ラインに接近</li>
+        <li>有事のドル買い + FOMCでの利下げ見通し後退が円安要因</li>
+        <li>三村淳・財務官が「あらゆる手段を講じる用意」と牽制</li>
+      </ul>
+      <span class="tag tag-warning">介入警戒</span>
+    </div>
+
+    <div class="card">
+      <h3>トリプル安の構図</h3>
+      <p>中東情勢の緊迫化に伴う原油高と世界的なインフレ懸念が重なり、東京市場では<strong>株安・債券安・円安</strong>の「トリプル安」が進行。エネルギー輸入依存の高い日本経済にとって構造的な逆風。</p>
+      <span class="tag tag-danger">トリプル安</span>
+    </div>
+  </div>
+
+  <!-- 3. 国内政治・政策 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(99,102,241,0.15);">🏛</div>
+      <h2>国内政治・政策</h2>
+    </div>
+
+    <div class="card">
+      <h3>暫定予算の検討</h3>
+      <p>2026年度本予算が4月1日の年度開始までに成立しない場合に備え、政府が暫定予算の編成を検討。</p>
+      <span class="tag tag-info">予算</span>
+    </div>
+
+    <div class="card">
+      <h3>南鳥島沖レアアース開発</h3>
+      <p>南鳥島沖のレアアース開発に対し、中国が妨害する懸念が浮上。1年前には空母が近くを航行しており、日本は米国の協力を得て対抗する方針。</p>
+      <span class="tag tag-info">資源安保</span>
+      <span class="tag tag-warning">中国</span>
+    </div>
+  </div>
+
+  <!-- 4. 3月の振り返り -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(56,189,248,0.15);">📅</div>
+      <h2>2026年3月の主要ニュース（振り返り）</h2>
+    </div>
+
+    <div class="card">
+      <h3>京都アニメーション 八田英明社長逝去（3月2日）</h3>
+      <p>1985年の創業から社長を務め、京アニを世界的アニメスタジオに育て上げた八田英明氏が逝去。享年76歳。</p>
+      <span class="tag tag-info">訃報</span>
+    </div>
+
+    <div class="card">
+      <h3>東京高裁が旧統一教会に解散命令（3月4日）</h3>
+      <p>東京高裁が旧統一教会に解散を命じる決定を下し、清算手続きへ進むことが確定。</p>
+      <span class="tag tag-info">司法</span>
+    </div>
+
+    <div class="card">
+      <h3>東日本大震災から15年（3月11日）</h3>
+      <p>震災から15年が経過。世界各地からの暖かいメッセージが継続的に寄せられている。</p>
+      <span class="tag tag-success">追悼</span>
+    </div>
+  </div>
+
+  <!-- Sources -->
+  <div class="sources">
+    <h3>Sources</h3>
+    <ul>
+      <li><a href="https://finance.yahoo.co.jp/news/detail/ce58f1dae06a4a3fbb96a854538e1f6dd1c90098" target="_blank">Yahoo!ファイナンス ── マーケット日報 2026年3月23日</a></li>
+      <li><a href="https://www.oanda.jp/lab-education/market_news/2026_03_23_usdjpy/" target="_blank">OANDA ── ドル/円見通し 2026年3月23日</a></li>
+      <li><a href="https://www.nippon.com/en/news/yjj2026032300406/" target="_blank">Nippon.com ── Japan Govt to Mull Provisional Budget</a></li>
+      <li><a href="https://japan.news-pravda.com/japan/2026/03/22/57389.html" target="_blank">ホワイトハウスはイランとの交渉を模索</a></li>
+      <li><a href="https://japan.news-pravda.com/en/world/2026/03/23/20361.html" target="_blank">日本政府 ガソリン高騰対策に50億ドル</a></li>
+      <li><a href="https://www.jrc.or.jp/international/news/2026/0316_051956.html" target="_blank">日本赤十字社 ── イラン人道危機救援金</a></li>
+      <li><a href="https://at-next.jp/jiji-news/28302/" target="_blank">＠next ── 2026年3月23日 経済・時事ニュースまとめ</a></li>
+      <li><a href="https://news-database.com/2026-03/" target="_blank">ニュースデータベース ── 2026年3月まとめ</a></li>
+      <li><a href="https://www.j-cast.com/2026/03/22512786.html?p=all" target="_blank">J-CAST ── 南鳥島沖レアアース開発</a></li>
+      <li><a href="https://www.newsweekjapan.jp/stories/world/2026/03/590289.php" target="_blank">Newsweek Japan ── 東日本大震災15年</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<footer>
+  Deep Research Report — 2026-03-23
+</footer>
+
+</body>
+</html>
