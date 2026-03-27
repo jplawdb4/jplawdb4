@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>移転価格分析 数値シミュレーション</title>
+<style>
+:root {
+  --primary: #1a365d;
+  --accent: #2b6cb0;
+  --warn: #c53030;
+  --bg: #f7fafc;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --text: #2d3748;
+  --muted: #718096;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+.container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+h1 { color: var(--primary); font-size: 1.6rem; border-bottom: 3px solid var(--accent); padding-bottom: 8px; margin-bottom: 24px; }
+h2 { color: var(--primary); font-size: 1.25rem; margin: 32px 0 12px; padding-left: 12px; border-left: 4px solid var(--accent); }
+h3 { color: var(--accent); font-size: 1.05rem; margin: 20px 0 8px; }
+.card { background: var(--card); border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 20px; margin-bottom: 20px; }
+table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.92rem; }
+th, td { border: 1px solid var(--border); padding: 8px 12px; text-align: right; }
+th { background: #edf2f7; color: var(--primary); font-weight: 600; text-align: center; }
+td:first-child, th:first-child { text-align: left; }
+.num-neg { color: var(--warn); font-weight: 600; }
+.num-pos { color: #276749; font-weight: 600; }
+.highlight { background: #fffbeb; }
+.assumption { background: #f0fff4; border-left: 3px solid #48bb78; padding: 12px 16px; margin: 12px 0; font-size: 0.9rem; }
+.warning { background: #fff5f5; border-left: 3px solid var(--warn); padding: 12px 16px; margin: 12px 0; font-size: 0.9rem; }
+.formula { background: #ebf8ff; border-radius: 4px; padding: 8px 14px; margin: 8px 0; font-family: monospace; font-size: 0.88rem; }
+.summary-box { background: #1a365d; color: #fff; border-radius: 8px; padding: 20px; margin: 24px 0; }
+.summary-box h3 { color: #bee3f8; margin-top: 0; }
+.summary-box .big-num { font-size: 1.8rem; font-weight: 700; color: #fbd38d; }
+.toc { background: var(--card); border-radius: 8px; padding: 16px 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.toc a { color: var(--accent); text-decoration: none; }
+.toc a:hover { text-decoration: underline; }
+.toc ul { list-style: none; padding-left: 0; }
+.toc li { padding: 4px 0; }
+.toc li::before { content: ""; display: inline-block; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; margin-right: 8px; vertical-align: middle; }
+sup { font-size: 0.75rem; color: var(--muted); }
+@media print {
+  body { font-size: 10pt; }
+  .card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; }
+  .summary-box { background: #333; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>移転価格分析 数値シミュレーション</h1>
+<p style="color:var(--muted); margin-bottom:16px;">作成日: 2026年3月26日 | 対象: 日本法人（P社イスラエル親会社の子会社）</p>
+
+<div class="toc">
+<strong>目次</strong>
+<ul>
+<li><a href="#premise">前提数値の整理</a></li>
+<li><a href="#sim1">シミュレーション1: プロキュアメント取引の利益影響</a></li>
+<li><a href="#sim2">シミュレーション2: ディストリビューション取引の利益影響</a></li>
+<li><a href="#sim3">シミュレーション3: 合成効果（2取引の同時変更）</a></li>
+<li><a href="#sim4">シミュレーション4: 全社P/Lからの取引別利益切り出し</a></li>
+<li><a href="#sim5">シミュレーション5: 推定課税リスクの金額影響</a></li>
+<li><a href="#overall">総括</a></li>
+</ul>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="premise">前提数値の整理</h2>
+<!-- ============================================================ -->
+<div class="card">
+
+<h3>全社P/L（単位: 百万円）</h3>
+<table>
+<tr><th>項目</th><th>金額</th><th>備考</th></tr>
+<tr><td>売上高</td><td>1,000</td><td>P社向け輸出300 + 国内顧客向け700</td></tr>
+<tr><td>売上原価（仕入）</td><td>700</td><td>P社からの輸入200 + 国内仕入500</td></tr>
+<tr><td>売上総利益</td><td>300</td><td>粗利率30%</td></tr>
+<tr><td>販管費</td><td>150</td><td>1,000 - 700 - 150 = 150（逆算）</td></tr>
+<tr><td>営業利益</td><td>150</td><td>OM = 15%</td></tr>
+</table>
+
+<h3>取引構造の分解</h3>
+<table>
+<tr><th>取引</th><th>売上</th><th>仕入（原価）</th><th>相手方</th><th>取引の流れ</th></tr>
+<tr><td><strong>プロキュアメント</strong><br>（調達代行）</td><td>300<br>（P社向け輸出）</td><td>国内仕入の一部<sup>※1</sup></td><td>P社（買い手）</td><td>国内仕入 → 当社 → P社へ輸出</td></tr>
+<tr><td><strong>ディストリビューション</strong><br>（販売代理）</td><td>国内売上の一部<sup>※2</sup></td><td>200<br>（P社からの輸入）</td><td>P社（売り手）</td><td>P社から輸入 → 当社 → 国内顧客へ販売</td></tr>
+</table>
+
+<div class="assumption">
+<strong>仮定※1: プロキュアメント取引の原価推定</strong><br>
+国内仕入500のうち、P社向け輸出300に対応する原価を推定する必要がある。<br>
+<strong>方法A（売上按分）</strong>: 500 × (300/1,000) = 150百万円 → 粗利率 = (300-150)/300 = 50%（高すぎる）<br>
+<strong>方法B（機能分析に基づく推定）</strong>: プロキュアメント（調達代行）はコスト+マージン型。輸出価格300 = 原価 ÷ (1+マークアップ率)。マークアップ8%なら原価 = 300/1.08 ≈ 278百万円。<br>
+<strong>本シミュレーションでは方法Bを主に使用し、方法Aも参考値として併記。</strong>
+</div>
+
+<div class="assumption">
+<strong>仮定※2: ディストリビューション取引の売上推定</strong><br>
+P社からの輸入200を国内で販売した際の売上を推定。<br>
+<strong>方法</strong>: ディストリビューションの一般的な粗利率を30-40%と仮定。仕入200に対し売上 = 200/(1-0.35) ≈ 308百万円。<br>
+<strong>本シミュレーションでは国内売上700のうち300をディストリビューション売上と仮定。</strong><br>
+残りの国内売上400は当社独自事業（プロキュアメント以外の国内取引）。
+</div>
+
+<h3>取引別の推定P/L（初期仮定）</h3>
+<table>
+<tr><th>項目</th><th>プロキュアメント</th><th>ディストリビューション</th><th>その他国内</th><th>全社合計</th></tr>
+<tr><td>売上</td><td>300</td><td>300</td><td>400</td><td>1,000</td></tr>
+<tr><td>原価</td><td>278<sup>※</sup></td><td>200</td><td>222<sup>※</sup></td><td>700</td></tr>
+<tr><td>売上総利益</td><td>22</td><td>100</td><td>178</td><td>300</td></tr>
+<tr><td colspan="5" style="font-size:0.85rem; color:var(--muted);">※原価の取引別配分は、プロキュアメントをマークアップ8%と仮定して逆算。残余をその他に配分。</td></tr>
+</table>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sim1">シミュレーション1: プロキュアメント取引の利益影響</h2>
+<!-- ============================================================ -->
+<div class="card">
+
+<p>プロキュアメント取引: 当社が国内で製品・材料を調達し、P社（イスラエル）へ輸出。当社は調達エージェントとしてのマージンを得る。</p>
+
+<h3>パターン(a): 輸出売上に対するマージン率</h3>
+<div class="formula">
+営業利益 = 輸出売上 × マージン率<br>
+仕入原価 = 輸出売上 - 営業利益 - 配賦販管費
+</div>
+
+<table>
+<tr><th>マージン率</th><th>輸出売上</th><th>営業利益</th><th>差額<br>（8%基準）</th></tr>
+<tr><td>8%（買収前想定）</td><td>300</td><td class="num-pos">24.0</td><td>---</td></tr>
+<tr><td>5%</td><td>300</td><td>15.0</td><td class="num-neg">-9.0</td></tr>
+<tr><td>3%</td><td>300</td><td>9.0</td><td class="num-neg">-15.0</td></tr>
+<tr><td>1%（買収後想定）</td><td>300</td><td>3.0</td><td class="num-neg">-21.0</td></tr>
+<tr class="highlight"><td><strong>利益移転額（8%→1%）</strong></td><td></td><td></td><td class="num-neg"><strong>-21.0</strong></td></tr>
+</table>
+
+<h3>パターン(b): 仕入原価に対するマークアップ率</h3>
+<div class="formula">
+輸出価格 = 仕入原価 × (1 + マークアップ率)<br>
+仕入原価 = 輸出売上 / (1 + マークアップ率)
+</div>
+
+<table>
+<tr><th>マークアップ率</th><th>逆算原価</th><th>粗利<br>(=売上-原価)</th><th>販管費配賦<sup>※</sup></th><th>営業利益</th><th>OM</th><th>差額<br>（8%基準）</th></tr>
+<tr>
+<td>8%（買収前想定）</td>
+<td>277.8</td>
+<td>22.2</td>
+<td>---</td>
+<td>22.2<sup>※※</sup></td>
+<td>7.4%</td>
+<td>---</td>
+</tr>
+<tr>
+<td>5%</td>
+<td>285.7</td>
+<td>14.3</td>
+<td>---</td>
+<td>14.3</td>
+<td>4.8%</td>
+<td class="num-neg">-7.9</td>
+</tr>
+<tr>
+<td>3%</td>
+<td>291.3</td>
+<td>8.7</td>
+<td>---</td>
+<td>8.7</td>
+<td>2.9%</td>
+<td class="num-neg">-13.5</td>
+</tr>
+<tr>
+<td>1%（買収後想定）</td>
+<td>297.0</td>
+<td>3.0</td>
+<td>---</td>
+<td>3.0</td>
+<td>1.0%</td>
+<td class="num-neg">-19.2</td>
+</tr>
+<tr class="highlight">
+<td><strong>利益移転額（8%→1%）</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td class="num-neg"><strong>-19.2</strong></td>
+</tr>
+</table>
+
+<div class="assumption">
+<strong>※※ 簡略化</strong>: パターン(b)では、プロキュアメント取引の販管費を一旦ゼロと仮定（調達代行は販管費が極めて少ない前提）。粗利 ≒ 営業利益として試算。<br>
+販管費を考慮する場合はシミュレーション4を参照。
+</div>
+
+<div class="assumption">
+<strong>計算過程の詳細（マークアップ8%の場合）</strong><br>
+・輸出売上 = 300<br>
+・原価 = 300 / 1.08 = 277.78（小数点以下第2位で四捨五入）<br>
+・粗利 = 300 - 277.78 = 22.22<br>
+・OM = 22.22 / 300 = 7.41%<br><br>
+<strong>計算過程の詳細（マークアップ1%の場合）</strong><br>
+・原価 = 300 / 1.01 = 297.03<br>
+・粗利 = 300 - 297.03 = 2.97 ≈ 3.0<br>
+・OM = 2.97 / 300 = 0.99%
+</div>
+
+<h3>パターン(a)と(b)の比較</h3>
+<table>
+<tr><th>計算ベース</th><th>買収前利益</th><th>買収後利益</th><th>利益移転額</th></tr>
+<tr><td>(a) 売上マージン率（8%→1%）</td><td>24.0</td><td>3.0</td><td class="num-neg">-21.0</td></tr>
+<tr><td>(b) 原価マークアップ率（8%→1%）</td><td>22.2</td><td>3.0</td><td class="num-neg">-19.2</td></tr>
+<tr><td colspan="4" style="font-size:0.85rem;">差異の理由: (a)は売上ベース、(b)は原価ベースのため、同じ%でも金額が異なる。<br>売上マージン8% = 原価マークアップ約8.7%に相当。</td></tr>
+</table>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sim2">シミュレーション2: ディストリビューション取引の利益影響</h2>
+<!-- ============================================================ -->
+<div class="card">
+
+<p>ディストリビューション取引: P社製品を輸入（仕入200百万円）し、国内顧客へ販売。当社は販売代理店としての利益を得る。</p>
+
+<div class="assumption">
+<strong>前提仮定</strong><br>
+・P社からの仕入（輸入原価）: 200百万円<br>
+・国内販売売上: 300百万円と仮定（粗利率33.3%）<br>
+・販管費: 売上按分で 300/1,000 × 150 = 45百万円を配賦
+</div>
+
+<h3>ベースケース（OM 4%）の構造</h3>
+<div class="formula">
+ディストリビューション売上: 300<br>
+仕入原価（P社からの輸入）: 200<br>
+粗利: 100（粗利率 33.3%）<br>
+販管費配賦: 45<br>
+営業利益: 100 - 45 = 55 → OM = 55/300 = 18.3%
+</div>
+
+<div class="warning">
+<strong>不整合の指摘</strong>: 売上300・原価200・販管費45ではOM=18.3%となり、「OM4%」と大きく乖離する。<br>
+OM4%を実現するには以下のいずれかの調整が必要:<br>
+(1) 売上がもっと低い（例: 220百万円 → OM4%なら営業利益8.8）<br>
+(2) 販管費がもっと高い（例: 88百万円）<br>
+(3) 輸入原価がもっと高い（例: 輸入価格を引き上げてマージンを圧縮）<br><br>
+<strong>以下ではOM指定値を前提として、OM × 売上 = 営業利益として直接計算する。</strong>
+</div>
+
+<h3>OMシナリオ別の利益試算</h3>
+
+<p><strong>売上300百万円を固定した場合:</strong></p>
+<table>
+<tr><th>OM</th><th>売上</th><th>営業利益<br>(= 売上 × OM)</th><th>差額<br>（OM4%基準）</th></tr>
+<tr><td>4%（ベース）</td><td>300</td><td class="num-pos">12.0</td><td>---</td></tr>
+<tr><td>3%</td><td>300</td><td>9.0</td><td class="num-neg">-3.0</td></tr>
+<tr><td>2%</td><td>300</td><td>6.0</td><td class="num-neg">-6.0</td></tr>
+<tr><td>1%</td><td>300</td><td>3.0</td><td class="num-neg">-9.0</td></tr>
+</table>
+
+<p><strong>別の前提: 売上を輸入原価ベースで推定した場合:</strong></p>
+<div class="assumption">
+ディストリビューターの粗利率が低い（10-15%）と仮定すると:<br>
+・売上 = 200 / (1 - 0.10) = 222百万円（粗利率10%の場合）<br>
+・売上 = 200 / (1 - 0.15) = 235百万円（粗利率15%の場合）
+</div>
+
+<table>
+<tr><th>OM</th><th colspan="2">売上222の場合</th><th colspan="2">売上235の場合</th><th colspan="2">売上300の場合</th></tr>
+<tr><th></th><th>営業利益</th><th>差額</th><th>営業利益</th><th>差額</th><th>営業利益</th><th>差額</th></tr>
+<tr><td>4%</td><td>8.9</td><td>---</td><td>9.4</td><td>---</td><td>12.0</td><td>---</td></tr>
+<tr><td>3%</td><td>6.7</td><td class="num-neg">-2.2</td><td>7.1</td><td class="num-neg">-2.4</td><td>9.0</td><td class="num-neg">-3.0</td></tr>
+<tr><td>2%</td><td>4.4</td><td class="num-neg">-4.4</td><td>4.7</td><td class="num-neg">-4.7</td><td>6.0</td><td class="num-neg">-6.0</td></tr>
+<tr><td>1%</td><td>2.2</td><td class="num-neg">-6.7</td><td>2.4</td><td class="num-neg">-7.1</td><td>3.0</td><td class="num-neg">-9.0</td></tr>
+</table>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sim3">シミュレーション3: 合成効果（2取引の同時変更）</h2>
+<!-- ============================================================ -->
+<div class="card">
+
+<p>買収前後で両取引の条件が同時に変更された場合の、日本法人の利益への合成影響。</p>
+
+<div class="assumption">
+<strong>計算前提</strong><br>
+・プロキュアメント: パターン(a)の売上マージン率を使用。売上300固定。<br>
+・ディストリビューション: 売上300固定。OM指定値で営業利益を直接算出。
+</div>
+
+<h3>マトリックス: プロキュアメント × ディストリビューションの組み合わせ</h3>
+<p>（単位: 百万円、2取引の合計営業利益）</p>
+<table>
+<tr>
+<th rowspan="2">プロキュアメント<br>マージン率</th>
+<th colspan="4">ディストリビューション OM</th>
+</tr>
+<tr><th>4%</th><th>3%</th><th>2%</th><th>1%</th></tr>
+<tr>
+<td>8%（利益24.0）</td>
+<td class="num-pos"><strong>36.0</strong></td>
+<td>33.0</td>
+<td>30.0</td>
+<td>27.0</td>
+</tr>
+<tr>
+<td>5%（利益15.0）</td>
+<td>27.0</td>
+<td>24.0</td>
+<td>21.0</td>
+<td>18.0</td>
+</tr>
+<tr>
+<td>3%（利益9.0）</td>
+<td>21.0</td>
+<td>18.0</td>
+<td>15.0</td>
+<td>12.0</td>
+</tr>
+<tr>
+<td>1%（利益3.0）</td>
+<td>15.0</td>
+<td>12.0</td>
+<td>9.0</td>
+<td class="num-neg"><strong>6.0</strong></td>
+</tr>
+</table>
+
+<h3>利益移転額マトリックス（買収前=左上セル36.0百万円との差額）</h3>
+<table>
+<tr>
+<th rowspan="2">プロキュアメント<br>マージン率</th>
+<th colspan="4">ディストリビューション OM</th>
+</tr>
+<tr><th>4%</th><th>3%</th><th>2%</th><th>1%</th></tr>
+<tr>
+<td>8%</td>
+<td>0</td>
+<td class="num-neg">-3.0</td>
+<td class="num-neg">-6.0</td>
+<td class="num-neg">-9.0</td>
+</tr>
+<tr>
+<td>5%</td>
+<td class="num-neg">-9.0</td>
+<td class="num-neg">-12.0</td>
+<td class="num-neg">-15.0</td>
+<td class="num-neg">-18.0</td>
+</tr>
+<tr>
+<td>3%</td>
+<td class="num-neg">-15.0</td>
+<td class="num-neg">-18.0</td>
+<td class="num-neg">-21.0</td>
+<td class="num-neg">-24.0</td>
+</tr>
+<tr>
+<td>1%</td>
+<td class="num-neg">-21.0</td>
+<td class="num-neg">-24.0</td>
+<td class="num-neg">-27.0</td>
+<td class="num-neg"><strong>-30.0</strong></td>
+</tr>
+</table>
+
+<div class="summary-box">
+<h3>合成効果の要約</h3>
+<table style="color:#fff; border-color:#2d3748;">
+<tr><th style="background:#2d3748; color:#bee3f8;">シナリオ</th><th style="background:#2d3748; color:#bee3f8;">プロキュア</th><th style="background:#2d3748; color:#bee3f8;">ディストリ</th><th style="background:#2d3748; color:#bee3f8;">合計利益</th><th style="background:#2d3748; color:#bee3f8;">利益移転額</th></tr>
+<tr><td>買収前</td><td>マージン8%→利益24.0</td><td>OM4%→利益12.0</td><td>36.0</td><td>---</td></tr>
+<tr><td>買収後（最悪）</td><td>マージン1%→利益3.0</td><td>OM1%→利益3.0</td><td>6.0</td><td style="color:#fbd38d; font-weight:700;">-30.0</td></tr>
+<tr><td>買収後（中間）</td><td>マージン1%→利益3.0</td><td>OM2%→利益6.0</td><td>9.0</td><td style="color:#fbd38d; font-weight:700;">-27.0</td></tr>
+<tr><td>買収後（穏当）</td><td>マージン1%→利益3.0</td><td>OM3%→利益9.0</td><td>12.0</td><td style="color:#fbd38d; font-weight:700;">-24.0</td></tr>
+</table>
+<p style="margin-top:12px;">利益移転の年間規模: <span class="big-num">2,400万円 ~ 3,000万円</span></p>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sim4">シミュレーション4: 全社P/Lからの取引別利益切り出し</h2>
+<!-- ============================================================ -->
+<div class="card">
+
+<p>全社の販管費150百万円を、3つの配賦基準で取引別に配分し、取引別OMを算出する。</p>
+
+<div class="assumption">
+<strong>取引別の売上・原価（再掲）</strong><br>
+・プロキュアメント: 売上300、原価278（マークアップ8%前提）<br>
+・ディストリビューション: 売上300、原価200<br>
+・その他国内: 売上400、原価222
+</div>
+
+<h3>(a) 売上金額按分</h3>
+<div class="formula">
+配賦販管費 = 全社販管費150 × (当該取引売上 / 全社売上1,000)
+</div>
+<table>
+<tr><th>取引</th><th>売上</th><th>按分率</th><th>販管費配賦</th><th>粗利</th><th>営業利益</th><th>OM</th></tr>
+<tr><td>プロキュアメント</td><td>300</td><td>30%</td><td>45.0</td><td>22.2</td><td class="num-neg">-22.8</td><td class="num-neg">-7.6%</td></tr>
+<tr><td>ディストリビューション</td><td>300</td><td>30%</td><td>45.0</td><td>100.0</td><td class="num-pos">55.0</td><td class="num-pos">18.3%</td></tr>
+<tr><td>その他国内</td><td>400</td><td>40%</td><td>60.0</td><td>178.0</td><td class="num-pos">118.0</td><td class="num-pos">29.5%</td></tr>
+<tr style="font-weight:700;"><td>合計</td><td>1,000</td><td>100%</td><td>150.0</td><td>300.0</td><td>150.0</td><td>15.0%</td></tr>
+</table>
+
+<div class="warning">
+<strong>問題点</strong>: プロキュアメント取引が赤字になる。調達代行は粗利率が低い（7.4%）のに、販管費を売上按分すると過大配賦になる。この配賦方法はプロキュアメントには不適切。
+</div>
+
+<h3>(b) 売上原価按分</h3>
+<div class="formula">
+配賦販管費 = 全社販管費150 × (当該取引原価 / 全社原価700)
+</div>
+<table>
+<tr><th>取引</th><th>原価</th><th>按分率</th><th>販管費配賦</th><th>粗利</th><th>営業利益</th><th>OM</th></tr>
+<tr><td>プロキュアメント</td><td>278</td><td>39.7%</td><td>59.6</td><td>22.2</td><td class="num-neg">-37.4</td><td class="num-neg">-12.5%</td></tr>
+<tr><td>ディストリビューション</td><td>200</td><td>28.6%</td><td>42.9</td><td>100.0</td><td class="num-pos">57.1</td><td class="num-pos">19.0%</td></tr>
+<tr><td>その他国内</td><td>222</td><td>31.7%</td><td>47.6</td><td>178.0</td><td class="num-pos">130.4</td><td class="num-pos">32.6%</td></tr>
+<tr style="font-weight:700;"><td>合計</td><td>700</td><td>100%</td><td>150.0</td><td>300.0</td><td>150.0</td><td>15.0%</td></tr>
+</table>
+
+<div class="warning">
+<strong>問題点</strong>: プロキュアメントは原価が大きいため、原価按分だとさらに赤字が拡大。この方法も不適切。
+</div>
+
+<h3>(c) 想定従業員配分（機能ベース配賦）</h3>
+<div class="assumption">
+<strong>想定</strong>: 全社従業員50人として、取引別の従事比率を機能分析に基づき推定。<br>
+・プロキュアメント: 5人（10%）--- 調達・輸出手配に少人数<br>
+・ディストリビューション: 20人（40%）--- 営業・マーケティング・物流に人員集中<br>
+・その他国内: 25人（50%）--- 製造・管理・国内営業
+</div>
+<table>
+<tr><th>取引</th><th>従業員比率</th><th>販管費配賦</th><th>粗利</th><th>営業利益</th><th>OM</th></tr>
+<tr><td>プロキュアメント</td><td>10%</td><td>15.0</td><td>22.2</td><td class="num-pos">7.2</td><td class="num-pos">2.4%</td></tr>
+<tr><td>ディストリビューション</td><td>40%</td><td>60.0</td><td>100.0</td><td class="num-pos">40.0</td><td class="num-pos">13.3%</td></tr>
+<tr><td>その他国内</td><td>50%</td><td>75.0</td><td>178.0</td><td class="num-pos">103.0</td><td class="num-pos">25.8%</td></tr>
+<tr style="font-weight:700;"><td>合計</td><td>100%</td><td>150.0</td><td>300.0</td><td>150.0</td><td>15.0%</td></tr>
+</table>
+
+<h3>配賦方法別OMの比較</h3>
+<table>
+<tr><th>取引</th><th>(a) 売上按分</th><th>(b) 原価按分</th><th>(c) 従業員按分</th></tr>
+<tr><td>プロキュアメント</td><td class="num-neg">-7.6%</td><td class="num-neg">-12.5%</td><td class="num-pos">2.4%</td></tr>
+<tr><td>ディストリビューション</td><td>18.3%</td><td>19.0%</td><td>13.3%</td></tr>
+<tr><td>その他国内</td><td>29.5%</td><td>32.6%</td><td>25.8%</td></tr>
+</table>
+
+<div class="assumption">
+<strong>実務上の示唆</strong><br>
+・プロキュアメント（調達代行）には従業員ベース配賦(c)が最も合理的。販管費の大半は販売活動に帰属し、調達代行は少人数で運営されるため。<br>
+・移転価格税制上、TNMMの利益指標にOMを用いる場合、販管費配賦の合理性が争点になりうる。<br>
+・(c)のOM 2.4%は、マークアップ8%で原価278に対する粗利22.2から販管費15を差し引いた結果であり、プロキュアメント型調達エージェントとして妥当な水準。
+</div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="sim5">シミュレーション5: 推定課税リスクの金額影響</h2>
+<!-- ============================================================ -->
+<div class="card">
+
+<p>税務当局がTNMM（取引単位営業利益法）で移転価格を算定し、更正処分を行った場合のリスク金額。</p>
+
+<h3>5-1. プロキュアメント取引の更正リスク</h3>
+<div class="assumption">
+<strong>前提</strong><br>
+・実際のマークアップ率: 1%（買収後）<br>
+・比較対象企業のFCM（フルコストマークアップ）: 5%<br>
+・FCMの計算ベース: 総原価（売上原価 + 販管費配賦）<br>
+・販管費配賦: 従業員按分で15百万円
+</div>
+
+<div class="formula">
+<strong>ステップ1: 総原価の算出</strong><br>
+実際の原価 = 300 / 1.01 = 297.0（マークアップ1%）<br>
+販管費配賦 = 15.0<br>
+総原価 = 297.0 + 15.0 = 312.0<br><br>
+
+<strong>ステップ2: 独立企業間価格（ALP）の算出</strong><br>
+ALP = 総原価 × (1 + FCM 5%) = 312.0 × 1.05 = 327.6<br><br>
+
+<strong>ステップ3: 更正所得金額</strong><br>
+更正所得 = ALP - 実際売上 = 327.6 - 300.0 = 27.6
+</div>
+
+<table>
+<tr><th>項目</th><th>実際（MU1%）</th><th>ALP（FCM5%）</th><th>差額（更正所得）</th></tr>
+<tr><td>輸出売上</td><td>300.0</td><td>327.6</td><td class="num-neg">+27.6</td></tr>
+<tr><td>原価</td><td>297.0</td><td>297.0</td><td>0</td></tr>
+<tr><td>販管費</td><td>15.0</td><td>15.0</td><td>0</td></tr>
+<tr><td>営業利益</td><td>-12.0<sup>※</sup></td><td>15.6</td><td>27.6</td></tr>
+</table>
+<p style="font-size:0.85rem; color:var(--muted);">※ 売上300 - 原価297 - 販管費15 = -12.0（販管費込みでは赤字。ただし実際は販管費を他取引と共有しているため見かけ上の赤字）</p>
+
+<h3>5-2. ディストリビューション取引の更正リスク</h3>
+<div class="assumption">
+<strong>前提</strong><br>
+・実際のOM: 1%（最悪シナリオ）<br>
+・比較対象企業のOM: 3%～5%<br>
+・ディストリビューション売上: 300百万円
+</div>
+
+<table>
+<tr><th>比較対象OM</th><th>ALP営業利益<br>(=売上×OM)</th><th>実際営業利益<br>(OM1%)</th><th>更正所得<br>(差額)</th></tr>
+<tr><td>3%</td><td>9.0</td><td>3.0</td><td class="num-neg">+6.0</td></tr>
+<tr><td>4%</td><td>12.0</td><td>3.0</td><td class="num-neg">+9.0</td></tr>
+<tr><td>5%</td><td>15.0</td><td>3.0</td><td class="num-neg">+12.0</td></tr>
+</table>
+
+<div class="assumption">
+<strong>ディストリビューションの更正メカニズム</strong><br>
+OMが低すぎる場合、仕入価格（P社からの輸入価格）が高すぎると認定される。<br>
+更正は仕入価格の引き下げ = 所得の増額として行われる。<br>
+例: OM1%→3%なら、仕入を6百万円引き下げ → 所得6百万円増。
+</div>
+
+<h3>5-3. 合計更正所得と税額影響</h3>
+<table>
+<tr><th>シナリオ</th><th>プロキュア更正</th><th>ディストリ更正</th><th>合計更正所得</th></tr>
+<tr><td>穏当（FCM5%, OM3%）</td><td>27.6</td><td>6.0</td><td class="num-neg">33.6</td></tr>
+<tr><td>中間（FCM5%, OM4%）</td><td>27.6</td><td>9.0</td><td class="num-neg">36.6</td></tr>
+<tr><td>厳格（FCM5%, OM5%）</td><td>27.6</td><td>12.0</td><td class="num-neg">39.6</td></tr>
+</table>
+
+<h3>5-4. 加算税・延滞税の概算</h3>
+<div class="assumption">
+<strong>税率の前提</strong><br>
+・法人税等の実効税率: 約30%<br>
+・過少申告加算税: 10%（更正所得に対する追加税額の10%）<br>
+ - 期限内申告額を超える部分又は50万円を超える部分: 15%<br>
+・延滞税: 年7.3%（納期限後2か月以内）/ 年14.6%（2か月超）<br>
+ - 令和4年以降の特例: 年2.4%（2か月以内）/ 年8.7%（2か月超）<br>
+・仮に更正処分が3年分を対象とする場合を試算
+</div>
+
+<table>
+<tr><th>項目</th><th>穏当<br>(更正33.6/年)</th><th>中間<br>(更正36.6/年)</th><th>厳格<br>(更正39.6/年)</th></tr>
+<tr><td>年間追加法人税等<br>(更正所得×30%)</td><td>10.1</td><td>11.0</td><td>11.9</td></tr>
+<tr><td>3年分追加法人税等</td><td>30.2</td><td>32.9</td><td>35.6</td></tr>
+<tr><td>過少申告加算税<br>(追加税額×10%)</td><td>3.0</td><td>3.3</td><td>3.6</td></tr>
+<tr><td>延滞税概算<sup>※</sup><br>(追加税額×平均3年×特例2.4%)</td><td>2.2</td><td>2.4</td><td>2.6</td></tr>
+<tr style="font-weight:700;" class="highlight">
+<td>合計追徴額（3年分）</td>
+<td class="num-neg">35.4</td>
+<td class="num-neg">38.6</td>
+<td class="num-neg">41.8</td>
+</tr>
+</table>
+
+<p style="font-size:0.85rem; color:var(--muted);">※延滞税は簡略計算。実際は各事業年度の法定納期限からの経過日数で個別に計算。平均1.5年の遅延と仮定し、各年の追加税額 × 2.4% × 1.5年で概算。</p>
+
+<div class="warning">
+<strong>追加リスク要因</strong><br>
+(1) <strong>仮装・隠蔽と認定された場合</strong>: 過少申告加算税に代えて重加算税35%が課される → 3年分の追加税額30-36百万円 × 35% = 10.5-12.5百万円<br>
+(2) <strong>更正期間の延長</strong>: 移転価格は最長7年遡及が可能（国税通則法70条5項）。7年分なら追徴額は上記の約2.3倍<br>
+(3) <strong>二重課税の救済</strong>: 相互協議（MAP）で救済される可能性があるが、解決までに数年を要する
+</div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="overall">総括</h2>
+<!-- ============================================================ -->
+<div class="card">
+
+<div class="summary-box">
+<h3>数値シミュレーション結果の全体像</h3>
+<table style="color:#fff; border-color:#2d3748; width:100%;">
+<tr>
+<th style="background:#2d3748; color:#bee3f8; width:30%;">分析項目</th>
+<th style="background:#2d3748; color:#bee3f8; width:35%;">主要数値</th>
+<th style="background:#2d3748; color:#bee3f8; width:35%;">備考</th>
+</tr>
+<tr>
+<td>プロキュアメント利益移転<br>（Sim1）</td>
+<td>年間 <strong>19.2 ~ 21.0百万円</strong></td>
+<td>マージン8%→1%。計算ベースにより差異</td>
+</tr>
+<tr>
+<td>ディストリビューション利益移転<br>（Sim2）</td>
+<td>年間 <strong>3.0 ~ 9.0百万円</strong></td>
+<td>OM4%→1~3%。売上前提により変動</td>
+</tr>
+<tr>
+<td>合成利益移転額<br>（Sim3）</td>
+<td>年間 <strong>24.0 ~ 30.0百万円</strong></td>
+<td>全社営業利益150の16~20%に相当</td>
+</tr>
+<tr>
+<td>推定課税更正所得<br>（Sim5）</td>
+<td>年間 <strong>33.6 ~ 39.6百万円</strong></td>
+<td>FCM5%、OM3-5%想定</td>
+</tr>
+<tr>
+<td>追徴税額（3年分）<br>（Sim5）</td>
+<td><span class="big-num">3,540万円 ~ 4,180万円</span></td>
+<td>本税+加算税+延滞税</td>
+</tr>
+</table>
+</div>
+
+<h3>主要な仮定と留意点</h3>
+<table>
+<tr><th>#</th><th>仮定</th><th>感度</th></tr>
+<tr><td>1</td><td>プロキュアメント原価: マークアップ8%から逆算で278百万円</td><td>原価が変われば利益移転額が変動。原価250なら粗利50、移転額も拡大</td></tr>
+<tr><td>2</td><td>ディストリビューション売上: 300百万円（国内売上700の一部）</td><td>売上220なら利益影響は約26%減少</td></tr>
+<tr><td>3</td><td>販管費配賦: 従業員按分（プロキュア10%、ディストリ40%、その他50%）</td><td>配賦比率が変わるとFCM計算結果が変動。プロキュア20%なら更正所得は約22百万円に減少</td></tr>
+<tr><td>4</td><td>比較対象企業のFCM: 5%</td><td>FCM3%なら更正所得は約18百万円に減少。FCM8%なら約37百万円に拡大</td></tr>
+<tr><td>5</td><td>延滞税は特例税率2.4%で概算</td><td>期間・時期により変動。本税額の5-10%程度</td></tr>
+</table>
+
+<h3>分析上の構造的課題</h3>
+<table>
+<tr><th>課題</th><th>内容</th></tr>
+<tr><td>取引別原価の不確定性</td><td>全社P/Lから取引別原価を分離する際、国内仕入500のプロキュアメント/その他への配分が不明。実際の会計データが必要。</td></tr>
+<tr><td>ディストリビューション売上の推定</td><td>P社製品の国内販売売上が全社売上のどこに含まれるか明示されていない。管理会計データが必要。</td></tr>
+<tr><td>マージン率とOM率の混在</td><td>プロキュアメントはコストプラス型（マークアップ）、ディストリビューションは再販型（OM）で、利益指標が異なる。比較には注意が必要。</td></tr>
+<tr><td>全社OMとの整合性</td><td>取引別利益の合計が全社利益150と一致するよう、「その他国内」取引が調整弁になっている。</td></tr>
+</table>
+</div>
+
+<p style="text-align:center; color:var(--muted); margin-top:32px; font-size:0.85rem;">
+作成日: 2026-03-26 | 移転価格分析 数値シミュレーション | 全数値は百万円単位（特記なき場合）
+</p>
+
+</div>
+</body>
+</html>
