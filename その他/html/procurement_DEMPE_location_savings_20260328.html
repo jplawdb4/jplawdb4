@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>プロキュアメント取引におけるDEMPE分析・ロケーションセービング・取引の再構築</title>
+<style>
+:root {
+  --primary: #1a365d;
+  --secondary: #2c5282;
+  --accent: #c53030;
+  --bg: #f7fafc;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --text: #1a202c;
+  --muted: #718096;
+  --highlight: #fffbeb;
+  --warning-bg: #fff5f5;
+  --insight-bg: #ebf8ff;
+  --success-bg: #f0fff4;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: "Noto Serif JP", "Georgia", serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+  font-size: 15px;
+}
+.container { max-width: 960px; margin: 0 auto; padding: 24px 20px; }
+h1 {
+  font-size: 1.6em;
+  color: var(--primary);
+  border-bottom: 3px solid var(--primary);
+  padding-bottom: 12px;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+.meta { color: var(--muted); font-size: 0.85em; margin-bottom: 24px; }
+h2 {
+  font-size: 1.3em;
+  color: var(--secondary);
+  border-left: 4px solid var(--secondary);
+  padding-left: 12px;
+  margin: 32px 0 16px 0;
+}
+h3 {
+  font-size: 1.1em;
+  color: var(--primary);
+  margin: 20px 0 10px 0;
+}
+h4 {
+  font-size: 1.0em;
+  color: #4a5568;
+  margin: 14px 0 8px 0;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 16px 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+.warning-box {
+  background: var(--warning-bg);
+  border-left: 4px solid var(--accent);
+  padding: 16px 20px;
+  margin: 16px 0;
+  border-radius: 0 8px 8px 0;
+}
+.insight-box {
+  background: var(--insight-bg);
+  border-left: 4px solid #3182ce;
+  padding: 16px 20px;
+  margin: 16px 0;
+  border-radius: 0 8px 8px 0;
+}
+.success-box {
+  background: var(--success-bg);
+  border-left: 4px solid #38a169;
+  padding: 16px 20px;
+  margin: 16px 0;
+  border-radius: 0 8px 8px 0;
+}
+.highlight-box {
+  background: var(--highlight);
+  border-left: 4px solid #d69e2e;
+  padding: 16px 20px;
+  margin: 16px 0;
+  border-radius: 0 8px 8px 0;
+}
+blockquote {
+  background: #f8f9fa;
+  border-left: 3px solid var(--muted);
+  padding: 12px 16px;
+  margin: 12px 0;
+  font-size: 0.92em;
+  color: #4a5568;
+}
+blockquote cite {
+  display: block;
+  text-align: right;
+  font-size: 0.85em;
+  color: var(--muted);
+  margin-top: 8px;
+}
+ul, ol { margin: 8px 0 8px 24px; }
+li { margin-bottom: 6px; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 0.9em;
+}
+th, td {
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  text-align: left;
+}
+th { background: #edf2f7; font-weight: bold; }
+.toc { background: #edf2f7; border-radius: 8px; padding: 20px; margin: 20px 0; }
+.toc h3 { margin-top: 0; }
+.toc ol { margin-left: 20px; }
+.toc li { margin-bottom: 4px; }
+.toc a { color: var(--secondary); text-decoration: none; }
+.toc a:hover { text-decoration: underline; }
+.section-num { color: var(--accent); font-weight: bold; margin-right: 4px; }
+.ref { font-size: 0.85em; color: var(--muted); }
+strong.key { color: var(--accent); }
+.fact-box {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 4px 16px;
+  margin: 8px 0;
+  font-size: 0.95em;
+}
+.fact-box dt { font-weight: bold; color: var(--secondary); }
+.fact-box dd { margin: 0; }
+@media print {
+  body { font-size: 11pt; }
+  .card, .warning-box, .insight-box, .success-box, .highlight-box {
+    break-inside: avoid;
+  }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>プロキュアメント取引におけるDEMPE分析・ロケーションセービング・取引の再構築</h1>
+<p class="meta">
+  対象事案: 外資系日本法人（イスラエル親会社P社100%子会社）のプロキュアメント取引<br>
+  作成日: 2026-03-28 | 分類: 移転価格税制 / 無形資産 / 事業再編
+</p>
+
+<!-- 事実関係 -->
+<div class="card">
+<h3>事案の概要</h3>
+<dl class="fact-box">
+  <dt>当事者構造</dt>
+  <dd>イスラエル親会社P社 &rarr; 日本法人（P社100%子会社）</dd>
+  <dt>取引内容</dt>
+  <dd>日本法人が日本国内でサプライヤーから部品・材料を仕入れ、P社に輸出（プロキュアメント取引）</dd>
+  <dt>マージン変動</dt>
+  <dd>従前 8% &rarr; 現在 1% に圧縮</dd>
+  <dt>日本法人の資産</dt>
+  <dd>長年にわたり構築したサプライヤーネットワーク、調達ノウハウ、品質管理体制</dd>
+</dl>
+</div>
+
+<!-- 目次 -->
+<div class="toc">
+<h3>目次</h3>
+<ol>
+  <li><a href="#sec1">DEMPE分析 ― 日本法人のプロキュアメント機能における無形資産</a></li>
+  <li><a href="#sec2">ロケーションセービング ― 日本の調達市場から生じる便益</a></li>
+  <li><a href="#sec3">取引の再構築（Non-recognition / Recharacterization）</a></li>
+  <li><a href="#sec4">機能・リスク分析の深化</a></li>
+  <li><a href="#sec5">本件への適用 ― 1%マージンの評価</a></li>
+  <li><a href="#sec6">日本法における法的根拠と実務的対応</a></li>
+  <li><a href="#sec7">出典・参照パラグラフ一覧</a></li>
+</ol>
+</div>
+
+<!-- ================================================ -->
+<h2 id="sec1"><span class="section-num">1.</span> DEMPE分析 ― 日本法人のプロキュアメント機能における無形資産</h2>
+
+<h3>1.1 DEMPE概念の概要</h3>
+<p>
+BEPS Action 8-10（2015）で導入され、OECD TPG 2022 Chapter VIに統合されたDEMPE分析は、
+無形資産に関連する所得の帰属を<strong>法的所有権</strong>ではなく、<strong>Development（開発）、Enhancement（改良）、Maintenance（維持）、Protection（保護）、Exploitation（活用）</strong>の各機能を実際に遂行する者に帰属させるフレームワークである。
+</p>
+
+<blockquote>
+"For transfer pricing purposes, legal ownership of intangibles, by itself, does not confer any right ultimately to retain returns derived by the MNE group from exploiting the intangible... The return ultimately retained by or attributed to the legal owner depends upon the functions it performs, the assets it uses, and the risks it assumes."
+<cite>OECD TPG 2022, para. 6.42</cite>
+</blockquote>
+
+<div class="card">
+<h4>DEMPE分析のフレームワーク（TPG 6.34）</h4>
+<ol>
+  <li>無形資産の特定（specificity）とそれに関連する経済的に重要なリスクの特定</li>
+  <li>契約上の取決め（法的所有権・ライセンス契約等）の確認</li>
+  <li>DEMPE各機能を実際に遂行する当事者の特定（機能分析）</li>
+  <li>契約条件と当事者の行為の整合性確認、リスクの支配と財務能力の検証</li>
+  <li>法的所有・契約・行為（DEMPE貢献）を踏まえた取引の正確な認定</li>
+  <li>各当事者のDEMPE貢献に応じた独立企業間対価の決定</li>
+</ol>
+</div>
+
+<h3>1.2 サプライヤーネットワーク・調達ノウハウの無形資産該当性</h3>
+
+<p>
+OECD TPG 6.6は、無形資産を「<strong>物理的資産でも金融資産でもなく、商業活動での使用のために所有又は支配が可能であり、独立企業間で譲渡・使用された場合に対価が支払われるもの</strong>」と定義する。
+</p>
+
+<div class="insight-box">
+<strong>日本法人のサプライヤーネットワークの分析</strong>
+<ul>
+  <li><strong>取引網（Trading network）</strong>: 国税庁移転価格事務運営要領3-12ハは、「<strong>生産工程、交渉手順及び開発、販売、資金調達等に係る取引網等</strong>」を明示的に重要な無形資産として列挙している。サプライヤーネットワークはこの「取引網」に直接該当する。</li>
+  <li><strong>ノウハウ</strong>: 事務運営要領3-12ロは、「従業員等が経営、営業、生産、研究開発、販売促進等の企業活動における経験等を通じて形成したノウハウ等」を無形資産として認識。長年の調達活動を通じて蓄積されたサプライヤー評価能力、価格交渉ノウハウ、品質管理基準はこれに該当する。</li>
+  <li><strong>顧客関係の類推</strong>: TPG 6.22-6.24は顧客リスト・顧客関係を無形資産として認識する。サプライヤー関係は「上流の顧客関係」として同様の論理が適用される。</li>
+</ul>
+</div>
+
+<h3>1.3 「マーケティング上の無形資産」との関係</h3>
+
+<p>
+TPG Glossaryの定義上、marketing intangiblesは「顧客との商業的関係」に関連する無形資産（商標、顧客リスト、顧客関係、流通チャネル等）を指す。サプライヤーネットワークは<strong>厳密には「マーケティング上の無形資産」ではなく、「組織的無形資産」又は「取引上の無形資産」</strong>に分類される。ただし、TPG 6.15は明示的に「特定のカテゴリーへの分類に基づいて結論を導くべきでない」と述べており、分類よりも<strong>当該無形資産が価値創造に寄与しているかどうか</strong>が本質的問題である。
+</p>
+
+<blockquote>
+"The approach contained in this chapter for determining arm's length prices in cases involving intangibles does not turn on these categorisations."
+<cite>OECD TPG 2022, para. 6.15</cite>
+</blockquote>
+
+<h3>1.4 日本法人によるDEMPE機能の遂行</h3>
+
+<div class="card">
+<table>
+<tr><th>DEMPE要素</th><th>日本法人の貢献</th><th>P社の貢献</th></tr>
+<tr>
+  <td><strong>D（開発）</strong></td>
+  <td>サプライヤーの発掘・選定、品質基準の策定、調達ネットワークの構築（長年にわたる活動）</td>
+  <td>調達仕様の提示（あり得る）</td>
+</tr>
+<tr>
+  <td><strong>E（改良）</strong></td>
+  <td>新規サプライヤーの追加、既存サプライヤーとの関係深化、調達プロセスの効率化</td>
+  <td>限定的（事実確認要）</td>
+</tr>
+<tr>
+  <td><strong>M（維持）</strong></td>
+  <td>サプライヤーとの日常的なコミュニケーション、品質監査、関係維持活動</td>
+  <td>なし又は極めて限定的</td>
+</tr>
+<tr>
+  <td><strong>P（保護）</strong></td>
+  <td>サプライヤー情報の秘匿、競合からのネットワーク防衛、契約管理</td>
+  <td>限定的</td>
+</tr>
+<tr>
+  <td><strong>E（活用）</strong></td>
+  <td>日常の調達業務遂行、価格交渉、納期管理、品質管理</td>
+  <td>調達品の最終利用（P社の事業に組み込み）</td>
+</tr>
+</table>
+</div>
+
+<div class="warning-box">
+<strong>核心的論点</strong>: 日本法人がDEMPEの全ての段階で実質的な機能を遂行している場合、TPG 6.54に基づき、P社が法的所有者であったとしても、日本法人は「重要な機能の遂行者」として残余利益の相当部分を受ける権利がある。1%マージンへの圧縮は、DEMPE貢献に対する適正な報酬を反映していない可能性が高い。
+</div>
+
+<h3>1.5 重要な機能（Important functions）と報酬</h3>
+
+<blockquote>
+"In considering the arm's length compensation for functional contributions of various members of the MNE group, certain important functions will have special significance... those important functions usually make a significant contribution to intangible value and, if those important functions are outsourced by the legal owner in transactions between associated enterprises, the performance of those functions should be compensated with an appropriate share of the returns derived by the MNE group from the exploitation of intangibles."
+<cite>OECD TPG 2022, para. 6.56</cite>
+</blockquote>
+
+<p>
+サプライヤーの選定・評価、品質管理基準の設計と実施、価格交渉は、プロキュアメント取引における「important functions」に該当する。これらの機能をP社にアウトソーシングせず日本法人が自ら遂行している場合、日本法人はルーチン報酬を超える利益配分を受けるべきである（TPG 6.56-6.58）。
+</p>
+
+<!-- ================================================ -->
+<h2 id="sec2"><span class="section-num">2.</span> ロケーションセービング ― 日本の調達市場から生じる便益</h2>
+
+<h3>2.1 ロケーションセービングの定義と分析枠組み</h3>
+
+<p>
+ロケーションセービングとは、特定の地理的市場で事業を行うことにより生じるコスト節減をいう（TPG 1.159）。典型的には低賃金国への製造移転に伴うコスト節減を指すが、日本の調達市場の場合は<strong>逆方向のロケーションセービング</strong>――すなわち、日本市場でしか入手できない高品質部品・材料の調達による便益が問題となる。
+</p>
+
+<div class="card">
+<h4>OECD TPG 1.161 ロケーションセービングの4段階分析</h4>
+<ol>
+  <li><strong>(i) ロケーションセービングの存否</strong>: 日本の調達市場に特有の便益（品質、信頼性、イノベーション、サプライチェーンの安定性）が存在するか</li>
+  <li><strong>(ii) ロケーションセービングの金額</strong>: 他国で同等品を調達した場合と比較した便益の定量化</li>
+  <li><strong>(iii) 第三者への転嫁の程度</strong>: 便益がP社の顧客（最終消費者）にどの程度転嫁されているか</li>
+  <li><strong>(iv) 残存する便益の配分方法</strong>: 独立企業間で同様の状況下にある当事者間でどのように配分されるか</li>
+</ol>
+</div>
+
+<h3>2.2 日本の調達市場の特性から生じる便益</h3>
+
+<div class="highlight-box">
+<strong>日本市場に特有のロケーション・アドバンテージ</strong>
+<ul>
+  <li><strong>品質の卓越性</strong>: 日本のサプライヤーが供給する部品・材料の品質水準、精密度、信頼性は国際的に認知された優位性を持つ。これはP社製品の競争力に直接寄与する。</li>
+  <li><strong>サプライチェーンの安定性</strong>: 日本の製造業は「ジャストインタイム」に代表される効率的な供給体制を実現しており、納期遵守率は他国と比較して高い。</li>
+  <li><strong>技術的イノベーション</strong>: 日本のサプライヤーは継続的な技術改良を行い、共同開発やVA/VE（Value Analysis/Value Engineering）提案を通じて付加価値を創出する傾向がある。</li>
+  <li><strong>長期的信頼関係</strong>: 日本の取引慣行における継続的取引関係（「系列」的関係を含む）は、取引コストの低減と供給の安定性に寄与する。</li>
+</ul>
+</div>
+
+<h3>2.3 TPG 1.162-1.163 の適用</h3>
+
+<blockquote>
+"Where the functional analysis shows that location savings exist that are not passed on to customers or suppliers, and where comparable entities and transactions in the local market can be identified, those local market comparables will provide the most reliable indication regarding how the net location savings should be allocated."
+<cite>OECD TPG 2022, para. 1.162</cite>
+</blockquote>
+
+<p>
+ロケーションセービングの配分に関し、日本市場で活動する比較対象企業（日本国内の独立プロキュアメント事業者）のマージン水準が参照可能であれば、それが最も信頼性の高い指標となる。信頼性のある現地市場の比較対象が存在する場合、ロケーションセービングの調整は不要である（TPG 1.162）。現地比較対象が利用できない場合は、全ての関連事実・状況に基づく分析が必要となる（TPG 1.163, 9.126-9.131参照）。
+</p>
+
+<h3>2.4 TPG 9.126-9.131 ビジネスリストラクチャリングにおけるロケーションセービング</h3>
+
+<p>
+Chapter IXは二つの対照的な事例を提示する:
+</p>
+
+<div class="card">
+<h4>事例1（TPG 9.128-9.129）: ロケーションセービングが受託者に帰属しないケース</h4>
+<p>
+有名ブランドの衣料メーカーが、高コスト国Aから低コスト国Bの関連会社に製造を移転。国B関連会社は契約製造者として重要な無形資産もリスクも負わない。この場合、国Bの契約製造者にロケーションセービングの配分は不要。独立の契約製造者と同等の報酬でよい。
+</p>
+<p><strong>理由</strong>: 製造業務は競争的市場であり、国Aの企業は国Bの関連会社に代えて第三者製造者を利用する選択肢（options realistically available）がある。</p>
+</div>
+
+<div class="card">
+<h4>事例2（TPG 9.130-9.131）: ロケーションセービングが受託者に帰属するケース</h4>
+<p>
+高度専門エンジニアリングサービスを提供する国X企業が、低コスト国Yの子会社に業務を委託。国Y子会社は同等の資格を持つエンジニアを低賃金で雇用し、独自の技術ノウハウを有し、それが参入障壁となっている。国X企業は国Y子会社以外の選択肢が実質的にない。
+</p>
+<p><strong>結論</strong>: 国Y子会社への報酬は、ロケーションセービングと独自の無形資産（技術ノウハウ）の価値を反映すべき。利益分割法の適用も検討対象。</p>
+</div>
+
+<div class="warning-box">
+<strong>本件への示唆</strong>: 日本法人の調達機能が「事例2」に近い特性を持つ場合――すなわち、(a) 日本法人が独自の調達ノウハウ・サプライヤーネットワークを保有し、(b) P社が日本法人を介さずに同等の調達を行う選択肢（options realistically available）が限定されている場合、ロケーションセービング（＝日本市場での調達便益）の相当部分は日本法人に帰属すべきである。1%マージンへの圧縮は、この便益の不当なP社への移転に該当し得る。
+</div>
+
+<h3>2.5 「その他の現地市場特性」（TPG 1.164-1.168）</h3>
+
+<p>
+狭義のロケーションセービング（コスト節減）に該当しない場合でも、TPG 1.164は「<strong>地理的市場の特性（市場の競争度、インフラの利用可能性、熟練労働者プール等）が市場の優位性又は不利益を生じさせ得る</strong>」ことを認め、比較可能性分析でこれを考慮すべきとする。日本市場の高品質サプライヤー基盤へのアクセスは、このような「local market feature」に該当する。
+</p>
+
+<!-- ================================================ -->
+<h2 id="sec3"><span class="section-num">3.</span> 取引の再構築（Non-recognition / Recharacterization）</h2>
+
+<h3>3.1 OECD TPG 1.142-1.145 非認識・再構築の基準</h3>
+
+<p>
+TPG 1.141は「<strong>正確に認定された取引に対して独立企業間価格を決定するためにあらゆる努力を払うべき</strong>」とし、取引の否認は例外的場合にのみ認められるとする。
+</p>
+
+<div class="card">
+<h4>非認識（Non-recognition）が認められる基準（TPG 1.142-1.143）</h4>
+<p>取引の否認・再構築が認められるのは、以下の要件を<strong>全て</strong>満たす場合に限られる:</p>
+<ol>
+  <li>取引全体を見た場合に、<strong>比較可能な状況下で商業的に合理的に行動する独立企業が採用する取決めと異なる</strong></li>
+  <li>その結果、<strong>各当事者の立場と現実に利用可能な選択肢を考慮して、双方が受入可能な価格の決定が妨げられている</strong></li>
+  <li>判断基準は「独立当事者間で同じ取引が観察されるかどうか」ではなく、「<strong>当該取引が比較可能な経済的状況下で非関連者間で合意される取決めの商業的合理性を有するか</strong>」</li>
+</ol>
+</div>
+
+<blockquote>
+"The key question in the analysis is whether the actual transaction possesses the commercial rationality of arrangements that would be agreed between unrelated parties under comparable economic circumstances, not whether the same transaction can be observed between independent parties."
+<cite>OECD TPG 2022, para. 1.143</cite>
+</blockquote>
+
+<h3>3.2 本件における取引の再構築の可能性</h3>
+
+<div class="insight-box">
+<strong>1%マージンの「商業的合理性」の検証</strong>
+<p>
+独立のプロキュアメント事業者が以下の機能を全て遂行しながら1%マージンを受け入れるか:
+</p>
+<ul>
+  <li>サプライヤーの探索・選定・評価</li>
+  <li>品質管理・検査</li>
+  <li>価格交渉</li>
+  <li>在庫管理・物流手配</li>
+  <li>信用リスク・為替リスクの一部負担</li>
+</ul>
+<p>
+独立企業間では、これらの機能に対して通常3-8%のマージン（又はコスト+マークアップ）が期待される。1%マージンが上記機能に対するルーチン報酬すら賄えない場合、<strong>TPG 1.142の「商業的合理性を欠く」基準に近づく</strong>。
+</p>
+</div>
+
+<p>
+ただし、TPG 1.142は「<strong>非認識が安易に用いられてはならず、二重課税の源泉となりうる</strong>」と強く警告している。また、「関連企業は独立企業よりも多様な取決めを行いうる」ことも認めている。したがって、1%マージン自体が直ちに「商業的合理性を欠く」とは断定できず、<strong>まず正確な取引認定と独立企業間価格の算定を試みるべき</strong>である。
+</p>
+
+<h3>3.3 ビジネスリストラクチャリングとしての分析（Chapter IX）</h3>
+
+<p>
+マージンが8%から1%に圧縮された経緯が買収後のグループ方針変更に起因する場合、TPG Chapter IXの事業再編の枠組みで分析すべきである:
+</p>
+
+<div class="card">
+<h4>TPG 9.1-9.2 事業再編の定義</h4>
+<p>
+事業再編には、「<strong>機能の集中化（例: 調達、販売支援、サプライチェーン物流）による現地機能の範囲・規模の縮小</strong>」が含まれる（TPG 9.2）。マージン8%→1%の圧縮は、実質的にフルファンクションの調達拠点からリミテッドリスクの購買代行への転換を意味し、TPG 9.2の「full-fledged distributors → limited-risk distributors」の転換に類似する。
+</p>
+</div>
+
+<div class="warning-box">
+<strong>事業再編時の補償問題（TPG 9.75-9.83）</strong>
+<p>
+マージン圧縮が独立企業間で行われた場合、以下が問われる:
+</p>
+<ul>
+  <li>日本法人のサプライヤーネットワーク・ノウハウの「移転」に対する補償（exit charge）が支払われたか</li>
+  <li>独立企業であれば、長年構築した調達ネットワークの価値の喪失（利益ポテンシャルの移転）に対して補償を要求するか</li>
+  <li>TPG 9.78: 全ての契約終了・再交渉が補償権を生じさせるわけではないが、事実と状況に依存する</li>
+</ul>
+</div>
+
+<!-- ================================================ -->
+<h2 id="sec4"><span class="section-num">4.</span> 機能・リスク分析の深化</h2>
+
+<h3>4.1 プロキュアメント機能のリスクプロファイル</h3>
+
+<div class="card">
+<table>
+<tr><th>リスク類型</th><th>内容</th><th>日本法人の負担</th><th>OECD TPG参照</th></tr>
+<tr>
+  <td><strong>在庫リスク</strong></td>
+  <td>仕入れた部品・材料の陳腐化、価格変動、品質不良</td>
+  <td>仕入から輸出までの期間のリスクを負担。発注から納品までのリードタイム中の価格変動リスク</td>
+  <td>1.71-1.72, 9.20</td>
+</tr>
+<tr>
+  <td><strong>信用リスク</strong></td>
+  <td>サプライヤーの債務不履行、P社の支払遅延</td>
+  <td>サプライヤーへの支払義務を直接負い、P社からの回収リスクも存在</td>
+  <td>1.72(c), 9.21</td>
+</tr>
+<tr>
+  <td><strong>為替リスク</strong></td>
+  <td>円建て仕入・外貨建て（又はその逆）での販売に伴う為替変動</td>
+  <td>仕入（円）と売上（外貨又は円）の通貨ミスマッチ</td>
+  <td>1.72(c)</td>
+</tr>
+<tr>
+  <td><strong>品質保証リスク</strong></td>
+  <td>納入品の品質問題に伴う返品・クレーム</td>
+  <td>サプライヤー管理と品質検査を通じたリスク軽減機能を遂行</td>
+  <td>1.72(b)</td>
+</tr>
+<tr>
+  <td><strong>市場リスク</strong></td>
+  <td>需要変動に伴う調達量の変動、サプライチェーン途絶</td>
+  <td>需要変動への対応、代替サプライヤーの確保</td>
+  <td>1.72(a)</td>
+</tr>
+</table>
+</div>
+
+<h3>4.2 OECD TPG 1.56-1.68 リスクフレームワークの適用</h3>
+
+<p>
+TPG 1.60の6段階リスク分析を本件に適用する:
+</p>
+
+<div class="card">
+<h4>6段階リスク分析</h4>
+<table>
+<tr><th>ステップ</th><th>内容</th><th>本件への適用</th></tr>
+<tr>
+  <td>Step 1</td>
+  <td>経済的に重要なリスクの特定</td>
+  <td>在庫リスク、品質リスク、為替リスク、信用リスクが経済的に重要</td>
+</tr>
+<tr>
+  <td>Step 2</td>
+  <td>契約上のリスク配分の確認</td>
+  <td>日本法人-P社間の調達契約の条項を確認（所有権移転時期、品質保証条件、為替条件等）</td>
+</tr>
+<tr>
+  <td>Step 3</td>
+  <td>リスク管理機能の分析</td>
+  <td><strong>核心</strong>: 日本法人がサプライヤー選定、品質管理、在庫水準決定等のリスク管理機能を実際に遂行しているか</td>
+</tr>
+<tr>
+  <td>Step 4</td>
+  <td>契約と行為の整合性、リスクの支配と財務能力</td>
+  <td>日本法人がリスクを「支配」（TPG 1.65: 意思決定能力＋実際の意思決定遂行）し、「財務能力」（TPG 1.64）を有するか</td>
+</tr>
+<tr>
+  <td>Step 5</td>
+  <td>リスクの再配分</td>
+  <td>Step 4で日本法人がリスクを支配していない場合のみ適用</td>
+</tr>
+<tr>
+  <td>Step 6</td>
+  <td>適正報酬の決定</td>
+  <td>リスク負担に見合った報酬（1%が十分か）</td>
+</tr>
+</table>
+</div>
+
+<h3>4.3 リスクの「支配」（Control）の意義</h3>
+
+<blockquote>
+"Control over risk involves... (i) the capability to make decisions to take on, lay off, or decline a risk-bearing opportunity, together with the actual performance of that decision-making function and (ii) the capability to make decisions on whether and how to respond to the risks associated with the opportunity, together with the actual performance of that decision-making function."
+<cite>OECD TPG 2022, para. 1.65</cite>
+</blockquote>
+
+<p>
+日本法人がサプライヤーの選定、価格交渉、品質基準の設定、在庫水準の決定等に関する意思決定を実際に行っている場合、日本法人はこれらのリスクを「支配」していると認められる。TPG 1.66は、意思決定者が「当該リスク領域における能力と経験を有し、意思決定が事業に与える影響を理解していること」を要求する。長年のプロキュアメント活動の実績がある日本法人は、この要件を満たす可能性が高い。
+</p>
+
+<h3>4.4 買収前後での機能・リスクの変化</h3>
+
+<div class="card">
+<table>
+<tr><th>項目</th><th>買収前（マージン8%）</th><th>買収後（マージン1%）</th><th>変化の実質</th></tr>
+<tr>
+  <td>遂行機能</td>
+  <td>フルファンクション調達</td>
+  <td>（確認要）変化があったか</td>
+  <td><strong>機能が変わらないのにマージンだけ圧縮されている場合、移転価格上の問題が明白</strong></td>
+</tr>
+<tr>
+  <td>負担リスク</td>
+  <td>在庫・信用・為替・品質</td>
+  <td>（確認要）リスクの実質的移転があったか</td>
+  <td>リスクが同じなら報酬も同水準であるべき</td>
+</tr>
+<tr>
+  <td>使用資産</td>
+  <td>サプライヤーネットワーク、ノウハウ</td>
+  <td>（確認要）無形資産の移転があったか</td>
+  <td>無形資産が移転していないなら、その貢献に見合う報酬が必要</td>
+</tr>
+<tr>
+  <td>意思決定権限</td>
+  <td>自律的</td>
+  <td>（確認要）P社への集中があったか</td>
+  <td>意思決定が実質的にP社に移転していればリスクの再配分あり</td>
+</tr>
+</table>
+</div>
+
+<div class="warning-box">
+<strong>最重要チェックポイント</strong>: 買収後に機能・リスク・使用資産に実質的変化がないにもかかわらずマージンが8%から1%に圧縮された場合、これは<strong>「条件の変更なき報酬の変更」</strong>であり、独立企業間原則に反する可能性が極めて高い。TPG 9.19は「リストラクチャリング前後のリスク配分の検証が機能分析の不可欠な部分である」と述べている。
+</div>
+
+<!-- ================================================ -->
+<h2 id="sec5"><span class="section-num">5.</span> 本件への適用 ― 1%マージンの評価</h2>
+
+<h3>5.1 総合評価</h3>
+
+<div class="success-box">
+<strong>結論的評価</strong>
+<p>
+以下の分析を総合すると、日本法人の1%マージンは独立企業間原則に整合しない可能性が高い。
+</p>
+</div>
+
+<div class="card">
+<h4>5つの論拠</h4>
+<ol>
+  <li><strong>DEMPE貢献の未反映</strong>: 日本法人がサプライヤーネットワーク・調達ノウハウのDEMPE全段階で実質的機能を遂行しているにもかかわらず、1%マージンはルーチン報酬にすら満たない可能性がある（TPG 6.42, 6.48-6.56）。</li>
+  <li><strong>ロケーションセービングの不当移転</strong>: 日本市場でのプロキュアメント活動から生じる便益（品質・信頼性・サプライチェーン安定性）がP社に一方的に移転されている。日本法人が独自のノウハウを有しP社の選択肢が限定されている場合、TPG 9.131に基づきロケーションセービングの相当部分は日本法人に帰属すべき。</li>
+  <li><strong>リスク負担との不整合</strong>: 日本法人が在庫リスク、信用リスク、為替リスク、品質リスクを実質的に負担・管理している場合、1%マージンではリスク調整後リターンとして不十分（TPG 1.56-1.68）。</li>
+  <li><strong>機能変化なきマージン圧縮</strong>: 買収後に機能・リスクの実質的変化がないにもかかわらずマージンが8%→1%に圧縮されている場合、これは事業再編（TPG Ch.IX）として分析すべきであり、利益ポテンシャルの移転に対する補償が必要。</li>
+  <li><strong>比較対象との乖離</strong>: 独立のプロキュアメント事業者・商社のマージン水準（通常3-8%程度）との乖離が著しい。</li>
+</ol>
+</div>
+
+<h3>5.2 推奨される分析手法</h3>
+
+<div class="card">
+<table>
+<tr><th>手法</th><th>適用場面</th><th>留意点</th></tr>
+<tr>
+  <td><strong>TNMM（取引単位営業利益法）</strong></td>
+  <td>日本法人をテスト対象とし、独立プロキュアメント企業のマージンをベンチマーク</td>
+  <td>機能・リスクの比較可能性を慎重に評価。独自の無形資産がある場合はTNMMの信頼性が低下（TPG 6.58）</td>
+</tr>
+<tr>
+  <td><strong>残余利益分割法</strong></td>
+  <td>日本法人・P社双方が重要な無形資産を有する場合</td>
+  <td>NTA事務運営要領も推奨（bessatsu-pack-08, 11）。基本的利益の配分後、残余利益をDEMPE貢献（取引網構築コスト等）に応じて配分</td>
+</tr>
+<tr>
+  <td><strong>CUP法</strong></td>
+  <td>買収前の取引条件（8%マージン）を内部比較対象として使用</td>
+  <td>TPG 9.110: 買収前の非関連者間取引条件が、機能・リスクの変化を調整した上で比較対象となり得る</td>
+</tr>
+</table>
+</div>
+
+<!-- ================================================ -->
+<h2 id="sec6"><span class="section-num">6.</span> 日本法における法的根拠と実務的対応</h2>
+
+<h3>6.1 移転価格税制の条文根拠</h3>
+
+<div class="card">
+<ul>
+  <li><strong>租税特別措置法66条の4</strong>: 移転価格税制の根幹規定。国外関連取引の対価が独立企業間価格と異なる場合の所得計算の特例</li>
+  <li><strong>措置法施行令39条の12第13項</strong>: 無形資産の定義（「有形資産及び金融資産以外の資産で、独立の事業者間で通常の取引の条件に従って行われるとした場合にその対価の額が支払われるべきもの」）</li>
+  <li><strong>移転価格事務運営要領3-12</strong>: 調査において検討すべき無形資産として(イ)特許権等、(ロ)ノウハウ等、<strong>(ハ)生産工程、交渉手順及び開発、販売、資金調達等に係る取引網等</strong>を明示</li>
+  <li><strong>移転価格事務運営要領3-13</strong>: 無形資産の形成・維持・発展への貢献。<strong>「費用を負担しているだけでは貢献の程度は低い」</strong>（＝DEMPE原則の日本法への反映）</li>
+</ul>
+</div>
+
+<h3>6.2 取引否認の法的根拠と限界</h3>
+
+<p>
+日本の移転価格税制（措置法66条の4）は、OECD TPG 1.142-1.145のような<strong>取引の非認識・再構築に関する明示的規定を持たない</strong>。日本法の下での対応は以下に限られる:
+</p>
+
+<div class="card">
+<table>
+<tr><th>法的根拠</th><th>内容</th><th>適用の可否</th></tr>
+<tr>
+  <td><strong>措置法66条の4</strong></td>
+  <td>独立企業間価格との差額の更正</td>
+  <td>適用可能。最も直接的な対応。取引自体は否認せず、価格を独立企業間水準に調整</td>
+</tr>
+<tr>
+  <td><strong>法人税法132条</strong><br>（同族会社の行為計算否認）</td>
+  <td>同族会社の行為又は計算で法人税の負担を不当に減少させるものの否認</td>
+  <td>外資系日本法人は同族会社に該当し得るが、移転価格事案での適用は稀。措置法66条の4が特別法として優先される</td>
+</tr>
+<tr>
+  <td><strong>法人税法132条の2</strong><br>（組織再編成に係る行為計算否認）</td>
+  <td>合併・分割等の組織再編に限定</td>
+  <td>本件のような内部的リストラクチャリングには直接適用されない可能性が高い</td>
+</tr>
+<tr>
+  <td><strong>実質課税原則</strong></td>
+  <td>法律上の形式ではなく実質に即した課税</td>
+  <td>移転価格税制の適用が困難な場合の補完的根拠として理論上はあり得るが、実務上の適用例は限定的</td>
+</tr>
+</table>
+</div>
+
+<div class="insight-box">
+<strong>実務上の最善策</strong>
+<p>
+日本の税務当局の観点からは、取引の否認・再構築よりも、<strong>措置法66条の4に基づく独立企業間価格への調整</strong>が最も確実かつ効果的な対応である。具体的には:
+</p>
+<ol>
+  <li>日本法人の機能・リスク分析を精緻に実施し、「基本的活動のみを行う法人」のマージンとの乖離を立証</li>
+  <li>サプライヤーネットワーク・調達ノウハウの重要な無形資産該当性を立証（事務運営要領3-12(ハ)）</li>
+  <li>残余利益分割法又はTNMM（比較対象企業は独立の調達事業者・商社）による独立企業間価格の算定</li>
+  <li>8%→1%の変更に伴う利益ポテンシャルの移転に対するexit chargeの検討</li>
+</ol>
+</div>
+
+<h3>6.3 納税者側の防御戦略</h3>
+
+<div class="card">
+<p>仮に納税者（日本法人又はP社）の立場から1%マージンを正当化する場合、以下の論拠が考えられる:</p>
+<ul>
+  <li><strong>機能縮小の主張</strong>: 買収後に調達に関する意思決定権限がP社に移転し、日本法人は単なる購買代行に転換したと主張 &rarr; ただし、実態（行為）が契約（形式）と一致している必要がある（TPG 1.140）</li>
+  <li><strong>無形資産の不存在</strong>: サプライヤーネットワークは「市場の状況」であり「無形資産」ではないと主張 &rarr; TPG 6.9は「市場の特性」と「無形資産」を区別するが、積極的に構築・維持された取引網は「市場の特性」ではなく「無形資産」（事務運営要領3-12(ハ)）</li>
+  <li><strong>ビジネス戦略</strong>: 市場浸透戦略等の正当な事業目的 &rarr; TPG 1.134-1.138に基づく検証が必要。無期限の低マージンは市場浸透戦略として正当化困難</li>
+</ul>
+</div>
+
+<!-- ================================================ -->
+<h2 id="sec7"><span class="section-num">7.</span> 出典・参照パラグラフ一覧</h2>
+
+<div class="card">
+<h4>OECD移転価格ガイドライン 2022</h4>
+<table>
+<tr><th>テーマ</th><th>パラグラフ</th></tr>
+<tr><td>独立企業間原則</td><td>Chapter I, 1.1-1.15</td></tr>
+<tr><td>機能分析（FAR分析）</td><td>1.51-1.55</td></tr>
+<tr><td>リスクフレームワーク（6段階）</td><td>1.56-1.106</td></tr>
+<tr><td>リスクの支配（Control over risk）</td><td>1.65-1.68</td></tr>
+<tr><td>財務能力（Financial capacity）</td><td>1.64</td></tr>
+<tr><td>リスクフリーリターン・リスク調整後リターン</td><td>1.109-1.125</td></tr>
+<tr><td>ビジネス戦略</td><td>1.134-1.138</td></tr>
+<tr><td>取引の認識（Recognition）</td><td>1.139-1.145</td></tr>
+<tr><td>非認識の基準と事例</td><td>1.142-1.148</td></tr>
+<tr><td>継続的損失</td><td>1.149-1.150</td></tr>
+<tr><td>ロケーションセービング</td><td>1.159-1.163</td></tr>
+<tr><td>その他の現地市場特性</td><td>1.164-1.168</td></tr>
+</table>
+
+<h4>Chapter VI: 無形資産</h4>
+<table>
+<tr><th>テーマ</th><th>パラグラフ</th></tr>
+<tr><td>無形資産の定義</td><td>6.6-6.12</td></tr>
+<tr><td>無形資産のカテゴリー</td><td>6.15-6.17</td></tr>
+<tr><td>市場条件との区別</td><td>6.9</td></tr>
+<tr><td>ノウハウ・営業秘密</td><td>6.20</td></tr>
+<tr><td>顧客関係・のれん</td><td>6.25-6.29</td></tr>
+<tr><td>DEMPEフレームワーク</td><td>6.32-6.34</td></tr>
+<tr><td>法的所有と経済的実質</td><td>6.35-6.42</td></tr>
+<tr><td>DEMPE機能の報酬</td><td>6.48-6.58</td></tr>
+<tr><td>資金提供の役割</td><td>6.59-6.64</td></tr>
+<tr><td>マーケティング無形資産</td><td>6.76-6.78</td></tr>
+<tr><td>比較可能性要素</td><td>6.116-6.120</td></tr>
+</table>
+
+<h4>Chapter IX: 事業再編</h4>
+<table>
+<tr><th>テーマ</th><th>パラグラフ</th></tr>
+<tr><td>事業再編の定義・範囲</td><td>9.1-9.4</td></tr>
+<tr><td>リスク分析</td><td>9.19-9.21</td></tr>
+<tr><td>補償（Indemnification）</td><td>9.75-9.83</td></tr>
+<tr><td>再編後取引の比較対象</td><td>9.109-9.116</td></tr>
+<tr><td>ロケーションセービング</td><td>9.126-9.131</td></tr>
+</table>
+
+<h4>日本法令・通達</h4>
+<table>
+<tr><th>出典</th><th>内容</th></tr>
+<tr><td>租税特別措置法66条の4</td><td>移転価格税制本体規定</td></tr>
+<tr><td>措置法施行令39条の12第13項</td><td>無形資産の定義</td></tr>
+<tr><td>移転価格事務運営要領3-10</td><td>役務提供取引の判断基準</td></tr>
+<tr><td>移転価格事務運営要領3-11</td><td>企業グループ内役務提供（IGS）の独立企業間価格</td></tr>
+<tr><td>移転価格事務運営要領3-12</td><td>調査において検討すべき無形資産（取引網等を明記）</td></tr>
+<tr><td>移転価格事務運営要領3-13</td><td>無形資産の形成・維持・発展への貢献（DEMPE的分析）</td></tr>
+<tr><td>別冊参考事例集【事例12】</td><td>販売網及び品質管理ノウハウに関する無形資産</td></tr>
+</table>
+
+<h4>BEPS Action 8-10 (2015)</h4>
+<table>
+<tr><th>テーマ</th><th>内容</th></tr>
+<tr><td>Part I</td><td>無形資産の移転価格側面（DEMPE導入）&rarr; TPG Ch.VI に統合</td></tr>
+<tr><td>Part II</td><td>リスクと資本の移転価格側面 &rarr; TPG Ch.I Section D.1 に統合</td></tr>
+<tr><td>DEMPE原則</td><td>法的所有権のみでは所得帰属を決定しない。機能遂行者への適正報酬</td></tr>
+<tr><td>リスク6段階分析</td><td>Step 1-6 &rarr; TPG 1.60</td></tr>
+</table>
+</div>
+
+<div class="card" style="margin-top: 32px; background: #f8f9fa;">
+<h4>ローカルファイル参照先</h4>
+<ul style="font-size: 0.85em; color: var(--muted);">
+  <li>OECD_TPG_2022_ChapterI: <code>/mnt/d/Users/PC/Desktop/その他/ミトヨ_研究_20260313/一次ソース/OECD/OECD_TPG_2022_ChapterI_Arms_Length_Principle.txt</code></li>
+  <li>OECD_TPG_2022_ChapterVI: <code>/mnt/d/.../OECD_TPG_2022_ChapterVI_Intangibles.txt</code></li>
+  <li>OECD_TPG_2022_ChapterIX: <code>/mnt/d/.../OECD_TPG_2022_ChapterIX_Business_Restructurings.txt</code></li>
+  <li>NTA事例集（無形資産）: <code>/home/user/jplawdb4/paper/text/nta-tp-audit/bessatsu-pack-08.txt</code></li>
+  <li>NTA事例集（残余利益分割法）: <code>/home/user/jplawdb4/paper/text/nta-tp-audit/bessatsu-pack-11.txt</code></li>
+  <li>NTA事務運営要領: <code>/home/user/jplawdb4/paper/text/nta-tp-audit/jimu-ch03-pack-00.txt</code></li>
+</ul>
+</div>
+
+</div>
+</body>
+</html>
