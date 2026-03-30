@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CFC合算漏れと外国税額控除 ── 欠損年度のゲート構造と国外所得金額の算出</title>
+<style>
+:root {
+  --primary: #1a365d;
+  --accent: #2b6cb0;
+  --warn: #c53030;
+  --bg: #f7fafc;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --text: #2d3748;
+  --muted: #718096;
+  --green: #276749;
+  --green-bg: #f0fff4;
+  --red-bg: #fff5f5;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+.container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+h1 { color: var(--primary); font-size: 1.6rem; border-bottom: 3px solid var(--accent); padding-bottom: 8px; margin-bottom: 24px; }
+h2 { color: var(--primary); font-size: 1.25rem; margin: 32px 0 12px; padding-left: 12px; border-left: 4px solid var(--accent); }
+h3 { color: var(--accent); font-size: 1.05rem; margin: 20px 0 8px; }
+p { margin: 10px 0; }
+.card { background: var(--card); border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 20px; margin-bottom: 20px; }
+table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.92rem; }
+th, td { border: 1px solid var(--border); padding: 8px 12px; text-align: right; }
+th { background: #edf2f7; color: var(--primary); font-weight: 600; text-align: center; }
+td:first-child, th:first-child { text-align: left; }
+.num-neg { color: var(--warn); font-weight: 600; }
+.num-pos { color: var(--green); font-weight: 600; }
+.highlight { background: #fffbeb; }
+.assumption { background: var(--green-bg); border-left: 3px solid #48bb78; padding: 12px 16px; margin: 12px 0; font-size: 0.9rem; }
+.warning { background: var(--red-bg); border-left: 3px solid var(--warn); padding: 12px 16px; margin: 12px 0; font-size: 0.9rem; }
+.formula { background: #ebf8ff; border-radius: 4px; padding: 8px 14px; margin: 8px 0; font-family: "Consolas", monospace; font-size: 0.88rem; line-height: 1.9; }
+.summary-box { background: #1a365d; color: #fff; border-radius: 8px; padding: 20px; margin: 24px 0; }
+.summary-box h3 { color: #bee3f8; margin-top: 0; }
+.summary-box .big-num { font-size: 1.8rem; font-weight: 700; color: #fbd38d; }
+.toc { background: var(--card); border-radius: 8px; padding: 16px 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.toc a { color: var(--accent); text-decoration: none; }
+.toc a:hover { text-decoration: underline; }
+.toc ul { list-style: none; padding-left: 0; }
+.toc li { padding: 4px 0; }
+.toc li::before { content: ""; display: inline-block; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; margin-right: 8px; vertical-align: middle; }
+.statute-quote { background: #f8f9fa; border-left: 4px solid #a0aec0; padding: 14px 18px; margin: 14px 0; font-style: italic; font-size: 0.92rem; line-height: 1.8; }
+.statute-quote cite { display: block; text-align: right; font-style: normal; color: var(--muted); font-size: 0.85rem; margin-top: 6px; }
+.gate-open { display: inline-block; background: var(--green-bg); color: var(--green); border: 1px solid #48bb78; border-radius: 4px; padding: 2px 10px; font-weight: 600; font-size: 0.85rem; }
+.gate-closed { display: inline-block; background: var(--red-bg); color: var(--warn); border: 1px solid var(--warn); border-radius: 4px; padding: 2px 10px; font-weight: 600; font-size: 0.85rem; }
+figure { margin: 24px 0; padding: 16px; background: #fafafa; border-radius: 6px; border: 1px solid var(--border); }
+figcaption { text-align: center; font-size: 0.88rem; color: var(--muted); margin-top: 10px; }
+sup { font-size: 0.75rem; color: var(--muted); }
+ol, ul { margin: 8px 0 8px 24px; }
+li { margin: 4px 0; }
+footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.8rem; text-align: center; }
+@media print {
+  body { font-size: 10pt; background: #fff; }
+  .card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; }
+  .summary-box { background: #333; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .toc { page-break-after: always; }
+  figure { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>CFC合算漏れと外国税額控除 ── 欠損年度のゲート構造と国外所得金額の算出</h1>
+<p style="color:var(--muted); margin-bottom:16px;">作成日: 2026年3月30日 | 分析対象: CFC合算漏れ事例（シンガポール子会社）| 条文ベース分析</p>
+
+<div class="toc">
+<strong>目次</strong>
+<ul>
+<li><a href="#sec1">1. 問題の設定</a></li>
+<li><a href="#sec2">2. CFC税制の適用判定と条文連鎖</a></li>
+<li><a href="#sec3">3. ×1年の分析 ── 欠損年度の処理</a></li>
+<li><a href="#sec4">4. ×2年の分析 ── 黒字年度の処理</a></li>
+<li><a href="#sec5">5. 国外所得金額の算出方法</a></li>
+<li><a href="#sec6">6. 外国税額控除の繰越の可否</a></li>
+<li><a href="#sec7">7. 修正申告時の手続き</a></li>
+<li><a href="#sec8">8. 構造的課題と総括</a></li>
+</ul>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="sec1">1. 問題の設定</h2>
+<!-- ================================================================ -->
+<div class="card">
+
+<h3>事例の概要</h3>
+<p>内国法人（当社）は、シンガポールに100%子会社を有する。同子会社はペーパーカンパニー（特定外国関係会社）に該当し、本来はCFC税制（外国子会社合算税制）に基づき各事業年度の所得を合算すべきであったが、失念していた。今年実施された税務調査により合算漏れが発覚した。</p>
+
+<table>
+<tr><th>事業年度</th><th>基準所得金額</th><th>現地法人税額</th><th>合算申告</th></tr>
+<tr><td>×1年</td><td class="num-neg">▲100万円</td><td>10万円</td><td>漏れ</td></tr>
+<tr><td>×2年</td><td class="num-pos">300万円</td><td>14万円</td><td>漏れ</td></tr>
+</table>
+
+<div class="assumption">
+<strong>前提条件</strong><br>
+(1) 持株割合100%（請求権等勘案合算割合 = 100%）<br>
+(2) シンガポール子会社以外に国外所得なし<br>
+(3) ×1年以前に繰越欠損金なし<br>
+(4) ×1年の所得▲100万円は、CFC税制上の基準所得金額として算定された値
+</div>
+
+<h3>分析すべき論点</h3>
+<ol>
+<li>各年度の適用対象金額と修正申告の要否</li>
+<li>外国税額控除（みなし納付）の適用可否</li>
+<li><strong>国外所得金額の算出方法</strong>と控除限度額の計算</li>
+<li>×1年の現地法人税10万円の救済可能性（繰越を含む）</li>
+</ol>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="sec2">2. CFC税制の適用判定と条文連鎖</h2>
+<!-- ================================================================ -->
+<div class="card">
+
+<h3>2.1 ペーパーカンパニーの判定</h3>
+<p>シンガポール子会社がペーパーカンパニー（特定外国関係会社）に該当する場合、経済活動基準による適用除外の判定を経ることなく、会社単位の合算課税が適用される（措法66条の6②二）。</p>
+
+<h3>2.2 適用対象金額の計算構造 ── 条文の連鎖</h3>
+<p>CFC合算課税から外国税額控除に至るまでの条文は、以下の連鎖構造を形成する。</p>
+
+<table>
+<tr><th>段階</th><th>条文</th><th>内容</th></tr>
+<tr><td>①</td><td>措令39条の15①②</td><td><strong>基準所得金額</strong>の算定（本邦法令基準 or 現地法令基準）</td></tr>
+<tr><td>②</td><td>措令39条の15⑤</td><td><strong>繰越欠損金</strong>の控除</td></tr>
+<tr><td>③</td><td>措法66条の6②四</td><td><strong>適用対象金額</strong> = 基準所得金額 − 繰越欠損金 − 納付法人所得税 + 還付法人所得税 − 控除対象配当等</td></tr>
+<tr><td>④</td><td>措法66条の6①</td><td>課税対象金額（= 適用対象金額 × 持株割合）の<strong>益金算入</strong></td></tr>
+<tr><td>⑤</td><td>措法66条の7①</td><td><strong>みなし納付</strong>外国法人税額（＝外国税額控除の対象）</td></tr>
+<tr><td>⑥</td><td>措令39条の18①</td><td>みなし納付額の<strong>按分計算</strong></td></tr>
+<tr><td>⑦</td><td>法69条①</td><td>外国税額控除（<strong>控除限度額</strong>の計算）</td></tr>
+<tr><td>⑧</td><td>法人税法施行令142条</td><td><strong>国外所得金額</strong>の算出</td></tr>
+</table>
+
+<h3>2.3 適用対象金額の計算式</h3>
+<p>財務省の改正解説（令和6年版）は、適用対象金額について次のように述べている。</p>
+
+<div class="statute-quote">
+適用対象金額は、基準所得金額に<strong>繰越欠損金額</strong>及び<strong>納付法人所得税の額</strong>に関する調整を加えた金額とされています。
+<cite>財務省「令和6年度税制改正の解説」（措法66条の6②四、措令39条の15⑤）</cite>
+</div>
+
+<p>国税庁の申告書別表十七（三の二）（令和7年4月1日以後終了事業年度分）もこの構造を反映しており、基準所得金額（欄9）の算出後に、繰越欠損金の当期控除額（欄8）、当期中に納付することとなる法人所得税の額（欄24）、当期中に還付を受けることとなる法人所得税の額（欄25）を別枠で調整する様式となっている。</p>
+
+<div class="formula">
+<strong>適用対象金額</strong> = 基準所得金額 − 繰越欠損金 − 納付法人所得税 + 還付法人所得税 − 控除対象配当等
+</div>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="sec3">3. ×1年の分析 ── 欠損年度の処理</h2>
+<!-- ================================================================ -->
+<div class="card">
+
+<h3>3.1 適用対象金額の算定</h3>
+<table>
+<tr><th>項目</th><th>金額</th><th>根拠</th></tr>
+<tr><td>基準所得金額</td><td class="num-neg">▲100万円</td><td>措令39条の15①②</td></tr>
+<tr><td>適用対象金額</td><td>0円</td><td>基準所得金額 &lt; 0 のため</td></tr>
+<tr><td>課税対象金額</td><td>0円</td><td>0 × 100% = 0</td></tr>
+<tr class="highlight"><td>CFC合算による益金算入額</td><td>0円</td><td>措法66条の6① 不適用</td></tr>
+</table>
+
+<p><strong>結論：</strong>適用対象金額がゼロであるため、CFC合算による益金算入は生じない。したがって×1年について修正申告は不要である。</p>
+
+<h3>3.2 繰越欠損金の発生</h3>
+<p>基準所得金額がマイナスとなった場合のマイナス額（100万円）は、措令39条の15⑤に基づく<strong>CFC繰越欠損金</strong>として翌事業年度以降に繰り越される。</p>
+
+<div class="assumption">
+<strong>CFC繰越欠損金の特徴</strong><br>
+(1) 法人税法57条の国内法人の欠損金繰越制度とは別の枠組み（措令39条の15⑤）<br>
+(2) 国内法人側の確定申告における申告要件は課されない<br>
+(3) 現地法の繰越規定とも独立した日本側の独自計算<br>
+(4) 合併等による欠損金の引継ぎは認められない
+</div>
+
+<h3>3.3 措法66条の7のゲート構造 ── 10万円が救済されない理由</h3>
+
+<p>×1年のシンガポール法人税10万円について、外国税額控除（みなし納付）の適用を受けることができるか。結論は<strong>できない</strong>。その理由は措法66条の7第1項の条文構造にある。</p>
+
+<div class="statute-quote">
+内国法人が<strong>前条第1項</strong>（第66条の6第1項）<strong>の規定の適用を受ける場合には</strong>、当該内国法人に係る外国関係会社……の所得に対して課される外国法人税の額……のうち、当該内国法人の課税対象金額に対応するもの……は、……控除対象外国法人税の額とみなす。
+<cite>租税特別措置法 第66条の7 第1項（要旨）</cite>
+</div>
+
+<p>この「<strong>前条第1項の規定の適用を受ける場合には</strong>」という条件節が、制度全体のゲートキーパーとして機能する。</p>
+
+<table>
+<tr><th>ステップ</th><th>×1年の状態</th><th>結果</th></tr>
+<tr><td>① 適用対象金額</td><td>0円（基準所得金額 &lt; 0）</td><td>課税対象金額 = 0</td></tr>
+<tr><td>② 措法66条の6①</td><td>益金算入額 = 0</td><td>「適用を受ける」事実なし</td></tr>
+<tr><td>③ 措法66条の7①</td><td>条件節を充足しない</td><td class="num-neg">ゲート閉鎖</td></tr>
+<tr><td>④ みなし納付</td><td>発動しない</td><td>控除対象外国法人税 = 0</td></tr>
+<tr class="highlight"><td>⑤ 外国税額控除</td><td>対象税額なし</td><td class="num-neg">10万円は救済されない</td></tr>
+</table>
+
+<div class="warning">
+<strong>×1年の現地法人税10万円は、日本の税制上一切の救済を受けることができない。</strong><br>
+みなし納付のゲートが閉鎖されているため、この10万円は控除対象外国法人税として認識されず、法69条の外国税額控除の世界に入ることがない。結果として、控除限度超過額としての繰越（法69条②）も、控除余裕額による吸収（法69条③）の対象にもならない。
+</div>
+
+<!-- SVG1: ゲート構造フローチャート -->
+<figure>
+<svg viewBox="0 0 800 480" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arG" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#276749"/></marker>
+    <marker id="arR" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#c53030"/></marker>
+    <marker id="arB" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#2b6cb0"/></marker>
+  </defs>
+
+  <text x="400" y="24" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a365d">【図1】措法66条の7 ゲート構造フローチャート</text>
+
+  <!-- Start -->
+  <rect x="300" y="40" width="200" height="40" rx="8" fill="#ebf8ff" stroke="#2b6cb0" stroke-width="2"/>
+  <text x="400" y="65" text-anchor="middle" font-size="13" font-weight="bold" fill="#2b6cb0">基準所得金額の算定</text>
+
+  <!-- Arrow down -->
+  <line x1="400" y1="80" x2="400" y2="110" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arB)"/>
+
+  <!-- Decision diamond -->
+  <polygon points="400,115 500,160 400,205 300,160" fill="#fffbeb" stroke="#d69e2e" stroke-width="2"/>
+  <text x="400" y="157" text-anchor="middle" font-size="12" font-weight="bold" fill="#744210">基準所得金額</text>
+  <text x="400" y="173" text-anchor="middle" font-size="12" font-weight="bold" fill="#744210">&gt; 0 ?</text>
+
+  <!-- LEFT: YES path (green) -->
+  <text x="270" y="150" text-anchor="middle" font-size="12" font-weight="bold" fill="#276749">YES</text>
+  <line x1="300" y1="160" x2="180" y2="160" stroke="#276749" stroke-width="2" marker-end="url(#arG)"/>
+
+  <rect x="60" y="140" width="120" height="40" rx="6" fill="#f0fff4" stroke="#276749" stroke-width="2"/>
+  <text x="120" y="163" text-anchor="middle" font-size="11" fill="#276749">適用対象金額算定</text>
+
+  <line x1="120" y1="180" x2="120" y2="220" stroke="#276749" stroke-width="2" marker-end="url(#arG)"/>
+
+  <rect x="30" y="220" width="180" height="40" rx="6" fill="#f0fff4" stroke="#276749" stroke-width="2"/>
+  <text x="120" y="244" text-anchor="middle" font-size="11" fill="#276749">措法66条の6① 益金算入</text>
+
+  <line x1="120" y1="260" x2="120" y2="300" stroke="#276749" stroke-width="2" marker-end="url(#arG)"/>
+
+  <rect x="10" y="300" width="220" height="50" rx="8" fill="#c6f6d5" stroke="#276749" stroke-width="2.5"/>
+  <text x="120" y="322" text-anchor="middle" font-size="12" font-weight="bold" fill="#276749">措法66条の7① ゲートOPEN</text>
+  <text x="120" y="340" text-anchor="middle" font-size="11" fill="#276749">「適用を受ける場合には」充足</text>
+
+  <line x1="120" y1="350" x2="120" y2="390" stroke="#276749" stroke-width="2" marker-end="url(#arG)"/>
+
+  <rect x="30" y="390" width="180" height="40" rx="6" fill="#f0fff4" stroke="#276749" stroke-width="2"/>
+  <text x="120" y="414" text-anchor="middle" font-size="11" font-weight="bold" fill="#276749">みなし納付FTC適用</text>
+
+  <rect x="30" y="440" width="180" height="30" rx="4" fill="#276749"/>
+  <text x="120" y="460" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">外国税額控除 可能</text>
+
+  <!-- RIGHT: NO path (red) -->
+  <text x="530" y="150" text-anchor="middle" font-size="12" font-weight="bold" fill="#c53030">NO</text>
+  <line x1="500" y1="160" x2="620" y2="160" stroke="#c53030" stroke-width="2" marker-end="url(#arR)"/>
+
+  <rect x="620" y="140" width="140" height="40" rx="6" fill="#fff5f5" stroke="#c53030" stroke-width="2"/>
+  <text x="690" y="163" text-anchor="middle" font-size="11" fill="#c53030">適用対象金額 = 0</text>
+
+  <line x1="690" y1="180" x2="690" y2="220" stroke="#c53030" stroke-width="2" marker-end="url(#arR)"/>
+
+  <rect x="610" y="220" width="160" height="40" rx="6" fill="#fff5f5" stroke="#c53030" stroke-width="2"/>
+  <text x="690" y="244" text-anchor="middle" font-size="11" fill="#c53030">措法66条の6① 不適用</text>
+
+  <line x1="690" y1="260" x2="690" y2="300" stroke="#c53030" stroke-width="2" marker-end="url(#arR)"/>
+
+  <rect x="580" y="300" width="220" height="50" rx="8" fill="#fed7d7" stroke="#c53030" stroke-width="2.5"/>
+  <text x="690" y="322" text-anchor="middle" font-size="12" font-weight="bold" fill="#c53030">措法66条の7① ゲートCLOSED</text>
+  <text x="690" y="340" text-anchor="middle" font-size="11" fill="#c53030">条件節を充足しない</text>
+
+  <line x1="690" y1="350" x2="690" y2="390" stroke="#c53030" stroke-width="2" marker-end="url(#arR)"/>
+
+  <rect x="610" y="390" width="160" height="40" rx="6" fill="#fff5f5" stroke="#c53030" stroke-width="2"/>
+  <text x="690" y="414" text-anchor="middle" font-size="11" fill="#c53030">みなし納付 不発動</text>
+
+  <rect x="600" y="440" width="180" height="30" rx="4" fill="#c53030"/>
+  <text x="690" y="460" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">外国税 永久に死蔵</text>
+</svg>
+<figcaption>【図1】措法66条の7第1項の「前条第1項の規定の適用を受ける場合には」がゲートキーパーとして機能し、欠損年度では全経路が遮断される</figcaption>
+</figure>
+
+</div>
+
+<!-- ================================================================ -->
+<h2 id="sec4">4. ×2年の分析 ── 黒字年度の処理</h2>
+<!-- ================================================================ -->
+<div class="card">
+
+<h3>4.1 適用対象金額の計算</h3>
+<p>×2年は基準所得金額が300万円であり、×1年の繰越欠損金100万円および当期の納付法人所得税14万円を控除して適用対象金額を算定する。</p>
+
+<table>
+<tr><th>項目</th><th>金額</th><th>根拠</th><th>別表十七（三の二）欄</th></tr>
+<tr><td>基準所得金額</td><td class="num-pos">300万円</td><td>措令39条の15①②</td><td>欄9</td></tr>
+<tr><td>繰越欠損金の当期控除額</td><td class="num-neg">▲100万円</td><td>措令39条の15⑤</td><td>欄8</td></tr>
+<tr><td>当期中に納付する法人所得税の額</td><td class="num-neg">▲14万円</td><td>措法66条の6②四</td><td>欄24</td></tr>
+<tr><td>還付法人所得税・控除対象配当等</td><td>0円</td><td>該当なし</td><td>欄25・15</td></tr>
+<tr class="highlight"><td><strong>適用対象金額</strong></td><td class="num-pos"><strong>186万円</strong></td><td></td><td></td></tr>
+</table>
+
+<div class="formula">
+適用対象金額 = 300万円 − 100万円 − 14万円 = <strong>186万円</strong>
+</div>
+
+<p>持株割合100%であるから、課税対象金額 = 186万円 × 100% = <strong>186万円</strong>。この金額が親法人の益金に算入される（措法66条の6①）。</p>
+
+<h3>4.2 みなし納付外国法人税額の按分計算</h3>
+<p>措法66条の7第1項に基づき、シンガポール子会社の外国法人税のうち課税対象金額に対応する部分が、親法人が納付する控除対象外国法人税の額とみなされる。按分計算は措令39条の18第1項による。</p>
+
+<div class="formula">
+みなし納付外国法人税額 = 外国法人税額 × (課税対象金額 ÷ 外国法人税の課税標準)<br>
+<br>
+= 14万円 × (186万円 ÷ 300万円)<br>
+= 14万円 × 0.62<br>
+= <strong>8.68万円</strong>（≒ 8.7万円）
+</div>
+
+<p>この8.7万円は法69条1項の外国税額控除の対象となるとともに、法人税法41条に基づき親法人の益金にも算入される。</p>
+
+<table>
+<tr><th>項目</th><th>金額</th><th>備考</th></tr>
+<tr><td>CFC合算による益金算入額</td><td class="num-pos">186万円</td><td>措法66条の6①</td></tr>
+<tr><td>みなし納付FTCの益金算入額</td><td class="num-pos">8.7万円</td><td>法41条（控除を受けた外国税の益金算入）</td></tr>
+<tr><td>合計益金算入額</td><td class="num-pos"><strong>194.7万円</strong></td><td></td></tr>
+<tr><td>外国税額控除額</td><td class="num-neg">▲8.7万円</td><td>法69条①（税額控除）</td></tr>
+</table>
+
+<div class="assumption">
+<strong>×2年で救済されない外国税</strong><br>
+シンガポール法人税14万円のうち、みなし納付として控除対象になるのは8.7万円（186/300按分）のみ。残りの5.3万円（14 − 8.7）は、繰越欠損金控除分（100万円分）と納付法人所得税控除分（14万円分）に対応する部分であり、日本側で控除されない。
+</div>
+
+<h3>4.3 控除限度額の計算</h3>
+<p>外国税額控除の控除限度額は、法69条1項に基づき次の算式で計算する。</p>
+
+<div class="formula">
+控除限度額 = 法人税額 × (調整国外所得金額 ÷ 全世界所得金額)
+</div>
+
+<p>本件では×2年のCFC合算所得186万円（＋みなし納付益金算入8.7万円 = 194.7万円）が唯一の国外源泉所得であるため、親法人に他の所得がなければ国外所得金額 ≒ 全世界所得金額となり、控除限度額 = 法人税額の全額となる。みなし納付8.7万円は控除限度額の範囲内に収まるため、<strong>全額控除が可能</strong>である。</p>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="sec5">5. 国外所得金額の算出方法</h2>
+<!-- ================================================================ -->
+<div class="card">
+
+<h3>5.1 法人税法施行令142条の基本構造</h3>
+<p>外国税額控除の控除限度額の計算における「国外所得金額」は、法人税法施行令142条に基づき、次の二重のリミッターを経て算出される。</p>
+
+<div class="formula">
+調整国外所得金額 = min( max( 国外所得金額, 0 ), 全世界所得金額 × 90% )
+</div>
+
+<table>
+<tr><th>リミッター</th><th>条件</th><th>効果</th><th>根拠</th></tr>
+<tr><td>ゼロフロア</td><td>国外所得金額 &lt; 0</td><td>0として扱う</td><td>法人税法施行令142条</td></tr>
+<tr><td>90%キャップ</td><td>国外所得金額 &gt; 全世界所得 × 90%</td><td>全世界所得の90%に制限</td><td>法人税法施行令142条</td></tr>
+</table>
+
+<h3>5.2 ゼロフロアの趣旨と効果</h3>
+<p>国外所得金額がマイナスの場合にゼロとして扱うルールの実質的意味は以下のとおりである。</p>
+
+<ul>
+<li>控除限度額 = 法人税額 × (<strong>0</strong> ÷ 全世界所得) = <strong>0</strong></li>
+<li>当該事業年度では外国税額控除が一切使えない</li>
+<li>ただし、直接外国税額控除の場合は、控除対象外国法人税自体は存在するため、全額が<strong>控除限度超過額</strong>として法69条2項に基づき3年間繰り越せる</li>
+</ul>
+
+<h3>5.3 CFC合算所得と国外所得金額の関係</h3>
+<p>CFC合算により益金算入された金額は、国外源泉所得として国外所得金額に含まれる。本件の各年度における国外所得金額は次のとおりである。</p>
+
+<table>
+<tr><th>年度</th><th>CFC合算額</th><th>国外所得金額</th><th>ゼロフロア適用</th><th>控除限度額</th></tr>
+<tr><td>×1年</td><td>0円（合算なし）</td><td>0円</td><td>─</td><td>0円</td></tr>
+<tr><td>×2年</td><td>186万円</td><td class="num-pos">186万円 + 8.7万円<sup>※</sup></td><td>不要</td><td>法人税額の範囲内</td></tr>
+</table>
+<p style="font-size:0.85rem; color:var(--muted);">※ みなし納付外国法人税額の益金算入分を含む</p>
+
+<div class="warning">
+<strong>×1年の国外所得金額の取扱い</strong><br>
+×1年はCFC合算自体が行われないため、国外所得金額は0円である（他に国外所得がない前提）。仮にCFC合算が行われる場合であっても、適用対象金額がゼロであれば国外所得金額もゼロとなり、ゼロフロアとの関係で控除限度額は0円となる。いずれのルートからも外国税額控除の余地はない。
+</div>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="sec6">6. 外国税額控除の繰越の可否</h2>
+<!-- ================================================================ -->
+<div class="card">
+
+<h3>6.1 法69条の繰越制度の概要</h3>
+<table>
+<tr><th>制度</th><th>内容</th><th>繰越期間</th><th>根拠</th></tr>
+<tr><td>控除限度超過額の繰越</td><td>控除対象外国法人税 &gt; 控除限度額 の場合、超過額を繰越</td><td>3年</td><td>法69条②</td></tr>
+<tr><td>控除余裕額の繰越</td><td>控除限度額 &gt; 控除対象外国法人税 の場合、余裕額を繰越</td><td>3年</td><td>法69条③</td></tr>
+</table>
+
+<h3>6.2 ×1年の10万円が繰越不可能な理由</h3>
+<p>繰越制度を利用するためには、当該外国税が「<strong>控除対象外国法人税の額</strong>」として日本の税制上認識されていることが前提となる。×1年の10万円は、以下の条文連鎖により、この前提を充足しない。</p>
+
+<ol>
+<li>適用対象金額 = 0 → 課税対象金額 = 0（措法66条の6②四）</li>
+<li>措法66条の6第1項の「適用を受ける」事実がない</li>
+<li>措法66条の7第1項のゲートが閉鎖 → みなし納付が発動しない</li>
+<li>10万円は「控除対象外国法人税の額」として<strong>認識されない</strong></li>
+<li>法69条の世界に入らない → 控除限度超過額にも控除余裕額にもならない</li>
+<li>∴ 繰越す対象自体が存在しない</li>
+</ol>
+
+<h3>6.3 ×2年の控除余裕額</h3>
+<p>×2年では控除限度額（法人税額の相当部分）に対してみなし納付8.7万円のみが控除対象であるため、大幅な<strong>控除余裕額</strong>が発生する。しかし、×1年側に控除限度超過額が存在しないため、この余裕額は×1年の10万円を吸収することができない。×3年以降に別の控除限度超過額が生じた場合にのみ活用される。</p>
+
+<h3>6.4 直接外国税額控除との構造的対比</h3>
+
+<!-- SVG2: x1年 vs x2年 対比図 -->
+<figure>
+<svg viewBox="0 0 860 440" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arG2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#276749"/></marker>
+    <marker id="arR2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#c53030"/></marker>
+    <marker id="arP" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#6b46c1"/></marker>
+  </defs>
+
+  <text x="430" y="24" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a365d">【図2】×1年 vs ×2年 ── CFC外国税額控除の適用対比</text>
+
+  <!-- x1年 (left, red) -->
+  <rect x="20" y="40" width="380" height="340" rx="10" fill="#fff5f5" stroke="#c53030" stroke-width="2"/>
+  <text x="210" y="68" text-anchor="middle" font-size="14" font-weight="bold" fill="#c53030">×1年（欠損年度）</text>
+
+  <rect x="50" y="85" width="320" height="30" rx="4" fill="#fff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="210" y="105" text-anchor="middle" font-size="12" fill="#2d3748">基準所得金額: <tspan fill="#c53030" font-weight="bold">▲100万円</tspan></text>
+
+  <rect x="50" y="125" width="320" height="30" rx="4" fill="#fff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="210" y="145" text-anchor="middle" font-size="12" fill="#2d3748">適用対象金額: <tspan font-weight="bold">0円</tspan></text>
+
+  <rect x="50" y="165" width="320" height="30" rx="4" fill="#fed7d7" stroke="#c53030" stroke-width="1.5"/>
+  <text x="210" y="185" text-anchor="middle" font-size="12" font-weight="bold" fill="#c53030">ゲート: CLOSED</text>
+
+  <rect x="50" y="205" width="320" height="30" rx="4" fill="#fff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="210" y="225" text-anchor="middle" font-size="12" fill="#2d3748">みなし納付: <tspan font-weight="bold">なし</tspan></text>
+
+  <rect x="50" y="245" width="320" height="30" rx="4" fill="#fff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="210" y="265" text-anchor="middle" font-size="12" fill="#2d3748">外国税額控除: <tspan font-weight="bold">0円</tspan></text>
+
+  <rect x="50" y="290" width="320" height="40" rx="6" fill="#c53030"/>
+  <text x="210" y="310" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">現地法人税10万円 → 永久に死蔵</text>
+  <text x="210" y="325" text-anchor="middle" font-size="10" fill="#fed7d7">控除対象外国法人税にならない</text>
+
+  <rect x="50" y="345" width="150" height="25" rx="4" fill="#fff" stroke="#48bb78" stroke-width="1.5"/>
+  <text x="125" y="362" text-anchor="middle" font-size="11" fill="#276749">繰越欠損金: 100万円</text>
+
+  <!-- x2年 (right, green) -->
+  <rect x="460" y="40" width="380" height="340" rx="10" fill="#f0fff4" stroke="#276749" stroke-width="2"/>
+  <text x="650" y="68" text-anchor="middle" font-size="14" font-weight="bold" fill="#276749">×2年（黒字年度）</text>
+
+  <rect x="490" y="85" width="320" height="30" rx="4" fill="#fff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="650" y="105" text-anchor="middle" font-size="12" fill="#2d3748">基準所得金額: <tspan fill="#276749" font-weight="bold">300万円</tspan></text>
+
+  <rect x="490" y="125" width="320" height="30" rx="4" fill="#fff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="650" y="145" text-anchor="middle" font-size="12" fill="#2d3748">適用対象金額: <tspan font-weight="bold">186万円</tspan>（300−100−14）</text>
+
+  <rect x="490" y="165" width="320" height="30" rx="4" fill="#c6f6d5" stroke="#276749" stroke-width="1.5"/>
+  <text x="650" y="185" text-anchor="middle" font-size="12" font-weight="bold" fill="#276749">ゲート: OPEN</text>
+
+  <rect x="490" y="205" width="320" height="30" rx="4" fill="#fff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="650" y="225" text-anchor="middle" font-size="12" fill="#2d3748">みなし納付: <tspan font-weight="bold">8.7万円</tspan>（14×186/300）</text>
+
+  <rect x="490" y="245" width="320" height="30" rx="4" fill="#fff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="650" y="265" text-anchor="middle" font-size="12" fill="#2d3748">外国税額控除: <tspan fill="#276749" font-weight="bold">8.7万円（全額控除可）</tspan></text>
+
+  <rect x="490" y="290" width="320" height="40" rx="6" fill="#276749"/>
+  <text x="650" y="310" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">修正申告: 186万円益金算入 + FTC 8.7万円</text>
+  <text x="650" y="325" text-anchor="middle" font-size="10" fill="#c6f6d5">未控除分5.3万円（14−8.7）は救済されない</text>
+
+  <!-- Arrow: 繰越欠損金 from x1 to x2 -->
+  <path d="M200 362 Q430 400 490 142" stroke="#6b46c1" stroke-width="2.5" stroke-dasharray="6,3" fill="none" marker-end="url(#arP)"/>
+  <text x="380" y="410" text-anchor="middle" font-size="11" font-weight="bold" fill="#6b46c1">繰越欠損金100万円を控除</text>
+
+  <!-- Bottom summary -->
+  <rect x="20" y="395" width="820" height="40" rx="6" fill="#1a365d"/>
+  <text x="430" y="420" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">外国法人税合計 24万円 → 日本側で救済されるのは 8.7万円のみ（救済率 36.3%）</text>
+</svg>
+<figcaption>【図2】×1年の繰越欠損金は×2年の適用対象金額計算で控除されるが、×1年の外国税10万円はゲート閉鎖により永久に救済されない</figcaption>
+</figure>
+
+<table>
+<tr><th></th><th>CFC税制（みなし納付）</th><th>直接外国税額控除（支店等）</th></tr>
+<tr><td>欠損年度の外国税</td><td class="num-neg">控除対象外国法人税にならない → 繰越不可</td><td class="num-pos">控除限度超過額として3年間繰越可能</td></tr>
+<tr><td>制度の入口</td><td>措法66条の7① の条件節（ゲート）</td><td>法69条① に直接アクセス</td></tr>
+<tr><td>ゲートの有無</td><td class="num-neg">あり（「適用を受ける場合には」）</td><td class="num-pos">なし（納付した事実のみで認識）</td></tr>
+</table>
+
+<div class="warning">
+<strong>構造的非対称性</strong><br>
+直接外国税額控除では、親法人が自ら納付した外国税は「控除対象外国法人税」として直ちに認識される。国外所得がマイナスで控除限度額が0円であっても、控除限度超過額として3年間繰り越せる。CFC税制のみなし納付にはこの救済経路がなく、ゲートが閉じた時点で外国税は日本の税制上永久に認識されなくなる。
+</div>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="sec7">7. 修正申告時の手続き</h2>
+<!-- ================================================================ -->
+<div class="card">
+
+<h3>7.1 各年度の修正申告の要否</h3>
+<table>
+<tr><th>年度</th><th>修正申告</th><th>理由</th></tr>
+<tr><td>×1年</td><td class="num-pos">不要</td><td>適用対象金額 = 0、益金算入なし</td></tr>
+<tr><td>×2年</td><td class="num-neg">必要</td><td>186万円の益金算入 + みなし納付FTC 8.7万円</td></tr>
+</table>
+
+<h3>7.2 当初申告要件の廃止</h3>
+<p>令和2年度（2020年）税制改正により、外国税額控除の当初申告要件は廃止された。これにより、当初の確定申告書に外国税額控除を記載していなかった場合であっても、<strong>修正申告において外国税額控除を新たに適用することが可能</strong>となった。</p>
+
+<div class="assumption">
+<strong>実務上の意味</strong><br>
+本件のようにCFC合算漏れが税務調査で発覚し修正申告を行う場面において、CFC合算による益金算入と外国税額控除（みなし納付）を<strong>同時に適用</strong>できる。これにより増差税額が圧縮され、過少申告加算税の計算基礎も減少する。
+</div>
+
+<h3>7.3 ×2年の修正申告で必要な手続き</h3>
+<table>
+<tr><th>手続き</th><th>内容</th></tr>
+<tr><td>別表十七（三の二）</td><td>適用対象金額の計算明細（基準所得金額300万、繰越欠損金100万、法人所得税14万を記載）</td></tr>
+<tr><td>別表六（二の二）</td><td>みなし納付外国税額控除の計算（控除対象外国法人税8.7万円）</td></tr>
+<tr><td>別表四</td><td>CFC合算所得186万円の益金加算 + みなし納付FTC益金算入8.7万円</td></tr>
+<tr><td>添付書類</td><td>シンガポール子会社の納税証明書（Tax Certificate）、財務諸表、持株関係を証する書類</td></tr>
+</table>
+
+<h3>7.4 加算税・延滞税</h3>
+<p>CFC合算漏れに基づく修正申告について、以下のペナルティが発生する。</p>
+
+<table>
+<tr><th>項目</th><th>税率</th><th>備考</th></tr>
+<tr><td>過少申告加算税</td><td>10%（50万円超部分15%）</td><td>増差税額（FTC控除後）が計算基礎</td></tr>
+<tr><td>延滞税</td><td>年率（変動制）</td><td>法定納期限の翌日から完納日まで</td></tr>
+<tr><td>重加算税</td><td>35%</td><td>仮装隠蔽があった場合のみ（単純な合算漏れでは通常不適用）</td></tr>
+</table>
+
+<p>みなし納付外国税額控除8.7万円を適用することにより、増差税額が圧縮され、過少申告加算税の額も軽減される。修正申告においてFTCを同時に主張することは、ペナルティ軽減の観点からも極めて重要である。</p>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="sec8">8. 構造的課題と総括</h2>
+<!-- ================================================================ -->
+<div class="card">
+
+<h3>8.1 CFC税制における外国税額控除の構造的限界</h3>
+<p>本事例は、CFC税制と外国税額控除の交差点に存在する<strong>3つの構造的問題</strong>を浮き彫りにしている。</p>
+
+<ol>
+<li><strong>欠損年度の外国税の死蔵：</strong>措法66条の7第1項のゲート構造により、適用対象金額がゼロの年度に現地で納付した法人税は、日本の税制上一切の救済を受けることができない。繰越制度にもアクセスできない。</li>
+<li><strong>直接FTCとの非対称性：</strong>自社の支店等を通じた直接外国税額控除であれば、欠損年度でも控除限度超過額として3年間繰り越せる。CFC税制のみなし納付にはこの経路がなく、同じ「二重課税の排除」を目的としながら、結果に大きな差が生じる。</li>
+<li><strong>按分による部分的死蔵：</strong>黒字年度であっても、繰越欠損金控除および法人所得税控除の結果、適用対象金額が基準所得金額を下回る場合、按分計算により外国税の一部（本件では5.3万円）が控除対象から外れる。</li>
+</ol>
+
+<h3>8.2 計算フロー全体図</h3>
+
+<!-- SVG3: 計算フロー全体図 -->
+<figure>
+<svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arB3" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#2b6cb0"/></marker>
+    <marker id="arG3" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#276749"/></marker>
+    <marker id="arR3" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#c53030"/></marker>
+  </defs>
+
+  <text x="450" y="22" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a365d">【図3】CFC合算漏れ ── 修正申告における計算フロー全体図</text>
+
+  <!-- Layer 1: Singapore -->
+  <rect x="10" y="35" width="880" height="95" rx="8" fill="#fff5f5" stroke="#c53030" stroke-width="1.5"/>
+  <text x="25" y="55" font-size="13" font-weight="bold" fill="#c53030">シンガポール（子会社）</text>
+
+  <rect x="30" y="65" width="200" height="55" rx="6" fill="#fff" stroke="#c53030" stroke-width="1.5"/>
+  <text x="130" y="85" text-anchor="middle" font-size="11" font-weight="bold" fill="#c53030">×1年</text>
+  <text x="130" y="103" text-anchor="middle" font-size="11" fill="#2d3748">所得▲100万 / 税10万</text>
+
+  <rect x="350" y="65" width="200" height="55" rx="6" fill="#fff" stroke="#c53030" stroke-width="1.5"/>
+  <text x="450" y="85" text-anchor="middle" font-size="11" font-weight="bold" fill="#c53030">×2年</text>
+  <text x="450" y="103" text-anchor="middle" font-size="11" fill="#2d3748">所得300万 / 税14万</text>
+
+  <rect x="670" y="65" width="200" height="55" rx="6" fill="#fed7d7" stroke="#c53030" stroke-width="1.5"/>
+  <text x="770" y="85" text-anchor="middle" font-size="11" font-weight="bold" fill="#c53030">外国税合計</text>
+  <text x="770" y="103" text-anchor="middle" font-size="13" font-weight="bold" fill="#c53030">24万円</text>
+
+  <!-- Layer 2: CFC Calculation -->
+  <rect x="10" y="145" width="880" height="170" rx="8" fill="#ebf8ff" stroke="#2b6cb0" stroke-width="1.5"/>
+  <text x="25" y="165" font-size="13" font-weight="bold" fill="#2b6cb0">CFC計算（措法66条の6・措令39条の15）</text>
+
+  <!-- x1 calculation -->
+  <line x1="130" y1="120" x2="130" y2="180" stroke="#c53030" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arR3)"/>
+  <rect x="40" y="180" width="180" height="40" rx="6" fill="#fff" stroke="#c53030" stroke-width="1.5"/>
+  <text x="130" y="205" text-anchor="middle" font-size="11" fill="#c53030">適用対象金額 = 0円</text>
+
+  <rect x="40" y="240" width="180" height="55" rx="6" fill="#fed7d7" stroke="#c53030" stroke-width="1.5"/>
+  <text x="130" y="260" text-anchor="middle" font-size="11" font-weight="bold" fill="#c53030">ゲート CLOSED</text>
+  <text x="130" y="280" text-anchor="middle" font-size="10" fill="#c53030">措法66の7① 不適用</text>
+
+  <!-- x2 calculation -->
+  <line x1="450" y1="120" x2="450" y2="180" stroke="#2b6cb0" stroke-width="1.5" marker-end="url(#arB3)"/>
+  <rect x="310" y="180" width="280" height="40" rx="6" fill="#fff" stroke="#2b6cb0" stroke-width="1.5"/>
+  <text x="450" y="200" text-anchor="middle" font-size="11" fill="#2b6cb0">300万 − 100万 − 14万 = <tspan font-weight="bold">186万円</tspan></text>
+
+  <rect x="340" y="240" width="220" height="55" rx="6" fill="#c6f6d5" stroke="#276749" stroke-width="1.5"/>
+  <text x="450" y="260" text-anchor="middle" font-size="11" font-weight="bold" fill="#276749">ゲート OPEN</text>
+  <text x="450" y="280" text-anchor="middle" font-size="10" fill="#276749">みなし納付 14×186/300 = 8.7万</text>
+
+  <!-- 繰越欠損金 arrow -->
+  <path d="M130 220 Q240 230 315 198" stroke="#6b46c1" stroke-width="2" stroke-dasharray="5,3" fill="none" marker-end="url(#arB3)"/>
+  <text x="220" y="215" text-anchor="middle" font-size="10" font-weight="bold" fill="#6b46c1">欠損100万繰越</text>
+
+  <!-- Rescue summary -->
+  <rect x="670" y="180" width="200" height="115" rx="6" fill="#fff" stroke="#2b6cb0" stroke-width="1.5"/>
+  <text x="770" y="200" text-anchor="middle" font-size="11" font-weight="bold" fill="#2b6cb0">救済状況</text>
+  <text x="695" y="225" font-size="11" fill="#276749">FTC適用: 8.7万円</text>
+  <text x="695" y="248" font-size="11" fill="#c53030">×1年税(死蔵): 10万円</text>
+  <text x="695" y="271" font-size="11" fill="#c53030">×2年按分外: 5.3万円</text>
+  <line x1="690" y1="280" x2="850" y2="280" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="695" y="295" font-size="11" font-weight="bold" fill="#1a365d">救済率: 8.7/24 = 36.3%</text>
+
+  <!-- Layer 3: Japan -->
+  <rect x="10" y="330" width="880" height="180" rx="8" fill="#f0fff4" stroke="#276749" stroke-width="1.5"/>
+  <text x="25" y="350" font-size="13" font-weight="bold" fill="#276749">日本（親法人の修正申告）</text>
+
+  <!-- x1 Japan -->
+  <rect x="40" y="360" width="180" height="60" rx="6" fill="#fff" stroke="#276749" stroke-width="1.5"/>
+  <text x="130" y="383" text-anchor="middle" font-size="11" font-weight="bold" fill="#276749">×1年: 修正不要</text>
+  <text x="130" y="403" text-anchor="middle" font-size="10" fill="#718096">益金算入なし</text>
+
+  <!-- x2 Japan -->
+  <line x1="450" y1="295" x2="450" y2="360" stroke="#276749" stroke-width="1.5" marker-end="url(#arG3)"/>
+  <rect x="310" y="360" width="280" height="60" rx="6" fill="#fff" stroke="#276749" stroke-width="1.5"/>
+  <text x="450" y="383" text-anchor="middle" font-size="11" font-weight="bold" fill="#276749">×2年: 修正申告</text>
+  <text x="450" y="403" text-anchor="middle" font-size="10" fill="#2d3748">+186万益金 +8.7万益金 −8.7万FTC</text>
+
+  <!-- Penalty -->
+  <rect x="310" y="440" width="280" height="50" rx="6" fill="#fffbeb" stroke="#d69e2e" stroke-width="1.5"/>
+  <text x="450" y="460" text-anchor="middle" font-size="11" fill="#744210">過少申告加算税 + 延滞税</text>
+  <text x="450" y="478" text-anchor="middle" font-size="10" fill="#744210">（FTC適用により増差税額が圧縮）</text>
+
+  <!-- Net impact -->
+  <rect x="670" y="360" width="200" height="130" rx="8" fill="#1a365d"/>
+  <text x="770" y="385" text-anchor="middle" font-size="12" font-weight="bold" fill="#bee3f8">NET IMPACT</text>
+  <text x="770" y="412" text-anchor="middle" font-size="11" fill="#fff">益金算入: 194.7万円</text>
+  <text x="770" y="436" text-anchor="middle" font-size="11" fill="#fff">税額控除: 8.7万円</text>
+  <text x="770" y="460" text-anchor="middle" font-size="11" fill="#fbd38d">未救済外国税: 15.3万円</text>
+  <text x="770" y="482" text-anchor="middle" font-size="10" fill="#a0aec0">（×1年10万+×2年5.3万）</text>
+</svg>
+<figcaption>【図3】CFC合算漏れ発覚時の修正申告における計算フロー。外国法人税24万円のうち、日本側で救済されるのは8.7万円（36.3%）に留まる</figcaption>
+</figure>
+
+<h3>8.3 実務上の示唆</h3>
+<ul>
+<li>CFC合算は毎期漏れなく行うことが極めて重要。合算漏れが生じた場合、欠損年度の外国税は永久に死蔵となり、事後的な救済は不可能である。</li>
+<li>修正申告においては、CFC合算と外国税額控除を<strong>必ず同時に</strong>主張すべきである。当初申告要件は廃止されており、修正申告時の新規適用が可能。</li>
+<li>合算漏れの年度に欠損がある場合、その繰越欠損金は翌期以降の適用対象金額計算で使用できるため、黒字年度の合算額を圧縮する効果がある。</li>
+</ul>
+
+</div>
+
+<div class="summary-box">
+<h3>本分析の要約</h3>
+<table style="border:none; color:#fff;">
+<tr style="border:none;">
+<td style="border:none; width:50%; vertical-align:top; padding:8px;">
+<p><strong style="color:#bee3f8;">×1年（欠損年度）</strong></p>
+<ul style="color:#e2e8f0; font-size:0.9rem;">
+<li>適用対象金額 = 0 → 修正申告不要</li>
+<li>繰越欠損金100万円が発生</li>
+<li>現地法人税10万円はゲート閉鎖により永久に死蔵</li>
+</ul>
+</td>
+<td style="border:none; width:50%; vertical-align:top; padding:8px;">
+<p><strong style="color:#bee3f8;">×2年（黒字年度）</strong></p>
+<ul style="color:#e2e8f0; font-size:0.9rem;">
+<li>適用対象金額 = 300−100−14 = 186万円</li>
+<li>みなし納付FTC = 14×186/300 = 8.7万円</li>
+<li>修正申告で186万円益金算入 + 8.7万円税額控除</li>
+</ul>
+</td>
+</tr>
+</table>
+<p style="text-align:center; margin-top:12px;">外国法人税合計24万円のうち、日本側で救済される金額: <span class="big-num">8.7万円</span>（救済率 36.3%）</p>
+</div>
+
+<footer>
+<p>作成日: 2026年3月30日 | 根拠条文: 措法66条の6・66条の7、措令39条の15・39条の18、法69条、法人税法施行令142条</p>
+</footer>
+
+</div>
+</body>
+</html>
