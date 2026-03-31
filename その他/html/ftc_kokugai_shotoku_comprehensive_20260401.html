@@ -84,6 +84,49 @@ a.file-link:hover { color: var(--primary); border-bottom-style: solid; }
 .related-files ul { list-style: none; padding-left: 0; }
 .related-files li { margin: 6px 0; padding-left: 18px; position: relative; }
 .related-files li::before { content: "→"; position: absolute; left: 0; color: #b98b59; }
+
+/* ===== SVG tap-to-zoom overlay ===== */
+figure { position: relative; cursor: zoom-in; }
+figure .zoom-hint { display: none; }
+@media (max-width: 800px) {
+  figure .zoom-hint { display: block; text-align: center; font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+}
+.svg-overlay { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; padding: 12px; cursor: zoom-out; -webkit-overflow-scrolling: touch; overflow: auto; }
+.svg-overlay.active { display: flex; }
+.svg-overlay svg { max-width: 100%; max-height: 100%; background: #fff; border-radius: 8px; box-shadow: 0 4px 24px rgba(0,0,0,0.4); }
+.svg-overlay .close-btn { position: fixed; top: 12px; right: 16px; color: #fff; font-size: 2rem; font-weight: bold; z-index: 10000; cursor: pointer; line-height: 1; text-shadow: 0 1px 4px rgba(0,0,0,0.6); }
+
+/* ===== Mobile responsive ===== */
+@media (max-width: 800px) {
+  .container { padding: 12px; }
+  h1 { font-size: 1.25rem; }
+  h2 { font-size: 1.1rem; margin-top: 32px; }
+  h3 { font-size: 0.98rem; }
+  .card { padding: 14px; }
+  table { font-size: 0.8rem; display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  th, td { padding: 6px 7px; white-space: normal; }
+  th { white-space: normal; font-size: 0.78rem; }
+  .toc { padding: 14px 16px; }
+  .formula { font-size: 0.82rem; padding: 10px 12px; }
+  .formula-big { font-size: 0.95rem; }
+  .law { font-size: 0.82rem; padding: 10px 12px; }
+  .ok, .warn, .insight, .note { font-size: 0.84rem; padding: 10px 12px; }
+  .summary-box { padding: 16px; }
+  .related-files { padding: 14px 16px; }
+  figure { padding: 8px; overflow-x: auto; }
+  figure svg { min-width: 600px; }
+  figcaption { font-size: 0.78rem; }
+  .ref { font-size: 0.78rem; }
+  .subtitle { font-size: 0.82rem; }
+  ol, ul { margin-left: 16px; }
+}
+@media (max-width: 480px) {
+  .container { padding: 8px; }
+  h1 { font-size: 1.1rem; }
+  .card { padding: 10px; margin-bottom: 14px; }
+  table { font-size: 0.75rem; }
+  th, td { padding: 4px 5px; }
+}
 </style>
 </head>
 <body>
@@ -224,6 +267,7 @@ a.file-link:hover { color: var(--primary); border-bottom-style: solid; }
   <line x1="600" y1="362" x2="542" y2="412" stroke="#b71c1c" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ar1)"/>
 </svg>
 <figcaption>図1-1：3つの国外所得概念のレイヤー関係 — 各層が異なる法令根拠と機能を持つ</figcaption>
+<div class="zoom-hint">タップで拡大</div>
 </figure>
 
 <div class="insight">
@@ -355,6 +399,7 @@ a.file-link:hover { color: var(--primary); border-bottom-style: solid; }
   <text x="460" y="560" text-anchor="middle" font-size="9" fill="#718096">※ 地方法人税・住民税にも類似の控除限度額・繰越規定あり（地方法人税法12条等）</text>
 </svg>
 <figcaption>図2-1：外国税額控除の法令構造マップ — 法律→政令→省令→通達の4階層委任構造</figcaption>
+<div class="zoom-hint">タップで拡大</div>
 </figure>
 
 <div class="law">
@@ -546,6 +591,7 @@ a.file-link:hover { color: var(--primary); border-bottom-style: solid; }
   <text x="585" y="297" text-anchor="middle" font-size="10" fill="#c53030">制限: 国外所得割合は90%が上限（所得金額の90%キャップ）</text>
 </svg>
 <figcaption>図5-1：控除限度額の計算構造 — 法人税額に国外所得割合を乗じる</figcaption>
+<div class="zoom-hint">タップで拡大</div>
 </figure>
 </div>
 
@@ -749,6 +795,7 @@ a.file-link:hover { color: var(--primary); border-bottom-style: solid; }
   <line x1="640" y1="561" x2="670" y2="561" stroke="#c05621" stroke-width="1.5"/><text x="680" y="565" font-size="9" fill="#4a5568">六(五)→六(二)</text>
 </svg>
 <figcaption>図7-1：別表六の転記フローマップ — 4つの別表が六(二)に集約され、最終的に別表一へ転記される</figcaption>
+<div class="zoom-hint">タップで拡大</div>
 </figure>
 
 <div class="card">
@@ -833,6 +880,7 @@ a.file-link:hover { color: var(--primary); border-bottom-style: solid; }
   <text x="400" y="510" text-anchor="middle" font-size="9" fill="#718096">※ 地方法人税分は別途「別表六(二)付表」で同様の計算を行う</text>
 </svg>
 <figcaption>図7-2：別表六(二)の概念的フォーム構造 — A(限度額算定)→B(税額集計)→C(控除確定)の3ブロック</figcaption>
+<div class="zoom-hint">タップで拡大</div>
 </figure>
 </div>
 
@@ -1161,5 +1209,42 @@ a.file-link:hover { color: var(--primary); border-bottom-style: solid; }
 </footer>
 
 </div><!-- /container -->
+
+<!-- SVG tap-to-zoom overlay -->
+<div class="svg-overlay" id="svgOverlay">
+  <span class="close-btn" id="svgClose">&times;</span>
+</div>
+<scr<!---->ipt>
+(function(){
+  var overlay=document.getElementById('svgOverlay');
+  var closeBtn=document.getElementById('svgClose');
+  document.querySelectorAll('figure').forEach(function(fig){
+    fig.addEventListener('click',function(e){
+      if(e.target.closest('a'))return;
+      var svg=fig.querySelector('svg');
+      if(!svg)return;
+      var clone=svg.cloneNode(true);
+      clone.style.minWidth='auto';
+      var old=overlay.querySelector('svg');
+      if(old)old.remove();
+      overlay.insertBefore(clone,closeBtn.nextSibling);
+      overlay.classList.add('active');
+      document.body.style.overflow='hidden';
+    });
+  });
+  function close(){
+    overlay.classList.remove('active');
+    document.body.style.overflow='';
+    var s=overlay.querySelector('svg');
+    if(s)s.remove();
+  }
+  overlay.addEventListener('click',function(e){
+    if(e.target===overlay||e.target===closeBtn)close();
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape')close();
+  });
+})();
+</scr<!---->ipt>
 </body>
 </html>
