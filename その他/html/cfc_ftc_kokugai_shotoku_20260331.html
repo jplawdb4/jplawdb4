@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CFC合算課税における外国税額控除の国外所得金額・調整国外所得金額の計算</title>
+<style>
+:root {
+  --primary: #1a365d;
+  --accent: #2b6cb0;
+  --warn: #c53030;
+  --bg: #f7fafc;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --text: #2d3748;
+  --muted: #718096;
+  --green: #276749;
+  --green-bg: #f0fff4;
+  --red-bg: #fff5f5;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", sans-serif; background: var(--bg); color: var(--text); line-height: 1.85; }
+.container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+h1 { color: var(--primary); font-size: 1.5rem; border-bottom: 3px solid var(--accent); padding-bottom: 8px; margin-bottom: 24px; }
+h2 { color: var(--primary); font-size: 1.25rem; margin: 36px 0 12px; padding-left: 12px; border-left: 4px solid var(--accent); }
+h3 { color: var(--accent); font-size: 1.05rem; margin: 22px 0 8px; }
+p { margin: 10px 0; }
+.card { background: var(--card); border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 20px; margin-bottom: 20px; }
+table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.92rem; }
+th, td { border: 1px solid var(--border); padding: 8px 12px; text-align: right; }
+th { background: #edf2f7; color: var(--primary); font-weight: 600; text-align: center; }
+td:first-child, th:first-child { text-align: left; }
+.num-neg { color: var(--warn); font-weight: 600; }
+.num-pos { color: var(--green); font-weight: 600; }
+.highlight { background: #fffbeb; }
+.ok { background: var(--green-bg); border-left: 3px solid #48bb78; padding: 12px 16px; margin: 14px 0; font-size: 0.92rem; }
+.warn { background: var(--red-bg); border-left: 3px solid var(--warn); padding: 12px 16px; margin: 14px 0; font-size: 0.92rem; }
+.formula { background: #ebf8ff; border-radius: 6px; padding: 12px 16px; margin: 10px 0; font-family: "Consolas", monospace; font-size: 0.9rem; line-height: 1.9; }
+.summary-box { background: #1a365d; color: #fff; border-radius: 8px; padding: 20px; margin: 24px 0; }
+.summary-box h3 { color: #bee3f8; margin-top: 0; }
+.summary-box .big-num { font-size: 1.8rem; font-weight: 700; color: #fbd38d; }
+.toc { background: var(--card); border-radius: 8px; padding: 16px 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.toc a { color: var(--accent); text-decoration: none; }
+.toc a:hover { text-decoration: underline; }
+.toc ul { list-style: none; padding-left: 0; }
+.toc li { padding: 4px 0; }
+.toc li::before { content: ""; display: inline-block; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; margin-right: 8px; vertical-align: middle; }
+.law { background: #f8f7f3; border-left: 5px solid #b98b59; padding: 16px 20px; margin: 16px 0; font-size: 0.93rem; line-height: 1.85; border-radius: 0 6px 6px 0; }
+.law .law-title { font-weight: 700; color: #744210; margin-bottom: 6px; font-size: 0.88rem; }
+.law em { font-style: normal; background: #fefce8; padding: 1px 4px; border-radius: 2px; font-weight: 600; }
+.law .law-note { color: var(--muted); font-size: 0.85rem; margin-top: 8px; }
+figure { margin: 24px 0; padding: 16px; background: #fafafa; border-radius: 6px; border: 1px solid var(--border); }
+figcaption { text-align: center; font-size: 0.88rem; color: var(--muted); margin-top: 10px; }
+ol, ul { margin: 8px 0 8px 24px; }
+li { margin: 5px 0; }
+.correction { background: #fefce8; border: 2px solid #d69e2e; border-radius: 8px; padding: 14px 18px; margin: 16px 0; }
+footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.8rem; text-align: center; }
+@media print {
+  body { font-size: 10pt; background: #fff; }
+  .card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; }
+  .summary-box { background: #333; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  figure { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>CFC合算課税における外国税額控除の国外所得金額・調整国外所得金額の計算</h1>
+<p style="color:var(--muted); margin-bottom:16px;">作成日: 2026年3月31日 | 条文ソース: e-Gov法令API（2025年12月27日施行の現行条文）</p>
+
+<div class="toc">
+<strong>目次</strong>
+<ul>
+<li><a href="#s1">1. 事実関係と前提</a></li>
+<li><a href="#s2">2. 制度の全体像 ── 条文はどう連鎖するか</a></li>
+<li><a href="#s3">3. ×1年の処理 ── 欠損年度のゲート構造</a></li>
+<li><a href="#s4">4. ×2年：適用対象金額150の導出</a></li>
+<li><a href="#s5">5. ×2年：みなし外税の按分計算</a></li>
+<li><a href="#s6">6. ×2年：国外所得金額の算出 ── 措令39条の18⑫⑬</a></li>
+<li><a href="#s7">7. ×2年：調整国外所得金額と90%キャップ</a></li>
+<li><a href="#s8">8. 控除限度額の最終計算</a></li>
+<li><a href="#s9">9. 総括と実務上の留意点</a></li>
+</ul>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="s1">1. 事実関係と前提</h2>
+<!-- ================================================================ -->
+<div class="card">
+<table>
+<tr><th>項目</th><th>×1年</th><th>×2年</th></tr>
+<tr><td>CFC利益</td><td class="num-neg">▲100</td><td class="num-pos">+250</td></tr>
+<tr><td>基準所得金額</td><td class="num-neg">▲100</td><td class="num-pos">300</td></tr>
+<tr><td>適用対象金額</td><td class="num-neg">0（欠損100が繰越）</td><td class="num-pos">150</td></tr>
+<tr><td>外国法人税額</td><td>―</td><td>50</td></tr>
+</table>
+<div class="ok">
+<strong>前提</strong>：持株割合100%。CFC（特定外国関係会社）。子会社配当等・控除対象配当等はなし。CFC以外の国外所得なし。
+</div>
+
+<p>×2年の適用対象金額は次の検算で確認できる。</p>
+<div class="formula">適用対象金額 = 基準所得金額 − 繰越欠損金 − 納付法人所得税 = 300 − 100 − 50 = <strong>150</strong> ✓</div>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="s2">2. 制度の全体像 ── 条文はどう連鎖するか</h2>
+<!-- ================================================================ -->
+<div class="card">
+<p>CFC合算課税から外国税額控除の国外所得金額に至るまで、以下の条文が順番に作用する。</p>
+
+<table>
+<tr><th>#</th><th>条文</th><th>何をするか</th></tr>
+<tr><td>①</td><td>措令39条の15⑤</td><td>基準所得金額から欠損金・法人所得税を控除して<strong>適用対象金額</strong>を確定</td></tr>
+<tr><td>②</td><td>措法66条の6①</td><td>課税対象金額を親法人の<strong>益金に算入</strong></td></tr>
+<tr><td>③</td><td>措法66条の7①</td><td>外国法人税を親法人の<strong>控除対象外国法人税とみなす</strong>（ゲート条項）</td></tr>
+<tr><td>④</td><td>措令39条の18③</td><td>みなし控除対象外国法人税額の<strong>按分計算</strong></td></tr>
+<tr><td>⑤</td><td>措法66条の7②</td><td>みなし外税額を<strong>益金算入</strong></td></tr>
+<tr><td>⑥</td><td>措令39条の18⑫</td><td>CFC益金算入額を<strong>調整国外所得金額に算入</strong></td></tr>
+<tr><td>⑦</td><td>措令39条の18⑬</td><td>みなし外税額を<strong>調整国外所得金額に算入</strong></td></tr>
+<tr><td>⑧</td><td>施行令142条③</td><td>調整国外所得金額に<strong>90%キャップ</strong>を適用</td></tr>
+<tr><td>⑨</td><td>法69条①・施行令142条①</td><td><strong>控除限度額</strong>を計算</td></tr>
+</table>
+
+<!-- SVG: 条文連鎖フロー -->
+<figure>
+<svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="aB" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#2b6cb0"/></marker>
+    <marker id="aG" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#276749"/></marker>
+    <marker id="aR" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#c53030"/></marker>
+  </defs>
+  <text x="450" y="24" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a365d">【図1】CFC合算課税から国外所得金額に至る条文連鎖</text>
+
+  <!-- Step 1: 基準所得 → 適用対象金額 -->
+  <rect x="50" y="45" width="240" height="50" rx="8" fill="#ebf8ff" stroke="#2b6cb0" stroke-width="2"/>
+  <text x="170" y="65" text-anchor="middle" font-size="11" font-weight="bold" fill="#2b6cb0">① 適用対象金額の確定</text>
+  <text x="170" y="83" text-anchor="middle" font-size="10" fill="#4a5568">措令39条の15⑤ → 150</text>
+  <line x1="290" y1="70" x2="345" y2="70" stroke="#2b6cb0" stroke-width="2" marker-end="url(#aB)"/>
+
+  <!-- Step 2: 益金算入 -->
+  <rect x="345" y="45" width="200" height="50" rx="8" fill="#ebf8ff" stroke="#2b6cb0" stroke-width="2"/>
+  <text x="445" y="65" text-anchor="middle" font-size="11" font-weight="bold" fill="#2b6cb0">② 益金算入</text>
+  <text x="445" y="83" text-anchor="middle" font-size="10" fill="#4a5568">措法66条の6① → 150</text>
+  <line x1="545" y1="70" x2="600" y2="70" stroke="#2b6cb0" stroke-width="2" marker-end="url(#aB)"/>
+
+  <!-- Step 3: ゲート -->
+  <rect x="600" y="45" width="250" height="50" rx="8" fill="#f0fff4" stroke="#276749" stroke-width="2"/>
+  <text x="725" y="65" text-anchor="middle" font-size="11" font-weight="bold" fill="#276749">③ みなし納付ゲートOPEN</text>
+  <text x="725" y="83" text-anchor="middle" font-size="10" fill="#4a5568">措法66条の7① ← 適用あり</text>
+  <line x1="725" y1="95" x2="725" y2="140" stroke="#276749" stroke-width="2" marker-end="url(#aG)"/>
+
+  <!-- Step 4: 按分計算 -->
+  <rect x="600" y="140" width="250" height="50" rx="8" fill="#f0fff4" stroke="#276749" stroke-width="2"/>
+  <text x="725" y="160" text-anchor="middle" font-size="11" font-weight="bold" fill="#276749">④ みなし外税の按分</text>
+  <text x="725" y="178" text-anchor="middle" font-size="10" fill="#4a5568">措令39条の18③ → 50</text>
+  <line x1="725" y1="190" x2="725" y2="235" stroke="#276749" stroke-width="2" marker-end="url(#aG)"/>
+
+  <!-- Step 5: みなし外税益金 -->
+  <rect x="600" y="235" width="250" height="50" rx="8" fill="#f0fff4" stroke="#276749" stroke-width="2"/>
+  <text x="725" y="255" text-anchor="middle" font-size="11" font-weight="bold" fill="#276749">⑤ みなし外税 益金算入</text>
+  <text x="725" y="273" text-anchor="middle" font-size="10" fill="#4a5568">措法66条の7② → +50</text>
+
+  <!-- 分岐: ⑫と⑬ -->
+  <line x1="445" y1="95" x2="445" y2="330" stroke="#2b6cb0" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <line x1="725" y1="285" x2="725" y2="330" stroke="#276749" stroke-width="1.5" stroke-dasharray="5,3"/>
+
+  <!-- Step 6+7: 調整国外所得金額 -->
+  <rect x="200" y="330" width="550" height="60" rx="10" fill="#ebf8ff" stroke="#2b6cb0" stroke-width="2.5"/>
+  <text x="475" y="352" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a365d">⑥⑦ 調整国外所得金額に算入</text>
+  <text x="475" y="372" text-anchor="middle" font-size="11" fill="#2b6cb0">措令39条の18⑫：CFC益金150 ＋ 措令39条の18⑬：みなし外税50 ＝ 200</text>
+
+  <line x1="445" y1="330" x2="445" y2="330" stroke="#2b6cb0" stroke-width="2"/>
+  <text x="440" y="320" text-anchor="end" font-size="10" fill="#2b6cb0">⑫ 150</text>
+  <text x="720" y="320" text-anchor="end" font-size="10" fill="#276749">⑬ 50</text>
+
+  <line x1="475" y1="390" x2="475" y2="430" stroke="#2b6cb0" stroke-width="2" marker-end="url(#aB)"/>
+
+  <!-- Step 8: 90%キャップ -->
+  <rect x="280" y="430" width="390" height="50" rx="10" fill="#1a365d" stroke="#1a365d" stroke-width="2"/>
+  <text x="475" y="452" text-anchor="middle" font-size="12" font-weight="bold" fill="#fbd38d">⑧ 90%キャップ → 調整国外所得金額 = 180*</text>
+  <text x="475" y="470" text-anchor="middle" font-size="10" fill="#bee3f8">施行令142条③ | min(200, 所得金額×90%)</text>
+</svg>
+<figcaption>【図1】CFC合算額（150）とみなし外税（50）が調整国外所得金額に流入する経路<br>* 親法人にCFC以外の所得がない場合。十分な国内所得がある場合は200</figcaption>
+</figure>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="s3">3. ×1年の処理 ── 欠損年度のゲート構造</h2>
+<!-- ================================================================ -->
+<div class="card">
+<p>×1年は基準所得金額が▲100であるため、適用対象金額はゼロとなり、CFC合算による益金算入は生じない。</p>
+
+<div class="law">
+<div class="law-title">租税特別措置法 第66条の7 第1項（抜粋）</div>
+前条第一項各号に掲げる内国法人が、<em>前条第一項、第六項又は第八項の規定の適用を受ける場合には</em>、当該内国法人に係る外国関係会社の所得に対して課される外国法人税の額のうち、当該外国関係会社の<em>課税対象金額に対応するものとして政令で定めるところにより計算した金額</em>……は、……当該内国法人が納付する<em>控除対象外国法人税の額とみなして</em>、同法第六十九条……の規定を適用する。
+</div>
+
+<p>措法66条の7①の発動要件は<strong>「前条第1項の規定の適用を受ける場合には」</strong>である。×1年は適用対象金額がゼロであるため措法66条の6①による益金算入が生じず、このゲート条項を充足しない。</p>
+
+<table>
+<tr><th>ステップ</th><th>×1年の状態</th><th>結果</th></tr>
+<tr><td>基準所得金額</td><td class="num-neg">▲100</td><td>適用対象金額 = 0</td></tr>
+<tr><td>措法66条の6①</td><td>益金算入額 = 0</td><td>「適用を受ける」事実なし</td></tr>
+<tr><td>措法66条の7①</td><td>ゲート条項</td><td class="num-neg">充足せず → 閉鎖</td></tr>
+<tr><td>みなし外税</td><td>不発動</td><td>控除対象外国法人税 = 0</td></tr>
+</table>
+
+<div class="ok">
+<strong>×1年の欠損▲100は繰越される。</strong>CFC繰越欠損金として、×2年以降の適用対象金額の計算において控除される（措令39条の15⑤一、繰越期間7年）。
+</div>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="s4">4. ×2年：適用対象金額150の導出</h2>
+<!-- ================================================================ -->
+<div class="card">
+<p>×2年は基準所得金額が300であるため、CFC合算の対象となる。適用対象金額は措令39条の15⑤に基づき計算される。</p>
+
+<div class="law">
+<div class="law-title">租税特別措置法施行令 第39条の15 第5項（要旨）</div>
+適用対象金額は、外国関係会社の各事業年度の基準所得金額から<em>次に掲げる金額の合計額を控除した残額</em>とする。<br>
+一　当該各事業年度開始の日前<em>七年以内に開始した事業年度において生じた欠損金額</em>の合計額に相当する金額<br>
+二　当該外国関係会社が当該各事業年度において<em>納付をすることとなる法人所得税の額</em>
+</div>
+
+<table>
+<tr><th>項目</th><th>金額</th><th>条文根拠</th></tr>
+<tr><td>基準所得金額</td><td class="num-pos">300</td><td>措令39条の15①②</td></tr>
+<tr><td>繰越欠損金（×1年分）</td><td class="num-neg">▲100</td><td>措令39条の15⑤一</td></tr>
+<tr><td>納付法人所得税</td><td class="num-neg">▲50</td><td>措令39条の15⑤二</td></tr>
+<tr class="highlight"><td><strong>適用対象金額</strong></td><td class="num-pos"><strong>150</strong></td><td></td></tr>
+</table>
+
+<div class="formula">適用対象金額 = 300 − 100 − 50 = <strong>150</strong></div>
+
+<p>持株割合100%であるため、<strong>課税対象金額 = 150 × 100% = 150</strong>。これが措法66条の6①に基づき親法人の益金に算入される。</p>
+
+<h3>補足：利益250と基準所得金額300の乖離</h3>
+<p>CFCの利益（現地会計上の所得）は250であるが、基準所得金額は300と50の差がある。これは日本税法の規定に準じた計算（いわゆる「本邦法令基準」、措令39条の15①）による調整の結果であり、現地会計上は認められる費用・損金が日本税法上は認められない場合などに生じる。外国税額控除の計算には基準所得金額300ベースの適用対象金額150を使用する。</p>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="s5">5. ×2年：みなし外税の按分計算</h2>
+<!-- ================================================================ -->
+<div class="card">
+<p>×2年は適用対象金額が正であるため、措法66条の7①のゲートが開き、CFCの外国法人税50が親法人のみなし控除対象外国法人税の対象となる。</p>
+
+<h3>5.1 条文の正確な読み方</h3>
+
+<div class="law">
+<div class="law-title">租税特別措置法施行令 第39条の18 第3項</div>
+法第六十六条の七第一項に規定する課税対象金額に対応するものとして政令で定めるところにより計算した金額は、外国関係会社につきその<em>課税対象年度の所得に対して課される外国法人税の額</em>に、当該課税対象年度に係る<em>適用対象金額</em>（第三十九条の十五第一項第四号に掲げる金額……又は……控除対象配当等の額……がある場合には、これらの金額を加算した金額。……<em>「調整適用対象金額」</em>という。）のうちに法第六十六条の七第一項に規定する内国法人に係る<em>課税対象金額の占める割合を乗じて計算した金額</em>とする。
+</div>
+
+<p>この条文を算式に分解すると：</p>
+<div class="formula">
+みなし控除対象外国法人税額 = <strong>外国法人税額</strong> × ( <strong>課税対象金額</strong> ÷ <strong>調整適用対象金額</strong> )
+</div>
+
+<div class="correction">
+<strong>分母は「基準所得金額300」でも「CFC利益250」でもない。</strong><br>
+条文の文言上、按分の分母は「<strong>調整適用対象金額</strong>」（= 適用対象金額 + 子会社配当等 + 控除対象配当等）であり、CFCの課税標準でも基準所得金額でもない。「50 × 150/300 = 25」や「50 × 150/250 = 30」という計算は誤りである。
+</div>
+
+<h3>5.2 「調整適用対象金額」の算定</h3>
+<div class="formula">
+調整適用対象金額 = 適用対象金額 + 子会社配当等（外国法人税の課税標準に含まれるもの）+ 控除対象配当等（同上）
+</div>
+<p>本件では子会社配当等・控除対象配当等はいずれもゼロであるため：</p>
+<div class="formula">調整適用対象金額 = 150 + 0 + 0 = <strong>150</strong></div>
+
+<h3>5.3 計算結果</h3>
+<table>
+<tr><th>項目</th><th>金額</th></tr>
+<tr><td>外国法人税額</td><td>50</td></tr>
+<tr><td>課税対象金額</td><td>150</td></tr>
+<tr><td>調整適用対象金額</td><td>150</td></tr>
+<tr><td>按分割合 = 150 ÷ 150</td><td><strong>100%</strong></td></tr>
+<tr class="highlight"><td><strong>みなし控除対象外国法人税額</strong></td><td><strong>50</strong></td></tr>
+</table>
+
+<div class="formula">
+みなし外税 = 50 × (150 ÷ 150) = 50 × 100% = <strong>50</strong>
+</div>
+
+<div class="ok">
+<strong>なぜ比率が100%か：</strong>100%保有・配当調整なしの前提では、課税対象金額 = 適用対象金額 = 調整適用対象金額（いずれも150）。按分比率は1になり、外国法人税額50が<strong>全額</strong>みなし控除対象外国法人税額となる。持株割合が100%未満であれば課税対象金額が小さくなり、比率は1を下回る。
+</div>
+
+<h3>5.4 みなし外税の益金算入</h3>
+<div class="law">
+<div class="law-title">租税特別措置法 第66条の7 第2項（要旨）</div>
+前項の規定により<em>控除対象外国法人税の額とみなされた金額</em>は、当該内国法人の政令で定める事業年度の所得の金額の計算上、<em>益金の額に算入する</em>。
+</div>
+<p>みなし外税50は、親法人の×2年の益金にも算入される。合計の益金算入額は 150 + 50 = <strong>200</strong>。</p>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="s6">6. ×2年：国外所得金額の算出 ── 措令39条の18⑫⑬</h2>
+<!-- ================================================================ -->
+<div class="card">
+<p>これが本分析の<strong>核心</strong>である。CFC合算額が外国税額控除の「国外所得金額」にどう反映されるかは、一般の外国税額控除と異なる特殊な条文構造を持つ。</p>
+
+<h3>6.1 一般の国外所得金額の定義</h3>
+
+<div class="law">
+<div class="law-title">法人税法施行令 第141条の2 第1項</div>
+法第六十九条第一項に規定する政令で定める金額は、内国法人の各事業年度の次に掲げる<em>国外源泉所得に係る所得の金額の合計額</em>（<em>当該合計額が零を下回る場合には、零</em>）とする。
+</div>
+
+<p>法69条④に列挙される「国外源泉所得」とは、国外事業所等帰属所得、国外資産の運用・譲渡・保有所得、外国株式配当等である。<strong>CFC合算益金算入額はこれらの類型に直接該当しない。</strong>これは、CFC合算が「実際に国外で稼得した所得」ではなく、措法66条の6による<strong>法律上の擬制的益金算入</strong>であるためである。</p>
+
+<div class="warn">
+<strong>問題の所在：</strong>CFC合算額が一般の国外所得金額の定義に含まれないとすると、外国税額控除の控除限度額の分子がゼロになり、みなし外税50の控除が不可能になる。これでは二重課税の排除という制度趣旨に反する。
+</div>
+
+<h3>6.2 解決：措令39条の18⑫⑬による特別算入</h3>
+<p>この問題を解決するのが、措令39条の18の第12項と第13項である。これらはCFC固有の益金算入額を、直接「<strong>調整国外所得金額</strong>」に算入する特別規定である。</p>
+
+<div class="law">
+<div class="law-title">租税特別措置法施行令 第39条の18 第12項</div>
+法第六十六条の六第一項各号に掲げる内国法人の各事業年度の所得の金額の計算上同項又は同条第六項若しくは第八項の規定により<em>益金の額に算入された金額</em>（以下この項において「益金算入額」という。）がある場合には、当該益金算入額は、当該内国法人の当該各事業年度に係る法人税法第六十九条第一項に規定する控除限度額の計算については、<em>法人税法施行令第百四十二条第三項本文に規定する調整国外所得金額</em>（当該内国法人が通算法人である場合には、同令第百四十八条第四項に規定する加算前国外所得金額）<em>に含まれるものとする</em>。<br><br>
+ただし、その所得に対して……外国法人税を<em>課さない国又は地域に本店又は主たる事務所を有する外国関係会社に係る益金算入額</em>……については、この限りでない。
+<div class="law-note">→ CFC合算益金算入額150が調整国外所得金額に入る根拠。ただし無税国CFCの場合は除外。</div>
+</div>
+
+<div class="law">
+<div class="law-title">租税特別措置法施行令 第39条の18 第13項</div>
+第八項各号に掲げる外国法人税の額のうち法第六十六条の七第一項の規定により外国関係会社に係る内国法人が納付する<em>控除対象外国法人税の額とみなされる金額</em>は、その内国法人の当該各号に定める事業年度に係る法人税法第六十九条第一項に規定する控除限度額の計算については、<em>法人税法施行令第百四十二条第三項本文に規定する調整国外所得金額</em>（当該内国法人が通算法人である場合には、同令第百四十八条第四項に規定する加算前国外所得金額）<em>に含まれるものとする</em>。
+<div class="law-note">→ みなし外税50も調整国外所得金額に入る根拠。</div>
+</div>
+
+<h3>6.3 国外所得金額の算定</h3>
+<p>措令39条の18⑫⑬により、以下の2つの金額が調整国外所得金額に算入される。</p>
+
+<table>
+<tr><th>項目</th><th>金額</th><th>条文根拠</th></tr>
+<tr><td>CFC益金算入額（課税対象金額）</td><td class="num-pos">150</td><td>措令39条の18⑫</td></tr>
+<tr><td>みなし外税益金算入額</td><td class="num-pos">50</td><td>措令39条の18⑬</td></tr>
+<tr class="highlight"><td><strong>国外所得金額（CFC由来合計）</strong></td><td class="num-pos"><strong>200</strong></td><td></td></tr>
+</table>
+
+<div class="formula">
+国外所得金額 = CFC益金算入額（150）<sup>⑫</sup> + みなし外税（50）<sup>⑬</sup> = <strong>200</strong>
+</div>
+
+<div class="ok">
+<strong>構造の理解：</strong>⑫⑬は一般の「国外源泉所得」（法69条④）を経由せず、<strong>直接</strong>「調整国外所得金額」（施行令142条③）に算入するバイパス規定である。CFC合算という擬制的な益金を、外国税額控除の限度額計算で国外所得として扱うための架橋規定といえる。
+</div>
+
+<h3>6.4 ⑫の例外規定 ── 無税国CFCの場合</h3>
+<p>措令39条の18⑫但書は、「外国法人税を課さない国又は地域に本店を有するCFC」の益金算入額を調整国外所得金額から<strong>除外</strong>する。無税国のCFCは外国法人税が存在しないため、外国税額控除を適用する余地がなく、国外所得金額に含める必要がないからである。</p>
+<p>本件では×2年に外国法人税50が課されているため、この例外は<strong>適用されない</strong>。</p>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="s7">7. ×2年：調整国外所得金額と90%キャップ</h2>
+<!-- ================================================================ -->
+<div class="card">
+
+<h3>7.1 調整国外所得金額の定義</h3>
+<div class="law">
+<div class="law-title">法人税法施行令 第142条 第3項</div>
+当該事業年度の調整国外所得金額とは、……当該事業年度の法第六十九条第一項に規定する<em>国外所得金額から外国法人税が課されない国外源泉所得に係る所得の金額を控除した金額</em>をいう。ただし、当該金額が当該事業年度の所得金額の<em>百分の九十に相当する金額を超える場合には、当該百分の九十に相当する金額</em>とする。
+</div>
+
+<p>調整国外所得金額は以下の2段階で計算される。</p>
+<div class="formula">
+Step 1: 調整国外所得金額 = 国外所得金額 − 外国法人税非課税の国外源泉所得<br>
+Step 2: 90%キャップ = min( Step 1の結果, 所得金額 × 90% )
+</div>
+
+<h3>7.2 本件への適用</h3>
+<p>CFC由来の国外所得金額200は全て外国法人税が課された所得に対応するため、Step 1での控除はゼロ。</p>
+
+<h3>ケースA：親法人にCFC以外の所得がない場合</h3>
+<table>
+<tr><th>項目</th><th>金額</th><th>備考</th></tr>
+<tr><td>所得金額</td><td>200</td><td>CFC益金150 + みなし外税益金50</td></tr>
+<tr><td>国外所得金額</td><td>200</td><td>措令39条の18⑫⑬</td></tr>
+<tr><td>外国法人税非課税分の控除</td><td>0</td><td>該当なし</td></tr>
+<tr><td>90%キャップ = 200 × 90%</td><td>180</td><td></td></tr>
+<tr class="highlight"><td><strong>調整国外所得金額</strong></td><td class="num-pos"><strong>180</strong></td><td>min(200, 180)</td></tr>
+</table>
+
+<div class="warn">
+<strong>90%キャップの影響：</strong>親法人にCFC以外の所得がない場合、国外所得金額(200)が所得金額(200)と一致するため、必ず90%キャップが作動し、調整国外所得金額は所得の90% = 180に圧縮される。これは国内源泉の法人税財源を最低10%確保するための政策的措置である。
+</div>
+
+<h3>ケースB：親法人に十分な国内所得がある場合</h3>
+<p>例えば、CFC益金のほかに国内所得800がある場合：</p>
+<table>
+<tr><th>項目</th><th>金額</th><th>備考</th></tr>
+<tr><td>所得金額</td><td>1,000</td><td>CFC益金200 + 国内所得800</td></tr>
+<tr><td>国外所得金額</td><td>200</td><td>措令39条の18⑫⑬</td></tr>
+<tr><td>90%キャップ = 1,000 × 90%</td><td>900</td><td></td></tr>
+<tr class="highlight"><td><strong>調整国外所得金額</strong></td><td class="num-pos"><strong>200</strong></td><td>min(200, 900) → キャップ非抵触</td></tr>
+</table>
+
+<div class="ok">
+<strong>実務上の意味：</strong>親法人に十分な国内所得がある場合、90%キャップは作動せず、調整国外所得金額は200となる。多くの実務ケースではこちらに該当する。
+</div>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="s8">8. 控除限度額の最終計算</h2>
+<!-- ================================================================ -->
+<div class="card">
+
+<div class="law">
+<div class="law-title">法人税法施行令 第142条 第1項</div>
+法第六十九条第一項に規定する政令で定めるところにより計算した金額は、……内国法人の各事業年度の所得に対する法人税の額……に、当該事業年度の<em>所得金額のうちに当該事業年度の調整国外所得金額の占める割合</em>を乗じて計算した金額とする。
+</div>
+
+<div class="formula">
+控除限度額 = 法人税額 × ( 調整国外所得金額 ÷ 所得金額 )
+</div>
+
+<h3>ケースA：CFC以外の所得なし</h3>
+<table>
+<tr><th>項目</th><th>金額</th></tr>
+<tr><td>所得金額</td><td>200</td></tr>
+<tr><td>調整国外所得金額</td><td>180</td></tr>
+<tr><td>法人税額（23.2%想定）</td><td>46.4</td></tr>
+<tr><td>控除限度額 = 46.4 × 180/200</td><td><strong>41.76</strong></td></tr>
+<tr class="highlight"><td>みなし外税50 vs 控除限度額41.76</td><td class="num-neg">控除限度超過 8.24</td></tr>
+</table>
+<p>90%キャップにより控除限度額が圧縮されるため、みなし外税50のうち8.24が当期に控除できず、控除限度超過額として3年間繰り越される（法69条②）。</p>
+
+<h3>ケースB：国内所得800がある場合</h3>
+<table>
+<tr><th>項目</th><th>金額</th></tr>
+<tr><td>所得金額</td><td>1,000</td></tr>
+<tr><td>調整国外所得金額</td><td>200</td></tr>
+<tr><td>法人税額（23.2%想定）</td><td>232</td></tr>
+<tr><td>控除限度額 = 232 × 200/1,000</td><td><strong>46.4</strong></td></tr>
+<tr class="highlight"><td>みなし外税50 vs 控除限度額46.4</td><td class="num-neg">控除限度超過 3.6</td></tr>
+</table>
+<p>国内所得が十分あっても、控除限度額46.4（= 200/1,000 × 232）に対してみなし外税50が上回るため、3.6は超過額として繰越。</p>
+
+<div class="correction">
+<strong>なぜ50全額を控除できないか：</strong>控除限度額の計算は「所得金額に占める国外所得金額の割合」に法人税率を乗じたものであるため、日本の法人税率（23.2%）が外国の実効税率（本件では50/250=20%ないし50/300≒16.7%）を上回る場合にのみ全額控除可能。CFC合算では、繰越欠損金控除と納付法人所得税控除により適用対象金額（=国外所得の基礎）が圧縮されるが、みなし外税は圧縮前の外国法人税額全額（50）が対象となるため、控除限度額との間にギャップが生じやすい。
+</div>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="s9">9. 総括と実務上の留意点</h2>
+<!-- ================================================================ -->
+
+<div class="summary-box">
+<h3>本分析の結論</h3>
+<table style="border:none; color:#fff; width:100%;">
+<tr style="border:none;">
+<td style="border:none; width:50%; vertical-align:top; padding:8px;">
+<p><strong style="color:#bee3f8;">国外所得金額</strong></p>
+<p class="big-num">200</p>
+<ul style="color:#e2e8f0; font-size:0.9rem; list-style:none; padding:0;">
+<li>CFC益金算入額 150（措令39条の18⑫）</li>
+<li>+ みなし外税益金 50（措令39条の18⑬）</li>
+</ul>
+</td>
+<td style="border:none; width:50%; vertical-align:top; padding:8px;">
+<p><strong style="color:#bee3f8;">調整国外所得金額</strong></p>
+<p class="big-num">180 〜 200</p>
+<ul style="color:#e2e8f0; font-size:0.9rem; list-style:none; padding:0;">
+<li>CFC以外の所得なし → 180（90%キャップ）</li>
+<li>十分な国内所得あり → 200（キャップ非抵触）</li>
+</ul>
+</td>
+</tr>
+</table>
+</div>
+
+<div class="card">
+<h3>9.1 計算チェーンの全体像</h3>
+<table>
+<tr><th>#</th><th>ステップ</th><th>金額</th><th>条文</th></tr>
+<tr><td>1</td><td>基準所得金額</td><td>300</td><td>措令39条の15①②</td></tr>
+<tr><td>2</td><td>繰越欠損金控除</td><td>▲100</td><td>措令39条の15⑤一</td></tr>
+<tr><td>3</td><td>納付法人所得税控除</td><td>▲50</td><td>措令39条の15⑤二</td></tr>
+<tr><td>4</td><td>適用対象金額</td><td><strong>150</strong></td><td></td></tr>
+<tr><td>5</td><td>課税対象金額（100%保有）</td><td><strong>150</strong></td><td>措法66条の6①</td></tr>
+<tr><td>6</td><td>CFC益金算入</td><td>+150</td><td>措法66条の6①</td></tr>
+<tr><td>7</td><td>みなし外税 = 50×150/150</td><td><strong>50</strong></td><td>措令39条の18③</td></tr>
+<tr><td>8</td><td>みなし外税益金算入</td><td>+50</td><td>措法66条の7②</td></tr>
+<tr><td>9</td><td>合計益金算入</td><td><strong>200</strong></td><td></td></tr>
+<tr><td>10</td><td>国外所得金額（CFC由来）</td><td><strong>200</strong></td><td>措令39条の18⑫⑬</td></tr>
+<tr><td>11</td><td>調整国外所得金額（90%キャップ後）</td><td><strong>180〜200</strong></td><td>施行令142条③</td></tr>
+</table>
+
+<h3>9.2 実務上の留意点</h3>
+
+<h3>（1）持株割合が100%未満の場合</h3>
+<p>持株割合がp%の場合：課税対象金額 = 150 × p%、按分比率 = (150×p%) / 150 = p%。みなし外税 = 50 × p%。国外所得金額 = 150×p% + 50×p% = 200×p%。</p>
+
+<h3>（2）×1年の外国法人税の不救済</h3>
+<p>×1年にCFCが外国法人税を納付していた場合でも、適用対象金額がゼロであるため措法66条の7①のゲートが閉じ、当該外国税は日本側で一切認識されない。控除限度超過額としての繰越（法69条②）も不可能である。これはCFC税制の構造的限界である。</p>
+
+<h3>（3）基準所得金額と利益の乖離への注意</h3>
+<p>本件では利益250に対し基準所得金額が300と50の乖離がある。みなし外税の按分計算（措令39条の18③）では基準所得金額ではなく「調整適用対象金額」が分母となるため、この乖離は按分比率に影響しない。ただし、基準所得金額が大きいほど適用対象金額も大きくなり、国外所得金額が増加する。</p>
+
+<h3>（4）控除しきれない場合の繰越</h3>
+<p>みなし外税50が控除限度額を超過した場合、超過額は法69条②に基づき<strong>3年間</strong>繰り越すことができる。翌期以降に控除余裕額があれば順次控除される。</p>
+
+<h3>9.3 条文引用の一覧</h3>
+<table>
+<tr><th>条文</th><th>本分析での役割</th></tr>
+<tr><td>措法66条の6①</td><td>CFC課税対象金額の益金算入（本体規定）</td></tr>
+<tr><td>措法66条の7①</td><td>みなし納付のゲート条項</td></tr>
+<tr><td>措法66条の7②</td><td>みなし外税額の益金算入</td></tr>
+<tr><td>措令39条の15⑤</td><td>適用対象金額の計算式</td></tr>
+<tr><td>措令39条の18③</td><td>みなし外税の按分計算（分母 = 調整適用対象金額）</td></tr>
+<tr><td>措令39条の18⑫</td><td>CFC益金算入額を調整国外所得金額に含める</td></tr>
+<tr><td>措令39条の18⑬</td><td>みなし外税額を調整国外所得金額に含める</td></tr>
+<tr><td>法69条①</td><td>外国税額控除の控除限度額</td></tr>
+<tr><td>法69条②③</td><td>控除限度超過額・控除余裕額の3年繰越</td></tr>
+<tr><td>施行令141条の2①</td><td>国外所得金額の定義とゼロフロア</td></tr>
+<tr><td>施行令142条③</td><td>調整国外所得金額の定義と90%キャップ</td></tr>
+</table>
+</div>
+
+<footer>
+<p>作成日: 2026年3月31日 | 条文ソース: e-Gov法令API（2025年12月27日施行の現行条文）</p>
+</footer>
+
+</div>
+</body>
+</html>
