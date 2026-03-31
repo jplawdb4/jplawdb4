@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CFC合算額は「国外所得」か？── 条文に書かれていない接続の構造分析</title>
+<style>
+:root {
+  --primary: #1a365d;
+  --accent: #2b6cb0;
+  --warn: #c53030;
+  --bg: #f7fafc;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --text: #2d3748;
+  --muted: #718096;
+  --green: #276749;
+  --green-bg: #f0fff4;
+  --red-bg: #fff5f5;
+  --purple: #553c9a;
+  --purple-bg: #faf5ff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", sans-serif; background: var(--bg); color: var(--text); line-height: 1.85; }
+.container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+h1 { color: var(--primary); font-size: 1.5rem; border-bottom: 3px solid var(--accent); padding-bottom: 8px; margin-bottom: 24px; }
+h2 { color: var(--primary); font-size: 1.25rem; margin: 36px 0 12px; padding-left: 12px; border-left: 4px solid var(--accent); }
+h3 { color: var(--accent); font-size: 1.05rem; margin: 22px 0 8px; }
+p { margin: 10px 0; }
+.card { background: var(--card); border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 20px; margin-bottom: 20px; }
+table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.92rem; }
+th, td { border: 1px solid var(--border); padding: 8px 12px; }
+th { background: #edf2f7; color: var(--primary); font-weight: 600; text-align: center; }
+td:first-child { text-align: left; }
+.highlight { background: #fffbeb; }
+.ok { background: var(--green-bg); border-left: 3px solid #48bb78; padding: 12px 16px; margin: 14px 0; font-size: 0.92rem; }
+.warn { background: var(--red-bg); border-left: 3px solid var(--warn); padding: 12px 16px; margin: 14px 0; font-size: 0.92rem; }
+.insight { background: var(--purple-bg); border-left: 3px solid var(--purple); padding: 12px 16px; margin: 14px 0; font-size: 0.92rem; }
+.law { background: #f8f7f3; border-left: 5px solid #b98b59; padding: 16px 20px; margin: 16px 0; font-size: 0.93rem; line-height: 1.85; border-radius: 0 6px 6px 0; }
+.law .law-title { font-weight: 700; color: #744210; margin-bottom: 6px; font-size: 0.88rem; }
+.law em { font-style: normal; background: #fefce8; padding: 1px 4px; border-radius: 2px; font-weight: 600; }
+.law .law-note { color: var(--muted); font-size: 0.85rem; margin-top: 8px; }
+.summary-box { background: #1a365d; color: #fff; border-radius: 8px; padding: 20px; margin: 24px 0; }
+.summary-box h3 { color: #bee3f8; margin-top: 0; }
+.toc { background: var(--card); border-radius: 8px; padding: 16px 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.toc a { color: var(--accent); text-decoration: none; }
+.toc a:hover { text-decoration: underline; }
+.toc ul { list-style: none; padding-left: 0; }
+.toc li { padding: 4px 0; }
+.toc li::before { content: ""; display: inline-block; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; margin-right: 8px; vertical-align: middle; }
+figure { margin: 24px 0; padding: 16px; background: #fafafa; border-radius: 6px; border: 1px solid var(--border); }
+figcaption { text-align: center; font-size: 0.88rem; color: var(--muted); margin-top: 10px; }
+ol, ul { margin: 8px 0 8px 24px; }
+li { margin: 5px 0; }
+.correction { background: #fefce8; border: 2px solid #d69e2e; border-radius: 8px; padding: 14px 18px; margin: 16px 0; }
+.formula { background: #ebf8ff; border-radius: 6px; padding: 12px 16px; margin: 10px 0; font-family: "Consolas", monospace; font-size: 0.9rem; line-height: 1.9; }
+blockquote { background: #f8f9fa; border-left: 4px solid #a0aec0; padding: 14px 18px; margin: 16px 0; font-size: 0.93rem; }
+footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.8rem; text-align: center; }
+@media print {
+  body { font-size: 10pt; background: #fff; }
+  .card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; }
+  .summary-box { background: #333; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  figure { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>CFC合算額は「国外所得」か？── 条文に書かれていない接続の構造分析</h1>
+<p style="color:var(--muted); margin-bottom:16px;">作成日: 2026年3月31日 | 条文ソース: e-Gov法令API（2025年12月27日施行の現行条文）</p>
+
+<div class="summary-box">
+<h3>結論</h3>
+<p>CFC合算益金算入額が「国外所得」であるとは、<strong>法律にも施行令にも書かれていない</strong>。CFC合算額は法69条④が列挙する16カテゴリーの「国外源泉所得」のいずれにも該当せず、施行令141条の2が定義する「国外所得金額」にも含まれない。唯一の接続点は、<strong>措置法施行令39条の18⑫⑬</strong>が「調整国外所得金額に含まれるものとする」と規定するバイパス規定であり、「国外源泉所得」→「国外所得金額」という正規の経路を完全にスキップして、最も下流の概念に直接流入する。</p>
+</div>
+
+<div class="toc">
+<strong>目次</strong>
+<ul>
+<li><a href="#s1">1. 問いの核心</a></li>
+<li><a href="#s2">2. 法律が定める「国外源泉所得」── 法69条④の16カテゴリー</a></li>
+<li><a href="#s3">3. 施行令が定める「国外所得金額」── 施行令141条の2</a></li>
+<li><a href="#s4">4. CFC合算額はどこにも該当しない</a></li>
+<li><a href="#s5">5. バイパス規定 ── 措令39条の18⑫⑬の構造</a></li>
+<li><a href="#s6">6. なぜ「国外源泉所得」と正面から書かないのか ── 法的性質論争</a></li>
+<li><a href="#s7">7. 立法技術としての評価</a></li>
+<li><a href="#s8">8. 実務上の帰結</a></li>
+</ul>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="s1">1. 問いの核心</h2>
+<!-- ================================================================ -->
+<div class="card">
+<p>CFC合算課税で益金に算入された金額は、外国税額控除の控除限度額の計算上、「国外所得金額」として扱われる。これは前回の分析で示した通りである。</p>
+
+<p>しかし、ここに根本的な問いがある。</p>
+
+<div class="correction">
+<strong>CFC合算額が「国外所得」であるということは、一体どの条文に書いてあるのか？</strong><br><br>
+法人税法69条④は「国外源泉所得」を16カテゴリー列挙している。CFC合算額はこれらのどれかに含まれるのか？ それとも、「国外所得」であることの根拠は法律の外にあるのか？
+</div>
+
+<p>結論を先に述べる。<strong>CFC合算額が「国外所得」であるとは、法律にも法人税法施行令にも、一切書かれていない。</strong></p>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="s2">2. 法律が定める「国外源泉所得」── 法69条④の16カテゴリー</h2>
+<!-- ================================================================ -->
+<div class="card">
+<p>外国税額控除の控除限度額を計算する際の「国外所得金額」は、法69条①で「国外源泉所得に係る所得」と定義されている。そして「国外源泉所得」は同条④で<strong>限定列挙</strong>されている。</p>
+
+<div class="law">
+<div class="law-title">法人税法 第69条 第4項</div>
+第一項に規定する国外源泉所得とは、<em>次に掲げるもの</em>をいう。
+</div>
+
+<table>
+<tr><th>号</th><th>国外源泉所得の類型</th><th>CFC合算額は該当するか</th></tr>
+<tr><td>1号</td><td>国外事業所等（PE）帰属所得</td><td style="color:#c53030; font-weight:600;">否 ─ CFCは親法人のPEではない</td></tr>
+<tr><td>2号</td><td>国外資産の運用・保有所得</td><td style="color:#c53030; font-weight:600;">否 ─ CFC株式の保有所得は配当のみ</td></tr>
+<tr><td>3号</td><td>国外資産の譲渡所得</td><td style="color:#c53030; font-weight:600;">否</td></tr>
+<tr><td>4号</td><td>国外人的役務提供対価</td><td style="color:#c53030; font-weight:600;">否</td></tr>
+<tr><td>5号</td><td>国外不動産賃貸・船舶航空機貸付</td><td style="color:#c53030; font-weight:600;">否</td></tr>
+<tr><td>6号</td><td>外国国債・外国法人社債利子等</td><td style="color:#c53030; font-weight:600;">否</td></tr>
+<tr><td>7号</td><td>外国法人からの配当等</td><td style="color:#c53030; font-weight:600;">否 ─ CFC合算額は「配当」ではない</td></tr>
+<tr><td>8号</td><td>国外業務に係る貸付金利子</td><td style="color:#c53030; font-weight:600;">否</td></tr>
+<tr><td>9号</td><td>国外業務に係る使用料・対価</td><td style="color:#c53030; font-weight:600;">否</td></tr>
+<tr><td>10号</td><td>国外事業広告宣伝賞金</td><td style="color:#c53030; font-weight:600;">否</td></tr>
+<tr><td>11号</td><td>外国保険契約年金</td><td style="color:#c53030; font-weight:600;">否</td></tr>
+<tr><td>12号</td><td>給付補塡金・利息・差益</td><td style="color:#c53030; font-weight:600;">否</td></tr>
+<tr><td>13号</td><td>国外匿名組合利益分配</td><td style="color:#c53030; font-weight:600;">否</td></tr>
+<tr><td>14号</td><td>国際運送所得</td><td style="color:#c53030; font-weight:600;">否</td></tr>
+<tr><td>15号</td><td>租税条約で課税可能とされる所得</td><td style="color:#c53030; font-weight:600;">否</td></tr>
+<tr class="highlight"><td><strong>16号</strong></td><td><strong>前各号のほか、その源泉が国外にある所得として政令で定めるもの</strong></td><td style="color:#c53030; font-weight:600;"><strong>否 ─ 下記参照</strong></td></tr>
+</table>
+
+<h3>16号（包括条項）はCFC合算額を捕捉できるか？</h3>
+
+<div class="law">
+<div class="law-title">法人税法 第69条 第4項 第16号</div>
+前各号に掲げるもののほか<em>その源泉が国外にある所得</em>として政令で定めるもの
+</div>
+
+<p>16号の要件は「<strong>その源泉が国外にある所得</strong>」である。CFC合算額はこの要件を満たさない。その理由は次のとおりである。</p>
+
+<ol>
+<li><strong>所得の帰属主体の問題</strong>：CFC（外国関係会社）の所得は、法的にはCFC自身の所得であり、親法人の所得ではない。措法66条の6①は「益金の額に算入する」と擬制するが、これは所得の帰属を変更するものではない。</li>
+<li><strong>「源泉（source）」の不存在</strong>：CFC合算額は、親法人が国外で「稼いだ」所得ではない。親法人とCFCの間に配当も取引も実際には存在しない。益金算入は法律上の擬制（fiction）である。</li>
+<li><strong>実際に政令指定されていない</strong>：16号に基づく政令指定を定めた法人税法施行令の関連規定において、CFC合算額は指定されていない。</li>
+</ol>
+
+<div class="warn">
+<strong>全16カテゴリーを検討した結果：</strong>CFC合算益金算入額は、法人税法69条④が列挙する「国外源泉所得」の<strong>いずれにも該当しない</strong>。法律レベルでは、CFC合算額は「国外所得」として認識されていない。
+</div>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="s3">3. 施行令が定める「国外所得金額」── 施行令141条の2</h2>
+<!-- ================================================================ -->
+<div class="card">
+
+<div class="law">
+<div class="law-title">法人税法施行令 第141条の2 第1項（国外所得金額）</div>
+法第六十九条第一項に規定する政令で定める金額は、内国法人の各事業年度の次に掲げる<em>国外源泉所得</em>（<em>同項に規定する国外源泉所得</em>をいう。以下この款において同じ。）<em>に係る所得の金額の合計額</em>（当該合計額が零を下回る場合には、零）とする。<br>
+一　法第六十九条第四項<em>第一号</em>に掲げる国外源泉所得<br>
+二　法第六十九条第四項<em>第二号から第十六号まで</em>に掲げる国外源泉所得
+</div>
+
+<p>施行令141条の2は、国外所得金額を「法69条④各号に掲げる国外源泉所得に係る所得の金額の合計額」と定義する。つまり、<strong>法69条④の16カテゴリーに該当する所得だけ</strong>が国外所得金額を構成する。</p>
+
+<div class="warn">
+<strong>CFC合算額は施行令141条の2の「国外所得金額」にも含まれない。</strong>なぜなら、法69条④の国外源泉所得に該当しないからである。施行令は法律の列挙を忠実に反映しているだけであり、ここで新たなカテゴリーを追加していない。
+</div>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="s4">4. CFC合算額はどこにも該当しない</h2>
+<!-- ================================================================ -->
+<div class="card">
+<p>ここで外国税額控除における3つの概念を整理する。</p>
+
+<table>
+<tr><th>概念</th><th>定義</th><th>CFC合算額の該当性</th></tr>
+<tr><td><strong>国外源泉所得</strong></td><td>法69条④の16カテゴリー</td><td style="color:#c53030; font-weight:600;">該当しない</td></tr>
+<tr><td><strong>国外所得金額</strong></td><td>施行令141条の2 ─ 国外源泉所得に係る所得の合計（ゼロフロア）</td><td style="color:#c53030; font-weight:600;">含まれない</td></tr>
+<tr><td><strong>調整国外所得金額</strong></td><td>施行令142条③ ─ 国外所得金額から非課税分を控除（90%キャップ）</td><td style="color:#276749; font-weight:600;">措令39条の18⑫⑬で算入</td></tr>
+</table>
+
+<p>CFC合算額は、本来の経路では「国外源泉所得」→「国外所得金額」→「調整国外所得金額」の<strong>どの段階にも入らない</strong>。しかし、措令39条の18⑫⑬により、<strong>最も下流の「調整国外所得金額」にだけ直接流入する</strong>。</p>
+
+<!-- SVG: 3層構造図 -->
+<figure>
+<svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="aB" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#2b6cb0"/></marker>
+    <marker id="aR" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#c53030"/></marker>
+    <marker id="aG" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#276749"/></marker>
+    <marker id="aP" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#553c9a"/></marker>
+  </defs>
+
+  <text x="450" y="24" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a365d">【図】CFC合算額の「国外所得」への接続構造</text>
+
+  <!-- === 正規経路（左側） === -->
+  <text x="30" y="58" font-size="12" font-weight="bold" fill="#2b6cb0">正規の経路（一般の外国税額控除）</text>
+
+  <!-- Layer 1: 国外源泉所得 -->
+  <rect x="30" y="70" width="350" height="70" rx="10" fill="#ebf8ff" stroke="#2b6cb0" stroke-width="2"/>
+  <text x="205" y="95" text-anchor="middle" font-size="13" font-weight="bold" fill="#2b6cb0">国外源泉所得</text>
+  <text x="205" y="115" text-anchor="middle" font-size="10" fill="#4a5568">法69条④ ── 16カテゴリーの限定列挙</text>
+  <text x="205" y="132" text-anchor="middle" font-size="10" fill="#4a5568">PE所得・配当・利子・使用料・譲渡益 等</text>
+
+  <line x1="205" y1="140" x2="205" y2="170" stroke="#2b6cb0" stroke-width="2" marker-end="url(#aB)"/>
+
+  <!-- Layer 2: 国外所得金額 -->
+  <rect x="30" y="170" width="350" height="60" rx="10" fill="#dbeafe" stroke="#2b6cb0" stroke-width="2"/>
+  <text x="205" y="195" text-anchor="middle" font-size="13" font-weight="bold" fill="#2b6cb0">国外所得金額</text>
+  <text x="205" y="215" text-anchor="middle" font-size="10" fill="#4a5568">施行令141条の2 ── 国外源泉所得の合計（ゼロフロア）</text>
+
+  <line x1="205" y1="230" x2="205" y2="260" stroke="#2b6cb0" stroke-width="2" marker-end="url(#aB)"/>
+
+  <!-- Layer 3: 調整国外所得金額 -->
+  <rect x="30" y="260" width="350" height="70" rx="10" fill="#1a365d" stroke="#1a365d" stroke-width="2"/>
+  <text x="205" y="288" text-anchor="middle" font-size="13" font-weight="bold" fill="#fbd38d">調整国外所得金額</text>
+  <text x="205" y="308" text-anchor="middle" font-size="10" fill="#bee3f8">施行令142条③ ── 非課税分控除 + 90%キャップ</text>
+  <text x="205" y="322" text-anchor="middle" font-size="10" fill="#bee3f8">→ 控除限度額の分子</text>
+
+  <!-- === CFC合算額（右側） === -->
+  <text x="530" y="58" font-size="12" font-weight="bold" fill="#553c9a">CFC合算額の経路</text>
+
+  <rect x="500" y="70" width="360" height="50" rx="8" fill="#faf5ff" stroke="#553c9a" stroke-width="2"/>
+  <text x="680" y="95" text-anchor="middle" font-size="12" font-weight="bold" fill="#553c9a">CFC合算益金算入額（措法66条の6①）</text>
+  <text x="680" y="112" text-anchor="middle" font-size="10" fill="#4a5568">+ みなし外税益金（措法66条の7②）</text>
+
+  <!-- ×マーク: 国外源泉所得に該当しない -->
+  <line x1="500" y1="120" x2="380" y2="105" stroke="#c53030" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="425" y="118" font-size="22" fill="#c53030" font-weight="bold">✕</text>
+  <text x="430" y="140" font-size="9" fill="#c53030">16カテゴリーに</text>
+  <text x="430" y="152" font-size="9" fill="#c53030">該当しない</text>
+
+  <!-- ×マーク: 国外所得金額にも含まれない -->
+  <line x1="500" y1="120" x2="380" y2="200" stroke="#c53030" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="425" y="198" font-size="22" fill="#c53030" font-weight="bold">✕</text>
+  <text x="430" y="218" font-size="9" fill="#c53030">定義に含まれない</text>
+
+  <!-- バイパス矢印: 調整国外所得金額に直接流入 -->
+  <path d="M 680 120 C 680 220 500 280 380 290" stroke="#553c9a" stroke-width="3" fill="none" marker-end="url(#aP)"/>
+  <rect x="520" y="200" width="280" height="55" rx="6" fill="#e9d5ff" stroke="#553c9a" stroke-width="2"/>
+  <text x="660" y="220" text-anchor="middle" font-size="11" font-weight="bold" fill="#553c9a">措令39条の18⑫⑬</text>
+  <text x="660" y="240" text-anchor="middle" font-size="10" fill="#553c9a">「調整国外所得金額に含まれるものとする」</text>
+
+  <!-- 注釈 -->
+  <rect x="30" y="370" width="830" height="130" rx="8" fill="#fff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="50" y="395" font-size="12" font-weight="bold" fill="#1a365d">構造の要点</text>
+  <text x="50" y="420" font-size="11" fill="#2d3748">1. CFC合算額は法69条④の「国外源泉所得」16カテゴリーのいずれにも該当しない</text>
+  <text x="50" y="440" font-size="11" fill="#2d3748">2. CFC合算額は施行令141条の2の「国外所得金額」にも含まれない</text>
+  <text x="50" y="460" font-size="11" fill="#2d3748">3. 措令39条の18⑫⑬が、「国外源泉所得」→「国外所得金額」の正規経路を完全にスキップして</text>
+  <text x="55" y="480" font-size="11" fill="#553c9a" font-weight="bold">   最も下流の「調整国外所得金額」に直接バイパスする</text>
+</svg>
+<figcaption>【図】CFC合算額は正規の「国外源泉所得→国外所得金額」経路を通らず、措令39条の18⑫⑬により調整国外所得金額に直接接続される</figcaption>
+</figure>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="s5">5. バイパス規定 ── 措令39条の18⑫⑬の構造</h2>
+<!-- ================================================================ -->
+<div class="card">
+<p>CFC合算額が控除限度額の計算上「国外所得」として機能する<strong>唯一の法的根拠</strong>が、措令39条の18⑫⑬である。その条文を精読する。</p>
+
+<div class="law">
+<div class="law-title">租税特別措置法施行令 第39条の18 第12項</div>
+法第六十六条の六第一項各号に掲げる内国法人の各事業年度の所得の金額の計算上同項又は同条第六項若しくは第八項の規定により<em>益金の額に算入された金額</em>（以下この項において「益金算入額」という。）がある場合には、当該益金算入額は、当該内国法人の当該各事業年度に係る法人税法第六十九条第一項に規定する控除限度額の計算については、法人税法施行令第百四十二条第三項本文に規定する<em>調整国外所得金額</em>……<em>に含まれるものとする</em>。
+</div>
+
+<h3>5.1 条文が使う言葉の精密な分析</h3>
+
+<table>
+<tr><th>注目点</th><th>条文の文言</th><th>意味</th></tr>
+<tr><td>何が算入されるか</td><td>「益金の額に算入された金額」</td><td>CFC合算額そのもの（課税対象金額）</td></tr>
+<tr><td>どこに含まれるか</td><td>「<strong>調整国外所得金額</strong>に含まれるものとする」</td><td>「国外源泉所得」とも「国外所得金額」とも言っていない</td></tr>
+<tr><td>法的効果</td><td>「含まれるものとする」</td><td>擬制規定（みなし規定）── 本来含まれないものを含めるための規定</td></tr>
+</table>
+
+<div class="insight">
+<strong>核心的な発見：</strong>条文は「国外源泉所得に含まれるものとする」とも「国外所得金額に含まれるものとする」とも書いていない。あえて最も下流の「<strong>調整国外所得金額</strong>」を指定し、そこにだけ算入するという構造を採っている。これは意図的な立法技術であり、CFC合算額の法的性質を巡る論争を回避する効果がある（後述）。
+</div>
+
+<h3>5.2 第13項（みなし外税）も同じ構造</h3>
+
+<div class="law">
+<div class="law-title">租税特別措置法施行令 第39条の18 第13項</div>
+第八項各号に掲げる外国法人税の額のうち法第六十六条の七第一項の規定により外国関係会社に係る内国法人が納付する<em>控除対象外国法人税の額とみなされる金額</em>は、……法人税法施行令第百四十二条第三項本文に規定する<em>調整国外所得金額</em>……<em>に含まれるものとする</em>。
+</div>
+
+<p>第13項も同じ構造である。みなし外税の益金算入額も、「国外源泉所得」でも「国外所得金額」でもなく、「調整国外所得金額」にだけ直接算入される。</p>
+
+<h3>5.3 ⑫但書 ── 無税国CFCの除外</h3>
+<p>⑫には但書がある。外国法人税を課さない国のCFCの益金算入額は、調整国外所得金額から<strong>除外</strong>される。これは論理的に整合する。無税国ならみなし外税はゼロであり、控除限度額の分子を膨らませる理由がないからである。</p>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="s6">6. なぜ「国外源泉所得」と正面から書かないのか ── 法的性質論争</h2>
+<!-- ================================================================ -->
+<div class="card">
+<p>措令39条の18⑫⑬がCFC合算額を「国外源泉所得に含まれるものとする」と書かず、あえて「調整国外所得金額に含まれるものとする」と書いた理由は、CFC合算額の<strong>法的性質</strong>を巡る学説対立と密接に関係する。</p>
+
+<h3>6.1 学説の対立構造</h3>
+
+<table>
+<tr><th>学説</th><th>CFC合算額の法的性質</th><th>国外源泉所得か？</th></tr>
+<tr><td><strong>擬制配当説</strong></td><td>CFCの留保利益を株主である親法人に配当したものとみなす</td><td>肯定的：外国法人からの配当（法69条④第7号）に準じる</td></tr>
+<tr><td><strong>擬制所得算出説</strong></td><td>「居住地国における立法規定の下での創造された擬制所得（fictional income）」<sup>※1</sup></td><td>否定的：「源泉」が存在しない擬制所得</td></tr>
+<tr><td><strong>帰属変更説</strong></td><td>CFCの所得を親法人に帰属させる（look-through）</td><td>肯定的：所得の帰属先が変わるだけで源泉は国外</td></tr>
+</table>
+
+<p style="font-size:0.85rem; color:var(--muted);">※1 石井孝「外国子会社合算税制において課税対象金額を本邦法令の規定の例に準じて計算する際の問題点」税大論叢83号（2015）</p>
+
+<blockquote>
+「我が国のタックス・ヘイブン対策税制（措置法66条の6）は、特定外国子会社等の法人格の存在を認めつつ、内国親法人等の株主の国際的租税回避の防止の観点から、当該内国親法人等の居住地国（日本）における立法規定の下での<strong>創造された擬制所得（fictional income）</strong>に対して課税するもの」<br>
+── 石井孝・税大論叢83号（秋元秀仁（2011）を引用）
+</blockquote>
+
+<blockquote>
+「収益の擬制という点からみれば、外国子会社の所得を内国法人に帰属する所得とする帰属モデルには当たらず、外国子会社に生じた所得を内国法人に<strong>配当擬制</strong>した結果、内国法人の所得とする<strong>配当モデル</strong>に近い」<br>
+── 橋本秀法「我が国タックス・ヘイブン税制と租税条約の関係」税大論叢54号（2007）
+</blockquote>
+
+<h3>6.2 学説と条文構造の関係</h3>
+
+<div class="insight">
+<strong>もし擬制配当説を採るなら</strong>：CFC合算額は「外国法人からの配当」（法69条④第7号）に類似するため、「国外源泉所得に含まれるものとする」と書くことも理論上は可能だった。<br><br>
+<strong>もし擬制所得算出説を採るなら</strong>：CFC合算額は法律によって「創造された」所得であり、「源泉が国外にある」とはいえない。「国外源泉所得に含まれる」と書くことは理論的に整合しない。
+</div>
+
+<p>措令39条の18⑫⑬が「調整国外所得金額に含まれるものとする」という<strong>下流への直接接続</strong>を採用したことは、以下のように解釈できる。</p>
+
+<ol>
+<li><strong>学説中立的</strong>：CFC合算額が「国外源泉所得」であるかどうかについて、条文上の立場を取らない。擬制配当説でも擬制所得算出説でも、どちらでも整合する。</li>
+<li><strong>機能的</strong>：法的性質の議論に踏み込まず、控除限度額計算という<strong>機能面</strong>でのみ「国外所得として扱う」効果を実現する。</li>
+<li><strong>安全策</strong>：法69条④の列挙に手を加えずに済むため、一般の外国税額控除制度への波及を回避する。</li>
+</ol>
+
+<h3>6.3 前田謙二（2010）の批判的指摘</h3>
+<blockquote>
+「現行の外国税額控除におけるように<strong>国外源泉所得をベースに控除限度額を計算するのではなく</strong>、現地国で実際に課税された税金を単純に控除するようにし、<strong>現行外国税額控除とは異なった枠組みのものにすべき</strong>であろう。」<br>
+── 前田謙二「タックス・ヘイブン対策税制の新設計」税研25巻5号（2010）
+</blockquote>
+
+<p>この指摘は、CFC合算額と既存の外国税額控除制度との間の構造的不整合を正面から批判したものといえる。CFC合算額が「国外源泉所得」の枠組みに馴染まないのであれば、そもそも既存の控除限度額方式を使うべきではない、という主張である。</p>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="s7">7. 立法技術としての評価</h2>
+<!-- ================================================================ -->
+<div class="card">
+
+<h3>7.1 パッチ的構造</h3>
+<p>外国税額控除制度（法69条）は1962年に導入され、CFC税制（タックス・ヘイブン対策税制）は1978年に後から追加された。CFC合算額の外税控除は、既存の外税控除フレームワークに<strong>後付けで接続</strong>されたものである。</p>
+
+<p>このとき、法69条④の国外源泉所得の列挙に「CFC合算額」を追加するという方法は<strong>採られなかった</strong>。代わりに、措置法施行令レベルで「調整国外所得金額に含まれるものとする」というバイパスが設けられた。</p>
+
+<h3>7.2 この構造がもたらす帰結</h3>
+
+<table>
+<tr><th>帰結</th><th>内容</th></tr>
+<tr><td>法律レベルの整合性</td><td>法69条④の列挙は変更されず、一般の外税控除制度の構造が維持される。CFC合算額は法律上は「国外源泉所得」ではなく、法律上は「国外所得金額」にも含まれない。</td></tr>
+<tr><td>機能的等価性</td><td>措令39条の18⑫⑬により、控除限度額計算上は国外所得として機能する。実務上の結果は同じ。</td></tr>
+<tr><td>概念上のギャップ</td><td>「国外所得金額」と「調整国外所得金額」が乖離する。一般の外税控除では両者はほぼ一致するが、CFC事案では調整国外所得金額にだけCFC合算額が加算される。</td></tr>
+<tr><td>法的性質の棚上げ</td><td>CFC合算額が「国外源泉所得」であるか否かという根本問題を回避。政策目的（二重課税排除）を達成しつつ、法的性質論争への影響を最小化。</td></tr>
+</table>
+
+<h3>7.3 委任立法の観点</h3>
+<p>措令39条の18⑫⑬は<strong>租税特別措置法施行令</strong>（政令）である。法律でないものが、法律が定めた「国外所得金額」の計算に実質的な修正を加えている。これは租税法律主義との緊張関係を内包するが、以下の理由から許容されていると解される。</p>
+<ul>
+<li>措法66条の7①自体が「法69条の規定を適用する」と委任しており、その適用方法の詳細は政令委任の範囲内</li>
+<li>⑫⑬は「国外源泉所得」の範囲を変更するのではなく、「調整国外所得金額」の計算方法を補充するにすぎない</li>
+<li>CFC合算による二重課税排除という趣旨に照らし、合理的な補充と評価できる</li>
+</ul>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="s8">8. 実務上の帰結</h2>
+<!-- ================================================================ -->
+<div class="card">
+
+<h3>8.1 別表六（二）での記載</h3>
+<p>別表六（二）「外国税額の控除に関する明細書」の「国外所得金額」欄には、一般の国外源泉所得に基づく金額が入る。CFC合算額は、一般の国外源泉所得としてこの欄に入るのではなく、「調整国外所得金額」の計算過程で別途加算される。別表六（二の二）（CFC関連の外税控除明細書）がこの加算を反映する。</p>
+
+<h3>8.2 CFC合算額のみの場合</h3>
+<p>親法人にCFC以外の国外所得が一切ない場合：</p>
+<ul>
+<li>法69条④の意味での「国外源泉所得」はゼロ</li>
+<li>施行令141条の2の意味での「国外所得金額」もゼロ</li>
+<li>しかし措令39条の18⑫⑬により「調整国外所得金額」にCFC合算額が加算される</li>
+<li>結果として、<strong>国外所得金額はゼロなのに、調整国外所得金額は正</strong>という一見矛盾した状態が生じる</li>
+</ul>
+
+<div class="correction">
+<strong>この構造は矛盾ではなく、意図された設計である。</strong>調整国外所得金額は「国外所得金額」の単純な変換ではなく、CFC合算額等の特殊項目が⑫⑬で直接注入される<strong>独立の計算概念</strong>である。
+</div>
+
+<h3>8.3 まとめ：3つの水準</h3>
+<table>
+<tr><th>水準</th><th>条文</th><th>CFC合算額の扱い</th></tr>
+<tr><td>法律</td><td>法69条④</td><td>国外源泉所得の16カテゴリー ── <strong>CFC不在</strong></td></tr>
+<tr><td>法人税法施行令</td><td>施行令141条の2</td><td>国外所得金額 = 国外源泉所得の合計 ── <strong>CFC不在</strong></td></tr>
+<tr><td>措置法施行令</td><td><strong>措令39条の18⑫⑬</strong></td><td>調整国外所得金額に含まれるものとする ── <strong>ここだけ</strong></td></tr>
+</table>
+</div>
+
+<div class="summary-box">
+<h3>総括：「国外所得」への接続は条文に書かれていない</h3>
+<p style="font-size:0.95rem;">CFC合算額が「国外所得」に該当するかどうかは、<strong>法律にも法人税法施行令にも書かれていない</strong>。正確には、CFC合算額は「国外源泉所得」（法69条④）のどのカテゴリーにも該当せず、「国外所得金額」（施行令141条の2）にも含まれない。</p>
+<p style="font-size:0.95rem; margin-top:12px;">唯一の接続点は<strong>措置法施行令39条の18⑫⑬</strong>であり、これは「国外源泉所得」→「国外所得金額」という正規の経路を完全にスキップして、最も下流の「<strong>調整国外所得金額</strong>」に直接バイパスする規定である。</p>
+<p style="font-size:0.95rem; margin-top:12px;">この迂回構造は、CFC合算額の<strong>法的性質論争</strong>（擬制配当説 vs 擬制所得算出説）を回避しつつ、二重課税排除という<strong>政策目的</strong>を達成するための、精緻かつ意図的な立法技術である。</p>
+</div>
+
+<div class="card">
+<h3>条文引用一覧</h3>
+<table>
+<tr><th>条文</th><th>内容</th><th>CFC合算額との関係</th></tr>
+<tr><td>法69条①</td><td>外国税額控除・控除限度額</td><td>「国外所得金額」を分子とする</td></tr>
+<tr><td>法69条④</td><td>国外源泉所得の定義（16号列挙）</td><td>CFC合算額は不該当</td></tr>
+<tr><td>施行令141条の2①</td><td>国外所得金額の定義</td><td>CFC合算額は不含</td></tr>
+<tr><td>施行令142条③</td><td>調整国外所得金額の定義</td><td>CFC合算額の受け皿</td></tr>
+<tr><td>措法66条の6①</td><td>CFC益金算入</td><td>合算額の本体規定</td></tr>
+<tr><td>措法66条の7①②</td><td>みなし外税・益金算入</td><td>外国法人税のみなし規定</td></tr>
+<tr><td><strong>措令39条の18⑫</strong></td><td>CFC益金算入額→調整国外所得金額</td><td><strong>唯一の接続規定（本体）</strong></td></tr>
+<tr><td><strong>措令39条の18⑬</strong></td><td>みなし外税→調整国外所得金額</td><td><strong>唯一の接続規定（外税分）</strong></td></tr>
+</table>
+<h3>参考文献</h3>
+<ul style="font-size:0.88rem; color:var(--muted);">
+<li>石井孝「外国子会社合算税制において課税対象金額を本邦法令の規定の例に準じて計算する際の問題点」税大論叢83号（2015）</li>
+<li>橋本秀法「我が国タックス・ヘイブン税制と租税条約の関係」税大論叢54号（2007）</li>
+<li>前田謙二「タックス・ヘイブン対策税制の新設計」税研25巻5号（2010）</li>
+<li>秋元秀仁「外国子会社配当益金不算入制度導入後の改正タックス・ヘイブン対策税制における租税条約適合性」税大ジャーナル17号（2011）</li>
+</ul>
+</div>
+
+<footer>
+<p>作成日: 2026年3月31日 | 条文ソース: e-Gov法令API（2025年12月27日施行の現行条文）</p>
+</footer>
+
+</div>
+</body>
+</html>
