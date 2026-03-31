@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CFC合算と外国税額控除 ── 概念のビジュアルマップ</title>
+<style>
+:root {
+  --primary: #1a365d;
+  --accent: #2b6cb0;
+  --warn: #c53030;
+  --bg: #f7fafc;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --text: #2d3748;
+  --muted: #718096;
+  --green: #276749;
+  --green-bg: #f0fff4;
+  --red-bg: #fff5f5;
+  --purple: #553c9a;
+  --purple-bg: #faf5ff;
+  --orange: #c05621;
+  --orange-bg: #fffaf0;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", sans-serif; background: var(--bg); color: var(--text); line-height: 1.85; }
+.container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+h1 { color: var(--primary); font-size: 1.55rem; border-bottom: 3px solid var(--accent); padding-bottom: 8px; margin-bottom: 24px; }
+h2 { color: var(--primary); font-size: 1.25rem; margin: 40px 0 14px; padding-left: 12px; border-left: 4px solid var(--accent); }
+h3 { color: var(--accent); font-size: 1.05rem; margin: 22px 0 8px; }
+p { margin: 10px 0; }
+.card { background: var(--card); border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 20px; margin-bottom: 20px; }
+table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.92rem; }
+th, td { border: 1px solid var(--border); padding: 8px 12px; }
+th { background: #edf2f7; color: var(--primary); font-weight: 600; text-align: center; }
+td:first-child { text-align: left; }
+.ok { background: var(--green-bg); border-left: 3px solid #48bb78; padding: 12px 16px; margin: 14px 0; font-size: 0.92rem; }
+.warn { background: var(--red-bg); border-left: 3px solid var(--warn); padding: 12px 16px; margin: 14px 0; font-size: 0.92rem; }
+.insight { background: var(--purple-bg); border-left: 3px solid var(--purple); padding: 12px 16px; margin: 14px 0; font-size: 0.92rem; }
+.law { background: #f8f7f3; border-left: 5px solid #b98b59; padding: 14px 18px; margin: 14px 0; font-size: 0.91rem; line-height: 1.8; border-radius: 0 6px 6px 0; }
+.law .law-title { font-weight: 700; color: #744210; margin-bottom: 4px; font-size: 0.86rem; }
+.law em { font-style: normal; background: #fefce8; padding: 1px 4px; border-radius: 2px; font-weight: 600; }
+figure { margin: 24px 0; padding: 16px; background: #fafafa; border-radius: 8px; border: 1px solid var(--border); overflow-x: auto; }
+figcaption { text-align: center; font-size: 0.88rem; color: var(--muted); margin-top: 10px; }
+.formula { background: #ebf8ff; border-radius: 6px; padding: 12px 16px; margin: 10px 0; font-family: "Consolas", "Courier New", monospace; font-size: 0.9rem; line-height: 1.9; }
+.summary-box { background: #1a365d; color: #fff; border-radius: 8px; padding: 20px; margin: 24px 0; }
+.summary-box h3 { color: #bee3f8; margin-top: 0; }
+ol, ul { margin: 8px 0 8px 24px; }
+li { margin: 5px 0; }
+footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.8rem; text-align: center; }
+@media print {
+  body { font-size: 10pt; background: #fff; }
+  .card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; }
+  figure { page-break-inside: avoid; }
+  .summary-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>CFC合算と外国税額控除 ── 概念のビジュアルマップ</h1>
+<p style="color:var(--muted);">作成日: 2026年3月31日 | 条文ソース: e-Gov法令API（2025年12月27日施行の現行条文）</p>
+
+<!-- ================================================================ -->
+<h2>1. 全体マップ ── 4つの概念はどう繋がるか</h2>
+<!-- ================================================================ -->
+<div class="card">
+<p>外国税額控除の控除限度額を計算するまでに、4つの概念が階層的に積み上がる。CFC合算額は正規の入口からは入れず、途中から合流する。</p>
+
+<figure>
+<svg viewBox="0 0 1050 700" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="aB" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#2b6cb0"/></marker>
+    <marker id="aG" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#276749"/></marker>
+    <marker id="aP" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#553c9a"/></marker>
+    <marker id="aO" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#c05621"/></marker>
+    <linearGradient id="gLayer" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ebf8ff"/>
+      <stop offset="100%" stop-color="#bee3f8"/>
+    </linearGradient>
+    <linearGradient id="gCFC" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#faf5ff"/>
+      <stop offset="100%" stop-color="#e9d5ff"/>
+    </linearGradient>
+  </defs>
+
+  <text x="525" y="28" text-anchor="middle" font-size="17" font-weight="bold" fill="#1a365d">【図1】外国税額控除の概念階層とCFC合算額の合流点</text>
+
+  <!-- ===== 左側: 正規経路 ===== -->
+  <text x="60" y="62" font-size="13" font-weight="bold" fill="#2b6cb0">正規の経路</text>
+
+  <!-- Layer 1: 国外源泉所得 -->
+  <rect x="40" y="75" width="400" height="90" rx="12" fill="url(#gLayer)" stroke="#2b6cb0" stroke-width="2"/>
+  <text x="60" y="100" font-size="14" font-weight="bold" fill="#1a365d">① 国外源泉所得</text>
+  <text x="60" y="120" font-size="11" fill="#2d3748">法69条④ ── 16カテゴリーの限定列挙</text>
+  <text x="60" y="140" font-size="10" fill="#4a5568">PE所得 | 配当 | 利子 | 使用料 | 譲渡益 | 不動産 | 人的役務 | …</text>
+  <rect x="310" y="82" width="120" height="24" rx="4" fill="#2b6cb0"/>
+  <text x="370" y="98" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">法律（法69条④）</text>
+
+  <!-- Arrow 1→2 -->
+  <line x1="240" y1="165" x2="240" y2="195" stroke="#2b6cb0" stroke-width="2" marker-end="url(#aB)"/>
+  <text x="248" y="185" font-size="9" fill="#2b6cb0">合計（ゼロフロア）</text>
+
+  <!-- Layer 2: 国外所得金額 -->
+  <rect x="40" y="200" width="400" height="80" rx="12" fill="#dbeafe" stroke="#2b6cb0" stroke-width="2"/>
+  <text x="60" y="228" font-size="14" font-weight="bold" fill="#1a365d">② 国外所得金額</text>
+  <text x="60" y="248" font-size="11" fill="#2d3748">施行令141条の2 ── ①の合計。マイナスなら0に切上げ</text>
+  <text x="60" y="265" font-size="10" fill="#4a5568">控除限度額の分子の「原材料」</text>
+  <rect x="310" y="207" width="120" height="24" rx="4" fill="#4a90c4"/>
+  <text x="370" y="223" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">施行令（141条の2）</text>
+
+  <!-- Arrow 2→3 -->
+  <line x1="240" y1="280" x2="240" y2="310" stroke="#2b6cb0" stroke-width="2" marker-end="url(#aB)"/>
+  <text x="248" y="302" font-size="9" fill="#2b6cb0">− 非課税分</text>
+
+  <!-- Layer 3: 調整国外所得金額 -->
+  <rect x="40" y="315" width="400" height="100" rx="12" fill="#1a365d" stroke="#1a365d" stroke-width="2"/>
+  <text x="60" y="342" font-size="14" font-weight="bold" fill="#fbd38d">③ 調整国外所得金額</text>
+  <text x="60" y="362" font-size="11" fill="#bee3f8">施行令142条③ ── ②から非課税分を引き、90%キャップ</text>
+  <text x="60" y="382" font-size="11" fill="#e2e8f0">＋ CFC合算額が⑫⑬で直接注入される受け皿</text>
+  <text x="60" y="400" font-size="10" fill="#fbd38d">→ 控除限度額の分子として使われる概念</text>
+  <rect x="310" y="322" width="120" height="24" rx="4" fill="#2d3748" stroke="#fbd38d" stroke-width="1"/>
+  <text x="370" y="338" text-anchor="middle" font-size="10" font-weight="bold" fill="#fbd38d">施行令（142条③）</text>
+
+  <!-- Arrow 3→4 -->
+  <line x1="240" y1="415" x2="240" y2="445" stroke="#276749" stroke-width="2" marker-end="url(#aG)"/>
+
+  <!-- Layer 4: 控除限度額 -->
+  <rect x="40" y="450" width="400" height="70" rx="12" fill="#f0fff4" stroke="#276749" stroke-width="2.5"/>
+  <text x="60" y="478" font-size="14" font-weight="bold" fill="#276749">④ 控除限度額</text>
+  <text x="60" y="498" font-size="11" fill="#276749">法人税額 × (③調整国外所得金額 ÷ 所得金額)</text>
+  <rect x="310" y="457" width="120" height="24" rx="4" fill="#276749"/>
+  <text x="370" y="473" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">法律（法69条①）</text>
+
+  <!-- ===== 右側: CFC合算の経路 ===== -->
+  <text x="560" y="62" font-size="13" font-weight="bold" fill="#553c9a">CFC合算額の経路</text>
+
+  <!-- CFC Box -->
+  <rect x="530" y="75" width="480" height="200" rx="12" fill="url(#gCFC)" stroke="#553c9a" stroke-width="2"/>
+
+  <!-- CFC内部: 基準所得 → 適用対象金額 → 課税対象金額 -->
+  <rect x="555" y="90" width="180" height="40" rx="6" fill="#fff" stroke="#553c9a" stroke-width="1.5"/>
+  <text x="645" y="115" text-anchor="middle" font-size="11" font-weight="bold" fill="#553c9a">基準所得金額 300</text>
+
+  <line x1="645" y1="130" x2="645" y2="148" stroke="#553c9a" stroke-width="1.5" marker-end="url(#aP)"/>
+  <text x="748" y="143" font-size="9" fill="#553c9a">− 欠損100 − 外国税50</text>
+
+  <rect x="555" y="150" width="180" height="40" rx="6" fill="#e9d5ff" stroke="#553c9a" stroke-width="2"/>
+  <text x="645" y="175" text-anchor="middle" font-size="12" font-weight="bold" fill="#553c9a">適用対象金額 150</text>
+
+  <line x1="645" y1="190" x2="645" y2="210" stroke="#553c9a" stroke-width="1.5" marker-end="url(#aP)"/>
+  <text x="748" y="205" font-size="9" fill="#553c9a">× 持株割合 100%</text>
+
+  <rect x="555" y="212" width="180" height="40" rx="6" fill="#d6bcfa" stroke="#553c9a" stroke-width="2"/>
+  <text x="645" y="237" text-anchor="middle" font-size="12" font-weight="bold" fill="#553c9a">課税対象金額 150</text>
+
+  <!-- みなし外税 Box -->
+  <rect x="780" y="150" width="210" height="102" rx="8" fill="#fff" stroke="#c05621" stroke-width="2"/>
+  <text x="885" y="172" text-anchor="middle" font-size="11" font-weight="bold" fill="#c05621">みなし外税の計算</text>
+  <text x="885" y="194" text-anchor="middle" font-size="10" fill="#4a5568">外国税50 × 150/150</text>
+  <text x="885" y="214" text-anchor="middle" font-size="13" font-weight="bold" fill="#c05621">= 50</text>
+  <text x="885" y="238" text-anchor="middle" font-size="9" fill="#4a5568">措令39条の18③</text>
+
+  <!-- 条文ラベル -->
+  <rect x="830" y="82" width="170" height="24" rx="4" fill="#553c9a"/>
+  <text x="915" y="98" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">措置法施行令レベル</text>
+
+  <!-- ×マーク: ①に入れない -->
+  <line x1="530" y1="120" x2="460" y2="120" stroke="#c53030" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="478" y="110" font-size="18" fill="#c53030" font-weight="bold">✕</text>
+
+  <!-- ×マーク: ②に入れない -->
+  <line x1="530" y1="200" x2="460" y2="240" stroke="#c53030" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="478" y="228" font-size="18" fill="#c53030" font-weight="bold">✕</text>
+
+  <!-- === 2本の合流矢印（⑫⑬） === -->
+
+  <!-- ⑫: 課税対象金額150 → 調整国外所得金額 -->
+  <path d="M 645 252 L 645 290 Q 645 330 560 350 L 440 358" stroke="#553c9a" stroke-width="3" fill="none" marker-end="url(#aP)"/>
+  <rect x="490" y="290" width="200" height="28" rx="4" fill="#553c9a"/>
+  <text x="590" y="308" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">⑫ CFC益金 = 150</text>
+
+  <!-- ⑬: みなし外税50 → 調整国外所得金額 -->
+  <path d="M 885 252 L 885 320 Q 885 355 700 368 L 440 375" stroke="#c05621" stroke-width="3" fill="none" marker-end="url(#aO)"/>
+  <rect x="700" y="340" width="230" height="28" rx="4" fill="#c05621"/>
+  <text x="815" y="358" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">⑬ みなし外税益金 = 50</text>
+
+  <!-- 合流結果 -->
+  <rect x="445" y="395" width="230" height="34" rx="6" fill="#fbd38d" stroke="#1a365d" stroke-width="2"/>
+  <text x="560" y="417" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a365d">合計注入 = 150 + 50 = 200</text>
+
+  <!-- ===== 下部: 90%キャップの説明 ===== -->
+  <rect x="40" y="550" width="970" height="130" rx="10" fill="#fff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="60" y="578" font-size="13" font-weight="bold" fill="#1a365d">90%キャップの作用</text>
+
+  <!-- ケースA -->
+  <rect x="60" y="592" width="430" height="75" rx="6" fill="#fff5f5" stroke="#c53030" stroke-width="1.5"/>
+  <text x="80" y="614" font-size="11" font-weight="bold" fill="#c53030">CFC以外の所得なし（所得金額 = 200）</text>
+  <text x="80" y="636" font-size="11" fill="#2d3748">調整国外所得金額 = min(200, 200×90%) = <tspan font-weight="bold" fill="#c53030">180</tspan></text>
+  <text x="80" y="656" font-size="10" fill="#718096">→ キャップが作動。控除限度額の分子が圧縮される</text>
+
+  <!-- ケースB -->
+  <rect x="520" y="592" width="470" height="75" rx="6" fill="#f0fff4" stroke="#276749" stroke-width="1.5"/>
+  <text x="540" y="614" font-size="11" font-weight="bold" fill="#276749">国内所得800あり（所得金額 = 1,000）</text>
+  <text x="540" y="636" font-size="11" fill="#2d3748">調整国外所得金額 = min(200, 1,000×90%) = <tspan font-weight="bold" fill="#276749">200</tspan></text>
+  <text x="540" y="656" font-size="10" fill="#718096">→ キャップ非抵触。CFC由来200がそのまま分子に</text>
+</svg>
+<figcaption>【図1】外国税額控除の4概念と、CFC合算額が正規ルートをバイパスして③に直接合流する構造</figcaption>
+</figure>
+</div>
+
+<!-- ================================================================ -->
+<h2>2. 適用対象金額と調整国外所得金額 ── どこがどう違うか</h2>
+<!-- ================================================================ -->
+<div class="card">
+<figure>
+<svg viewBox="0 0 1050 480" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="a2B" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#2b6cb0"/></marker>
+    <marker id="a2P" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#553c9a"/></marker>
+    <marker id="a2O" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#c05621"/></marker>
+  </defs>
+
+  <text x="525" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a365d">【図2】適用対象金額 vs 調整国外所得金額 ── 棒グラフ比較</text>
+
+  <!-- 軸 -->
+  <line x1="100" y1="380" x2="950" y2="380" stroke="#a0aec0" stroke-width="1.5"/>
+  <line x1="100" y1="380" x2="100" y2="60" stroke="#a0aec0" stroke-width="1.5"/>
+
+  <!-- Y軸ラベル -->
+  <text x="90" y="380" text-anchor="end" font-size="10" fill="#718096">0</text>
+  <text x="90" y="316" text-anchor="end" font-size="10" fill="#718096">50</text>
+  <line x1="95" y1="316" x2="950" y2="316" stroke="#e2e8f0" stroke-width="0.5" stroke-dasharray="4,4"/>
+  <text x="90" y="252" text-anchor="end" font-size="10" fill="#718096">100</text>
+  <line x1="95" y1="252" x2="950" y2="252" stroke="#e2e8f0" stroke-width="0.5" stroke-dasharray="4,4"/>
+  <text x="90" y="188" text-anchor="end" font-size="10" fill="#718096">150</text>
+  <line x1="95" y1="188" x2="950" y2="188" stroke="#e2e8f0" stroke-width="0.5" stroke-dasharray="4,4"/>
+  <text x="90" y="124" text-anchor="end" font-size="10" fill="#718096">200</text>
+  <line x1="95" y1="124" x2="950" y2="124" stroke="#e2e8f0" stroke-width="0.5" stroke-dasharray="4,4"/>
+  <text x="90" y="60" text-anchor="end" font-size="10" fill="#718096">250</text>
+
+  <!-- Bar 1: 基準所得金額 300 -->
+  <rect x="130" y="60" width="100" height="320" rx="4" fill="#c3dafe" stroke="#4299e1" stroke-width="1.5"/>
+  <text x="180" y="400" text-anchor="middle" font-size="10" fill="#2d3748">基準所得金額</text>
+  <text x="180" y="416" text-anchor="middle" font-size="12" font-weight="bold" fill="#2b6cb0">300</text>
+  <!-- 内訳ラベル -->
+  <text x="180" y="85" text-anchor="middle" font-size="10" fill="#2b6cb0">措令39条の15①②</text>
+
+  <!-- Bar 2: 適用対象金額 150（＝基準所得 − 欠損 − 外国税） -->
+  <rect x="280" y="188" width="100" height="192" rx="4" fill="#e9d5ff" stroke="#553c9a" stroke-width="2"/>
+  <text x="330" y="400" text-anchor="middle" font-size="10" fill="#2d3748">適用対象金額</text>
+  <text x="330" y="416" text-anchor="middle" font-size="14" font-weight="bold" fill="#553c9a">150</text>
+  <!-- 控除部分を斜線で表示 -->
+  <rect x="280" y="60" width="100" height="128" rx="0" fill="#f7fafc" stroke="#a0aec0" stroke-width="1" stroke-dasharray="3,2"/>
+  <text x="330" y="100" text-anchor="middle" font-size="9" fill="#718096">欠損金 ▲100</text>
+  <text x="330" y="120" text-anchor="middle" font-size="9" fill="#718096">外国税 ▲50</text>
+  <text x="330" y="140" text-anchor="middle" font-size="9" fill="#c53030">＝ 控除 ▲150</text>
+  <text x="330" y="170" text-anchor="middle" font-size="10" fill="#553c9a">措令39条の15⑤</text>
+
+  <!-- Bar 3: 課税対象金額 150 -->
+  <rect x="430" y="188" width="100" height="192" rx="4" fill="#d6bcfa" stroke="#553c9a" stroke-width="2"/>
+  <text x="480" y="400" text-anchor="middle" font-size="10" fill="#2d3748">課税対象金額</text>
+  <text x="480" y="416" text-anchor="middle" font-size="14" font-weight="bold" fill="#553c9a">150</text>
+  <text x="480" y="210" text-anchor="middle" font-size="9" fill="#553c9a">= 適用対象金額</text>
+  <text x="480" y="225" text-anchor="middle" font-size="9" fill="#553c9a">× 持株割合100%</text>
+  <text x="480" y="170" text-anchor="middle" font-size="10" fill="#553c9a">措法66条の6①</text>
+
+  <!-- Arrow: ⑫ -->
+  <path d="M 530 280 Q 570 280 575 270" stroke="#553c9a" stroke-width="2" fill="none" stroke-dasharray="4,3"/>
+
+  <!-- Bar 4: 調整国外所得金額 200（= 150 + 50） -->
+  <rect x="580" y="124" width="120" height="256" rx="4" fill="none" stroke="#1a365d" stroke-width="2.5"/>
+  <!-- CFC部分 150 -->
+  <rect x="580" y="188" width="120" height="192" rx="0" fill="#d6bcfa"/>
+  <text x="640" y="290" text-anchor="middle" font-size="11" font-weight="bold" fill="#553c9a">CFC益金</text>
+  <text x="640" y="310" text-anchor="middle" font-size="13" font-weight="bold" fill="#553c9a">150</text>
+  <text x="640" y="330" text-anchor="middle" font-size="9" fill="#553c9a">措令39条の18⑫</text>
+  <!-- みなし外税部分 50 -->
+  <rect x="580" y="124" width="120" height="64" rx="0" fill="#fed7aa"/>
+  <text x="640" y="150" text-anchor="middle" font-size="11" font-weight="bold" fill="#c05621">みなし外税</text>
+  <text x="640" y="170" text-anchor="middle" font-size="13" font-weight="bold" fill="#c05621">50</text>
+  <text x="640" y="186" text-anchor="middle" font-size="9" fill="#c05621">措令39条の18⑬</text>
+
+  <text x="640" y="400" text-anchor="middle" font-size="10" fill="#2d3748">調整国外所得金額</text>
+  <text x="640" y="416" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a365d">200</text>
+  <text x="640" y="432" text-anchor="middle" font-size="9" fill="#718096">(キャップ前)</text>
+
+  <!-- Bar 5: 90%キャップ後 180 -->
+  <rect x="750" y="124" width="120" height="256" rx="4" fill="none" stroke="#c53030" stroke-width="1" stroke-dasharray="5,3"/>
+  <rect x="750" y="150" width="120" height="230" rx="4" fill="#1a365d"/>
+  <text x="810" y="270" text-anchor="middle" font-size="11" font-weight="bold" fill="#fbd38d">キャップ後</text>
+  <text x="810" y="298" text-anchor="middle" font-size="16" font-weight="bold" fill="#fbd38d">180</text>
+  <text x="810" y="320" text-anchor="middle" font-size="10" fill="#bee3f8">所得200×90%</text>
+  <!-- カット部分 -->
+  <rect x="750" y="124" width="120" height="26" rx="0" fill="#fff5f5" stroke="#c53030" stroke-width="1" stroke-dasharray="3,2"/>
+  <text x="810" y="142" text-anchor="middle" font-size="9" fill="#c53030">▲20 カット</text>
+
+  <text x="810" y="400" text-anchor="middle" font-size="10" fill="#2d3748">調整国外所得金額</text>
+  <text x="810" y="416" text-anchor="middle" font-size="10" fill="#c53030">(CFC所得のみの場合)</text>
+
+  <!-- 差分の注釈 -->
+  <!-- 適用対象金額 ↔ 調整国外所得金額 の差 -->
+  <line x1="380" y1="188" x2="580" y2="188" stroke="#c05621" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="580" y1="124" x2="700" y2="98" stroke="#c05621" stroke-width="1.5"/>
+  <rect x="700" y="78" width="200" height="44" rx="6" fill="#fffaf0" stroke="#c05621" stroke-width="1.5"/>
+  <text x="800" y="96" text-anchor="middle" font-size="10" font-weight="bold" fill="#c05621">差額 = みなし外税 50</text>
+  <text x="800" y="114" text-anchor="middle" font-size="9" fill="#c05621">適用対象金額150 ≠ 調整国外所得金額200</text>
+
+</svg>
+<figcaption>【図2】棒グラフで見る各概念の金額関係。適用対象金額150に対し、調整国外所得金額は「みなし外税50」が加わって200になる</figcaption>
+</figure>
+</div>
+
+<!-- ================================================================ -->
+<h2>3. 概念の辞書 ── 5つの金額を一覧整理</h2>
+<!-- ================================================================ -->
+<div class="card">
+<table>
+<tr>
+  <th style="width:18%;">概念</th>
+  <th style="width:15%;">条文</th>
+  <th style="width:22%;">定義</th>
+  <th style="width:12%;">計算レベル</th>
+  <th style="width:18%;">本件の金額</th>
+  <th style="width:15%;">役割</th>
+</tr>
+<tr>
+  <td><strong>基準所得金額</strong></td>
+  <td>措令39条の15①②</td>
+  <td>CFCの所得を日本税法に準じて計算した金額</td>
+  <td>CFC側</td>
+  <td>300</td>
+  <td>適用対象金額の出発点</td>
+</tr>
+<tr>
+  <td><strong>適用対象金額</strong></td>
+  <td>措令39条の15⑤</td>
+  <td>基準所得 − 繰越欠損金 − 納付法人所得税</td>
+  <td>CFC側</td>
+  <td>150</td>
+  <td>合算課税の対象となる金額</td>
+</tr>
+<tr>
+  <td><strong>課税対象金額</strong></td>
+  <td>措法66条の6①</td>
+  <td>適用対象金額 × 持株割合</td>
+  <td>親法人側</td>
+  <td>150</td>
+  <td>親法人の益金に算入される金額</td>
+</tr>
+<tr style="background:#ebf8ff;">
+  <td><strong>国外所得金額</strong></td>
+  <td>施行令141条の2</td>
+  <td>国外源泉所得（法69条④）の合計</td>
+  <td>親法人側</td>
+  <td>0 <span style="font-size:0.8rem;">(CFC分は不含)</span></td>
+  <td>調整国外所得金額の基礎</td>
+</tr>
+<tr style="background:#fefce8;">
+  <td><strong>調整国外所得金額</strong></td>
+  <td>施行令142条③<br>+ 措令39条の18⑫⑬</td>
+  <td>国外所得金額 − 非課税分 + <strong>CFC益金</strong> + <strong>みなし外税</strong>（90%キャップ）</td>
+  <td>親法人側</td>
+  <td><strong>200</strong> (キャップ前)<br><strong>180</strong> (キャップ後*)</td>
+  <td><strong>控除限度額の分子</strong></td>
+</tr>
+</table>
+<p style="font-size:0.85rem; color:var(--muted);">* CFC以外の所得がない場合。十分な国内所得がある場合は200。</p>
+</div>
+
+<!-- ================================================================ -->
+<h2>4. ウォーターフォール ── 基準所得金額300から控除限度額まで</h2>
+<!-- ================================================================ -->
+<div class="card">
+<figure>
+<svg viewBox="0 0 1050 550" xmlns="http://www.w3.org/2000/svg">
+  <text x="525" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a365d">【図3】ウォーターフォール：基準所得300 → 控除限度額</text>
+
+  <!-- 軸 -->
+  <line x1="60" y1="440" x2="1000" y2="440" stroke="#a0aec0" stroke-width="1"/>
+
+  <!-- Step 1: 基準所得 300 -->
+  <rect x="80" y="100" width="90" height="340" rx="4" fill="#c3dafe" stroke="#4299e1" stroke-width="1.5"/>
+  <text x="125" y="275" text-anchor="middle" font-size="11" font-weight="bold" fill="#2b6cb0">300</text>
+  <text x="125" y="460" text-anchor="middle" font-size="9" fill="#2d3748">基準所得</text>
+  <text x="125" y="474" text-anchor="middle" font-size="9" fill="#2d3748">金額</text>
+
+  <!-- Step 2: 欠損控除 −100 -->
+  <rect x="195" y="100" width="90" height="113" rx="4" fill="#fed7d7" stroke="#c53030" stroke-width="1.5"/>
+  <text x="240" y="160" text-anchor="middle" font-size="11" font-weight="bold" fill="#c53030">▲100</text>
+  <text x="240" y="460" text-anchor="middle" font-size="9" fill="#2d3748">欠損金</text>
+  <text x="240" y="474" text-anchor="middle" font-size="9" fill="#2d3748">控除</text>
+  <!-- 接続線 -->
+  <line x1="170" y1="100" x2="195" y2="100" stroke="#a0aec0" stroke-width="1" stroke-dasharray="3,2"/>
+
+  <!-- Step 3: 法人所得税控除 −50 -->
+  <rect x="310" y="213" width="90" height="57" rx="4" fill="#fed7d7" stroke="#c53030" stroke-width="1.5"/>
+  <text x="355" y="245" text-anchor="middle" font-size="11" font-weight="bold" fill="#c53030">▲50</text>
+  <text x="355" y="460" text-anchor="middle" font-size="9" fill="#2d3748">法人所得</text>
+  <text x="355" y="474" text-anchor="middle" font-size="9" fill="#2d3748">税控除</text>
+  <line x1="285" y1="213" x2="310" y2="213" stroke="#a0aec0" stroke-width="1" stroke-dasharray="3,2"/>
+
+  <!-- Step 4: 適用対象金額 150 -->
+  <rect x="425" y="270" width="90" height="170" rx="4" fill="#e9d5ff" stroke="#553c9a" stroke-width="2"/>
+  <text x="470" y="360" text-anchor="middle" font-size="13" font-weight="bold" fill="#553c9a">150</text>
+  <text x="470" y="460" text-anchor="middle" font-size="9" fill="#2d3748">適用対象</text>
+  <text x="470" y="474" text-anchor="middle" font-size="9" fill="#2d3748">金額</text>
+  <line x1="400" y1="270" x2="425" y2="270" stroke="#a0aec0" stroke-width="1" stroke-dasharray="3,2"/>
+
+  <!-- Step 5: みなし外税加算 +50 -->
+  <rect x="540" y="213" width="90" height="57" rx="4" fill="#fed7aa" stroke="#c05621" stroke-width="2"/>
+  <text x="585" y="245" text-anchor="middle" font-size="11" font-weight="bold" fill="#c05621">+50</text>
+  <text x="585" y="260" text-anchor="middle" font-size="9" fill="#c05621">みなし外税</text>
+  <text x="585" y="460" text-anchor="middle" font-size="9" fill="#2d3748">みなし外税</text>
+  <text x="585" y="474" text-anchor="middle" font-size="9" fill="#2d3748">益金算入</text>
+  <line x1="515" y1="270" x2="540" y2="270" stroke="#a0aec0" stroke-width="1" stroke-dasharray="3,2"/>
+
+  <!-- Step 6: 調整国外所得金額 200 -->
+  <rect x="655" y="213" width="90" height="227" rx="4" fill="#1a365d" stroke="#1a365d" stroke-width="2"/>
+  <text x="700" y="330" text-anchor="middle" font-size="13" font-weight="bold" fill="#fbd38d">200</text>
+  <text x="700" y="460" text-anchor="middle" font-size="9" fill="#2d3748">調整国外</text>
+  <text x="700" y="474" text-anchor="middle" font-size="9" fill="#2d3748">所得金額</text>
+  <line x1="630" y1="213" x2="655" y2="213" stroke="#c05621" stroke-width="1" stroke-dasharray="3,2"/>
+
+  <!-- Step 7: 90%キャップ −20 -->
+  <rect x="770" y="213" width="90" height="23" rx="4" fill="#fff5f5" stroke="#c53030" stroke-width="1.5"/>
+  <text x="815" y="230" text-anchor="middle" font-size="10" font-weight="bold" fill="#c53030">▲20</text>
+  <text x="815" y="460" text-anchor="middle" font-size="9" fill="#2d3748">90%</text>
+  <text x="815" y="474" text-anchor="middle" font-size="9" fill="#2d3748">キャップ*</text>
+  <line x1="745" y1="213" x2="770" y2="213" stroke="#a0aec0" stroke-width="1" stroke-dasharray="3,2"/>
+
+  <!-- Step 8: 最終 調整国外所得金額 180 -->
+  <rect x="885" y="236" width="90" height="204" rx="4" fill="#276749" stroke="#276749" stroke-width="2"/>
+  <text x="930" y="342" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">180</text>
+  <text x="930" y="362" text-anchor="middle" font-size="9" fill="#d1fae5">→ 分子</text>
+  <text x="930" y="460" text-anchor="middle" font-size="9" fill="#2d3748">最終</text>
+  <text x="930" y="474" text-anchor="middle" font-size="9" fill="#2d3748">調整国外*</text>
+  <line x1="860" y1="236" x2="885" y2="236" stroke="#a0aec0" stroke-width="1" stroke-dasharray="3,2"/>
+
+  <!-- 注釈 -->
+  <text x="930" y="500" text-anchor="middle" font-size="8" fill="#718096">*CFC以外の所得なしの場合</text>
+
+  <!-- 区間ラベル -->
+  <rect x="80" y="50" width="330" height="30" rx="4" fill="#faf5ff" stroke="#553c9a" stroke-width="1"/>
+  <text x="245" y="70" text-anchor="middle" font-size="10" font-weight="bold" fill="#553c9a">CFC側の計算（措令39条の15）</text>
+
+  <rect x="425" y="50" width="210" height="30" rx="4" fill="#fffaf0" stroke="#c05621" stroke-width="1"/>
+  <text x="530" y="70" text-anchor="middle" font-size="10" font-weight="bold" fill="#c05621">親法人の益金（措法66条の6・7）</text>
+
+  <rect x="655" y="50" width="320" height="30" rx="4" fill="#ebf8ff" stroke="#2b6cb0" stroke-width="1"/>
+  <text x="815" y="70" text-anchor="middle" font-size="10" font-weight="bold" fill="#2b6cb0">FTC限度額計算（施行令142条）</text>
+</svg>
+<figcaption>【図3】基準所得金額300から控除限度額の分子（調整国外所得金額180*）に至るウォーターフォール</figcaption>
+</figure>
+</div>
+
+<!-- ================================================================ -->
+<h2>5. 控除限度額の最終計算</h2>
+<!-- ================================================================ -->
+<div class="card">
+<figure>
+<svg viewBox="0 0 1050 300" xmlns="http://www.w3.org/2000/svg">
+  <text x="525" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a365d">【図4】控除限度額の算式（CFC以外の所得なしの場合）</text>
+
+  <!-- 大きな分数式 -->
+  <text x="160" y="140" font-size="22" font-weight="bold" fill="#1a365d">控除限度額 =</text>
+
+  <!-- 法人税額 -->
+  <rect x="370" y="100" width="120" height="55" rx="8" fill="#ebf8ff" stroke="#2b6cb0" stroke-width="2"/>
+  <text x="430" y="125" text-anchor="middle" font-size="11" fill="#2b6cb0">法人税額</text>
+  <text x="430" y="145" text-anchor="middle" font-size="16" font-weight="bold" fill="#2b6cb0">46.4</text>
+
+  <text x="510" y="140" font-size="28" fill="#1a365d">×</text>
+
+  <!-- 分子 -->
+  <rect x="540" y="80" width="220" height="46" rx="6" fill="#276749"/>
+  <text x="650" y="105" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">調整国外所得金額 = 180</text>
+
+  <!-- 分数線 -->
+  <line x1="540" y1="135" x2="760" y2="135" stroke="#1a365d" stroke-width="3"/>
+
+  <!-- 分母 -->
+  <rect x="540" y="142" width="220" height="46" rx="6" fill="#edf2f7"/>
+  <text x="650" y="170" text-anchor="middle" font-size="12" font-weight="bold" fill="#2d3748">所得金額 = 200</text>
+
+  <!-- = 結果 -->
+  <text x="790" y="140" font-size="28" fill="#1a365d">=</text>
+
+  <rect x="830" y="100" width="170" height="70" rx="10" fill="#276749" stroke="#276749" stroke-width="2"/>
+  <text x="915" y="130" text-anchor="middle" font-size="13" fill="#d1fae5">控除限度額</text>
+  <text x="915" y="158" text-anchor="middle" font-size="22" font-weight="bold" fill="#fff">41.76</text>
+
+  <!-- 注釈 -->
+  <rect x="100" y="210" width="850" height="70" rx="8" fill="#fff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="120" y="235" font-size="11" fill="#2d3748">法人税額 = 所得200 × 23.2% = 46.4</text>
+  <text x="120" y="255" font-size="11" fill="#2d3748">控除限度額 = 46.4 × (180/200) = <tspan font-weight="bold">41.76</tspan></text>
+  <text x="120" y="272" font-size="11" fill="#c53030">→ みなし外税50 &gt; 控除限度額41.76 → 差額8.24は控除限度超過額として3年繰越（法69条②）</text>
+</svg>
+<figcaption>【図4】控除限度額の最終算式。90%キャップにより分子が180に圧縮されるため、みなし外税50の全額は控除できない</figcaption>
+</figure>
+</div>
+
+<!-- ================================================================ -->
+<h2>6. 概念間の変換関係 ── 一枚で俯瞰</h2>
+<!-- ================================================================ -->
+<div class="card">
+<figure>
+<svg viewBox="0 0 1050 580" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="a6B" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#2b6cb0"/></marker>
+    <marker id="a6P" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#553c9a"/></marker>
+    <marker id="a6G" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#276749"/></marker>
+    <marker id="a6O" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#c05621"/></marker>
+    <marker id="a6R" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#c53030"/></marker>
+  </defs>
+
+  <text x="525" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a365d">【図5】概念変換マップ ── どの概念がどの概念に変換されるか</text>
+
+  <!-- ====== CFC側（上段） ====== -->
+  <rect x="30" y="50" width="990" height="200" rx="12" fill="#faf5ff" stroke="#d6bcfa" stroke-width="1.5"/>
+  <text x="50" y="74" font-size="12" font-weight="bold" fill="#553c9a">CFC側の概念空間</text>
+
+  <!-- 基準所得 -->
+  <rect x="60" y="90" width="160" height="50" rx="8" fill="#fff" stroke="#553c9a" stroke-width="1.5"/>
+  <text x="140" y="112" text-anchor="middle" font-size="11" fill="#553c9a">基準所得金額</text>
+  <text x="140" y="130" text-anchor="middle" font-size="14" font-weight="bold" fill="#553c9a">300</text>
+
+  <!-- → -->
+  <line x1="220" y1="115" x2="270" y2="115" stroke="#553c9a" stroke-width="2" marker-end="url(#a6P)"/>
+  <text x="245" y="108" text-anchor="middle" font-size="8" fill="#553c9a">−欠損100</text>
+  <text x="245" y="140" text-anchor="middle" font-size="8" fill="#553c9a">−外国税50</text>
+
+  <!-- 適用対象金額 -->
+  <rect x="275" y="90" width="160" height="50" rx="8" fill="#e9d5ff" stroke="#553c9a" stroke-width="2"/>
+  <text x="355" y="112" text-anchor="middle" font-size="11" fill="#553c9a">適用対象金額</text>
+  <text x="355" y="130" text-anchor="middle" font-size="14" font-weight="bold" fill="#553c9a">150</text>
+
+  <!-- → -->
+  <line x1="435" y1="115" x2="480" y2="115" stroke="#553c9a" stroke-width="2" marker-end="url(#a6P)"/>
+  <text x="460" y="108" text-anchor="middle" font-size="8" fill="#553c9a">×持株100%</text>
+
+  <!-- 課税対象金額 -->
+  <rect x="485" y="90" width="170" height="50" rx="8" fill="#d6bcfa" stroke="#553c9a" stroke-width="2.5"/>
+  <text x="570" y="112" text-anchor="middle" font-size="11" font-weight="bold" fill="#553c9a">課税対象金額</text>
+  <text x="570" y="130" text-anchor="middle" font-size="14" font-weight="bold" fill="#553c9a">150</text>
+
+  <!-- みなし外税 -->
+  <rect x="60" y="170" width="300" height="50" rx="8" fill="#fff" stroke="#c05621" stroke-width="2"/>
+  <text x="210" y="192" text-anchor="middle" font-size="11" font-weight="bold" fill="#c05621">みなし外税 = 外国税50 × (150÷150)</text>
+  <text x="210" y="210" text-anchor="middle" font-size="14" font-weight="bold" fill="#c05621">50</text>
+
+  <!-- 外国法人税額 -->
+  <rect x="700" y="90" width="160" height="50" rx="8" fill="#fff" stroke="#c05621" stroke-width="1.5"/>
+  <text x="780" y="112" text-anchor="middle" font-size="11" fill="#c05621">外国法人税額</text>
+  <text x="780" y="130" text-anchor="middle" font-size="14" font-weight="bold" fill="#c05621">50</text>
+
+  <!-- 外国税 → みなし外税 -->
+  <path d="M 700 130 Q 550 180 360 195" stroke="#c05621" stroke-width="1.5" fill="none" marker-end="url(#a6O)"/>
+  <text x="530" y="168" font-size="8" fill="#c05621">措令39条の18③</text>
+
+  <!-- ====== 親法人の益金空間（中段） ====== -->
+  <rect x="30" y="270" width="990" height="100" rx="12" fill="#ebf8ff" stroke="#90cdf4" stroke-width="1.5"/>
+  <text x="50" y="294" font-size="12" font-weight="bold" fill="#2b6cb0">親法人の益金算入</text>
+
+  <!-- 益金① CFC -->
+  <rect x="60" y="305" width="200" height="46" rx="6" fill="#d6bcfa" stroke="#553c9a" stroke-width="2"/>
+  <text x="160" y="325" text-anchor="middle" font-size="11" fill="#553c9a">CFC益金算入</text>
+  <text x="160" y="343" text-anchor="middle" font-size="13" font-weight="bold" fill="#553c9a">150</text>
+
+  <!-- 益金② みなし外税 -->
+  <rect x="290" y="305" width="200" height="46" rx="6" fill="#fed7aa" stroke="#c05621" stroke-width="2"/>
+  <text x="390" y="325" text-anchor="middle" font-size="11" fill="#c05621">みなし外税益金</text>
+  <text x="390" y="343" text-anchor="middle" font-size="13" font-weight="bold" fill="#c05621">50</text>
+
+  <!-- 合計 -->
+  <rect x="520" y="305" width="200" height="46" rx="6" fill="#2b6cb0"/>
+  <text x="620" y="325" text-anchor="middle" font-size="11" fill="#fff">合計益金算入</text>
+  <text x="620" y="343" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">200</text>
+
+  <!-- 矢印: 上から下へ -->
+  <line x1="570" y1="140" x2="160" y2="305" stroke="#553c9a" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#a6P)"/>
+  <line x1="210" y1="220" x2="390" y2="305" stroke="#c05621" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#a6O)"/>
+
+  <!-- ====== FTC限度額空間（下段） ====== -->
+  <rect x="30" y="390" width="990" height="170" rx="12" fill="#f0fff4" stroke="#9ae6b4" stroke-width="1.5"/>
+  <text x="50" y="414" font-size="12" font-weight="bold" fill="#276749">外国税額控除の限度額計算</text>
+
+  <!-- 国外所得金額 -->
+  <rect x="60" y="430" width="200" height="46" rx="6" fill="#fff" stroke="#a0aec0" stroke-width="1.5"/>
+  <text x="160" y="450" text-anchor="middle" font-size="11" fill="#718096">国外所得金額（一般）</text>
+  <text x="160" y="468" text-anchor="middle" font-size="13" font-weight="bold" fill="#718096">0</text>
+
+  <!-- + CFC -->
+  <text x="280" y="458" font-size="20" font-weight="bold" fill="#553c9a">+</text>
+
+  <!-- CFC益金 -->
+  <rect x="310" y="430" width="130" height="46" rx="6" fill="#d6bcfa" stroke="#553c9a" stroke-width="1.5"/>
+  <text x="375" y="450" text-anchor="middle" font-size="10" fill="#553c9a">⑫ CFC益金</text>
+  <text x="375" y="468" text-anchor="middle" font-size="13" font-weight="bold" fill="#553c9a">150</text>
+
+  <text x="458" y="458" font-size="20" font-weight="bold" fill="#c05621">+</text>
+
+  <!-- みなし外税 -->
+  <rect x="480" y="430" width="130" height="46" rx="6" fill="#fed7aa" stroke="#c05621" stroke-width="1.5"/>
+  <text x="545" y="450" text-anchor="middle" font-size="10" fill="#c05621">⑬ みなし外税</text>
+  <text x="545" y="468" text-anchor="middle" font-size="13" font-weight="bold" fill="#c05621">50</text>
+
+  <text x="630" y="458" font-size="20" font-weight="bold" fill="#1a365d">=</text>
+
+  <!-- 調整国外所得金額 -->
+  <rect x="650" y="425" width="180" height="55" rx="8" fill="#1a365d" stroke="#1a365d" stroke-width="2"/>
+  <text x="740" y="448" text-anchor="middle" font-size="11" fill="#bee3f8">調整国外所得金額</text>
+  <text x="740" y="470" text-anchor="middle" font-size="16" font-weight="bold" fill="#fbd38d">200</text>
+
+  <!-- 90%キャップ -->
+  <line x1="830" y1="452" x2="870" y2="452" stroke="#c53030" stroke-width="2" marker-end="url(#a6R)"/>
+  <rect x="870" y="425" width="130" height="55" rx="8" fill="#fff5f5" stroke="#c53030" stroke-width="2"/>
+  <text x="935" y="448" text-anchor="middle" font-size="10" fill="#c53030">90%キャップ後</text>
+  <text x="935" y="470" text-anchor="middle" font-size="16" font-weight="bold" fill="#c53030">180*</text>
+
+  <!-- 矢印: 中段から下段へ -->
+  <line x1="160" y1="351" x2="375" y2="430" stroke="#553c9a" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#a6P)"/>
+  <text x="248" y="396" font-size="9" fill="#553c9a">⑫</text>
+  <line x1="390" y1="351" x2="545" y2="430" stroke="#c05621" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#a6O)"/>
+  <text x="454" y="396" font-size="9" fill="#c05621">⑬</text>
+
+  <!-- 控除限度額 -->
+  <rect x="650" y="500" width="350" height="45" rx="8" fill="#276749"/>
+  <text x="825" y="522" text-anchor="middle" font-size="11" fill="#d1fae5">控除限度額 = 法人税額 × (180*/200) =</text>
+  <text x="825" y="540" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">41.76*</text>
+
+  <line x1="740" y1="480" x2="740" y2="500" stroke="#276749" stroke-width="2" marker-end="url(#a6G)"/>
+
+  <text x="60" y="540" font-size="9" fill="#718096">*CFC以外の所得なしの場合の数値。十分な国内所得がある場合、キャップ非抵触で調整国外所得金額=200、控除限度額も異なる</text>
+</svg>
+<figcaption>【図5】CFC側→親法人の益金→FTC限度額計算 ── 3つの空間を横断する概念変換マップ</figcaption>
+</figure>
+</div>
+
+<!-- ================================================================ -->
+<h2>7. 核心の構造的発見</h2>
+<!-- ================================================================ -->
+<div class="card">
+<div class="insight">
+<strong>「調整国外所得金額」は単なる国外所得金額の調整版ではない。</strong><br><br>
+一般の外税控除では「国外所得金額≒調整国外所得金額」であり、両者はほぼ同義。しかしCFC事案では：<br>
+<ul>
+<li>国外所得金額 = 0（CFC合算額は国外源泉所得ではない）</li>
+<li>調整国外所得金額 = 200（⑫⑬でCFC合算額が直接注入される）</li>
+</ul>
+<strong>両者が完全に乖離する。</strong>調整国外所得金額は、CFC合算額の受け皿として機能する<strong>独立の計算概念</strong>である。
+</div>
+
+<div class="ok">
+<strong>適用対象金額 ≠ 調整国外所得金額</strong><br>
+適用対象金額150はCFC側で完結する概念。調整国外所得金額200は、そこにみなし外税50が加わった親法人側の概念。差額 = みなし外税。
+</div>
+</div>
+
+<footer>
+<p>作成日: 2026年3月31日 | 条文ソース: e-Gov法令API（2025年12月27日施行の現行条文）</p>
+</footer>
+
+</div>
+</body>
+</html>
