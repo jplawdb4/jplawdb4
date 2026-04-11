@@ -8,7 +8,7 @@
 *{box-sizing:border-box}
 body{
   margin:0;
-  background:#f5f0e8;
+  background:#f3eee6;
   color:#1f2428;
   font-family:"Hiragino Mincho ProN","Yu Mincho","游明朝","Times New Roman",serif;
   line-height:1.95;
@@ -16,15 +16,18 @@ body{
 }
 .paper{
   max-width:1120px;
-  margin:0 auto;
+  margin:0 auto 48px;
   background:#fffdf9;
   padding:44px 54px 72px;
   box-shadow:0 0 0 1px rgba(92,74,56,.08);
 }
 .head{
-  border-bottom:1px solid #d8cfc0;
-  padding-bottom:22px;
-  margin-bottom:26px;
+  border:1px solid #ddd2c2;
+  border-top:8px solid var(--accent);
+  border-radius:12px;
+  padding:24px 28px 22px;
+  margin-bottom:30px;
+  background:linear-gradient(180deg,#fffdf9 0%,#faf5ee 100%);
 }
 .title{
   margin:0;
@@ -46,6 +49,7 @@ body{
   padding:18px 22px;
   border:1px solid #ded4c5;
   background:#fbf8f3;
+  border-radius:10px;
 }
 .abstract h2,.toc h2,.notes h2,.refs h2{
   margin:0 0 10px;
@@ -57,6 +61,7 @@ body{
   padding:18px 22px;
   border:1px solid #e5dccf;
   background:#fcfbf8;
+  border-radius:10px;
 }
 .toc ol{
   margin:0;
@@ -73,16 +78,16 @@ body{
   text-decoration:underline;
 }
 h1{
-  margin:40px 0 14px;
-  padding-left:12px;
-  border-left:4px solid var(--accent);
+  margin:0 0 16px;
+  padding-left:14px;
+  border-left:6px solid var(--accent);
   color:#1c2a35;
   font-size:1.44rem;
 }
 h2{
   margin:28px 0 12px;
-  padding-bottom:6px;
-  border-bottom:1px solid #e4dacd;
+  padding-bottom:8px;
+  border-bottom:1px solid #e2d7c8;
   color:#243440;
   font-size:1.12rem;
 }
@@ -90,6 +95,8 @@ h3{
   margin:20px 0 10px;
   color:#31424f;
   font-size:1.02rem;
+  padding-left:10px;
+  border-left:3px solid #d6c6af;
 }
 h4,h5,h6{
   margin:16px 0 8px;
@@ -116,6 +123,7 @@ table{
   border-collapse:collapse;
   margin:16px 0;
   font-size:.94rem;
+  background:#fff;
 }
 th,td{
   border:1px solid #ddd3c4;
@@ -126,20 +134,46 @@ th,td{
 th{
   background:#f4ede4;
 }
+.chapter{
+  margin:48px 0;
+  padding:26px 28px 28px;
+  border:1px solid #dfd4c5;
+  border-radius:12px;
+  background:#fffefb;
+  box-shadow:0 1px 0 rgba(92,74,56,.03);
+}
+.chapter + .chapter{
+  margin-top:54px;
+}
 .chapter-intro{
   color:#3f4d59;
+  margin:0 0 22px;
+  padding:14px 18px;
+  border-left:3px solid #ccb292;
+  border-radius:0 10px 10px 0;
+  background:#faf6ef;
 }
 .source-unit{
-  margin:26px 0 34px;
+  margin:24px 0 0;
+  padding:18px 20px 20px;
+  border:1px solid #e3d8ca;
+  border-radius:10px;
+  background:#fcfaf6;
+}
+.source-unit + .source-unit{
+  margin-top:18px;
 }
 .source-label{
-  font-size:1rem;
-  color:#30404d;
+  margin:0 0 12px;
+  padding-bottom:8px;
+  border-bottom:1px dashed #d7cbbc;
+  font-size:.84rem;
+  letter-spacing:.08em;
+  color:#6e573f;
+  font-weight:700;
 }
 .source-meta{
-  margin:0 0 10px;
-  color:#6e7b84;
-  font-size:.88rem;
+  display:none;
 }
 .small-note{
   color:#6a747c;
@@ -147,8 +181,10 @@ th{
 }
 .notes,.refs{
   margin-top:40px;
-  padding-top:12px;
-  border-top:1px solid #ddd3c4;
+  padding:20px 22px 16px;
+  border:1px solid #ddd3c4;
+  border-radius:10px;
+  background:#fcfaf7;
 }
 .notes ol{
   padding-left:1.5rem;
@@ -171,9 +207,19 @@ th{
   font-size:.85rem;
   text-decoration:none;
 }
+.chapter table tr:nth-child(even) td{
+  background:#fbf8f3;
+}
+.chapter blockquote{
+  border-radius:0 8px 8px 0;
+}
 @media (max-width:760px){
   .paper{padding:24px 18px 42px}
   .title{font-size:1.6rem}
+  .head{padding:18px 18px 16px}
+  .chapter{padding:20px 16px 20px}
+  .chapter-intro{padding:12px 14px}
+  .source-unit{padding:16px 14px 16px}
 }
 </style>
 </head>
@@ -192,13 +238,17 @@ th{
       <h2>目次</h2>
       <ol><li><a href="#c1">第一章　問題設定</a></li><li><a href="#c2">第二章　地方税法と固定資産評価基準の枠組み</a></li><li><a href="#c3">第三章　賦課期日と価格の算定基準日</a></li><li><a href="#c4">第四章　近時裁判例と評価基準の一般的合理性</a></li><li><a href="#conclusion">結論</a></li><li><a href="#notes">注</a></li><li><a href="#refs">参考文献</a></li></ol>
     </nav>
-    <section id="c1"><h1>第一章　問題設定</h1><p class="chapter-intro">まず短稿の問題意識を起点に、固定資産税評価における『基準』と『時価』の二重性を確認する。</p><div class="source-unit"><h2 class="source-label">総論的整理</h2><div class="source-meta">参照資料に即した整理</div><h4>要旨</h4>
+    <section id="c1" class="chapter"><h1>第一章　問題設定</h1><p class="chapter-intro">まず短稿の問題意識を起点に、固定資産税評価における『基準』と『時価』の二重性を確認する。</p><div class="source-unit"><div class="source-label">総論的整理</div><div class="source-meta">参照資料に即した整理</div><h4>要旨</h4>
 <p>固定資産税の評価をめぐる争点は、適正な時価と固定資産評価基準の関係、賦課期日における価格とは何を意味するか、基準年度と据置年度の関係をどう捉えるかという三つの問題に収れんする。</p>
 <p>この領域では、地方税法が全国一律の大量処理を予定する一方、個々の土地・家屋は強い個別性を持つため、評価基準の法的拘束力と裁判所による事後審査の距離感が常に問題となる。</p>
 <p>本稿では、地方税法の基本構造、評価事務要領、裁判例を通じて、評価基準の一般的合理性と、賦課期日現在の時価をどのように結び付けるべきかを検討する。</p>
 <h3>第一章 問題設定</h3>
 <p>まず短稿の問題意識を起点に、固定資産税評価における『基準』と『時価』の二重性を確認する。</p>
 <h4>総論的整理</h4>
+<p>固定資産税の評価をめぐる争点は、適正な時価と固定資産評価基準の関係、賦課期日における価格とは何を意味するか、基準年度と据置年度の関係をどう捉えるかという三つの問題に収れんする。</p>
+<p>この領域では、地方税法が全国一律の大量処理を予定する一方、個々の土地・家屋は強い個別性を持つため、評価基準の法的拘束力と裁判所による事後審査の距離感が常に問題となる。</p>
+<p>本稿では、地方税法の基本構造、評価事務要領、裁判例を通じて、評価基準の一般的合理性と、賦課期日現在の時価をどのように結び付けるべきかを検討する。</p>
+<p>まず短稿の問題意識を起点に、固定資産税評価における『基準』と『時価』の二重性を確認する。</p>
 <p>固定資産税の評価をめぐる争点は、適正な時価と固定資産評価基準の関係、賦課期日における価格とは何を意味するか、基準年度と据置年度の関係をどう捉えるかという三つの問題に収れんする。</p>
 <p>この領域では、地方税法が全国一律の大量処理を予定する一方、個々の土地・家屋は強い個別性を持つため、評価基準の法的拘束力と裁判所による事後審査の距離感が常に問題となる。</p>
 <p>本稿では、地方税法の基本構造、評価事務要領、裁判例を通じて、評価基準の一般的合理性と、賦課期日現在の時価をどのように結び付けるべきかを検討する。</p>
@@ -5689,7 +5739,7 @@ C) 周辺が山林で林道等に沿接して資材置場や原材料置場等�
 100-3
 事務所
 【図例 13】
-舗装駐車場</p></div></section><section id="c2"><h1>第二章　地方税法と固定資産評価基準の枠組み</h1><p class="chapter-intro">評価基準の法的拘束力を論じる前提として、地方税法が想定する賦課期日・課税標準・評価基準の位置づけを確認する。</p><div class="source-unit"><h2 class="source-label">令和6年度基準年度固定資産土地評価事務取扱要領</h2><div class="source-meta">参照資料に即した整理</div><p>令和6基準年度
+舗装駐車場</p></div></section><section id="c2" class="chapter"><h1>第二章　地方税法と固定資産評価基準の枠組み</h1><p class="chapter-intro">評価基準の法的拘束力を論じる前提として、地方税法が想定する賦課期日・課税標準・評価基準の位置づけを確認する。</p><div class="source-unit"><div class="source-label">令和6年度基準年度固定資産土地評価事務取扱要領</div><div class="source-meta">参照資料に即した整理</div><p>令和6基準年度
 固定資産(土地)評価事務取扱要領
 十和田市企画財政部 税務課
 目次
@@ -11137,7 +11187,7 @@ C) 周辺が山林で林道等に沿接して資材置場や原材料置場等�
 100-3
 事務所
 【図例 13】
-舗装駐車場</p></div></section><section id="c3"><h1>第三章　賦課期日と価格の算定基準日</h1><p class="chapter-intro">賦課期日における価格という文言を、価格調査基準日や評価替えの実務とどのように整合させるかは、固定資産税訴訟の古典的論点である。古い判例から基本線を確認する。</p><div class="source-unit"><h2 class="source-label">神戸地裁平成14年6月27日判決テキスト</h2><div class="source-meta">参照資料に即した整理</div><p>判決 平成14年6月27日 神戸地方裁判所 平成12年(行ウ)第28号 固定
+舗装駐車場</p></div></section><section id="c3" class="chapter"><h1>第三章　賦課期日と価格の算定基準日</h1><p class="chapter-intro">賦課期日における価格という文言を、価格調査基準日や評価替えの実務とどのように整合させるかは、固定資産税訴訟の古典的論点である。古い判例から基本線を確認する。</p><div class="source-unit"><div class="source-label">神戸地裁平成14年6月27日判決テキスト</div><div class="source-meta">参照資料に即した整理</div><p>判決 平成14年6月27日 神戸地方裁判所 平成12年(行ウ)第28号 固定
 資産評価審査決定取消請求事件
  1 原告の請求を棄却する。
  2 訴訟費用は原告の負担とする。
@@ -11643,7 +11693,7 @@ B・C・Dの3ポイントの下落率平均値が7.3%となっているが,本�
  1億3832万5840円
  (3) 最終決定額(平成10年度固定資産評価額)
  1億3004万3910円</p></div>
-<div class="source-unit"><h2 class="source-label">令和元年3月8日裁判例テキスト</h2><div class="source-meta">参照資料に即した整理</div><p>1
+<div class="source-unit"><div class="source-label">令和元年3月8日裁判例テキスト</div><div class="source-meta">参照資料に即した整理</div><p>1
 平成31年3月8日判決言渡
 平成28年(行ウ)第91号 固定資産価格審査決定取消請求事件
 主 文
@@ -12651,7 +12701,7 @@ SRC造と認定してSRC造・RC造の経年減点補正率を適用したこと
  裁判官 西 村 康 夫
  38
  裁判官 味 元 厚 二 郎
-(別紙省略) 5</p></div></section><section id="c4"><h1>第四章　近時裁判例と評価基準の一般的合理性</h1><p class="chapter-intro">近時裁判例は、評価基準の一般的合理性を前提としつつ、なお個別事情による審査の余地をどこまで認めるかを示している。ここではその線引きを読む。</p><div class="source-unit"><h2 class="source-label">令和7年3月27日裁判例テキスト</h2><div class="source-meta">参照資料に即した整理</div><p>- 1 -
+(別紙省略) 5</p></div></section><section id="c4" class="chapter"><h1>第四章　近時裁判例と評価基準の一般的合理性</h1><p class="chapter-intro">近時裁判例は、評価基準の一般的合理性を前提としつつ、なお個別事情による審査の余地をどこまで認めるかを示している。ここではその線引きを読む。</p><div class="source-unit"><div class="source-label">令和7年3月27日裁判例テキスト</div><div class="source-meta">参照資料に即した整理</div><p>- 1 -
 令和7年3月27日判決言渡
 令和5年(行ウ)第185号 審査決定取消等請求事件
 主 文
@@ -14392,7 +14442,7 @@ B21からB22までの距離) であることから、 計算上の奥行距離�
 - 66 -
  (被告の主張)
  争う。</p></div></section>
-    <section id="conclusion">
+    <section id="conclusion" class="chapter">
       <h1>結論</h1>
       <p>固定資産評価基準は、全国一律の大量課税を実現するための実務基準にとどまらず、地方税法388条のもとで一般的合理性を有する評価枠組みとして強い法的意味を持つ。ただし、それは個別事件における時価審査を完全に閉ざすものではない。</p><p>賦課期日における価格という法文を読むときは、価格調査基準日や評価替え事務の必要性を無視できない一方、実務上の便宜だけで基準日を自由にずらせるわけでもない。この緊張関係こそが、固定資産税訴訟の中心にある。</p><p>評価基準の拘束力と裁判所による事後審査との均衡をどう保つかは、今後も固定資産税法研究の核心にとどまると考えられる。</p>
     </section>

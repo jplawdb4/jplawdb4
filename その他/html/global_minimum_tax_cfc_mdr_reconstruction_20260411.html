@@ -8,7 +8,7 @@
 *{box-sizing:border-box}
 body{
   margin:0;
-  background:#f5f0e8;
+  background:#f3eee6;
   color:#1f2428;
   font-family:"Hiragino Mincho ProN","Yu Mincho","游明朝","Times New Roman",serif;
   line-height:1.95;
@@ -16,15 +16,18 @@ body{
 }
 .paper{
   max-width:1120px;
-  margin:0 auto;
+  margin:0 auto 48px;
   background:#fffdf9;
   padding:44px 54px 72px;
   box-shadow:0 0 0 1px rgba(92,74,56,.08);
 }
 .head{
-  border-bottom:1px solid #d8cfc0;
-  padding-bottom:22px;
-  margin-bottom:26px;
+  border:1px solid #ddd2c2;
+  border-top:8px solid var(--accent);
+  border-radius:12px;
+  padding:24px 28px 22px;
+  margin-bottom:30px;
+  background:linear-gradient(180deg,#fffdf9 0%,#faf5ee 100%);
 }
 .title{
   margin:0;
@@ -46,6 +49,7 @@ body{
   padding:18px 22px;
   border:1px solid #ded4c5;
   background:#fbf8f3;
+  border-radius:10px;
 }
 .abstract h2,.toc h2,.notes h2,.refs h2{
   margin:0 0 10px;
@@ -57,6 +61,7 @@ body{
   padding:18px 22px;
   border:1px solid #e5dccf;
   background:#fcfbf8;
+  border-radius:10px;
 }
 .toc ol{
   margin:0;
@@ -73,16 +78,16 @@ body{
   text-decoration:underline;
 }
 h1{
-  margin:40px 0 14px;
-  padding-left:12px;
-  border-left:4px solid var(--accent);
+  margin:0 0 16px;
+  padding-left:14px;
+  border-left:6px solid var(--accent);
   color:#1c2a35;
   font-size:1.44rem;
 }
 h2{
   margin:28px 0 12px;
-  padding-bottom:6px;
-  border-bottom:1px solid #e4dacd;
+  padding-bottom:8px;
+  border-bottom:1px solid #e2d7c8;
   color:#243440;
   font-size:1.12rem;
 }
@@ -90,6 +95,8 @@ h3{
   margin:20px 0 10px;
   color:#31424f;
   font-size:1.02rem;
+  padding-left:10px;
+  border-left:3px solid #d6c6af;
 }
 h4,h5,h6{
   margin:16px 0 8px;
@@ -116,6 +123,7 @@ table{
   border-collapse:collapse;
   margin:16px 0;
   font-size:.94rem;
+  background:#fff;
 }
 th,td{
   border:1px solid #ddd3c4;
@@ -126,20 +134,46 @@ th,td{
 th{
   background:#f4ede4;
 }
+.chapter{
+  margin:48px 0;
+  padding:26px 28px 28px;
+  border:1px solid #dfd4c5;
+  border-radius:12px;
+  background:#fffefb;
+  box-shadow:0 1px 0 rgba(92,74,56,.03);
+}
+.chapter + .chapter{
+  margin-top:54px;
+}
 .chapter-intro{
   color:#3f4d59;
+  margin:0 0 22px;
+  padding:14px 18px;
+  border-left:3px solid #ccb292;
+  border-radius:0 10px 10px 0;
+  background:#faf6ef;
 }
 .source-unit{
-  margin:26px 0 34px;
+  margin:24px 0 0;
+  padding:18px 20px 20px;
+  border:1px solid #e3d8ca;
+  border-radius:10px;
+  background:#fcfaf6;
+}
+.source-unit + .source-unit{
+  margin-top:18px;
 }
 .source-label{
-  font-size:1rem;
-  color:#30404d;
+  margin:0 0 12px;
+  padding-bottom:8px;
+  border-bottom:1px dashed #d7cbbc;
+  font-size:.84rem;
+  letter-spacing:.08em;
+  color:#6e573f;
+  font-weight:700;
 }
 .source-meta{
-  margin:0 0 10px;
-  color:#6e7b84;
-  font-size:.88rem;
+  display:none;
 }
 .small-note{
   color:#6a747c;
@@ -147,8 +181,10 @@ th{
 }
 .notes,.refs{
   margin-top:40px;
-  padding-top:12px;
-  border-top:1px solid #ddd3c4;
+  padding:20px 22px 16px;
+  border:1px solid #ddd3c4;
+  border-radius:10px;
+  background:#fcfaf7;
 }
 .notes ol{
   padding-left:1.5rem;
@@ -171,9 +207,19 @@ th{
   font-size:.85rem;
   text-decoration:none;
 }
+.chapter table tr:nth-child(even) td{
+  background:#fbf8f3;
+}
+.chapter blockquote{
+  border-radius:0 8px 8px 0;
+}
 @media (max-width:760px){
   .paper{padding:24px 18px 42px}
   .title{font-size:1.6rem}
+  .head{padding:18px 18px 16px}
+  .chapter{padding:20px 16px 20px}
+  .chapter-intro{padding:12px 14px}
+  .source-unit{padding:16px 14px 16px}
 }
 </style>
 </head>
@@ -192,13 +238,17 @@ th{
       <h2>目次</h2>
       <ol><li><a href="#c1">第一章　問題設定</a></li><li><a href="#c2">第二章　CFC税制の基礎構造</a></li><li><a href="#c3">第三章　CFC税制の応用と比較法</a></li><li><a href="#c4">第四章　BEPSとグローバル・ミニマム課税</a></li><li><a href="#c5">第五章　情報報告義務と国際租税法の将来像</a></li><li><a href="#conclusion">結論</a></li><li><a href="#notes">注</a></li><li><a href="#refs">参考文献</a></li></ol>
     </nav>
-    <section id="c1"><h1>第一章　問題設定</h1><p class="chapter-intro">短稿で示した重心移動の仮説を確認し、その後の検討を支える基本線を置く。</p><div class="source-unit"><h2 class="source-label">総論的整理</h2><div class="source-meta">参照資料に即した整理</div><h4>要旨</h4>
+    <section id="c1" class="chapter"><h1>第一章　問題設定</h1><p class="chapter-intro">短稿で示した重心移動の仮説を確認し、その後の検討を支える基本線を置く。</p><div class="source-unit"><div class="source-label">総論的整理</div><div class="source-meta">参照資料に即した整理</div><h4>要旨</h4>
 <p>近年の国際租税法は、個々の所得をどの国へどの程度帰属させるかという古典的問題だけでは捉えきれない段階に入っている。グローバル・ミニマム課税、CFC税制、情報報告義務の拡張は、いずれも課税権配分と執行基盤の双方を組み替える動きとして理解する必要がある。</p>
 <p>本稿は、国際課税の重心が、所得帰属の微調整から、情報の把握と最低限の税負担の担保へ移っているのではないかという仮説を検討する。そのために、CFC税制の基礎と比較法、BEPS以後の制度改変、グローバル・ミニマム課税の論理を横断的に読む。</p>
 <p>制度相互の接続を意識してみると、各制度は孤立した補助線ではなく、租税回避対策と執行可能性を一体で再構成する大きな流れの一部であることが見えてくる。</p>
 <h3>第一章 問題設定</h3>
 <p>短稿で示した重心移動の仮説を確認し、その後の検討を支える基本線を置く。</p>
 <h4>総論的整理</h4>
+<p>近年の国際租税法は、個々の所得をどの国へどの程度帰属させるかという古典的問題だけでは捉えきれない段階に入っている。グローバル・ミニマム課税、CFC税制、情報報告義務の拡張は、いずれも課税権配分と執行基盤の双方を組み替える動きとして理解する必要がある。</p>
+<p>本稿は、国際課税の重心が、所得帰属の微調整から、情報の把握と最低限の税負担の担保へ移っているのではないかという仮説を検討する。そのために、CFC税制の基礎と比較法、BEPS以後の制度改変、グローバル・ミニマム課税の論理を横断的に読む。</p>
+<p>制度相互の接続を意識してみると、各制度は孤立した補助線ではなく、租税回避対策と執行可能性を一体で再構成する大きな流れの一部であることが見えてくる。</p>
+<p>短稿で示した重心移動の仮説を確認し、その後の検討を支える基本線を置く。</p>
 <p>近年の国際租税法は、個々の所得をどの国へどの程度帰属させるかという古典的問題だけでは捉えきれない段階に入っている。グローバル・ミニマム課税、CFC税制、情報報告義務の拡張は、いずれも課税権配分と執行基盤の双方を組み替える動きとして理解する必要がある。</p>
 <p>本稿は、国際課税の重心が、所得帰属の微調整から、情報の把握と最低限の税負担の担保へ移っているのではないかという仮説を検討する。そのために、CFC税制の基礎と比較法、BEPS以後の制度改変、グローバル・ミニマム課税の論理を横断的に読む。</p>
 <p>制度相互の接続を意識してみると、各制度は孤立した補助線ではなく、租税回避対策と執行可能性を一体で再構成する大きな流れの一部であることが見えてくる。</p>
@@ -273,12 +323,7 @@ th{
 <p>CFC税制は、国際租税法の中で単独で機能する制度ではなく、他の制度と密接に関連している。主要な関連制度として、移転価格税制(Transfer Pricing Rules)、過少資本税制(Thin Capitalization Rules)・過大支払利子税制(Earnings Stripping Rules)、外国税額控除制度(Foreign Tax Credit)、租税条約、および2021年以降のOECD/G20の第2の柱(Pillar Two)であるグローバル・ミニマム課税(GloBE Rules)がある。</p>
 <p>特に、グローバル・ミニマム課税との関係は近年の重要論点である。GloBE Rulesは、多国籍企業グループの実効税率が15%を下回る場合にトップアップ税(上乗せ税)を課すものであり、CFC税制と機能的に重複する部分がある。実際、GloBE Rulesの下では、QDMTT(適格国内ミニマムトップアップ税)やIIR(所得合算ルール)がCFC税制と同様の効果を持つ場面がある。今後、CFC税制とグローバル・ミニマム課税の関係をどのように整理するかは、各国の税制設計における重要な課題となっている。</p>
 <ul><li>CFC税制とは、内国法人が支配する低税率国の外国子会社の所得を、配当の有無にかかわらず内国法人の所得に合算して課税する制度である。起源は1962年の米国Subpart F制度にある。</li><li>ケネディ大統領の当初提案(全所得合算)は議会の反対により後退し、受動的所得・ベースカンパニー所得に限定した合算課税という形で成立した。このSubpart Fの設計は「トランザクション・アプローチ」と呼ばれる。</li><li>CFC税制は1970年代以降、ドイツ、日本、英国、豪州等の先進国に波及し、2000年代以降は新興国にも拡大した。BEPS行動3(2015年)がさらなる国際標準化を推進している。</li><li>日本のCFC税制は2017年度改正で「エンティティ・アプローチ」から「ハイブリッド型」に移行した。今後はグローバル・ミニマム課税(GloBE Rules)との関係整理が重要な課題となる。</li></ul>
-<h6>CFC適用判定フロー</h6>
-<p>以下のフローチャートは、外国法人がCFC(特定外国関係会社・対象外国関係会社)に該当するかを判定する手順を示す。</p>
-<p>※ 措法66条の6 ~66条の9の3を基に簡略化。実際の判定は条文・施行令・通達を参照。</p>
-<h6>CFC税制の制度趣旨—資本輸出中立性とタックスヘイブン対策</h6>
-<h6>2-1. CFC税制の根本的な政策目的</h6>
-<p>CFC税制の制度趣旨を正確に理解することは、個別の適用判定やグレーゾーンの解釈において重要である。CFC税制には複数の政策目的が内包されているが、主要なものとして以下の4つを挙げることができる。第一に「資本輸出中立性」(Capital Export Neutrality: CEN)の確保、第二に「タックスヘイブンを利用した租税回避の防止」、第三に「課税ベースの保全」(Revenue Protection)、第四に「公平性の確保」(Equity)である。</p></div></section><section id="c2"><h1>第二章　CFC税制の基礎構造</h1><p class="chapter-intro">CFC税制は依然として国際租税法の中核にある。まず制度の骨格、判定フロー、設計思想を整理する。</p><div class="source-unit"><h2 class="source-label">CFC税制の基礎</h2><div class="source-meta">参照資料に即した整理</div><h3>CFC税制の基礎 ─ 制度趣旨と適用対象の判定</h3>
+<h6>CFC適用判定フロー</h6></div></section><section id="c2" class="chapter"><h1>第二章　CFC税制の基礎構造</h1><p class="chapter-intro">CFC税制は依然として国際租税法の中核にある。まず制度の骨格、判定フロー、設計思想を整理する。</p><div class="source-unit"><div class="source-label">CFC税制の基礎</div><div class="source-meta">参照資料に即した整理</div><h3>CFC税制の基礎 ─ 制度趣旨と適用対象の判定</h3>
 <p>外国子会社合算税制(CFC税制)は、国際租税法の中核をなす制度の一つです。本講では、CFC税制が誕生した歴史的背景から、日本法の条文構造、外国関係会社・特定外国関係会社の判定基準、租税負担割合の計算方法、さらには各国CFC税制の比較とBEPS行動3の勧告まで、実務家が把握すべき論点を網羅的に解説します。</p>
 <ol><li>01 CFC税制の誕生—米国Subpart Fから各国への波及</li><li>02 CFC税制の制度趣旨—資本輸出中立性とタックスヘイブン対策</li><li>03 日本のCFC税制の条文構造( 措法66条の6 〜 措法66条の9の2 )</li><li>04 外国関係会社の定義—持株基準と実質支配基準</li><li>05 特定外国関係会社の3類型</li><li>06 ペーパーカンパニーの認定基準の詳細分析</li><li>07 事実上のキャッシュボックスの判定</li><li>08 対象外国関係会社の判定—租税負担割合の計算方法</li><li>09 20%基準と30%基準のトリガー税率</li><li>10 租税負担割合の計算における実務上の論点</li><li>11 各国CFC税制の比較</li><li>12 BEPS行動3のCFC勧告と各国の対応</li></ol>
 <h4>CFC税制の誕生—米国Subpart F(1962年)から各国への波及</h4>
@@ -491,7 +536,7 @@ th{
 <p>Q1 CFC税制(外国子会社合算税制)の適用対象となる持株比率の基準はどれか?</p>
 <p>Q2 「特定外国関係会社」として全所得が合算される典型例はどれか?</p>
 <p>Q3 部分合算課税の対象となる「受動所得」に含まれるものはどれか?</p></div>
-<div class="source-unit"><h2 class="source-label">CFC入門 第1章</h2><div class="source-meta">参照資料に即した整理</div><h3>第1章 外国子会社合算税制(CFC税制)入門</h3>
+<div class="source-unit"><div class="source-label">CFC入門 第1章</div><div class="source-meta">参照資料に即した整理</div><h3>第1章 外国子会社合算税制(CFC税制)入門</h3>
 <h4>1. この章を読む前に</h4>
 <p>この章は、こんな方のために書きました:</p>
 <p>CFC税制を知らないと、こんなリスクがあります:</p>
@@ -628,7 +673,7 @@ th{
 <ul><li>事業基準 :主たる事業が受動的事業(株式保有等)でないこと</li><li>実体基準 :事務所・店舗・工場等があること</li><li>管理支配基準 :現地で事業の管理・支配を行っていること</li><li>非関連者基準/所在地国基準 :取引相手・事業場所が適切か</li></ul>
 <ul><li>節税 :法が予定した範囲内で税金を減らすこと(問題なし)</li><li>租税回避 :形式は合法だが法の趣旨に反する方法で減らすこと(CFC税制が対処)</li><li>脱税 :違法に税金を逃れること(犯罪)</li></ul>
 <p>第1章 終わり ─ 第2章「CFC税制の判定フロー」へ続く</p></div>
-<div class="source-unit"><h2 class="source-label">CFC入門 第2章</h2><div class="source-meta">参照資料に即した整理</div><h3>第2章 CFC課税の判定フロー全体像</h3>
+<div class="source-unit"><div class="source-label">CFC入門 第2章</div><div class="source-meta">参照資料に即した整理</div><h3>第2章 CFC課税の判定フロー全体像</h3>
 <h4>1. この章で学ぶこと</h4>
 <p>この章は、こんな方のために書きました:</p>
 <p>読み終わると、こんなことがわかります:</p>
@@ -733,7 +778,7 @@ th{
 <h5>章末クイズ(5問)</h5>
 <ol><li>ペーパーカンパニー(実体・管理支配基準を満たさない)</li><li>キャッシュボックス(受動的資産50%超、または受動的所得30%超)</li><li>ブラックリスト国所在(情報交換非協力国)</li></ol>
 <ul><li>従業員が2名のみで、実体基準を満たさない可能性がある(ペーパーカンパニーの疑い)</li><li>主な収入がロイヤルティ(受動的所得)で、受動的所得の割合が30%を超える(キャッシュボックスの疑い)</li></ul>
-<p>第2章 終わり ─ 第3章「経済活動基準の4要件」へ続く</p></div></section><section id="c3"><h1>第三章　CFC税制の応用と比較法</h1><p class="chapter-intro">制度の難所は、トリガー税率、キャッシュボックス、経済活動基準、外国税額控除との関係に集中する。比較法的素材も交えて整理する。</p><div class="source-unit"><h2 class="source-label">CFC税制の応用</h2><div class="source-meta">参照資料に即した整理</div><h3>CFC税制の応用 経済活動基準・合算計算・二重課税調整</h3>
+<p>第2章 終わり ─ 第3章「経済活動基準の4要件」へ続く</p></div></section><section id="c3" class="chapter"><h1>第三章　CFC税制の応用と比較法</h1><p class="chapter-intro">制度の難所は、トリガー税率、キャッシュボックス、経済活動基準、外国税額控除との関係に集中する。比較法的素材も交えて整理する。</p><div class="source-unit"><div class="source-label">CFC税制の応用</div><div class="source-meta">参照資料に即した整理</div><h3>CFC税制の応用 経済活動基準・合算計算・二重課税調整</h3>
 <p>外国子会社合算税制(CFC税制)の中核を成す経済活動基準の4要件、部分合算課税と会社単位合算の判定ロジック、適用対象金額の計算方法、そして二重課税調整・外国税額控除までを体系的に学ぶ全13章の包括講座です。</p>
 <h4>経済活動基準──4基準の全体像</h4>
 <h5>1-1. CFC税制における経済活動基準の位置づけ</h5>
@@ -1038,7 +1083,7 @@ T社の所在地国法令基準による所得金額:
 <p>Q1 対象外国関係会社の適用除外基準(5基準)はどのような関係か?</p>
 <p>Q2 「実体基準」が要求するものとして正しいものはどれか?</p>
 <p>Q3 受動所得の「部分合算課税」が適用されるのはどの場合か?</p></div>
-<div class="source-unit"><h2 class="source-label">CFC比較法研究</h2><div class="source-meta">参照資料に即した整理</div><h4>第1章 目的と方法論</h4>
+<div class="source-unit"><div class="source-label">CFC比較法研究</div><div class="source-meta">参照資料に即した整理</div><h4>第1章 目的と方法論</h4>
 <h5>1.1 本報告の射程</h5>
 <p>本報告は、CFC税制(Controlled Foreign Corporation / Company Rules、外国子会社合算税制)について、12ヶ国の制度を横断的に比較分析するディープリサーチの成果物である。CFC税制とは、内国法人が低税率国に設立した外国子会社の留保所得を、一定の要件のもとで親法人の所得に合算して課税する制度であり、国際的な租税回避の防止を主たる目的とする。</p>
 <p>CFC税制は1962年の米国Revenue Act(Subpart F)を嚆矢として、半世紀以上にわたり各国が独自の設計思想に基づいて整備してきた。2015年のOECD/G20 BEPS(Base Erosion and Profit Shifting)プロジェクトAction 3最終報告書は、CFC税制の設計に関する6つのビルディングブロックを提示し、各国制度の収斂を促した。さらに、2021年のOECD/G20包摂的枠組みによるPillar Two(GloBE Rules)の合意は、グローバル最低税率15%の導入を通じて、CFC税制と重畳する新たな課税メカニズムを創出した。</p>
@@ -1265,7 +1310,7 @@ T社の所在地国法令基準による所得金額:
 <p>Tax Foundation(米国のシンクタンク)は、日本のCFC制度について「Japanese CFC rules are among the most comprehensive in the world」と評価し、その適用範囲の広さと制度の複雑性を指摘している。PwC UKのJapanese Business Network Hotlineは、2024年のアップデートにおいて、日本のCFC制度の要点を英語で解説し、日本に進出する外国企業に対してCFC課税のリスクを警告している。</p>
 <p>Chambers and Partners Global Practice Guides(Tax Controversy 2025, Japan)は、CFC税制が日本の国際税務における「最も頻繁に争われる分野の一つ」であり、租税負担割合の計算方法や経済活動基準の適用について課税庁と納税者の間で見解が分かれるケースが多いと分析している。</p>
 <p>学術的な観点からは、UC Berkeley eScholarshipに掲載された論文が日本のCFC税制の構造分析を行い、税務大学校論叢の複数の論文(論叢83号「外国子会社合算税制の対象とすべき租税回避」等)が制度の改善に向けた提言を行っている。京都大学リサーチリポジトリにも関連論文が所蔵されている。</p></div>
-<div class="source-unit"><h2 class="source-label">CFC入門 第9章</h2><div class="source-meta">参照資料に即した整理</div><h3>第9章 外国税額控除</h3>
+<div class="source-unit"><div class="source-label">CFC入門 第9章</div><div class="source-meta">参照資料に即した整理</div><h3>第9章 外国税額控除</h3>
 <h4>1. この章で学ぶこと</h4>
 <p>この章は、こんな方のために書きました:</p>
 <p>外国税額控除を適切に適用しないと、こんな問題が起きます:</p>
@@ -1399,7 +1444,7 @@ T社の所在地国法令基準による所得金額:
 <p>この章の内容を確認してみましょう。</p>
 <p>・全世界所得:5,000万円(うち国外所得1,000万円) ・法人税率:30% ・外国子会社がシンガポールで納付した税額:150万円</p>
 <ul><li>法人税額:5,000万円 × 30% = 1,500万円</li><li>控除限度額:1,500万円 × 1,000万円 ÷ 5,000万円 = 300万円</li><li>みなし納付外国税額:150万円(限度額300万円以内)</li><li>外国税額控除額: 150万円</li><li>日本で納付する税額:1,500万円 - 150万円 = 1,350万円</li><li>控除余裕額:300万円 - 150万円 = 150万円(翌年度以降に繰越可能)</li></ul>
-<p>第9章 終わり ─ 第10章へ続く</p></div></section><section id="c4"><h1>第四章　BEPSとグローバル・ミニマム課税</h1><p class="chapter-intro">ここでは、最低税負担の確保が、従来のCFC税制を置き換えるのではなく、その上に重なり合って国際租税法の重心を動かしている点を検討する。</p><div class="source-unit"><h2 class="source-label">BEPSとグローバル・ミニマム課税</h2><div class="source-meta">参照資料に即した整理</div><h3>BEPSとグローバルミニマム課税 Pillar 1 &amp; Pillar 2</h3>
+<p>第9章 終わり ─ 第10章へ続く</p></div></section><section id="c4" class="chapter"><h1>第四章　BEPSとグローバル・ミニマム課税</h1><p class="chapter-intro">ここでは、最低税負担の確保が、従来のCFC税制を置き換えるのではなく、その上に重なり合って国際租税法の重心を動かしている点を検討する。</p><div class="source-unit"><div class="source-label">BEPSとグローバル・ミニマム課税</div><div class="source-meta">参照資料に即した整理</div><h3>BEPSとグローバルミニマム課税 Pillar 1 &amp; Pillar 2</h3>
 <p>多国籍企業の税源浸食と利益移転(BEPS)に対する国際的取組みの全体像を解説。OECD/G20包摂的枠組みが打ち出した「二本の柱」を中心に、制度設計から日本の国内法化まで体系的に学びます。</p>
 <h4>📑 目次</h4>
 <h4>BEPSの背景──なぜ国際課税改革が必要になったか</h4>
@@ -1620,7 +1665,7 @@ T社の所在地国法令基準による所得金額:
 <ul><li>2023年10月:MLIへのSTTR条項の追加が合意(MLI第X条)</li><li>主に途上国(ヴィエトナム・インドネシア等)が条約改正の形で導入</li><li>先進国(日本・米国・EU)はSTTRの適用を受ける側(源泉地国がSTTRを行使する場合、条約上の源泉税率が上昇)</li><li>実務では相手国がSTTRを採用する場合に日系企業の支払コストが増加するリスクに注意</li></ul>
 <h5>📌 実務上の留意点(2025年時点)</h5>
 <ul><li>連結売上高750億ユーロ超のグループは GloBEの適用開始 を確認し、国ごとのETR(実効税率)を計算・モニタリングする必要がある</li><li>シンガポール・香港・UAEなどの低税率国の子会社は QDMTT導入 により現地での税負担が増加</li><li>移転価格と GloBE の交錯:移転価格調整によって特定国のETRが変動し、GloBE上乗せ税額が変わるケースが増加している</li><li>CFC税制( 措法66条の6 )と GloBE は どちらが先に適用されるか を条文・通達で確認する必要がある</li></ul></div>
-<div class="source-unit"><h2 class="source-label">CFC制度史補論</h2><div class="source-meta">参照資料に即した整理</div><p>「税負担の公平は、民主主義の基盤である。 ある納税者が少なく払えば、他の誰かが多く払わねばならない」</p>
+<div class="source-unit"><div class="source-label">CFC制度史補論</div><div class="source-meta">参照資料に即した整理</div><p>「税負担の公平は、民主主義の基盤である。 ある納税者が少なく払えば、他の誰かが多く払わねばならない」</p>
 <p>——ジョン・F・ケネディ大統領 1961年4月20日 租税教書より</p>
 <p>— 序章 —</p>
 <h4>1961年4月20日、ホワイトハウスの朝</h4>
@@ -1776,7 +1821,7 @@ T社の所在地国法令基準による所得金額:
 <h4>4月20日——歴史的な租税教書演説の詳細描写</h4>
 <p>皆さん、ここで再び、あの朝のホワイトハウスに戻りましょう。</p>
 <p>午前9時30分。ケネディは執務室で最終確認を行っておりました。隣には、ディロン財務長官とサリー次官補が控えておりました。</p></div>
-<div class="source-unit"><h2 class="source-label">CFC制度史補論</h2><div class="source-meta">参照資料に即した整理</div><p>あたしさくらももこ。税金のことなんて、まるでわかんないのが普通だと思ってた。でもね、アメリカには「サブパートF」っていう、なんだか不思議な名前の税金の仕組みがあるんだって。1962年に生まれたっていうから、あたしのおじいちゃんが働き盛りだった頃の話だね。今日はこの「サブパートF」っていうのを、じっくり解剖してみようと思うのである。</p>
+<div class="source-unit"><div class="source-label">CFC制度史補論</div><div class="source-meta">参照資料に即した整理</div><p>あたしさくらももこ。税金のことなんて、まるでわかんないのが普通だと思ってた。でもね、アメリカには「サブパートF」っていう、なんだか不思議な名前の税金の仕組みがあるんだって。1962年に生まれたっていうから、あたしのおじいちゃんが働き盛りだった頃の話だね。今日はこの「サブパートF」っていうのを、じっくり解剖してみようと思うのである。</p>
 <h4>第一節 IRC§951条文への旅</h4>
 <p>内国歳入法典(Internal Revenue Code)の第951条。これがサブパートFの入り口である。まるで迷路の入り口に立った時のように、ここから先は複雑怪奇な税法の世界が広がっている。けれども、入り口さえしっかり理解すれば、その先も案外なんとかなるものだ。</p>
 <p>26 U.S.C. § 951 - 米国株主の総所得への算入額</p>
@@ -1954,7 +1999,7 @@ T社の所在地国法令基準による所得金額:
 <p>※繰延により税引前利益で再投資できる分、有利に</p>
 <h5>1962年の妥協とその後の展開</h5>
 <p>ケネディ政権が当初提案した「全面的な繰延廃止」は、まさに完全な資本輸出中立性を目指すものだった。しかし、産業界の反対により、サブパートFという「部分的」な対策に落ち着いた。</p>
-<p>その後の60年以上にわたる歴史の中で、サブパートFは幾多の改正を経てきた。対象所得の範囲は拡大と縮小を繰り返し、例外規定は増減を重ねた。それは、資本輸出中立性と企業の国際競争力という、時に相反する政策目標の間での綱引きの歴史でもあった。</p></div></section><section id="c5"><h1>第五章　情報報告義務と国際租税法の将来像</h1><p class="chapter-intro">所得の配分だけでなく、何が見えるか、誰が先に把握するかという執行上の問題が制度設計へ深く入り込んでいる。ここを最後に整理する。</p><div class="source-unit"><h2 class="source-label">CFC入門 第11章</h2><div class="source-meta">参照資料に即した整理</div><h3>第11章 申告・届出の実務</h3>
+<p>その後の60年以上にわたる歴史の中で、サブパートFは幾多の改正を経てきた。対象所得の範囲は拡大と縮小を繰り返し、例外規定は増減を重ねた。それは、資本輸出中立性と企業の国際競争力という、時に相反する政策目標の間での綱引きの歴史でもあった。</p></div></section><section id="c5" class="chapter"><h1>第五章　情報報告義務と国際租税法の将来像</h1><p class="chapter-intro">所得の配分だけでなく、何が見えるか、誰が先に把握するかという執行上の問題が制度設計へ深く入り込んでいる。ここを最後に整理する。</p><div class="source-unit"><div class="source-label">CFC入門 第11章</div><div class="source-meta">参照資料に即した整理</div><h3>第11章 申告・届出の実務</h3>
 <h4>1. この章で学ぶこと</h4>
 <p>この章は、こんな方のために書きました:</p>
 <p>CFC税制の理論を理解しても、実際の申告で失敗することがあります:</p>
@@ -2071,7 +2116,7 @@ T社の所在地国法令基準による所得金額:
 <ul><li>原則: 2ヶ月以内</li><li>延長申請が認められた場合: 3ヶ月以内 (+1ヶ月)</li></ul>
 <ul><li>外国関係会社の貸借対照表</li><li>外国関係会社の損益計算書</li><li>外国関係会社の法人税申告書の写し</li><li>外国法人税の納税証明書</li><li>株式保有状況を示す書類</li></ul>
 <p>第11章 終わり ─ 第12章へ続く</p></div>
-<div class="source-unit"><h2 class="source-label">CFC入門 第12章</h2><div class="source-meta">参照資料に即した整理</div><h3>第12章 重要判例と制度の将来</h3>
+<div class="source-unit"><div class="source-label">CFC入門 第12章</div><div class="source-meta">参照資料に即した整理</div><h3>第12章 重要判例と制度の将来</h3>
 <h4>1. この章で学ぶこと</h4>
 <p>この章は、こんな方のために書きました:</p>
 <p>これまでの章で、CFC税制の仕組みを体系的に学んできました。この最終章では、 実際の裁判で何が争われたのか を見ていきます。</p>
@@ -2211,7 +2256,7 @@ T社の所在地国法令基準による所得金額:
 <p>第12章 終わり ─ CFC税制入門書 完結</p>
 <p>CFC税制は複雑な制度ですが、基本的な考え方を理解すれば、実務での判断の指針が得られます。</p>
 <p>制度は常に改正されています。本書の内容を出発点として、最新の法令・通達・判例をフォローしてください。</p></div></section>
-    <section id="conclusion">
+    <section id="conclusion" class="chapter">
       <h1>結論</h1>
       <p>国際租税法の近時の変化は、単に新制度が増えたという以上の意味を持っている。グローバル・ミニマム課税、CFC税制、情報報告義務の拡張を一体でみると、制度の重心は、所得帰属の精緻化だけでなく、情報把握と最低税負担の担保へ移りつつある。</p><p>この見方に立てば、CFC税制は古い制度として退場しつつあるのではなく、むしろ最低税負担確保の体系の中で再定位されていると理解できる。情報報告義務も、執行の付随的手段ではなく、実体法を支える基盤となる。</p><p>国際租税法の再編は、課税権配分の理論と執行可能性の理論が、これまで以上に強く結び付いたことを意味している。</p>
     </section>
