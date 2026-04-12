@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CFC税制 問題点体系マップ ─ 22の構造的課題 | jplawdb4</title>
+<style>
+:root {
+  --bg: #f6f2ea;
+  --paper: #fffdf8;
+  --ink: #1c2430;
+  --muted: #5f6c78;
+  --line: #ddd4c6;
+  --navy: #18334d;
+  --green: #2f6f5e;
+  --green-soft: #edf4f0;
+  --sand: #f4eee3;
+  --red: #c23b3b;
+  --red-soft: #fdf2f2;
+  --gold: #b8860b;
+  --gold-soft: #fdf6e4;
+  --purple: #6b3fa0;
+  --purple-soft: #f5f0fb;
+  --blue: #2b6cb0;
+  --blue-soft: #edf3fb;
+  --shadow: 0 12px 34px rgba(28,36,48,.08);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin:0;
+  background: radial-gradient(circle at top right, rgba(47,111,94,.08), transparent 26%), linear-gradient(180deg, #f6f2ea 0%, #fbfaf7 100%);
+  color: var(--ink);
+  font-family: "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif;
+  line-height: 1.72;
+}
+a { color: var(--green); text-decoration: none; }
+a:hover { text-decoration: underline; }
+header.hero {
+  padding: 58px 24px 28px;
+  background: linear-gradient(135deg, rgba(24,51,77,.98), rgba(47,111,94,.94));
+  color: #fff;
+}
+.hero-inner, main { max-width: 1220px; margin: 0 auto; }
+.hero-inner .eyebrow {
+  display:inline-block; padding:4px 10px; border:1px solid rgba(255,255,255,.25); border-radius:999px; font-size:12px; letter-spacing:.08em; margin-bottom:12px;
+}
+.hero-inner h1 { margin:0 0 14px; font-size: clamp(30px, 5.0vw, 52px); line-height:1.12; letter-spacing:-.02em; }
+.hero-inner p.sub { margin:0 0 10px; max-width:980px; color:rgba(255,255,255,.93); font-size:16px; }
+.meta-row { margin-top:18px; display:flex; flex-wrap:wrap; gap:10px; }
+.meta-pill { background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18); border-radius:999px; padding:6px 12px; font-size:12px; }
+main { padding: 28px 20px 64px; }
+.section {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 26px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+.section h2 { margin:0 0 10px; font-size:28px; line-height:1.24; color: var(--navy); }
+.section h2 .num { color: var(--green); font-weight:700; margin-right:8px; }
+.lede { margin:0 0 18px; color: var(--muted); font-size:15px; }
+.toc-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:12px; }
+.toc-card { background:#fff; border:1px solid #ebe3d7; border-radius:14px; padding:14px 16px; }
+.toc-card strong { display:block; margin-bottom:6px; color: var(--navy); font-size:15px; }
+.toc-card ol { margin:0; padding-left:22px; font-size:13px; color:var(--muted); }
+.toc-card ol li { margin:3px 0; }
+
+/* Badge system */
+.badges { display:flex; gap:6px; flex-wrap:wrap; }
+.badge {
+  display:inline-block; padding:3px 10px; border-radius:999px; font-size:11px; font-weight:700; letter-spacing:.02em;
+}
+.b-over { background: var(--red-soft); color: var(--red); border:1px solid var(--red); }
+.b-under { background: var(--gold-soft); color: var(--gold); border:1px solid var(--gold); }
+.b-source { background: var(--purple-soft); color: var(--purple); border:1px solid var(--purple); }
+.b-intl { background: var(--blue-soft); color: var(--blue); border:1px solid var(--blue); }
+
+/* Issue card */
+.issue {
+  background:#fff; border:1px solid #e9dfd2; border-radius:20px; padding:20px; margin-bottom:16px;
+  page-break-inside: avoid;
+}
+.issue-top { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; margin-bottom:12px; flex-wrap:wrap; }
+.issue-top h4 { margin:0; font-size:21px; line-height:1.3; color: var(--navy); flex:1; min-width:280px; }
+.issue-top h4 .idx {
+  display:inline-block; background: var(--navy); color:#fff; border-radius:8px; padding:2px 10px; margin-right:10px; font-size:15px; font-weight:700;
+}
+.issue-grid { display:grid; grid-template-columns: 1.2fr .9fr; gap:16px; }
+.issue-main, .issue-side { display:grid; gap:12px; }
+.block { background:#fcfbf8; border:1px solid #eee5d9; border-radius:14px; padding:14px; }
+.block h5 { margin:0 0 8px; font-size:14px; color: var(--navy); letter-spacing:.02em; }
+.block p { margin:0 0 8px; font-size:13.5px; line-height:1.7; }
+.block p:last-child { margin-bottom:0; }
+.block ul { margin:4px 0 0; padding-left:20px; font-size:13px; }
+.block ul li { margin:3px 0; line-height:1.6; }
+.statute {
+  background: var(--gold-soft); border-left:4px solid var(--gold); padding:10px 14px; margin:8px 0; border-radius:6px;
+  font-size:12.5px; color:#6b5000; font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+}
+.statute .src { display:block; color:var(--gold); font-weight:700; font-size:11px; margin-bottom:4px; letter-spacing:.05em; }
+.case {
+  background: var(--green-soft); border-left:4px solid var(--green); padding:10px 14px; margin:4px 0; border-radius:6px;
+  font-size:12.5px; color:#1d4437;
+}
+.case .src { display:block; color:var(--green); font-weight:700; font-size:11px; margin-bottom:4px; }
+.compare {
+  background: var(--blue-soft); border-left:4px solid var(--blue); padding:10px 14px; border-radius:6px;
+  font-size:12.5px; color:#12467a;
+}
+.compare .src { display:block; color:var(--blue); font-weight:700; font-size:11px; margin-bottom:4px; }
+.paper-ref {
+  background: var(--purple-soft); border-left:4px solid var(--purple); padding:10px 14px; border-radius:6px;
+  font-size:12.5px; color:#40235e;
+}
+.paper-ref .src { display:block; color:var(--purple); font-weight:700; font-size:11px; margin-bottom:4px; }
+.impact { display:flex; gap:8px; align-items:center; font-size:13px; color: var(--muted); }
+.impact .dot { width:10px; height:10px; border-radius:50%; background: var(--red); display:inline-block; }
+.impact .dot.mid { background: var(--gold); }
+.impact .dot.low { background: var(--green); }
+
+/* Section tabs */
+.sec-tab { display:flex; gap:10px; margin-bottom:18px; font-size:13px; color: var(--muted); flex-wrap:wrap; }
+.sec-tab span { background: #fff; border:1px solid var(--line); border-radius:999px; padding:4px 12px; }
+.sec-tab span.active { background: var(--navy); color:#fff; border-color: var(--navy); }
+
+/* Overview SVG */
+.fig-container { display:flex; justify-content:center; margin:10px 0 20px; overflow-x:auto; }
+svg { max-width:100%; height:auto; }
+.legend { display:flex; gap:20px; flex-wrap:wrap; justify-content:center; padding:12px; background:#fbf8f2; border-radius:12px; font-size:12.5px; margin-top:12px; }
+.legend-item { display:flex; gap:6px; align-items:center; }
+.legend-dot { width:14px; height:14px; border-radius:3px; }
+
+/* Footer */
+.footer-note { color: var(--muted); font-size:13px; padding-top:20px; border-top:1px solid var(--line); margin-top:30px; }
+.footer-note p { margin:6px 0; }
+
+@media print {
+  body { background:#fff; padding:0; }
+  .section { box-shadow:none; page-break-inside: avoid; }
+  .issue { page-break-inside: avoid; }
+  header.hero { background: linear-gradient(135deg, #18334d, #2f6f5e) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .badge, .statute, .case, .compare, .paper-ref { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+@media (max-width: 820px) {
+  .issue-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <span class="eyebrow">CFC TAX SYSTEM · STRUCTURAL ISSUES MAP · 2026-04-12</span>
+    <h1>CFC税制 問題点体系マップ<br><span style="font-size:.58em; color:rgba(255,255,255,.82); font-weight:400;">— 措法66条の6〜9の構造的課題 22項目を機能フロー上に整理 —</span></h1>
+    <p class="sub">本稿は、博士論文プロジェクトで蓄積した 8,739件のコーパス・43カ国の比較法データ・660件の書誌・59件の日本判例 を横断精査し、CFC税制（外国子会社合算税制）の問題点を <strong>捕捉範囲 → 適用除外 → 所得計算 → 制度間交錯 → 手続・法源 → ハイブリッド → 国際接続</strong> の機能フローに沿って体系化したリファレンスである。各問題には <strong>性質タグ（過剰課税／過少課税／法源問題／国際調整不全）</strong> を付し、論文章・関連判例・比較法エビデンスへの接続を可能にしている。</p>
+    <div class="meta-row">
+      <span class="meta-pill">対象条文: 措法66条の6〜9／措令39条の14〜19</span>
+      <span class="meta-pill">比較法: 43カ国 feature matrix</span>
+      <span class="meta-pill">全22問題 / 7セクション</span>
+      <span class="meta-pill">論文 v13.8 / 比較法ワークフロー対応</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ============== TOC ============== -->
+<section class="section" id="toc">
+  <h2><span class="num">§</span>目次 — 22の構造的問題</h2>
+  <p class="lede">CFC適用フローに沿って7セクションに分類。各問題は <span class="badge b-over">過剰課税</span> <span class="badge b-under">過少課税</span> <span class="badge b-source">法源問題</span> <span class="badge b-intl">国際調整不全</span> の性質タグを持つ。</p>
+  <div class="toc-grid">
+    <div class="toc-card">
+      <strong>I. 捕捉範囲（入口判定）</strong>
+      <ol start="1">
+        <li><a href="#i1">支配判定基準の過大捕捉</a></li>
+        <li><a href="#i2">租税負担割合20/27%基準 vs 国際15%基準</a></li>
+      </ol>
+    </div>
+    <div class="toc-card">
+      <strong>II. 適用除外（経済活動基準）</strong>
+      <ol start="3">
+        <li><a href="#i3">実体基準の明示化欠如（vs EU ATAD）</a></li>
+        <li><a href="#i4">経済活動基準の形骸化リスク</a></li>
+        <li><a href="#i5">ペーパーカンパニー基準の捕捉漏れ</a></li>
+      </ol>
+    </div>
+    <div class="toc-card">
+      <strong>III. 基準所得金額計算（準用規定）★中核</strong>
+      <ol start="6">
+        <li><a href="#i6">「準じて」の不確定性（過少・過剰の共通根因）</a></li>
+        <li><a href="#i7">損金経理要件の外国法人適用不可能性</a></li>
+        <li><a href="#i8">地理的要件「国内」の読替え問題</a></li>
+        <li><a href="#i9">業法・規制法要件の不可能性</a></li>
+        <li><a href="#i10">文理解釈と制度趣旨の衝突</a></li>
+        <li><a href="#i11">「修正の範囲」の未定義</a></li>
+      </ol>
+    </div>
+    <div class="toc-card">
+      <strong>IV. 制度間交錯（FTC・PE・TP）</strong>
+      <ol start="12">
+        <li><a href="#i12">PE所得合算による過大課税（みずほ案件）</a></li>
+        <li><a href="#i13">配当期待欠如時の形式的合算</a></li>
+        <li><a href="#i14">匿名組合等の日本固有概念の国際適用</a></li>
+      </ol>
+    </div>
+    <div class="toc-card">
+      <strong>V. 手続・法源（通達依存）</strong>
+      <ol start="15">
+        <li><a href="#i15">ソフトロー（通達）への過度な依存</a></li>
+        <li><a href="#i16">租税法律主義との緊張</a></li>
+        <li><a href="#i17">通達未対応領域の存在</a></li>
+      </ol>
+    </div>
+    <div class="toc-card">
+      <strong>VI. ハイブリッド・ミスマッチ</strong>
+      <ol start="18">
+        <li><a href="#i18">BEPS Action 2 否認ルール未導入</a></li>
+        <li><a href="#i19">航空機ABS・キャプティブの二重非課税</a></li>
+      </ol>
+    </div>
+    <div class="toc-card">
+      <strong>VII. 国際接続（条約・Pillar Two）</strong>
+      <ol start="20">
+        <li><a href="#i20">条約適合性の曖昧性</a></li>
+        <li><a href="#i21">Pillar Two との制度間調整</a></li>
+        <li><a href="#i22">Pillar Two 閾値（€750M）未満の制度空白</a></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ============== Overview SVG ============== -->
+<section class="section" id="overview">
+  <h2><span class="num">0.</span>全体構造俯瞰 — 22問題の機能フロー上のマッピング</h2>
+  <p class="lede">CFC税制の適用プロセスに沿って22問題を配置。色は問題の性質を示す。最多の問題が集中するのは <strong>III. 基準所得金額計算</strong>（6問題）であり、論文の中核命題（過少・過剰課税の共通根因、ハイブリッド・ミスマッチ）はここに収斂する。</p>
+
+  <div class="fig-container">
+  <svg width="1160" height="640" viewBox="0 0 1160 640" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="arr" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><path d="M0,0 L10,3.5 L0,7Z" fill="#4a5568"/></marker>
+      <filter id="sh"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.12"/></filter>
+    </defs>
+
+    <!-- Top banner -->
+    <rect x="20" y="20" width="1120" height="42" rx="8" fill="#18334d"/>
+    <text x="580" y="47" text-anchor="middle" fill="#fff" font-size="16" font-weight="700">CFC税制 適用フロー × 22構造的問題の配置</text>
+
+    <!-- Flow Stages -->
+    <!-- Stage 1: Scope -->
+    <rect x="30" y="90" width="160" height="60" rx="10" fill="#e8f2fb" stroke="#2b6cb0" stroke-width="2" filter="url(#sh)"/>
+    <text x="110" y="115" text-anchor="middle" fill="#18334d" font-size="14" font-weight="700">I. 捕捉範囲</text>
+    <text x="110" y="135" text-anchor="middle" fill="#2b6cb0" font-size="11">支配判定・低税判定</text>
+
+    <rect x="210" y="90" width="160" height="60" rx="10" fill="#e8f2fb" stroke="#2b6cb0" stroke-width="2" filter="url(#sh)"/>
+    <text x="290" y="115" text-anchor="middle" fill="#18334d" font-size="14" font-weight="700">II. 適用除外</text>
+    <text x="290" y="135" text-anchor="middle" fill="#2b6cb0" font-size="11">経済活動基準</text>
+
+    <rect x="390" y="90" width="200" height="60" rx="10" fill="#fdf2f2" stroke="#c23b3b" stroke-width="2.5" filter="url(#sh)"/>
+    <text x="490" y="115" text-anchor="middle" fill="#742a2a" font-size="14" font-weight="700">III. 所得計算 ★中核</text>
+    <text x="490" y="135" text-anchor="middle" fill="#c23b3b" font-size="11">準用規定（共通根因）</text>
+
+    <rect x="610" y="90" width="160" height="60" rx="10" fill="#e8f2fb" stroke="#2b6cb0" stroke-width="2" filter="url(#sh)"/>
+    <text x="690" y="115" text-anchor="middle" fill="#18334d" font-size="14" font-weight="700">IV. 制度間交錯</text>
+    <text x="690" y="135" text-anchor="middle" fill="#2b6cb0" font-size="11">FTC・PE・TP</text>
+
+    <rect x="790" y="90" width="160" height="60" rx="10" fill="#f5f0fb" stroke="#6b3fa0" stroke-width="2" filter="url(#sh)"/>
+    <text x="870" y="115" text-anchor="middle" fill="#40235e" font-size="14" font-weight="700">V. 手続・法源</text>
+    <text x="870" y="135" text-anchor="middle" fill="#6b3fa0" font-size="11">通達依存</text>
+
+    <rect x="970" y="90" width="160" height="60" rx="10" fill="#fdf6e4" stroke="#b8860b" stroke-width="2" filter="url(#sh)"/>
+    <text x="1050" y="115" text-anchor="middle" fill="#6b5000" font-size="14" font-weight="700">VI/VII. 国際接続</text>
+    <text x="1050" y="135" text-anchor="middle" fill="#b8860b" font-size="11">Hybrid・Pillar Two</text>
+
+    <!-- Connect arrows -->
+    <line x1="190" y1="120" x2="210" y2="120" stroke="#4a5568" stroke-width="2" marker-end="url(#arr)"/>
+    <line x1="370" y1="120" x2="390" y2="120" stroke="#4a5568" stroke-width="2" marker-end="url(#arr)"/>
+    <line x1="590" y1="120" x2="610" y2="120" stroke="#4a5568" stroke-width="2" marker-end="url(#arr)"/>
+    <line x1="770" y1="120" x2="790" y2="120" stroke="#4a5568" stroke-width="2" marker-end="url(#arr)"/>
+    <line x1="950" y1="120" x2="970" y2="120" stroke="#4a5568" stroke-width="2" marker-end="url(#arr)"/>
+
+    <!-- Issues bubbles (small) -->
+    <!-- Section I (2 issues) -->
+    <circle cx="60" cy="195" r="14" fill="#c23b3b"/>
+    <text x="60" y="200" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">1</text>
+    <text x="110" y="200" fill="#18334d" font-size="11">支配判定の過大捕捉</text>
+
+    <circle cx="60" cy="225" r="14" fill="#2b6cb0"/>
+    <text x="60" y="230" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">2</text>
+    <text x="110" y="230" fill="#18334d" font-size="11">20/27%基準の乖離</text>
+
+    <!-- Section II (3) -->
+    <circle cx="240" cy="195" r="14" fill="#b8860b"/>
+    <text x="240" y="200" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">3</text>
+    <text x="290" y="200" fill="#18334d" font-size="11">実体基準の不明示</text>
+
+    <circle cx="240" cy="225" r="14" fill="#b8860b"/>
+    <text x="240" y="230" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">4</text>
+    <text x="290" y="230" fill="#18334d" font-size="11">経済活動基準の形骸化</text>
+
+    <circle cx="240" cy="255" r="14" fill="#b8860b"/>
+    <text x="240" y="260" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">5</text>
+    <text x="290" y="260" fill="#18334d" font-size="11">ペーパーカンパニー漏れ</text>
+
+    <!-- Section III (6) - CORE -->
+    <circle cx="420" cy="195" r="16" fill="#7b1f1f" stroke="#fbf5c0" stroke-width="2"/>
+    <text x="420" y="200" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">6</text>
+    <text x="490" y="200" text-anchor="middle" fill="#7b1f1f" font-size="11" font-weight="700">「準じて」不確定性 第1命題</text>
+
+    <circle cx="420" cy="225" r="14" fill="#c23b3b"/>
+    <text x="420" y="230" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">7</text>
+    <text x="490" y="230" text-anchor="middle" fill="#18334d" font-size="11">損金経理要件</text>
+
+    <circle cx="420" cy="255" r="14" fill="#7b1f1f"/>
+    <text x="420" y="260" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">8</text>
+    <text x="490" y="260" text-anchor="middle" fill="#18334d" font-size="11">地理的要件の読替え</text>
+
+    <circle cx="420" cy="285" r="14" fill="#c23b3b"/>
+    <text x="420" y="290" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">9</text>
+    <text x="490" y="290" text-anchor="middle" fill="#18334d" font-size="11">業法要件の不可能性</text>
+
+    <circle cx="420" cy="315" r="14" fill="#6b3fa0"/>
+    <text x="420" y="320" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">10</text>
+    <text x="490" y="320" text-anchor="middle" fill="#18334d" font-size="11">文理 vs 趣旨の衝突</text>
+
+    <circle cx="420" cy="345" r="14" fill="#6b3fa0"/>
+    <text x="420" y="350" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">11</text>
+    <text x="490" y="350" text-anchor="middle" fill="#18334d" font-size="11">「修正の範囲」未定義</text>
+
+    <!-- Section IV (3) -->
+    <circle cx="640" cy="195" r="14" fill="#c23b3b"/>
+    <text x="640" y="200" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">12</text>
+    <text x="690" y="200" fill="#18334d" font-size="11">PE合算（みずほ）</text>
+
+    <circle cx="640" cy="225" r="14" fill="#c23b3b"/>
+    <text x="640" y="230" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">13</text>
+    <text x="690" y="230" fill="#18334d" font-size="11">配当期待欠如</text>
+
+    <circle cx="640" cy="255" r="14" fill="#b8860b"/>
+    <text x="640" y="260" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">14</text>
+    <text x="690" y="260" fill="#18334d" font-size="11">匿名組合の国際適用</text>
+
+    <!-- Section V (3) -->
+    <circle cx="820" cy="195" r="14" fill="#6b3fa0"/>
+    <text x="820" y="200" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">15</text>
+    <text x="870" y="200" fill="#18334d" font-size="11">ソフトロー過度依存</text>
+
+    <circle cx="820" cy="225" r="14" fill="#6b3fa0"/>
+    <text x="820" y="230" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">16</text>
+    <text x="870" y="230" fill="#18334d" font-size="11">租税法律主義との緊張</text>
+
+    <circle cx="820" cy="255" r="14" fill="#6b3fa0"/>
+    <text x="820" y="260" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">17</text>
+    <text x="870" y="260" fill="#18334d" font-size="11">通達未対応領域</text>
+
+    <!-- Section VI (2) -->
+    <circle cx="1000" cy="195" r="14" fill="#b8860b"/>
+    <text x="1000" y="200" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">18</text>
+    <text x="1050" y="200" text-anchor="middle" fill="#18334d" font-size="11">Action 2 未導入 第2命題</text>
+
+    <circle cx="1000" cy="225" r="14" fill="#b8860b"/>
+    <text x="1000" y="230" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">19</text>
+    <text x="1050" y="230" text-anchor="middle" fill="#18334d" font-size="11">ABS・キャプティブ</text>
+
+    <!-- Section VII (3) -->
+    <circle cx="1000" cy="275" r="14" fill="#2b6cb0"/>
+    <text x="1000" y="280" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">20</text>
+    <text x="1050" y="280" text-anchor="middle" fill="#18334d" font-size="11">条約適合性</text>
+
+    <circle cx="1000" cy="305" r="14" fill="#2b6cb0"/>
+    <text x="1000" y="310" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">21</text>
+    <text x="1050" y="310" text-anchor="middle" fill="#18334d" font-size="11">Pillar Two 調整 第3命題</text>
+
+    <circle cx="1000" cy="335" r="14" fill="#2b6cb0"/>
+    <text x="1000" y="340" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">22</text>
+    <text x="1050" y="340" text-anchor="middle" fill="#18334d" font-size="11">€750M閾値未満</text>
+
+    <!-- Core hypotheses banner -->
+    <rect x="30" y="430" width="1100" height="70" rx="10" fill="#fbf5c0" stroke="#b8860b" stroke-width="1.5"/>
+    <text x="580" y="455" text-anchor="middle" fill="#6b5000" font-size="15" font-weight="700">論文の3中核命題との対応</text>
+    <text x="240" y="480" text-anchor="middle" fill="#6b5000" font-size="13">第1命題: 過少・過剰の共通根因 ─ #6, #7, #8, #9</text>
+    <text x="580" y="480" text-anchor="middle" fill="#6b5000" font-size="13">第2命題: ハイブリッド・ミスマッチ ─ #18, #19</text>
+    <text x="920" y="480" text-anchor="middle" fill="#6b5000" font-size="13">第3命題: Pillar Two 残余リスク ─ #22</text>
+
+    <!-- Impact axes -->
+    <rect x="30" y="520" width="1100" height="100" rx="10" fill="#edf3fb" stroke="#2b6cb0" stroke-width="1"/>
+    <text x="580" y="545" text-anchor="middle" fill="#18334d" font-size="14" font-weight="700">問題の性質による4軸マップ</text>
+    <rect x="60" y="560" width="250" height="50" rx="8" fill="#fdf2f2" stroke="#c23b3b"/>
+    <text x="185" y="582" text-anchor="middle" fill="#742a2a" font-size="12" font-weight="700">過剰課税（7問題）</text>
+    <text x="185" y="598" text-anchor="middle" fill="#c23b3b" font-size="10">#1, #7, #9, #12, #13 ほか</text>
+
+    <rect x="330" y="560" width="250" height="50" rx="8" fill="#fdf6e4" stroke="#b8860b"/>
+    <text x="455" y="582" text-anchor="middle" fill="#6b5000" font-size="12" font-weight="700">過少課税（8問題）</text>
+    <text x="455" y="598" text-anchor="middle" fill="#b8860b" font-size="10">#3, #4, #5, #14, #18, #19, #22</text>
+
+    <rect x="600" y="560" width="250" height="50" rx="8" fill="#f5f0fb" stroke="#6b3fa0"/>
+    <text x="725" y="582" text-anchor="middle" fill="#40235e" font-size="12" font-weight="700">法源問題（5問題）</text>
+    <text x="725" y="598" text-anchor="middle" fill="#6b3fa0" font-size="10">#10, #11, #15, #16, #17</text>
+
+    <rect x="870" y="560" width="250" height="50" rx="8" fill="#edf3fb" stroke="#2b6cb0"/>
+    <text x="995" y="582" text-anchor="middle" fill="#18334d" font-size="12" font-weight="700">国際調整不全（5問題）</text>
+    <text x="995" y="598" text-anchor="middle" fill="#2b6cb0" font-size="10">#2, #20, #21, #22, #14</text>
+  </svg>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><span class="legend-dot" style="background:#c23b3b"></span>過剰課税（overinclusion）</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#b8860b"></span>過少課税（underinclusion）</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#6b3fa0"></span>法源問題（租税法律主義・ソフトロー）</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#2b6cb0"></span>国際調整不全（条約・Pillar Two）</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#7b1f1f"></span>★ 最重要（第1命題中核）</div>
+  </div>
+</section>
+
+<!-- ============== Section I ============== -->
+<section class="section" id="section1">
+  <div class="sec-tab"><span class="active">I. 捕捉範囲</span><span>2問題</span><span>論文 比較法ch1 対応</span></div>
+  <h2><span class="num">I.</span>捕捉範囲の問題 ─ 入口判定の設計</h2>
+  <p class="lede">CFC税制は、まず「誰が」「どのような外国法人を」「どの程度支配しているか」という入口判定から始まる。日本は広い入口（50%＋間接保有＋事実上の支配）を採るが、この広さが下流の除外装置への負荷を生む。</p>
+
+  <!-- Issue 1 -->
+  <div class="issue" id="i1">
+    <div class="issue-top">
+      <h4><span class="idx">01</span>支配判定基準の過大捕捉 — 「事実上の支配」概念の射程不明確性</h4>
+      <div class="badges"><span class="badge b-over">過剰課税</span></div>
+    </div>
+    <div class="issue-grid">
+      <div class="issue-main">
+        <div class="block">
+          <h5>問題の構造</h5>
+          <p>措法66条の6第2項3号は、株式等保有割合50%超に加え「事実上の支配」概念を取り込み、外国関係会社の範囲を広くとる。日本は「直接・間接保有50%超＋分配請求権・実質的決定権」という <strong>3本立ての広い支配基準</strong> を採用しており、比較法上も広い部類。</p>
+          <p>問題は「事実上の支配」がどこまで射程を広げるか、条文のみからは確定できない点にある。日産自動車事件（2024年最高裁）は、この曖昧さが foreign-to-foreign ストリッピングの認定に直結したケースとして参照される。</p>
+        </div>
+        <div class="statute">
+          <span class="src">措法66条の6第2項3号（外国関係会社）</span>
+          居住者等株主等の外国法人に係る直接及び間接保有の株式等の数の合計の当該外国法人の発行済株式等の総数のうちに占める割合……100分の50を超える場合における当該外国法人（<strong>前項に規定する内国法人との間に実質支配関係がある外国法人を含む</strong>）
+        </div>
+        <div class="block">
+          <h5>発生メカニズム</h5>
+          <p>広い入口 → 下流の適用除外装置（経済活動基準）への過大な負荷 → 経済活動基準が個別事情を十分に捕捉できなければ、実体のある事業所得まで合算されるリスクが生じる。</p>
+        </div>
+      </div>
+      <div class="issue-side">
+        <div class="compare">
+          <span class="src">比較法エビデンス（feature matrix）</span>
+          <strong>豪</strong>: 5+1%＋listed country exemption（UK/US/DE/FR/JP/NZ/CA）<br>
+          <strong>独</strong>: >50%＋15%低税フィルター<br>
+          <strong>仏</strong>: >50%（ただし5%まで低下、preferential regime時）<br>
+          <strong>英</strong>: >50% + Significant People Functions (SPF) test<br>
+          <strong>加</strong>: >50%「foreign affiliate」基準＋10%間接持分
+        </div>
+        <div class="case">
+          <span class="src">関連判例</span>
+          日産自動車事件（最判 2024）— foreign-to-foreign 融資の非関連者基準と支配関係の認定。広い入口が争点に持ち込まれた近年最大のケース。
+        </div>
+        <div class="paper-ref">
+          <span class="src">論文対応</span>
+          比較法ワークフロー第1章「Scope and Control」／論文v13.8 第2章（理論装置）
+        </div>
+        <div class="impact"><span class="dot mid"></span>影響度：中 — 下流装置との連動で増幅</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Issue 2 -->
+  <div class="issue" id="i2">
+    <div class="issue-top">
+      <h4><span class="idx">02</span>租税負担割合基準（20%・27%）と国際標準（15%）の乖離</h4>
+      <div class="badges"><span class="badge b-intl">国際調整不全</span></div>
+    </div>
+    <div class="issue-grid">
+      <div class="issue-main">
+        <div class="block">
+          <h5>問題の構造</h5>
+          <p>日本のCFC税制は、租税負担割合が <strong>20%未満（特定外国関係会社＝ペーパーカンパニー等は27%未満基準が別途適用）</strong> の外国関係会社を合算対象とする。これに対して、EU ATADは15%、ドイツは15%、英国は実効税率75%以下（UK ETRの4分の3）、米国Subpart Fは実質的に低税判定を置かないなど、国際的な基準は多様かつ概ね15%基準に収斂しつつある。</p>
+          <p>Pillar Two の最低税率（QDMTT・IIR・UTPR）が 15% に設定されたことで、「15%」が国際的な事実上のベンチマークとなり、日本の 20% 基準は <strong>制度的に高止まり</strong> する方向にある。</p>
+        </div>
+        <div class="statute">
+          <span class="src">措令39条の17の4（租税負担割合）</span>
+          外国関係会社の本店所在地国の租税負担割合が <strong>百分の二十に満たない</strong> 場合…（ペーパーカンパニー等の特定外国関係会社は <strong>百分の二十七</strong> に満たない場合）に合算対象となる。
+        </div>
+        <div class="block">
+          <h5>発生メカニズム</h5>
+          <p>日本基準20% > 国際標準15% → 15%〜20%のゾーンにある外国子会社は、日本CFCでは合算対象だが、他国CFCでは対象外となる。これが二重課税や国際的な不整合（「日本だけが合算する」状態）を生む。</p>
+        </div>
+      </div>
+      <div class="issue-side">
+        <div class="compare">
+          <span class="src">比較法エビデンス</span>
+          <strong>独 AStG</strong>: 15%（§8 para.5）<br>
+          <strong>仏 CGI</strong>: 実効税率40%以下（参照税率との差）<br>
+          <strong>英 TIOPA 2010</strong>: UK ETRの75%（≒実効税率25%相当）<br>
+          <strong>EU ATAD標準</strong>: 15%<br>
+          <strong>Pillar Two GloBE</strong>: 15%（QDMTT/IIR/UTPR）
+        </div>
+        <div class="paper-ref">
+          <span class="src">論文対応</span>
+          比較法ワークフロー第4章／論文v13.8 第9章（第3命題: Pillar Two残余リスク）
+        </div>
+        <div class="impact"><span class="dot mid"></span>影響度：中 — 制度調和圧力が今後増大</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== Section II ============== -->
+<section class="section" id="section2">
+  <div class="sec-tab"><span class="active">II. 適用除外</span><span>3問題</span><span>比較法ch2 対応</span></div>
+  <h2><span class="num">II.</span>適用除外の問題 ─ 経済活動基準（substance test）の設計</h2>
+  <p class="lede">日本法の適用除外は、事業基準・実体基準・管理支配基準・所在地国基準／非関連者基準の4要素で構成される複層設計。「過剰包摂を避けるための中核装置」として機能すべきだが、明示化・運用面で課題を抱える。</p>
+
+  <!-- Issue 3 -->
+  <div class="issue" id="i3">
+    <div class="issue-top">
+      <h4><span class="idx">03</span>実体基準の明示化欠如 — EU ATAD型の "staff/equipment/assets/premises" 列挙との落差</h4>
+      <div class="badges"><span class="badge b-under">過少課税</span></div>
+    </div>
+    <div class="issue-grid">
+      <div class="issue-main">
+        <div class="block">
+          <h5>問題の構造</h5>
+          <p>EU ATAD第7条第2項は、CFC除外の substance 要件を <strong>"substantive economic activity supported by staff, equipment, assets and premises"</strong> と列挙的に明示する。ドイツ、オーストリア、ベルギー、フィンランド、ギリシャ等はこの定式をそのまま条文化。</p>
+          <p>日本の措法66条の6第2項2号・3項は「事業基準」「実体基準」「管理支配基準」という語を使うが、何を以て実体があると認めるかの <strong>定性的基準は通達（措通66の6-4〜6-7）に委ねられている</strong>。条文レベルの明示化がなく、判断基準は運用依存。</p>
+        </div>
+        <div class="statute">
+          <span class="src">EU ATAD Article 7(2)(a) — EU実体テストの明示文言</span>
+          "the controlled foreign company carries on a substantive economic activity supported by <strong>staff, equipment, assets and premises</strong>, as evidenced by relevant facts and circumstances"
+        </div>
+        <div class="block">
+          <h5>発生メカニズム</h5>
+          <p>条文レベルの明示化がない → 実体判定の予測可能性が低下 → 納税者は保守的に申告、課税当局は攻撃的に否認、双方に取引コストが発生。さらに <strong>明示基準の欠如</strong> は、ペーパーカンパニー該当性の迂回余地を生む（問題05）。</p>
+        </div>
+      </div>
+      <div class="issue-side">
+        <div class="compare">
+          <span class="src">比較法エビデンス（feature matrix実体列）</span>
+          <strong>独</strong>: motive test（§8(2)(3) AStG）— EU/EEA限定でsubstance挙証<br>
+          <strong>英</strong>: SPF test — asset/risk レベルで機能評価（最精密）<br>
+          <strong>ハンガリー</strong>: adequate personnel/equipment/assets/location＋income 50%基準<br>
+          <strong>日本</strong>: Economic Activity Tests（定性的、通達依存）
+        </div>
+        <div class="paper-ref">
+          <span class="src">論文対応</span>
+          比較法ワークフロー第2章「Exemptions and Substance」／論文v13.8 第4章
+        </div>
+        <div class="impact"><span class="dot"></span>影響度：高 — 制度中核装置の予測可能性</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Issue 4 -->
+  <div class="issue" id="i4">
+    <div class="issue-top">
+      <h4><span class="idx">04</span>経済活動基準の形骸化リスク — 形式要件の充足と実体の剥離</h4>
+      <div class="badges"><span class="badge b-under">過少課税</span></div>
+    </div>
+    <div class="issue-grid">
+      <div class="issue-main">
+        <div class="block">
+          <h5>問題の構造</h5>
+          <p>管理支配基準・事業基準等の形式要件（固定施設の有無・役職員の実在など）は、形式的に充足することが可能なケースがある。特に「固定施設を有していること」は、シェアードオフィス等の利用で形式的に満たせる。</p>
+          <p>結果、<strong>形式要件は充足するが実体が伴わない</strong>「ペーパーに近い実体」を除外してしまう余地が残る。BEPS Action 5 の substantial activities requirement（nexus approach）の趣旨に照らすと、この形骸化リスクは国際的な問題意識と整合しない。</p>
+        </div>
+        <div class="block">
+          <h5>発生メカニズム</h5>
+          <p>CFC主要国では、経済活動基準の運用で「質的評価」（どの程度の人員・資産がどの程度のリスク／機能を支えているか）を重視する方向にある（特に英国SPF、独motive test、OECD BEPS Action 5）。日本法は形式要件の列挙型から質的評価への移行が相対的に遅れている。</p>
+        </div>
+      </div>
+      <div class="issue-side">
+        <div class="compare">
+          <span class="src">比較法エビデンス</span>
+          <strong>豪</strong>: active income test（passive income が 5%未満なら除外）— 定量化<br>
+          <strong>BE</strong>: passive income が total income の1/3未満で除外— 定量化<br>
+          <strong>独</strong>: passive income が 10%未満＆EUR 80,000未満で除外— 定量化<br>
+          <strong>日本</strong>: 受動的所得合算部分はあるが、全体除外の定量基準は弱い
+        </div>
+        <div class="paper-ref">
+          <span class="src">論文対応</span>
+          論文v13.8 第4章（過剰課税の他方＝過少課税の縁） ／比較法ワークフロー第2章
+        </div>
+        <div class="impact"><span class="dot mid"></span>影響度：中 — 運用解決の余地あり</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Issue 5 -->
+  <div class="issue" id="i5">
+    <div class="issue-top">
+      <h4><span class="idx">05</span>ペーパーカンパニー基準の捕捉漏れ — 2017年改正後の残余空白</h4>
+      <div class="badges"><span class="badge b-under">過少課税</span></div>
+    </div>
+    <div class="issue-grid">
+      <div class="issue-main">
+        <div class="block">
+          <h5>問題の構造</h5>
+          <p>2017年改正で「特定外国関係会社」概念が導入され、ペーパーカンパニー・事実上のキャッシュボックス・ブラックリスト国所在等を租税負担割合27%未満で会社単位合算する強化が行われた。</p>
+          <p>しかし、<strong>ペーパーカンパニー該当性の判定（措法66条の6第2項2号イ）</strong> は「主たる事業を行うに必要と認められる固定施設を有していないこと」「本店所在地国において事業管理・支配・運営を自ら行っていないこと」という否定要件で構成されるため、形式的にこれを否定できれば該当を免れる。航空機ABSやキャプティブ等の特殊スキームでは、実体性要件の境界での争いが残る。</p>
+        </div>
+        <div class="statute">
+          <span class="src">措法66条の6第2項2号イ（ペーパーカンパニー）</span>
+          その主たる事業を行うに必要と認められる事務所、店舗、工場その他の <strong>固定施設を有していないこと</strong>、及びその本店所在地国においてその事業の管理、支配及び運営を自ら行っていないこと
+        </div>
+        <div class="block">
+          <h5>発生メカニズム</h5>
+          <p>形式要件の否定要件化 → 該当性の立証責任配分が不明確 → 境界事例で合算漏れ発生。特に金融業・保険業・知財保有の分野で、国際的な租税回避スキームの残余空白を生む。</p>
+        </div>
+      </div>
+      <div class="issue-side">
+        <div class="compare">
+          <span class="src">比較法エビデンス</span>
+          <strong>豪</strong>: listed country exemption（税制類似国は自動除外）<br>
+          <strong>加</strong>: foreign affiliate基準＋substance例外（5 full-time employees要件）— 定量的<br>
+          <strong>エストニア</strong>: non-genuine arrangement test（ATAD準拠）<br>
+          <strong>日本</strong>: 否定要件型、立証責任不明
+        </div>
+        <div class="paper-ref">
+          <span class="src">論文対応</span>
+          論文v13.8 第4章／cfc_beppyo_gensen_slide_20260301
+        </div>
+        <div class="impact"><span class="dot mid"></span>影響度：中 — 特定スキームへの影響大</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== Section III ============== -->
+<section class="section" id="section3">
+  <div class="sec-tab"><span class="active">III. 所得計算</span><span>★中核6問題</span><span>論文 第1命題（過少・過剰の共通根因）収斂点</span></div>
+  <h2><span class="num">III.</span>基準所得金額計算の問題 ─「準用規定」の構造的欠陥</h2>
+  <p class="lede">このセクションは、本稿の <strong>中核</strong> である。措令39条の15第1項「本邦法令の規定の例に準じて計算する」という条項が、過少課税と過剰課税を同時に内包する構造的欠陥の源泉となっている。論文v13.8 の第一命題はすべてここに収斂する。</p>
+
+  <!-- Issue 6 -->
+  <div class="issue" id="i6">
+    <div class="issue-top">
+      <h4><span class="idx">06</span>「本邦法令の規定の例に準じて」の不確定性 — 過少・過剰課税の共通根因 ★中核</h4>
+      <div class="badges"><span class="badge b-over">過剰課税</span><span class="badge b-under">過少課税</span></div>
+    </div>
+    <div class="issue-grid">
+      <div class="issue-main">
+        <div class="block">
+          <h5>問題の構造</h5>
+          <p>措令39条の15第1項は、外国関係会社の基準所得金額について「本邦法令の規定の例に準じて計算した金額」と規定する。ここでの「準じて」が、<strong>どこまで本邦法令を適用し、どこから外国事情を考慮するか</strong> を法令レベルで定めていない。</p>
+          <p>文理の射程内では本邦法令が機械的に適用される → <strong>外国法人に適用不可能な要件が機械的適用されれば過剰課税</strong>（損金経理要件、日本船舶要件等）。他方、射程外に落ちる領域では本邦法令の制約が及ばず → <strong>過少課税</strong>（ハイブリッド・ミスマッチの支払側否認なし）。</p>
+          <p>同一の条文構造が、過少課税と過剰課税の両方向の歪みを同時に内包する。これが論文の第1命題（共通根因命題）。</p>
+        </div>
+        <div class="statute">
+          <span class="src">措令39条の15第1項（基準所得金額の計算）</span>
+          外国関係会社の各事業年度の決算に基づく所得の金額につき、<strong>法人税法……及びこの政令の規定（法人税法第二編第一章第一節第二款から第九款まで……）の例に準じて計算した金額</strong>……
+        </div>
+        <div class="block">
+          <h5>発生メカニズム（両側）</h5>
+          <ul>
+            <li><strong>過剰側</strong>: 法人税法22条・32条・損金経理要件等が外国法人に機械的適用 → 減価償却CFC判決（東京地裁H29.1.31）</li>
+            <li><strong>過少側</strong>: 法人税法の支払側否認規定（DD mismatch対応等）が未整備 → TK・SPC経由のハイブリッドが放置</li>
+            <li><strong>両側の共通根因</strong>: 「準じて」の射程を法令が決めていない</li>
+          </ul>
+        </div>
+      </div>
+      <div class="issue-side">
+        <div class="case">
+          <span class="src">関連判例（中核）</span>
+          <strong>減価償却CFC判決</strong>（東京地裁H29.1.31、東京高裁H29.9.6）<br>
+          シンガポール子会社の船舶減価償却について、法人税法の「損金経理額」「償却限度額」要件が準用されるかが争点。「準じて」の射程を裁判所が具体化した数少ない先例。
+        </div>
+        <div class="compare">
+          <span class="src">比較法エビデンス</span>
+          <strong>独 AStG §10</strong>: 独税法に基づき計算、ただし外国法人の性質に応じた明示的調整規定あり<br>
+          <strong>英 TIOPA 2010 Part 9A</strong>: UK corporate tax rulesを使うが、「CFC income」の個別カテゴリー（trading/finance/etc.）で分離計算<br>
+          <strong>米 §954</strong>: Subpart F income を類型別に規定、計算準用の射程は個別明示
+        </div>
+        <div class="paper-ref">
+          <span class="src">論文対応（最重要）</span>
+          論文v13.8 <strong>第1命題（共通根因命題）全体</strong>／第3章〜第5章（Part II・III 双方の起点）
+        </div>
+        <div class="impact"><span class="dot"></span>影響度：<strong>最高</strong> — 制度根幹</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Issue 7 -->
+  <div class="issue" id="i7">
+    <div class="issue-top">
+      <h4><span class="idx">07</span>損金経理要件の外国法人適用不可能性</h4>
+      <div class="badges"><span class="badge b-over">過剰課税</span></div>
+    </div>
+    <div class="issue-grid">
+      <div class="issue-main">
+        <div class="block">
+          <h5>問題の構造</h5>
+          <p>法人税法は、減価償却費・引当金等について「損金経理」（確定した決算において費用又は損失として経理すること）を要件とする。しかし外国関係会社は日本の法人税申告を行わないため、「損金経理」の観念そのものが成立しない。</p>
+          <p>措令39条の15が法人税法の損金経理要件を準用する文理を機械適用すると、外国法人のローカル帳簿で処理されている減価償却等が <strong>損金経理していない として損金算入を否認</strong> され、基準所得金額が膨らむ → 過剰課税が生じる。</p>
+        </div>
+        <div class="statute">
+          <span class="src">法人税法2条25号（損金経理の定義）</span>
+          損金経理 法人がその確定した <strong>決算において費用又は損失として経理すること</strong>をいう。
+        </div>
+        <div class="block">
+          <h5>発生メカニズム</h5>
+          <p>外国法人 → 日本の「確定した決算」が観念上存在しない → 損金経理要件を文理適用すると常に不充足 → 減価償却費の損金算入が形式的に否認される。減価償却CFC判決はこの争点を正面から扱った唯一の先例。</p>
+        </div>
+      </div>
+      <div class="issue-side">
+        <div class="case">
+          <span class="src">関連判例</span>
+          減価償却CFC判決：シンガポール子会社の船舶について、ローカル会計上の償却と日本法上の償却限度額の関係を扱う。裁判所は文理の壁を一部緩和する解釈を示したが、一般論としての射程は不明。
+        </div>
+        <div class="paper-ref">
+          <span class="src">論文対応</span>
+          論文v13.8 第8〜10章（Part III: 過剰課税）／CFC_depreciation_case_DR_20260320
+        </div>
+        <div class="impact"><span class="dot"></span>影響度：高 — 船舶・航空機・機械等の資本集約業で顕在化</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Issue 8 -->
+  <div class="issue" id="i8">
+    <div class="issue-top">
+      <h4><span class="idx">08</span>地理的要件「国内」の読替え問題 — 99億円の譲渡益を左右する語</h4>
+      <div class="badges"><span class="badge b-over">過剰課税</span><span class="badge b-under">過少課税</span></div>
+    </div>
+    <div class="issue-grid">
+      <div class="issue-main">
+        <div class="block">
+          <h5>問題の構造</h5>
+          <p>法人税法の数多くの規定が「国内」「内国」「本邦」等の地理的要件を使う。外国関係会社に準用する際、これらを <strong>そのまま「日本」と読むか、CFC所在地国に読み替えるか</strong> で、基準所得金額の計算結果が大きく変わる。</p>
+          <p>例えば組織再編税制の適格要件における「国内にある資産」、圧縮記帳の「国内の土地」、損金不算入規定の「国内の……」等。読替えの有無が 99億円規模の譲渡益に直結したケースもある（文書回答事例）。</p>
+        </div>
+        <div class="block">
+          <h5>発生メカニズム（両側）</h5>
+          <ul>
+            <li><strong>過剰側</strong>: 「国内＝日本」と機械的に読む → CFC所在地国内の取引・資産が日本の優遇規定（圧縮記帳・適格要件）の適用を受けられず、課税所得が膨張</li>
+            <li><strong>過少側</strong>: 逆に広く読み替える → 本来ならば合算すべき所得が優遇規定で課税所得から減算</li>
+          </ul>
+          <p>読替えルールは措通にごく部分的に示されるのみで、法令レベルの整備がない。</p>
+        </div>
+      </div>
+      <div class="issue-side">
+        <div class="compare">
+          <span class="src">比較法エビデンス</span>
+          <strong>独 AStG</strong>: 外国法人向け計算ルールを明示的に調整（§10-14 AStG）<br>
+          <strong>英</strong>: trading income/non-trade finance profits等のカテゴリー別に独立した計算規則<br>
+          <strong>日本</strong>: 法人税法の全面準用＋部分的通達による読替えのみ
+        </div>
+        <div class="paper-ref">
+          <span class="src">論文対応</span>
+          論文v13.8 第4章・第8章（Part II & Part III双方）／第1命題の代表例
+        </div>
+        <div class="impact"><span class="dot"></span>影響度：高 — 金額規模大</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Issue 9 -->
+  <div class="issue" id="i9">
+    <div class="issue-top">
+      <h4><span class="idx">09</span>業法・規制法要件の不可能性 — 日本船舶要件・保険業法免許・金商法登録</h4>
+      <div class="badges"><span class="badge b-over">過剰課税</span></div>
+    </div>
+    <div class="issue-grid">
+      <div class="issue-main">
+        <div class="block">
+          <h5>問題の構造</h5>
+          <p>法人税法の優遇規定の中には、<strong>日本の業法・規制法に基づく要件</strong> を組み込むものがある。例えば：</p>
+          <ul>
+            <li>海運業の特別償却（日本船舶たること＝船舶法上の日本船籍要件）</li>
+            <li>保険準備金（日本の保険業法に基づく免許を前提）</li>
+            <li>金融業の引当金（金融商品取引法上の登録業者前提）</li>
+          </ul>
+          <p>これらを外国関係会社に準用すると、<strong>外国法人は日本の業法要件を充足しえない</strong> ため、構造的に優遇を受けられない。</p>
+        </div>
+        <div class="block">
+          <h5>発生メカニズム</h5>
+          <p>日本の業法要件は属地的・属国籍的に日本法人・日本居住者を前提とする → 外国関係会社は定義上これらを満たせない → 法人税法の「一般的損金算入・優遇規定」に準じる計算で、外国法人のみが不利益を被る。</p>
+        </div>
+      </div>
+      <div class="issue-side">
+        <div class="paper-ref">
+          <span class="src">論文対応</span>
+          論文v13.8 第8章（Part III）／具体例を網羅的に列挙する章
+        </div>
+        <div class="impact"><span class="dot mid"></span>影響度：中 — 特定業種（海運・保険・金融）で顕在化</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Issue 10 -->
+  <div class="issue" id="i10">
+    <div class="issue-top">
+      <h4><span class="idx">10</span>文理解釈と制度趣旨の衝突 — 形式厳格適用の機能不全</h4>
+      <div class="badges"><span class="badge b-source">法源問題</span></div>
+    </div>
+    <div class="issue-grid">
+      <div class="issue-main">
+        <div class="block">
+          <h5>問題の構造</h5>
+          <p>租税法律主義（憲法84条）と課税要件明確主義からは、租税法は文理を厳密に解釈すべきである。ところが措令39条の15の文理を厳密に適用すると、CFC税制の制度趣旨（租税回避防止）から乖離した結果が生じる（問題06〜09）。</p>
+          <p>そのため実務は、<strong>文理の機械的適用を避けるために目的論的解釈・縮小解釈</strong> を行うが、これは課税要件明確主義と緊張する。判例・学説は個別事案で処理するしかなく、体系的な解釈基準が未確立。</p>
+        </div>
+        <div class="block">
+          <h5>発生メカニズム</h5>
+          <p>文理 → 形式厳格適用 → 不合理な帰結 → 目的論的緩和 → 予測可能性低下。このループが体系的解釈基準の不在を示す。</p>
+        </div>
+      </div>
+      <div class="issue-side">
+        <div class="paper-ref">
+          <span class="src">論文対応</span>
+          論文v13.8 第5〜6章（Part II末尾〜Part III冒頭の論理接続）／石井孝論文の継承点
+        </div>
+        <div class="impact"><span class="dot mid"></span>影響度：中〜高 — 解釈方法論の問題</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Issue 11 -->
+  <div class="issue" id="i11">
+    <div class="issue-top">
+      <h4><span class="idx">11</span>「修正の範囲」の未定義 — 準用における読替え権限の所在不明</h4>
+      <div class="badges"><span class="badge b-source">法源問題</span></div>
+    </div>
+    <div class="issue-grid">
+      <div class="issue-main">
+        <div class="block">
+          <h5>問題の構造</h5>
+          <p>「本邦法令の規定の例に準じて」は、一般的に「修正の余地を含む準用」と理解される。しかし <strong>どこまでが許容される修正か、誰が修正権限を持つか</strong> は条文に書かれていない。</p>
+          <p>石井孝論文（税大論叢）は、法制執務上「準ずる」は「修正がなければ原規定をそのまま当てはめる」が通常であると指摘する。しかしCFC税制の文脈では修正なしに機能しない場面が頻出するため、実務は <strong>通達・行政解釈で修正を補完</strong>。これが租税法律主義との緊張を生む（問題16）。</p>
+        </div>
+        <div class="block">
+          <h5>発生メカニズム</h5>
+          <p>法令 → 「準じて」 → 修正範囲の不定 → 通達が空白を埋める → 通達が実質的に課税要件を決定。法制執務上は逸脱的な状態。</p>
+        </div>
+      </div>
+      <div class="issue-side">
+        <div class="paper-ref">
+          <span class="src">論文対応（石井孝論文継承）</span>
+          論文v13.8 第5章／石井孝「『準ずる』の法制執務」（税大論叢）
+        </div>
+        <div class="impact"><span class="dot"></span>影響度：高 — 法源問題の核心</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== Section IV ============== -->
+<section class="section" id="section4">
+  <div class="sec-tab"><span class="active">IV. 制度間交錯</span><span>3問題</span><span>FTC・PE・TP連動</span></div>
+  <h2><span class="num">IV.</span>制度間交錯の問題 ─ 外税控除・PE・移転価格との接続</h2>
+  <p class="lede">CFC税制は単独では機能せず、外国税額控除（FTC）・PE課税・移転価格税制（TP）・恒久的施設課税と連動する。制度間接続の不整合が、みずほ案件等の実務上の衝突を生んでいる。</p>
+
+  <!-- Issue 12 -->
+  <div class="issue" id="i12">
+    <div class="issue-top">
+      <h4><span class="idx">12</span>PE所得合算による過大課税 — みずほ案件に象徴される問題</h4>
+      <div class="badges"><span class="badge b-over">過剰課税</span></div>
+    </div>
+    <div class="issue-grid">
+      <div class="issue-main">
+        <div class="block">
+          <h5>問題の構造</h5>
+          <p>外国関係会社が外国にPEを持つ場合、そのPE帰属所得は CFC課税の基準所得金額に取り込まれる。しかし、<strong>PE所在地国はすでにPE課税を実施</strong> しているため、外国関係会社段階と日本親会社段階の二重の課税がPE所在地国の税制と衝突する。</p>
+          <p>みずほフィナンシャルグループ関連の訴訟で争点化した構造（報道ベース・学術的な類例）は、ケイマン諸島SPC経由のPE所得について、PE所在地国での課税とCFC合算が並行した結果、実効税率が著しく高くなる事案。</p>
+        </div>
+        <div class="block">
+          <h5>発生メカニズム</h5>
+          <p>外国関係会社にPE帰属所得 → 日本CFCで合算 → PE所在地国で既に課税 → 二重課税調整が CFC＋FTCで十分機能せず → 過大課税が残存。特に <strong>PE所在地国で長期繰越欠損金を使用</strong> していた場合、CFC側では繰越控除を認めないため、期中の実効税率が一時的に跳ね上がる。</p>
+        </div>
+      </div>
+      <div class="issue-side">
+        <div class="case">
+          <span class="src">関連事案</span>
+          みずほ案件（報道ベース）— ケイマン SPC・PE経由の所得についてCFCと PE課税の衝突が訴訟で争点化。
+        </div>
+        <div class="paper-ref">
+          <span class="src">論文対応</span>
+          論文v13.8 第8〜10章（Part III過剰課税）／CFC_FTC_合算漏れ分析_20260330
+        </div>
+        <div class="impact"><span class="dot"></span>影響度：高 — 金額規模大の実務事案</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Issue 13 -->
+  <div class="issue" id="i13">
+    <div class="issue-top">
+      <h4><span class="idx">13</span>配当期待欠如時の形式的合算 — 現実に日本に戻らない所得への課税</h4>
+      <div class="badges"><span class="badge b-over">過剰課税</span></div>
+    </div>
+    <div class="issue-grid">
+      <div class="issue-main">
+        <div class="block">
+          <h5>問題の構造</h5>
+          <p>CFC税制は「株主段階での課税繰延の防止」として構成されるが、実際には配当期待が欠如する場面でも合算される。例：外国子会社が欠損を抱え、<strong>将来配当が現実的に見込めない</strong> 場合、親会社に現金が流入しないにもかかわらず、期間中の利益だけが合算課税される。</p>
+          <p>これは CFC税制の基礎理論（租税回避防止 or 課税繰延防止）のどちらを採るかで評価が分かれるが、少なくとも <strong>現金フローと課税の乖離</strong> が経営上のインパクトを生む。</p>
+        </div>
+        <div class="block">
+          <h5>発生メカニズム</h5>
+          <p>外国関係会社の合算所得 → 日本親会社の益金算入 → 実際の配当なし → 期間差異で税を先払い → 将来実際に配当を受けても、既合算部分は措法66条の8で二重課税排除されるが、<strong>為替・時間価値・事業継続リスク</strong> の調整は不十分。</p>
+        </div>
+      </div>
+      <div class="issue-side">
+        <div class="paper-ref">
+          <span class="src">論文対応</span>
+          論文v13.8 第2章（理論装置）／渕圭吾・岡村忠生の課税根拠論との接続
+        </div>
+        <div class="impact"><span class="dot mid"></span>影響度：中 — 理論的含意は大きい</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Issue 14 -->
+  <div class="issue" id="i14">
+    <div class="issue-top">
+      <h4><span class="idx">14</span>匿名組合等の日本固有概念の国際的適用</h4>
+      <div class="badges"><span class="badge b-under">過少課税</span><span class="badge b-intl">国際調整不全</span></div>
+    </div>
+    <div class="issue-grid">
+      <div class="issue-main">
+        <div class="block">
+          <h5>問題の構造</h5>
+          <p>匿名組合（TK）・特定目的会社（SPC）・投資事業有限責任組合（LPS）等、日本固有のパス・スルー概念と外国法制の組み合わせで、CFC税制の射程が曖昧になる。</p>
+          <p>特に <strong>TK 営業者が外国法人</strong> のケースでは、TK 持分の分配がどのように日本のCFC税制で処理されるか、OECDモデル条約にも規定がない日本固有概念の扱いが問題化。国際課税実務検討会報告書（2010年代）で議論されたが、法令レベルの整備は未完。</p>
+        </div>
+        <div class="block">
+          <h5>発生メカニズム</h5>
+          <p>パス・スルー性 → 法形式上「出資」ではなく「営業者に対する債権」と構成 → CFC支配判定でどう扱うか不明確 → ハイブリッド・ミスマッチの温床（問題18と連動）。</p>
+        </div>
+      </div>
+      <div class="issue-side">
+        <div class="compare">
+          <span class="src">比較法エビデンス</span>
+          <strong>英 SPF approach</strong>: 事業体形式によらず、機能・リスクの locus で判断 → 日本固有概念にも応用可能な枠組み<br>
+          <strong>米 check-the-box</strong>: 事業体性質の選択制 → 日本のTKは check-the-box の対象外、取扱いが非対称
+        </div>
+        <div class="paper-ref">
+          <span class="src">論文対応</span>
+          論文v13.8 第3章（第2命題: ハイブリッド・ミスマッチの前提構造）
+        </div>
+        <div class="impact"><span class="dot mid"></span>影響度：中 — 特定取引での実務インパクト</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== Section V ============== -->
+<section class="section" id="section5">
+  <div class="sec-tab"><span class="active">V. 手続・法源</span><span>3問題</span><span>租税法律主義との緊張</span></div>
+  <h2><span class="num">V.</span>手続・法源の問題 ─ ソフトロー（通達）への依存と租税法律主義</h2>
+  <p class="lede">CFC税制は通達（措通66の6-x）・Q&A・文書回答事例・FAQに大きく依存する。この「運用の厚さ」が実務上のガイダンスを与える反面、<strong>課税要件の実質を通達が決める</strong> 構造は租税法律主義との緊張を生む。</p>
+
+  <!-- Issue 15 -->
+  <div class="issue" id="i15">
+    <div class="issue-top">
+      <h4><span class="idx">15</span>ソフトロー（通達）への過度な依存</h4>
+      <div class="badges"><span class="badge b-source">法源問題</span></div>
+    </div>
+    <div class="issue-grid">
+      <div class="issue-main">
+        <div class="block">
+          <h5>問題の構造</h5>
+          <p>現在のCFC税制は、通達（措通66の6-1〜66の9-x）、文書回答事例、申告書様式の記載要領等によって実質的な運用が規定されている。具体例：</p>
+          <ul>
+            <li>青色申告要件の免除（通達で対応）</li>
+            <li>損金経理要件の緩和（通達で対応）</li>
+            <li>管理支配基準の具体的判定要素（通達で列挙）</li>
+            <li>事業基準の各業種別運用（通達・Q&A）</li>
+          </ul>
+          <p>英国 HMRC マニュアルや独 BMF 通達もソフトローに依存するが、日本ほど <strong>条文の空白を通達で埋める比重</strong> は大きくない。</p>
+        </div>
+        <div class="block">
+          <h5>発生メカニズム</h5>
+          <p>条文の不確定性（問題06・11）→ 通達による補完 → 通達が実質的課税要件 → 租税法律主義との緊張（問題16）。</p>
+        </div>
+      </div>
+      <div class="issue-side">
+        <div class="compare">
+          <span class="src">比較法エビデンス</span>
+          <strong>英 HMRC INTM Manual</strong>: 詳細だが条文が相対的に自足的<br>
+          <strong>独 BMF Schreiben</strong>: 行政解釈、条文整備と併行<br>
+          <strong>日本 措通66の6</strong>: 条文の欠陥を補う比重が大きい
+        </div>
+        <div class="paper-ref">
+          <span class="src">論文対応</span>
+          論文v13.8 第6章（法源論・ソフトロー）／第11〜13章（ハードロー＋ソフトロー二層構造の再設計提案）
+        </div>
+        <div class="impact"><span class="dot"></span>影響度：高 — 制度全体の法源構造に関わる</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Issue 16 -->
+  <div class="issue" id="i16">
+    <div class="issue-top">
+      <h4><span class="idx">16</span>租税法律主義との緊張 — 課税要件明確主義の希釈</h4>
+      <div class="badges"><span class="badge b-source">法源問題</span></div>
+    </div>
+    <div class="issue-grid">
+      <div class="issue-main">
+        <div class="block">
+          <h5>問題の構造</h5>
+          <p>憲法84条（租税法律主義）は、課税要件が法律で定められることを要請する。しかし、CFC税制では <strong>経済活動基準の判断要素・減価償却の読替え・地理的要件の読替え</strong> 等が通達で定められ、納税者は通達を読まなければ課税要件を把握できない。</p>
+          <p>最高裁の租税法律主義判例（大嶋訴訟・東京サラリーマン税金訴訟等）の系譜からは、通達が課税要件を実質的に決定する状態は、<strong>憲法上の課税要件明確主義との整合性</strong> に疑義を生じさせる。</p>
+        </div>
+        <div class="block">
+          <h5>発生メカニズム</h5>
+          <p>条文の空白 → 通達での補完 → 実質的課税要件が法律外に位置 → 租税法律主義の希釈。学説（金子宏・中里実等）もこの点を繰り返し論じている。</p>
+        </div>
+      </div>
+      <div class="issue-side">
+        <div class="paper-ref">
+          <span class="src">論文対応</span>
+          論文v13.8 第6章／羽島和宏論文の継承（制度の「交錯」問題の理論化）
+        </div>
+        <div class="impact"><span class="dot"></span>影響度：高 — 憲法論</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Issue 17 -->
+  <div class="issue" id="i17">
+    <div class="issue-top">
+      <h4><span class="idx">17</span>通達未対応領域の存在 — ソフトローでもカバーされない空白</h4>
+      <div class="badges"><span class="badge b-source">法源問題</span></div>
+    </div>
+    <div class="issue-grid">
+      <div class="issue-main">
+        <div class="block">
+          <h5>問題の構造</h5>
+          <p>通達は条文の空白を補完するが、それ自体にも限界がある。調査の結果、<strong>以下の領域は通達でも十分にカバーされていない</strong>：</p>
+          <ul>
+            <li>地理的要件「国内」の系統的な読替えルール（問題08）</li>
+            <li>業法・規制法要件の個別読替え（問題09）</li>
+            <li>ハイブリッド・ミスマッチ関連の支払側処理（問題18）</li>
+            <li>匿名組合・パス・スルー事業体の詳細（問題14）</li>
+            <li>航空機ABS・キャプティブ等の特定スキーム（問題19）</li>
+          </ul>
+          <p>法令も通達も沈黙する領域では、納税者は <strong>個別事前照会（APA類似制度）</strong> に頼らざるを得ず、実質的な立法は行政協議で行われることになる。</p>
+        </div>
+      </div>
+      <div class="issue-side">
+        <div class="paper-ref">
+          <span class="src">論文対応</span>
+          論文v13.8 第6章／第11〜13章（再設計提案：通達化すべき領域・ハードロー化すべき領域の区分）
+        </div>
+        <div class="impact"><span class="dot mid"></span>影響度：中〜高 — 特定スキーム依存</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== Section VI ============== -->
+<section class="section" id="section6">
+  <div class="sec-tab"><span class="active">VI. ハイブリッド・ミスマッチ</span><span>2問題</span><span>論文 第2命題 収斂点</span></div>
+  <h2><span class="num">VI.</span>ハイブリッド・ミスマッチの課税空白 ─ BEPS Action 2 未導入の帰結</h2>
+  <p class="lede">OECD BEPS Action 2（ハイブリッド・ミスマッチ否認ルール）は、支払側の損金算入否認 or 受取側の益金不算入否認で二重非課税を防ぐ。日本は <strong>Action 2型の否認ルールを包括的には導入していない</strong>。これが TK・SPC 経由の構造で二重非課税を温存している。</p>
+
+  <!-- Issue 18 -->
+  <div class="issue" id="i18">
+    <div class="issue-top">
+      <h4><span class="idx">18</span>BEPS Action 2 否認ルール未導入 — ハイブリッド・ミスマッチの課税空白（第2命題）</h4>
+      <div class="badges"><span class="badge b-under">過少課税</span></div>
+    </div>
+    <div class="issue-grid">
+      <div class="issue-main">
+        <div class="block">
+          <h5>問題の構造</h5>
+          <p>BEPS Action 2（Final Report 2015）は、D/NI（損金算入／益金不算入）・DD（二重損金算入）・Imported Mismatch等の構造を包括的に否認するルールを提案。EU ATAD 1・2、米国 §267A、英国 CTA 2010 Part 6A 等が実装済み。</p>
+          <p>日本は部分的な対応（2020年改正等）はあるが、<strong>Action 2 型の包括的否認ルールは未導入</strong>。CFC税制では、外国関係会社の支払がハイブリッド構造で外国側で損金算入されつつ受取側で益金不算入 or 低課税となっても、日本CFCで合算する契機が欠落する場合がある。</p>
+        </div>
+        <div class="block">
+          <h5>発生メカニズム（第2命題）</h5>
+          <ul>
+            <li>TK営業者（外国）の TK分配支払 → 外国で損金算入</li>
+            <li>TK持分権者の受取 → 日本で低課税 or 非課税</li>
+            <li>CFC合算の契機があれば救済可能だが、経済活動基準等で除外されると空白</li>
+            <li>Action 2 の支払側否認があれば、少なくとも外国側の損金を否認して二重非課税を防げる</li>
+          </ul>
+          <p>論文は、この <strong>日本CFC＋Action 2未導入＋TK/SPC固有性</strong> の3層欠落がハイブリッド・ミスマッチの制度的温存を生むことを第2命題として定式化する。</p>
+        </div>
+      </div>
+      <div class="issue-side">
+        <div class="compare">
+          <span class="src">比較法エビデンス</span>
+          <strong>EU ATAD 2</strong>: 包括的hybrid mismatch rules（加盟国実装済）<br>
+          <strong>米 §267A</strong>: hybrid dividends・hybrid payments否認<br>
+          <strong>英 CTA 2010 Part 6A</strong>: anti-hybrid rules全面導入<br>
+          <strong>日本</strong>: 部分対応のみ、Action 2の包括導入なし
+        </div>
+        <div class="paper-ref">
+          <span class="src">論文対応（第2命題中核）</span>
+          論文v13.8 <strong>第2命題（ハイブリッド・ミスマッチ）全体</strong>／第3章（Part II 過少課税の代表例）
+        </div>
+        <div class="impact"><span class="dot"></span>影響度：高 — BEPS整合性</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Issue 19 -->
+  <div class="issue" id="i19">
+    <div class="issue-top">
+      <h4><span class="idx">19</span>航空機ABS・キャプティブ保険における二重非課税</h4>
+      <div class="badges"><span class="badge b-under">過少課税</span></div>
+    </div>
+    <div class="issue-grid">
+      <div class="issue-main">
+        <div class="block">
+          <h5>問題の構造</h5>
+          <p>航空機 asset-backed security (ABS) のSPCやキャプティブ保険の外国法人は、経済活動基準上「実体のある事業」として一定の substance を有するため、CFC合算の対象外となることが多い。他方、設置国（アイルランド・ケイマン・バミューダ等）では低税率・免税扱い。</p>
+          <p>結果として <strong>日本親会社はCFC合算されず、設置国では低課税／免税 → 実質的な二重非課税</strong> が生じる。問題18（Action 2未導入）と重なる領域。</p>
+        </div>
+        <div class="block">
+          <h5>発生メカニズム</h5>
+          <p>実体要件の形式充足（問題04）＋Action 2否認ルール未導入（問題18）＋設置国の優遇税制 → 三重の空白 → 二重非課税の残存。</p>
+        </div>
+      </div>
+      <div class="issue-side">
+        <div class="paper-ref">
+          <span class="src">論文対応</span>
+          論文v13.8 第3章／第2命題の具体例としての位置づけ
+        </div>
+        <div class="impact"><span class="dot mid"></span>影響度：中 — 特定業種（航空・金融）に集中</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== Section VII ============== -->
+<section class="section" id="section7">
+  <div class="sec-tab"><span class="active">VII. 国際接続</span><span>3問題</span><span>論文 第3命題 収斂点</span></div>
+  <h2><span class="num">VII.</span>国際接続の問題 ─ 租税条約・Pillar Two との関係</h2>
+  <p class="lede">CFC税制は国内アンチアボイダンスとして設計されるが、租税条約・Pillar Two（GloBE）等の supra-national layer との接続が制度設計の最終課題。論文 第3命題（Pillar Two 残余リスク）はこの領域に位置する。</p>
+
+  <!-- Issue 20 -->
+  <div class="issue" id="i20">
+    <div class="issue-top">
+      <h4><span class="idx">20</span>条約適合性の曖昧性 — 株主レベル課税の構成が国内法で明示されない</h4>
+      <div class="badges"><span class="badge b-intl">国際調整不全</span></div>
+    </div>
+    <div class="issue-grid">
+      <div class="issue-main">
+        <div class="block">
+          <h5>問題の構造</h5>
+          <p>CFC税制の条約適合性は、OECDモデル条約コメンタリー（特に第1条コメンタリー）では「株主レベルでの国内課税であり、CFC所在地国への課税管轄権の侵犯ではない」と説明されるのが通説。</p>
+          <p>しかし日本のCFC税制は、措法66条の6が <strong>「内国法人の所得に加算する」</strong> と規定するのみで、「株主レベル課税として構成する」という条約整合的な理論構成が <strong>国内法上明示されていない</strong>。そのため、条約抵触の主張（外国子会社所在地国の課税権侵害）に対する防御ロジックが法文から直接導けない。</p>
+        </div>
+        <div class="block">
+          <h5>発生メカニズム</h5>
+          <p>国内法の構成が不透明 → 条約整合性の議論が通達・解釈に依存 → 海外CFC所在地国の課税権主張に脆弱。特にMLI未批准との関係で将来の争点化可能性あり。</p>
+        </div>
+      </div>
+      <div class="issue-side">
+        <div class="compare">
+          <span class="src">比較法エビデンス</span>
+          <strong>NZ</strong>: Tax sparing と CFC の重複で二重課税訴訟（判例あり）<br>
+          <strong>独</strong>: AStG §10が株主所得への追加課税として明示構成<br>
+          <strong>日本</strong>: 「内国法人の所得に加算」のみ
+        </div>
+        <div class="paper-ref">
+          <span class="src">論文対応</span>
+          論文v13.8 第9章（国際接続）／比較法ワークフロー第4章
+        </div>
+        <div class="impact"><span class="dot mid"></span>影響度：中 — 潜在的論点</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Issue 21 -->
+  <div class="issue" id="i21">
+    <div class="issue-top">
+      <h4><span class="idx">21</span>Pillar Two との制度間調整 — CFCとQDMTT/IIR/UTPRの役割分担</h4>
+      <div class="badges"><span class="badge b-intl">国際調整不全</span></div>
+    </div>
+    <div class="issue-grid">
+      <div class="issue-main">
+        <div class="block">
+          <h5>問題の構造</h5>
+          <p>Pillar Two（GloBE Model Rules 2021 + 2024 Administrative Guidance）は、15%の最低税率をQDMTT（対象国での上乗せ）、IIR（親会社での所得合算）、UTPR（グループ内で残余を配分）で確保する。</p>
+          <p>これらはCFC税制と重複する局面がある：<strong>IIRは CFC類似の親会社段階課税</strong>。日本は2023年改正で Pillar Two 関連の各種帳簿記録義務・申告義務を導入したが、<strong>CFC税制とIIRの適用順序・重複調整は必ずしも条文レベルで明示されていない</strong>。両制度が競合した場合、どちらが優先し、どのように二重課税調整するかの体系が未整備。</p>
+        </div>
+        <div class="block">
+          <h5>発生メカニズム</h5>
+          <p>CFC合算所得 vs IIR合算所得 → 重複領域で二重課税リスク → 調整規定（日本国内・国際）が未整備 → 適用順序の予測可能性低下。</p>
+        </div>
+      </div>
+      <div class="issue-side">
+        <div class="compare">
+          <span class="src">比較法エビデンス</span>
+          <strong>オーストリア</strong>: Pillar Two関連論文3件（QDMTT coordination）<br>
+          <strong>伊</strong>: Article 167 TUIR簡素化とPillar Two（論文2件）<br>
+          <strong>ルクセンブルク</strong>: €750k threshold + 15% minimum rate（論文2件）<br>
+          <strong>スイス</strong>: Pillar Two実装法成立
+        </div>
+        <div class="paper-ref">
+          <span class="src">論文対応</span>
+          論文v13.8 第9章／CFC_international_framework_DR_20260315
+        </div>
+        <div class="impact"><span class="dot"></span>影響度：高 — 今後の最大の制度設計課題</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Issue 22 -->
+  <div class="issue" id="i22">
+    <div class="issue-top">
+      <h4><span class="idx">22</span>Pillar Two 閾値（€750M）未満の制度空白 — 中堅企業グループへの第1命題の全面適用（第3命題）</h4>
+      <div class="badges"><span class="badge b-under">過少課税</span><span class="badge b-intl">国際調整不全</span></div>
+    </div>
+    <div class="issue-grid">
+      <div class="issue-main">
+        <div class="block">
+          <h5>問題の構造</h5>
+          <p>Pillar Two（GloBE）は、年間総収入 <strong>EUR 750 million以上</strong> の多国籍企業グループを対象とする（GloBE Model Rules Article 1.1）。この閾値未満の中堅グループには Pillar Two は適用されない。</p>
+          <p>したがって、中堅グループに対しては <strong>CFC税制が唯一の租税回避防止制度</strong> として機能し続ける。論文 第1命題が指摘する「準用規定の構造的欠陥」は、この閾値未満の企業に関しては、Pillar Two による救済がないため、<strong>全面的に妥当し続ける</strong>。これが第3命題（Pillar Two 残余リスク）。</p>
+        </div>
+        <div class="statute">
+          <span class="src">GloBE Model Rules Article 1.1 (Scope)</span>
+          These GloBE Rules apply to Constituent Entities that are members of an MNE Group that has annual revenue of <strong>EUR 750 million or more</strong> in the Consolidated Financial Statements of the Ultimate Parent Entity in at least 2 of the 4 Fiscal Years immediately preceding the tested Fiscal Year.
+        </div>
+        <div class="block">
+          <h5>発生メカニズム（第3命題）</h5>
+          <p>第1命題が指摘する欠陥は、Pillar Two 対象企業（大企業）では IIR・UTPR・QDMTT の補完で救われる部分がある → 中堅企業（€750M未満）では CFC のみが働く → 第1命題が全面妥当。論文はこの非対称性を第3命題として指摘し、<strong>中堅企業向け制度設計</strong> が今後の立法課題となることを示す。</p>
+        </div>
+      </div>
+      <div class="issue-side">
+        <div class="paper-ref">
+          <span class="src">論文対応（第3命題中核）</span>
+          論文v13.8 <strong>第3命題（Pillar Two 残余リスク）全体</strong>／第9章・第11〜13章（再設計提案）
+        </div>
+        <div class="impact"><span class="dot"></span>影響度：高 — 立法課題として継続</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== Synthesis ============== -->
+<section class="section" id="synthesis">
+  <h2><span class="num">§</span>統合分析 ─ 22問題の4軸マッピングと政策含意</h2>
+  <p class="lede">22問題を性質タグ（過剰／過少／法源／国際）× 影響度（高／中／低）の2軸で集計すると、論文の再設計提案の焦点が浮かぶ。</p>
+  <div class="toc-grid">
+    <div class="toc-card" style="background:#fdf2f2;">
+      <strong style="color:#742a2a;">過剰課税（7問題）</strong>
+      <p style="font-size:13px; color:#742a2a; margin:4px 0;">#1 支配判定、#7 損金経理、#8 地理要件、#9 業法要件、#12 PE合算、#13 配当期待欠如</p>
+      <p style="font-size:12px; color:var(--muted); margin:6px 0 0;">論文 Part III の中核。通達による緩和では根本解決困難、ハードロー改正が必要。</p>
+    </div>
+    <div class="toc-card" style="background:#fdf6e4;">
+      <strong style="color:#6b5000;">過少課税（8問題）</strong>
+      <p style="font-size:13px; color:#6b5000; margin:4px 0;">#3 実体不明示、#4 形骸化、#5 ペーパー漏れ、#14 TK、#18 Action 2、#19 ABS、#22 €750M未満</p>
+      <p style="font-size:12px; color:var(--muted); margin:6px 0 0;">論文 Part II の中核。BEPS対応強化＋中堅企業向け制度設計が政策課題。</p>
+    </div>
+    <div class="toc-card" style="background:#f5f0fb;">
+      <strong style="color:#40235e;">法源問題（5問題）</strong>
+      <p style="font-size:13px; color:#40235e; margin:4px 0;">#10 文理vs趣旨、#11 修正範囲、#15 通達依存、#16 租税法律主義、#17 通達未対応</p>
+      <p style="font-size:12px; color:var(--muted); margin:6px 0 0;">論文 Part IV（再設計）の軸。ハードロー＋ソフトロー二層構造の精緻化が提案される。</p>
+    </div>
+    <div class="toc-card" style="background:#edf3fb;">
+      <strong style="color:#18334d;">国際調整不全（5問題）</strong>
+      <p style="font-size:13px; color:#18334d; margin:4px 0;">#2 税率乖離、#14 TK、#20 条約適合性、#21 Pillar Two、#22 €750M未満</p>
+      <p style="font-size:12px; color:var(--muted); margin:6px 0 0;">今後の制度間調整の焦点。Pillar Two 実装との歩調合わせが必要。</p>
+    </div>
+  </div>
+
+  <div style="margin-top:20px; padding:18px; background: linear-gradient(135deg, #fbf5c0, #fdf6e4); border-radius:14px; border:1px solid var(--gold);">
+    <h3 style="margin:0 0 10px; color:#6b5000; font-size:18px;">深掘りの優先順位（次フェーズ）</h3>
+    <p style="margin:0; font-size:14px; color:#6b5000;">
+      <strong>最優先</strong>: #6（「準じて」不確定性＝過少・過剰の共通根因）／#18（Action 2未導入）／#22（€750M未満の制度空白）─ 論文3命題（第1〜第3命題）の各中核。<br>
+      <strong>次優先</strong>: #8（地理的要件）／#15（ソフトロー依存）／#21（Pillar Two調整）─ 実務影響度が高く、比較法エビデンスも厚い。<br>
+      <strong>その他</strong>: #1〜#5, #7, #9〜#14, #16, #17, #19, #20 ─ 統合論の補強材料として機能。
+    </p>
+  </div>
+</section>
+
+<!-- ============== Footer ============== -->
+<section class="section">
+  <h2><span class="num">§</span>出典・参照</h2>
+  <div class="footer-note">
+    <p><strong>条文・正本</strong>: 租税特別措置法66条の6〜9（e-Gov 332AC0000000026）、租税特別措置法施行令39条の14〜19（332CO0000000043）、国税庁通達 措通66の6-x（<code>/home/user/ai-law-db/simple/sozei_tokubetsu</code>、<code>/home/user/jplawdb4/law/text/sozei_tokubetsu</code>）</p>
+    <p><strong>比較法</strong>: <code>/mnt/d/Users/PC/Desktop/CFC税制/80_索引ハブ/60_比較法_feature_matrix/cfc_feature_matrix.csv</code>（43カ国）、<code>cfc_substantive_feature_matrix.csv</code></p>
+    <p><strong>判例</strong>: 減価償却CFC判決（東京地裁H29.1.31・東京高裁H29.9.6）、日産自動車事件（最判2024）ほか計59件（<code>/home/user/ai-law-db/simple/hanketsu</code>）</p>
+    <p><strong>OECD</strong>: BEPS Action 2 (Final Report 2015)、GloBE Model Rules (2021)、Administrative Guidance Article 8.1.4・9.1 (2024)、Central Record of Legislation</p>
+    <p><strong>論文</strong>: CFC税制博士論文 v13.8（2026-02-23）、比較法ワークフロー draft_pack_20260411 (4章構成、manuscript_pack_20260412)、submission_pack_20260412 (citation_evidence_pack)</p>
+    <p><strong>関連既存成果物</strong>: <a href="./international_tax_cfc_issues_20260411.html">international_tax_cfc_issues_20260411.html</a>（実務・争訟視点）、<a href="./CFC税制_本質的問題点_slide_20260302.html">CFC税制_本質的問題点_slide_20260302.html</a>（6緊張関係・5パラドックス）、<a href="./CFC_dissertation_TOC_v2_20260314.html">CFC_dissertation_TOC_v2_20260314.html</a>（論文目次確定版）、<a href="./CFC_Comparative_Deep_Research_20260411.html">CFC_Comparative_Deep_Research_20260411.html</a></p>
+    <p><strong>先行研究継承</strong>: 石井孝（「準ずる」の法制執務・税大論叢）、羽島和宏（制度の「交錯」論）、渕圭吾・岡村忠生（CFC税制の課税根拠論）、鍋谷彰男（BEPS Action 3 比較法）、池田直樹（2025年税大ジャーナル）</p>
+    <hr style="border:none; border-top:1px solid var(--line); margin:16px 0;">
+    <p style="text-align:right; font-size:12px;">
+      CFC税制 問題点体系マップ — 22 structural issues mapped on functional flow<br>
+      作成 2026-04-12 ／ jplawdb4 CFC dissertation project
+    </p>
+  </div>
+</section>
+
+</main>
+</body>
+</html>
