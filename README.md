@@ -23,17 +23,7 @@ AI エージェント（Claude Code 等）が日本の税法・法令を高速�
 | `accounting/` | 会計 | `accounting/quickstart.txt` |
 | `qa/` | Q&A | `qa/quickstart.txt` |
 | `treaty/` | 租税条約 | `treaty/quickstart.txt` |
-| `その他/` | DR成果HTML（分析レポート等） | `その他/quickstart.txt` |
 
-## DR成果HTMLの保存ルール
+## DR成果HTMLの扱い
 
-ClaudeCodeが生成するディープリサーチ成果物HTMLは `その他/html/` に保存する。
-
-```
-その他/
-├── quickstart.txt   # AI向けガイド
-├── index.json       # 機械可読インデックス（全HTML一覧+メタ）
-├── index.html       # ブラウザ用ナビ
-└── html/            # HTML本体
-    └── {topic}_{YYYYMMDD}.html
-```
+ClaudeCode が生成するディープリサーチ成果物 HTML は、現在は公開リポジトリの外で private に管理する。
