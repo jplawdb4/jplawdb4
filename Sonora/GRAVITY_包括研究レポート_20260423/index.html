@@ -1,0 +1,5606 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>GRAVITY 包括研究レポート 2026-04-23</title>
+<style>
+  :root {
+    --bg: #f4f7fb;
+    --card: #ffffff;
+    --ink: #172033;
+    --muted: #5f6f87;
+    --line: #dbe3ef;
+    --blue: #234d9b;
+    --soft: #eef4ff;
+    --max: 1120px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Yu Gothic UI", sans-serif;
+    background: linear-gradient(180deg, #f9fbff 0%, var(--bg) 100%);
+    color: var(--ink);
+    line-height: 1.95;
+  }
+  .page {
+    width: min(100%, var(--max));
+    margin: 0 auto;
+    padding: 34px 24px 72px;
+  }
+  .hero, .toc, .panel, section, .appendix-section {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    box-shadow: 0 18px 40px rgba(28, 42, 70, 0.05);
+  }
+  .hero {
+    padding: 28px 30px;
+    margin-bottom: 26px;
+    background: linear-gradient(135deg, #eaf1ff 0%, #f8fbff 60%, #ffffff 100%);
+  }
+  .eyebrow {
+    margin: 0 0 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--blue);
+    text-transform: uppercase;
+  }
+  h1 {
+    margin: 0 0 14px;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.18;
+  }
+  .hero p {
+    margin: 0 0 14px;
+    color: var(--muted);
+  }
+  .meta {
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .toc {
+    padding: 22px 26px;
+    margin-bottom: 26px;
+  }
+  .toc ol {
+    margin: 12px 0 0 1.3em;
+    padding: 0;
+    columns: 2;
+    column-gap: 40px;
+  }
+  .toc li {
+    margin-bottom: 8px;
+    break-inside: avoid;
+  }
+  section {
+    padding: 24px 28px;
+    margin-bottom: 22px;
+  }
+  h2 {
+    margin: 0 0 14px;
+    padding-bottom: 9px;
+    border-bottom: 2px solid #d9e5fb;
+    color: var(--blue);
+    font-size: 1.45rem;
+    line-height: 1.35;
+  }
+  p {
+    margin: 0 0 16px;
+  }
+  ul {
+    margin: 0 0 16px 1.2em;
+  }
+  li {
+    margin-bottom: 8px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0 6px;
+  }
+  th, td {
+    border: 1px solid #d7dfed;
+    padding: 10px 12px;
+    vertical-align: top;
+    text-align: left;
+  }
+  th {
+    background: #edf3ff;
+  }
+  a {
+    color: #2454bb;
+    text-underline-offset: 0.18em;
+  }
+  code {
+    background: var(--soft);
+    padding: 0.1em 0.34em;
+    border-radius: 6px;
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: 0.94em;
+  }
+  pre {
+    white-space: pre-wrap;
+    overflow-x: auto;
+    padding: 16px 18px;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #f7fbff 0%, #edf4ff 100%);
+    color: #18263f;
+    border: 1px solid #cfdcf3;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.78);
+    line-height: 1.75;
+  }
+  .appendix-section {
+    padding: 24px 28px;
+  }
+  .appendix-meta {
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+  .appendix-body > *:first-child {
+    margin-top: 0;
+  }
+  .footer {
+    margin-top: 28px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+  @media (max-width: 900px) {
+    .toc ol { columns: 1; }
+    .page { padding-left: 16px; padding-right: 16px; }
+    section, .appendix-section, .hero, .toc { padding-left: 18px; padding-right: 18px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+<header class="hero">
+<p class="eyebrow">GRAVITY Comprehensive Master Report</p>
+<h1>GRAVITY合同会社・JIF・Japan DH4・TMK・匿名組合分配金に関する包括研究レポート</h1>
+<p>本レポートは、<code>gravity_tk_tmk_project</code> に蓄積した source-of-truth と比較整理資産を再統合し、GRAVITY案件のストラクチャー、プレイヤー配置、キャッシュフロー、GK/TK/TMK/一般社団法人の税務レイヤー、匿名組合分配金の源泉税、JIF Japan Partners LP の treaty claimant frontier までを、公開可能な長文の研究レポートとして一本化したものです。</p>
+<p>位置づけとしては、図解中心の Visual Atlas の上に載る文字中心の master report であり、個別メモの断片を読む前に「現時点の best explanation は何か」「何が確定で、何が高確度推定で、何が未確認か」を一気に把握するための基礎文書です。</p>
+<div class="meta">作成日時: 2026-04-23 07:13 JST / 形式: HTML 長文研究レポート / 想定読者: 税務調査・税務DD・国際税務・ファンドストラクチャー分析の実務者 / ベース workspace: <code>/mnt/d/Users/PC/Desktop/tax/gravity_tk_tmk_project</code></div>
+</header>
+<nav class="toc">
+<strong>目次</strong>
+<ol>
+<li><a href="#summary">エグゼクティブサマリー</a></li>
+<li><a href="#method">調査対象・方法・証拠レベル</a></li>
+<li><a href="#structure">ストラクチャー全体像の骨格</a></li>
+<li><a href="#sponsor-family">sponsor family と platform の層</a></li>
+<li><a href="#upstream-vehicles">上流ファンド群</a></li>
+<li><a href="#gravity-gk-ah">Gravity合同会社と Gravity AH合同会社</a></li>
+<li><a href="#downstream-tmk">下流 TMK と物流資産ライン</a></li>
+<li><a href="#money-flows">お金の流れ</a></li>
+<li><a href="#tax-layers">GK / TK / TMK / 一般社団法人の税務上の位置づけ</a></li>
+<li><a href="#withholding">匿名組合分配金と日本の源泉税</a></li>
+<li><a href="#claimant">JIF LP が pass-through なら誰が claimant か</a></li>
+<li><a href="#certainty">確定・推定・未確認の切り分け</a></li>
+<li><a href="#implications">実務上の含意</a></li>
+<li><a href="#frontier">次の frontier</a></li>
+<li><a href="#source-map">主要一次ソース一覧</a></li>
+<li><a href="#appendices">付録</a></li>
+</ol>
+</nav>
+<section id="summary"><h2>1. エグゼクティブサマリー</h2><p>本レポートの結論を最初に一文で置くと、公開一次資料ベースで最も筋の通る読みは、<strong>Ares / GLP / 日本GLP</strong> を sponsor family とし、その下に <strong>Japan DH4 投資事業有限責任組合</strong>、<strong>JIF Japan Partners LP</strong>、<strong>Gravity合同会社</strong>、<strong>Gravity特定目的会社</strong>、そして日本物流施設へ至る多層構造を想定するものです。ここで重要なのは、これは単純な SPC 一枚図ではなく、資金の束ね方、法的受皿、課税主体、資産保有箱が層ごとに分かれている点です。</p><p>その骨格を支える一次資料として、金融庁の <a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/011.pdf">FSA tokurei 011</a>、<a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/012.pdf">FSA tokurei 012</a>、<a href="https://www.fsa.go.jp/common/law/tekikaku/01_b.pdf">FSA QII 01_b</a>、<a href="https://www.fsa.go.jp/menkyo/menkyoj/tokutei_todokede.pdf">FSA 特定目的会社届出一覧</a> が特に重要です。これらは、八重洲クラスターに並ぶ GK 群、外国法 vehicle と domestic operator の関係、TMK の現存、出資対象事業持分の類型を、かなり直接に示しています。</p><p>一方で、最後まで未立証の線も明確です。特に <strong>JIF Japan Partners LP の member roster / treaty claimant</strong> と、<strong>Gravity合同会社 から Gravity特定目的会社への direct line</strong> の二本は、現在も決定打待ちです。したがって本件は『全体像がほぼ見えたが、最後の契約線と条約請求主体だけが残っている』段階にあると整理するのが最も正確です。</p><p>税務面では、匿名組合分配金の起点論点について、<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2878.htm">NTA 2878</a>、<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2884.htm">NTA 2884</a>、<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2888.htm">NTA 2888</a>、<a href="https://www.mof.go.jp/tax_policy/summary/international/press_release/SynthesizedTextforJapan-SingaporeJP.pdf">MOF 日シンガポール条約統合テキスト</a>、<a href="https://www.nta.go.jp/about/organization/ntc/kenkyu/ronsou/52/04/ronsou.pdf">NTA 論叢52-04</a> を組み合わせると、<strong>条約届出が前提として整わない限り、Gravity合同会社側の安全側初期値は 20.42% 源泉</strong> と読むのが自然です。そして JIF LP が pass-through なら、恩典主体は JIF LP それ自体ではなく、その所得を取得したと扱われる構成員へ look-through される可能性が高い、というのが現時点の最良整理です。</p></section>
+<section id="method"><h2>2. 調査対象・方法・証拠レベルの置き方</h2><p>本レポートは、新規にゼロから web 検索を回して書き上げるというより、既に `gravity_tk_tmk_project` に蓄積した source-of-truth と比較整理資産を再編し、`jplawdb4` 公開用の長文成果物としてまとめ直すものです。土台にあるのは、FSA、GLP J-REIT、JPX、SGX、Ares SEC、e-Gov、NTA、MOF、ACRA の official layer と、それを受けて作成した主体別ドシエ、構造ノート、法令ノート、源泉税メモ、JIF LP メモです。</p><p>証拠レベルは三層で管理します。第一に、公式 PDF や法令テキストのような <strong>確定レベル</strong>。第二に、official と secondary trace を橋渡しした <strong>高確度推定レベル</strong>。第三に、まだ契約書や register extract を欠いている <strong>未確認レベル</strong> です。公開の長文レポートで一番危険なのは、この三層を混ぜることなので、本レポートでは各所で断定の強さを意識的に分けています。</p><p>また、今回の長文版は説明の密度を優先しつつ、後から再利用しやすいように設計しています。本文の前半では総説、構造、税務、frontier を叙述し、後半では既存成果物を付録として折り込みます。これにより、読者はまず私たちの現時点の best reading を把握し、その後で一次ソース anchored の詳細メモへ降りられるようになります。</p><ul><li>前半: 総説・構造・税務・実務的含意</li><li>中盤: プレイヤー別・レイヤー別の詳細整理</li><li>後半: 既存長文レポート・deep research メモ・issue memo・research plan の付録統合</li></ul></section>
+<section id="structure"><h2>3. ストラクチャー全体像の骨格</h2><p>最も重要なのは、本件を『GK が下の TMK に投資して、その先に物流施設がある』という単線ではなく、複数の資金束ね箱・投資家受皿・資産保有箱が重なった layered structure として読むことです。上流には sponsor family と regional fund platform があり、その下に日本側 LPS、さらに foreign sleeve、そして日本側の GK/TK operator、その先に TMK または信託受益権、最後に物流施設という順でレイヤーが積み重なっています。</p><p>この骨格は、<a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/011.pdf">FSA tokurei 011</a> と <a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/012.pdf">FSA tokurei 012</a> の届出資料だけでもかなり見えてきます。前者は八重洲クラスターの複数 GK の併存を示し、後者は `Tokumei Kumiai Operator`、外国法 LP、国内投資事業有限責任組合、TMK 持分・優先出資ルートが同一案件群の中で複数レーンとして現れることを示します。</p><p>このため、どこが sponsor-side で、どこが domestic hub で、どこが foreign sleeve で、どこが日本の課税起点かを一層ずつ分解して読む必要があります。ここを飛ばして『最終的に資産に投資しているのはどこか』だけを見ると、税務上の論点である匿名組合分配金、条約届出、pass-through、TMK 導管性、一般社団法人の位置づけがすべて曖昧になります。</p><p>したがって、本レポートでは構造理解の順番を、スポンサー群、上流ファンド群、日本側 aggregation hub、foreign sleeve、GK/TK operator、TMK / trust beneficiary right、real assets の順で置きます。この順番は、税務論点の論理順でもあります。</p></section>
+<section id="sponsor-family"><h2>4. sponsor family と platform の層</h2><p>スポンサー側の最上流に位置するのは Ares / GLP / 日本GLP の family です。ここで Ares を『ただの親会社』としてしか見ないと、JIF・SMA・Sakai・JDP4 などの parallel sleeve をうまく理解できません。むしろ、Ares / GLP は日本物流資産に対する regional investing platform を持ち、その下に複数の vehicle 群を並べていると見るのが自然です。</p><p><a href="https://www.sec.gov/Archives/edgar/data/1176948/000162828026011413/a2025q4exhibit211.htm">Ares Exhibit 21.1</a> では、`JIF Japan Partners GP`、`Japan Income Fund GK`、`GLP Japan Logistics Income Fund GP`、`GLP JIF SMA Fund I GP` などが同じ重要子会社クラスターに並びます。このことは、JIF Japan Partners LP が単独で孤立した vehicle ではなく、GLP / Ares family の中の foreign sleeve の一つであることを補強します。</p><p>また、<a href="https://links.sgx.com/1.0.0/corporate-announcements/IF3OY1SE60NRAZDD/802098_GLP_FY23_Financial_Statements.pdf">SGX FY2023 Financial Statements</a> と <a href="https://www.glp.com/global/article/glp-launches-largest-logistics-private-open-ended-income-fund-japan">GLP JIF launch article</a> からは、`GLP Japan Income Fund L.P. (JIF)` が GLP 側の official fund line として現れていることが分かります。ただし、ここで重要なのは `GLP Japan Income Fund L.P. ("JIF")` と `JIF Japan Partners LP` を同一視しないことです。現時点では、同一 vehicle と断定するよりも、同じ family に属する parallel / sleeve vehicles と見る方が慎重で整合的です。</p><p>この sponsor family 層を押さえることの実務的意味は、個別 vehicle の肩書きだけに引きずられないことです。税務調査、税務 DD、源泉税判断のいずれでも、最終的に問われるのは『この箱は family の中で何を担っているのか』であり、名称の似通いだけでは判断できません。</p></section>
+<section id="upstream-vehicles"><h2>5. 上流ファンド群: Japan DH4、JIF Japan Partners LP、Japan Income Fund 合同会社</h2><p>上流レイヤーの理解で中核になるのは、`Japan DH4 投資事業有限責任組合`、`JIF Japan Partners LP`、`Japan Income Fund合同会社` の三者をどう切るかです。現時点の最良読解では、JIF Japan Partners LP は foreign-law sleeve として日本の Tokumei Kumiai Operator へ間接投資する箱であり、そのさらに上流候補として Japan DH4 投資事業有限責任組合が位置し、Japan Income Fund合同会社は日本側 LPS aggregation hub と読むのが最も自然です。</p><p><a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/012.pdf">FSA tokurei 012</a> は、JIF Japan Partners LP を foreign-law fund-of-funds として固定するのに最も重要な資料です。ここでは `Tokumei Kumiai investment in Tokumei Kumiai Operator` を通じて日本物流へ間接投資する旨が読み取れます。他方、Japan DH4 側には `海外リミテッドパートナーシップ` を経由する文言があり、JIF LP の直上候補として文言整合性が高い、というのが現在の strongest reading です。</p><p>一方、Japan Income Fund合同会社は軽視してよい主体ではありません。むしろ日本側の資金束ねハブとして極めて重要です。ただ、Gravity合同会社の匿名組合利益分配の法的な直後受領者として読むよりも、国内 LPS aggregation hub または parallel route として読む方が、届出資料・ family vehicle 配置・ role 分化のすべてと整合します。</p><p>この三者を分けて考えることは、後の税務論点に直結します。JIF LP が foreign sleeve なら treaty claimant 問題が前面に出ますが、Japan Income Fund 合同会社が日本側ハブなら、そこはむしろ domestic structuring の論点になります。つまり、同じ『上流側』でも、税務上問われる論点が違うのです。</p></section>
+<section id="gravity-gk-ah"><h2>6. Gravity合同会社と Gravity AH合同会社の役割差</h2><p>同じ八重洲クラスターにいる `Gravity合同会社` と `Gravity AH合同会社` を同じ箱として扱うのは危険です。この二つは sponsor family の中では近いものの、資産への接続方法が違います。現在の整理では、`Gravity合同会社` は TMK 持分ルートの中心にいる GK / TK operator であり、`Gravity AH合同会社` は信託受益権ルートの別箱として読む方が整合します。</p><p>Gravity合同会社は、上では匿名組合営業者、下では TMK の特定出資・優先出資引受主体という二重機能を持ちます。つまり、単なる受け皿 GK ではなく、『匿名組合を受ける箱』であり『TMK へ資金を落とす箱』でもあります。ここが本件の説明で最も大事な point です。</p><p>他方、Gravity AH合同会社は、JCR や案件資料との照合から、物件保有・資金調達ビークルとしての色合いが強く、TMK 持分レーンよりも信託受益権・ asset holding 側に寄ります。したがって、同じ八重洲クラスターだからといって、両者のキャッシュフローや源泉税の論点を一つに束ねるべきではありません。</p><p>この違いを図で表すなら、`Gravity合同会社 = GK + TK operator + TMK持分 route`、`Gravity AH合同会社 = GK + TK operator + 信託受益権 route` です。本レポート全体もこの tax map に従って読み進めるのが最もスムーズです。</p></section>
+<section id="downstream-tmk"><h2>7. 下流側: Gravity特定目的会社と DH4 名義 TMK 群</h2><p>下流 TMK の理解では、現時点で `Gravity特定目的会社` が第一候補です。ただし、これを唯一候補として言い切る段階ではなく、`GLP Japan DH4特定目的会社` と `GLP DH4 Exc特定目的会社` を parallel / additional candidate family として残すのが慎重です。</p><p><a href="https://www.fsa.go.jp/menkyo/menkyoj/tokutei_todokede.pdf">FSA 特定目的会社届出一覧</a> は current list として、`Gravity特定目的会社`、`GLP Japan DH4特定目的会社`、`GLP DH4 Exc特定目的会社` の実在を確認する起点です。さらに、<a href="https://www.glpjreit.com/file/tmp-9zt6x.pdf">GLP J-REIT 2017取得開示</a>、<a href="https://www.glpjreit.com/file/portfolio_files-1b9f898f5bc04cb776266ca9b1205431ecf68245.pdf">GLP J-REIT 2020取得開示</a>、<a href="https://www.glpjreit.com/file/ir_library_other_file-1666cd47c49c94044dd15a7bd43b45f6c0e65003.pdf">GLP J-REIT 2021-05開示</a>、<a href="https://www.glpjreit.com/file/portfolio_files-3c85ba006d02cd916ee26fb160684f3411e1c190.pdf">GLP J-REIT 2021-06開示</a> を重ねることで、舞洲・柏・狭山日高の旧名称 TMK と現行 name の橋を掛けられます。</p><p>特に `Gravity特定目的会社` については、狭山日高 2 ロジスティック特定目的会社からの改称痕跡と、GLP 狭山日高Ⅱ の lineage を結べるので、GLP 物流資産系 current-name TMK とみる読みが一段強いです。もっとも、まだ `Gravity合同会社 -&gt; Gravity特定目的会社` を名指しで書いた direct evidence は出ていません。</p><p>このため実務的には、『下流の最有力候補はかなり絞れたが、最後の接続線は未立証』と表現するのが最も誠実です。構造理解としてはかなり前に進んでいますが、契約線の最終立証には追加資料が必要です。</p></section>
+<section id="money-flows"><h2>8. お金の流れ: 投資資金流入、資産収益、匿名組合利益分配</h2><p>本件のキャッシュフローは、少なくとも三本に分けて理解すべきです。第一に、上流投資家から国内外のファンド箱を通って GK に落ちる `投資資金の流入`。第二に、物流施設から TMK または trust route を通じて生まれる `運用収益`。第三に、その収益が GK / TK / LP の各レイヤーを通じて上流に戻る `利益分配の還流` です。</p><p>このうち、Gravity合同会社に関して最も自然な本線は、`Japan DH4 系 -&gt; JIF Japan Partners LP -&gt; Gravity合同会社匿名組合への出資 -&gt; Gravity合同会社 -&gt; TMK の特定出資 / 優先出資 -&gt; 物流施設` という流れです。戻りは逆で、`物流施設の賃料収入・売却益 -&gt; TMK の配当原資 -&gt; Gravity合同会社の匿名組合利益 -&gt; JIF Japan Partners LP への分配 -&gt; 上流投資家への再分配` となります。</p><p>ここでよく起きる誤読は、『Gravity合同会社 から Japan DH4 に直接戻る』あるいは『TMK から foreign LP に直接流れる』という読みです。しかし法的には、まず GK と匿名組合員の関係、TMK と持分保有者の関係があり、そのレイヤーを飛ばして一気に最終投資家へ接続させるのは危険です。</p><p>結局のところ、本件は経済実態としてはパススルー的なお金の流れに見えても、税務上は GK・TMK・LP がそれぞれ別ルールで判定される構造です。この二重性を押さえることが、後の源泉税論点を理解する鍵になります。</p></section>
+<section id="tax-layers"><h2>9. GK / TK / TMK / 一般社団法人の税務上の位置づけ</h2><p>`GK`、`TK`、`TMK`、`一般社団法人` を一括りにして『SPC』と呼んでしまうと、税務処理は途端に見誤ります。<a href="https://laws.e-gov.go.jp/law/417AC0000000086">e-Gov 会社法</a>、<a href="https://laws.e-gov.go.jp/law/132AC0000000048">e-Gov 商法 匿名組合</a>、<a href="https://laws.e-gov.go.jp/law/410AC0000000105">e-Gov 資産流動化法</a>、<a href="https://laws.e-gov.go.jp/law/340AC0000000034">e-Gov 法人税法</a>、<a href="https://laws.e-gov.go.jp/law/332AC0000000026">e-Gov 租税特別措置法</a>、<a href="https://laws.e-gov.go.jp/law/418AC0000000048">e-Gov 一般社団法人法</a> を土台に tax map を切ると、各箱の役割は明確に分かれます。</p><p>まず GK は原則として普通法人であり、自動的な導管ではありません。TK は民法上の組合ではなく商法上の匿名組合であり、営業者に事業が帰属しつつ、利益分配の局面で源泉税と条約が問題になります。TMK は法人ですが、一定要件を満たすと支払配当の損金算入により導管性に近づきます。一般社団法人は orphan / governance layer として使われても、税務上は別個の法人類型として判定されます。</p><p>この点で、<a href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/hojin/shinkoku/itiran2013/pdf/10_08.pdf">NTA TMK申告様式説明資料</a> と <a href="https://www.nta.go.jp/publication/pamph/hojin/koekihojin/pdf/01.pdf">NTA 一般社団法人等の法人税取扱い</a> の二つは非常に有用です。前者は TMK 導管課税の実務面を、後者は一般社団法人の法人税上の取扱いを整理するための足場になります。</p><p>GRAVITY 文脈へ当て込むと、`Gravity合同会社 = GK + TK operator + TMK持分 route`、`Gravity AH合同会社 = GK + TK operator + 信託受益権 route`、`Gravity特定目的会社 = 下流 TMK 第一候補`、`Gravity一般社団法人 = orphan / governance layer` という理解が最も整合的です。</p></section>
+<section id="withholding"><h2>10. 匿名組合分配金と日本の源泉税</h2><p>匿名組合分配金に関する日本税務の出発点は、<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2878.htm">NTA 2878</a> と <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2884.htm">NTA 2884</a> にあります。ここから、匿名組合契約等に基づく利益の分配は国内源泉所得に入り、非居住者・外国法人への支払なら原則として 20.42% 源泉が安全側初期値になる、と整理できます。</p><p>本件で重要なのは、『経済実態として最終的に海外投資家へ流れる』ことと、『法的な直後相手方が誰か』を区別することです。現時点の最有力 reading では、Gravity合同会社匿名組合の法的な直後受領者は JIF Japan Partners LP であり、そのさらに上流に Japan DH4 投資事業有限責任組合がいる、という二段構えです。</p><p>したがって、税務上まず問題になるのは `Gravity合同会社 -&gt; JIF Japan Partners LP` の支払です。ここで条約届出が前提として整わない限り、支払者である Gravity 側はまず国内法税率で源泉するのが自然です。後から treaty relief や refund を議論する余地はありますが、初期値は 20.42% とみるのが実務上の安全策になります。</p><p>この局面の届出実務を詰めるには、<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2888.htm">NTA 2888</a>、<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2889.htm">NTA 2889</a>、<a href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/joyaku/annai/1648_13.htm">NTA A3-13</a>、<a href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/joyaku/annai/1648_04.htm">NTA A3-4</a>、<a href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/joyaku/annai/1648_18.htm">NTA A3-18</a> をまとめて見る必要があります。これは単に税率の話ではなく、『誰が treaty claimant で、どの書式を使い、前日までに何を出すか』の問題だからです。</p></section>
+<section id="claimant"><h2>11. JIF Japan Partners LP が pass-through なら誰が treaty claimant か</h2><p>この論点は、GRAVITY 案件の税務面で最も繊細です。感覚的には『シンガポール LP を通しているのだから条約が使えるのではないか』と思いやすいのですが、実際にはそこまで単純ではありません。</p><p><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2888.htm">NTA 2888</a>、<a href="https://www.nta.go.jp/about/organization/tokyo/syotoku/oshirase/5300/5335.htm">NTA 5335</a>、<a href="https://www.mof.go.jp/tax_policy/summary/international/press_release/SynthesizedTextforJapan-SingaporeJP.pdf">MOF 日シンガポール条約統合テキスト</a>、<a href="https://www.mof.go.jp/tax_policy/summary/international/tax_convention/mli_si.htm">MOF 日シンガポール条約 MLI概要</a>、<a href="https://www.nta.go.jp/about/organization/ntc/kenkyu/ronsou/52/04/ronsou.pdf">NTA 論叢52-04</a> を組み合わせると、JIF LP が fiscally transparent なら、恩典主体は JIF LP に自動帰属せず、その所得を相手国法上取得したと扱われる構成員ごとに分かれる可能性が高い、というのが最も自然です。</p><p>つまり、Business Profile や member roster が重要なのは、『投資家を知りたいから』ではなく、『誰が条約上の claimants になり得るか』を決めるためです。この意味で、JIF Japan Partners LP の member roster / entity classification は、単なる corporate profile ではなく源泉税処理そのものに直結する frontier です。</p><p>同時に、この論点はまだ direct evidence 待ちでもあります。public web だけでは最終的な member roster までは届いていません。ただし、<a href="https://www.acra.gov.sg/resources/guides-forms/buying-a-business-profile/">ACRA Business Profile guidance</a>、<a href="https://www.acra.gov.sg/resources/buying-business-information/types-of-acra-information-products/">ACRA Types of ACRA information products</a>、<a href="https://www.acra.gov.sg/resources/eservice-tools-portals/api-marketplace/">ACRA API Marketplace</a>、<a href="https://www.acra.gov.sg/about-bizfile/updates-and-announcements/provision-of-free-business-profiles">ACRA Provision of Free Business Profiles</a> から、Business Profile に General Partner / Limited Partner / Manager / Withdrawn Partners が載ること、free route ではなく purchase/API frontier に入ったことまでは確認済みです。したがって、必要な資料の所在はかなり見えています。</p></section>
+<section id="certainty"><h2>12. 何が確定し、何が高確度推定で、何が未確認か</h2><p>ここまでをまとめると、確定しているのは『八重洲クラスターの主体群の存在』『JIF Japan Partners LP が Tokumei Kumiai Operator 経由で日本物流へ入る foreign-law vehicle であること』『Gravity合同会社が TMK 持分ルートの中核 GK として現れること』『Gravity特定目的会社および DH4 名義 TMK 群の current existence』です。</p><p>高確度推定なのは、『Japan DH4 投資事業有限責任組合 -&gt; JIF Japan Partners LP -&gt; Gravity合同会社 -&gt; Gravity特定目的会社』という主線、`GLP Japan Income Fund L.P. ("JIF")` と `JIF Japan Partners LP` を same-family / parallel sleeve と読むこと、Gravity特定目的会社を GLP 狭山日高Ⅱ line の current-name TMK とみることです。</p><p>未確認なのは、`JIF Japan Partners LP -&gt; Gravity合同会社` の direct contract line、`Gravity合同会社 -&gt; Gravity特定目的会社` の direct line、そして `JIF LP の member roster / treaty claimant` です。この三点が取れれば、本件のストラクチャー理解は 8割台後半から 9割超へ進み、税務上の論点もかなり断定的に書ける段階に入ります。</p></section>
+<section id="implications"><h2>13. 実務上の含意</h2><p>実務的にこの GRAVITY 調査から得られる含意は三つあります。第一に、ファンド / SPC / TMK の多層案件では、『最終的に誰にお金が行くのか』だけではなく、『どのレイヤーで何の税務論点が立つのか』を層別に見る必要があること。第二に、foreign LP を挟むと treaty relief が自動で軽くなるわけではなく、むしろ claimant 判定と届出実務が複雑になること。第三に、一次ソースの収集は構造理解だけでなく、断定の強さを制御するためにも不可欠だということです。</p><p>税務 DD であれば、まず GK / TK / TMK / LP ごとに cash flow と legal flow を分けて書くべきです。税務調査対応であれば、匿名組合分配金の法的相手方、国内法の baseline 税率、条約届出書の route、構成員 look-through の必要性を順番に確認すべきです。金融商品・不動産ファンド分析の文脈であれば、上流 sponsor family と下流 TMK line の bridge が一番効きます。</p><p>その意味で、本レポートは『最終結論を断定する文書』というより、『どこまで分かったか』『何を前提にその結論を置いているか』『次に何を取れば断定に行けるか』を一体で示す設計にしています。これは GRAVITY のような多層案件では、説明責任のある形だからです。</p></section>
+<section id="frontier"><h2>14. 次の frontier</h2><p>最後の frontier は、かなり絞れています。第一に `JIF Japan Partners LP` の member roster / treaty claimant。第二に `Gravity合同会社 -&gt; Gravity特定目的会社` の direct evidence。第三に `Japan DH4 投資事業有限責任組合 -&gt; JIF Japan Partners LP` の direct line です。このうち税務に最も効くのは第一で、ストラクチャーの最後の矢印に最も効くのは第二です。</p><p>いまの時点で大切なのは、何が未解決かを曖昧にしないことです。本件は『全然わからない』段階ではありません。むしろ『骨格はかなり見えたが、最後の claimant / contract line が未取得』という段階です。この距離感を保つことが、次の調査を最短にします。</p><p>したがって次の一手は、Business Profile / member roster の controlled-access route に入るか、もしくは日本側の条約届出書・様式16・匿名組合契約の実物に接近することです。そこまで行けば、ここでの best reading を、かなり強い direct-evidence-backed statement へ押し上げられます。</p></section>
+<section id="source-map"><h2>15. 主要一次ソース一覧</h2><p>以下に、本レポートの叙述を支えた主要一次ソースをまとめます。本文中のリンクも含め、公開ページからそのまま外部の公開一次ソースへ飛べるように統一しています。</p><table><thead><tr><th>一次ソース</th><th>リンク</th></tr></thead><tbody><tr><td>FSA tokurei 011</td><td><a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/011.pdf">https://www.fsa.go.jp/menkyo/menkyoj/tokurei/011.pdf</a></td></tr><tr><td>FSA tokurei 012</td><td><a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/012.pdf">https://www.fsa.go.jp/menkyo/menkyoj/tokurei/012.pdf</a></td></tr><tr><td>FSA QII 01_b</td><td><a href="https://www.fsa.go.jp/common/law/tekikaku/01_b.pdf">https://www.fsa.go.jp/common/law/tekikaku/01_b.pdf</a></td></tr><tr><td>FSA 特定目的会社届出一覧</td><td><a href="https://www.fsa.go.jp/menkyo/menkyoj/tokutei_todokede.pdf">https://www.fsa.go.jp/menkyo/menkyoj/tokutei_todokede.pdf</a></td></tr><tr><td>GLP J-REIT 2017取得開示</td><td><a href="https://www.glpjreit.com/file/tmp-9zt6x.pdf">https://www.glpjreit.com/file/tmp-9zt6x.pdf</a></td></tr><tr><td>GLP J-REIT 2020取得開示</td><td><a href="https://www.glpjreit.com/file/portfolio_files-1b9f898f5bc04cb776266ca9b1205431ecf68245.pdf">https://www.glpjreit.com/file/portfolio_files-1b9f898f5bc04cb776266ca9b1205431ecf68245.pdf</a></td></tr><tr><td>GLP J-REIT 2021-05開示</td><td><a href="https://www.glpjreit.com/file/ir_library_other_file-1666cd47c49c94044dd15a7bd43b45f6c0e65003.pdf">https://www.glpjreit.com/file/ir_library_other_file-1666cd47c49c94044dd15a7bd43b45f6c0e65003.pdf</a></td></tr><tr><td>GLP J-REIT 2021-06開示</td><td><a href="https://www.glpjreit.com/file/portfolio_files-3c85ba006d02cd916ee26fb160684f3411e1c190.pdf">https://www.glpjreit.com/file/portfolio_files-3c85ba006d02cd916ee26fb160684f3411e1c190.pdf</a></td></tr><tr><td>SGX FY2023 Financial Statements</td><td><a href="https://links.sgx.com/1.0.0/corporate-announcements/IF3OY1SE60NRAZDD/802098_GLP_FY23_Financial_Statements.pdf">https://links.sgx.com/1.0.0/corporate-announcements/IF3OY1SE60NRAZDD/802098_GLP_FY23_Financial_Statements.pdf</a></td></tr><tr><td>Ares Exhibit 21.1</td><td><a href="https://www.sec.gov/Archives/edgar/data/1176948/000162828026011413/a2025q4exhibit211.htm">https://www.sec.gov/Archives/edgar/data/1176948/000162828026011413/a2025q4exhibit211.htm</a></td></tr><tr><td>GLP JIF launch article</td><td><a href="https://www.glp.com/global/article/glp-launches-largest-logistics-private-open-ended-income-fund-japan">https://www.glp.com/global/article/glp-launches-largest-logistics-private-open-ended-income-fund-japan</a></td></tr><tr><td>e-Gov 会社法</td><td><a href="https://laws.e-gov.go.jp/law/417AC0000000086">https://laws.e-gov.go.jp/law/417AC0000000086</a></td></tr><tr><td>e-Gov 商法 匿名組合</td><td><a href="https://laws.e-gov.go.jp/law/132AC0000000048">https://laws.e-gov.go.jp/law/132AC0000000048</a></td></tr><tr><td>e-Gov 資産流動化法</td><td><a href="https://laws.e-gov.go.jp/law/410AC0000000105">https://laws.e-gov.go.jp/law/410AC0000000105</a></td></tr><tr><td>e-Gov 法人税法</td><td><a href="https://laws.e-gov.go.jp/law/340AC0000000034">https://laws.e-gov.go.jp/law/340AC0000000034</a></td></tr><tr><td>e-Gov 相続税法</td><td><a href="https://laws.e-gov.go.jp/law/325AC0000000073">https://laws.e-gov.go.jp/law/325AC0000000073</a></td></tr><tr><td>e-Gov 租税特別措置法</td><td><a href="https://laws.e-gov.go.jp/law/332AC0000000026">https://laws.e-gov.go.jp/law/332AC0000000026</a></td></tr><tr><td>e-Gov 一般社団法人法</td><td><a href="https://laws.e-gov.go.jp/law/418AC0000000048">https://laws.e-gov.go.jp/law/418AC0000000048</a></td></tr><tr><td>NTA 2878</td><td><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2878.htm">https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2878.htm</a></td></tr><tr><td>NTA 2884</td><td><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2884.htm">https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2884.htm</a></td></tr><tr><td>NTA 2888</td><td><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2888.htm">https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2888.htm</a></td></tr><tr><td>NTA 2889</td><td><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2889.htm">https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2889.htm</a></td></tr><tr><td>NTA A3-13</td><td><a href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/joyaku/annai/1648_13.htm">https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/joyaku/annai/1648_13.htm</a></td></tr><tr><td>NTA A3-4</td><td><a href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/joyaku/annai/1648_04.htm">https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/joyaku/annai/1648_04.htm</a></td></tr><tr><td>NTA A3-18</td><td><a href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/joyaku/annai/1648_18.htm">https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/joyaku/annai/1648_18.htm</a></td></tr><tr><td>NTA 5335</td><td><a href="https://www.nta.go.jp/about/organization/tokyo/syotoku/oshirase/5300/5335.htm">https://www.nta.go.jp/about/organization/tokyo/syotoku/oshirase/5300/5335.htm</a></td></tr><tr><td>NTA 論叢52-04</td><td><a href="https://www.nta.go.jp/about/organization/ntc/kenkyu/ronsou/52/04/ronsou.pdf">https://www.nta.go.jp/about/organization/ntc/kenkyu/ronsou/52/04/ronsou.pdf</a></td></tr><tr><td>NTA TMK申告様式説明資料</td><td><a href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/hojin/shinkoku/itiran2013/pdf/10_08.pdf">https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/hojin/shinkoku/itiran2013/pdf/10_08.pdf</a></td></tr><tr><td>NTA 一般社団法人等の法人税取扱い</td><td><a href="https://www.nta.go.jp/publication/pamph/hojin/koekihojin/pdf/01.pdf">https://www.nta.go.jp/publication/pamph/hojin/koekihojin/pdf/01.pdf</a></td></tr><tr><td>MOF 日シンガポール条約統合テキスト</td><td><a href="https://www.mof.go.jp/tax_policy/summary/international/press_release/SynthesizedTextforJapan-SingaporeJP.pdf">https://www.mof.go.jp/tax_policy/summary/international/press_release/SynthesizedTextforJapan-SingaporeJP.pdf</a></td></tr><tr><td>MOF 日シンガポール条約 MLI概要</td><td><a href="https://www.mof.go.jp/tax_policy/summary/international/tax_convention/mli_si.htm">https://www.mof.go.jp/tax_policy/summary/international/tax_convention/mli_si.htm</a></td></tr><tr><td>ACRA Business Profile guidance</td><td><a href="https://www.acra.gov.sg/resources/guides-forms/buying-a-business-profile/">https://www.acra.gov.sg/resources/guides-forms/buying-a-business-profile/</a></td></tr><tr><td>ACRA Types of ACRA information products</td><td><a href="https://www.acra.gov.sg/resources/buying-business-information/types-of-acra-information-products/">https://www.acra.gov.sg/resources/buying-business-information/types-of-acra-information-products/</a></td></tr><tr><td>ACRA API Marketplace</td><td><a href="https://www.acra.gov.sg/resources/eservice-tools-portals/api-marketplace/">https://www.acra.gov.sg/resources/eservice-tools-portals/api-marketplace/</a></td></tr><tr><td>ACRA Provision of Free Business Profiles</td><td><a href="https://www.acra.gov.sg/about-bizfile/updates-and-announcements/provision-of-free-business-profiles">https://www.acra.gov.sg/about-bizfile/updates-and-announcements/provision-of-free-business-profiles</a></td></tr><tr><td>data.gov.sg Entities Registered with ACRA</td><td><a href="https://data.gov.sg/datasets/d_3f960c10fed6145404ca7b821f263b87/view">https://data.gov.sg/datasets/d_3f960c10fed6145404ca7b821f263b87/view</a></td></tr></tbody></table></section>
+<section id="appendices">
+<h2>16. 付録: 既存成果物の統合収録</h2>
+<p>以下では、既存の長文レポート、deep research メモ、法令・通達監査メモ、JIF LP 論点メモ、research plan、issue memo を付録として統合しています。これにより、本レポートは単なる総説ではなく、詳細メモと一体化した master report になります。</p>
+</section>
+<section class="appendix-section">
+<h2>A. 既存長文レポート: Gravity合同会社 現状研究レポート</h2>
+<p class="appendix-meta">原本: <code>/mnt/d/Users/PC/Desktop/その他/GRAVITY_匿名組合源泉税条約恩典メモ_20260422/gravity_godo_current_status_master_report_20260422.html</code></p>
+<div class="appendix-body"><div class="page">
+<div class="hero">
+<h1>Gravity合同会社の現状に関する研究レポート</h1>
+<p class="sub">GRAVITY案件について、2026-04-22 時点の公開一次資料と、既存 research hub に蓄積した分析資産を統合し、<code>Gravity合同会社</code> を中心に上流・下流・並行ビークル・TK分配金・日本の源泉税論点までを俯瞰的に整理した長文レポート。</p>
+<div class="meta">作成日: 2026-04-22 ｜ 想定読者: 税務調査・税務DD・国際税務分析・ファンドストラクチャー読解を行う実務者 ｜ 対象時点: 2026-04-22</div>
+</div>
+<div class="toc">
+<strong>目次</strong>
+<ol>
+<li>本レポートの結論</li>
+<li>調査対象と方法</li>
+<li>Gravity合同会社について現時点で確定していること</li>
+<li>GRAVITY案件の全体ストラクチャー</li>
+<li>上流レイヤーの主体別整理</li>
+<li>下流レイヤーの主体別整理</li>
+<li>Gravity特定目的会社とDH4名義TMK群の位置づけ</li>
+<li>TK分配金について現時点で言えること</li>
+<li>日本の源泉税論点</li>
+<li>JIF LP が pass-through なら誰が条約恩典を取るのか</li>
+<li>確定・高確度推定・未確認の整理</li>
+<li>実務上の含意</li>
+<li>今後の最重要 frontier</li>
+<li>主要ソース一覧</li>
+</ol>
+</div>
+<h2>1. 本レポートの結論</h2>
+<div class="panel key">
+<p>現時点で最も重要な結論は、<code>Gravity合同会社</code> を単体のGKとして見るだけでは、この案件の本質を見誤るという点にあります。公開資料を積み上げると、これは単純な一層構造ではなく、<code>platform / strategy</code>、<code>domestic LPS</code>、<code>foreign sleeve</code>、<code>domestic GK/TK operator</code>、<code>TMK / 信託受益権</code>、<code>real assets</code> の各層が重なった多層ストラクチャーです。</p>
+<p>その中で <code>Gravity合同会社</code> は、<code>TK</code> 層では営業者であり、下流 <code>TMK</code> 層では <code>特定出資</code> と <code>優先出資</code> の引受人として機能する、日本側の中心的な <code>GK/SPC</code> です。法的に見ると、上の箱では事業者、下の箱では投資家、という二重の役割を持つ箱だと理解するのが自然です。</p>
+<p>また、上流レイヤーでは <code>JIF Japan Partners LP</code> が <code>Tokumei Kumiai Operator</code> 経由で日本物流不動産へ投資する foreign sleeve として最も強く見えており、そのさらに上流には <code>Japan DH4 投資事業有限責任組合</code> が乗る、というのが現時点の best explanation です。他方、<code>Japan Income Fund合同会社 / ジャパンインカムファンド投資事業有限責任組合</code> は重要な国内ハブですが、<code>Gravity合同会社</code> の利益分配の直後受領者というより、日本側LPSハブまたは parallel route として見る方が整合的です。</p>
+<p>下流側では、現時点の strongest direct-name candidate は <code>Gravity特定目的会社</code> です。これに加えて、<code>GLP Japan DH4特定目的会社</code> と <code>GLP DH4 Exc特定目的会社</code> が parallel / additional candidate family として残っています。ただし、<code>Gravity合同会社 -&gt; Gravity特定目的会社</code>、あるいは <code>Gravity合同会社 -&gt; DH4名義TMK群</code> の direct evidence はまだ未取得であり、ここは最重要の未解決点です。</p>
+<p>さらに税務面では、<code>Gravity合同会社匿名組合</code> の利益分配は国内法上まず <code>所得税法161条1項16号</code> の国内源泉所得と読むのが自然で、支払先が非居住者・外国法人側であるなら、実務の安全側初期値は <code>20.42%</code> 源泉です。条約軽減の可能性はありますが、<code>JIF LP</code> が pass-through なら恩典主体は <code>JIF LP</code> そのものではなく、その所得を取得したと扱われる構成員ごとに分かれるのが基本です。つまり、<code>foreign LP が一枚挟まっているから自動的に treaty relief</code> とは読めません。</p>
+</div>
+<p class="source-note"><strong>公開一次ソース:</strong> <a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/011.pdf">FSA tokurei 011</a>、<a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/012.pdf">FSA tokurei 012</a>、<a href="https://www.fsa.go.jp/menkyo/menkyoj/tokutei_todokede.pdf">FSA 特定目的会社届出一覧</a>、<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2878.htm">NTA 2878</a>、<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2884.htm">NTA 2884</a>、<a href="https://www.mof.go.jp/tax_policy/summary/international/press_release/SynthesizedTextforJapan-SingaporeJP.pdf">MOF 日シンガポール条約統合テキスト</a></p>
+<h2>2. 調査対象と方法</h2>
+<div class="panel">
+<p>本レポートは、新たにゼロから探索し直すよりも、すでに <code>/mnt/d/Users/PC/Desktop/tax/gravity_tk_tmk_project</code> に蓄積済みの official-source anchored research hub を再統合する形で作成したものです。つまり、単なる会話メモではなく、既に取得済みの一次ソース、構造ノート、主体別ドシエ、checkpoint、統合レポート群を再編集して一本化しています。</p>
+<p>使った一次ソースの核は、金融庁の <code>tokurei_011-014</code>、<code>QII 01_b</code>、<code>特定目的会社届出一覧</code>、GLP J-REIT / JPX の開示、Ares の SEC Exhibit 21.1、国土交通省・大阪市・Hon Hai の案件資料です。二次ソースは補強に使っていますが、本文の主張はできる限り official source に寄せています。</p>
+<p>また、断定の強さは明示的に三層化しています。すなわち、<code>確定</code>、<code>高確度推定</code>、<code>未確認</code> を意識的に分けています。これにより、構造理解を深めつつも、証拠レベルを取り違えないようにしています。</p>
+</div>
+<p class="source-note"><strong>公開一次ソース:</strong> <a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/011.pdf">FSA tokurei 011</a>、<a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/012.pdf">FSA tokurei 012</a>、<a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/013.pdf">FSA tokurei 013</a>、<a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/014.pdf">FSA tokurei 014</a>、<a href="https://www.fsa.go.jp/common/law/tekikaku/01_b.pdf">FSA QII 01_b</a>、<a href="https://www.sec.gov/Archives/edgar/data/1176948/000162828026011413/a2025q4exhibit211.htm">Ares Exhibit 21.1</a></p>
+<h2>3. Gravity合同会社について現時点で確定していること</h2>
+<div class="panel">
+<p><code>Gravity合同会社</code> について、公開資料上かなり堅く言える部分は次のとおりです。第一に、<code>Gravity AH合同会社</code> とは別法人です。これは似た名称のため混同しやすいのですが、投資導線も下流資産の持ち方も別です。<code>Gravity合同会社</code> は TMK の特定出資・優先出資引受型、<code>Gravity AH合同会社</code> は信託受益権取得型です。</p>
+<p>第二に、<code>Gravity合同会社</code> は金融庁 <code>tokurei/011.pdf</code> 上の届出者であり、<code>Gravity合同会社匿名組合</code> の届出主体です。代表社員は <code>Gravity一般社団法人</code>、2025年9月30日現在の職務執行者は <code>川島聖</code>、所在地は <code>東京都中央区八重洲二丁目2番1号</code> です。gBizINFO 上の法人番号は <code>4010403022859</code> で整合します。</p>
+<p>第三に、<code>tokurei/012.pdf</code> 上、<code>Gravity合同会社匿名組合</code> の投資内容は、<code>匿名組合出資をもって特定目的会社の発行する特定出資及び優先出資を引受けることにより、間接的に不動産等へ投資</code> と整理されています。したがって、<code>Gravity合同会社</code> は匿名組合の営業者として上から資金を受け、それを使って TMK の証券を引き受ける構造を示唆します。</p>
+<p>第四に、<code>tokurei/012.pdf</code> 上で見える投資家属性は、<code>外国法人又は外国人等(1)</code>、非QII 投資家ゼロです。この一点だけでも、<code>Gravity合同会社匿名組合</code> における匿名組合員側は single foreign-type investor と読むのが自然になります。ここが後で <code>JIF LP</code> を最有力候補とみる足場になります。</p>
+</div>
+<p class="source-note"><strong>公開一次ソース:</strong> <a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/011.pdf">FSA tokurei 011</a>、<a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/012.pdf">FSA tokurei 012</a>、<a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/013.pdf">FSA tokurei 013</a>、<a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/014.pdf">FSA tokurei 014</a>、<a href="https://info.gbiz.go.jp/hojin/ichiran?hojinBango=4010403022859">gBizINFO Gravity合同会社</a></p>
+<h2>4. GRAVITY案件の全体ストラクチャー</h2>
+<div class="panel">
+<p>この案件を最も見誤りやすいのは、<code>GK -&gt; TMK -&gt; 物流施設</code> の単線だけで読むことです。現実には、上流に platform / strategy があり、その下に国内LPS、さらに foreign sleeve、そこから日本国内の GK/TK operator、下流の TMK、最後に real assets という複層構造になっています。</p>
+<p>現時点の current best layering は、次のようなものです。</p>
+<pre>Layer A: Platform / strategy
+Ares / GLP / 日本GLP / GLP Japan Income Fund
+
+Layer B: domestic LPS
+Japan DH4 投資事業有限責任組合
+ジャパンインカムファンド投資事業有限責任組合
+
+Layer C: foreign sleeve
+JIF Japan Partners LP
+Sakai GK Partners LP
+TK Investor Singapore LP
+
+Layer D: domestic GK/TK operator
+Gravity合同会社
+Gravity AH合同会社
+JDP3合同会社
+JDP4合同会社
+堺ロジスティック合同会社
+
+Layer E: downstream holding route
+TMK の特定出資 / 優先出資
+不動産信託受益権
+
+Layer F: real assets
+日本国内物流施設</pre>
+<p>この構造で見ると、<code>Gravity合同会社</code> は Layer D に位置する <code>domestic GK/TK operator</code> であり、上流と下流をつなぐ中枢箱です。逆に言えば、<code>Gravity合同会社</code> の機能は、それ自体単独で完結するものではなく、上流の資金ビークルと下流の asset-holding vehicle のあいだの変換装置に近い、ということです。</p>
+</div>
+<p class="source-note"><strong>公開一次ソース:</strong> <a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/011.pdf">FSA tokurei 011</a>、<a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/012.pdf">FSA tokurei 012</a>、<a href="https://www.sec.gov/Archives/edgar/data/1176948/000162828026011413/a2025q4exhibit211.htm">Ares Exhibit 21.1</a>、<a href="https://www.glp.com/global/article/glp-launches-largest-logistics-private-open-ended-income-fund-japan">GLP JIF launch article</a></p>
+<h2>5. 上流レイヤーの主体別整理</h2>
+<h3>5.1 Ares / GLP / 日本GLP</h3>
+<div class="panel">
+<p>最上流 platform としては、Ares による GLP 関連プラットフォームの取り込みと、その下にある日本GLPの運用レイヤーを押さえる必要があります。Ares 2025年の SEC Exhibit 21.1 では、<code>JIF Japan Partners GP, Pte. Ltd.</code>、<code>Japan Income Fund GK</code>、GLP Japan 関連主体が同一重要子会社群に並んでおり、これにより <code>JIF / Japan Income Fund / GLP Japan</code> がバラバラではなく、一つの platform family に属することが裏打ちされます。</p>
+<p>また GLP 公式ページでは、<code>GLP Japan Income Fund</code> が open-end / core 型の日本物流 income strategy として位置づけられ、2020年開始・その後の拡大が説明されています。ここから分かるのは、GRAVITY案件が単発案件だけでなく、広い JIF strategy 文脈のなかで読むべきだということです。</p>
+</div>
+<p class="source-note"><strong>公開一次ソース:</strong> <a href="https://www.sec.gov/Archives/edgar/data/1176948/000162828026011413/a2025q4exhibit211.htm">Ares Exhibit 21.1</a>、<a href="https://www.glp.com/global/article/glp-launches-largest-logistics-private-open-ended-income-fund-japan">GLP JIF launch article</a>、<a href="https://links.sgx.com/1.0.0/corporate-announcements/IF3OY1SE60NRAZDD/802098_GLP_FY23_Financial_Statements.pdf">SGX FY2023 Financial Statements</a></p>
+<h3>5.2 Japan DH4 投資事業有限責任組合</h3>
+<div class="panel">
+<p><code>Japan DH4 投資事業有限責任組合</code> は、今回の全体構造を読むうえで重要な国内LPSです。<code>tokurei_012</code> 上で、この主体は <code>海外リミテッドパートナーシップに対する出資を通じて、間接的に不動産等に対する投資を行う</code> と記載されています。これは、国内LPSから foreign LP に上がるルートを公式資料が直接示している、という意味で極めて重要です。</p>
+<p>この文言があるため、<code>JIF Japan Partners LP</code> の直上候補としては、<code>Japan DH4</code> が非常に強い位置に立ちます。少なくとも current best view では、<code>Japan DH4 -&gt; JIF Japan Partners LP</code> は direct proof ではないが、高確度推定として扱ってよいと考えられます。</p>
+</div>
+<p class="source-note"><strong>公開一次ソース:</strong> <a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/012.pdf">FSA tokurei 012</a></p>
+<h3>5.3 JIF Japan Partners LP</h3>
+<div class="panel">
+<p><code>JIF Japan Partners LP</code> は、今回の GRAVITY 局面で最重要の foreign sleeve です。金融庁 <code>tokurei_012</code> では、<code>portfolio of cash-yielding logistics facilities in Japan</code> に対し、<code>Tokumei Kumiai investment in Tokumei Kumiai Operator</code> を通じて間接投資すると明示されています。これは、単独案件より portfolio-level stabilized logistics facilities への投資戦略を示唆します。</p>
+<p>また、GP として <code>JIF Japan Partners GP, Pte. Ltd.</code> が確認され、シンガポール所在の GP と LP の組合せが見えています。もっとも、ここで注意すべきは、<code>QII 01_b</code> は周辺行の括弧書きを誤読しやすく、<code>JIF GP -&gt; JIF LP</code> の対応確認は <code>tokurei_012</code> を優先すべきだという点です。</p>
+<p>いずれにせよ、現時点の公開資料では、<code>JIF Japan Partners LP</code> が <code>Tokumei Kumiai Operator</code> に対する投資を通じて日本物流資産へ間接投資する foreign LP であることはかなり堅いです。</p>
+</div>
+<p class="source-note"><strong>公開一次ソース:</strong> <a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/012.pdf">FSA tokurei 012</a>、<a href="https://www.fsa.go.jp/common/law/tekikaku/01_b.pdf">FSA QII 01_b</a>、<a href="https://data.gov.sg/datasets/d_3f960c10fed6145404ca7b821f263b87/view">data.gov.sg Entities Registered with ACRA</a></p>
+<h3>5.4 Japan Income Fund合同会社 / ジャパンインカムファンド投資事業有限責任組合</h3>
+<div class="panel">
+<p><code>Japan Income Fund合同会社</code> と <code>ジャパンインカムファンド投資事業有限責任組合</code> は、GRAVITY案件を読むときに非常に重要ですが、位置づけを誤ると全体が崩れます。これらは公開資料上、<code>匿名組合の営業者に対する匿名組合出資</code> を行う国内LPSハブとして現れており、しかも国内の金融機関・事業法人など多数の投資家層を伴います。</p>
+<p>したがって、これを <code>Gravity合同会社</code> の匿名組合利益分配の直後受領者とみるより、<code>日本側の broad investor aggregation layer</code> として見る方が自然です。つまり、上流の domestic LPS の一つではあるが、<code>JIF LP</code> や <code>Gravity</code> と同じ文脈で直列に並ぶとは限らない、ということです。</p>
+</div>
+<p class="source-note"><strong>公開一次ソース:</strong> <a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/011.pdf">FSA tokurei 011</a>、<a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/012.pdf">FSA tokurei 012</a>、<a href="https://info.gbiz.go.jp/hojin/ichiran?hojinBango=6010403022989">gBizINFO Japan Income Fund合同会社</a>、<a href="https://disclosure2dl.edinet-fsa.go.jp/searchdocument/pdf/S100OF9S.pdf">EDINET Mizuho Lease S100OF9S</a></p>
+<h2>6. 下流レイヤーの主体別整理</h2>
+<h3>6.1 Gravity合同会社</h3>
+<div class="panel">
+<p><code>Gravity合同会社</code> は、上から見れば匿名組合の営業者、下から見れば TMK 証券の引受人です。この二面性は一見矛盾しているように見えますが、契約関係が違うだけで法的には整合します。すなわち、<code>TK 契約との関係では営業者</code>、<code>TMK との関係では投資家</code> です。</p>
+<p>経済的にいえば、<code>Gravity合同会社</code> は上流の投資家資金を一度受け止め、それを TMK 証券へ変換して下流資産へ流す装置です。この意味で、GRAVITY案件の中心的な relay box と言えます。</p>
+</div>
+<p class="source-note"><strong>公開一次ソース:</strong> <a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/011.pdf">FSA tokurei 011</a>、<a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/012.pdf">FSA tokurei 012</a>、<a href="https://info.gbiz.go.jp/hojin/ichiran?hojinBango=4010403022859">gBizINFO Gravity合同会社</a></p>
+<h3>6.2 Gravity AH合同会社</h3>
+<div class="panel">
+<p><code>Gravity AH合同会社</code> はしばしば <code>Gravity合同会社</code> と混同されますが、投資導線が違います。<code>Gravity AH合同会社匿名組合</code> は、<code>匿名組合出資をもって不動産信託受益権を取得する</code> 型として理解されます。JCR の資料では、Ares 系日本GLPが運用する大型物流ファンドの保有・資金調達ビークルとしての位置づけがかなり強く示されています。</p>
+<p>したがって、<code>Gravity AH</code> は GRAVITY family の重要な sibling ですが、<code>TMK の特定出資・優先出資を引き受ける Gravity合同会社</code> とは、下流資産の持ち方が違う別箱として扱う必要があります。</p>
+</div>
+<p class="source-note"><strong>公開ソース:</strong> <a href="https://www.jcr.co.jp/download/7b87fa8f717d02cb98b274c1a5ec12aa4a79a5cc06fcaaaa17/26d0053.pdf">JCR Gravity AH 資料</a>、<a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/012.pdf">FSA tokurei 012</a></p>
+<h3>6.3 JDP3 / JDP4 / Sakai ルート</h3>
+<div class="panel">
+<p>初期段階では、<code>JDP3</code>、<code>JDP4</code>、<code>Sakai</code> も <code>JIF</code> の直接下流候補に見えました。しかし、追加 official source によって、これらはむしろ <code>案件固有スリーブ</code> 又は <code>project cluster</code> として理解する方が自然になりました。</p>
+<p><code>JDP3</code> は国土交通省資料で <code>GLP ALFALINK 茨木1</code> の提案者側として現れ、個別新築開発案件色が強いです。<code>JDP4</code> は大阪市の建築・入札資料から複数の土地・建築案件を束ねる cluster と読めます。<code>Sakai</code> は Hon Hai report で associate として現れ、単独案件または JV 色が強いです。</p>
+<p>このため、<code>JDP3 / JDP4 / Sakai</code> を JIF の直接下流候補として主線に置くより、比較例として保持しながら、portfolio-level operator の主線は <code>Gravity合同会社</code> に寄せる、というのが current best view です。</p>
+</div>
+<p class="source-note"><strong>公開ソース:</strong> <a href="https://www.mlit.go.jp/jutakukentiku/house/content/001844965.html">国土交通省 GLP ALFALINK 茨木1</a>、<a href="https://www.city.osaka.lg.jp/toshikeikaku/cmsfiles/contents/0000657/657324/R07-024.pdf">大阪市 仮称GLP南港北プロジェクト</a>、<a href="https://www.foxconn.com/en-us/investor-relations/financial-information/reports?category=quarterly">Hon Hai reports</a></p>
+<h2>7. Gravity特定目的会社とDH4名義TMK群の位置づけ</h2>
+<div class="panel">
+<p>下流 TMK を読む段階で、現在もっとも面白いのは <code>Gravity特定目的会社</code> が前面に出てきたことです。金融庁の current <code>特定目的会社届出一覧</code> に、<code>Ｇｒａｖｉｔｙ特定目的会社</code> が現存し、しかも <code>Gravity合同会社</code> と名称・住所・電話番号帯が揃っています。さらに <code>QII 01_b</code> でも、<code>Ｇｒａｖｉｔｙ合同会社</code> と <code>Ｇｒａｖｉｔｙ特定目的会社</code> の双方が同じ official list に現れます。</p>
+<p>加えて、GLP J-REIT の 2021-05-27 開示では <code>GLP 狭山日高Ⅱ</code> の取得文脈に <code>狭山日高2ロジスティック特定目的会社</code> が現れ、二次ソースでは <code>狭山日高2ロジスティック特定目的会社 -&gt; Gravity特定目的会社</code> の改称痕跡が確認されています。この official-to-secondary bridge により、<code>Gravity特定目的会社 = GLP 狭山日高Ⅱ 系統の current-name TMK</code> という読みが一段強くなりました。</p>
+<p>他方で、<code>GLP Japan DH4特定目的会社</code> と <code>GLP DH4 Exc特定目的会社</code> も current official list に現存しています。これらについては、旧名称 <code>舞洲1ロジスティック特定目的会社</code> と <code>柏2ロジスティック特定目的会社</code> からの rename trace があり、それぞれ <code>GLP 舞洲Ⅰ</code>、<code>GLP 柏Ⅱ</code> の asset-level TMK だったことが official disclosure と整合します。</p>
+<p>そのため、下流 TMK frontier はもはや <code>名前不明</code> ではなく、<code>Gravity特定目的会社</code> を strongest direct-name candidate としつつ、<code>GLP Japan DH4特定目的会社 / GLP DH4 Exc特定目的会社</code> を parallel / additional candidate family として保持する段階に進んでいます。ただし、そのいずれとも <code>Gravity合同会社</code> を直結する公開資料はまだ未取得です。</p>
+</div>
+<p class="source-note"><strong>公開一次ソース:</strong> <a href="https://www.fsa.go.jp/menkyo/menkyoj/tokutei_todokede.pdf">FSA 特定目的会社届出一覧</a>、<a href="https://www.fsa.go.jp/common/law/tekikaku/01_b.pdf">FSA QII 01_b</a>、<a href="https://www.glpjreit.com/file/ir_library_other_file-1666cd47c49c94044dd15a7bd43b45f6c0e65003.pdf">GLP J-REIT 2021-05開示</a>、<a href="https://www.glpjreit.com/file/tmp-9zt6x.pdf">GLP J-REIT 2017取得開示</a>、<a href="https://www.glpjreit.com/file/portfolio_files-1b9f898f5bc04cb776266ca9b1205431ecf68245.pdf">GLP J-REIT 2020取得開示</a></p>
+<h2>8. TK分配金について現時点で言えること</h2>
+<div class="panel">
+<p>この論点は、<code>法的に直後の受領者</code> と <code>そのさらに上流の受益レイヤー</code> を分けないと誤ります。まず商法上、匿名組合契約における利益分配の相手方は <code>匿名組合員</code> です。したがって、<code>Gravity合同会社匿名組合</code> の利益分配の法的な直後受領者は、TMK でも日本GLPでもなく、匿名組合員側です。</p>
+<p>そして <code>tokurei_012</code> では、<code>Gravity合同会社匿名組合</code> の投資家属性が <code>外国法人又は外国人等(1)</code> と見えています。これは、公開届出の読みとしては、直後受領者が <code>単一の foreign-type investor</code> であることを示唆します。ここに最も強く整合する実名候補が <code>JIF Japan Partners LP</code> です。理由は、この LP 自身が <code>Tokumei Kumiai Operator</code> への投資を明示しているからです。</p>
+<p>そのさらに上流については、<code>Japan DH4</code> が <code>海外リミテッドパートナーシップに対する出資</code> を明示しているため、<code>Japan DH4 -&gt; JIF Japan Partners LP -&gt; Gravity合同会社匿名組合の匿名組合員</code> という layering が現時点で最も合理的です。逆に、<code>Japan Income Fund合同会社</code> は日本側LPSハブとして重要ですが、直後受領者というより上流 / parallel の層として読む方が自然です。</p>
+<p>したがって、TK分配金についての current best reading は、次のようになります。</p>
+<pre>物流施設の収益
+  ↓
+TMK の配当・分配
+  ↓
+Gravity合同会社匿名組合
+  ↓ 匿名組合利益分配
+匿名組合員
+  ↓ 最有力実名候補
+JIF Japan Partners LP
+  ↓ さらに上流の最有力候補
+Japan DH4 投資事業有限責任組合</pre>
+<p>この整理の意味は大きく、<code>Gravity合同会社 -&gt; 日本GLP</code> のように単純な企業グループ内送金で捉えるのではなく、<code>TK契約上の利益分配 -&gt; foreign LP -&gt; さらに上流のLPS/投資家</code> というファンドレイヤーで読む必要がある、ということです。</p>
+</div>
+<p class="source-note"><strong>公開一次ソース:</strong> <a href="https://laws.e-gov.go.jp/law/132AC0000000048">e-Gov 商法（匿名組合関連）</a>、<a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/012.pdf">FSA tokurei 012</a>、<a href="https://www.fsa.go.jp/common/law/tekikaku/01_b.pdf">FSA QII 01_b</a></p>
+<h2>9. 日本の源泉税論点</h2>
+<div class="panel">
+<p>税務面の出発点はかなりクリアです。<code>Gravity合同会社匿名組合</code> の利益分配は、国内法上まず <code>所得税法161条1項16号</code> の <code>匿名組合契約に基づく利益の分配</code> として国内源泉所得に入ります。国税庁 <code>No.2878</code> も同趣旨です。</p>
+<p>そのため、直後受領者が非居住者又は外国法人側であるなら、<code>所得税法212条1項</code> により <code>Gravity合同会社</code> が源泉徴収義務者となり、<code>No.2884</code> によれば税率の入口は <code>20.42%</code> です。国外送金だから外れるという理屈は、<code>212条2項</code> の存在から採れません。</p>
+<p>実務上ここで誤りやすいのは、<code>212条5項</code> をそのまま主軸に持ってくることです。しかし、今回の中心は <code>161条1項16号</code> であって、<code>161条1項4号</code> の partnership allocation 類型とは条文上の足場が違います。したがって、少なくとも current issue の軸は <code>212条1項・2項</code> で押さえるのが自然です。</p>
+<p>ここから導かれる実務の安全側初期値は、<code>Gravity合同会社 -&gt; JIF Japan Partners LP</code> を仮置きしたとき、まず <code>20.42%源泉</code> を baseline に置く、というものです。これは「最終的に必ずその税率で終わる」という意味ではなく、条約軽減を立証できるまではその前提で動くのが最も保守的だ、という意味です。</p>
+</div>
+<p class="source-note"><strong>公開一次ソース:</strong> <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2878.htm">NTA 2878</a>、<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2884.htm">NTA 2884</a>、<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2885.htm">NTA 2885</a></p>
+<h2>10. JIF LP が pass-through なら誰が条約恩典を取るのか</h2>
+<div class="panel">
+<p>この論点の本質は、<code>JIF LP</code> に自動的に treaty benefit が落ちるわけではない、という点です。もし <code>JIF Japan Partners LP</code> が fiscally transparent / pass-through entity と評価されるなら、日本の見方としては、<code>その所得を居住地国法上取得したと扱われる者</code> が誰かを見にいきます。つまり、<code>JIF LP の構成員ごと</code> に恩典主体が割れる可能性が高い、ということです。</p>
+<p>国税庁 <code>No.2888</code> は、日本と相手国で entity の課税上の取扱いが異なる場合、<code>届出書</code>、<code>付表</code>、<code>軽減対象構成員名簿</code> を前提に treaty relief を処理する建付けを示しています。ここからも、問題が <code>LP という箱</code> で終わらず、<code>誰に所得が帰属するか</code> に下りていくことが分かります。</p>
+<p>したがって、JIF LP が pass-through だと仮定した場合の回答は、単一ではありません。構成員の所在国、各国条約、各構成員への所得帰属割合、受益者性、PE の有無によって分かれます。つまり、<code>誰が条約恩典を取るのか</code> という問いの答えは、<code>JIF LP ではなく、その中の誰が derive したかで決まる</code>、が基本です。</p>
+<p>ここでさらに重要なのは、透明体だからといって常に誰かが恩典を取れるわけではないことです。日米条約のように、匿名組合的 arrangement について、entity だけでなく参加者側の treaty benefit も否認し得る special denial がある条約もあります。このため、<code>pass-through = 自動的に partner look-through で軽減</code> と考えるのは危険です。</p>
+</div>
+<p class="source-note"><strong>公開一次ソース:</strong> <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2888.htm">NTA 2888</a>、<a href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/joyaku/annai/1648_13.htm">NTA A3-13</a>、<a href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/joyaku/annai/1648_04.htm">NTA A3-4</a>、<a href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/joyaku/annai/1648_18.htm">NTA A3-18</a>、<a href="https://www.nta.go.jp/about/organization/tokyo/syotoku/oshirase/5300/5335.htm">NTA 5335</a></p>
+<h2>11. シンガポール条約を視野に入れたときの含意</h2>
+<div class="panel">
+<p>今回の JIF LP はシンガポール sleeve と強く疑われるため、日本・シンガポール協定が重要です。ただし、今回確認した synthesized text の範囲では、匿名組合を名指しする独立条項は見えていません。したがって、まずこの所得を <code>利子</code>、<code>配当</code>、<code>その他所得</code>、<code>事業利得</code> のどれとして処理するのかを決める必要があります。</p>
+<p>国税庁論叢では、典型的匿名組合なら <code>利子</code>、非典型又は PE 型なら <code>事業利得</code> が問題になると整理されています。<code>Gravity</code> 局面でどこに落ちるかは、<code>JIF LP</code> の関与の深さや契約実態を見ないと断定できません。</p>
+<p>さらに、シンガポール条約には <code>22条2項</code> の exempt / substance 制限があります。すなわち、シンガポール側で実質課税がなく、かつ実体も実活動も乏しい場合、仮に形式的にはシンガポール vehicle でも軽減が止まる余地があります。したがって、<code>Singapore LP だから treaty relief</code> という短絡も危険です。</p>
+</div>
+<p class="source-note"><strong>公開一次ソース:</strong> <a href="https://www.mof.go.jp/tax_policy/summary/international/press_release/SynthesizedTextforJapan-SingaporeJP.pdf">MOF 日シンガポール条約統合テキスト</a>、<a href="https://www.mof.go.jp/tax_policy/summary/international/tax_convention/mli_si.htm">MOF 日シンガポール条約 MLI概要</a>、<a href="https://www.nta.go.jp/about/organization/ntc/kenkyu/ronsou/52/04/ronsou.pdf">NTA 論叢52-04</a></p>
+<h2>12. 確定・高確度推定・未確認の整理</h2>
+<div class="panel">
+<table>
+<thead>
+<tr>
+<th>強度</th>
+<th>内容</th>
+<th>コメント</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>確定</td>
+<td><code>Gravity合同会社</code> と <code>Gravity AH合同会社</code> は別法人であり、投資導線も異なる</td>
+<td>FSA届出の投資内容が分かれる</td>
+</tr>
+<tr>
+<td>確定</td>
+<td><code>Gravity合同会社匿名組合</code> は TMK の <code>特定出資 / 優先出資</code> 引受型</td>
+<td><code>tokurei_012</code> の文言で足りる</td>
+</tr>
+<tr>
+<td>確定</td>
+<td><code>JIF Japan Partners LP</code> は <code>Tokumei Kumiai Operator</code> 経由投資を明示</td>
+<td>直後受領者候補として強い</td>
+</tr>
+<tr>
+<td>確定</td>
+<td><code>Japan DH4</code> は foreign LP 経由投資を明示</td>
+<td><code>JIF LP</code> の直上候補として強い</td>
+</tr>
+<tr>
+<td>高確度推定</td>
+<td><code>Japan DH4 -&gt; JIF Japan Partners LP</code></td>
+<td>文言整合性は高いが direct proof 未取得</td>
+</tr>
+<tr>
+<td>高確度推定</td>
+<td><code>JIF Japan Partners LP -&gt; Gravity合同会社</code></td>
+<td>投資戦略記述と foreign investor 1者表示が強く整合</td>
+</tr>
+<tr>
+<td>高確度推定</td>
+<td><code>Gravity特定目的会社</code> は <code>Gravity合同会社</code> 下流の strongest direct-name candidate</td>
+<td>official co-presence と rename trace が効く</td>
+</tr>
+<tr>
+<td>未確認</td>
+<td><code>Gravity合同会社 -&gt; Gravity特定目的会社</code> の direct evidence</td>
+<td>官報・資産流動化計画・担保資料待ち</td>
+</tr>
+<tr>
+<td>未確認</td>
+<td><code>JIF LP</code> の LP 契約書・PPM・member roster</td>
+<td>税務上の treaty beneficiary 判定の核心</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="source-note"><strong>公開一次ソース:</strong> <a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/011.pdf">FSA tokurei 011</a>、<a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/012.pdf">FSA tokurei 012</a>、<a href="https://www.fsa.go.jp/menkyo/menkyoj/tokutei_todokede.pdf">FSA 特定目的会社届出一覧</a>、<a href="https://www.fsa.go.jp/common/law/tekikaku/01_b.pdf">FSA QII 01_b</a>、<a href="https://www.acra.gov.sg/resources/guides-forms/buying-a-business-profile/">ACRA Buying a Business Profile</a></p>
+<h2>13. 実務上の含意</h2>
+<div class="panel">
+<p>税務調査、税務DD、移転価格ではなくファンド構造・源泉税・条約論点を読む局面では、<code>Gravity合同会社</code> を単なる SPC として片づけると危険です。むしろ、この箱は <code>上流資金の受皿</code> と <code>下流TMK投資</code> をつなぐ結節点であり、どのレイヤーで何を受け、何を払い、誰に帰属させるのかが核心です。</p>
+<p>また、TK分配金については、<code>法的に誰が直接受けるか</code> と <code>経済的に誰が最終的に受益するか</code> を切り分けないと、法人税・源泉税・条約恩典の議論が崩れます。ここで <code>JIF LP</code> と <code>Japan DH4</code> を一枚岩にしたり、<code>Japan Income Fund</code> を直後受領者だと早合点したりすると、レイヤーが混ざります。</p>
+<p>源泉税実務では、<code>20.42%源泉 baseline</code> を置いたうえで、軽減を崩すには entity classification と member-level treaty entitlement を立証する必要があります。したがって、今後の資料取得では、<code>JIF LP の構成員名簿</code>、<code>居住者証明</code>、<code>条約届出ルート</code> が最優先になります。</p>
+</div>
+<p class="source-note"><strong>公開一次ソース:</strong> <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2878.htm">NTA 2878</a>、<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2884.htm">NTA 2884</a>、<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2888.htm">NTA 2888</a>、<a href="https://www.acra.gov.sg/resources/guides-forms/buying-a-business-profile/">ACRA Buying a Business Profile</a></p>
+<h2>14. 今後の最重要 frontier</h2>
+<div class="warning">
+<p>次に取るべき証拠は、かなりはっきりしています。</p>
+<ul>
+<li><code>Gravity合同会社 -&gt; Gravity特定目的会社</code> の direct evidence</li>
+<li><code>JIF Japan Partners LP -&gt; Gravity合同会社匿名組合</code> の direct evidence</li>
+<li><code>Japan DH4 -&gt; JIF Japan Partners LP</code> の direct evidence</li>
+<li><code>JIF LP</code> の entity classification と member roster</li>
+<li>条約届出書・付表・構成員名簿ベースで軽減を立証できるかどうか</li>
+</ul>
+<p>この5点が埋まると、GRAVITY案件は「合理的推定の束」から「かなり強い立証構造」へ一段進みます。</p>
+</div>
+<p class="source-note"><strong>公開一次ソース:</strong> <a href="https://www.acra.gov.sg/resources/guides-forms/buying-a-business-profile/">ACRA Buying a Business Profile</a>、<a href="https://www.acra.gov.sg/resources/buying-business-information/types-of-acra-information-products/">ACRA Types of ACRA Information Products</a>、<a href="https://www.acra.gov.sg/resources/eservice-tools-portals/api-marketplace/">ACRA API Marketplace</a>、<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2888.htm">NTA 2888</a></p>
+<h2>15. 主要ソース一覧</h2>
+<div class="panel">
+<ul>
+<li>金融庁 <code>tokurei 011</code> <a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/011.pdf">https://www.fsa.go.jp/menkyo/menkyoj/tokurei/011.pdf</a></li>
+<li>金融庁 <code>tokurei 012</code> <a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/012.pdf">https://www.fsa.go.jp/menkyo/menkyoj/tokurei/012.pdf</a></li>
+<li>金融庁 <code>tokurei 013</code> <a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/013.pdf">https://www.fsa.go.jp/menkyo/menkyoj/tokurei/013.pdf</a></li>
+<li>金融庁 <code>tokurei 014</code> <a href="https://www.fsa.go.jp/menkyo/menkyoj/tokurei/014.pdf">https://www.fsa.go.jp/menkyo/menkyoj/tokurei/014.pdf</a></li>
+<li>金融庁 <code>QII 01_b</code> <a href="https://www.fsa.go.jp/common/law/tekikaku/01_b.pdf">https://www.fsa.go.jp/common/law/tekikaku/01_b.pdf</a></li>
+<li>金融庁 <code>特定目的会社届出一覧</code> <a href="https://www.fsa.go.jp/menkyo/menkyoj/tokutei_todokede.pdf">https://www.fsa.go.jp/menkyo/menkyoj/tokutei_todokede.pdf</a></li>
+<li>Ares SEC Exhibit 21.1 <a href="https://www.sec.gov/Archives/edgar/data/1176948/000162828026011413/a2025q4exhibit211.htm">https://www.sec.gov/Archives/edgar/data/1176948/000162828026011413/a2025q4exhibit211.htm</a></li>
+<li>GLP 公式 JIF ページ <a href="https://www.glp.com/jp/fund/">https://www.glp.com/jp/fund/</a></li>
+<li>GLP 公式 JIF ローンチ <a href="https://www.glp.com/global/article/glp-launches-largest-logistics-private-open-ended-income-fund-japan">https://www.glp.com/global/article/glp-launches-largest-logistics-private-open-ended-income-fund-japan</a></li>
+<li>GLP 公式 JIF 拡大 <a href="https://www.glp.com/global/article/japan-income-fund-grows-jpy-453-billion-capital-commitments">https://www.glp.com/global/article/japan-income-fund-grows-jpy-453-billion-capital-commitments</a></li>
+<li>国税庁 <code>No.2878</code> <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2878.htm">https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2878.htm</a></li>
+<li>国税庁 <code>No.2884</code> <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2884.htm">https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2884.htm</a></li>
+<li>国税庁 <code>No.2885</code> <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2885.htm">https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2885.htm</a></li>
+<li>国税庁 <code>No.2888</code> <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2888.htm">https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2888.htm</a></li>
+<li>国税庁論叢 <code>匿名組合と国際税務</code> <a href="https://www.nta.go.jp/about/organization/ntc/kenkyu/ronsou/52/04/ronsou.pdf">https://www.nta.go.jp/about/organization/ntc/kenkyu/ronsou/52/04/ronsou.pdf</a></li>
+</ul>
+</div>
+<div class="footer">
+<p>本レポートは、主に <code>/mnt/d/Users/PC/Desktop/tax/gravity_tk_tmk_project</code> 内の既存 research asset を再編集して作成したものです。元の核となる成果物は、<code>gravity_current_status_deep_research_20260422.md</code>、<code>gravity_group_structure_deep_research_20260422.md</code>、<code>gravity_tk_distribution_destination_deep_research_20260422.md</code>、<code>gravity_withholding_tax_and_treaty_benefit_deep_research_20260422.md</code> です。</p>
+</div>
+</div></div>
+</section>
+<section class="appendix-section">
+<h2>B. gravity_current_status_deep_research_20260422</h2>
+<p class="appendix-meta">原本: <code>/mnt/d/Users/PC/Desktop/tax/gravity_tk_tmk_project/90_成果/gravity_current_status_deep_research_20260422.md</code></p>
+<div class="appendix-body"><h1>gravity_current_status_deep_research_20260422</h1>
+<h2>1. Executive Summary</h2>
+<p><code>2026-04-22</code> 時点の <code>GRAVITY</code> 案件について、
+現行 official source を refresh したうえでの結論は次のとおりです。</p>
+<ul>
+<li><code>Gravity合同会社</code>
+  と
+  <code>JIF Japan Partners LP</code>
+  を取り巻く
+  <code>FSA tokurei 011-014</code>
+  は、
+  現行配布ファイルと workspace 保存版の
+  <code>SHA-256</code>
+  が一致しており、
+  少なくともこの届出群について
+  <code>2026-04-22</code> 時点で
+  新しい公開差分は確認されない</li>
+<li>一方で、
+  金融庁の現行 <code>特定目的会社届出一覧</code>
+  から、
+  <code>GLP Japan DH4特定目的会社</code>
+  と
+  <code>GLP DH4 Exc特定目的会社</code>
+  が
+  公式に現存することが確認できた</li>
+<li>さらに、
+  <code>GLP J-REIT / JPX</code>
+  の official disclosure から、
+  旧TMK名
+  <code>舞洲1ロジスティック特定目的会社</code>
+  と
+  <code>柏2ロジスティック特定目的会社</code>
+  が、
+  それぞれ
+  <code>GLP 舞洲Ⅰ</code>
+  と
+  <code>GLP 柏Ⅱ</code>
+  に対応する asset-level TMK だったことが確認できた</li>
+<li>加えて、
+  法人番号系の secondary public page では、
+  <code>舞洲1ロジスティック特定目的会社 -&gt; GLP Japan DH4特定目的会社</code>
+  と
+  <code>柏2ロジスティック特定目的会社 -&gt; GLP DH4 Exc特定目的会社</code>
+  の
+  名称変更痕跡まで確認できた</li>
+<li>さらに、
+  同じ
+  <code>特定目的会社届出一覧</code>
+  には
+  <code>Ｇｒａｖｉｔｙ特定目的会社</code>
+  も現存しており、
+  <code>Gravity合同会社</code>
+  と
+  名称・住所・電話番号帯が揃う
+  <code>direct-name downstream candidate</code>
+  として
+  <code>DH4</code> 名義TMK群より
+  一段強い位置に上がった</li>
+<li>さらに、
+  金融庁
+  <code>QII 01_b</code>
+  では
+  <code>Ｇｒａｖｉｔｙ合同会社</code>
+  と
+  <code>Ｇｒａｖｉｔｙ特定目的会社</code>
+  の双方が
+  同じ official list 内に
+  <code>東京都中央区八重洲二丁目2番1号</code>
+  付きで現れる</li>
+<li>加えて、
+  <code>GLP J-REIT</code>
+  の
+  <code>2021-05-27</code>
+  付開示では、
+  <code>GLP 狭山日高Ⅱ</code>
+  の取得文脈で
+  <code>狭山日高２ロジスティック特定目的会社</code>
+  と
+  <code>GLP Pte. Ltd. が50%間接保有する特定目的会社</code>
+  の記載が現れ、
+  secondary の
+  <code>狭山日高2 -&gt; Gravity</code>
+  改称痕跡とつなぐ
+  official-to-secondary bridge
+  が取れた</li>
+<li>さらに、
+  <code>GLP J-REIT</code>
+  の
+  <code>2021-06-25</code>
+  付開示では、
+  <code>GLP 狭山日高Ⅰ</code>
+  の取得文脈で
+  <code>狭山日高 1 ロジスティック特定目的会社</code>
+  と
+  <code>GLP Pte. Ltd.の子会社等に当たる特定目的会社</code>
+  の記載が現れ、
+  <code>狭山日高1 -&gt; GLP 狭山日高Ⅰ</code>
+  と
+  <code>狭山日高2 -&gt; GLP 狭山日高Ⅱ</code>
+  の
+  1/2 symmetric pair
+  まで official layer で取れた</li>
+<li>さらに、
+  現行
+  <code>tokurei_011</code>
+  再取得版では、
+  <code>Japan Income Fund合同会社</code>
+<code>Ｇｒａｖｉｔｙ合同会社</code>
+<code>Japan DH4合同会社</code>
+  が、
+  いずれも
+  <code>東京都中央区八重洲二丁目2番1号</code>
+<code>03-6897-6297</code>
+  の同一 official cluster に並ぶ</li>
+<li>さらに、
+  現行
+  <code>特定目的会社届出一覧</code>
+  では、
+  <code>狭山日高1ロジスティック特定目的会社</code>
+  と
+  <code>Ｇｒａｖｉｔｙ特定目的会社</code>
+  が、
+  どちらも
+  <code>東京都中央区八重洲2-2-1</code>
+<code>03-6897-6297</code>
+  で現存している</li>
+<li>このため、
+  official current layer でも
+  <code>狭山日高1</code>
+  は旧名称のまま残り、
+  <code>狭山日高2</code>
+  側だけが
+  <code>Gravity</code>
+  へ current-name 化した
+  という asymmetric sibling pattern
+  が見える</li>
+<li>secondary layer では、
+  <code>Ｇｒａｖｉｔｙ特定目的会社</code>
+  が
+  <code>狭山日高2ロジスティック特定目的会社</code>
+  から
+  <code>2020/04/28</code>
+  に改称し、
+  <code>2025/09/30</code>
+  時点の総資産が
+  <code>4,165億9,500万円</code>
+  に達することまで確認できた</li>
+<li>このため、
+  <code>Gravity合同会社</code> 下流の <code>TMK</code> frontier は、
+  これまでの
+  <code>名前不明</code>
+  から、
+  <code>DH4 名義の具体候補集合まで絞れた</code>
+  という段階へ進んだ</li>
+</ul>
+<p>したがって、
+現時点の最良モデルは、</p>
+<pre><code class="language-text">Japan DH4 投資事業有限責任組合
+  ↓ 高確度推定
+JIF Japan Partners LP
+  ↓ 高確度推定
+Gravity合同会社
+  ↓ strongest direct-name candidate with stronger official support
+Gravity特定目的会社
+
+parallel / additional candidate family
+  ↓
+GLP Japan DH4特定目的会社 / GLP DH4 Exc特定目的会社
+</code></pre>
+<p>です。</p>
+<p>ただし、
+最後の
+<code>Gravity -&gt; Gravity特定目的会社</code>
+および
+<code>Gravity -&gt; DH4名義TMK群</code>
+の矢印だけは、
+まだ direct evidence がありません。</p>
+<h2>2. What We Refreshed</h2>
+<h3>2.1 FSA <code>tokurei 011-014</code></h3>
+<p>現行URLから再取得した結果、
+既存保存版との hash は次のとおり一致しました。</p>
+<ul>
+<li><code>tokurei_011.pdf</code></li>
+<li><code>tokurei_012.pdf</code></li>
+<li><code>tokurei_013.pdf</code></li>
+<li><code>tokurei_014.pdf</code></li>
+</ul>
+<p>つまり、
+<code>Gravity合同会社</code>
+<code>JIF Japan Partners LP</code>
+<code>Japan Income Fund合同会社</code>
+<code>Japan DH4合同会社</code>
+周辺の
+FSA private placement / QII 届出情報は、
+本 workspace が前提にしていた内容から
+現時点でズレていません。</p>
+<h3>2.2 FSA <code>特定目的会社届出一覧</code></h3>
+<p>新たに
+<code>https://www.fsa.go.jp/menkyo/menkyoj/tokutei_todokede.pdf</code>
+を取得・資産化しました。</p>
+<p>この current list は、
+<code>令和8年3月31日現在</code>
+の一覧であり、
+<code>GLP</code> / <code>DH</code> 系 TMK の現存確認に使えます。</p>
+<h2>3. Newly Fixed by Official Source</h2>
+<h3>3.1 <code>Gravity特定目的会社</code></h3>
+<p>FSA current list では、
+次の記載が確認できます。</p>
+<pre><code class="language-text">(会)第1795号
+Ｇｒａｖｉｔｙ特定目的会社
+2010405008668
+東京都中央区八重洲２－２－１
+03-6897-6297
+</code></pre>
+<h3>3.2 <code>GLP Japan DH4特定目的会社</code></h3>
+<p>FSA current list では、
+次の記載が確認できます。</p>
+<pre><code class="language-text">(会)第639号
+ＧＬＰ　Ｊａｐａｎ　ＤＨ４特定目的会社
+8010405004513
+東京都中央区八重洲２－２－１
+03-6897-6297
+</code></pre>
+<h3>3.3 <code>GLP DH4 Exc特定目的会社</code></h3>
+<p>同じく、
+次の記載が確認できます。</p>
+<pre><code class="language-text">(会)第2035号
+ＧＬＰ　ＤＨ４　Ｅｘｃ特定目的会社
+9010405008678
+東京都中央区八重洲２－２－１
+03-6897-6297
+</code></pre>
+<h3>3.4 Why This Matters</h3>
+<p>この3TMKは、</p>
+<ul>
+<li><code>Gravity</code>
+  という直接的な名称一致</li>
+<li><code>DH4</code>
+  という名前の一致</li>
+<li><code>八重洲2-2-1</code>
+  という日本GLPクラスター住所</li>
+<li><code>03-6897-6297</code>
+  という電話番号帯</li>
+</ul>
+<p>の3点で、
+<code>Gravity</code>
+および
+<code>Japan DH4</code>
+系の GK / LPS 導線と
+強く整合します。</p>
+<h3>3.5 <code>Gravity特定目的会社</code> current fit</h3>
+<p><code>Gravity合同会社</code>
+について、
+<code>tokurei_011</code>
+と
+<code>tokurei_014</code>
+では、</p>
+<ul>
+<li><code>4010403022859</code></li>
+<li><code>東京都中央区八重洲二丁目2番1号</code></li>
+<li><code>03-6897-6297</code></li>
+</ul>
+<p>が確認できます。</p>
+<p>したがって、
+<code>Gravity合同会社</code>
+と
+<code>Gravity特定目的会社</code>
+は、
+名称だけでなく
+所在地・電話番号帯でも
+強く揃います。</p>
+<h3>3.5.1 FSA <code>QII 01_b</code> co-presence</h3>
+<p>金融庁
+<code>QII 01_b</code>
+では、</p>
+<pre><code class="language-text">45 Ｇｒａｖｉｔｙ合同会社 4010403022859 東京都中央区八重洲二丁目２番１号
+</code></pre>
+<pre><code class="language-text">8 Ｇｒａｖｉｔｙ特定目的会社 2010405008668 東京都中央区八重洲二丁目２番１号
+</code></pre>
+<p>の双方が
+official list 内に現れます。</p>
+<p>この一覧自体は
+投資関係を直接示しませんが、
+少なくとも
+<code>Gravity GK / Gravity TMK</code>
+が
+同じ official cluster に
+同時に現存していることは
+確認できます。</p>
+<h3>3.6 Old logistics-TMK names and asset correspondence</h3>
+<p><code>GLP J-REIT / JPX</code>
+の official disclosure では、
+asset-specific TMK 名と物件名の対応が確認できます。</p>
+<ul>
+<li><code>舞洲1ロジスティック特定目的会社</code>
+  は
+  <code>GLP 舞洲Ⅰ</code>
+  の取得文脈で現れる</li>
+<li><code>柏2ロジスティック特定目的会社</code>
+  は
+  <code>GLP 柏Ⅱ</code>
+  の取得文脈で現れる</li>
+</ul>
+<p>このため、
+<code>DH4</code> 名義TMK候補は
+単なる current registry name ではなく、
+GLP の cash-yielding logistics assets を持つ
+TMKラインの current-name candidate として
+位置づけられるようになりました。</p>
+<h3>3.6.1 Official bridge from old TMK name to <code>Gravity特定目的会社</code></h3>
+<p><code>GLP J-REIT</code>
+の
+<code>2021-05-27</code>
+付
+<code>資産の取得及び貸借に関するお知らせ</code>
+では、
+<code>GLP 狭山日高Ⅱ</code>
+の取得文脈で、</p>
+<pre><code class="language-text">①狭山日高２ロジスティック特定目的会社
+②本資産運用会社の親会社等である GLP Pte. Ltd. が50%間接保有する特定目的会社
+</code></pre>
+<p>という記載が現れます。</p>
+<p>一方、
+secondary layer では
+法人番号
+<code>2010405008668</code>
+について
+<code>狭山日高2ロジスティック特定目的会社 -&gt; Gravity特定目的会社</code>
+の改称痕跡が確認できています。</p>
+<p>この2段をつなぐと、
+<code>Gravity特定目的会社</code>
+を
+<code>GLP 狭山日高Ⅱ</code>
+系統の current-name TMK
+として読む根拠は
+従来よりかなり強くなります。</p>
+<h3>3.6.2 Symmetric pair with <code>GLP 狭山日高Ⅰ</code></h3>
+<p><code>GLP J-REIT</code>
+の
+<code>2021-06-25</code>
+付
+<code>資産の取得及び貸借に関するお知らせ</code>
+では、
+<code>GLP 狭山日高Ⅰ</code>
+の取得文脈で、</p>
+<pre><code class="language-text">① 狭山日高 1 ロジスティック特定目的会社
+② 本資産運用会社の親会社等である GLP Pte. Ltd.の子会社等に当たる特定目的会社
+</code></pre>
+<p>という記載が現れます。</p>
+<p>したがって、
+official layer だけでも</p>
+<ul>
+<li><code>狭山日高1ロジスティック特定目的会社 -&gt; GLP 狭山日高Ⅰ</code></li>
+<li><code>狭山日高2ロジスティック特定目的会社 -&gt; GLP 狭山日高Ⅱ</code></li>
+</ul>
+<p>という
+1/2 の symmetric pair
+が取れています。</p>
+<p>この対照により、
+<code>狭山日高2</code>
+だけが
+<code>Gravity特定目的会社</code>
+へ改称した
+secondary trace
+は、
+<code>狭山日高 1/2</code>
+ペアのうち
+<code>2</code>
+側だけが current-name 化した
+可能性として読む方が自然になります。</p>
+<h3>3.6.3 Current official cluster around <code>JIF / Gravity / Japan DH4</code></h3>
+<p>現行
+<code>tokurei_011</code>
+再取得版では、
+次の3主体が
+いずれも
+<code>東京都中央区八重洲二丁目2番1号</code>
+<code>03-6897-6297</code>
+で現れます。</p>
+<pre><code class="language-text">Japan Income Fund合同会社
+6010403022989
+関東財務局
+日本GLP株式会社
+職務執行者 川島聖
+</code></pre>
+<pre><code class="language-text">Ｇｒａｖｉｔｙ合同会社
+4010403022859
+関東財務局
+Gravity一般社団法人
+職務執行者 川島聖
+</code></pre>
+<pre><code class="language-text">Japan DH4合同会社
+2010403026011
+関東財務局
+日本GLP株式会社
+職務執行者 川島聖
+</code></pre>
+<p>このため、
+<code>JIF / Gravity / Japan DH4</code>
+は、
+過去スナップショットだけでなく
+current official layer
+でも
+同一運営クラスターとして
+追跡できます。</p>
+<h3>3.6.4 Current official asymmetry between <code>狭山日高1</code> and <code>Gravity</code></h3>
+<p>現行
+<code>特定目的会社届出一覧</code>
+では、
+次の2件が並立しています。</p>
+<pre><code class="language-text">(会)第1790号
+狭山日高１ロジスティック特定目的会社
+3010405008667
+東京都中央区八重洲２－２－１
+03-6897-6297
+</code></pre>
+<pre><code class="language-text">(会)第1795号
+Ｇｒａｖｉｔｙ特定目的会社
+2010405008668
+東京都中央区八重洲２－２－１
+03-6897-6297
+</code></pre>
+<p>これにより、
+official current layer でも</p>
+<ul>
+<li><code>狭山日高1</code>
+  は旧名称のまま残る</li>
+<li><code>狭山日高2</code>
+  側だけが
+  <code>Gravity</code>
+  へ current-name 化した</li>
+</ul>
+<p>という非対称性が見えます。</p>
+<p>したがって、
+<code>Gravity特定目的会社</code>
+を
+<code>狭山日高2 / GLP 狭山日高Ⅱ</code>
+ラインの
+current-name TMK
+とみる読解は、
+secondary rename trace
+だけでなく
+current official pattern
+によっても
+補強されます。</p>
+<h3>3.7 Secondary rename trace by corporate-number pages</h3>
+<p>法人番号系の public page では、
+次の rename trace が確認できます。</p>
+<ul>
+<li><code>2010405008668</code>
+  について
+  <code>2020/04/28</code>
+  に
+  <code>狭山日高2ロジスティック特定目的会社</code>
+  から
+  <code>Gravity特定目的会社</code>
+  へ名称・商号変更</li>
+<li><code>2010405008668</code>
+  について
+  <code>2022/12/13</code>
+  に
+  <code>東京都港区東新橋1丁目5番2号汐留シティセンター</code>
+  から
+  <code>東京都中央区八重洲2丁目2番1号</code>
+  へ所在地変更</li>
+<li><code>8010405004513</code>
+  について
+  <code>2021/09/16</code>
+  に
+  <code>舞洲1ロジスティック特定目的会社</code>
+  から
+  <code>GLP Japan DH4特定目的会社</code>
+  へ名称・商号変更</li>
+<li><code>9010405008678</code>
+  について
+  <code>2023/06/29</code>
+  に
+  <code>柏2ロジスティック特定目的会社</code>
+  から
+  <code>GLP DH4 Exc特定目的会社</code>
+  へ名称・商号変更</li>
+</ul>
+<p>また、
+historical TMK-list mirror でも、</p>
+<ul>
+<li><code>2020-10-31</code>
+  時点で
+  <code>(会)第1795号 = Ｇｒａｖｉｔｙ特定目的会社</code>
+<code>2010405008668</code></li>
+<li><code>2021-10-31</code>
+  時点でも
+  <code>(会)第1795号 = Ｇｒａｖｉｔｙ特定目的会社</code>
+<code>2010405008668</code></li>
+<li><code>2020-10-31</code>
+  時点では
+  <code>(会)第639号 = 舞洲１ロジスティック特定目的会社</code></li>
+<li><code>2021-10-31</code>
+  時点では
+  <code>(会)第639号 = ＧＬＰ　Ｊａｐａｎ　ＤＨ４特定目的会社</code></li>
+<li><code>2020-10-31</code>
+  時点では
+  <code>(会)第2035号 = 柏２ロジスティック特定目的会社</code></li>
+<li><code>2021-10-31</code>
+  時点でも
+  <code>(会)第2035号 = 柏２ロジスティック特定目的会社</code></li>
+</ul>
+<p>という時系列が確認でき、
+rename trace と整合します。</p>
+<p>これは
+<code>official source</code>
+ではなく
+<code>secondary registry-derived evidence</code>
+ですが、
+<code>Gravity</code>
+直名称候補と
+asset-level official trace を組み合わせると、
+downstream TMK layer の中身をかなり具体化できます。</p>
+<h2>4. Current Interpretation by Layer</h2>
+<h3>4.1 Platform layer</h3>
+<p><code>Ares</code>
+が上流スポンサーであり、
+<code>GLP / 日本GLP</code>
+が日本の運用プラットフォームを担う、
+という理解は変わりません。</p>
+<p>この点は、</p>
+<ul>
+<li><code>GLP Japan</code>
+  公式ページ</li>
+<li><code>GLP J-REIT</code>
+  の2025年運用体制等報告書</li>
+<li><code>SEC Exhibit 21.1</code></li>
+<li><code>JCR Gravity AH</code></li>
+</ul>
+<p>で継続して支えられています。</p>
+<h3>4.2 Foreign sleeve layer</h3>
+<p><code>JIF Japan Partners LP</code>
+は、
+<code>tokurei_012</code>
+上で
+<code>Tokumei Kumiai Operator</code>
+経由の
+<code>cash-yielding logistics facilities</code>
+投資を行う
+foreign sleeve
+として位置づけられます。</p>
+<p>この点も今回の refresh で変化はありません。</p>
+<h3>4.3 Domestic LPS layer</h3>
+<p><code>Investment Limited Partnership (1)</code>
+の第一候補は、
+引き続き
+<code>Japan DH4 投資事業有限責任組合</code>
+です。</p>
+<p>理由は、
+<code>tokurei_012</code>
+の中で
+<code>海外リミテッドパートナーシップ</code>
+を明示する国内LPSが
+この系列だけだからです。</p>
+<h3>4.4 Domestic operator layer</h3>
+<p><code>Tokumei Kumiai Operator</code>
+の第一候補は、
+引き続き
+<code>Gravity合同会社</code>
+です。</p>
+<p>理由は、
+同社の記載が</p>
+<ul>
+<li><code>日本国内の物流施設</code></li>
+<li><code>TMKの特定出資及び優先出資</code></li>
+<li><code>外国法人又は外国人等(1)</code></li>
+</ul>
+<p>であり、
+案件単位より
+portfolio-level
+で整合するからです。</p>
+<h3>4.5 Downstream TMK layer</h3>
+<p>ここが今回最も進んだ部分です。</p>
+<p>これまでは
+<code>Gravity合同会社</code>
+の下流TMKは
+<code>名前不明</code>
+でした。</p>
+<p>現在は、</p>
+<ul>
+<li><code>Gravity特定目的会社</code></li>
+<li><code>GLP Japan DH4特定目的会社</code></li>
+<li><code>GLP DH4 Exc特定目的会社</code></li>
+</ul>
+<p>が
+official source で確認されており、
+<code>Gravity</code> 下流TMKの候補集合として
+明示できるようになりました。</p>
+<p>このうち、
+<code>Gravity特定目的会社</code>
+は
+名称・所在地・電話番号帯が
+<code>Gravity合同会社</code>
+と
+直接揃うため、
+現時点では
+<code>strongest direct-name candidate</code>
+です。</p>
+<p>加えて、
+旧TMK名として</p>
+<ul>
+<li><code>舞洲1ロジスティック特定目的会社</code></li>
+<li><code>柏2ロジスティック特定目的会社</code></li>
+</ul>
+<p>が
+<code>GLP 舞洲Ⅰ / GLP 柏Ⅱ</code>
+に対応していたことも
+official source で確認できました。</p>
+<p>さらに、
+secondary layer では、</p>
+<ul>
+<li><code>狭山日高2ロジスティック特定目的会社 -&gt; Gravity特定目的会社</code></li>
+<li><code>舞洲1ロジスティック特定目的会社 -&gt; GLP Japan DH4特定目的会社</code></li>
+<li><code>柏2ロジスティック特定目的会社 -&gt; GLP DH4 Exc特定目的会社</code></li>
+</ul>
+<p>という rename trace まで確認できています。</p>
+<h2>5. Certainty Matrix</h2>
+<h3>5.1 Confirmed</h3>
+<ul>
+<li><code>JIF Japan Partners LP</code>
+  は
+  <code>Tokumei Kumiai Operator</code>
+  経由で
+  日本物流施設へ投資する</li>
+<li><code>Gravity合同会社</code>
+  は
+  <code>TMKの特定出資及び優先出資</code>
+  を引き受ける
+  国内 operator である</li>
+<li><code>Gravity特定目的会社</code>
+  は
+  <code>2026-03-31</code>
+  現在の金融庁 official list に現存する</li>
+<li><code>GLP Japan DH4特定目的会社</code>
+  は
+  <code>2026-03-31</code>
+  現在の金融庁 official list に現存する</li>
+<li><code>GLP DH4 Exc特定目的会社</code>
+  も
+  同 official list に現存する</li>
+<li><code>舞洲1ロジスティック特定目的会社</code>
+  は
+  <code>GLP 舞洲Ⅰ</code>
+  の取得文脈で official disclosure に現れる</li>
+<li><code>柏2ロジスティック特定目的会社</code>
+  は
+  <code>GLP 柏Ⅱ</code>
+  の取得文脈で official disclosure に現れる</li>
+<li>secondary registry-derived page では、
+  <code>狭山日高2 -&gt; Gravity</code>
+  と
+  <code>舞洲1 -&gt; GLP Japan DH4</code>
+  と
+  <code>柏2 -&gt; GLP DH4 Exc</code>
+  の rename trace が確認できる</li>
+<li><code>tokurei_011-014</code>
+  の official refresh では
+  既存保存版との差分は見つからない</li>
+</ul>
+<h3>5.2 High-confidence inference</h3>
+<ul>
+<li><code>Japan DH4 投資事業有限責任組合 -&gt; JIF Japan Partners LP</code></li>
+<li><code>JIF Japan Partners LP -&gt; Gravity合同会社</code></li>
+<li><code>Gravity合同会社</code> 下流TMKの第一候補は
+  <code>Gravity特定目的会社</code>
+  である</li>
+<li><code>Gravity合同会社</code> は
+  <code>Gravity特定目的会社</code>
+  に加えて
+  <code>DH4</code> 名義TMK群のどちらか、
+  あるいは両方
+  にも投資している可能性がある</li>
+<li><code>DH4</code> 名義TMK群は、
+  <code>GLP 舞洲Ⅰ / GLP 柏Ⅱ</code>
+  のような物流資産を持つ
+  GLP系TMKラインの current-name candidate である可能性が高い</li>
+<li>secondary layer では、
+  <code>GLP Japan DH4特定目的会社 = GLP 舞洲Ⅰ 系統</code>
+  と
+  <code>GLP DH4 Exc特定目的会社 = GLP 柏Ⅱ 系統</code>
+  という読みが最有力</li>
+</ul>
+<h3>5.3 Still unverified</h3>
+<ul>
+<li><code>Gravity合同会社 -&gt; Gravity特定目的会社</code>
+  の direct link</li>
+<li><code>Gravity合同会社 -&gt; GLP Japan DH4特定目的会社</code>
+  の direct link</li>
+<li><code>Gravity合同会社 -&gt; GLP DH4 Exc特定目的会社</code>
+  の direct link</li>
+<li><code>Gravity特定目的会社</code>
+  と
+  <code>GLP Japan DH4特定目的会社 / GLP DH4 Exc特定目的会社</code>
+  の役割分担</li>
+<li><code>舞洲1ロジスティック特定目的会社 -&gt; GLP Japan DH4特定目的会社 / GLP DH4 Exc特定目的会社</code>
+  の改称・承継 direct evidence</li>
+<li><code>柏2ロジスティック特定目的会社 -&gt; GLP Japan DH4特定目的会社 / GLP DH4 Exc特定目的会社</code>
+  の改称・承継 direct evidence</li>
+<li>上記 rename trace を
+  <code>official source</code>
+  で再取得すること</li>
+<li><code>Exc</code>
+  の意味</li>
+<li><code>Japan Income Fund</code> が入る国内 <code>TK operator</code>
+  の具体名</li>
+</ul>
+<h2>6. What Did Not Move</h2>
+<p>今回の refresh は、
+<code>全体像をひっくり返す更新</code>
+ではありません。</p>
+<p>むしろ、</p>
+<ul>
+<li><code>上流 platform</code></li>
+<li><code>foreign sleeve</code></li>
+<li><code>Japan DH4</code></li>
+<li><code>Gravity</code></li>
+</ul>
+<p>という主要仮説は維持され、
+そのうち
+<code>Gravity 下流TMK</code>
+だけが
+<code>より具体化</code>
+した、
+というのが正確です。</p>
+<h2>7. The Most Important Open Problem</h2>
+<p>現時点の最大の未解決点は、
+<code>TMK名が分からない</code>
+ことではなく、</p>
+<p><code>Gravity特定目的会社</code>
+と
+<code>DH4名義TMK候補群</code>
+は見えたが、
+Gravity合同会社がそのどれにどう入っているかを
+直接示す資料がまだない`</p>
+<p>ことです。</p>
+<p>つまり frontier は、
+<code>探索のゼロ地点</code>
+から、
+<code>候補集合の中で direct link を取る局面</code>
+に進みました。</p>
+<h2>8. Next Frontier</h2>
+<ol>
+<li><code>Gravity特定目的会社</code>
+   の資産流動化計画・公告・物件資料を探す</li>
+<li><code>GLP Japan DH4特定目的会社</code>
+   の資産流動化計画・公告・物件資料を探す</li>
+<li><code>GLP DH4 Exc特定目的会社</code>
+   の <code>Exc</code> の意味と役割差を確認する</li>
+<li><code>Gravity合同会社</code>
+   と
+   <code>Gravity特定目的会社 / DH4 TMK群</code>
+   の直接結合資料を探す</li>
+<li><code>Japan DH4 -&gt; JIF LP -&gt; Gravity</code>
+   の各矢印を、
+   契約ではなくても
+   より強い公開資料で補強する</li>
+</ol>
+<h2>9. Primary Sources Added or Reconfirmed in This Refresh</h2>
+<ul>
+<li><code>20_一次資料/official/FSA/tokutei_todokede_20260331.pdf</code></li>
+<li><code>20_一次資料/extracted_text/added_20260422/tokutei_todokede_20260331.txt</code></li>
+<li><code>20_一次資料/official/FSA/tokurei_011.pdf</code></li>
+<li><code>20_一次資料/official/FSA/tokurei_011_refetch_20260422.pdf</code></li>
+<li><code>20_一次資料/official/FSA/tokurei_012.pdf</code></li>
+<li><code>20_一次資料/official/FSA/tokurei_013.pdf</code></li>
+<li><code>20_一次資料/official/FSA/tokurei_014.pdf</code></li>
+<li><code>20_一次資料/official/FSA/tokutei_todokede_refetch_20260422.pdf</code></li>
+<li><code>20_一次資料/extracted_text/added_20260422/tokurei_011_refetch_20260422.txt</code></li>
+<li><code>20_一次資料/extracted_text/added_20260422/tokutei_todokede_refetch_20260422.txt</code></li>
+<li><code>20_一次資料/official/GLPJREIT/glpjreit_2017_08_4asset_acquisition_notice.pdf</code></li>
+<li><code>30_分析/ソース抜粋/Gravity特定目的会社_現況と改称痕跡_20260422.md</code></li>
+<li><code>30_分析/ソース抜粋/日本GLP八重洲クラスター_20260421.md</code></li>
+<li><code>20_一次資料/official/GLPJREIT/glpjreit_2018_08_kessan_tanshin.pdf</code></li>
+<li><code>20_一次資料/official/GLPJREIT/glpjreit_2020_11_asset_acquisition_notice.pdf</code></li>
+<li><code>30_分析/ソース抜粋/FSA_特定目的会社届出一覧_DH4_TMK抜粋_20260422.md</code></li>
+<li><code>30_分析/ソース抜粋/GLPJREIT_DH4旧名称アセット対応_20260422.md</code></li>
+<li><code>30_分析/ソース抜粋/法人番号系_DH4改称痕跡_20260422.md</code></li>
+<li><code>30_分析/ストラクチャー/Gravity下流TMK候補_20260422.md</code></li>
+</ul></div>
+</section>
+<section class="appendix-section">
+<h2>C. gravity_group_structure_deep_research_20260422</h2>
+<p class="appendix-meta">原本: <code>/mnt/d/Users/PC/Desktop/tax/gravity_tk_tmk_project/90_成果/gravity_group_structure_deep_research_20260422.md</code></p>
+<div class="appendix-body"><h1>gravity_group_structure_deep_research_20260422</h1>
+<h2>1. 2026-04-22 時点の暫定結論</h2>
+<p>現時点の最良モデルは、
+次の三層連結です。</p>
+<ul>
+<li>上流 <code>Investment Limited Partnership (1)</code> 候補:
+  <code>Japan DH4 投資事業有限責任組合</code></li>
+<li>foreign sleeve:
+  <code>JIF Japan Partners LP</code></li>
+<li>下流 <code>Tokumei Kumiai Operator</code> 候補:
+  <code>Gravity合同会社</code></li>
+</ul>
+<p>ただし、これはまだ
+<code>高確度推定</code>
+であって、
+直接契約資料や募集資料での立証ではありません。</p>
+<h2>2. 今回なぜ判断が進んだか</h2>
+<p>今回の追加 official source によって、
+<code>JDP3 / JDP4 / Sakai</code>
+の性格が一段はっきりしました。</p>
+<h3>2.1 <code>JDP3</code></h3>
+<p>国土交通省の
+<code>GLP ALFALINK 茨木1</code>
+資料では、
+<code>JDP3ロジスティック2特定目的会社</code>
+が提案者として現れます。</p>
+<p>したがって、
+<code>JDP3</code>
+は portfolio-level operator というより、
+個別の新築物流開発案件と密接に結び付いたルートです。</p>
+<h3>2.2 <code>JDP4</code></h3>
+<p>大阪市の建築・入札資料では、</p>
+<ul>
+<li><code>JDP4ロジスティック2特定目的会社</code></li>
+<li><code>JDP4ロジスティック3特定目的会社</code></li>
+<li><code>JDP4ロジスティック4特定目的会社</code></li>
+</ul>
+<p>が確認できます。</p>
+<p>これは
+<code>JDP4</code>
+が、
+複数の取得・開発案件を束ねる
+project cluster 的ルートであることを示します。</p>
+<h3>2.3 <code>Sakai</code></h3>
+<p><code>tokurei_012</code>
+では
+<code>cash-yielding logistics facility</code>
+が単数であり、
+さらに Hon Hai 2024 report では
+<code>Sakai GK Partners LP</code>
+が
+<code>Associate</code>
+として現れます。</p>
+<p>このため、
+<code>Sakai</code>
+も portfolio-level sleeve というより、
+単独案件または JV 色の強いルートと読む方が自然です。</p>
+<h2>3. その結果どう変わったか</h2>
+<p><code>JDP3 / JDP4 / Sakai</code>
+は、
+<code>JIF</code>
+の直接下流候補というより、
+<code>foreign sleeve</code>
+が案件単位でどう切られるかを示す比較例へ寄りました。</p>
+<p>そのぶん、
+<code>JIF LP</code>
+の</p>
+<ul>
+<li>plural の <code>cash-yielding logistics facilities</code></li>
+<li><code>Tokumei Kumiai Operator</code>
+  経由</li>
+</ul>
+<p>という文言と整合しやすい国内 operator は、
+相対的に
+<code>Gravity合同会社</code>
+になっています。</p>
+<h2>4. Upstream 側の再評価</h2>
+<p><code>Japan DH4 投資事業有限責任組合</code>
+は、
+<code>tokurei_012</code>
+の中で
+唯一
+<code>海外リミテッドパートナーシップ</code>
+経由を明示する国内LPSです。</p>
+<p>したがって、
+<code>JIF LP</code>
+の investor type である
+<code>Investment Limited Partnership (1)</code>
+の第一候補として、
+<code>Japan Income Fund</code>
+より一段強いです。</p>
+<p><code>Japan Income Fund</code>
+はむしろ、
+<code>匿名組合の営業者</code>
+へ直接入る国内LPSハブとして読む方が自然です。</p>
+<h2>5. 現時点の構造図</h2>
+<pre><code class="language-text">Layer 1: Platform / strategy
+Ares / GLP / 日本GLP / GLP Japan Income Fund
+
+Layer 2A: domestic LPS for foreign sleeve
+Japan DH4 投資事業有限責任組合
+  ↓ 高確度推定
+
+Layer 2B: domestic LPS for domestic operator
+ジャパンインカムファンド投資事業有限責任組合
+  ↓
+匿名組合の営業者
+
+Layer 3: foreign sleeve
+JIF Japan Partners LP
+  ↓ 高確度推定
+Tokumei Kumiai Operator
+
+Layer 4: domestic operator / holding route
+Gravity合同会社
+  ↓
+TMKの特定出資 / 優先出資
+
+Layer 5: asset holding
+TMK / 信託受益権保有ビークル
+
+Layer 6: real assets
+日本物流施設
+</code></pre>
+<p>比較例としては、</p>
+<ul>
+<li><code>GLP Sakai GP -&gt; Sakai GK Partners LP</code></li>
+<li><code>GLP JDP4 FEEDER GP -&gt; TK Investor Singapore LP</code></li>
+<li><code>JDP3合同会社</code></li>
+<li><code>JDP4合同会社</code></li>
+</ul>
+<p>が重要です。
+ただし、これらは現在のところ
+<code>JIF</code>
+の直接下流候補というより、
+案件別スリーブの比較例と読む方が安全です。</p>
+<h2>6. 確定 / 高確度推定 / 未確認</h2>
+<h3>6.1 確定</h3>
+<ul>
+<li><code>JIF Japan Partners LP</code>
+  は
+  <code>Tokumei Kumiai Operator</code>
+  経由で日本物流不動産へ間接投資する</li>
+<li><code>Japan DH4 投資事業有限責任組合</code>
+  は
+  <code>海外リミテッドパートナーシップ</code>
+  経由の国内LPS</li>
+<li><code>Gravity合同会社</code>
+  は
+  <code>TMKの特定出資及び優先出資</code>
+  引受型の国内GK/TK operator</li>
+<li><code>JDP3 / JDP4 / Sakai</code>
+  には案件固有性を示す official source がある</li>
+</ul>
+<h3>6.2 高確度推定</h3>
+<ul>
+<li><code>Japan DH4 投資事業有限責任組合 -&gt; JIF Japan Partners LP</code></li>
+<li><code>JIF Japan Partners LP -&gt; Gravity合同会社</code></li>
+</ul>
+<h3>6.3 未確認</h3>
+<ul>
+<li><code>Gravity合同会社</code> の下流 <code>TMK</code> 名</li>
+<li><code>Japan Income Fund</code> が入る具体的な国内 <code>TK operator</code></li>
+<li><code>JIF LP</code> の LP 契約書と PPM</li>
+</ul>
+<h2>7. 今回追加した資産の意味</h2>
+<p>今回の資産化で、
+このプロジェクトは</p>
+<ul>
+<li>主体別ドシエ</li>
+<li>全体構造図</li>
+<li>直上直下候補マトリクス</li>
+<li>必須資料一覧</li>
+<li>案件粒度比較</li>
+</ul>
+<p>まで揃いました。</p>
+<p>つまり、
+「何が分かっているか」
+だけでなく、
+「何を見ればこの構造が読めるか」
+まで固定できた状態です。</p>
+<h2>8. 次の frontier</h2>
+<ol>
+<li><code>Gravity合同会社</code> の下流 <code>TMK</code> 名を特定する</li>
+<li><code>Japan DH4 -&gt; JIF LP</code> の直接補強資料を探す</li>
+<li><code>JIF LP -&gt; Gravity合同会社</code> の直接補強資料を探す</li>
+<li><code>Japan Income Fund</code> が入る国内 <code>TK operator</code> を特定する</li>
+</ol></div>
+</section>
+<section class="appendix-section">
+<h2>D. gravity_named_entities_tax_mapping_deep_research_20260422</h2>
+<p class="appendix-meta">原本: <code>/mnt/d/Users/PC/Desktop/tax/gravity_tk_tmk_project/90_成果/gravity_named_entities_tax_mapping_deep_research_20260422.md</code></p>
+<div class="appendix-body"><h1>gravity_named_entities_tax_mapping_deep_research_20260422</h1>
+<h2>1. Executive Summary</h2>
+<p>今回の問いは、
+これまで別々に資産化してきた</p>
+<ul>
+<li><code>構造研究</code></li>
+<li><code>源泉税・条約研究</code></li>
+<li><code>GK / TK / TMK / 一般社団法人</code>
+  の tax map</li>
+</ul>
+<p>を、
+<code>実名主体</code>
+に当て直すと
+どう見えるか、
+です。</p>
+<p>現時点の最も安全な結論は、
+GRAVITY グループの全体像は
+<code>ほぼ把握できている</code>
+が、
+最後の契約線はなお点線である、
+というものです。</p>
+<p>そのうえで、
+実名 tax map を引くと、
+次の整理がいちばん自然です。</p>
+<ul>
+<li><code>Gravity一般社団法人</code>
+  は
+  <code>orphan / governance layer</code></li>
+<li><code>Gravity合同会社</code>
+  は
+  <code>GK + TK operator + TMK investment route</code></li>
+<li><code>Gravity AH合同会社</code>
+  は
+  <code>GK + TK operator + trust beneficiary right route</code></li>
+<li><code>Gravity特定目的会社</code>
+  は
+  <code>TMK</code>
+  であり、
+  <code>Gravity合同会社</code>
+  の
+  下流第一候補</li>
+<li><code>Japan Income Fund合同会社</code>
+  は
+  <code>国内LPS aggregation hub</code></li>
+<li><code>Japan DH4合同会社</code>
+  は
+  <code>海外LPレーンの国内ハブ</code></li>
+<li><code>JIF Japan Partners LP</code>
+  は
+  <code>foreign sleeve</code>
+  であり、
+  <code>Gravity -&gt; JIF LP</code>
+  の局面では
+  <code>treaty claimant</code>
+  の確定が最大論点</li>
+</ul>
+<p>要するに、
+同じ sponsor platform の中に、</p>
+<ul>
+<li><code>TMK route</code></li>
+<li><code>trust beneficiary right route</code></li>
+<li><code>domestic LPS route</code></li>
+<li><code>foreign sleeve route</code></li>
+</ul>
+<p>が
+並走している、
+という読みです。</p>
+<h2>2. Why This Mapping Matters</h2>
+<p>これまでの workspace では、
+次のことはかなり分かっていました。</p>
+<ul>
+<li><code>JIF Japan Partners LP</code>
+  は
+  <code>Tokumei Kumiai Operator</code>
+  経由で
+  日本物流施設へ入る</li>
+<li><code>Gravity合同会社</code>
+  は
+  <code>TMKの特定出資及び優先出資</code>
+  引受型の
+  国内GK/TK operator</li>
+<li><code>Gravity特定目的会社</code>
+  は
+  下流TMK候補として最有力</li>
+<li><code>Japan DH4</code>
+  は
+  <code>海外リミテッドパートナーシップ</code>
+  経由を明示する</li>
+<li><code>Japan Income Fund</code>
+  は
+  <code>匿名組合の営業者</code>
+  へ入る
+  国内LPSハブ</li>
+</ul>
+<p>ただ、
+これを
+<code>誰がGKで</code>
+<code>誰がTKで</code>
+<code>誰がTMKで</code>
+<code>誰がorphan layerで</code>
+<code>誰に源泉税が立つのか</code>
+まで
+一体で見るメモは
+まだありませんでした。</p>
+<p>今回の成果は、
+その gap を埋める
+<code>named-entity tax map</code>
+です。</p>
+<h2>3. Entity-by-Entity Deep Mapping</h2>
+<h3>3.1 Gravity一般社団法人</h3>
+<p><code>tokurei_011</code>
+<code>tokurei_013</code>
+を読む限り、
+<code>Gravity一般社団法人</code>
+は、
+<code>Gravity合同会社</code>
+と
+<code>Gravity AH合同会社</code>
+の双方で
+<code>代表社員</code>
+として現れます。</p>
+<p>したがって、
+この主体は
+<code>受益主体</code>
+というより、
+<code>GKを束ねるガバナンス主体</code>
+とみるのが自然です。</p>
+<p>法形式が
+<code>一般社団法人</code>
+である以上、
+社員への剰余金分配を予定する箱ではありません。
+そのため、
+経済的収益の最終帰属主体というより、
+<code>orphan / control layer</code>
+として理解するのが
+日本の典型スキームにも合います。</p>
+<p>税務上は、
+ここが自動的に軽くなるわけではありません。</p>
+<ul>
+<li><code>非営利型法人</code>
+  なら
+  <code>公益法人等</code>
+  として
+  <code>収益事業課税</code></li>
+<li>そうでなければ
+  <code>普通法人</code>
+  として
+  <code>全所得課税</code></li>
+</ul>
+<p>です。</p>
+<p>さらに、
+運営実態によっては
+<code>特定一般社団法人等</code>
+の論点も生じ得ます。
+ただし、
+現時点では
+法人番号・定款・役員構成までは未取得であり、
+そこは未確定です。</p>
+<h3>3.2 Gravity合同会社</h3>
+<p><code>Gravity合同会社</code>
+は、
+現時点の GRAVITY 案件の中心です。</p>
+<p><code>tokurei_011</code>
+では、</p>
+<ul>
+<li>法人番号 <code>4010403022859</code></li>
+<li>代表社員 <code>Gravity一般社団法人</code></li>
+<li>職務執行者 <code>川島聖</code></li>
+<li>八重洲住所</li>
+</ul>
+<p>が確認できます。</p>
+<p><code>tokurei_012</code>
+では、
+<code>Gravity合同会社匿名組合</code>
+が</p>
+<ul>
+<li><code>匿名組合契約</code></li>
+<li><code>不動産ファンド</code></li>
+<li><code>日本国内の物流施設</code></li>
+<li><code>匿名組合出資をもって特定目的会社の発行する特定出資及び優先出資を引受ける</code></li>
+</ul>
+<p>と記載されています。</p>
+<p>このため、
+<code>Gravity合同会社</code>
+は、</p>
+<ol>
+<li><code>上の契約</code>
+   では
+   <code>TK営業者</code></li>
+<li><code>下の投資</code>
+   では
+   <code>TMK持分の引受人</code></li>
+</ol>
+<p>という
+二層的役割を持ちます。</p>
+<p>税務上の初期値は、
+<code>GK</code>
+として
+<code>普通法人</code>
+です。
+しかし、
+真の論点は
+その下ではなく
+その上にあります。</p>
+<p>つまり、
+<code>Gravity合同会社匿名組合</code>
+から
+<code>JIF Japan Partners LP</code>
+らしき foreign vehicle へ利益分配が出るとき、</p>
+<ul>
+<li><code>所得税法161条1項16号</code></li>
+<li><code>所得税法212条1項・2項</code></li>
+<li><code>No.2878</code></li>
+<li><code>No.2884</code></li>
+</ul>
+<p>により、
+<code>国内源泉所得</code>
+<code>20.42% 源泉</code>
+が
+baseline になる、
+という点です。</p>
+<p>したがって、
+<code>Gravity合同会社</code>
+は
+単なる SPC ではなく、
+GRAVITY 案件の
+<code>日本側源泉税論点の中心GK</code>
+でもあります。</p>
+<h3>3.3 Gravity AH合同会社</h3>
+<p><code>Gravity AH合同会社</code>
+は、
+<code>Gravity合同会社</code>
+と同じ八重洲 cluster に属する別GKです。</p>
+<p><code>tokurei_011</code>
+では、</p>
+<ul>
+<li>法人番号 <code>8010403022921</code></li>
+<li>代表社員 <code>Gravity一般社団法人</code></li>
+<li>職務執行者 <code>田渕安春</code></li>
+</ul>
+<p>が確認でき、
+<code>tokurei_012</code>
+では、
+<code>Gravity AH合同会社匿名組合</code>
+が
+<code>匿名組合出資をもって不動産信託受益権を取得する</code>
+と記載されます。</p>
+<p>ここで重要なのは、
+<code>Gravity合同会社</code>
+との差です。</p>
+<ul>
+<li><code>Gravity合同会社</code>
+  は
+  <code>TMK持分 route</code></li>
+<li><code>Gravity AH合同会社</code>
+  は
+  <code>trust beneficiary right route</code></li>
+</ul>
+<p>です。</p>
+<p>さらに、
+<code>JCR</code>
+の
+<code>2026-01-18</code>
+資料では、
+<code>Gravity AH合同会社</code>
+は
+<code>GLPグループが20年8月に設立し運用を開始したオープンエンド型私募ファンド</code>
+における
+<code>投資物件の保有と資金調達を担う投資ヴィークル</code>
+と説明されています。</p>
+<p>これにより、
+<code>Gravity AH</code>
+は
+<code>信託受益権 route を担う保有・調達 vehicle</code>
+だという理解が、
+単なる推測ではなく
+かなり直接的に補強されました。</p>
+<p>税務上は、
+ここもまず
+<code>普通法人</code>
+です。
+また、
+匿名組合を介する以上、
+利益分配時には
+<code>TKレイヤーの源泉税</code>
+の論点があり得ます。
+ただし、
+<code>Gravity合同会社</code>
+ルートと違って、
+現時点では
+投資家属性が
+<code>事業法人等(1)</code>
+と見えており、
+<code>外国法人又は外国人等(1)</code>
+の Gravity 本体と
+表示が違います。</p>
+<h3>3.4 Gravity特定目的会社</h3>
+<p><code>Gravity特定目的会社</code>
+は、
+現時点で
+<code>Gravity合同会社</code>
+の下流TMKとして最有力です。</p>
+<p>理由は、
+単なる名称一致ではありません。</p>
+<ul>
+<li>FSA current list に現存</li>
+<li>住所が
+  <code>東京都中央区八重洲2-2-1</code></li>
+<li>電話番号帯も
+  <code>03-6897-6297</code></li>
+<li><code>狭山日高2ロジスティック特定目的会社 -&gt; Gravity特定目的会社</code>
+  の改称痕跡</li>
+<li><code>GLP狭山日高Ⅱ</code>
+  と
+  <code>狭山日高2ロジスティック特定目的会社</code>
+  の official bridge</li>
+</ul>
+<p>が揃っているからです。</p>
+<p>税務上は、
+ここは
+<code>TMK</code>
+です。
+したがって、
+<code>匿名組合分配</code>
+ではなく、
+<code>措法67条の14</code>
+による
+<code>支払配当損金算入</code>
+の可否が主戦場になります。</p>
+<p>つまり、
+<code>Gravity合同会社</code>
+と
+<code>Gravity特定目的会社</code>
+は、</p>
+<ul>
+<li>前者が
+  <code>GK / TK operator</code></li>
+<li>後者が
+  <code>TMK conduit candidate</code></li>
+</ul>
+<p>という
+税務上まったく違う層に立っています。</p>
+<p>もっとも、
+<code>Gravity合同会社 -&gt; Gravity特定目的会社</code>
+を直接書いた公開契約資料は
+まだ未取得です。
+そのため、
+強い候補ではあるが
+<code>最後の矢印は未立証</code>
+という整理は維持する必要があります。</p>
+<h3>3.5 Japan Income Fund合同会社</h3>
+<p><code>Japan Income Fund合同会社</code>
+は、
+今回の map で誤読しやすい主体です。</p>
+<p><code>tokurei_011</code>
+<code>013</code>
+<code>014</code>
+から、</p>
+<ul>
+<li>法人番号 <code>6010403022989</code></li>
+<li>代表社員 <code>日本GLP株式会社</code></li>
+<li>職務執行者 <code>川島聖</code></li>
+<li>八重洲住所</li>
+</ul>
+<p>が確認できます。</p>
+<p><code>tokurei_012</code>
+では、
+<code>ジャパンインカムファンド投資事業有限責任組合</code>
+を扱い、
+<code>匿名組合の営業者に対する匿名組合出資</code>
+を通じて
+物流施設へ入る戦略だと記載されます。</p>
+<p>このため、
+<code>Japan Income Fund合同会社</code>
+は、
+<code>JIF Japan Partners LP</code>
+の直上直下をそのまま構成する主体というより、
+<code>国内投資家を束ねる別レーンのGK</code>
+とみる方が自然です。</p>
+<p>税務上も、
+ここはまず
+<code>普通法人</code>
+です。
+そのうえで、
+<code>国内LPS aggregation hub</code>
+としての役割を持つのであって、
+<code>Gravity合同会社匿名組合</code>
+から直接利益分配を受ける最有力主体ではありません。</p>
+<p>現時点では、
+<code>Japan Income Fund</code>
+は
+<code>直後受領者</code>
+ではなく、
+<code>同一プラットフォーム内の別資金導線</code>
+として扱うのが最も安全です。</p>
+<h3>3.6 Japan DH4合同会社</h3>
+<p><code>Japan DH4合同会社</code>
+は、
+<code>Japan Income Fund合同会社</code>
+と似ていますが、
+役割は違います。</p>
+<p>この主体は、
+<code>Japan DH4 投資事業有限責任組合</code>
+を扱い、
+<code>海外リミテッドパートナーシップ</code>
+を通じて
+日本物流施設へ入る、
+と
+<code>tokurei_012</code>
+に明示されています。</p>
+<p>したがって、
+<code>Japan DH4</code>
+は、
+国内LPSから
+foreign sleeve へ乗り換える
+<code>overseas LP bridge</code>
+です。</p>
+<p>この意味で、
+いまのところ
+<code>JIF Japan Partners LP</code>
+の直上候補としては、
+<code>Japan Income Fund</code>
+より
+<code>Japan DH4</code>
+の方が文言整合性が高いです。</p>
+<p>税務上は、
+ここも
+<code>GK</code>
+として
+<code>普通法人</code>
+です。
+ただし、
+本質は法人課税の軽重ではなく、
+<code>foreign LP route の日本側ハブ</code>
+だという点にあります。</p>
+<h3>3.7 JIF Japan Partners LP</h3>
+<p><code>JIF Japan Partners LP</code>
+は、
+GRAVITY tax map の
+最後の難所です。</p>
+<p><code>tokurei_012</code>
+では、</p>
+<ul>
+<li><code>Rights based on laws and regulations of a foreign state</code></li>
+<li><code>Fund of funds</code></li>
+<li><code>Tokumei Kumiai investment in Tokumei Kumiai Operator</code></li>
+<li><code>Investment Limited Partnership (1)</code></li>
+</ul>
+<p>と記載され、
+日本物流施設ポートフォリオへ間接投資する
+foreign sleeve
+であることが確認できます。</p>
+<p>他方で、
+税務上は、
+この主体を
+<code>そのまま treaty claimant</code>
+として扱えるかが未確定です。</p>
+<p>なぜなら、</p>
+<ul>
+<li><code>entity claimant</code>
+  として見るのか</li>
+<li><code>member look-through</code>
+  で見るのか</li>
+</ul>
+<p>を決めるには、
+<code>Business Profile</code>
+や
+<code>member roster</code>
+が必要だからです。</p>
+<p>このため、
+現時点の安全側実務は、
+<code>Gravity -&gt; JIF LP</code>
+を仮置きした場合でも、
+まず
+<code>20.42%源泉</code>
+を baseline に置き、
+そこから
+条約軽減を崩せるかを
+構成員情報と届出資料で詰める、
+という順番になります。</p>
+<h2>4. Integrated Structure</h2>
+<p>現時点の named-entity map を
+一つの図にすると、
+こうなります。</p>
+<pre><code class="language-text">Platform / sponsor
+  Ares / GLP / 日本GLP
+
+Governance / orphan layer
+  Gravity一般社団法人
+
+Domestic GK routes
+  Gravity合同会社
+    -&gt; Gravity合同会社匿名組合
+    -&gt; TMK 持分 route
+
+  Gravity AH合同会社
+    -&gt; Gravity AH合同会社匿名組合
+    -&gt; trust beneficiary right route
+
+  Japan Income Fund合同会社
+    -&gt; ジャパンインカムファンド投資事業有限責任組合
+    -&gt; domestic LPS route
+
+  Japan DH4合同会社
+    -&gt; Japan DH4 投資事業有限責任組合
+    -&gt; overseas LP bridge
+
+Foreign sleeve
+  JIF Japan Partners LP
+
+Asset-holding layer
+  Gravity特定目的会社
+  GLP Japan DH4特定目的会社
+  GLP DH4 Exc特定目的会社
+  trust beneficiary right holdings
+</code></pre>
+<h2>5. Best Current Tax Reading</h2>
+<p>税務上の母線は、
+非常にシンプルです。</p>
+<ul>
+<li><code>GK</code>
+  は
+  <code>普通法人</code></li>
+<li><code>TK</code>
+  は
+  <code>国内源泉所得 + 源泉税 + 条約</code></li>
+<li><code>TMK</code>
+  は
+  <code>67条の14</code></li>
+<li><code>一般社団法人</code>
+  は
+  <code>orphan</code>
+  でも
+  <code>税務別判定</code></li>
+</ul>
+<p>これを実名主体に当てると、</p>
+<ul>
+<li><code>Gravity合同会社</code>
+  と
+  <code>Gravity AH合同会社</code>
+  が
+  <code>GK + TK</code></li>
+<li><code>Gravity特定目的会社</code>
+  が
+  <code>TMK</code></li>
+<li><code>Gravity一般社団法人</code>
+  が
+  <code>一般社団法人</code></li>
+<li><code>JIF Japan Partners LP</code>
+  が
+  <code>条約 claimant frontier</code></li>
+<li><code>Japan Income Fund合同会社</code>
+  と
+  <code>Japan DH4合同会社</code>
+  が
+  <code>資金導線の違う domestic hub GK</code></li>
+</ul>
+<p>という位置づけになります。</p>
+<h2>6. Remaining Frontier</h2>
+<p>全体像の骨格は、
+かなり見えています。</p>
+<p>ただし、
+次の矢印はまだ点線です。</p>
+<ul>
+<li><code>Japan DH4 投資事業有限責任組合 -&gt; JIF Japan Partners LP</code></li>
+<li><code>JIF Japan Partners LP -&gt; Gravity合同会社</code></li>
+<li><code>Gravity合同会社 -&gt; Gravity特定目的会社</code></li>
+<li><code>Japan Income Fund合同会社 -&gt; 具体的国内 TK operator</code></li>
+</ul>
+<p>また、
+税務上の最大 frontier は、
+引き続き
+<code>JIF Japan Partners LP</code>
+の
+<code>member roster / treaty claimant</code>
+です。</p>
+<h2>7. Bottom Line</h2>
+<p>この named-entity tax map によって、
+GRAVITY グループは、
+次のように読むのが最も安全になりました。</p>
+<ol>
+<li><code>Gravity合同会社</code>
+   と
+   <code>Gravity AH合同会社</code>
+   は
+   似たGKだが、
+   下流資産レーンが違う</li>
+<li><code>Gravity特定目的会社</code>
+   は
+   <code>Gravity合同会社</code>
+   の下流TMK候補として最有力</li>
+<li><code>Japan Income Fund</code>
+   と
+   <code>Japan DH4</code>
+   は
+   どちらも八重洲クラスターだが、
+   前者は
+   <code>国内LPS route</code>
+   後者は
+   <code>海外LP bridge</code></li>
+<li><code>JIF Japan Partners LP</code>
+   は
+   GRAVITY 案件の
+   <code>foreign sleeve</code>
+   として最有力だが、
+   条約恩典主体の確定には
+   <code>Business Profile</code>
+   など controlled-access source が必要</li>
+</ol>
+<p>したがって、
+<code>ストラクチャー全体像はかなり見えた</code>
+といってよく、
+残っているのは
+<code>最後の契約線</code>
+と
+<code>条約 claimant</code>
+の
+二つの frontier
+です。</p></div>
+</section>
+<section class="appendix-section">
+<h2>E. gravity_tk_distribution_destination_deep_research_20260422</h2>
+<p class="appendix-meta">原本: <code>/mnt/d/Users/PC/Desktop/tax/gravity_tk_tmk_project/90_成果/gravity_tk_distribution_destination_deep_research_20260422.md</code></p>
+<div class="appendix-body"><h1>gravity_tk_distribution_destination_deep_research_20260422</h1>
+<h2>1. Executive Summary</h2>
+<p>本メモの問いは、</p>
+<p><code>現状で Gravity合同会社 が仮に匿名組合分配金を支払うとすれば、その先はどこだと合理的に推定されるか</code></p>
+<p>です。</p>
+<p>結論だけ先に言うと、
+この問いは
+<code>法的に直後の受領者</code>
+と
+<code>そのさらに上流の受益レイヤー</code>
+を分けないと誤ります。</p>
+<p>現時点の公開一次資料に基づく最良結論は、
+次の3層です。</p>
+<ol>
+<li><code>法的な直後受領者</code>
+<code>Gravity合同会社匿名組合</code> の <code>匿名組合員</code></li>
+<li><code>その匿名組合員の最有力実名候補</code>
+<code>JIF Japan Partners LP</code></li>
+<li><code>そのさらに上流の最有力候補</code>
+<code>Japan DH4 投資事業有限責任組合</code></li>
+</ol>
+<p>したがって、
+現時点で最も合理的な推定チェーンは、</p>
+<pre><code class="language-text">Japan DH4 投資事業有限責任組合
+  ↓ 高確度推定
+JIF Japan Partners LP
+  ↓ 高確度推定
+Gravity合同会社匿名組合の匿名組合員
+  ↓ 法的な直接受領先
+匿名組合利益分配
+</code></pre>
+<p>です。</p>
+<p>逆に、
+<code>Japan Income Fund合同会社 / ジャパンインカムファンド投資事業有限責任組合</code>
+を
+Gravity の利益分配の直後受領者とみる読みは、
+現時点では一段弱いです。
+これは、
+同主体が
+<code>匿名組合の営業者に対する匿名組合出資</code>
+を行う
+<code>日本側LPSハブ</code>
+として現れており、
+<code>Gravity合同会社匿名組合</code>
+で見える
+<code>外国法人又は外国人等(1)</code>
+という
+single foreign-type investor
+の表示と
+やや層が違うからです。</p>
+<h2>2. Legal Layer: Who Receives the Distribution First?</h2>
+<h3>2.1 Commercial Code framing</h3>
+<p><code>商法535条</code>
+は、
+匿名組合契約を
+<code>一方が相手方の営業のために出資し、その営業から生ずる利益を分配することを約する</code>
+契約と定義します。</p>
+<p><code>商法536条</code>
+は、</p>
+<ul>
+<li><code>匿名組合員の出資は、営業者の財産に属する</code></li>
+<li><code>匿名組合員は、営業者の業務を執行し、又は営業者を代表することができない</code></li>
+<li><code>匿名組合員は、営業者の行為について、第三者に対して権利及び義務を有しない</code></li>
+<li><code>損失をてん補した後でなければ、匿名組合員は、利益の配当を請求することができない</code></li>
+</ul>
+<p>と定めます。</p>
+<p>このため、
+<code>Gravity合同会社匿名組合</code>
+で
+<code>Gravity合同会社</code>
+が営業者なら、
+利益分配の法的な相手方は
+<code>匿名組合員</code>
+です。</p>
+<h3>2.2 FSA filing consistency</h3>
+<p><code>tokurei_012</code>
+の
+<code>Ｇｒａｖｉｔｙ合同会社</code>
+欄では、</p>
+<ul>
+<li><code>Gravity合同会社匿名組合</code></li>
+<li><code>日本国内の物流施設</code></li>
+<li><code>匿名組合出資をもって特定目的会社の発行する特定出資及び優先出資を引受ける</code></li>
+<li><code>外国法人又は外国人等(1)</code></li>
+</ul>
+<p>が並びます。</p>
+<p>この表示は、
+<code>Gravity合同会社</code>
+が
+<code>匿名組合の営業者</code>
+であり、
+その反対側に
+<code>外国法人又は外国人等 1者</code>
+の
+匿名組合員がいる、
+という読みと最も整合します。</p>
+<p>したがって、
+<code>Gravity合同会社</code> が支払う匿名組合利益分配の
+法的な直後受領者は、
+TMK ではなく、
+この <code>匿名組合員側</code>
+です。</p>
+<h2>3. Candidate Comparison</h2>
+<h3>3.1 JIF Japan Partners LP</h3>
+<p><code>tokurei_012</code>
+では、
+<code>JIF Japan Partners LP</code>
+が</p>
+<p><code>In accordance with the strategy to invest in a portfolio of cash-yielding logistics facilities in Japan, JIF Japan Partners LP will indirectly invest in real estate, etc. through Tokumei Kumiai investment in Tokumei Kumiai Operator.</code></p>
+<p>と記載されています。</p>
+<p>この文言は、</p>
+<ul>
+<li>投資対象が <code>Japan logistics facilities</code></li>
+<li>投資経路が <code>Tokumei Kumiai investment in Tokumei Kumiai Operator</code></li>
+</ul>
+<p>であり、
+<code>Gravity合同会社匿名組合</code>
+の記載と
+極めてよく噛み合います。</p>
+<p>さらに
+<code>JIF Japan Partners LP</code>
+は
+海外LPであり、
+<code>Gravity合同会社匿名組合</code>
+に現れる
+<code>外国法人又は外国人等(1)</code>
+とも自然に整合します。</p>
+<p>現時点では、
+<code>Gravity合同会社</code> の匿名組合利益分配の
+最有力直後受領者候補は
+この <code>JIF Japan Partners LP</code>
+です。</p>
+<h3>3.2 Japan DH4 投資事業有限責任組合</h3>
+<p><code>Japan DH4合同会社</code>
+の
+<code>tokurei_012</code>
+記載は、</p>
+<p><code>日本国内の物流施設に対する投資を内容とする投資戦略に従い、海外リミテッドパートナーシップに対する出資を通じて、間接的に不動産等に対する投資を行う。</code></p>
+<p>です。</p>
+<p>この文言は、</p>
+<ul>
+<li><code>国内LPS</code>
+  が</li>
+<li><code>海外LP</code>
+  に出資し、</li>
+<li>その海外LPが
+  日本の物流施設に投資する</li>
+</ul>
+<p>という
+<code>Japan DH4 -&gt; foreign LP -&gt; Tokumei Kumiai Operator</code>
+の層構造を
+ほぼそのまま示します。</p>
+<p>このため、
+<code>JIF Japan Partners LP</code>
+の直上候補としては、
+<code>Japan DH4 投資事業有限責任組合</code>
+が最も強いです。</p>
+<p>言い換えると、
+<code>Gravity合同会社</code> が利益分配を払う
+<code>そのさらに先</code>
+まで合理的に追うなら、
+<code>JIF Japan Partners LP</code>
+のさらに上に
+<code>Japan DH4</code>
+が乗る構図が
+現時点の best explanation です。</p>
+<h3>3.3 Japan Income Fund合同会社 / ジャパンインカムファンド投資事業有限責任組合</h3>
+<p><code>Japan Income Fund合同会社</code>
+の
+<code>tokurei_012</code>
+記載は、</p>
+<p><code>匿名組合の営業者に対する匿名組合出資を通じて、間接的に不動産等に対する投資を行う</code></p>
+<p>です。</p>
+<p>この主体は、</p>
+<ul>
+<li><code>金融機関等(17)、事業法人等(12)</code></li>
+<li>合計 <code>29</code>
+ という
+  国内投資家母集団を伴う
+  日本側LPSハブ</li>
+</ul>
+<p>として見えています。</p>
+<p>そのため、
+<code>日本側の上流ハブ</code>
+としては重要ですが、
+<code>Gravity合同会社匿名組合</code>
+の
+<code>外国法人又は外国人等(1)</code>
+という
+直後投資家像とは
+やや層がずれます。</p>
+<p>よって、
+<code>Japan Income Fund</code>
+は
+<code>Gravityの匿名組合利益分配の直後受領先</code>
+としてより、
+<code>JIF LP より上または parallel の国内LPSハブ</code>
+として読む方が合理的です。</p>
+<h3>3.4 Other foreign-sleeve patterns</h3>
+<p>比較例として、</p>
+<ul>
+<li><code>Sakai GK Partners LP</code></li>
+<li><code>TK Investor Singapore LP</code></li>
+</ul>
+<p>も
+<code>foreign LP -&gt; Tokumei Kumiai Operator</code>
+の文言を持っています。</p>
+<p>ただし、
+workspace に蓄積した
+<code>MLIT / 大阪市 / Hon Hai</code>
+等の official source を合わせると、</p>
+<ul>
+<li><code>Sakai</code></li>
+<li><code>JDP4</code></li>
+</ul>
+<p>は
+案件固有スリーブ色が強く、
+<code>JIF LP</code> の一般的・portfolio-level な受皿としては
+<code>Gravity</code>
+の方が一段自然です。</p>
+<h2>4. Why JIF LP is Stronger than Japan Income Fund for the Immediate Payee Question</h2>
+<p>この問いで最も重要な比較は、
+<code>JIF Japan Partners LP</code>
+と
+<code>Japan Income Fund合同会社</code>
+のどちらを
+<code>Gravityの匿名組合利益分配の直後受領先</code>
+とみるべきか、
+です。</p>
+<p>現時点では、
+<code>JIF Japan Partners LP</code>
+の方が強いです。</p>
+<p>理由は4つあります。</p>
+<ol>
+<li><code>Gravity合同会社匿名組合</code> 側で見えているのが
+   <code>外国法人又は外国人等(1)</code>
+   であり、
+   single foreign-type investor だから</li>
+<li><code>JIF Japan Partners LP</code> が
+   <code>Tokumei Kumiai Operator への Tokumei Kumiai investment</code>
+   を直接うたっているから</li>
+<li><code>Japan DH4</code>
+   が
+   <code>海外リミテッドパートナーシップ</code>
+   経由投資を示しており、
+   <code>Japan DH4 -&gt; JIF LP</code>
+   の層構造を組みやすいから</li>
+<li><code>Japan Income Fund合同会社</code>
+   は
+   国内側のLPSハブであり、
+   多数の国内投資家母集団を抱える
+   upstream / parallel hub
+   として読む方が自然だから</li>
+</ol>
+<h2>5. Best Current Reconstruction</h2>
+<p>現時点の公開ソースを
+<code>法的な直後受領者</code>
+から
+<code>合理的な上流</code>
+まで一本でつなぐと、
+最良モデルは次です。</p>
+<pre><code class="language-text">[economic upstream]
+Japan DH4 投資事業有限責任組合
+  ↓
+JIF Japan Partners LP
+  ↓
+[legal immediate payee]
+Gravity合同会社匿名組合の匿名組合員
+  ↑
+Gravity合同会社
+  = 匿名組合の営業者
+</code></pre>
+<p>ここでの重要点は、
+<code>Gravity合同会社</code> の
+下流TMK候補
+<code>Gravity特定目的会社</code>
+とは
+別レイヤーだということです。</p>
+<p><code>Gravity特定目的会社</code>
+は
+<code>Gravity合同会社</code>
+が
+匿名組合出資をもって引き受ける
+投資先TMKの strongest direct-name candidate ですが、
+<code>Gravity合同会社</code> が匿名組合利益分配を払う
+相手そのものではありません。</p>
+<h2>6. Confidence Map</h2>
+<table>
+<thead>
+<tr>
+<th>命題</th>
+<th style="text-align: right;">評価</th>
+<th>コメント</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Gravity合同会社</code> は本件TKで営業者である</td>
+<td style="text-align: right;">high</td>
+<td>商法・FSA届出・既存法令ノートが整合</td>
+</tr>
+<tr>
+<td>匿名組合利益分配の法的直後受領者は匿名組合員である</td>
+<td style="text-align: right;">high</td>
+<td>商法535・536条レベルで明確</td>
+</tr>
+<tr>
+<td><code>Gravity合同会社匿名組合</code> の匿名組合員は foreign-type investor 1者である</td>
+<td style="text-align: right;">high</td>
+<td><code>tokurei_012</code> の <code>外国法人又は外国人等(1)</code></td>
+</tr>
+<tr>
+<td>その最有力実名候補は <code>JIF Japan Partners LP</code></td>
+<td style="text-align: right;">medium-high</td>
+<td>文言整合が最強だが direct naming 未取得</td>
+</tr>
+<tr>
+<td>そのさらに上流は <code>Japan DH4 投資事業有限責任組合</code></td>
+<td style="text-align: right;">medium</td>
+<td><code>海外リミテッドパートナーシップ</code> 経由の記載が強いが direct naming 未取得</td>
+</tr>
+<tr>
+<td><code>Japan Income Fund合同会社</code> が直後受領者である</td>
+<td style="text-align: right;">low-medium</td>
+<td>upstream / parallel hub としては重要だが直後受領者としては整合が弱い</td>
+</tr>
+</tbody>
+</table>
+<h2>7. What Is Still Unproven</h2>
+<p>まだ直接立証できていないものは
+次です。</p>
+<ul>
+<li><code>Gravity合同会社匿名組合</code> の実際の匿名組合契約書</li>
+<li><code>JIF Japan Partners LP -&gt; Gravity合同会社匿名組合</code>
+  を名指しで示す
+  PPM / subscription / side letter</li>
+<li><code>Japan DH4 投資事業有限責任組合 -&gt; JIF Japan Partners LP</code>
+  を名指しで示す
+  契約書・私募資料</li>
+</ul>
+<p>したがって、
+本メモの結論は
+<code>公開一次資料を最大限重ねた合理的推定</code>
+であって、
+<code>契約書ベースの直証</code>
+ではありません。</p>
+<h2>8. Practical Answer</h2>
+<p>実務的に一文で答えるなら、
+次です。</p>
+<p><code>現状で Gravity合同会社 が仮に匿名組合分配金を支払うとすれば、法的な直後の支払先は Gravity合同会社匿名組合の匿名組合員であり、その最有力候補は JIF Japan Partners LP、さらにその上流は Japan DH4 投資事業有限責任組合だと推定するのが最も合理的である。</code></p></div>
+</section>
+<section class="appendix-section">
+<h2>F. gravity_withholding_tax_and_treaty_benefit_deep_research_20260422</h2>
+<p class="appendix-meta">原本: <code>/mnt/d/Users/PC/Desktop/tax/gravity_tk_tmk_project/90_成果/gravity_withholding_tax_and_treaty_benefit_deep_research_20260422.md</code></p>
+<div class="appendix-body"><h1>gravity_withholding_tax_and_treaty_benefit_deep_research_20260422</h1>
+<h2>1. Executive Summary</h2>
+<p>本メモは、次の2点を一体で整理する。</p>
+<ol>
+<li><code>Gravity合同会社</code> が <code>JIF Japan Partners LP</code> に匿名組合利益分配を支払う局面で、日本の源泉税はどう動くか</li>
+<li><code>JIF Japan Partners LP</code> が pass-through / fiscally transparent entity と評価される場合、誰が租税条約上の恩典を取るのか</li>
+</ol>
+<p>現時点の最も実務的な結論は、次のとおりである。</p>
+<ul>
+<li><code>Gravity合同会社匿名組合</code> の利益分配は、国内法上、<code>所得税法161条1項16号</code> の国内源泉所得に当たる。</li>
+<li>したがって、支払先が <code>非居住者又は外国法人</code> である限り、<code>所得税法212条1項</code> により、<code>Gravity合同会社</code> は源泉徴収義務者となる。</li>
+<li>税率の実務入口は国税庁 <code>No.2884</code> で、<code>匿名組合契約等に基づく利益の分配</code> は <code>20.42%</code> と整理される。</li>
+<li>ただし、租税条約があれば結果は動き得る。もっとも、匿名組合分配金は条約の型によって扱いが大きく分かれる。</li>
+<li><code>JIF Japan Partners LP</code> が pass-through であるなら、条約恩典を当然に <code>JIF LP</code> 自体が取るとは言えない。むしろ、<code>その所得を自国法上取得したものと扱われる構成員</code> ごとに、居住地・条約・受益者性・届出資料を見ていくのが筋である。</li>
+<li>よって、<code>Gravity</code> 実務の安全側初期値は、<code>JIF LP</code> 宛支払について国内法どおりの源泉を前提にし、条約軽減を主張するなら <code>条約の型判定 + entity classification + 構成員名簿 + 届出書</code> を揃える、である。</li>
+</ul>
+<h2>2. Domestic Law Layer</h2>
+<h3>2.1 なぜ国内源泉所得か</h3>
+<p><code>商法535条</code> は匿名組合契約を、</p>
+<blockquote>
+<p>当事者の一方が相手方の営業のために出資をし、その営業から生ずる利益を分配することを約する</p>
+</blockquote>
+<p>契約とする。</p>
+<p><code>商法536条</code> は、匿名組合員の出資は営業者の財産に属し、匿名組合員は業務執行も代表もできないとする。</p>
+<p>したがって、<code>Gravity合同会社匿名組合</code> における支払の法的性質は、<code>営業者である Gravity合同会社 から匿名組合員への利益分配</code> である。</p>
+<p>この利益分配は、<code>所得税法161条1項16号</code> により、</p>
+<blockquote>
+<p>国内において事業を行う者に対する出資につき、匿名組合契約（これに準ずる契約として政令で定めるものを含む。）に基づいて受ける利益の分配</p>
+</blockquote>
+<p>として国内源泉所得とされる。</p>
+<p>国税庁 <code>No.2878</code> でも、</p>
+<ul>
+<li><code>国内において事業を行う者に対する出資につき、匿名組合契約等に基づく利益の分配</code></li>
+</ul>
+<p>を国内源泉所得の一類型として明示している。</p>
+<h3>2.2 だれが源泉徴収義務者か</h3>
+<p><code>所得税法212条1項</code> は、非居住者または外国法人に対し、国内源泉所得の支払をする者に源泉徴収義務を課す。</p>
+<p>したがって、<code>JIF Japan Partners LP</code> が少なくとも日本国内法上 <code>非居住者又は外国法人</code> として扱われるなら、<code>Gravity合同会社</code> が源泉徴収義務者となる。</p>
+<p>さらに <code>所得税法212条2項</code> により、支払が国外で行われても、支払者が国内に住所・居所・事務所等を有すれば、日本国内支払とみなされる。</p>
+<p>よって、<code>日本のGKが国外LPへ送金するだけだから日本源泉は外れる</code> とは読めない。</p>
+<h3>2.3 税率の入口</h3>
+<p>国税庁 <code>No.2884</code> は、非居住者等への国内源泉所得の税率表で、</p>
+<ul>
+<li><code>匿名組合契約等に基づく利益の分配</code></li>
+</ul>
+<p>を <code>20.42%</code> としている。</p>
+<p>したがって、条約軽減がない限り、<code>Gravity -&gt; JIF LP</code> の支払はまず <code>20.42%</code> 源泉が起点となる。</p>
+<h3>2.4 今回の Gravity 論点で重要な注意</h3>
+<p><code>所得税法212条5項</code> は、<code>161条1項4号</code> の組合契約ベースの配分について、計算期間末から2か月経過で支払時期みなしを置いている。</p>
+<p>しかし、<code>Gravity合同会社匿名組合</code> の支払は、いまの整理では <code>161条1項16号</code> の <code>匿名組合契約に基づく利益の分配</code> である。したがって、今回の主論点は <code>212条1項・2項</code> の一般ルールが中心であり、<code>212条5項</code> のみなし規定をそのまま当てる場面ではない。</p>
+<h2>3. Treaty Layer</h2>
+<h3>3.1 まず条約の型を見ないと危ない</h3>
+<p>匿名組合分配金の条約処理は、対象条約の型でかなり違う。</p>
+<p>ローカル比較表では、少なくとも次の類型が確認できる。</p>
+<ul>
+<li><code>一般型</code></li>
+<li><code>日本源泉課税留保型</code></li>
+<li><code>日米特則型</code></li>
+<li><code>所得類型組込型</code></li>
+</ul>
+<p>したがって、<code>条約がある = 自動的に軽減</code> ではない。</p>
+<h3>3.2 シンガポール条約をどうみるか</h3>
+<p>今回の <code>JIF Japan Partners LP</code> は、少なくとも <code>Singapore sleeve</code> として強く疑われる。</p>
+<p>確認した日本・シンガポール協定の該当条文では、</p>
+<ul>
+<li><code>第10条 配当</code></li>
+<li><code>第11条 利子</code></li>
+<li><code>第21条 その他の所得</code></li>
+</ul>
+<p>があり、それぞれ <code>他方の締約国の居住者</code>、<code>受益者</code>、<code>PE</code> を要件としている。</p>
+<p>一方で、今回見たローカル条文パックでは、<code>匿名組合分配金</code> の独立特則は確認できていない。</p>
+<p>そのため、シンガポール条約を前提にするなら、まず</p>
+<ol>
+<li>当該所得を <code>利子 / 配当 / その他所得 / 企業利得</code> のどこで読むか</li>
+<li>その受領者が <code>他方の締約国の居住者</code> か</li>
+<li>その受領者が <code>受益者</code> といえるか</li>
+<li><code>PE</code> があるか</li>
+</ol>
+<p>を詰める必要がある。</p>
+<h2>4. How to Characterize the TK Distribution Under a Treaty</h2>
+<p>国税庁論叢 <code>匿名組合と国際税務</code> は、匿名組合分配金の条約上の所得類型について、</p>
+<ul>
+<li>典型的匿名組合であれば <code>利子</code></li>
+<li>非典型的匿名組合で、営業者事業所が外国匿名組合員の <code>PE</code> に当たるなら <code>企業の利得</code></li>
+</ul>
+<p>という整理を示す。</p>
+<p>この整理を <code>Gravity</code> に持ち込むと、</p>
+<ul>
+<li><code>JIF LP</code> が純投資家として受けるだけの <code>typical TK</code>
+  なら、条約上 <code>利子</code> 読みが有力</li>
+<li><code>JIF LP</code> 側に業務執行関与や支配を通じた <code>共同事業性</code> が強く、営業者事業所が LP 側の <code>PE</code> と読めるなら、<code>企業の利得</code></li>
+</ul>
+<p>となる。</p>
+<h2>5. If JIF LP Is Pass-Through, Who Gets Treaty Benefits?</h2>
+<p><code>JIF Japan Partners LP</code> が pass-through / fiscally transparent であるなら、原則として <code>LP自体が自動的に条約恩典主体になるわけではない</code>。</p>
+<p>この場合に見るべきは、</p>
+<ul>
+<li>その所得を <code>誰が自国法上取得したと扱うか</code></li>
+<li>その者が <code>条約相手国の居住者</code> か</li>
+<li>当該条約の <code>受益者</code> 要件、<code>LOB</code>、<code>substance</code>、<code>PE</code> 条項を満たすか</li>
+</ul>
+<p>である。</p>
+<p>国税庁 <code>No.2888</code> は、<code>日本と相手国で課税上の取扱いが異なる事業体</code> に関し、</p>
+<ul>
+<li><code>租税条約に関する届出書</code></li>
+<li><code>付表（様式16）</code></li>
+<li><code>構成員のうち源泉徴収の軽減・免除を受けることができる者の名簿</code></li>
+</ul>
+<p>を要求する。</p>
+<p>したがって、<code>JIF LP が透明体なら誰が条約恩典を取るのか</code> という問いへの日本実務寄りの答えは、</p>
+<blockquote>
+<p><code>JIF LP</code> ではなく、<code>その所得を居住地国法上取得したものとされる構成員のうち、条約要件を満たす者</code></p>
+</blockquote>
+<p>となるのが基本形である。</p>
+<p>さらに日米条約は、匿名組合的仕組みについて <code>entity</code> だけでなく <code>参加者</code> の treaty benefits も否認し得る特則を持つ。したがって、<code>pass-through なら常に partner look-through で救われる</code> と考えるのは危ない。</p>
+<h2>6. Applying This to Gravity -&gt; JIF LP</h2>
+<p><code>Gravity合同会社</code> にとっての保守的起点は、次のとおりである。</p>
+<ul>
+<li><code>JIF LP</code> への TK 分配は国内源泉所得</li>
+<li>相手は少なくとも外国法LPとして現れている</li>
+<li>したがって、日本側ではまず <code>20.42%</code> 源泉を基本値とする</li>
+</ul>
+<p>そのうえで、条約軽減を主張するなら、<code>JIF LP そのもの</code> で取るのか、<code>look-through で構成員</code> が取るのかを確定する必要がある。</p>
+<p><code>JIF LP</code> 自体でシンガポール条約等の恩典を取るなら、少なくとも次が問題になる。</p>
+<ul>
+<li><code>JIF LP</code> は treaty 上の <code>居住者</code> と言えるか</li>
+<li><code>JIF LP</code> はその所得の <code>受益者</code> と言えるか</li>
+<li>シンガポール条約 <code>22条2項</code> の substance 制限に引っかからないか</li>
+</ul>
+<p>特に <code>22条2項</code> は、</p>
+<ul>
+<li>その者についてシンガポールで租税が免除されており</li>
+<li>かつ</li>
+<li>実体を有して実際の活動を行っていない</li>
+</ul>
+<p>ときには、減免を認めないとしている。</p>
+<p>一方、look-through なら、</p>
+<ul>
+<li>各構成員の居住地</li>
+<li>各構成員の所得帰属割合</li>
+<li>各構成員が applicable treaty の <code>居住者</code> か</li>
+<li><code>beneficial owner / 受益者</code>、<code>LOB</code>、<code>substance</code>、<code>PE</code></li>
+</ul>
+<p>を構成員ごとに確認する必要がある。</p>
+<h2>7. Bottom Line</h2>
+<p>現時点の <code>Gravity -&gt; JIF LP</code> 仮説にそのまま当てはめると、結論はこうなる。</p>
+<ol>
+<li><code>Gravity合同会社</code> は、まず <code>匿名組合分配 = 国内源泉所得</code> として <code>20.42%</code> 源泉を前提に動くのが安全</li>
+<li>条約軽減はあり得るが、まず <code>どの条約類型か</code> を見ないといけない</li>
+<li><code>JIF LP</code> が pass-through なら、恩典主体は <code>JIF LP</code> ではなく <code>その構成員</code> 側に落ちるのが基本</li>
+<li>ただし、日米条約のように <code>仕組み</code> も <code>参加者</code> も benefit を否認し得る条約もある</li>
+</ol>
+<h2>8. Sources</h2>
+<ul>
+<li>国税庁 <code>No.2878 国内源泉所得の範囲</code></li>
+<li>https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2878.htm</li>
+<li>国税庁 <code>No.2884 非居住者等に対する源泉徴収</code></li>
+<li>https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2884.htm</li>
+<li>国税庁 <code>No.2885 非居住者等に対する源泉徴収のしくみ</code></li>
+<li>https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2885.htm</li>
+<li>国税庁 <code>No.2888 日本と相手国で課税上の取扱いが異なる事業体に対する租税条約の適用</code></li>
+<li>https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2888.htm</li>
+<li>国税庁論叢 <code>匿名組合と国際税務</code></li>
+<li>https://www.nta.go.jp/about/organization/ntc/kenkyu/ronsou/52/04/ronsou.pdf</li>
+<li>日本・シンガポール協定 synthesized text</li>
+<li>http://www.mof.go.jp/tax_policy/summary/international/press_release/SynthesizedTextforJapan-SingaporeJP.pdf</li>
+</ul></div>
+</section>
+<section class="appendix-section">
+<h2>G. gravity_gk_tk_tmk_shadan_tax_deep_research_20260422</h2>
+<p class="appendix-meta">原本: <code>/mnt/d/Users/PC/Desktop/tax/gravity_tk_tmk_project/90_成果/gravity_gk_tk_tmk_shadan_tax_deep_research_20260422.md</code></p>
+<div class="appendix-body"><h1>GRAVITY GK TK TMK 一般社団法人 税務ディープリサーチ 20260422</h1>
+<p>Status: <code>durable synthesis</code></p>
+<h2>0. Executive Summary</h2>
+<p>今回の追加調査で、GRAVITY案件の日本側スキームを読むための
+<code>GK / TK / TMK / 一般社団法人</code>
+の法形式と税務上の取り扱いを、
+official source ベースで固定できた。</p>
+<p>結論だけ先に言うと、次の整理がいちばん安全である。</p>
+<ul>
+<li><code>GK</code></li>
+<li>日本法上の法人であり、税務上の初期値は <code>普通法人</code></li>
+<li><code>TK</code></li>
+<li>商法上の契約レイヤーであり、匿名組合利益分配が
+    <code>源泉税 / 条約 / 所得類型</code> の主戦場</li>
+<li><code>TMK</code></li>
+<li>法人ではあるが、措法67条の14で
+    <code>支払配当の損金算入</code>
+    により導管に近い扱いを受け得る</li>
+<li><code>一般社団法人</code></li>
+<li><code>orphan / control layer</code> として機能し得るが、
+    税務上は <code>非営利型法人</code> 判定や
+    <code>特定一般社団法人等</code> の相続税論点が残る</li>
+</ul>
+<h2>1. GK レイヤー</h2>
+<p>合同会社は <code>持分会社</code> であり、社員はすべて有限責任社員である。
+このため、GK は日本の不動産・流動化・ファンド実務で
+<code>TK営業者</code> や <code>TMK投資主体</code> として使いやすい。</p>
+<p>しかし税務上は、
+GK は通常の <code>内国法人 / 普通法人</code> である。
+したがって、</p>
+<ul>
+<li><code>GKだから透明体</code></li>
+<li><code>GKだから軽課税</code></li>
+</ul>
+<p>とはならない。</p>
+<h2>2. TK レイヤー</h2>
+<p>商法535条・536条により、
+匿名組合では</p>
+<ul>
+<li>匿名組合員は営業のために出資する</li>
+<li>利益分配を受ける</li>
+<li>出資財産は営業者の財産に属する</li>
+<li>匿名組合員は業務執行・代表ができない</li>
+</ul>
+<p>という構造になる。</p>
+<p>税務上は、匿名組合契約等に基づく利益分配が
+国内源泉所得であり、
+非居住者・外国法人への支払なら
+<code>20.42%</code> 源泉が初期値である。</p>
+<h2>3. TMK レイヤー</h2>
+<p>TMK は資産流動化法上の特定目的会社であり、
+優先出資・特定出資・特定社債などを用いて資金を集め、
+資産流動化計画に従って資産を保有・処分する。</p>
+<p>税務上の重要点は、
+TMK は自動的に非課税ではなく、
+措法67条の14の要件を満たした場合に
+<code>支払配当の損金算入</code>
+が認められる、という点である。</p>
+<p>NTA 明細書からは、</p>
+<ul>
+<li>配当可能利益</li>
+<li>90% テスト</li>
+<li>所得金額 ceiling</li>
+</ul>
+<p>が実務の中心だと分かる。</p>
+<h2>4. 一般社団法人レイヤー</h2>
+<p>一般社団法人は会社法型の出資者持分を持たず、
+定款で社員に剰余金・残余財産の分配権を与えても無効であり、
+社員総会も社員への剰余金分配決議ができない。
+そのため、スキームでは
+<code>orphan / control layer</code>
+として使われやすい。</p>
+<p>ただし税務上は、</p>
+<ul>
+<li><code>非営利型法人</code> なら収益事業課税</li>
+<li>それ以外は普通法人として全所得課税</li>
+</ul>
+<p>であり、
+さらに相続税法66条の2により
+<code>特定一般社団法人等</code>
+の遺贈みなし課税があり得る。
+もっとも、この <code>一般社団法人等</code> には、
+公益法人や法人税法2条9号の2の <code>非営利型法人</code> は含まれない。</p>
+<h2>5. 統合構造としての読み</h2>
+<pre><code class="language-text">上流 foreign LP / sponsor family
+  ↓
+JIF Japan Partners LP
+  ↓
+Gravity合同会社
+  = 日本側 GK
+  = 匿名組合営業者
+  ↓
+Gravity合同会社匿名組合
+  ↓
+TMK 優先出資 / 特定出資
+  ↓
+Gravity特定目的会社 ほか
+  ↓
+物流施設キャッシュフロー
+</code></pre>
+<p>その脇で、
+一般社団法人は
+代表社員・ガバナンス主体・orphan control として
+GK 層の上に乗る。</p>
+<h2>6. 実務上の含意</h2>
+<p>今回の資産化により、以後は</p>
+<ul>
+<li><code>GK は普通法人</code></li>
+<li><code>TK は源泉・条約レイヤー</code></li>
+<li><code>TMK は導管課税の可否レイヤー</code></li>
+<li><code>一般社団法人は orphan でも自動非課税ではない</code></li>
+</ul>
+<p>という母線を毎回引き直さずに済む。</p>
+<p>残る中心論点は、</p>
+<ul>
+<li><code>Gravity合同会社 -&gt; Gravity特定目的会社</code> の直結証拠</li>
+<li><code>JIF Japan Partners LP</code> の Business Profile</li>
+<li>代表社員に入る一般社団法人の非営利型法人判定</li>
+<li>下流 TMK の措法67条の14適用実績</li>
+</ul>
+<p>である。</p>
+<h2>7. Main Sources</h2>
+<ul>
+<li>e-Gov 会社法</li>
+<li>e-Gov 商法</li>
+<li>e-Gov 資産の流動化に関する法律</li>
+<li>e-Gov 法人税法</li>
+<li>e-Gov 租税特別措置法</li>
+<li>e-Gov 相続税法</li>
+<li>NTA <code>No.2878</code></li>
+<li>NTA <code>No.2884</code></li>
+<li>NTA <code>No.2888</code></li>
+<li>NTA <code>一般社団法人・一般財団法人の法人税法上の取扱い</code></li>
+<li>NTA <code>特定目的会社の支払配当の損金算入に関する明細書</code></li>
+<li>NTA <code>第11表付表5（特定一般社団法人等）</code></li>
+</ul></div>
+</section>
+<section class="appendix-section">
+<h2>H. gravity_law_and_guidance_coverage_audit_20260422</h2>
+<p class="appendix-meta">原本: <code>/mnt/d/Users/PC/Desktop/tax/gravity_tk_tmk_project/90_成果/gravity_law_and_guidance_coverage_audit_20260422.md</code></p>
+<div class="appendix-body"><h1>GRAVITY 法律・通達カバレッジ監査 2026-04-22</h1>
+<h2>結論</h2>
+<ul>
+<li><code>2026-04-22 18:50 JST</code> 時点では、<code>全部取得済み</code> とまではまだ言いません。</li>
+<li>ただし、今回の補強で、<code>GRAVITY</code> 案件に直撃する <code>骨格法令 + 主要通達 + 条約実務</code> は <code>ほぼ揃った</code> と評価してよい水準まで来ました。</li>
+<li>監査前に大きかった穴は、<code>所得税法</code>、<code>No.2885</code>、<code>No.2889</code>、<code>36・37共-21</code>、<code>所得税法施行令</code>、<code>租税特別措置法施行令</code>、<code>相続税法施行令</code>、<code>日シンガポール租税条約 official pack</code> でしたが、今回これらを official layer に追加しました。</li>
+<li>したがって、現時点の正確な言い方は、<code>主要該当分はほぼ取得済み、ただし strict な意味での完全取得はなお留保</code> です。</li>
+</ul>
+<h2>監査対象</h2>
+<ul>
+<li><code>Gravity合同会社</code></li>
+<li><code>Gravity AH合同会社</code></li>
+<li><code>Gravity特定目的会社</code></li>
+<li><code>JIF Japan Partners LP</code></li>
+<li>これらを読むために必要な</li>
+<li><code>GK / TK / TMK / 一般社団法人</code> の日本法レイヤー</li>
+<li><code>匿名組合利益分配の源泉税・条約届出</code></li>
+<li><code>JIF LP</code> を前提とした <code>日シンガポール条約</code></li>
+</ul>
+<h2>監査方法</h2>
+<ol>
+<li><code>20_一次資料/official</code> の現物棚卸し</li>
+<li><code>99_管理/source_inventory_initial.csv</code> の登録状況確認</li>
+<li>既存成果物で引用している法令・通達の逆引き</li>
+<li>official source に限定した追加取得</li>
+<li><code>取得済み / 重要穴 / 補強余地</code> の再分類</li>
+</ol>
+<h2>監査前に確認できた重要穴</h2>
+<ul>
+<li><code>所得税法</code> 条文 raw が未保存</li>
+<li><code>No.2885 非居住者等に対する源泉徴収のしくみ</code> 未保存</li>
+<li><code>No.2889 租税条約に関する源泉徴収税額の還付請求</code> 未保存</li>
+<li><code>所得税基本通達 36・37共-21 / 21の2</code> 未保存</li>
+<li><code>所得税法施行令</code> 未保存</li>
+<li><code>租税特別措置法施行令</code> 未保存</li>
+<li><code>相続税法施行令</code> 未保存</li>
+<li><code>日シンガポール租税条約 official pack</code> 未保存</li>
+</ul>
+<p>この状態では、既存成果物の方向性自体は大きくは崩れないものの、<code>条文・通達の source-of-truth</code> が薄く、<code>全部取得済み</code> とは言えませんでした。</p>
+<h2>今回追加取得した official source</h2>
+<h3>e-Gov</h3>
+<ul>
+<li><a href="https://laws.e-gov.go.jp/law/340AC0000000033">所得税法</a></li>
+<li><a href="https://laws.e-gov.go.jp/law/340CO0000000096">所得税法施行令</a></li>
+<li><a href="https://laws.e-gov.go.jp/law/340CO0000000097">法人税法施行令</a></li>
+<li><a href="https://laws.e-gov.go.jp/law/332CO0000000043">租税特別措置法施行令</a></li>
+<li><a href="https://laws.e-gov.go.jp/law/325CO0000000071">相続税法施行令</a></li>
+</ul>
+<h3>NTA</h3>
+<ul>
+<li><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2885.htm">No.2885 非居住者等に対する源泉徴収のしくみ</a></li>
+<li><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2889.htm">No.2889 租税条約に関する源泉徴収税額の還付請求</a></li>
+<li><a href="https://www.nta.go.jp/law/tsutatsu/kihon/shotoku/05/16.htm">所得税基本通達 36・37共-21 / 21の2</a></li>
+<li><a href="https://www.nta.go.jp/law/tsutatsu/kihon/shotoku/22/01.htm">所得税基本通達 161 関係</a></li>
+<li><a href="https://www.nta.go.jp/law/tsutatsu/kihon/shotoku/23/01.htm">所得税基本通達 164 関係</a></li>
+<li><a href="https://www.nta.go.jp/law/tsutatsu/kihon/shotoku/37/01.htm">所得税基本通達 212 関係</a></li>
+<li><a href="https://www.nta.go.jp/about/organization/tokyo/bunshokaito/gensen/02/02.htm">東京国税局 文書回答 2002-02</a></li>
+<li><a href="https://www.nta.go.jp/law/joho-zeikaishaku/hojin/091228/index.htm">法人税基本通達等改正趣旨 2009-12-28 index</a></li>
+<li><a href="https://www.nta.go.jp/law/joho-zeikaishaku/hojin/091228/01_06.htm">法人税基本通達等改正趣旨 2009-12-28 01_06</a></li>
+<li><a href="https://www.nta.go.jp/law/joho-zeikaishaku/hojin/091228/01_08.htm">法人税基本通達等改正趣旨 2009-12-28 01_08</a></li>
+<li><a href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/hojin/shinkoku/itiran2018/pdf/03/10_07.pdf">特定目的会社の支払配当の損金算入に関する明細書 2018 10_07</a></li>
+</ul>
+<h3>MOF</h3>
+<ul>
+<li><a href="https://www.mof.go.jp/tax_policy/summary/international/tax_convention/mli_si.htm">日シンガポール租税条約 MLI適用関係</a></li>
+<li><a href="https://www.mof.go.jp/tax_policy/summary/international/press_release/SynthesizedTextforJapan-SingaporeJP.pdf">日シンガポール租税条約統合テキスト JP</a></li>
+</ul>
+<h2>現時点で <code>collected_core</code> と言えるもの</h2>
+<h3>GK / TK / TMK / 一般社団法人の骨格法</h3>
+<ul>
+<li>商法</li>
+<li>会社法</li>
+<li>資産流動化法</li>
+<li>一般社団法人及び一般財団法人に関する法律</li>
+<li>所得税法</li>
+<li>法人税法</li>
+<li>相続税法</li>
+<li>租税特別措置法</li>
+<li>所得税法施行令</li>
+<li>法人税法施行令</li>
+<li>相続税法施行令</li>
+<li>租税特別措置法施行令</li>
+</ul>
+<h3>匿名組合利益分配と源泉税の主要 guidance</h3>
+<ul>
+<li><code>No.2878</code></li>
+<li><code>No.2884</code></li>
+<li><code>No.2885</code></li>
+<li><code>No.2888</code></li>
+<li><code>No.2889</code></li>
+<li><code>36・37共-21 / 21の2</code></li>
+<li><code>212 関係</code></li>
+<li><code>060117_21</code></li>
+<li><code>匿名組合と国際税務</code></li>
+</ul>
+<h3>透明体・条約届出実務</h3>
+<ul>
+<li><code>A3-4</code></li>
+<li><code>A3-13</code></li>
+<li><code>A3-18</code></li>
+<li><code>5335</code></li>
+</ul>
+<h3>実案件条約</h3>
+<ul>
+<li><code>日シンガポール租税条約統合テキスト JP</code></li>
+<li><code>日シンガポール租税条約 MLI適用関係</code></li>
+</ul>
+<h2>なお残る gap</h2>
+<h3>1. strict に「全部」と言うには未固定のもの</h3>
+<ul>
+<li><code>法人税基本通達</code> のうち、一般社団法人の非営利型 / 普通法人区分や GK 普通法人 layer を直接支える <code>raw exact clause</code></li>
+<li><code>措置法関係通達</code> のうち、<code>67条の14</code> を直接読む <code>official circular raw</code></li>
+<li><code>租税特別措置法施行規則</code> のうち、TMK導管課税の様式・計算補助を厳密に支える箇所</li>
+</ul>
+<h3>2. ただし、これらの gap の評価</h3>
+<ul>
+<li>いずれも <code>現時点の結論を大きく崩す critical gap</code> ではありません。</li>
+<li>いまの GRAVITY 案件で最も重要だった <code>匿名組合分配金の国内源泉所得性 / 20.42% baseline / 条約届出 / JIF LP の treaty claimant 問題 / TMK導管課税 / 一般社団法人の orphan だが税務別判定</code> は、今回取得済みの source set でかなり強く支えられます。</li>
+<li><code>法人税基本通達</code> については、<code>raw exact clause</code> は未固定でも、<code>2009-12-28</code> の official explanation pages により、<code>1-1-11</code> と <code>15-1-28</code> を通じた非営利型法人判定の趣旨までは確保できています。</li>
+<li><code>67条の14</code> については、<code>direct circular raw</code> はなお未固定ですが、<code>法文 + 政令 + 2018 10_07 form guidance</code> までは official layer で押さえられています。</li>
+<li>したがって、残る gap は <code>完全性の追求</code> のための補強であり、<code>中核論点が source-of-truth 不足で不安定</code> という状態ではもうありません。</li>
+</ul>
+<h2>監査判定</h2>
+<h3>実務的判定</h3>
+<ul>
+<li><code>主要該当分はほぼ取得済み</code></li>
+</ul>
+<h3>厳密判定</h3>
+<ul>
+<li><code>法律・通達関係を全て取得したと断言するのは、まだ少し早い</code></li>
+</ul>
+<h3>いちばん正確な一文</h3>
+<ul>
+<li><code>GRAVITY案件で実際に使う中核法令・主要通達・条約 official pack は今回でほぼ揃ったが、strict completeness の観点では、法人税基本通達や措置法関係通達の個別 raw など、なお補強余地が残る</code></li>
+</ul>
+<h2>次の frontier</h2>
+<ol>
+<li><code>法人税基本通達</code> の relevant raw 固定</li>
+<li><code>措置法関係通達 67条の14</code> の有無と relevant raw 固定</li>
+<li>そのうえで、今回そろった法令・通達レイヤーを <code>Gravity合同会社 / Gravity AH合同会社 / Gravity特定目的会社 / JIF Japan Partners LP</code> に実名で当て直す</li>
+</ol>
+<h2>関連資産</h2>
+<ul>
+<li>legal_guidance_coverage_matrix_20260422.csv</li>
+<li>source_inventory_initial.csv</li>
+<li>法人税基本通達_一般社団法人_nonprofit_official_explanation_20260422.md</li>
+<li>措置法67条の14_official_surface_probe_20260422.md</li>
+</ul></div>
+</section>
+<section class="appendix-section">
+<h2>I. jif_lp_entity_classification_and_treaty_filing_deep_research_20260422</h2>
+<p class="appendix-meta">原本: <code>/mnt/d/Users/PC/Desktop/tax/gravity_tk_tmk_project/90_成果/jif_lp_entity_classification_and_treaty_filing_deep_research_20260422.md</code></p>
+<div class="appendix-body"><h1>jif_lp_entity_classification_and_treaty_filing_deep_research_20260422</h1>
+<h2>1. Executive Summary</h2>
+<p>本メモの問いは、
+<code>Gravity合同会社 -&gt; JIF Japan Partners LP</code>
+という仮説を前提にしたとき、</p>
+<ol>
+<li><code>JIF Japan Partners LP</code>
+   を
+   条約適用主体としてどこまで扱えるか</li>
+<li>もし
+   <code>JIF LP</code>
+   が
+   pass-through / fiscally transparent
+   なら、
+   誰が条約恩典を取り得るか</li>
+<li>その場合、
+   日本側の届出実務は
+   どの route を通るか</li>
+</ol>
+<p>である。</p>
+<p>現時点の結論は、次のとおり。</p>
+<ul>
+<li>official source で固定できるのは、
+  <code>JIF Japan Partners LP</code>
+  が
+  <code>foreign-law fund-of-funds vehicle</code>
+  であり、
+  <code>Tokumei Kumiai Operator</code>
+  への匿名組合出資を通じて
+  日本物流施設へ間接投資する
+  というところまでである。</li>
+<li><code>JIF Japan Partners GP, Pte. Ltd.</code>
+  が
+  GP / managing partner
+  であることも
+  official source でかなり強く固定できる。</li>
+<li>しかし、
+  <code>JIF LP</code>
+  自体の
+  <code>entity classification</code>
+<code>居住者性</code>
+<code>構成員構成</code>
+<code>member roster</code>
+  は、
+  まだ primary record で確定していない。</li>
+<li>NTA の official guidance は、
+  <code>取扱いが異なる事業体</code>
+  では、
+  <code>entity claimant</code>
+  ではなく
+  <code>構成員ごと</code>
+  の treaty entitlement をみるルートを
+  明確に許容している。</li>
+<li>したがって、
+  現時点の実務的安全側整理は、
+  <code>20.42%源泉 baseline</code>
+  を維持し、
+  <code>JIF LP</code>
+  を通じた treaty relief は
+  <code>member roster と届出書類</code>
+  が揃ってから詰める、
+  である。</li>
+</ul>
+<h2>2. What Is Actually Fixed</h2>
+<h3>2.1 <code>JIF LP</code> is official, but only at a high level</h3>
+<p>金融庁
+<code>tokurei_012</code>
+により、
+<code>JIF Japan Partners LP</code>
+について
+次の事実は official に確認できる。</p>
+<ul>
+<li><code>Rights based on laws and regulations of a foreign state</code></li>
+<li><code>Fund of funds</code></li>
+<li><code>Tokumei Kumiai investment in Tokumei Kumiai Operator</code>
+  を通じた
+  <code>indirect investment</code></li>
+<li>investor type
+  <code>Investment Limited Partnership (1)</code></li>
+</ul>
+<p>ここから言えるのは、
+<code>JIF LP</code>
+が
+<code>日本側の匿名組合営業者へ入る外国法 vehicle</code>
+だというところまでである。</p>
+<h3>2.2 GP layer is much better fixed</h3>
+<p><code>qii_01_b</code>
+と
+<code>tokurei_014</code>
+により、
+<code>JIF Japan Partners GP, Pte. Ltd.</code>
+については、</p>
+<ul>
+<li>名称</li>
+<li>シンガポール所在地</li>
+<li><code>JIF Japan Partners LP</code>
+  の
+  <code>業務執行組合員等</code></li>
+</ul>
+<p>が確認できる。</p>
+<p>したがって、
+<code>JIF LP</code>
+の上に
+<code>Singapore GP layer</code>
+があること自体は、
+かなり強く固定できる。</p>
+<h2>3. What Is Not Yet Fixed</h2>
+<p>現時点で未確定なのは、
+次の4点である。</p>
+<ol>
+<li><code>JIF LP</code>
+   が
+   シンガポール法上
+   どのように課税されるか</li>
+<li><code>JIF LP</code>
+   自体が
+   treaty claimant
+   たり得るか</li>
+<li><code>JIF LP</code>
+   の
+   構成員は誰か</li>
+<li>その構成員のうち、
+   誰が
+   <code>Gravity</code>
+   からの所得を
+   <code>derive</code>
+   したと扱われるか</li>
+</ol>
+<p>registry-derivative では、
+<code>JIF JAPAN PARTNERS LP</code>
+が
+Singapore LP
+として見えている。
+しかし、
+この段階では
+<code>derivative helper evidence</code>
+であり、
+条約届出の最終根拠にはしない。</p>
+<h2>4. NTA Filing Route That Matters</h2>
+<h3>4.1 Default rule</h3>
+<p><code>No.2888</code>
+によれば、
+租税条約による軽減・免除を受けるには、</p>
+<ul>
+<li><code>届出書</code>
+  を
+  <code>支払日の前日まで</code>
+  に提出</li>
+</ul>
+<p>する必要がある。</p>
+<p>提出がなければ、
+<code>国内法税率</code>
+で源泉する。</p>
+<h3>4.2 Hybrid / transparent entities are treated specially</h3>
+<p>同じ
+<code>No.2888</code>
+は、
+<code>日本と相手国で課税上の取扱いが異なる事業体</code>
+では、
+条約適用主体を明確にする添付資料が必要だとする。</p>
+<p><code>A3-4</code>
+と
+<code>A3-18</code>
+は、
+その具体化として、</p>
+<ul>
+<li><code>相手国団体の構成員の名簿（様式16）</code></li>
+<li><code>株主等の名簿（様式16）</code></li>
+</ul>
+<p>を要求する場面を明示している。</p>
+<p>したがって、
+<code>JIF LP</code>
+が
+pass-through
+なら、
+日本側実務は
+<code>LP一枚で届出</code>
+ではなく、
+<code>構成員別の treaty filing</code>
+に寄る可能性が高い。</p>
+<h3>4.3 Item 16 route is not always the interest route</h3>
+<p><code>A3-13</code>
+は、
+<code>161条1項16号</code>
+の国内源泉所得について、
+条約上
+<code>配当・利子・使用料</code>
+に当たらないものの届出 route
+を示している。</p>
+<p>これは、
+匿名組合利益分配が
+自動的に
+<code>利子条項</code>
+へ落ちるわけではないことを、
+フォーム面から支える。</p>
+<h2>5. Who Gets Treaty Benefits If JIF LP Is Pass-Through</h2>
+<p>NTA <code>5335</code>
+は、
+両締約国で異なる取扱いを受ける事業体について、</p>
+<ul>
+<li>相手国で
+  <code>構成員課税</code>
+  なら
+  <code>構成員が取得する部分</code>
+  に特典</li>
+<li>相手国で
+  <code>団体課税</code>
+  なら
+  <code>その事業体</code>
+  に特典</li>
+<li>ケースによっては
+  <code>特典なし</code></li>
+</ul>
+<p>と整理する。</p>
+<p>この logic を
+<code>JIF LP</code>
+に当てると、
+もし
+<code>JIF LP</code>
+が
+pass-through
+で、
+相手国法上
+<code>members</code>
+がその所得を取得したと扱われるなら、
+条約恩典主体は
+<code>JIF LP</code>
+ではなく
+<code>members</code>
+である。</p>
+<p>しかも、
+その場合は
+<code>member-by-member</code>
+で、</p>
+<ul>
+<li>居住地</li>
+<li>treaty eligibility</li>
+<li>beneficial owner / derive 要件</li>
+<li>PE の有無</li>
+<li>LOB / substance</li>
+</ul>
+<p>をみる必要がある。</p>
+<h2>6. Gravity Case Implication</h2>
+<p>この案件に即して言うと、
+いま日本側で保守的に動くなら、
+次の順序になる。</p>
+<ol>
+<li><code>Gravity合同会社</code>
+   は
+   <code>20.42%源泉</code>
+   を baseline に置く</li>
+<li><code>JIF LP</code>
+   が
+   entity claimant
+   だと主張するなら、
+   まず
+   <code>residence</code>
+<code>entity-level taxation</code>
+<code>beneficial owner</code>
+   を固める</li>
+<li><code>JIF LP</code>
+   が
+   pass-through
+   なら、
+   <code>members</code>
+   の
+   <code>名簿</code>
+   と
+   <code>条約適用ルート</code>
+   を固める</li>
+<li>現時点では
+   <code>2</code> も <code>3</code> も
+   direct evidence 不足</li>
+</ol>
+<p>したがって、
+今の段階で
+<code>JIF LP に条約があるから軽減できる</code>
+と処理するのは早い。</p>
+<h2>7. Best Current Working Read</h2>
+<p>現時点の best current read は、
+次のとおりである。</p>
+<ul>
+<li><code>JIF LP</code>
+  は
+  official に
+  <code>foreign-law fund-of-funds</code>
+  として現れている</li>
+<li><code>JIF GP</code>
+  は
+  official に固定されている</li>
+<li>しかし、
+  <code>JIF LP</code>
+  の treaty position は、
+  <code>entity claimant</code>
+  と
+  <code>member look-through</code>
+  のどちらか未確定</li>
+<li>NTA の official filing guidance は、
+  <code>member look-through</code>
+  の可能性をかなり強く示している</li>
+</ul>
+<p>よって、
+この frontier の実務的ゴールは、
+<code>JIF LP member roster</code>
+と
+<code>entity classification evidence</code>
+を取ることに尽きる。</p>
+<h2>8. Immediate Next Frontier</h2>
+<p>次に狙うべきものは、
+抽象論ではなく
+次の concrete evidence である。</p>
+<ol>
+<li><code>JIF Japan Partners LP</code>
+   の
+   primary registry extract</li>
+<li><code>JIF LP</code>
+   の
+   offering / subscription / fund terms</li>
+<li><code>JIF LP</code>
+   の
+   member roster
+   または
+   investor composition trace</li>
+<li><code>JIF LP</code>
+   を
+   entity-level taxpayer
+   とみるか、
+   member-taxed vehicle
+   とみるかを支える
+   residence-country material</li>
+</ol>
+<p>この4本が取れれば、
+<code>Gravity</code>
+側の源泉実務は、
+一般論から案件論へかなり進められる。</p>
+<h2>9. Sources</h2>
+<ul>
+<li>FSA <code>tokurei_012</code></li>
+<li><code>https://www.fsa.go.jp/menkyo/menkyoj/tokurei/012.pdf</code></li>
+<li>FSA <code>qii_01_b</code></li>
+<li><code>https://www.fsa.go.jp/common/law/tekikaku/01_b.pdf</code></li>
+<li>NTA <code>No.2888</code></li>
+<li><code>https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2888.htm</code></li>
+<li>NTA <code>A3-13</code></li>
+<li><code>https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/joyaku/annai/1648_13.htm</code></li>
+<li>NTA <code>A3-4</code></li>
+<li><code>https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/joyaku/annai/1648_04.htm</code></li>
+<li>NTA <code>A3-18</code></li>
+<li><code>https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/joyaku/annai/1648_18.htm</code></li>
+<li>NTA <code>5335</code></li>
+<li><code>https://www.nta.go.jp/about/organization/tokyo/syotoku/oshirase/5300/5335.htm</code></li>
+<li>NTA 論叢 <code>匿名組合と国際税務</code></li>
+<li><code>https://www.nta.go.jp/about/organization/ntc/kenkyu/ronsou/52/04/ronsou.pdf</code></li>
+</ul></div>
+</section>
+<section class="appendix-section">
+<h2>J. jif_lp_primary_gap_and_secondary_cluster_deep_research_20260422</h2>
+<p class="appendix-meta">原本: <code>/mnt/d/Users/PC/Desktop/tax/gravity_tk_tmk_project/90_成果/jif_lp_primary_gap_and_secondary_cluster_deep_research_20260422.md</code></p>
+<div class="appendix-body"><h1>jif_lp_primary_gap_and_secondary_cluster_deep_research_20260422</h1>
+<h2>1. Executive Summary</h2>
+<p>今回の追加調査で一番重要なのは、
+<code>JIF Japan Partners LP</code>
+について、
+<code>official が届く範囲</code>
+と
+<code>secondary cluster としてはかなり強いが primary ではない範囲</code>
+を切り分けられたことです。</p>
+<p>現時点の結論は次のとおりです。</p>
+<ul>
+<li><code>FSA tokurei_012</code>
+  により、
+  <code>JIF Japan Partners LP</code>
+  は
+  <code>Rights based on laws and regulations of a foreign state</code>
+  の
+  <code>Fund of funds</code>
+  であり、
+  <code>Tokumei Kumiai Operator</code>
+  への匿名組合出資を通じて
+  日本物流施設へ
+  <code>indirectly invest</code>
+  する
+  foreign-law vehicle
+  だと
+  official
+  に固定できる</li>
+<li><code>SGX</code>
+  の
+  <code>GLP Pte Ltd</code>
+  財務諸表は、
+  <code>GLP Japan Income Fund L.P. ("JIF")</code>
+  を
+  official に示す
+  が、
+  これは
+  <code>JIF Japan Partners LP</code>
+  と同一だとまでは言えない</li>
+<li><code>Ares Exhibit 21.1</code>
+  は、
+  <code>JIF Japan Partners GP</code>
+  と
+  <code>GLP Japan Logistics Income Fund GP</code>
+  と
+  <code>GLP JIF SMA Fund I GP</code>
+  と
+  <code>Japan Income Fund GK</code>
+  を
+  同一重要子会社クラスターに並べる
+  ため、
+  Singapore / Japan
+  側に
+  related vehicle family
+  があることを
+  official
+  に補強する</li>
+<li><code>companies.sg</code>
+  の
+  registry-derived data
+  では、
+  <code>JIF Japan Partners LP</code>
+  と
+  <code>GLP Japan Income Fund LP</code>
+  が
+  <code>2020-05-28</code>
+  同日、
+  <code>8 Marina View</code>
+  同住所、
+  近接 UEN
+  で並び、
+  <code>JIF Japan Partners GP</code>
+  も
+  同住所に後続している</li>
+<li>したがって、
+  現時点の最良読解は、
+  <code>JIF Japan Partners LP</code>
+  と
+  <code>GLP Japan Income Fund L.P. ("JIF")</code>
+  は
+  <code>同一 label</code>
+  ではなく、
+  <code>同一 sponsor family に属する parallel / sleeve 系 vehicle</code>
+  である可能性が高い、
+  というもの</li>
+</ul>
+<p>未取得の核心は変わりません。</p>
+<ul>
+<li><code>JIF LP</code> の
+  primary registry extract</li>
+<li><code>member roster</code></li>
+<li><code>offering / subscription materials</code></li>
+<li><code>JIF LP -&gt; Gravity合同会社</code>
+  の direct evidence</li>
+</ul>
+<p>ここが埋まらない限り、
+<code>entity claimant</code>
+か
+<code>member look-through</code>
+かの最終判断は
+まだできません。</p>
+<h2>2. Official Layer</h2>
+<h3>2.1 FSA fixes <code>JIF Japan Partners LP</code></h3>
+<p><code>tokurei_012</code>
+では、
+<code>JIF Japan Partners LP</code>
+が
+明示され、
+次の key descriptors
+が確認できます。</p>
+<ul>
+<li><code>Rights based on laws and regulations of a foreign state</code></li>
+<li><code>Fund of funds</code></li>
+<li><code>Tokumei Kumiai investment in Tokumei Kumiai Operator</code></li>
+<li><code>will indirectly invest in real estate, etc.</code></li>
+</ul>
+<p>このため、
+<code>JIF LP</code>
+が
+日本側
+<code>Tokumei Kumiai Operator</code>
+へ入る
+foreign-law fund vehicle
+である点は、
+official
+にかなり強いです。</p>
+<h3>2.2 SGX fixes <code>GLP Japan Income Fund L.P. ("JIF")</code></h3>
+<p><code>GLP Pte Ltd</code>
+の
+<code>FY2022</code>
+および
+<code>FY2023</code>
+財務諸表では、
+<code>GLP Japan Income Fund L.P. ("JIF")</code>
+が現れます。</p>
+<p>記述は、
+概ね次のとおりです。</p>
+<ul>
+<li><code>GLP Japan Income Fund L.P. ("JIF")</code></li>
+<li><code>Private equity fund focused on logistics properties</code></li>
+<li><code>Japan</code></li>
+<li><code>14.04</code></li>
+</ul>
+<p>これは
+<code>GLP</code>
+の official financial statements
+上の記述であり、
+<code>GLP Japan Income Fund L.P. ("JIF")</code>
+が
+GLP 側の official accounting perimeter
+にいることを示します。</p>
+<p>ただし、
+ここで出てくるのは
+<code>JIF Japan Partners LP</code>
+ではありません。</p>
+<h3>2.3 Ares fixes the GP cluster</h3>
+<p><code>Ares 2025 Exhibit 21.1</code>
+では、
+次が同じ重要子会社クラスターに現れます。</p>
+<ul>
+<li><code>GLP Japan Logistics Income Fund GP, Pte. Ltd.</code></li>
+<li><code>JIF Japan Partners GP, Pte. Ltd.</code></li>
+<li><code>GLP JIF SMA Fund I GP Pte. Ltd.</code></li>
+<li><code>Japan Income Fund GK</code></li>
+</ul>
+<p>この official source
+だけでも、
+<code>JIF</code>
+周辺に
+複数の Singapore GP / Japan GK
+が並走していることが分かります。</p>
+<h2>3. Secondary Cluster Layer</h2>
+<h3>3.1 Same-day, same-address, sequential UEN pattern</h3>
+<p><code>companies.sg</code>
+の
+registry-derived page
+では、
+次が確認できました。</p>
+<p><code>JIF JAPAN PARTNERS LP</code></p>
+<ul>
+<li>UEN:
+  <code>T20LP0037H</code></li>
+<li>entity type:
+  <code>Limited Partnership</code></li>
+<li>incorporation / registration:
+  <code>2020-05-28</code></li>
+<li>address:
+  <code>8 MARINA VIEW, #07-04, ASIA SQUARE TOWER 1</code></li>
+</ul>
+<p><code>GLP JAPAN INCOME FUND LP</code></p>
+<ul>
+<li>UEN:
+  <code>T20LP0036A</code></li>
+<li>entity type:
+  <code>Limited Partnership</code></li>
+<li>incorporation / registration:
+  <code>2020-05-28</code></li>
+<li>address:
+  <code>8 MARINA VIEW, #07-04, ASIA SQUARE TOWER 1</code></li>
+</ul>
+<p><code>JIF JAPAN PARTNERS GP, PTE. LTD.</code></p>
+<ul>
+<li>UEN:
+  <code>202019944Z</code></li>
+<li>incorporation:
+  <code>2020-07-13</code></li>
+<li>address:
+  <code>8 MARINA VIEW, #07-04, ASIA SQUARE TOWER 1</code></li>
+</ul>
+<p>この
+<code>同日</code>
+<code>同住所</code>
+<code>近接 UEN</code>
+という並びは、
+偶然とみるより、
+同一 formation wave
+とみる方が自然です。</p>
+<h3>3.2 Later sleeve at same address</h3>
+<p>同じ
+<code>8 Marina View</code>
+の
+address cluster page
+には、
+<code>GLP JIF SMA FUND I LP</code>
+も現れます。</p>
+<p>しかも、
+この page
+自体に
+<code>Powered by official data.gov.sg</code>
+が明示されます。</p>
+<p>したがって、
+Singapore 側では
+<code>JIF / GLP JIF / JIF GP / SMA</code>
+が
+同住所クラスターに並ぶ
+vehicle family
+である可能性がさらに強くなります。</p>
+<h3>3.3 Current official open-data layer points to Collyer Quay</h3>
+<h3>3.4 ACRA Business Profile is now the concrete primary route</h3>
+<p>2026-04-22
+の追加調査で、
+<code>ACRA</code>
+official pages
+と
+official sample PDF
+から、
+<code>Business Profile</code>
+に
+何が載り、
+どの route
+なら
+第三者調査で到達できるかを
+一段具体化できた。</p>
+<p>要点は次のとおりである。</p>
+<ul>
+<li><code>Types of ACRA information products</code>
+  は
+  <code>Business Profile</code>
+  に
+  <code>position holders</code>
+  と
+  <code>business owners or partners</code>
+  が含まれると明示する</li>
+<li><code>Business Profile - LP v13</code>
+  sample
+  は、
+  LP 向け Business Profile
+  に
+  <code>PARTICULARS OF PARTNERS</code>
+<code>GENERAL PARTNER</code>
+<code>LIMITED PARTNER</code>
+<code>PARTICULARS OF MANAGER(S)</code>
+<code>WITHDRAWN PARTNERS</code>
+  が載ることを示す</li>
+<li><code>Provision of Free Business Profiles</code>
+  は、
+  free route
+  が
+  <code>eligible transaction</code>
+  を filed した当事者に限られ、
+  <code>within 15 minutes</code>
+  かつ
+  <code>up to 60 days</code>
+  の window でしか使えないと明示する</li>
+<li>したがって、
+  今回の
+  third-party research
+  では、
+  <code>free route</code>
+  ではなく
+  <code>paid Bizfile purchase</code>
+  または
+  <code>Business Profile Data API</code>
+  が
+  実務上の primary route
+  になる</li>
+</ul>
+<p>この結果、
+<code>JIF LP</code>
+の
+<code>member roster</code>
+については、
+<code>public web</code>
+で取り切れていないから弱い、
+のではなく、
+<code>official primary route は Business Profile</code>
+であり、
+それが
+<code>paid / controlled access</code>
+側にあるため、
+現時点では
+<code>current official existence</code>
+と
+<code>concrete next route</code>
+までが
+source-of-truth
+だと整理できる。</p>
+<p>ただし、
+2026-04-22
+の
+<code>data.gov.sg</code>
+current open-data layer
+まで見ると、
+現在の official registration layer は
+<code>8 Marina View</code>
+ではなく、
+次の
+<code>COLLYER QUAY / 049315</code>
+へ寄っています。</p>
+<ul>
+<li><code>JIF JAPAN PARTNERS LP</code></li>
+<li><code>T20LP0037H</code></li>
+<li><code>2020-05-28</code></li>
+<li><code>COLLYER QUAY / 049315</code></li>
+<li><code>GLP JAPAN INCOME FUND LP</code></li>
+<li><code>T20LP0036A</code></li>
+<li><code>2020-05-28</code></li>
+<li><code>COLLYER QUAY / 049315</code></li>
+<li><code>JIF JAPAN PARTNERS GP, PTE. LTD.</code></li>
+<li><code>202019944Z</code></li>
+<li><code>2020-07-13</code></li>
+<li><code>COLLYER QUAY / 049315</code></li>
+<li><code>GLP JAPAN INCOME FUND GP, PTE. LTD.</code></li>
+<li><code>202010597K</code></li>
+<li><code>2020-04-02</code></li>
+<li><code>COLLYER QUAY / 049315</code></li>
+<li><code>GLP JIF SMA FUND I LP</code></li>
+<li><code>T23LP0068A</code></li>
+<li><code>2023-05-26</code></li>
+<li><code>COLLYER QUAY / 049315</code></li>
+<li><code>GLP JIF SMA FUND I GP PTE. LTD.</code></li>
+<li><code>202319548R</code></li>
+<li><code>2023-05-18</code></li>
+<li><code>COLLYER QUAY / 049315</code></li>
+</ul>
+<p>したがって、
+<code>8 Marina View</code>
+は
+<code>historical / registry-derived secondary layer</code>
+としては有用だが、
+current official layer
+としては
+<code>Collyer Quay</code>
+を優先すべきです。</p>
+<h2>4. Best Current Synthesis</h2>
+<p>現時点の best reading は、
+次のように整理できます。</p>
+<h3>4.1 What is strong</h3>
+<ul>
+<li><code>JIF Japan Partners LP</code>
+  は
+  official に存在する
+  foreign-law fund-of-funds vehicle</li>
+<li><code>GLP Japan Income Fund L.P. ("JIF")</code>
+  も
+  official に存在する
+  GLP financial-statement level fund</li>
+<li><code>JIF Japan Partners GP</code>
+  と
+  <code>GLP Japan Logistics Income Fund GP</code>
+  と
+  <code>GLP JIF SMA Fund I GP</code>
+  は
+  official に同一 Ares subsidiary cluster に並ぶ</li>
+<li>secondary registry-derived layer
+  では、
+  <code>JIF Japan Partners LP</code>
+  と
+  <code>GLP Japan Income Fund LP</code>
+  は
+  同日・同住所・近接 UEN
+  の pair</li>
+</ul>
+<h3>4.2 What this most naturally means</h3>
+<p>いま最も自然なのは、</p>
+<ul>
+<li><code>JIF Japan Partners LP</code>
+  と
+  <code>GLP Japan Income Fund L.P. ("JIF")</code>
+  は
+  <code>同一 vehicle</code>
+  ではなく
+  <code>parallel / sleeve / family vehicle</code>
+  である</li>
+</ul>
+<p>という読みです。</p>
+<p>つまり、
+<code>JIF</code>
+という label は、
+単一法人を指すのではなく、
+<code>GLP / Ares / Singapore / Japan</code>
+の複数 vehicle 群にまたがる
+platform label
+として使われている可能性があります。</p>
+<p>さらに、
+<code>qii_01_b</code>
+の extracted text
+では、
+<code>JIF Japan Partners GP, Pte. Ltd.</code>
+について
+<code>10 Collyer Quay, #34-01, Ocean Financial Centre, Singapore</code>
+が確認できます。</p>
+<p>このため、
+current official Singapore layer
+は、</p>
+<ul>
+<li>postal-level:
+  <code>COLLYER QUAY / 049315</code></li>
+<li>concrete office:
+  <code>10 Collyer Quay, #34-01, Ocean Financial Centre</code></li>
+</ul>
+<p>という二段で保持するのが最も自然です。</p>
+<h2>5. Why This Matters for Tax</h2>
+<p>この区別は、
+<code>Gravity合同会社</code>
+の
+TK 分配金
+に対する
+日本の源泉税論点にそのまま効きます。</p>
+<p>もし
+<code>JIF Japan Partners LP</code>
+が
+<code>条約適用主体</code>
+なら、
+<code>JIF LP</code>
+に対する届出・受益者性・居住者性の立証が問題になります。</p>
+<p>しかし、
+<code>JIF LP</code>
+が
+transparent
+で、
+しかも
+<code>GLP JIF</code>
+や
+他の sleeve
+と役割分担しているなら、
+問題は
+<code>誰が treaty claimant か</code>
+だけではなく、</p>
+<ul>
+<li>どの LP / GP / SMA sleeve が
+  実際に受益を持つか</li>
+<li>その所得が
+  <code>どの構成員</code>
+  に
+  <code>derive</code>
+  されるか</li>
+</ul>
+<p>に移ります。</p>
+<p>だからこそ、
+<code>member roster</code>
+と
+<code>offering materials</code>
+が
+critical gap
+のまま残っています。</p>
+<p>しかも、
+今回の
+<code>ACRA</code>
+official pages
+により、
+<code>Business Profile</code>
+には
+<code>position holders</code>
+に加えて
+<code>business owners or partners</code>
+が含まれ、
+さらに
+<code>Business Profile Data API</code>
+が
+<code>18 November 2025</code>
+に開始していることが確認できました。</p>
+<p>したがって、
+<code>JIF LP</code>
+の
+<code>member roster</code>
+や
+<code>partner composition</code>
+の frontier は、
+generic web search
+ではなく、
+<code>Business Profile / Business Profile Data API</code>
+という
+paid-primary route
+へ移った
+とみるべきです。</p>
+<h2>6. What Remains Unproved</h2>
+<p>今回の調査でも、
+次は未取得です。</p>
+<ul>
+<li><code>JIF LP</code>
+  の primary registry extract</li>
+<li><code>JIF LP</code>
+  の partnership agreement</li>
+<li><code>JIF LP</code>
+  の member roster</li>
+<li><code>JIF LP</code>
+  の offering / subscription materials</li>
+<li><code>JIF LP -&gt; Gravity合同会社</code>
+  の direct contractual link</li>
+</ul>
+<p>このため、
+今回の更新は
+<code>JIF LP の正体が分かった</code>
+というより、</p>
+<ul>
+<li><code>JIF LP</code>
+  は
+  <code>official source</code>
+  で高位には固定できる</li>
+<li>ただし
+  <code>primary claimant documentation</code>
+  は未取得</li>
+<li>一方で
+  <code>Singapore cluster</code>
+  としての輪郭はかなりはっきりした</li>
+</ul>
+<p>という前進です。</p>
+<h2>7. Practical Frontier</h2>
+<p>次に掘るべき順番は明確です。</p>
+<ol>
+<li><code>JIF LP</code> の primary registry extract</li>
+<li><code>member roster</code></li>
+<li><code>offering / subscription materials</code></li>
+<li><code>JIF LP -&gt; Gravity</code>
+   の direct evidence</li>
+</ol>
+<p>この4本のうち、
+少なくとも
+<code>1</code>
+か
+<code>2</code>
+が取れれば、
+<code>entity claimant</code>
+と
+<code>member look-through</code>
+のどちらで
+<code>Gravity</code>
+が届出実務を組むべきかを、
+かなり具体的に詰められます。</p></div>
+</section>
+<section class="appendix-section">
+<h2>K. research_plan</h2>
+<p class="appendix-meta">原本: <code>/mnt/d/Users/PC/Desktop/tax/gravity_tk_tmk_project/10_作業/research_plan.md</code></p>
+<div class="appendix-body"><h1>Research Plan</h1>
+<h2>Goal</h2>
+<ul>
+<li>Gravity合同会社・Gravity AH合同会社・JIF Japan Partners LP・GLP/Ares周辺のTK/TMK/LP構造、主体、法令、公式ソースを継続的に資産化する</li>
+</ul>
+<h2>Phase 1: プロジェクト基盤の固定</h2>
+<ul>
+<li>Dドライブ上のworkspaceを作る</li>
+<li><code>.codex-autonomy/</code> を初期化する</li>
+<li>読む順序が明確なREADMEを置く</li>
+</ul>
+<h2>Phase 2: 主体別ドシエの作成</h2>
+<ul>
+<li>Gravity合同会社</li>
+<li>Gravity AH合同会社</li>
+<li>JIF Japan Partners周辺</li>
+<li>Japan Income Fund合同会社</li>
+<li>それぞれについて確定・推定・未確認を分ける</li>
+</ul>
+<h2>Phase 3: 構造ノートの作成</h2>
+<ul>
+<li>全体俯瞰</li>
+<li>TK / TMK 二層構造</li>
+<li>確定度マトリクス</li>
+<li>Japan Income Fund合同会社とJIF LP接続仮説</li>
+</ul>
+<h2>Phase 4: 一次ソースの保存</h2>
+<ul>
+<li>FSA PDF</li>
+<li>NTA資料</li>
+<li>e-Gov法令XML / TXT</li>
+<li>SEC Exhibit 21.1</li>
+<li>EDINETの投資家痕跡</li>
+<li>source inventory の更新</li>
+</ul>
+<h2>Phase 5: 法令読解の固定</h2>
+<ul>
+<li>商法匿名組合</li>
+<li>資産流動化法TMK</li>
+<li>FSA届出資料読解</li>
+</ul>
+<h2>Phase 6: 次段の未解決論点</h2>
+<ul>
+<li>TMK名の特定</li>
+<li>Gravity合同会社とJIF/GLP/Aresの接続</li>
+<li>Japan Income Fund合同会社 / ジャパンインカムファンド投資事業有限責任組合
+  と JIF Japan Partners LP の接続</li>
+<li>LP契約・PPM・AM契約の探索</li>
+</ul>
+<h2>Phase 7: プレイヤー別ドシエの拡張</h2>
+<ul>
+<li>Ares / 日本GLP / GLP Japan Advisors</li>
+<li>Japan Income Fund GK</li>
+<li>GLP Japan Income Fund LP / GP</li>
+<li>GLP Japan Income Investors, Pte. Ltd.</li>
+<li>GLP JIF SMA Fund I 周辺</li>
+<li>各プレイヤー比較表の作成</li>
+</ul>
+<h2>Phase 8: 公式ソース横断の精密化</h2>
+<ul>
+<li>GLP公式ページ上のJIFタイムライン固定</li>
+<li>SGX年次財務諸表上の holding company 層の固定</li>
+<li>SEC / FSA / gBizINFO の名称差の橋渡し</li>
+</ul>
+<h2>Phase 9: 案件粒度比較と実線候補の再ランク</h2>
+<ul>
+<li><code>JIF Japan Partners LP</code> の直上 <code>Investment Limited Partnership (1)</code> 候補を再ランクする</li>
+<li><code>JIF Japan Partners LP</code> の直下 <code>Tokumei Kumiai Operator</code> 候補を再ランクする</li>
+<li><code>JDP3 / JDP4 / Sakai</code> を案件固有スリーブとして比較し
+  <code>Gravity</code> が portfolio-level operator 候補としてどこまで優位かを整理する</li>
+<li>構造理解に必要な必須資料一覧と欠落資料一覧を固定する</li>
+</ul>
+<h2>Phase 10: current status refresh と TMK frontier の絞り込み</h2>
+<ul>
+<li>金融庁 <code>特定目的会社届出一覧</code> の現行PDFを取得し、
+  <code>GLP Japan DH4特定目的会社</code> と
+  <code>GLP DH4 Exc特定目的会社</code> の現存を公式に固定する</li>
+<li>既存 <code>tokurei_011-014</code> の現行配布ファイルと
+  workspace 保存版の hash を比較し、
+  <code>2026-04-22</code> 時点で届出内容に差分がないか確認する</li>
+<li><code>Gravity合同会社 -&gt; TMK</code>
+  frontier を
+  <code>未知のTMK</code>
+  から
+  <code>名前付き候補集合</code>
+  へ進める</li>
+<li>現時点の <code>GRAVITY</code> 構造を、
+  <code>確定 / 高確度推定 / 候補 / 未確認</code>
+  の4層で再報告する</li>
+</ul>
+<h2>Phase 11: DH4 候補の asset-level official trace 固定</h2>
+<ul>
+<li><code>GLP J-REIT / JPX</code>
+  の official disclosure から、
+  <code>舞洲1ロジスティック特定目的会社</code>
+  と
+  <code>柏2ロジスティック特定目的会社</code>
+  の asset 対応を固定する</li>
+<li><code>GLP 舞洲Ⅰ / GLP 柏Ⅱ</code>
+  との対応まで確認し、
+  <code>DH4</code> 名義TMK候補が
+  具体物流資産系統のTMKラインに属することを補強する</li>
+<li>そのうえで、
+  <code>旧名称TMK -&gt; 現在のDH4名義TMK</code>
+  の改称・承継証拠と、
+  <code>Gravity合同会社 -&gt; DH4名義TMK</code>
+  の direct evidence を次段 frontier として明示する</li>
+</ul>
+<h2>Phase 12: Gravity特定目的会社 の official-to-secondary bridge 固定</h2>
+<ul>
+<li>金融庁
+  <code>QII 01_b</code>
+  で
+  <code>Gravity合同会社</code>
+  と
+  <code>Gravity特定目的会社</code>
+  の
+  同一 official list 内での並列表記を固定する</li>
+<li><code>GLP J-REIT</code>
+  の
+  <code>2021-05-27</code>
+  開示から、
+  <code>GLP 狭山日高Ⅱ</code>
+  の旧々所有者として
+  <code>狭山日高2ロジスティック特定目的会社</code>
+  が明示されることを固定する</li>
+<li>そのうえで、
+  <code>狭山日高2 -&gt; Gravity特定目的会社</code>
+  の secondary rename trace と接続し、
+  <code>Gravity特定目的会社</code>
+  を
+  <code>GLP物流資産系 current-name TMK</code>
+  として再評価する</li>
+<li>次段 frontier は、
+  依然として
+  <code>Gravity合同会社 -&gt; Gravity特定目的会社</code>
+  の direct evidence
+  であることを明示する</li>
+</ul>
+<h2>Phase 13: current official cluster と asymmetry の固定</h2>
+<ul>
+<li>現行
+  <code>tokurei_011</code>
+  再取得版で
+  <code>Japan Income Fund合同会社</code>
+<code>Gravity合同会社</code>
+<code>Japan DH4合同会社</code>
+  が、
+  いずれも
+  <code>東京都中央区八重洲二丁目2番1号</code>
+<code>03-6897-6297</code>
+  に並ぶことを固定する</li>
+<li>現行
+  <code>特定目的会社届出一覧</code>
+  で
+  <code>狭山日高1ロジスティック特定目的会社</code>
+  と
+  <code>Gravity特定目的会社</code>
+  が、
+  同一住所・同一電話番号帯・近接法人番号帯で
+  併存することを固定する</li>
+<li>これにより、
+  <code>狭山日高1</code>
+  は旧名称のまま残り、
+  <code>狭山日高2</code>
+  側だけが
+  <code>Gravity</code>
+  へ current-name 化した
+  という
+  asymmetric sibling pattern
+  を official current layer で確定する</li>
+<li>そのうえで、
+  次段 frontier を
+  <code>direct evidence がないから候補が多すぎる</code>
+  ではなく、
+  <code>候補はかなり絞れたので最後の直結証拠を取りに行く</code>
+  という局面に更新する</li>
+</ul>
+<h2>Phase 14: Gravity匿名組合分配先のレイヤー分解</h2>
+<ul>
+<li><code>Gravity合同会社</code> が
+  匿名組合利益を分配する場合の
+  <code>法的な直後受領者</code>
+  と
+  <code>そのさらに上流</code>
+  を分けて整理する</li>
+<li><code>商法535条・536条</code>
+  と
+  <code>tokurei_012</code>
+  を突き合わせ、
+  <code>営業者 = Gravity合同会社</code>
+<code>匿名組合員 = 外国法人又は外国人等(1)</code>
+  を中間結論として固定する</li>
+<li>そのうえで、
+  <code>JIF Japan Partners LP</code>
+<code>Japan DH4 投資事業有限責任組合</code>
+<code>Japan Income Fund合同会社</code>
+<code>Sakai/TK Investor Singapore</code>
+  を比較し、
+  <code>直後受領者候補</code>
+  と
+  <code>上流受益候補</code>
+  を別々にランク付けする</li>
+<li>direct evidence 未取得でも、
+  <code>合理的推定</code>
+  と
+  <code>直接立証済み</code>
+  を混同しない結論文まで固定する</li>
+</ul>
+<h2>Phase 15: Gravity匿名組合分配の源泉税論点と条約恩典主体</h2>
+<ul>
+<li><code>Gravity合同会社 -&gt; JIF Japan Partners LP</code>
+  を仮置きした場合の
+  日本国内法上の初期値を
+  <code>所得税法161条1項16号</code>
+<code>所得税法212条1項・2項</code>
+<code>No.2878</code>
+<code>No.2884</code>
+  で固定し、</li>
+</ul>
+<h2>Phase 16: 日本法 tax map の精度監査</h2>
+<ul>
+<li><code>GK / TK / TMK / 一般社団法人</code> の要約メモについて、
+  条文の言い回しと NTA 様式の説明が混線していないかを再監査する</li>
+<li>一般社団法人の分配禁止は
+  <code>一般法人法11条2項</code>
+  と
+  <code>35条3項</code>
+  に即して表現を固定する</li>
+<li><code>相続税法66条の2</code>
+  は、
+  算式、対象除外、<code>特定一般社団法人等</code> の要件まで落として要約する</li>
+<li><code>措法67条の14</code>
+  は、
+  法文上の cap と
+  <code>NTA 10_08</code>
+  の計算表示を区別して説明する
+  <code>匿名組合利益分配 = 国内源泉所得</code>
+<code>非居住者等向けなら20.42%源泉</code>
+  を
+  安全側 baseline として明示する</li>
+<li>そのうえで、
+  <code>212条5項</code>
+  は
+  <code>161条1項4号</code>
+  向けの timing deeming であり、
+  今回の
+  <code>161条1項16号</code>
+  バケットとは
+  条文上の足場が違うことを切り分ける</li>
+<li>条約側では、
+  <code>匿名組合分配</code>
+  が
+  <code>利子</code>
+<code>事業利得</code>
+<code>その他所得</code>
+  の
+  どこに落ちるかが
+  treaty-by-treaty で変わることを、
+  国税庁論叢
+  <code>匿名組合と国際税務</code>
+  と
+  treaty text の双方で整理する</li>
+<li><code>JIF LP</code>
+  が
+  fiscally transparent / pass-through
+  と扱われる場合、
+  条約恩典主体は
+  <code>JIF LP</code>
+  に自動帰属しない可能性が高く、
+  <code>No.2888</code>
+  を軸に
+  <code>所得を取得するとみなされる構成員</code>
+  ごとの
+  treaty entitlement と
+  構成員名簿ベースの手続要件まで
+  論点化する</li>
+<li><code>シンガポール条約</code>
+  では
+  明示的な匿名組合条項が見えない一方、
+  <code>22条2項</code>
+  の
+  exempt / substance 制限があり得ること、
+  <code>米国条約</code>
+  では
+  透明体でも
+  誰も恩典を取れない
+  special denial があり得ることを比較し、
+  <code>pass-through = 自動的に条約軽減</code>
+  ではないと固定する</li>
+<li>実務 conclusion としては、
+  <code>JIF LP の entity classification</code>
+<code>居住者性</code>
+<code>受益者性</code>
+<code>PE有無</code>
+<code>構成員別帰属</code>
+<code>届出書・付表・構成員名簿</code>
+  が出揃うまで、
+  <code>20.42%で源泉し、条約軽減は後から詰める</code>
+  という保守的初期値が最も自然だと整理する</li>
+</ul>
+<h2>Phase 16: JIF LP の entity classification と treaty filing route</h2>
+<ul>
+<li><code>tokurei_012</code>
+  と
+  <code>qii_01_b</code>
+  を中核一次ソースとして、
+  <code>JIF LP</code>
+  自体ではなく
+  <code>JIF GP</code>
+  までが official に強く固定されていることを切り分ける</li>
+<li><code>registry-derivative</code>
+  の
+  <code>Singapore LP</code>
+  情報は、
+  <code>helper evidence</code>
+  として使うにとどめ、
+  <code>primary registry extract</code>
+  未取得であることを明示する</li>
+<li>NTA
+  <code>No.2888</code>
+<code>A3-4</code>
+<code>A3-13</code>
+<code>A3-18</code>
+<code>5335</code>
+  を用い、
+  <code>取扱いが異なる事業体</code>
+  については
+  <code>entity claimant</code>
+  ではなく
+  <code>構成員ごとの treaty entitlement</code>
+  に落ち得ることを
+  form guidance
+  レベルまで固定する</li>
+<li>そのうえで、
+  <code>JIF LP</code>
+  が
+  <code>entity-level taxed vehicle</code>
+  か
+  <code>member-taxed transparent vehicle</code>
+  かで、
+  <code>Gravity</code>
+  側の届出・源泉・還付 route が
+  どう変わるかを
+  <code>案件論</code>
+  として整理する</li>
+<li>この phase の direct frontier は、
+  <code>JIF LP member roster</code>
+<code>primary registry extract</code>
+<code>offering / subscription materials</code>
+<code>residence-country tax treatment materials</code>
+  の4本とする</li>
+<li>追加で、
+  <code>ACRA Business Profile - LP v13</code>
+  sample
+  と
+  <code>Provision of Free Business Profiles</code>
+  を使い、
+  <code>member roster</code>
+  が
+  <code>Business Profile</code>
+  の中に実在し、
+  しかも
+  free route
+  は
+  filing 当事者限定
+  だと固定する</li>
+<li>これにより、
+  <code>public web で見つからない</code>
+  ことを
+  <code>資料不存在</code>
+  ではなく
+  <code>paid-primary route 未実行</code>
+  として扱う運用へ切り替える</li>
+</ul>
+<h2>Phase 17: JIF LP と GLP JIF の二重ラベル問題の整理</h2>
+<ul>
+<li><code>SGX</code>
+  公式財務諸表上の
+  <code>GLP Japan Income Fund L.P. ("JIF")</code>
+  と、
+  <code>FSA tokurei_012</code>
+  上の
+  <code>JIF Japan Partners LP</code>
+  を
+  source label
+  レベルで切り分ける</li>
+<li><code>Ares Exhibit 21.1</code>
+  上の
+  <code>GLP Japan Logistics Income Fund GP</code>
+<code>JIF Japan Partners GP</code>
+<code>GLP JIF SMA Fund I GP</code>
+<code>Japan Income Fund GK</code>
+  を
+  同一 official cluster
+  として整理し、
+  <code>single entity</code>
+  ではなく
+  <code>vehicle family</code>
+  として読む</li>
+<li><code>companies.sg</code>
+  の
+  registry-derived layer
+  により、
+  <code>JIF JAPAN PARTNERS LP</code>
+<code>GLP JAPAN INCOME FUND LP</code>
+<code>JIF JAPAN PARTNERS GP</code>
+<code>GLP JIF SMA FUND I LP</code>
+  の
+  same-day / same-address / near-sequential-UEN
+  パターンを固定する</li>
+<li>そのうえで、
+  <code>JIF LP</code>
+  の
+  <code>treaty claimant</code>
+  問題を、
+  <code>単一 JIF entity</code>
+  の議論としてではなく、
+  <code>関連 sleeve 群の中のどの vehicle / member に所得が帰属するか</code>
+  という論点に更新する</li>
+<li>この phase の direct frontier は、
+  <code>JIF LP primary registry extract</code>
+<code>GLP JIF LP primary registry extract</code>
+<code>member roster</code>
+<code>offering / subscription materials</code>
+  の4本とする</li>
+</ul>
+<h2>Phase 18: Singapore current official layer と paid-primary route の固定</h2>
+<ul>
+<li><code>data.gov.sg</code>
+  current open-data layer
+  により、
+  <code>JIF JAPAN PARTNERS LP</code>
+<code>GLP JAPAN INCOME FUND LP</code>
+<code>JIF JAPAN PARTNERS GP</code>
+<code>GLP JAPAN INCOME FUND GP</code>
+<code>GLP JIF SMA FUND I LP</code>
+<code>GLP JIF SMA FUND I GP</code>
+  が
+  <code>COLLYER QUAY / 049315</code>
+  に並ぶことを固定する</li>
+<li>これにより、
+  <code>8 Marina View</code>
+  は
+  <code>historical / secondary layer</code>
+  へ降格し、
+  current official layer
+  は
+  <code>Collyer Quay</code>
+  だと整理する</li>
+<li><code>qii_01_b</code>
+  の extracted text
+  で
+  <code>JIF Japan Partners GP, Pte. Ltd.</code>
+  の
+  <code>10 Collyer Quay, #34-01, Ocean Financial Centre</code>
+  を bridge として固定する</li>
+<li><code>ACRA</code>
+  official pages
+  により、
+  <code>Business Profile</code>
+  が
+  <code>position holders / business owners or partners</code>
+  を含み、
+  <code>Business Profile Data API</code>
+  が
+  <code>18 November 2025</code>
+  開始だと確認する</li>
+<li>この phase の direct frontier は、
+  <code>JIF LP Business Profile</code>
+<code>GLP JIF LP Business Profile</code>
+<code>JIF GP Business Profile</code>
+  の3本を最優先に置く</li>
+</ul>
+<h2>Phase 19: 日本側 GK / TK / TMK / 一般社団法人 レイヤーの税務資産化</h2>
+<ul>
+<li><code>e-Gov</code>
+<code>会社法</code>
+  により、
+  <code>合同会社</code>
+  が
+  <code>持分会社</code>
+  であり、
+  全社員有限責任、
+  原則として社員が業務執行を担う
+  という
+  GK layer の私法上の骨格を固定する</li>
+<li><code>e-Gov</code>
+<code>法人税法</code>
+  と
+  NTA
+  <code>一般社団法人・一般財団法人の法人税法上の取扱い</code>
+  により、
+  <code>一般社団法人</code>
+  は
+  自動的に非課税ではなく、
+  <code>非営利型法人なら収益事業課税</code>
+<code>それ以外は普通法人として全所得課税</code>
+  と整理すべきことを固定する</li>
+<li><code>e-Gov</code>
+<code>一般社団法人及び一般財団法人に関する法律</code>
+  と
+  <code>相続税法66条の2</code>
+  により、
+  一般社団法人は
+  <code>社員への剰余金・残余財産分配権を持たない orphan/control layer</code>
+  として使いやすい一方、
+  <code>特定一般社団法人等</code>
+  には
+  遺贈みなし課税リスクがあることを固定する</li>
+<li><code>e-Gov</code>
+<code>租税特別措置法67条の14</code>
+  と
+  NTA
+  <code>特定目的会社の支払配当の損金算入に関する明細書</code>
+  により、
+  TMK は
+  自動的な pass-through vehicle
+  ではなく、
+  <code>90% 配当</code>
+<code>所得金額 ceiling</code>
+  などの要件を満たしたときに限り
+  導管課税へ寄る
+  と整理する</li>
+<li><code>NTA</code>
+<code>No.2878</code>
+<code>No.2884</code>
+<code>No.2888</code>
+  既存整理と今回の日本法 layer を接続し、
+  <code>GK = 普通法人</code>
+<code>TK = 源泉税・条約レイヤー</code>
+<code>TMK = 導管課税の可否</code>
+<code>一般社団法人 = orphan だが税務は別判定</code>
+  という
+  GRAVITY 全体構造の基礎 tax map を固定する</li>
+<li>この phase の direct frontier は、
+  今回固定した
+  <code>GK / TK / TMK / 一般社団法人</code>
+  の tax layer を
+  <code>Gravity合同会社</code>
+<code>Gravity AH合同会社</code>
+<code>Gravity特定目的会社</code>
+<code>Japan Income Fund合同会社</code>
+  に
+  実名マッピングし、
+  そのうえで
+  <code>JIF LP Business Profile</code>
+  と
+  <code>Gravity -&gt; Gravity特定目的会社</code>
+  の
+  直結証拠探索を継続する</li>
+</ul>
+<h2>Phase 20: 法律・通達カバレッジ監査</h2>
+<ul>
+<li><code>20_一次資料/official</code>
+  と
+  <code>99_管理/source_inventory_initial.csv</code>
+  を突き合わせ、
+  GRAVITY 案件で現に使う
+  <code>法律</code>
+<code>施行令</code>
+<code>国税庁 Tax Answer</code>
+<code>所得税基本通達</code>
+<code>条約届出 guidance</code>
+<code>MOF 条約 official pack</code>
+  の
+  取得状況を棚卸しする</li>
+<li>監査前の重要穴として、
+  <code>所得税法</code>
+<code>No.2885</code>
+<code>No.2889</code>
+<code>36・37共-21</code>
+<code>所得税法施行令</code>
+<code>租税特別措置法施行令</code>
+<code>相続税法施行令</code>
+<code>日シンガポール条約 official pack</code>
+  を特定し、
+  取得できるものは
+  official layer に追加する</li>
+<li>そのうえで、
+  <code>主要該当分はほぼ取得済み</code>
+  と
+  <code>strict completeness ではなお補強余地あり</code>
+  を分けて報告する</li>
+<li>次段 frontier は、
+  <code>法人税基本通達 raw exact clause</code>
+  と
+  <code>措置法関係通達67条の14 direct circular raw</code>
+  の
+  official surface をさらに詰めること、
+  及び
+  その結果を named GRAVITY entities への当て込みに接続することである</li>
+</ul>
+<h2>Phase 21: named GRAVITY entities への tax map 当て込み</h2>
+<ul>
+<li>既に固定した
+  <code>GK = 普通法人</code>
+<code>TK = 源泉税・条約</code>
+<code>TMK = 導管課税の可否</code>
+<code>一般社団法人 = orphan だが税務は別判定</code>
+  の母線を、
+  <code>Gravity合同会社</code>
+<code>Gravity AH合同会社</code>
+<code>Gravity特定目的会社</code>
+<code>Gravity一般社団法人</code>
+<code>Japan Income Fund合同会社</code>
+<code>Japan DH4合同会社</code>
+<code>JIF Japan Partners LP</code>
+  に実名で当て直す</li>
+<li>その際、
+  <code>tokurei_011</code>
+<code>012</code>
+<code>013</code>
+<code>014</code>
+  および
+  <code>JCR Gravity AH</code>
+  の direct text を母線にし、
+  <code>確定</code>
+<code>高確度推定</code>
+<code>未立証</code>
+  を分けて書く</li>
+<li>補助成果として、
+  未作成だった
+  <code>Gravity AH合同会社</code>
+<code>Japan Income Fund合同会社</code>
+<code>Gravity一般社団法人</code>
+  の
+  subject dossier を追加する</li>
+<li>そのうえで、
+  <code>named entities tax mapping</code>
+  の
+  structure note
+  と
+  <code>90_成果</code>
+  の synthesis report
+  を新設し、
+  次段 frontier を
+  <code>JIF LP member roster / treaty claimant</code>
+  と
+  <code>Gravity -&gt; Gravity特定目的会社</code>
+  の
+  直結証拠に絞り込む</li>
+</ul>
+<h2>Phase 22: public master report の生成と公開</h2>
+<ul>
+<li><code>gravity_tk_tmk_project</code>
+  に蓄積した
+  official source
+  <code>90_成果</code>
+<code>主体別ドシエ</code>
+<code>法令ノート</code>
+<code>ストラクチャー</code>
+<code>research_plan</code>
+<code>issue_memo</code>
+  を再編し、
+  <code>10万字超</code>
+  の
+  public 向け包括研究レポートを作成する</li>
+<li>公開先は
+  <code>jplawdb4/その他/GRAVITY_包括研究レポート_20260423</code>
+  とし、
+  既存の
+  <code>GRAVITY_構造図解アトラス_20260422</code>
+  と sibling package の関係で相互参照させる</li>
+<li>長文本体だけでなく、
+  既存長文HTML、
+  <code>90_成果</code>
+  markdown、
+  plan / issue memo を appendix として取り込み、
+  将来の resume 点にもなる
+  master artifact
+  とする</li>
+<li>公開後は
+  <code>その他/index.html</code>
+<code>その他/index.json</code>
+  へ登録し、
+  push 後に
+  <code>GitHub blob</code>
+  と
+  <code>Pages</code>
+  の両導線を確認する</li>
+</ul></div>
+</section>
+<section class="appendix-section">
+<h2>L. issue_memo</h2>
+<p class="appendix-meta">原本: <code>/mnt/d/Users/PC/Desktop/tax/gravity_tk_tmk_project/10_作業/issue_memo.md</code></p>
+<div class="appendix-body"><h1>Issue Memo</h1>
+<h2>Open Questions</h2>
+<ul>
+<li><code>JIF Japan Partners LP</code> が投資する <code>Tokumei Kumiai Operator</code> は誰か</li>
+<li>その <code>Tokumei Kumiai Operator</code> と <code>Gravity合同会社</code> は同一か</li>
+<li><code>Investment Limited Partnership (1)</code> は <code>Japan DH4 投資事業有限責任組合</code> か</li>
+<li><code>ジャパンインカムファンド投資事業有限責任組合</code> は
+  どの国内 <code>TK operator</code> 群に入るのか</li>
+<li><code>JIF Japan Partners LP</code> と <code>GLP Japan Income Fund LP</code> は parallel / feeder / sleeve のどれに近いか</li>
+<li><code>Japan Income Fund GK</code> と <code>Japan Income Fund合同会社</code> の同一性をどう補強するか</li>
+<li><code>Gravity合同会社</code> の下流 <code>TMK</code> 名と資産流動化計画をどう特定するか</li>
+<li><code>Gravity特定目的会社</code> と
+  <code>GLP Japan DH4特定目的会社 / GLP DH4 Exc特定目的会社</code>
+  の関係をどう整理するか</li>
+<li><code>Gravity合同会社</code> の下流が
+  <code>Gravity特定目的会社</code>
+  単独なのか、
+  それに加えて
+  <code>DH4</code> 名義TMK群も含むのか</li>
+<li><code>Gravity合同会社</code> が
+  匿名組合利益分配を払う場合の
+  <code>法的な直後受領者</code>
+  の実名は
+  <code>JIF Japan Partners LP</code>
+  でよいのか</li>
+<li><code>Japan DH4</code>
+  は
+  <code>直後受領者</code>
+  ではなく
+  <code>そのさらに上流</code>
+  として整理すべきか</li>
+<li><code>JIF Japan Partners LP</code>
+  は
+  条約適用上
+  <code>entity claimant</code>
+  なのか、
+  それとも
+  <code>構成員 look-through</code>
+  で扱うべき透明体なのか</li>
+<li><code>JIF Japan Partners LP</code>
+  の
+  <code>member roster</code>
+  と
+  <code>条約届出 route</code>
+  を
+  どの一次ソースで固めるか</li>
+<li><code>JIF Japan Partners LP</code>
+  と
+  <code>GLP Japan Income Fund L.P. ("JIF")</code>
+  は
+  別 vehicle
+  なのか、
+  それとも
+  同一ファンドの別 label
+  なのか</li>
+<li><code>GLP JIF SMA Fund I LP</code>
+  は
+  <code>JIF LP</code>
+  と
+  <code>GLP JIF LP</code>
+  の
+  parallel sleeve
+  としてどこに位置付くか</li>
+</ul>
+<h2>Key Findings</h2>
+<ul>
+<li><code>tokurei_012.pdf</code> は、<code>Gravity合同会社匿名組合</code> について、
+  <code>TMKの特定出資・優先出資</code> 引受型であることを直接示す</li>
+<li><code>tokurei_012.pdf</code> は、<code>JIF Japan Partners GP, Pte. Ltd.</code> に対応する
+  出資対象事業持分として <code>JIF Japan Partners LP</code> を直接掲げる</li>
+<li><code>qii_01_b.pdf</code>
+  は、
+  <code>JIF Japan Partners GP, Pte. Ltd.</code>
+  を
+  <code>JIF Japan Partners LP</code>
+  の
+  <code>業務執行組合員等</code>
+  として
+  official に示している</li>
+<li><code>GLP J-REIT</code> の2025年運用体制等報告書は、
+  <code>GLP Japan Income Fund (JIF)</code> を2020年8月設立・2020年10月運用開始と明示する</li>
+<li><code>JCR</code> は <code>Gravity AH合同会社</code> を本ファンドの物件保有・資金調達ビークルとし、
+  <code>Ares</code> を親会社とする日本GLPをAMとする旨を明示する</li>
+<li><code>Japan Income Fund合同会社</code> は、
+  <code>日本GLP株式会社</code> を代表社員とする届出主体であり、
+  <code>ジャパンインカムファンド投資事業有限責任組合</code> を通じて
+  <code>匿名組合の営業者</code> へ投資する日本側LPSハブとして現れる</li>
+<li><code>Ares</code> の <code>Exhibit 21.1</code> は、
+  <code>JIF Japan Partners GP, Pte. Ltd.</code> と <code>Japan Income Fund GK</code> を
+  同じ重要子会社群に並べる</li>
+<li><code>Japan Income Fund GK</code>
+  は、
+  名称対応上
+  <code>Japan Income Fund合同会社</code>
+  の英語表記である可能性が高い
+  が、
+  最終同定はなお留保する</li>
+<li><code>EDINET</code> では、
+  <code>ジャパンインカムファンド投資事業有限責任組合</code> が
+  複数の国内大手機関投資家の投資対象として現れる</li>
+<li>GLP公式ページは、
+  <code>GLP Japan Income Fund</code>
+  を
+  <code>2020</code>
+  開始の
+  <code>Open-End / Core</code>
+  戦略として掲げ、
+  <code>2020-08-25</code>
+  ローンチ、
+  <code>2023-06-23</code>
+  時点の
+  <code>453 billion commitments / 700 billion+ AUM</code>
+  を説明する</li>
+<li>SGXのGLP公式財務諸表スニペットでは、
+  <code>GLP Japan Income Investors, Pte. Ltd.</code>
+  が
+  <code>Investment holding</code>
+  の重要子会社として
+  <code>FY2022-2024</code>
+  連続で確認できる</li>
+<li><code>GLP JIF SMA Fund I GP / LP</code>
+  は、
+  <code>2023</code>
+  時点でも
+  JIF周辺に追加スリーブが作られていることを示す</li>
+<li><code>SGX</code>
+  の
+  <code>GLP Pte Ltd</code>
+  財務諸表では、
+  <code>GLP Japan Income Fund L.P. ("JIF")</code>
+  が
+  <code>Private equity fund focused on logistics properties</code>
+  として official に現れる</li>
+<li>ただし、
+  この official source
+  は
+  <code>JIF Japan Partners LP</code>
+  を示していないため、
+  現時点では
+  <code>GLP Japan Income Fund L.P. ("JIF")</code>
+  と
+  <code>JIF Japan Partners LP</code>
+  を
+  同一 vehicle
+  とみなすべきではない</li>
+<li><code>Ares 2025 Exhibit 21.1</code>
+  は、
+  <code>GLP Japan Logistics Income Fund GP</code>
+<code>JIF Japan Partners GP</code>
+<code>GLP JIF SMA Fund I GP</code>
+<code>Japan Income Fund GK</code>
+  を
+  同一重要子会社クラスターに並べており、
+  <code>JIF</code>
+  周辺が複数 sleeve / GP / GK から成る family であることを official に補強する</li>
+<li><code>companies.sg</code>
+  の registry-derived layer では、
+  <code>JIF JAPAN PARTNERS LP</code>
+<code>T20LP0037H</code>
+  と
+  <code>GLP JAPAN INCOME FUND LP</code>
+<code>T20LP0036A</code>
+  が、
+  <code>2020-05-28</code>
+  同日、
+  <code>8 MARINA VIEW</code>
+  同住所、
+  近接 UEN
+  で並ぶ</li>
+<li>同じく
+  <code>JIF JAPAN PARTNERS GP, PTE. LTD.</code>
+  は
+  <code>2020-07-13</code>
+  に
+  同住所で設立される</li>
+<li><code>8 Marina View</code>
+  の
+  address cluster page
+  には
+  <code>GLP JIF SMA FUND I LP</code>
+  も現れるため、
+  Singapore 側では
+  <code>JIF LP / GLP JIF LP / JIF GP / SMA</code>
+  が
+  同住所クラスターの vehicle family を形成している可能性が高い</li>
+<li>ここまでで言える strongest reading は、
+  <code>JIF Japan Partners LP</code>
+  と
+  <code>GLP Japan Income Fund L.P. ("JIF")</code>
+  は
+  <code>同一</code>
+  ではなく
+  <code>parallel / sleeve / same-family vehicle</code>
+  だということ</li>
+<li>しかし、
+  <code>primary registry extract</code>
+<code>member roster</code>
+<code>offering / subscription materials</code>
+  は
+  まだ未取得であるため、
+  treaty claimant
+  を
+  <code>entity</code>
+  で捉えるか
+  <code>member look-through</code>
+  で捉えるかの最終判断はなお留保する</li>
+<li>同じ八重洲16階・同じ電話番号帯には、
+  <code>Japan Income Fund合同会社</code>、<code>Gravity合同会社</code>、<code>Gravity AH合同会社</code>、
+  <code>JDP3合同会社</code>、<code>JDP4合同会社</code>、<code>Japan DH4合同会社</code>、
+  <code>堺ロジスティック合同会社</code> が並び、
+  <code>tokurei_012.pdf</code> 上も役割の異なる投資導線が確認できる</li>
+<li><code>Japan DH4合同会社</code> は、
+  <code>海外リミテッドパートナーシップ</code> への出資を通じて
+  日本物流施設へ間接投資するLPSとして現れ、
+  <code>Japan Income Fund -&gt; JIF LP</code> 仮説の比較例として有力</li>
+<li><code>GLP Sakai GP -&gt; Sakai GK Partners LP</code> と
+  <code>GLP JDP4 FEEDER GP -&gt; TK Investor Singapore LP</code> は、
+  <code>外国LP -&gt; Tokumei Kumiai Operator</code> が JIF 固有ではないことを示す</li>
+<li><code>JIF GP</code>、<code>GLP Sakai GP</code>、<code>GLP JDP4 FEEDER GP</code> は
+  住所・役員が重なり、同一系列の foreign sleeve 群として読むのが自然</li>
+<li><code>Japan DH4 LPS</code> は <code>JIF LP</code> の直上候補として、
+  <code>Japan Income Fund LPS</code> より文言整合性が高い</li>
+<li><code>Japan Income Fund LPS</code> は、
+  むしろ <code>堺ロジスティック</code> のような
+  <code>ILP(1)</code> 型の国内TK operator受皿候補として整合しやすい</li>
+<li><code>tokurei_012.txt</code> 全体では、
+  <code>海外リミテッドパートナーシップ</code>
+  という文言は
+  <code>Japan DH4 投資事業有限責任組合</code>
+  の記載にしか現れず、
+  <code>JIF LP</code> の直上候補としての優位が一段強い</li>
+<li>国土交通省の <code>GLP ALFALINK 茨木1</code> ページでは、
+  <code>JDP3ロジスティック2特定目的会社</code> が提案者として現れ、
+  <code>JDP3</code> 系が開発案件粒度の高いルートであることが見える</li>
+<li>大阪市資料では、
+  <code>JDP4ロジスティック2特定目的会社</code> が
+  <code>（仮称）GLP南港北プロジェクト</code> の建築主として現れ、
+  <code>JDP4ロジスティック3/4特定目的会社</code> も
+  市有地入札に出ており、
+  <code>JDP4</code> 系も案件固有の開発・取得ルート色が強い</li>
+<li>Hon Hai 2024年年次報告書では、
+  <code>Sakai GK Partners LP</code> と <code>Sakai SK Holdings Pte. Ltd.</code> が
+  <code>Associate</code> として並び、
+  <code>Sakai</code> 系も単独案件または JV 色の強い foreign sleeve と読むのが自然</li>
+<li>以上を踏まえると、
+  <code>JDP3 / JDP4 / Sakai</code> は <code>JIF</code> の下流候補というより
+  比較例・案件別スリーブとして扱う方が自然であり、
+  <code>JIF LP</code> の下流 <code>Tokumei Kumiai Operator</code> 候補としては
+  <code>Gravity合同会社</code> の方が現在は一段有力</li>
+<li><code>Gravity合同会社</code> は、
+  <code>日本国内の物流施設</code>・<code>TMKの特定出資及び優先出資</code>・<code>外国法人又は外国人等(1)</code>
+  という記載を持ち、
+  <code>JIF LP</code> の
+  <code>portfolio of cash-yielding logistics facilities</code>
+  という portfolio-level 記述と整合しやすい</li>
+<li><code>2026-04-22</code> に現行取得した
+  金融庁 <code>特定目的会社届出一覧</code>
+  では、
+  <code>Gravity特定目的会社</code>
+<code>(会)第1795号</code>
+<code>2010405008668</code>
+  と、
+  <code>GLP Japan DH4特定目的会社</code>
+<code>(会)第639号</code>
+  と
+  <code>GLP DH4 Exc特定目的会社</code>
+<code>(会)第2035号</code>
+  が
+  いずれも
+  <code>東京都中央区八重洲2-2-1 / 03-6897-6297</code>
+  で現存していることが確認できる</li>
+<li>この追加 official source により、
+  <code>Gravity合同会社</code>
+  下流TMK frontier は
+  <code>名前不明</code>
+  ではなく、
+  少なくとも
+  <code>Gravity特定目的会社</code>
+  と
+  <code>DH4</code> 名義TMK群まで絞り込める</li>
+<li><code>Gravity特定目的会社</code>
+  は
+  <code>tokurei_011 / tokurei_014</code>
+  上の
+  <code>Gravity合同会社</code>
+  と
+  <code>八重洲2-2-1 / 03-6897-6297</code>
+  が一致し、
+  direct-name downstream candidate
+  として
+  もっとも自然である</li>
+<li><code>houjin.jp</code>
+  と
+  <code>GVA 法人検索</code>
+  では、
+  <code>2010405008668</code>
+  が
+  <code>2020/04/28</code>
+  に
+  <code>狭山日高2ロジスティック特定目的会社</code>
+  から
+  <code>Gravity特定目的会社</code>
+  へ改称したことが確認できる</li>
+<li><code>官報決算データベース</code>
+  では、
+  <code>Gravity特定目的会社</code>
+  の
+  <code>2025年09月30日</code>
+  総資産が
+  <code>4,165億9,500万円</code>
+  に達しており、
+  current sleeve としての規模感も大きい</li>
+<li>金融庁
+  <code>QII 01_b</code>
+  では、
+  <code>Ｇｒａｖｉｔｙ合同会社</code>
+  と
+  <code>Ｇｒａｖｉｔｙ特定目的会社</code>
+  の双方が
+  <code>東京都中央区八重洲二丁目2番1号</code>
+  付きで
+  同じ official list 内に現れる</li>
+<li><code>GLP J-REIT</code>
+  の
+  <code>2021-05-27</code>
+  付開示では、
+  <code>GLP 狭山日高Ⅱ</code>
+  の取得文脈で
+  <code>①狭山日高２ロジスティック特定目的会社</code>
+<code>②GLP Pte. Ltd. が50%間接保有する特定目的会社</code>
+  が明示される</li>
+<li>したがって、
+  secondary の
+  <code>狭山日高2 -&gt; Gravity特定目的会社</code>
+  改称痕跡を重ねると、
+  <code>Gravity特定目的会社</code>
+  を
+  <code>GLP 狭山日高Ⅱ</code>
+  系統の current-name TMK
+  とみる根拠は
+  さらに強くなる</li>
+<li><code>GLP J-REIT</code>
+  の
+  <code>2021-06-25</code>
+  付開示では、
+  <code>GLP 狭山日高Ⅰ</code>
+  の取得文脈で
+  <code>①狭山日高 1 ロジスティック特定目的会社</code>
+<code>②GLP Pte. Ltd.の子会社等に当たる特定目的会社</code>
+  が明示される</li>
+<li>したがって、
+  official layer だけでも
+  <code>狭山日高1 -&gt; GLP 狭山日高Ⅰ</code>
+  と
+  <code>狭山日高2 -&gt; GLP 狭山日高Ⅱ</code>
+  の
+  1/2 symmetric pair
+  が取れており、
+  <code>狭山日高2 -&gt; Gravity特定目的会社</code>
+  の改称痕跡は
+  <code>2</code>
+  側だけの current-name 化
+  と読む方が自然になった</li>
+<li><code>GLP J-REIT / JPX</code>
+  の official disclosure では、
+  <code>舞洲1ロジスティック特定目的会社</code>
+  が
+  <code>GLP 舞洲Ⅰ</code>
+  と、
+  <code>柏2ロジスティック特定目的会社</code>
+  が
+  <code>GLP 柏Ⅱ</code>
+  と
+  asset-level に対応している</li>
+<li>したがって、
+  <code>Gravity合同会社</code>
+  下流の <code>DH4</code> 名義TMK候補は、
+  抽象的な名前一致だけでなく、
+  <code>GLP物流資産保有TMKライン</code>
+  という文脈まで official source で補強された</li>
+<li>ただし、
+  <code>舞洲1 / 柏2</code>
+  の旧TMK名が
+  現在の
+  <code>GLP Japan DH4特定目的会社</code>
+  または
+  <code>GLP DH4 Exc特定目的会社</code>
+  に
+  改称・承継したという official 直接資料はまだ取れていない</li>
+<li>もっとも、
+  <code>houjin.jp</code>
+  と
+  <code>GVA 法人検索</code>
+  では、
+  同一法人番号ベースで
+  <code>舞洲1 -&gt; GLP Japan DH4</code>
+  と
+  <code>柏2 -&gt; GLP DH4 Exc</code>
+  の
+  名称・商号変更履歴が確認できる</li>
+<li>したがって、
+  現在の最良読解は、
+  <code>Gravity合同会社</code>
+  の下流第一候補が
+  <code>Gravity特定目的会社</code>
+  であり、
+  これに加えて
+  <code>GLP Japan DH4特定目的会社 = GLP 舞洲Ⅰ 系統</code>
+  と
+  <code>GLP DH4 Exc特定目的会社 = GLP 柏Ⅱ 系統</code>
+  が
+  parallel / additional candidate family
+  を形成している、
+  というものである</li>
+<li>同時に、
+  現行URLから再取得した
+  <code>tokurei_011-014</code>
+  の hash は
+  workspace 保存版と一致しており、
+  <code>Gravity / JIF / Japan Income Fund / Japan DH4</code>
+  周辺の FSA private placement 届出自体に
+  <code>2026-04-22</code>
+  時点の更新差分は見つかっていない</li>
+</ul>
+<h2>Evidence to Confirm</h2>
+<ul>
+<li><code>tokurei_012.txt</code> 90942以降の <code>JIF Japan Partners LP</code> 記載</li>
+<li><code>tokurei_012.txt</code> 29991以降の <code>Japan Income Fund合同会社</code> 記載</li>
+<li><code>tokurei_012.txt</code> 34772以降の <code>堺ロジスティック / Japan DH4 / JDP4</code> 記載</li>
+<li><code>tokurei_012.txt</code> 95966以降の <code>Sakai GK Partners LP</code> 記載</li>
+<li><code>tokurei_012.txt</code> 98226以降の <code>TK Investor Singapore LP</code> 記載</li>
+<li><code>tokurei_012.txt</code> 30331以降の <code>Gravity合同会社</code> 記載</li>
+<li><code>glpjreit_2025_operating_structure_jp.txt</code> 614行付近の <code>JIF</code> 記載</li>
+<li><code>jcr_26d0053_gravity_ah.txt</code> 冒頭の <code>Gravity AH</code> 記載</li>
+<li><code>a2025q4exhibit211.htm</code> の <code>JIF GP / Japan Income Fund GK / GLP Japan</code> 並び</li>
+<li><code>EDINET/MizuhoLease_S100OF9S.txt</code> 7928以降の <code>ジャパンインカムファンド投資事業有限責任組合</code></li>
+<li><code>GLP_ALFALINK_茨木1_MLIT.html</code> 131-138行の <code>JDP3ロジスティック2特定目的会社</code></li>
+<li><code>JDP4_logistics2_R07-024.txt</code> 56行付近の <code>JDP4ロジスティック2特定目的会社</code></li>
+<li><code>JDP4_logistics3_bid_R4-3-9.txt</code> 冒頭の <code>JDP4ロジスティック3特定目的会社</code></li>
+<li><code>JDP4_logistics4_bid_R4-3-16.txt</code> 冒頭の <code>JDP4ロジスティック4特定目的会社</code></li>
+<li><code>HonHai_2024Q4_consolidated_report_en.txt</code> 4348行付近の <code>Sakai GK Partners LP Associate</code></li>
+<li><code>added_20260422/tokutei_todokede_20260331.txt</code> 462-466 の
+  <code>GLP Japan DH4特定目的会社</code></li>
+<li><code>added_20260422/tokutei_todokede_20260331.txt</code> 2091-2094 の
+  <code>GLP DH4 Exc特定目的会社</code></li>
+</ul>
+<h2>Next Actions</h2>
+<ul>
+<li><code>JIF LP -&gt; Tokumei Kumiai Operator</code> の相手先を
+  <code>Gravity / JDP4 / 堺ロジスティック / JDP3 / Gravity AH</code>
+  の順で再評価する</li>
+<li><code>Japan DH4</code> を
+  <code>JIF LP</code> の直上 <code>Investment Limited Partnership (1)</code> 第一候補として
+  補強できる追加資料を探す</li>
+<li><code>Japan Income Fund合同会社 / ジャパンインカムファンド投資事業有限責任組合</code>
+  を国内LPS-to-domestic-TK operator ハブとして再評価する</li>
+<li><code>Gravity合同会社</code> の下流 <code>TMK</code> 名と資産流動化計画を
+  物件資料・資産流動化計画・公告資料から狙う</li>
+<li><code>舞洲1ロジスティック特定目的会社 / 柏2ロジスティック特定目的会社</code>
+  と
+  <code>GLP Japan DH4特定目的会社 / GLP DH4 Exc特定目的会社</code>
+  の
+  改称・承継・清算接続を
+  官報・担保資料・資産流動化計画から official に取り直す</li>
+<li>上流 <code>Ares / GLP / JIF</code> と日本側 <code>Japan DH4 / Gravity</code> の点線を
+  どこまで実線化できるか再評価する</li>
+<li><code>Japan Income Fund GK</code>
+  と
+  <code>Japan Income Fund合同会社</code>
+  の同一性を
+  追加ソースでどこまで補強できるか検討する</li>
+<li><code>GLP Japan DH4特定目的会社</code>
+  と
+  <code>GLP DH4 Exc特定目的会社</code>
+  について、
+  物件資料・資産流動化計画・公告・担保資料から
+  <code>Gravity合同会社</code>
+  との直接接続を狙う</li>
+</ul>
+<h2>Current Official Cluster Refresh - 2026-04-22 08:30 JST</h2>
+<ul>
+<li>現行
+  <code>tokurei_011</code>
+  再取得版では、
+  <code>Japan Income Fund合同会社</code>
+<code>Ｇｒａｖｉｔｙ合同会社</code>
+<code>Japan DH4合同会社</code>
+  が、
+  いずれも
+  <code>東京都中央区八重洲二丁目2番1号</code>
+<code>03-6897-6297</code>
+  に並ぶ</li>
+<li>したがって、
+  <code>JIF / Gravity / Japan DH4</code>
+  は
+  過去スナップショットだけでなく、
+  current official layer
+  でも
+  同一運営クラスターとして追える</li>
+<li>現行
+  <code>特定目的会社届出一覧</code>
+  では、
+  <code>(会)第1790号 狭山日高1ロジスティック特定目的会社 3010405008667</code>
+  と
+  <code>(会)第1795号 Ｇｒａｖｉｔｙ特定目的会社 2010405008668</code>
+  が、
+  どちらも
+  <code>東京都中央区八重洲2-2-1</code>
+<code>03-6897-6297</code>
+  で現存している</li>
+<li>つまり、
+  official current layer では
+  <code>狭山日高1</code>
+  は旧名称のまま残り、
+  <code>狭山日高2</code>
+  側だけが
+  <code>Gravity</code>
+  へ current-name 化した
+  と読むのが自然になった</li>
+<li>これは
+  <code>狭山日高2 -&gt; Gravity特定目的会社</code>
+  の secondary rename trace を、
+  <code>狭山日高 1/2 pair</code>
+  のうち
+  <code>2</code>
+  側だけの非対称 current-name 化として
+  official layer からも補強する</li>
+<li>したがって、
+  現時点の最良モデルは維持しつつ、
+  <code>Gravity合同会社 -&gt; Gravity特定目的会社</code>
+  を
+  direct-name candidate
+  として最上位に置く判断は
+  さらに強化された</li>
+</ul>
+<h2>Immediate Next Move</h2>
+<ul>
+<li><code>官報 / 資産流動化計画 / 担保資料</code>
+  から
+  <code>Gravity合同会社 -&gt; Gravity特定目的会社</code>
+  の direct evidence
+  を引き続き最優先で狙う</li>
+<li>ただし、
+  直結証拠がまだ出ない場合でも、
+  <code>JIF / Gravity / Japan DH4</code>
+  の current official cluster と
+  <code>狭山日高1 / Gravity</code>
+  の current TMK asymmetry を
+  中間結論として固定してよい</li>
+</ul>
+<h2>Distribution Destination Layering - 2026-04-22 08:40 JST</h2>
+<ul>
+<li><code>商法535条・536条</code>
+  と
+  <code>tokurei_012</code>
+  を合わせると、
+  <code>Gravity合同会社匿名組合</code>
+  における
+  <code>法的な直後の利益分配受領者</code>
+  は
+  <code>匿名組合員</code>
+  であり、
+  <code>Gravity合同会社</code>
+  自身でも
+  下流TMKでもない</li>
+<li><code>Gravity合同会社匿名組合</code>
+  には
+  <code>外国法人又は外国人等(1)</code>
+  という表示があり、
+  少なくとも公開届出の読みでは
+  <code>直後受領者 = 単一の foreign-type investor</code>
+  とみるのが最も自然</li>
+<li><code>JIF Japan Partners LP</code>
+  は
+  <code>Japan の cash-yielding logistics facilities</code>
+  に対し
+  <code>Tokumei Kumiai Operator</code>
+  への投資を通じて
+  間接投資すると明示しており、
+  <code>Gravity合同会社</code>
+  の投資記述と
+  最も強く整合する</li>
+<li>したがって、
+  <code>Gravity合同会社</code>
+  が匿名組合利益分配を払う場合の
+  <code>法的な直後受領者</code>
+  の最有力実名候補は
+  <code>JIF Japan Partners LP</code>
+  である</li>
+<li>そのさらに上流については、
+  <code>Japan DH4合同会社</code>
+  の
+  <code>海外リミテッドパートナーシップ</code>
+  経由投資の記載から、
+  <code>Japan DH4 投資事業有限責任組合 -&gt; JIF Japan Partners LP</code>
+  という層構造が
+  現時点で最も合理的</li>
+<li>一方、
+  <code>Japan Income Fund合同会社</code>
+  は
+  <code>匿名組合の営業者</code>
+  に対する匿名組合出資を行う
+  日本側LPSハブとして重要だが、
+  <code>Gravity合同会社匿名組合</code>
+  の
+  <code>法的な直後受領者</code>
+  としては
+  <code>JIF Japan Partners LP</code>
+  より一段弱い</li>
+</ul>
+<h2>Withholding Tax and Treaty-Benefit Layer - 2026-04-22 10:51 JST</h2>
+<ul>
+<li><code>Gravity合同会社匿名組合</code>
+  の利益分配は、
+  国内法の出発点では
+  <code>所得税法161条1項16号</code>
+  による
+  <code>匿名組合契約に基づく利益の分配</code>
+  として
+  国内源泉所得に入る</li>
+<li>したがって、
+  直後受領者が
+  <code>JIF Japan Partners LP</code>
+  のような
+  foreign-type holder
+  であるなら、
+  初期値は
+  <code>所得税法212条1項・2項</code>
+  と
+  <code>No.2884</code>
+  に基づく
+  <code>20.42%源泉</code>
+  で置くのが安全</li>
+<li>ここで重要なのは、
+  <code>212条5項</code>
+  は
+  <code>161条1項4号</code>
+  の
+  partnership allocation
+  に対する timing deeming であり、
+  今回の
+  <code>161条1項16号</code>
+  匿名組合利益分配
+  とは
+  条文上の足場が違うこと</li>
+<li>条約側では、
+  匿名組合分配の性質決定が
+  treaty-by-treaty で揺れ、
+  国税庁論叢では
+  典型的には
+  <code>利子</code>
+  非典型またはPE型では
+  <code>事業利得</code>
+  が問題になる</li>
+<li>checked treaty のうち
+  <code>シンガポール条約</code>
+  には
+  明示的な匿名組合条項が見当たらず、
+  relief を主張するには
+  <code>配当/利子/その他所得/事業利得</code>
+  の
+  どこへ落とすかと、
+  <code>22条2項</code>
+  の
+  exempt / substance 制限まで
+  詰める必要がある</li>
+<li>さらに、
+  <code>JIF LP</code>
+  が
+  fiscally transparent
+  なら、
+  条約恩典主体は
+  <code>JIF LP</code>
+  単体ではなく、
+  residence-state law 上
+  その所得を取得したと扱われる
+  <code>構成員ごと</code>
+  に割れる可能性が高い</li>
+<li>この点では
+  <code>No.2888</code>
+  が重要で、
+  entity の課税上の取扱いが
+  日本と相手国で異なる場合には、
+  <code>届出書</code>
+<code>付表</code>
+<code>実際に軽減対象となる構成員名簿</code>
+  を前提に
+  treaty relief を処理する建付けだと読める</li>
+<li>さらに、
+  NTA
+  <code>A3-4</code>
+<code>A3-13</code>
+<code>A3-18</code>
+  は、
+  <code>161条1項16号</code>
+  の匿名組合分配が
+  <code>配当・利子・使用料</code>
+  以外の route に落ち得ること、
+  及び
+  <code>取扱いが異なる事業体</code>
+  では
+  <code>様式16</code>
+  ベースの
+  <code>構成員名簿</code>
+  が必要になり得ることを
+  official に示す</li>
+<li>NTA
+  <code>5335</code>
+  は、
+  両締約国で課税上の取扱いが異なる事業体では、
+  <code>entity-level taxation</code>
+  なら
+  その事業体に、
+  <code>member taxation</code>
+  なら
+  構成員が取得する部分に
+  treaty benefits
+  が帰属するという実務整理を示す</li>
+<li>したがって、
+  現時点の実務的な safe reading は
+  <code>Gravity -&gt; JIF LP</code>
+  支払時点では
+  まず
+  <code>20.42%源泉</code>
+  を baseline とし、
+  軽減を主張するなら
+  <code>JIF LP の entity classification</code>
+<code>受益者性</code>
+<code>構成員別帰属</code>
+<code>PE有無</code>
+<code>条約届出書類</code>
+  を個別に立証する、
+  という順序で考えるべきだということ</li>
+</ul>
+<h2>2026-04-22 16:28 JST 追加メモ</h2>
+<ul>
+<li><code>data.gov.sg</code>
+  current open-data layer
+  では、
+  <code>JIF JAPAN PARTNERS LP</code>
+<code>GLP JAPAN INCOME FUND LP</code>
+<code>JIF JAPAN PARTNERS GP</code>
+<code>GLP JAPAN INCOME FUND GP</code>
+<code>GLP JIF SMA FUND I LP</code>
+<code>GLP JIF SMA FUND I GP</code>
+  がいずれも
+  <code>COLLYER QUAY / 049315</code>
+  に並ぶ</li>
+<li>したがって、
+  <code>8 Marina View</code>
+  は
+  historical / registry-derived layer
+  としては依然有用だが、
+  current official layer
+  としては
+  <code>Collyer Quay</code>
+  を優先すべき</li>
+<li><code>qii_01_b</code>
+  の extracted text
+  では、
+  <code>JIF Japan Partners GP, Pte. Ltd.</code>
+  に
+  <code>10 Collyer Quay, #34-01, Ocean Financial Centre, Singapore</code>
+  が確認できる</li>
+<li><code>ACRA</code>
+  official page
+  では、
+  <code>Business Profile</code>
+  が
+  <code>position holders</code>
+  と
+  <code>business owners or partners</code>
+  を含むと明示される</li>
+<li>さらに
+  <code>Business Profile Data API</code>
+  は
+  <code>18 November 2025</code>
+  開始と明示される</li>
+<li>このため、
+  <code>JIF LP member roster</code>
+  の frontier は
+  generic web search
+  ではなく、
+  <code>Business Profile / Business Profile Data API</code>
+  という
+  paid-primary route
+  の問題に変わった</li>
+<li><code>ACRA</code>
+  の
+  <code>Business Profile - LP v13</code>
+  sample
+  では、
+  <code>PARTICULARS OF PARTNERS</code>
+<code>GENERAL PARTNER</code>
+<code>LIMITED PARTNER</code>
+<code>PARTICULARS OF MANAGER(S)</code>
+<code>WITHDRAWN PARTNERS</code>
+  が確認でき、
+  欲しい member layer が
+  <code>Business Profile</code>
+  に実在することを official に固定できた</li>
+<li><code>Provision of Free Business Profiles</code>
+  では、
+  free Business Profile
+  は
+  <code>eligible transaction</code>
+  を filed した当事者だけが、
+  approval 後
+  <code>15 minutes</code>
+  から
+  <code>60 days</code>
+  の window
+  で取得できると明示される</li>
+<li>したがって、
+  今回の第三者調査で
+  <code>JIF LP</code>
+  の
+  <code>member roster</code>
+  を取る practical route は
+  <code>paid Bizfile purchase</code>
+  または
+  <code>Business Profile Data API</code>
+  に絞られる</li>
+</ul>
+<h2>2026-04-22 18:07 JST 追加メモ</h2>
+<ul>
+<li>日本法 layer を切り分けると、
+  <code>合同会社</code>
+  は
+  <code>会社法上の持分会社</code>
+  かつ
+  <code>法人税法上は普通法人</code>
+  とみるのが出発点になる</li>
+<li><code>匿名組合</code>
+  は
+  GK そのものを透明体化する制度ではなく、
+  <code>GK に帰属した収益を誰にどう分配するか</code>
+  の
+  <code>源泉税・条約レイヤー</code>
+  として扱う方が自然</li>
+<li><code>TMK</code>
+  は
+  <code>支払配当 = 常に pass-through</code>
+  ではなく、
+  <code>措法67条の14</code>
+  の
+  要件と
+  NTA
+  <code>10_08</code>
+  の
+  <code>90パーセントテスト</code>
+<code>所得金額 ceiling</code>
+  を満たしたときだけ
+  導管課税へ寄る</li>
+<li><code>一般社団法人</code>
+  は
+  <code>社員に利益を戻さない orphan / control layer</code>
+  としては使いやすいが、
+  税務上は
+  <code>非営利型法人なら収益事業課税</code>
+<code>それ以外は普通法人</code>
+  に分かれ、
+  さらに
+  <code>相続税法66条の2</code>
+  の
+  特定一般社団法人等リスクを持つ</li>
+<li>よって、
+  GRAVITY スキームを日本税務で読む最小マップは
+  <code>GK = 普通法人</code>
+<code>TK = 源泉税・条約</code>
+<code>TMK = 導管課税の可否</code>
+<code>一般社団法人 = orphan だが税務は別判定</code>
+  であり、
+  以後の
+  <code>JIF LP treaty claimant</code>
+  や
+  <code>Gravity -&gt; Gravity特定目的会社</code>
+  の
+  判定もこの4層の上に載せるべき</li>
+</ul>
+<h2>2026-04-22 18:24 JST 精度監査メモ</h2>
+<ul>
+<li>一般社団法人の <code>分配禁止</code>
+  は、
+  <code>一般法人法11条2項</code>
+  の
+  <code>定款で分配権を与えても無効</code>
+  と、
+  <code>35条3項</code>
+  の
+  <code>社員総会も剰余金分配決議ができない</code>
+  を併せて押さえるのが正確</li>
+<li><code>相続税法66条の2</code>
+  は、
+  <code>純資産額 ÷ (同族理事数 + 1)</code>
+  を基礎とする遺贈みなし課税であり、
+  公益法人や
+  <code>法人税法2条9号の2</code>
+  の
+  <code>非営利型法人</code>
+  は
+  <code>一般社団法人等</code>
+  から除外される</li>
+<li><code>措法67条の14</code>
+  の cap は法文上は
+  <code>政令で定める所得金額</code>
+  であり、
+  <code>90% テスト</code>
+  や
+  <code>所得金額合計との比較</code>
+  は
+  <code>NTA 10_08</code>
+  が
+  実務計算用に見せているレイヤーとして区別して書くべき</li>
+</ul>
+<h2>2026-04-22 18:50 JST 法律・通達カバレッジ監査メモ</h2>
+<ul>
+<li>監査開始時点では、
+  <code>所得税法</code>
+<code>No.2885</code>
+<code>No.2889</code>
+<code>36・37共-21</code>
+<code>所得税法施行令</code>
+<code>租税特別措置法施行令</code>
+<code>相続税法施行令</code>
+<code>日シンガポール条約 official pack</code>
+  が
+  official layer の重要穴だった</li>
+<li>今回の追加取得により、
+  <code>匿名組合利益分配</code>
+<code>源泉税</code>
+<code>条約届出</code>
+<code>TMK導管課税</code>
+<code>一般社団法人</code>
+  の
+  中核法令・主要通達は
+  <code>ほぼ揃った</code>
+  と言ってよい</li>
+<li>ただし、
+  <code>全部取得済み</code>
+  と strict に言うには、
+  <code>法人税基本通達 raw exact clause</code>、
+  <code>措置法関係通達67条の14 direct circular raw</code>、
+  必要に応じた
+  <code>租税特別措置法施行規則</code>
+  の固定がなお補強余地として残る</li>
+<li><code>法人税基本通達</code>
+  については、
+  <code>2009-12-28</code>
+  の
+  official explanation pages
+  まで確保できたので、
+  一般社団法人 layer の支えは一段強くなった</li>
+<li><code>67条の14</code>
+  については、
+  guessed URL probe は
+  <code>指定されたページを表示できませんでした</code>
+  となり、
+  現時点では
+  <code>法文 + 政令 + current form guidance</code>
+  までが
+  public official surface と整理するのが妥当</li>
+<li>よって現時点の最も正確な評価は、
+  <code>主要該当分はほぼ取得済み</code>
+<code>strict completeness は未達</code>
+  である</li>
+</ul>
+<h2>2026-04-22 20:10 JST named entity tax map メモ</h2>
+<ul>
+<li><code>Gravity一般社団法人</code>
+  は、
+  <code>Gravity合同会社</code>
+  と
+  <code>Gravity AH合同会社</code>
+  の
+  代表社員として official に現れ、
+  現時点では
+  <code>orphan / governance layer</code>
+  とみるのが最も自然</li>
+<li><code>Gravity合同会社</code>
+  は
+  <code>TK営業者</code>
+  かつ
+  <code>TMK持分 route</code>
+  の
+  国内GKであり、
+  <code>匿名組合利益分配 -&gt; 20.42% baseline</code>
+  の
+  日本側源泉税論点の中心</li>
+<li><code>Gravity AH合同会社</code>
+  は
+  <code>TK営業者</code>
+  かつ
+  <code>不動産信託受益権 route</code>
+  の
+  国内GKであり、
+  <code>Gravity合同会社</code>
+  とは
+  下流資産レーンが違う</li>
+<li><code>JCR</code>
+  により、
+  <code>Gravity AH合同会社</code>
+  は
+  <code>GLPグループが20年8月に設立し運用を開始したオープンエンド型私募ファンド</code>
+  の
+  <code>投資物件保有・資金調達ビークル</code>
+  と
+  かなり直接に説明できる</li>
+<li><code>Japan Income Fund合同会社</code>
+  は
+  <code>ジャパンインカムファンド投資事業有限責任組合</code>
+  を扱い、
+  <code>匿名組合の営業者</code>
+  へ入る
+  <code>国内LPS aggregation hub</code>
+  と読むのが自然であり、
+  <code>Gravity匿名組合利益分配</code>
+  の
+  <code>直後受領者</code>
+  候補としては
+  一段弱い</li>
+<li><code>Japan DH4合同会社</code>
+  は
+  <code>海外リミテッドパートナーシップ</code>
+  を通じて日本物流へ入る
+  <code>overseas LP bridge</code>
+  であり、
+  <code>JIF Japan Partners LP</code>
+  の
+  直上候補としては
+  <code>Japan Income Fund</code>
+  より強い</li>
+<li>したがって、
+  current best named-entity structure は、
+  <code>Gravity一般社団法人</code>
+<code>-&gt; Gravity合同会社 / Gravity AH合同会社</code>
+<code>-&gt; Gravity特定目的会社 or trust beneficiary right route</code>
+  と、
+  <code>Japan DH4 -&gt; JIF LP -&gt; Gravity</code>
+  という
+  二本の読みを重ねる形になる</li>
+</ul>
+<h2>2026-04-23 06:12 JST public master report メモ</h2>
+<ul>
+<li><code>GRAVITY_包括研究レポート_20260423</code>
+  を
+  <code>jplawdb4/その他</code>
+  に public package として生成した</li>
+<li>本体は
+  <code>10万字超</code>
+  の
+  master report
+  であり、
+  既存の
+  <code>GRAVITY_構造図解アトラス_20260422</code>
+  の
+  <code>sources/official</code>
+  を一次ソースの anchor layer として参照する</li>
+<li>現時点の public delivery は、
+  <code>atlas</code>
+  と
+  <code>master report</code>
+  の
+  sibling package 化により、
+  <code>図解俯瞰</code>
+  と
+  <code>長文 doctrine / evidence</code>
+  を分離しつつ往復できる構成になった</li>
+<li>publication 後の fallback として、
+  <code>GitHub Pages</code>
+  が
+  lag / 404
+  の場合は
+  <code>GitHub blob</code>
+  URL を併記するのが安全</li>
+</ul></div>
+</section>
+<div class="footer">
+<p>本レポートは、公開一次資料と既存 workspace 成果物を統合した研究版です。文字数ベースの包括性を優先しており、最終結論を超えて、そこに至る過程と保留点も明示しています。</p>
+</div>
+</div>
+</body>
+</html>
