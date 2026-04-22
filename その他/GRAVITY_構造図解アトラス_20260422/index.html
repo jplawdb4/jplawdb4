@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GRAVITY 構造図解アトラス 2026-04-22</title>
+<style>
+  :root {
+    --bg: #f5f7fb;
+    --paper: #ffffff;
+    --ink: #172033;
+    --muted: #5c677d;
+    --line: #d8e0ec;
+    --navy: #1f3b77;
+    --blue: #2457d6;
+    --green: #0f766e;
+    --amber: #b45309;
+    --rose: #9f1239;
+    --shadow: 0 18px 44px rgba(16, 24, 40, 0.08);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background:
+      radial-gradient(circle at 0% 0%, rgba(36,87,214,0.08), transparent 30%),
+      radial-gradient(circle at 100% 10%, rgba(15,118,110,0.08), transparent 24%),
+      linear-gradient(180deg, #f8fbff 0%, var(--bg) 100%);
+    color: var(--ink);
+    font-family: "Avenir Next", "Hiragino Sans", "Yu Gothic", sans-serif;
+    line-height: 1.75;
+  }
+
+  .shell {
+    width: 100%;
+    margin: 0;
+    padding: 32px 24px 88px;
+  }
+
+  .hero,
+  .summary-grid,
+  .toc,
+  .source-box,
+  .atlas-section,
+  .footer-note {
+    width: min(100%, 1120px);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero {
+    display: grid;
+    grid-template-columns: 1.25fr 0.75fr;
+    gap: 28px;
+    align-items: end;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .overline {
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--blue);
+    font-weight: 800;
+  }
+
+  h1 {
+    margin: 12px 0 14px;
+    font-size: clamp(2.8rem, 6vw, 5.8rem);
+    line-height: 0.94;
+    letter-spacing: -0.05em;
+    color: var(--navy);
+    font-family: "Iowan Old Style", "Baskerville", "Yu Mincho", serif;
+  }
+
+  .standfirst {
+    max-width: 900px;
+    font-size: 1.04rem;
+    color: var(--muted);
+  }
+
+  .meta {
+    display: grid;
+    gap: 12px;
+  }
+
+  .chip {
+    display: inline-block;
+    padding: 9px 12px;
+    border: 1px solid var(--line);
+    background: rgba(255,255,255,0.72);
+    font-size: 0.84rem;
+    letter-spacing: 0.03em;
+  }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 26px;
+  }
+
+  .summary-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    padding: 16px;
+  }
+
+  .summary-card h2 {
+    margin: 0 0 8px;
+    font-size: 0.88rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--blue);
+  }
+
+  .summary-card p {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  .toc {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 16px;
+    margin: 30px auto 24px;
+    width: min(100%, 920px);
+    padding: 18px 20px;
+    border: 1px solid var(--line);
+    background: rgba(255,255,255,0.68);
+  }
+
+  .toc a {
+    display: block;
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 0.92rem;
+  }
+
+  .source-box {
+    margin: 0 auto 24px;
+    width: min(100%, 920px);
+    padding: 18px 20px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+  }
+
+  .source-box h2 {
+    margin: 0 0 10px;
+    font-size: 0.98rem;
+    color: var(--navy);
+  }
+
+  .source-box ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 8px;
+  }
+
+  .source-box li {
+    margin: 0;
+  }
+
+  .source-box a {
+    display: block;
+    word-break: break-word;
+  }
+
+  .atlas-section {
+    padding: 28px 0 36px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .section-label {
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--amber);
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+
+  .atlas-section h2 {
+    margin: 0 0 10px;
+    font-size: clamp(1.8rem, 3.2vw, 3rem);
+    line-height: 1.03;
+    letter-spacing: -0.04em;
+    color: var(--navy);
+    font-family: "Iowan Old Style", "Baskerville", "Yu Mincho", serif;
+  }
+
+  .lead {
+    margin: 0 0 18px;
+    max-width: 920px;
+    color: var(--muted);
+    font-size: 1rem;
+  }
+
+  .figure {
+    margin: 0 auto 18px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    padding: 14px;
+    width: 100%;
+    max-width: 1120px;
+  }
+
+  .figure img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: contain;
+    display: block;
+    background: #f8f6f1;
+    cursor: zoom-in;
+  }
+
+  body.lightbox-open {
+    overflow: hidden;
+  }
+
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+    background: rgba(12, 18, 32, 0.86);
+    backdrop-filter: blur(6px);
+    z-index: 9999;
+  }
+
+  .lightbox.is-open {
+    display: flex;
+  }
+
+  .lightbox-panel {
+    position: relative;
+    width: min(96vw, 1800px);
+    max-height: 92vh;
+    padding: 16px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.96);
+    box-shadow: 0 28px 72px rgba(0,0,0,0.28);
+  }
+
+  .lightbox-image {
+    display: block;
+    width: 100%;
+    max-height: calc(92vh - 32px);
+    object-fit: contain;
+    background: #fff;
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(23, 32, 51, 0.14);
+    border-radius: 999px;
+    background: rgba(255,255,255,0.92);
+    color: var(--ink);
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .lightbox-close:hover {
+    background: #fff;
+  }
+
+  .reading-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+
+  .reading-card {
+    background: rgba(255,255,255,0.72);
+    border: 1px solid var(--line);
+    padding: 14px 16px;
+  }
+
+  .reading-card h3 {
+    margin: 0 0 8px;
+    font-size: 0.84rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--blue);
+  }
+
+  .reading-card p {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  .commentary {
+    max-width: 1120px;
+    margin: 22px auto 0;
+    padding: 22px 24px;
+    background: rgba(255,255,255,0.78);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+  }
+
+  .commentary h3 {
+    margin: 0 0 12px;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--green);
+  }
+
+  .commentary p {
+    margin: 0 0 14px;
+    font-size: 0.97rem;
+    color: var(--ink);
+  }
+
+  .commentary p:last-child {
+    margin-bottom: 0;
+  }
+
+  .source-links {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--line);
+    font-size: 0.92rem;
+    color: var(--muted);
+  }
+
+  .source-links strong {
+    color: var(--navy);
+  }
+
+  .footer-note {
+    margin-top: 32px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+
+  a { color: var(--blue); text-underline-offset: 0.16em; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: rgba(31,59,119,0.06); padding: 0.12em 0.32em; }
+
+  @media (max-width: 1040px) {
+    .hero, .summary-grid, .reading-grid { grid-template-columns: 1fr; }
+    .toc { grid-template-columns: 1fr; }
+    .figure { width: 100%; max-width: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="shell">
+    <header class="hero">
+      <div>
+        <div class="overline">GRAVITY Visual Atlas</div>
+        <h1>GRAVITY 構造図解アトラス</h1>
+        <p class="standfirst">
+          これまで <code>/mnt/d/Users/PC/Desktop/tax/gravity_tk_tmk_project</code> と
+          <code>/mnt/d/Users/PC/Desktop/その他/GRAVITY_匿名組合源泉税条約恩典メモ_20260422</code>
+          に蓄積した調査資産を、<strong>確定した事実</strong>、<strong>高確度の推定</strong>、
+          <strong>まだ未立証の frontier</strong> に切り分けながら再編した包括版アトラス。
+          Ares / GLP 系 sponsor family、国内LPS、foreign sleeve、GK / TK、TMK、物流資産、
+          そして源泉税・条約論点までを、1枚ずつ焦点をずらしながら整理する。
+        </p>
+      </div>
+      <div class="meta">
+        <div class="chip">作成日: 2026-04-22</div>
+        <div class="chip">形式: 画像10枚 + 体系化HTML</div>
+        <div class="chip">対象: GRAVITY合同会社 / JIF / Japan DH4 / TMK / 源泉税</div>
+        <div class="chip">狙い: 全体構造の把握から claimant frontier までを一気に俯瞰</div>
+      </div>
+    </header>
+
+    <section class="summary-grid">
+      <article class="summary-card">
+        <h2>Core Read</h2>
+        <p>公開資料ベースの最良読解は、<strong>Japan DH4系資金 → JIF Japan Partners LP → Gravity合同会社側 → Gravity特定目的会社 / 物流資産ライン</strong>。ただし一部はなお高確度推定にとどまる。</p>
+      </article>
+      <article class="summary-card">
+        <h2>Gravity</h2>
+        <p><strong>Gravity合同会社</strong> は、公開資料の読みでは日本側の匿名組合営業者であり、同時に下流TMKへの出資ハブとして機能する中核GKとみるのが自然。</p>
+      </article>
+      <article class="summary-card">
+        <h2>Tax Focus</h2>
+        <p>税務の本丸は <strong>Gravity合同会社からのTK分配金</strong> と <strong>誰を treaty claimant とみるか</strong>。条約届出がなければ <strong>20.42%</strong> が出発点になる。</p>
+      </article>
+      <article class="summary-card">
+        <h2>Frontier</h2>
+        <p>最後の詰めどころは、<strong>JIF Japan Partners LP の member roster / treaty claimant</strong> と <strong>Gravity合同会社 → Gravity特定目的会社</strong> を直接つなぐ資料。</p>
+      </article>
+    </section>
+
+    <nav class="toc">
+      <a href="#s1">01. 全体ストラクチャー俯瞰</a>
+      <a href="#s2">02. 上流 sponsor / fund family</a>
+      <a href="#s3">03. 投資資金の本線</a>
+      <a href="#s4">04. Gravity合同会社の本質</a>
+      <a href="#s5">05. 下流TMK・物流資産ライン</a>
+      <a href="#s6">06. 投資資金流入と収益還流</a>
+      <a href="#s7">07. GK / TK / TMK / 一般社団法人</a>
+      <a href="#s8">08. 源泉税・条約恩典・claimant</a>
+      <a href="#s9">09. 証拠マップ</a>
+      <a href="#s10">10. 実務含意と frontier</a>
+    </nav>
+
+    <section class="source-box">
+      <h2>ベースにした主要ローカル資産</h2>
+      <ul>
+        <li><a href="reports/gravity_group_structure_deep_research_20260422.md">gravity_group_structure_deep_research_20260422.md</a></li>
+        <li><a href="reports/gravity_named_entities_tax_mapping_deep_research_20260422.md">gravity_named_entities_tax_mapping_deep_research_20260422.md</a></li>
+        <li><a href="reports/gravity_withholding_tax_and_treaty_benefit_deep_research_20260422.md">gravity_withholding_tax_and_treaty_benefit_deep_research_20260422.md</a></li>
+        <li><a href="reports/gravity_gk_tk_tmk_shadan_tax_deep_research_20260422.md">gravity_gk_tk_tmk_shadan_tax_deep_research_20260422.md</a></li>
+        <li><a href="reports/gravity_godo_current_status_master_report_20260422.html">gravity_godo_current_status_master_report_20260422.html</a></li>
+      </ul>
+    </section>
+
+    <main>
+      <section class="atlas-section" id="s1">
+        <div class="section-label">Figure 01</div>
+        <h2>GRAVITY案件 全体ストラクチャー俯瞰</h2>
+        <p class="lead">本件を単線のSPC図としてではなく、<strong>スポンサー群 / 国内LPS / 外国LPスリーブ / 日本側GK・TK / 下流TMK・資産</strong> の多層構造として捉えるための起点図。</p>
+        <figure class="figure"><img src="gravity_atlas_01_overview_hq_uniform_20260422.png" alt="GRAVITY案件 全体ストラクチャー俯瞰"></figure>
+        <div class="reading-grid">
+          <article class="reading-card"><h3>What</h3><p>公開資料から見えているレイヤー構造と、そこに重なる主線候補を1枚に集約する。</p></article>
+          <article class="reading-card"><h3>Why</h3><p>後続の税務図や証拠図を読む前提として、確定した層と推定の層を混ぜないため。</p></article>
+          <article class="reading-card"><h3>Key Read</h3><p>いちばん筋の通る読みは <strong>Japan DH4系 → JIF LP → Gravity合同会社 → Gravity特定目的会社 / 物流資産</strong> だが、最後の矢印にはなお未立証部分が残る。</p></article>
+        </div>
+        <div class="commentary">
+          <h3>Detailed Commentary</h3>
+          <p>この1枚目は、個々のプレイヤーを細かく見る前に、まず「GRAVITY案件はどのレイヤーが重なってできているのか」を視覚的に固定するための起点図です。ここで最も重要なのは、本件を単純な <code>GK → TMK → 物流施設</code> の一直線の箱として読まないことです。実際には、最上流に sponsor family と strategy line があり、その下に domestic LPS があり、さらに foreign sleeve がかぶさり、その先で国内の GK/TK operator が動き、最後に TMK や信託受益権ルートを通じて real assets に到達します。つまり、法的な器・資金の束ね方・税務の判断単位が、1つの箱にまとまっているのではなく、層ごとに分かれているのが本件の本質です。ここを見誤ると、どの主体が sponsor-side family vehicle なのか、どの主体が日本側の課税起点なのか、どの主体が資産保有者として重要なのかが一気に混線します。</p>
+          <p>また、この図であえて <code>Gravity AH合同会社</code> を主線から外して別レーンで置いているのは、同じ八重洲クラスターに属していても、資産への接続の仕方が違うからです。<code>Gravity合同会社</code> は TMK 持分ルートの中心にいる一方、<code>Gravity AH合同会社</code> は信託受益権ルート側の別箱として理解した方が整合します。さらに、<code>JDP3 / JDP4 / Sakai</code> も、主線の直結先というよりは比較用・案件別スリーブの群として読む方が自然です。この全体俯瞰図の役割は、後続の9枚を読むときの地図を先に渡すことにあります。どの図も結局は「この多層構造のどこを拡大しているのか」を説明しているので、最初にこのレイヤー感覚を身体化しておくと、後続の税務図や源泉税図の理解が格段に安定します。</p>
+          <p class="source-links"><strong>一次ソース:</strong> <a href="sources/official/FSA/tokurei_011_refetch_20260422.pdf">FSA tokurei 011</a>、<a href="sources/official/FSA/tokurei_012.pdf">FSA tokurei 012</a>、<a href="sources/official/FSA/tokutei_todokede_refetch_20260422.pdf">FSA 特定目的会社届出一覧</a></p>
+        </div>
+      </section>
+
+      <section class="atlas-section" id="s2">
+        <div class="section-label">Figure 02</div>
+        <h2>Ares / GLP / 日本GLP / JIF の上流構造</h2>
+        <p class="lead">スポンサー・日本実行レイヤー・strategy line・foreign sleeve family を切り分け、JIF vehicle 群を同一familyの中で並べ直す。</p>
+        <figure class="figure"><img src="gravity_atlas_02_upstream_family_hq_uniform_20260422.png" alt="上流 sponsor / fund family"></figure>
+        <div class="reading-grid">
+          <article class="reading-card"><h3>What</h3><p>JIF Japan Partners LP と GLP Japan Income Fund LP を安易に同一視せず、same-family / parallel sleeve として扱う。</p></article>
+          <article class="reading-card"><h3>Why</h3><p>foreign sleeve の箱を誤ると、条約 claimant と上流投資家の整理が崩れるため。</p></article>
+          <article class="reading-card"><h3>Key Read</h3><p>Singapore 側 vehicle 群は sponsor family の国際投資受け皿として理解するのが最も自然。</p></article>
+        </div>
+        <div class="commentary">
+          <h3>Detailed Commentary</h3>
+          <p>2枚目は、GRAVITY案件を「日本側の箱」だけで読んだときに見落としやすい、上流 sponsor family の構造を整理する図です。本件では <code>Ares</code>、<code>GLP platform</code>、<code>日本GLP</code>、<code>GLP Japan Income Fund</code>、さらにそれにぶら下がる複数の LP / GP vehicle が登場しますが、ここでの注意点は、似た名前の vehicle を短絡的に同一視しないことです。たとえば <code>JIF Japan Partners LP</code> と <code>GLP Japan Income Fund LP</code> は、同じ family の中にいる近い箱である可能性は高いものの、直ちに「同一主体」と断定するのは危険です。むしろ sponsor family の中で役割分担された parallel sleeve、あるいは investor type ごとに分けられた別箱として読む方が、今ある一次資料には整合的です。</p>
+          <p>この図が税務上も重要なのは、上流 family の切り方がそのまま treaty claimant 問題に接続するからです。もし foreign sleeve を誤認すると、「誰が実際に日本側からの分配の直後受領者なのか」「誰を居住者として条約判定すべきか」「entity claimant なのか look-through なのか」という論点が一段ずつずれてしまいます。本図では、Ares / GLP / 日本GLP を sponsor / platform / Japan execution layer として整理し、その下に strategy line と multiple sleeves を並べることで、「上流は一本のファンドではなく、family 構造そのものとして理解すべきだ」という感覚を定着させる狙いがあります。言い換えれば、この図は案件理解のための“組織図”であると同時に、後の源泉税・条約論点の誤射を防ぐための“前提条件整理図”でもあります。</p>
+          <p class="source-links"><strong>一次ソース:</strong> <a href="sources/official/FSA/qii_01_b.pdf">FSA QII 01_b</a>、<a href="sources/official/Ares/a2025q4exhibit211.htm">Ares Exhibit 21.1</a>、<a href="sources/official/SGX/GLP_Pte_FY2023_FS.pdf">SGX FY2023 Financial Statements</a>、<a href="sources/official/GLP/glp_jif_launch_article.html">GLP JIF launch article</a></p>
+        </div>
+      </section>
+
+      <section class="atlas-section" id="s3">
+        <div class="section-label">Figure 03</div>
+        <h2>投資資金の本線</h2>
+        <p class="lead">法的な直前相手と経済的な上流を混同せず、上流投資資金がどの順番で下流資産へ落ちていくかを一本線で示す。</p>
+        <figure class="figure"><img src="gravity_atlas_03_investment_line_hq_uniform_20260422.png" alt="投資資金の本線"></figure>
+        <div class="reading-grid">
+          <article class="reading-card"><h3>What</h3><p>JIF Japan Partners LP を Gravity 側の直前レイヤー、Japan DH4 をその上流LPSとして描く。</p></article>
+          <article class="reading-card"><h3>Why</h3><p>直前受領者と上流資金束ね層を取り違えると、分配と条約の論点が崩れる。</p></article>
+          <article class="reading-card"><h3>Key Read</h3><p>本線は <strong>上流投資家 → Japan DH4 → JIF LP → Gravity合同会社匿名組合 → Gravity合同会社 → Gravity特定目的会社 → 物流施設</strong>。</p></article>
+        </div>
+        <div class="commentary">
+          <h3>Detailed Commentary</h3>
+          <p>3枚目は、これまでの調査で最も重要な「主線」の仮説を一本の矢印に落とし込んだ図です。ここで押さえたいのは、<code>Japan DH4</code> と <code>JIF Japan Partners LP</code> の位置関係です。会話だけで追っていると、この2つがしばしば同じ高さに見えてしまいますが、構造上はそうではありません。現時点の最良読解では、<code>Japan DH4 投資事業有限責任組合</code> は国内LPSとして foreign sleeve に資金を渡す上流層に位置し、<code>JIF Japan Partners LP</code> がそのさらに下で、日本側 <code>Tokumei Kumiai Operator</code> に入る直前レイヤーとして機能している可能性が最も高い、というのが整理の芯です。したがって、<code>JIF LP</code> を Gravity 側の“直前相手”として置き、<code>Japan DH4</code> をその上の資金束ね層として置くことには、見た目以上に大きな意味があります。</p>
+          <p>この違いは、後で出てくる源泉税と treaty claimant の論点に直結します。もし <code>Japan DH4</code> を直後受領者のように描いてしまうと、<code>Gravity合同会社</code> から誰に分配金が支払われるのか、誰を相手に届出書や条約判定を考えるべきかがずれてしまいます。逆に、この図のように <code>上流投資家 → Japan DH4 → JIF LP → Gravity合同会社匿名組合 → Gravity合同会社 → TMK → 物流施設</code> と順に落としていけば、「経済的な上流」と「法的に直前のカウンターパーティ」を分けて読むことができます。本図は単なる資金の流れ図ではなく、後の税務分析に耐えるように関係の深さを調整した“優先順位付きの主線図”です。だからこそ、ここでの線の引き方は、後ろの図の説得力を支える土台になります。</p>
+          <p class="source-links"><strong>一次ソース:</strong> <a href="sources/official/FSA/tokurei_012.pdf">FSA tokurei 012</a>、<a href="sources/official/FSA/qii_01_b.pdf">FSA QII 01_b</a>、<a href="sources/official/Singapore_OpenData/JIF_Japan_Partners_LP_current_open_data_20260422.json">Singapore Open Data: JIF Japan Partners LP</a></p>
+        </div>
+      </section>
+
+      <section class="atlas-section" id="s4">
+        <div class="section-label">Figure 04</div>
+        <h2>Gravity合同会社の本質</h2>
+        <p class="lead">上では匿名組合営業者、下ではTMK持分引受主体という二重機能を持つため、単なるGKではなく日本側の中心SPCとして読む必要がある。</p>
+        <figure class="figure"><img src="gravity_atlas_04_gravity_essence_hq_uniform_20260422.png" alt="Gravity合同会社の本質"></figure>
+        <div class="reading-grid">
+          <article class="reading-card"><h3>Upper Face</h3><p>匿名組合営業者、資金受入主体、TK分配金の支払者としての顔。</p></article>
+          <article class="reading-card"><h3>Lower Face</h3><p>TMKの特定出資・優先出資の引受主体、下流投資ハブとしての顔。</p></article>
+          <article class="reading-card"><h3>Key Read</h3><p><strong>事業者であり投資家でもある</strong> という二重構造が、本件の読み筋を決める。</p></article>
+        </div>
+        <div class="commentary">
+          <h3>Detailed Commentary</h3>
+          <p>4枚目は、GRAVITY案件全体の中でもっとも重要な主体である <code>Gravity合同会社</code> の“本質”だけを抜き出した図です。本件を複雑に感じさせる最大の原因は、<code>Gravity合同会社</code> が一つの箱で二つの顔を持っていることにあります。上の契約レイヤーでは、同社は匿名組合営業者として資金を受け入れ、匿名組合員に対する分配の支払者になります。他方、下の投資レイヤーでは、TMKの特定出資・優先出資を引き受け、物流施設ポートフォリオへ間接投資する主体として振る舞います。つまり、法的には事業者、経済的には投資ハブという、役割の切り替えを1つの合同会社が担っているわけです。ここを理解せずに「単なるGK」とだけ読むと、なぜ源泉税論点と下流資産論点が同じ箱に集まるのかが見えません。</p>
+          <p>この図の狙いは、<code>Gravity合同会社</code> を「資金の受け皿」と「下流投資の接続点」という二つの視点から同時に読ませることにあります。税務上もこの二重性が重要で、上の顔の局面では <code>TK分配金</code> と国内源泉所得、源泉徴収義務、条約届出が問題になりますが、下の顔の局面では TMK との接続、資産キャッシュフローの吸い上げ、導管課税に近づくかどうか、といった別の論点が立ち上がります。つまり、本件の多くの複雑さは、プレイヤーが多いからではなく、「一つの箱に違う種類の論点が重なっている」から生じています。この図を真ん中に置くと、以後の図がすべて <code>Gravity合同会社</code> を中心に放射状に展開している理由も自然に理解できます。</p>
+          <p class="source-links"><strong>一次ソース:</strong> <a href="sources/official/FSA/tokurei_011_refetch_20260422.pdf">FSA tokurei 011</a>、<a href="sources/official/FSA/tokurei_012.pdf">FSA tokurei 012</a>、<a href="sources/official/FSA/tokutei_todokede_refetch_20260422.pdf">FSA 特定目的会社届出一覧</a></p>
+        </div>
+      </section>
+
+      <section class="atlas-section" id="s5">
+        <div class="section-label">Figure 05</div>
+        <h2>下流TMK・物流資産ライン</h2>
+        <p class="lead">主線は Gravity特定目的会社、補助候補は DH4 名義TMK群、別レーンとして Gravity AH の信託受益権ルートを切り分ける。</p>
+        <figure class="figure"><img src="gravity_atlas_05_downstream_tmk_assets_hq_uniform_20260422.png" alt="下流TMK・物流資産ライン"></figure>
+        <div class="reading-grid">
+          <article class="reading-card"><h3>Primary</h3><p><strong>Gravity特定目的会社</strong> が現時点での strongest direct-name candidate。</p></article>
+          <article class="reading-card"><h3>Parallel</h3><p>GLP Japan DH4特定目的会社 / GLP DH4 Exc特定目的会社 は parallel / additional candidate family。</p></article>
+          <article class="reading-card"><h3>Separate Lane</h3><p>Gravity AH合同会社は信託受益権ルートであり、Gravity合同会社の主線と混ぜない。</p></article>
+        </div>
+        <div class="commentary">
+          <h3>Detailed Commentary</h3>
+          <p>5枚目は、<code>Gravity合同会社</code> の下流に何がいるのか、どこまでを主線として描き、どこから先を補助候補として扱うべきかを整理するための図です。この領域は、上流の sponsor family よりもさらに誤読が起こりやすい箇所です。というのも、名称が近い TMK 群が複数あり、しかも公式資料と secondary trace を重ねないと線が見えてこないからです。現時点では、<code>Gravity特定目的会社</code> が下流TMK第一候補として最も強い位置にあります。名称の一致、八重洲クラスターとの整合、旧名称の改称痕跡などを踏まえると、主線としてここを置くのが一番自然です。一方で、<code>GLP Japan DH4特定目的会社</code> と <code>GLP DH4 Exc特定目的会社</code> も、別ラインの並行候補として無視できません。したがって、この図では主線と補助候補を同じ重みで描かず、読み手の視線がまず <code>Gravity特定目的会社</code> に落ちるように設計しています。</p>
+          <p>さらに重要なのは、<code>Gravity AH合同会社</code> のルートをここで明示的に別レーン化している点です。同じ八重洲クラスターに属するため、つい <code>Gravity合同会社</code> と下流を共有しているように見えますが、実際には AH 側は信託受益権ルートで理解した方が整合的です。つまり、「下流」と一言で言っても、TMK持分ラインと受益権ラインが同じ図に混ざると、構造の読み取りが一気に不鮮明になります。本図は、主線・parallel candidates・separate lane の三つを意識的に分けることで、どこが “かなり見えた構造” で、どこが “なお direct evidence を要する候補群” なのかを可視化しています。後で frontier を議論するとき、この区分がそのまま優先順位になります。</p>
+          <p class="source-links"><strong>一次ソース:</strong> <a href="sources/official/FSA/tokutei_todokede_refetch_20260422.pdf">FSA 特定目的会社届出一覧</a>、<a href="sources/official/GLPJREIT/glpjreit_2017_08_4asset_acquisition_notice.pdf">GLP J-REIT 2017取得開示</a>、<a href="sources/official/GLPJREIT/glpjreit_2020_11_asset_acquisition_notice.pdf">GLP J-REIT 2020取得開示</a>、<a href="sources/official/GLPJREIT/glpjreit_2021_05_asset_acquisition_notice.pdf">GLP J-REIT 2021-05開示</a>、<a href="sources/official/GLPJREIT/glpjreit_2021_06_asset_acquisition_notice.pdf">GLP J-REIT 2021-06開示</a></p>
+        </div>
+      </section>
+
+      <section class="atlas-section" id="s6">
+        <div class="section-label">Figure 06</div>
+        <h2>投資資金流入と収益還流の二本線</h2>
+        <p class="lead">片道ではなく、資金流入と収益還流の往復構造として読むことで、どこで税務論点が立つかが見える。</p>
+        <figure class="figure"><img src="gravity_atlas_06_inflow_outflow_hq_uniform_20260422.png" alt="投資資金流入と収益還流の二本線"></figure>
+        <div class="reading-grid">
+          <article class="reading-card"><h3>Inflow</h3><p>投資資金は上流から下流へ落ち、物流施設に接続する。</p></article>
+          <article class="reading-card"><h3>Return</h3><p>物流施設の賃料・売却益は TMK → Gravity合同会社 → JIF LP → 上流投資家へ戻る。</p></article>
+          <article class="reading-card"><h3>Key Read</h3><p>税務の主戦場は、下段の <strong>TK分配金</strong> とその claimant 判定にある。</p></article>
+        </div>
+        <div class="commentary">
+          <h3>Detailed Commentary</h3>
+          <p>6枚目は、GRAVITY案件を理解するうえで最も直感的でありながら、実務上もっとも重要な図です。なぜなら、本件を「片道の投資図」としてだけ見てしまうと、税務の論点がどこに立つかが見えなくなるからです。投資資金は、上流投資家から domestic LPS や foreign sleeve を通じて <code>Gravity合同会社</code> に入り、そこから TMK や物流資産へ落ちていきます。しかし案件はそこで終わりません。むしろ実務上重要なのは、物流施設で発生した賃料収入や売却益が、どのルートで上へ戻ってくるのかという “帰り道” の方です。TMK から分配され、<code>Gravity合同会社</code> に集まり、そこで TK 分配金という形になって <code>JIF Japan Partners LP</code> へ向かう。この戻り線の途中に、日本の源泉税や条約恩典主体の論点が立ち上がります。</p>
+          <p>この図で上下二本の線を分けているのは、見た目の整理だけが理由ではありません。投資資金の流入線と収益還流線は、法務上も税務上も違う意味を持つからです。流入線では「誰がどこへ投資したか」が主論点ですが、還流線では「誰がどの所得を受けるのか」「その支払は何に該当するのか」「日本はどこで課税権を持つのか」が問題になります。特に本件では、<code>JIF LP</code> が直後受領者なのか、さらにその上流構成員を見るべきなのか、という claimant 問題が、下段の還流線に集中しています。だからこそ、この図は “お金が往復している” という事実を見せるだけでなく、「実務で争点が生じるのは主に帰り道である」という感覚を固定するための図でもあります。</p>
+          <p class="source-links"><strong>一次ソース:</strong> <a href="sources/official/FSA/tokurei_012.pdf">FSA tokurei 012</a>、<a href="sources/official/FSA/tokutei_todokede_refetch_20260422.pdf">FSA 特定目的会社届出一覧</a>、<a href="sources/official/NTA/nta_2878_domestic_source_income_scope.html">NTA 2878</a>、<a href="sources/official/NTA/nta_2884_withholding_rates_nonresidents.html">NTA 2884</a></p>
+        </div>
+      </section>
+
+      <section class="atlas-section" id="s7">
+        <div class="section-label">Figure 07</div>
+        <h2>GK / TK / TMK / 一般社団法人の税務レイヤー</h2>
+        <p class="lead">同じ platform 内でも、GK・TK・TMK・一般社団法人は税務上まったく違うルールで読む必要がある。</p>
+        <figure class="figure"><img src="gravity_atlas_07_tax_layers_hq_uniform_20260422.png" alt="GK/TK/TMK/一般社団法人の税務レイヤー"></figure>
+        <div class="reading-grid">
+          <article class="reading-card"><h3>GK</h3><p>普通法人。Gravity合同会社、Gravity AH合同会社、Japan Income Fund合同会社などがここに入る。</p></article>
+          <article class="reading-card"><h3>TK / TMK</h3><p>TK は源泉税・条約レイヤー、TMK は導管課税に近づくかが争点。</p></article>
+          <article class="reading-card"><h3>一般社団法人</h3><p>orphan / governance layer として読むのが自然で、受益主体と短絡しない。</p></article>
+        </div>
+        <div class="commentary">
+          <h3>Detailed Commentary</h3>
+          <p>7枚目は、GRAVITY案件の「構造図」を、税務上のルールの違いに引き直した図です。ここでのポイントは、同じ sponsor family の内部にあり、見た目には似た箱に見えても、税務上の読み方は全く同じではないということです。<code>合同会社</code> は原則として普通法人であり、税務判断の単位になります。他方、<code>匿名組合</code> は法人格そのものではなく契約レイヤーであり、営業者から匿名組合員への利益分配が日本の源泉税の起点になる場所です。さらに <code>TMK</code> は、単なる下流保有箱ではなく、一定要件のもとで支払配当の損金算入を通じて導管課税に近づくという、きわめて特殊なルールを持ちます。そして <code>一般社団法人</code> は、しばしば orphan layer として設計上使われるものの、税務上自動的に軽いわけではなく、別途その法的性格に応じた読解が必要です。</p>
+          <p>この図が必要なのは、本件を「全体としてはパススルーっぽい」と感じた瞬間に、かえって箱ごとの差異を見落としやすくなるからです。実際、経済実態としては資金が上流から下流へ流れ、下流収益が上流へ戻るので、全体としては導管的に見えます。しかし、税務上はその途中のすべての箱が同じように透明ではありません。<code>GK</code> は普通法人、<code>TK</code> は契約レイヤー、<code>TMK</code> は導管に近づく特別ルールの箱、<code>一般社団法人</code> はガバナンス層。この区別を見失うと、「なぜ同じ案件の中で、源泉税、導管課税、orphan 論点が同時に立つのか」が分からなくなります。本図は、GRAVITY案件を“1つの案件”としてではなく、“異なる税務ルールの箱が接続された連鎖”として読むためのレンズを提供しています。</p>
+          <p class="source-links"><strong>一次ソース:</strong> <a href="sources/official/e-Gov/会社法.txt">e-Gov 会社法</a>、<a href="sources/official/e-Gov/商法_匿名組合関連.txt">e-Gov 商法（匿名組合関連）</a>、<a href="sources/official/e-Gov/資産流動化法.txt">e-Gov 資産流動化法</a>、<a href="sources/official/e-Gov/法人税法.txt">e-Gov 法人税法</a>、<a href="sources/official/e-Gov/相続税法.txt">e-Gov 相続税法</a>、<a href="sources/official/e-Gov/租税特別措置法.txt">e-Gov 租税特別措置法</a>、<a href="sources/official/e-Gov/一般社団法人及び一般財団法人に関する法律.txt">e-Gov 一般社団法人法</a>、<a href="sources/official/NTA/nta_general_association_corporate_tax_2014.pdf">NTA 一般社団法人等の法人税取扱い</a>、<a href="sources/official/NTA/nta_tmk_special_tax_filing_packet_10_08.pdf">NTA TMK申告様式説明資料</a></p>
+        </div>
+      </section>
+
+      <section class="atlas-section" id="s8">
+        <div class="section-label">Figure 08</div>
+        <h2>源泉税・条約恩典・treaty claimant の判断構造</h2>
+        <p class="lead">Gravity合同会社 → JIF Japan Partners LP の TK分配金について、国内法 baseline と treaty claimant の分岐を図式化する。</p>
+        <figure class="figure"><img src="gravity_atlas_08_withholding_treaty_hq_uniform_20260422.png" alt="源泉税・条約恩典・treaty claimant の判断構造"></figure>
+        <div class="reading-grid">
+          <article class="reading-card"><h3>Domestic Law</h3><p>国内法の出発点は 161条1項16号・212条、実務の安全側初期値は 20.42%。</p></article>
+          <article class="reading-card"><h3>Treaty</h3><p>条約は自動軽減ではなく、所得類型・届出・claimant 判定・様式16の組合せで決まる。</p></article>
+          <article class="reading-card"><h3>Key Read</h3><p>本件の最大 tax frontier は <strong>JIF LP 自体か、構成員 look-through か</strong> である。</p></article>
+        </div>
+        <div class="commentary">
+          <h3>Detailed Commentary</h3>
+          <p>8枚目は、ここまでの構造理解を税務判断フローに変換した図です。本件の源泉税論点は、一見すると「税率はいくつか」という単純な問題に見えますが、実際には段階的な判断の積み重ねです。まず国内法の出発点として、<code>Gravity合同会社匿名組合</code> の利益分配が <code>所得税法161条1項16号</code> の国内源泉所得に当たり、支払先が非居住者等であれば <code>212条</code> によって源泉徴収義務が立つ、という土台があります。この時点では安全側の初期値は 20.42% です。しかし、それで終わりではなく、次に租税条約の適用可能性、当該所得の条約上の所得類型、届出書や様式16の有無、さらに誰が treaty claimant なのかというレイヤーが積み重なります。つまり、本件の税務は「国内法の起点は強く見えているが、条約適用の出口がまだ閉じていない」という構造です。</p>
+          <p>この図で最も強調したいのは、<code>JIF Japan Partners LP</code> が pass-through 的に扱われる可能性があるからといって、自動的に条約恩典が与えられるわけではない、という点です。むしろ問題はそこから先で、「LP 自体を claimant とみるのか」「構成員ごとに look-through して判定するのか」が本件最大の frontier になります。したがって、図の中心に置いた判断フローは、単なる学説整理ではなく、<code>Gravity合同会社</code> が実務でどう動くべきかという手順を表しています。すなわち、まず国内法どおりに源泉を考え、そこから条約軽減の条件を一つずつ崩していく。ここで必要になる資料が member roster、Business Profile、様式16、条約届出書です。本図は、構造理解と税務処理の橋渡しをする“判断の地図”として読むのが正しいです。</p>
+          <p class="source-links"><strong>一次ソース:</strong> <a href="sources/official/NTA/nta_2878_domestic_source_income_scope.html">NTA 2878</a>、<a href="sources/official/NTA/nta_2884_withholding_rates_nonresidents.html">NTA 2884</a>、<a href="sources/official/NTA/nta_2888_treaty_notification_filing.html">NTA 2888</a>、<a href="sources/official/NTA/nta_a3_13_form_guidance.html">NTA A3-13</a>、<a href="sources/official/NTA/nta_a3_4_form_guidance.html">NTA A3-4</a>、<a href="sources/official/NTA/nta_a3_18_form_guidance.html">NTA A3-18</a>、<a href="sources/official/NTA/nta_5335_uk_treaty_hybrid_entity_faq.pdf">NTA 5335</a>、<a href="sources/official/NTA/nta_journal_ronso52_04.pdf">NTA 論叢52-04</a>、<a href="sources/official/MOF/mof_japan_singapore_synthesized_text_jp.pdf">MOF 日シンガポール条約統合テキスト</a>、<a href="sources/official/MOF/mof_japan_singapore_mli_summary.html">MOF 日シンガポール条約 MLI概要</a></p>
+        </div>
+      </section>
+
+      <section class="atlas-section" id="s9">
+        <div class="section-label">Figure 09</div>
+        <h2>証拠マップ：確定 / 高確度推定 / 未確認</h2>
+        <p class="lead">どこまで official source で固定できていて、どこから先が high-confidence inference / direct evidence gap なのかを一枚で示す。</p>
+        <figure class="figure"><img src="gravity_atlas_09_evidence_map_hq_uniform_20260422.png" alt="証拠マップ"></figure>
+        <div class="reading-grid">
+          <article class="reading-card"><h3>Confirmed</h3><p>JIF LP の foreign sleeve 性、Japan DH4 の overseas LP line、Gravity合同会社の TMK持分 route などは強く固定済み。</p></article>
+          <article class="reading-card"><h3>High-Confidence</h3><p>Japan DH4 → JIF LP、JIF LP → Gravity合同会社、Gravity合同会社 → Gravity特定目的会社は高確度推定。</p></article>
+          <article class="reading-card"><h3>Unresolved</h3><p>member roster、claimant、匿名組合契約、direct evidence が最後の点線。</p></article>
+        </div>
+        <div class="commentary">
+          <h3>Detailed Commentary</h3>
+          <p>9枚目は、ここまでの調査結果を “どれだけ強く言えるか” という証拠の強度に変換した図です。こうしたマップを明示的に置く理由は、ストラクチャーの理解度と立証力を混同しないためです。GRAVITY案件は、全体構造の骨格についてはかなり見えてきています。<code>JIF Japan Partners LP</code> の foreign sleeve 性、<code>Japan DH4</code> の overseas LP line、<code>Gravity合同会社</code> の TMK持分 route などは、もはや単なる印象論ではなく、official source に anchored した整理として扱えます。その一方で、<code>Japan DH4 → JIF LP</code>、<code>JIF LP → Gravity合同会社</code>、<code>Gravity合同会社 → Gravity特定目的会社</code> といった“最後の矢印”は、なお direct evidence ではなく高確度推定のままです。つまり、「全体像はかなり分かったが、最終契約線はまだ点線」というのが、いまの正確な位置づけです。</p>
+          <p>この区別は、実務でも非常に重要です。なぜなら、税務メモや社内説明では高確度推定だけでも十分役に立つ場面がありますが、届出実務や争訟対応では最後の立証資料が必要になるからです。本図は、調査の進捗を見せるだけでなく、「どの論点なら今すぐ実務判断に使えるか」「どこはまだ推定として留保すべきか」を示すための地図でもあります。特に、member roster や treaty claimant の問題は、構造理解の残り20%というより、税務処理の決定打としての最後の1本です。したがって、本図を読むときは、“未確認が多いから全体像が分からない” と逆に受け取るのではなく、“ここまで official と comparative reading で積み上げても、最後に残るのは何か” を示した優先順位図として理解するのが適切です。</p>
+          <p class="source-links"><strong>一次ソース:</strong> <a href="sources/official/FSA/tokurei_011_refetch_20260422.pdf">FSA tokurei 011</a>、<a href="sources/official/FSA/tokurei_012.pdf">FSA tokurei 012</a>、<a href="sources/official/FSA/tokutei_todokede_refetch_20260422.pdf">FSA 特定目的会社届出一覧</a>、<a href="sources/official/FSA/qii_01_b.pdf">FSA QII 01_b</a>、<a href="sources/official/ACRA/acra_buying_business_profile_20260422.html">ACRA Business Profile guidance</a></p>
+        </div>
+      </section>
+
+      <section class="atlas-section" id="s10">
+        <div class="section-label">Figure 10</div>
+        <h2>実務上の含意と次の frontier</h2>
+        <p class="lead">何がもう実務判断に使え、何がなお最後のボトルネックかを、資料取得ルートまで含めて整理する締めの図。</p>
+        <figure class="figure"><img src="gravity_atlas_10_frontier_hq_uniform_20260422.png" alt="実務上の含意と次の frontier"></figure>
+        <div class="reading-grid">
+          <article class="reading-card"><h3>What We Know</h3><p>全体構造は 8割超まで把握できており、主線・税務論点・役割分担はかなり固まった。</p></article>
+          <article class="reading-card"><h3>What We Need</h3><p>Business Profile、member roster、匿名組合契約、条約届出書・様式16が決定打候補。</p></article>
+          <article class="reading-card"><h3>Key Read</h3><p>フェーズは <strong>全体像の探索</strong> から <strong>最後の claimant / contract line の確定</strong> に移っている。</p></article>
+        </div>
+        <div class="commentary">
+          <h3>Detailed Commentary</h3>
+          <p>10枚目は、このアトラス全体の締めとして、「ここまで分かったことが実務上どんな意味を持つか」と「次にどこを掘れば案件理解がもう一段締まるか」をまとめた図です。最も重要なのは、いまの GRAVITY 調査は、もはや “構造が見えないから探索する段階” ではないということです。上流 sponsor family、domestic LPS、foreign sleeve、国内GK/TK operator、下流TMK、物流資産、そして源泉税の論点まで、主要な層はすでにかなり見えています。したがって、今後の追加調査は、全体像を広くなぞるよりも、最後の点線を太線に変えるための資料取得に集中すべきです。つまりフェーズは、“理解のための広域調査” から “立証のための狭域調査” に移っています。</p>
+          <p>では何を取ればよいか。その答えが、この図の右側に置いた frontier 群です。第一に、<code>JIF Japan Partners LP</code> の member roster や Business Profile は、条約 claimant を entity でみるのか、構成員ごとに look-through するのかを決める決定打になります。第二に、<code>Gravity合同会社匿名組合契約</code> は、誰が法的な直後受領者なのかを確定させるための中核資料です。第三に、<code>Gravity合同会社 → Gravity特定目的会社</code> の direct evidence が取れれば、下流主線もほぼ閉じます。こうして見ると、残っている問題は無限に広いのではなく、かなりはっきりした少数のボトルネックに収束しています。本図は、“まだ分からないこと” を列挙するためではなく、“次の一手がもう明確になっている” ことを示す図です。その意味で、これは調査の終点ではなく、次の実行フェーズの発火点になっています。</p>
+          <p class="source-links"><strong>一次ソース:</strong> <a href="sources/official/ACRA/acra_buying_business_profile_20260422.html">ACRA Buying a Business Profile</a>、<a href="sources/official/ACRA/acra_buying_business_information_types_20260422.html">ACRA Types of ACRA Information Products</a>、<a href="sources/official/ACRA/acra_buying_business_information_partners_20260422.html">ACRA Free Business Profiles</a>、<a href="sources/official/ACRA/acra_api_marketplace_20260422.html">ACRA API Marketplace</a>、<a href="sources/official/NTA/nta_2888_treaty_notification_filing.html">NTA 2888</a>、<a href="sources/official/NTA/nta_2889_treaty_refund_claim.html">NTA 2889</a></p>
+        </div>
+      </section>
+    </main>
+
+    <div class="footer-note">
+      画像ファイルはこのフォルダ直下、生成意図の簡易一覧は
+      <a href="prompts/gravity_visual_atlas_prompt_library_20260422.md">prompt library</a>
+      に保存。既存の図解HTMLパック
+      <a href="../GRAVITY_グループストラクチャー精査_20260422/index.html">GRAVITY_グループストラクチャー精査_20260422</a>
+      は残したまま、本ページは「今までここで集めた情報」を10枚に再編した包括版として位置づける。
+    </div>
+  </div>
+  <div class="lightbox" id="atlas-lightbox" aria-hidden="true">
+    <div class="lightbox-panel" role="dialog" aria-modal="true" aria-label="画像の拡大表示">
+      <button class="lightbox-close" id="atlas-lightbox-close" aria-label="閉じる">×</button>
+      <img class="lightbox-image" id="atlas-lightbox-image" alt="">
+    </div>
+  </div>
+  <script>
+    (() => {
+      const lightbox = document.getElementById('atlas-lightbox');
+      const panel = lightbox.querySelector('.lightbox-panel');
+      const lightboxImage = document.getElementById('atlas-lightbox-image');
+      const closeButton = document.getElementById('atlas-lightbox-close');
+      const figures = document.querySelectorAll('.figure img');
+
+      function openLightbox(img) {
+        lightboxImage.src = img.currentSrc || img.src;
+        lightboxImage.alt = img.alt || '';
+        lightbox.classList.add('is-open');
+        lightbox.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('lightbox-open');
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove('is-open');
+        lightbox.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('lightbox-open');
+        lightboxImage.removeAttribute('src');
+      }
+
+      figures.forEach((img) => {
+        img.tabIndex = 0;
+        img.setAttribute('role', 'button');
+        img.setAttribute('aria-label', `${img.alt || '画像'} を拡大表示`);
+        img.addEventListener('click', () => openLightbox(img));
+        img.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            openLightbox(img);
+          }
+        });
+      });
+
+      closeButton.addEventListener('click', closeLightbox);
+      lightbox.addEventListener('click', (event) => {
+        if (!panel.contains(event.target)) closeLightbox();
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && lightbox.classList.contains('is-open')) {
+          closeLightbox();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
