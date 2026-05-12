@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>クンチ株式会社 特定同族会社判定レポート</title>
+  <style>
+    :root {
+      --ink: #172026;
+      --muted: #59656f;
+      --line: #d9e0e6;
+      --bg: #f6f8fa;
+      --paper: #ffffff;
+      --blue: #245f9f;
+      --green: #27745f;
+      --amber: #9b6825;
+      --red: #a64242;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", sans-serif;
+      line-height: 1.72;
+    }
+    header {
+      background: #102233;
+      color: white;
+      padding: 28px 28px 22px;
+    }
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px 18px 56px;
+    }
+    h1, h2, h3 { line-height: 1.28; margin: 0; }
+    h1 { font-size: clamp(24px, 4vw, 42px); letter-spacing: 0; }
+    h2 { font-size: 24px; margin-top: 34px; padding-bottom: 8px; border-bottom: 2px solid var(--line); }
+    h3 { font-size: 18px; margin-top: 20px; }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .meta { color: #d6e2ed; margin-top: 10px; font-size: 14px; }
+    .grid { display: grid; gap: 16px; }
+    .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .panel {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: 0 1px 2px rgba(0,0,0,.04);
+    }
+    .lead {
+      font-size: 18px;
+      font-weight: 700;
+      color: #0e2c46;
+    }
+    .tag {
+      display: inline-block;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 2px 9px;
+      margin: 2px 4px 2px 0;
+      font-size: 12px;
+      background: #f9fbfc;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .status {
+      display: inline-block;
+      border-radius: 4px;
+      padding: 2px 7px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .yes { background: #e7f3ef; color: var(--green); }
+    .hold { background: #fff4df; color: var(--amber); }
+    .no { background: #f8e8e8; color: var(--red); }
+    .fact { border-left: 4px solid var(--green); }
+    .infer { border-left: 4px solid var(--amber); }
+    .open { border-left: 4px solid var(--red); }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; background: white; }
+    th, td { border: 1px solid var(--line); padding: 9px 10px; vertical-align: top; }
+    th { background: #eef3f7; text-align: left; font-size: 13px; }
+    td { font-size: 14px; }
+    blockquote {
+      margin: 10px 0;
+      padding: 9px 12px;
+      background: #f7fafc;
+      border-left: 4px solid #8aa8c8;
+      color: #20313f;
+    }
+    .small { font-size: 13px; color: var(--muted); }
+    .result {
+      display: grid;
+      grid-template-columns: 190px 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+    .badge {
+      display: block;
+      text-align: center;
+      border-radius: 8px;
+      padding: 18px 12px;
+      background: #fff4df;
+      color: var(--amber);
+      font-weight: 800;
+      font-size: 20px;
+      border: 1px solid #e8d0a7;
+    }
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .node {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      min-height: 112px;
+    }
+    .node strong { display: block; margin-bottom: 6px; }
+    .footer {
+      margin-top: 34px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    @media (max-width: 820px) {
+      .grid.two, .grid.three, .flow { grid-template-columns: 1fr; }
+      .result { grid-template-columns: 1fr; }
+      header { padding: 22px 18px; }
+      main { padding: 16px 12px 42px; }
+      table { font-size: 13px; }
+      th, td { padding: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>クンチ株式会社 特定同族会社判定レポート</h1>
+    <div class="meta">対象: クンチ株式会社 / 東京都中央区京橋所在 / 企業調査基準日: 2026年5月7日 / 作成日: 2026年5月12日</div>
+  </header>
+  <main>
+    <section class="panel">
+      <div class="result">
+        <div class="badge">判定保留<br>該当可能性高</div>
+        <div>
+          <p class="lead">公開情報だけでは、クンチ株式会社を法人税法67条1項の「特定同族会社」と断定するにはまだ足りない。ただし、上海路捷鲲驰集团股份有限公司との資本・事業接続を示す公的資料と、中国側親会社の同族的支配を示すCICC輔導資料があるため、該当可能性はかなり強い調査仮説として扱うべきである。</p>
+          <p>決定打は、クンチ株式会社の対象事業年度末の株主名簿・議決権台帳・別表二である。ここで上海路捷鲲驰集团股份有限公司又は同社の被支配関連会社による50%超支配、できれば100%保有が確認されれば、CICC資料上の李宏德・魏静夫妻による95.69%議決権支配とつながり、特定同族会社該当方向は大きく強まる。</p>
+          <span class="tag">fact / inference / unresolved 分離</span>
+          <span class="tag">条文対応</span>
+          <span class="tag">一次・準一次ソース対応</span>
+          <span class="tag">反証QA込み</span>
+        </div>
+      </div>
+    </section>
+
+    <h2>1. 判定ロジック</h2>
+    <div class="flow">
+      <div class="node">
+        <strong>Step 1</strong>
+        内国法人・清算中でないことを確認。
+        <div><span class="status yes">入口は満たす方向</span></div>
+      </div>
+      <div class="node">
+        <strong>Step 2</strong>
+        1株主グループで50%超の株式・出資又は議決権支配があるか。
+        <div><span class="status hold">直接株主未確認</span></div>
+      </div>
+      <div class="node">
+        <strong>Step 3</strong>
+        判定基礎に「被支配会社でない法人」がある場合、その法人を除いても被支配会社か。
+        <div><span class="status hold">中国側上位支配を要確認</span></div>
+      </div>
+      <div class="node">
+        <strong>Step 4</strong>
+        資本金1億円以下なら、法66条5項2号から5号等の対象法人か。
+        <div><span class="status hold">資本金未確認</span></div>
+      </div>
+      <div class="node">
+        <strong>Step 5</strong>
+        判定は事業年度終了時の現況。
+        <div><span class="status hold">期末資料が必要</span></div>
+      </div>
+    </div>
+
+    <h2>2. 法令要件と引用</h2>
+    <table>
+      <thead>
+        <tr><th>要件ID</th><th>根拠</th><th>短い引用</th><th>判定での意味</th><th>リンク</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>REQ-67-1</td>
+          <td>法人税法67条1項</td>
+          <td>「内国法人である特定同族会社」</td>
+          <td>対象は内国法人の特定同族会社。資本金1億円以下の場合は法66条5項2号から5号等との関係が入口になる。</td>
+          <td><a href="https://laws.e-gov.go.jp/law/340AC0000000034">e-Gov 法人税法</a></td>
+        </tr>
+        <tr>
+          <td>REQ-67-2</td>
+          <td>法人税法67条2項</td>
+          <td>「百分の五十を超える」</td>
+          <td>1株主と特殊関係個人・法人で50%超の株式又は出資を有するかを見る。</td>
+          <td><a href="https://laws.e-gov.go.jp/law/340AC0000000034">e-Gov 法人税法</a></td>
+        </tr>
+        <tr>
+          <td>REQ-67-8</td>
+          <td>法人税法67条8項</td>
+          <td>「事業年度終了の時」</td>
+          <td>2026年5月7日の企業調査事実ではなく、対象事業年度末の株主・議決権・資本金で判定する。</td>
+          <td><a href="https://laws.e-gov.go.jp/law/340AC0000000034">e-Gov 法人税法</a></td>
+        </tr>
+        <tr>
+          <td>REQ-1397</td>
+          <td>法人税法施行令139条の7</td>
+          <td>「株主等の親族」</td>
+          <td>個人株主の親族、支配会社、議決権行使同意者等を株主グループに合算する。</td>
+          <td><a href="https://laws.e-gov.go.jp/law/340CO0000000097">e-Gov 法人税法施行令</a></td>
+        </tr>
+        <tr>
+          <td>REQ-BCT-16-1-1</td>
+          <td>法人税基本通達16-1-1</td>
+          <td>「直接又は間接の被支配会社」</td>
+          <td>非被支配法人とその直接・間接子会社の扱いを確認する。中国親会社が非被支配法人なら反証になり得る。</td>
+          <td><a href="https://www.nta.go.jp/law/tsutatsu/kihon/hojin/16/16_01_01.htm">国税庁 通達</a></td>
+        </tr>
+        <tr>
+          <td>REQ-BCT-16-5-2</td>
+          <td>法人税基本通達16-5-2</td>
+          <td>「電信売買相場の仲値」</td>
+          <td>外国法人が大法人に該当するかは、期末日のTTMで資本金等を円換算して見る。</td>
+          <td><a href="https://www.nta.go.jp/law/tsutatsu/kihon/hojin/16/16_05.htm">国税庁 通達</a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>3. 確認できた事実</h2>
+    <div class="grid two">
+      <section class="panel fact">
+        <h3>日本法人の基本情報</h3>
+        <p>gBizINFOは法人番号1010401135095、本店所在地を東京都中央区京橋2丁目7番14号ビュレックス京橋と表示する。公式会社概要は、住所をBurex京橋515、代表取締役を前田大介、設立を2016年11月とする。</p>
+        <blockquote>公式会社概要: 「代表取締役 前田 大介」「設立 2016年11月」</blockquote>
+        <p class="small">出典: <a href="https://info.gbiz.go.jp/hojin/ichiran?hojinBango=1010401135095">gBizINFO</a> / <a href="https://www.kunchi.tokyo/about.html">クンチ公式会社概要</a></p>
+      </section>
+      <section class="panel fact">
+        <h3>日本法人の事業実態</h3>
+        <p>公式サイトは、日本ブランドの中国市場展開、越境EC、一般貿易支援を掲げ、現地グループ会社と連携して全業務フローを支援すると説明している。</p>
+        <blockquote>公式日本ページ: 「現地グループ会社と連携」</blockquote>
+        <p class="small">出典: <a href="https://www.kunchi.tokyo/japan.html">クンチ公式 日本ページ</a></p>
+      </section>
+      <section class="panel fact">
+        <h3>Kunchi Groupの拠点・沿革</h3>
+        <p>グループ公式サイトは、Kunchi Groupを1999年創立の消費品領域ブランド運営企業とし、上海・北京・天津・蘇州・広州・香港・東京・チューリッヒの拠点を掲げる。沿革上も「日本鲲驰成立」として東京拠点を示す。</p>
+        <blockquote>グループ公式: 「日本鲲驰成立」</blockquote>
+        <p class="small">出典: <a href="https://kunchi.com/about.html">Kunchi Group About</a> / <a href="https://kunchi.com/wenger.html">多態業務</a></p>
+      </section>
+      <section class="panel fact">
+        <h3>中国側の事業規模</h3>
+        <p>グループ公式サービスページは、200超ブランド、ライブ基地、スマート物流園、IT基盤等を掲げる。これは事業的一体性の補強にはなるが、株主・議決権の直接証拠ではない。</p>
+        <blockquote>公式サービス: 「超200个知名品牌」</blockquote>
+        <p class="small">出典: <a href="https://kunchi.com/service.html">Kunchi Group サービス</a></p>
+      </section>
+    </div>
+
+    <h2>4. 資本・支配関係の証拠評価</h2>
+    <table>
+      <thead>
+        <tr><th>証拠</th><th>確認内容</th><th>判定への効き方</th><th>限界</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>MOFCOM系公開情報</td>
+          <td>上海市商務委の境外投資抽査結果に、境内主体「上海路捷鲲驰集团股份有限公司」、境外企業「日本鲲驰株式会社」が掲載される。</td>
+          <td>上海側法人と日本鲲驰の境外投資関係を示す公的資料。資本接続の重要な補強。</td>
+          <td>持株比率、議決権、対象期末時点の保有状況までは示さない。</td>
+        </tr>
+        <tr>
+          <td>上海虹口区政府記事</td>
+          <td>前田大介氏が2017年2月に加入した日本鲲驰について、上海路捷鲲驰集团股份有限公司が全額投資した日本分公司と説明。</td>
+          <td>100%出資を示す強い補助情報。</td>
+          <td>記事であり、株主名簿・登記・出資証明ではない。</td>
+        </tr>
+        <tr>
+          <td>CICC輔導資料</td>
+          <td>上海路捷鲲驰集团股份有限公司の実質支配者について、李宏德・魏静夫妻が合計95.69%議決権を支配すると記載。</td>
+          <td>中国側親会社が「被支配会社でない法人」ではなく、同族的に支配された会社である可能性を強く示す。</td>
+          <td>2021年時点のIPO輔導資料。2026年5月7日又は対象期末の最新株主構成は別確認が必要。</td>
+        </tr>
+        <tr>
+          <td>中証網報道</td>
+          <td>CICC輔導資料と同様、李宏德・魏静夫妻の95.69%議決権支配を報道。</td>
+          <td>CICC資料の確認補助。</td>
+          <td>報道であり、一次資料ではない。</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="small">出典: <a href="https://zsmtjhzs.mofcom.gov.cn/fecppub/zcq/view?sysno=0000000084c6d2ab0184eb4e369e0065">商務部/上海市商務委 公開情報</a> / <a href="https://www.shhk.gov.cn/xwzx/002008/002008040/20221108/6dc2cb60-0b6a-412f-bc8d-f6268a124638.html">上海虹口区政府記事</a> / <a href="https://www.cicc.com.cn/upload/repository/file/809b591d-85d2-4829-8935-0c1426f5412e.pdf">CICC 輔導資料PDF</a> / <a href="https://www.cs.com.cn/xg/wysg/202101/t20210129_6135718.html">中証網</a></p>
+
+    <h2>5. 条文へのあてはめ</h2>
+    <table>
+      <thead>
+        <tr><th>要件</th><th>公開情報での状態</th><th>暫定評価</th><th>必要資料</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>内国法人</td>
+          <td>日本法人として法人番号、本店所在地、公式会社概要が確認できる。</td>
+          <td><span class="status yes">充足方向</span></td>
+          <td>履歴事項全部証明書</td>
+        </tr>
+        <tr>
+          <td>清算中でないこと</td>
+          <td>公式サイト上は通常営業の外観。清算公告は今回確認していない。</td>
+          <td><span class="status hold">要登記確認</span></td>
+          <td>履歴事項全部証明書、官報公告</td>
+        </tr>
+        <tr>
+          <td>50%超支配</td>
+          <td>上海側との投資・事業関係は強いが、クンチ株式会社の株主名簿は未取得。</td>
+          <td><span class="status hold">核心未確定</span></td>
+          <td>株主名簿、議決権台帳、別表二、定款</td>
+        </tr>
+        <tr>
+          <td>特殊関係者合算</td>
+          <td>CICC資料上、上海親会社は李宏德・魏静夫妻による95.69%議決権支配。</td>
+          <td><span class="status yes">中国側は該当方向</span></td>
+          <td>中国側最新工商档案、章程、株主名簿</td>
+        </tr>
+        <tr>
+          <td>非被支配法人除外</td>
+          <td>上海親会社が2021年時点で夫妻支配なら、非被支配法人として除外される方向ではない。</td>
+          <td><span class="status hold">最新性が未確認</span></td>
+          <td>2026年又は対象期末の中国側支配資料</td>
+        </tr>
+        <tr>
+          <td>資本金1億円以下の場合の追加入口</td>
+          <td>クンチ株式会社の資本金が公開情報で未確認。上海親会社の登録資本はCICC資料上29,260.4502万元人民元。</td>
+          <td><span class="status hold">資本金・完全支配要確認</span></td>
+          <td>日本法人資本金、完全支配関係、期末TTM</td>
+        </tr>
+        <tr>
+          <td>事業年度終了時判定</td>
+          <td>基準日2026年5月7日の企業調査と、税務上の対象期末は同一ではない。</td>
+          <td><span class="status hold">期末未特定</span></td>
+          <td>対象事業年度、期末株主名簿、期末資本金</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>6. 反証仮説</h2>
+    <div class="grid two">
+      <section class="panel infer">
+        <h3>反証1: 日本法人が資本子会社ではない</h3>
+        <p>公式サイトの「東京拠点」や「現地グループ会社と連携」は、事業的一体性の資料であって、株主・議決権資料ではない。代表者個人、日本側第三者、又は香港法人が株主である可能性は公開情報だけでは排除できない。</p>
+      </section>
+      <section class="panel infer">
+        <h3>反証2: 中国側支配が変化している</h3>
+        <p>CICC資料は2021年のIPO輔導時点である。上場準備後の外部投資、株主分散、持株会社変更、香港法人介在があれば、2026年又は対象事業年度末の支配構造とずれる。</p>
+      </section>
+      <section class="panel infer">
+        <h3>反証3: 資本金1億円以下の入口で落ちる</h3>
+        <p>日本法人の資本金が1億円以下の場合、法67条1項括弧書きにより法66条5項2号から5号等への該当確認が必要になる。完全支配関係と外国法人資本金の円換算を閉じる必要がある。</p>
+      </section>
+      <section class="panel infer">
+        <h3>反証4: 議決権と株式数が一致しない</h3>
+        <p>種類株、議決権制限、議決権行使合意、名義株がある場合、表面的な出資比率だけでは判定できない。令139条の7は重要議決権と同一内容の議決権行使合意も見る。</p>
+      </section>
+    </div>
+
+    <h2>7. 最終結論</h2>
+    <section class="panel">
+      <p class="lead">現時点の結論は「該当可能性が高いが、公開情報のみでは判定保留」。</p>
+      <p>もっとも重要なのは、クンチ株式会社を「中国Kunchi Groupの日本側フロント」と評価できることと、「法人税法67条上の株主等による50%超支配」を確認できることは別問題だという点である。公開情報上、前者はかなり強い。後者についても、MOFCOM系資料、上海虹口区政府記事、CICC輔導資料を合わせると相当強い仮説になる。しかし、税務上の結論として「特定同族会社に該当する」と書くには、対象事業年度末の株主名簿・議決権台帳・資本金・中国側最新支配資料が必要である。</p>
+      <p>実務上は、株主名簿又は別表二で上海路捷鲲驰集团股份有限公司又は同社被支配会社による50%超保有が確認され、かつ中国側の李宏德・魏静夫妻支配が対象期末にも維持されていれば、特定同族会社該当方向で整理するのが自然である。</p>
+    </section>
+
+    <h2>8. 取得すべき資料</h2>
+    <table>
+      <thead>
+        <tr><th>優先度</th><th>資料</th><th>閉じる論点</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>A</td><td>クンチ株式会社の株主名簿・議決権台帳・別表二</td><td>直接株主、50%超支配、議決権、期末時点</td></tr>
+        <tr><td>A</td><td>履歴事項全部証明書、定款、種類株式情報</td><td>資本金、清算状態、種類株、自己株式</td></tr>
+        <tr><td>A</td><td>上海路捷鲲驰集团股份有限公司の最新工商档案・章程・株主名簿</td><td>中国側親会社の最新支配者</td></tr>
+        <tr><td>A</td><td>香港法人が介在する場合のAnnual Return / Register of Members</td><td>中間持株会社の株主・議決権</td></tr>
+        <tr><td>B</td><td>境外投資証書、ODI filing、グループ組織図</td><td>上海側から日本法人への出資比率・出資主体</td></tr>
+        <tr><td>B</td><td>対象期末日のTTM、外国法人資本金資料</td><td>法66条5項2号の大法人判定</td></tr>
+      </tbody>
+    </table>
+
+    <h2>9. 出典一覧</h2>
+    <table>
+      <thead>
+        <tr><th>ID</th><th>出典</th><th>区分</th><th>用途</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>LAW-67</td><td><a href="https://laws.e-gov.go.jp/law/340AC0000000034">e-Gov 法人税法</a></td><td>一次</td><td>特定同族会社、被支配会社、期末判定</td></tr>
+        <tr><td>LAW-1397</td><td><a href="https://laws.e-gov.go.jp/law/340CO0000000097">e-Gov 法人税法施行令</a></td><td>一次</td><td>特殊関係個人・法人、議決権支配</td></tr>
+        <tr><td>NTA-16-1-1</td><td><a href="https://www.nta.go.jp/law/tsutatsu/kihon/hojin/16/16_01_01.htm">国税庁 法人税基本通達16-1-1</a></td><td>一次</td><td>非被支配法人の直接・間接子会社</td></tr>
+        <tr><td>NTA-16-5-2</td><td><a href="https://www.nta.go.jp/law/tsutatsu/kihon/hojin/16/16_05.htm">国税庁 法人税基本通達16-5-2</a></td><td>一次</td><td>外国法人資本金の円換算</td></tr>
+        <tr><td>JP-GBIZ</td><td><a href="https://info.gbiz.go.jp/hojin/ichiran?hojinBango=1010401135095">gBizINFO クンチ株式会社</a></td><td>政府系二次集約</td><td>法人番号・所在地</td></tr>
+        <tr><td>JP-OFFICIAL</td><td><a href="https://www.kunchi.tokyo/about.html">クンチ株式会社 会社概要</a></td><td>会社公式</td><td>所在地・代表者・設立</td></tr>
+        <tr><td>JP-JAPAN</td><td><a href="https://www.kunchi.tokyo/japan.html">クンチ株式会社 日本ページ</a></td><td>会社公式</td><td>事業内容・現地グループ連携</td></tr>
+        <tr><td>CN-GROUP</td><td><a href="https://kunchi.com/about.html">Kunchi Group About</a></td><td>会社公式</td><td>グループ概要・東京拠点</td></tr>
+        <tr><td>CN-SERVICE</td><td><a href="https://kunchi.com/service.html">Kunchi Group サービス</a></td><td>会社公式</td><td>事業規模・運営機能</td></tr>
+        <tr><td>CN-ECOSYS</td><td><a href="https://kunchi.com/wenger.html">Kunchi Group 多態業務</a></td><td>会社公式</td><td>香港・日本・欧州展開</td></tr>
+        <tr><td>CN-MOFCOM</td><td><a href="https://zsmtjhzs.mofcom.gov.cn/fecppub/zcq/view?sysno=0000000084c6d2ab0184eb4e369e0065">商務部/上海市商務委 公開情報</a></td><td>公的資料</td><td>上海側法人と日本鲲驰の境外投資関係</td></tr>
+        <tr><td>CN-HONGKOU</td><td><a href="https://www.shhk.gov.cn/xwzx/002008/002008040/20221108/6dc2cb60-0b6a-412f-bc8d-f6268a124638.html">上海虹口区政府記事</a></td><td>政府サイト掲載記事</td><td>全額投資日本分公司との補助情報</td></tr>
+        <tr><td>CN-CICC</td><td><a href="https://www.cicc.com.cn/upload/repository/file/809b591d-85d2-4829-8935-0c1426f5412e.pdf">CICC 輔導資料PDF</a></td><td>証券開示系準一次</td><td>上海側親会社の実質支配者・95.69%議決権</td></tr>
+        <tr><td>CN-CS</td><td><a href="https://www.cs.com.cn/xg/wysg/202101/t20210129_6135718.html">中証網</a></td><td>報道</td><td>CICC資料の報道確認</td></tr>
+      </tbody>
+    </table>
+
+    <div class="footer">
+      注意: 本レポートは公開情報に基づく調査メモであり、税務申告上の確定判定ではない。最終判定には対象事業年度末の内部資料と登記・株主資料が必要である。
+    </div>
+  </main>
+</body>
+</html>
