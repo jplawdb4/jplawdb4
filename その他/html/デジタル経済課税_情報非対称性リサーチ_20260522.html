@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>デジタル経済課税と情報の非対称性 — 学術論文・政策文書リサーチ</title>
+<style>
+  :root {
+    --bg: #f8f9fa;
+    --card: #ffffff;
+    --border: #dee2e6;
+    --accent: #2c5282;
+    --accent-light: #ebf4ff;
+    --text: #2d3748;
+    --text-light: #718096;
+    --green: #276749;
+    --green-light: #f0fff4;
+    --red: #c53030;
+    --red-light: #fff5f5;
+    --orange: #c05621;
+    --orange-light: #fffaf0;
+    --purple: #553c9a;
+    --purple-light: #faf5ff;
+    --yellow-mark: #fefcbf;
+    --blue-mark: #bee3f8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Meiryo", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    padding: 1rem;
+    max-width: 980px;
+    margin: 0 auto;
+  }
+  h1 {
+    font-size: 1.4rem;
+    color: var(--accent);
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  h2 {
+    font-size: 1.15rem;
+    color: var(--accent);
+    margin: 2rem 0 0.8rem;
+    padding: 0.4rem 0.8rem;
+    background: var(--accent-light);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 4px 4px 0;
+  }
+  h3 {
+    font-size: 1.05rem;
+    color: var(--text);
+    margin: 1.2rem 0 0.5rem;
+    padding-left: 0.5rem;
+    border-left: 3px solid var(--border);
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.2rem;
+    margin: 0.8rem 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .card-green { border-left: 4px solid var(--green); }
+  .card-red { border-left: 4px solid var(--red); }
+  .card-orange { border-left: 4px solid var(--orange); }
+  .card-purple { border-left: 4px solid var(--purple); }
+  .card-accent { border-left: 4px solid var(--accent); }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.8rem 0;
+    font-size: 0.88rem;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 0.5rem 0.7rem;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: var(--accent);
+    color: white;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  tr:nth-child(even) { background: #f7fafc; }
+  .mark { background: var(--yellow-mark); padding: 1px 4px; border-radius: 2px; }
+  .mark-blue { background: var(--blue-mark); padding: 1px 4px; border-radius: 2px; }
+  .ref {
+    font-size: 0.82rem;
+    color: var(--text-light);
+    margin-top: 0.4rem;
+  }
+  .formula {
+    background: #edf2f7;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.8rem 1rem;
+    margin: 0.6rem 0;
+    font-family: "Consolas", "SF Mono", monospace;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    overflow-x: auto;
+  }
+  .tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-weight: 600;
+    margin-right: 4px;
+  }
+  .tag-add { background: var(--red-light); color: var(--red); }
+  .tag-sub { background: var(--green-light); color: var(--green); }
+  .tag-retain { background: var(--purple-light); color: var(--purple); }
+  .tag-out { background: var(--orange-light); color: var(--orange); }
+  .tag-ctrl { background: var(--accent-light); color: var(--accent); }
+  .important {
+    background: var(--orange-light);
+    border: 1px solid #fbd38d;
+    border-radius: 6px;
+    padding: 0.8rem 1rem;
+    margin: 0.8rem 0;
+  }
+  .important strong { color: var(--orange); }
+  .conclusion {
+    background: var(--green-light);
+    border: 2px solid var(--green);
+    border-radius: 8px;
+    padding: 1.2rem;
+    margin: 1rem 0;
+  }
+  .conclusion strong { color: var(--green); }
+  .section-num {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    width: 1.6rem;
+    height: 1.6rem;
+    text-align: center;
+    line-height: 1.6rem;
+    border-radius: 50%;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-right: 0.3rem;
+    vertical-align: middle;
+  }
+  blockquote {
+    background: #f0f4f8;
+    border-left: 3px solid var(--accent);
+    padding: 0.8rem 1rem;
+    margin: 0.8rem 0;
+    font-size: 0.93rem;
+  }
+  footer {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.8rem;
+    color: var(--text-light);
+    text-align: right;
+  }
+  .paper-num {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    min-width: 1.8rem;
+    padding: 0 6px;
+    height: 1.8rem;
+    text-align: center;
+    line-height: 1.8rem;
+    border-radius: 4px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+  }
+  .paper-num-orange {
+    display: inline-block;
+    background: var(--orange);
+    color: white;
+    min-width: 1.8rem;
+    padding: 0 6px;
+    height: 1.8rem;
+    text-align: center;
+    line-height: 1.8rem;
+    border-radius: 4px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+  }
+  .paper-num-purple {
+    display: inline-block;
+    background: var(--purple);
+    color: white;
+    min-width: 1.8rem;
+    padding: 0 6px;
+    height: 1.8rem;
+    text-align: center;
+    line-height: 1.8rem;
+    border-radius: 4px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+  }
+  .info-gap {
+    background: var(--red-light);
+    border: 1px solid #feb2b2;
+    border-radius: 6px;
+    padding: 0.6rem 0.8rem;
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+  }
+  .info-gap strong { color: var(--red); }
+  .solution-item {
+    background: var(--accent-light);
+    border: 1px solid #bee3f8;
+    border-radius: 6px;
+    padding: 0.6rem 0.8rem;
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+  }
+  .limit-item {
+    background: var(--orange-light);
+    border: 1px solid #fbd38d;
+    border-radius: 6px;
+    padding: 0.6rem 0.8rem;
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+  }
+  .unsolved-item {
+    background: var(--purple-light);
+    border: 1px solid #d6bcfa;
+    border-radius: 6px;
+    padding: 0.6rem 0.8rem;
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+  }
+  .unsolved-item strong { color: var(--purple); }
+</style>
+</head>
+<body>
+
+<h1>デジタル経済課税と「情報の非対称性」— 学術論文・政策文書リサーチ</h1>
+
+<div class="conclusion">
+  <strong>調査概要</strong><br>
+  デジタル経済課税における情報の非対称性に関する学術論文・政策文書を横断的に調査した。OECD・IMF・各国研究機関の一次文書、および Oxford CBT・ZEW・ifo 等の研究者の論文を対象に、2018年以降を中心に15本以上を確認・整理した。<br><br>
+  デジタル経済固有の情報問題は、①無形資産の評価困難性、②デジタルPE把握の不可能性、③ユーザー価値創造の非可視性、④プラットフォーム所得の申告漏洩、という四層構造をなしており、いずれも伝統的課税体系が前提とする「物理的存在＝情報接触点」の崩壊に起因する。
+</div>
+
+<h2><span class="section-num">1</span> エグゼクティブ・サマリー：情報問題の四層構造</h2>
+
+<div class="card card-accent">
+  <svg viewBox="0 0 860 220" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;display:block;margin:0.5rem auto;">
+    <!-- 背景 -->
+    <rect width="860" height="220" rx="10" fill="#f8f9fa"/>
+    <!-- 層1 -->
+    <rect x="20" y="20" width="190" height="180" rx="8" fill="#fff5f5" stroke="#c53030" stroke-width="1.5"/>
+    <text x="115" y="50" text-anchor="middle" font-size="11" font-weight="700" fill="#c53030">【層1】無形資産評価</text>
+    <text x="115" y="70" text-anchor="middle" font-size="10" fill="#4a5568">データ・アルゴリズム・</text>
+    <text x="115" y="86" text-anchor="middle" font-size="10" fill="#4a5568">ユーザーネットワークの</text>
+    <text x="115" y="102" text-anchor="middle" font-size="10" fill="#4a5568">市場価値が非観測</text>
+    <text x="115" y="130" text-anchor="middle" font-size="9" fill="#718096">→移転価格操作の余地</text>
+    <text x="115" y="146" text-anchor="middle" font-size="9" fill="#718096">→比較可能取引なし</text>
+    <text x="115" y="162" text-anchor="middle" font-size="9" fill="#718096">→HTVI規定の実効性限界</text>
+    <!-- 層2 -->
+    <rect x="230" y="20" width="190" height="180" rx="8" fill="#fffaf0" stroke="#c05621" stroke-width="1.5"/>
+    <text x="325" y="50" text-anchor="middle" font-size="11" font-weight="700" fill="#c05621">【層2】デジタルPE</text>
+    <text x="325" y="70" text-anchor="middle" font-size="10" fill="#4a5568">物理的拠点なしで</text>
+    <text x="325" y="86" text-anchor="middle" font-size="10" fill="#4a5568">市場国から収益獲得</text>
+    <text x="325" y="102" text-anchor="middle" font-size="10" fill="#4a5568">→課税根拠が存在しない</text>
+    <text x="325" y="130" text-anchor="middle" font-size="9" fill="#718096">→SEP概念の未成熟</text>
+    <text x="325" y="146" text-anchor="middle" font-size="9" fill="#718096">→ユーザー数の把握困難</text>
+    <text x="325" y="162" text-anchor="middle" font-size="9" fill="#718096">→収益帰属ルール未確立</text>
+    <!-- 層3 -->
+    <rect x="440" y="20" width="190" height="180" rx="8" fill="#faf5ff" stroke="#553c9a" stroke-width="1.5"/>
+    <text x="535" y="50" text-anchor="middle" font-size="11" font-weight="700" fill="#553c9a">【層3】ユーザー価値創造</text>
+    <text x="535" y="70" text-anchor="middle" font-size="10" fill="#4a5568">ネットワーク効果・</text>
+    <text x="535" y="86" text-anchor="middle" font-size="10" fill="#4a5568">データ提供・コンテンツ生成</text>
+    <text x="535" y="102" text-anchor="middle" font-size="10" fill="#4a5568">の価値が計測不能</text>
+    <text x="535" y="130" text-anchor="middle" font-size="9" fill="#718096">→DST根拠の曖昧性</text>
+    <text x="535" y="146" text-anchor="middle" font-size="9" fill="#718096">→location-specific rent測定不能</text>
+    <text x="535" y="162" text-anchor="middle" font-size="9" fill="#718096">→Amount A配分基準の問題</text>
+    <!-- 層4 -->
+    <rect x="650" y="20" width="190" height="180" rx="8" fill="#f0fff4" stroke="#276749" stroke-width="1.5"/>
+    <text x="745" y="50" text-anchor="middle" font-size="11" font-weight="700" fill="#276749">【層4】プラットフォーム所得</text>
+    <text x="745" y="70" text-anchor="middle" font-size="10" fill="#4a5568">ギグワーカー・民泊等</text>
+    <text x="745" y="86" text-anchor="middle" font-size="10" fill="#4a5568">の収入が税務当局に</text>
+    <text x="745" y="102" text-anchor="middle" font-size="10" fill="#4a5568">見えにくい</text>
+    <text x="745" y="130" text-anchor="middle" font-size="9" fill="#718096">→1099-K閾値問題(米)</text>
+    <text x="745" y="146" text-anchor="middle" font-size="9" fill="#718096">→DAC7/MRDPで一部対処</text>
+    <text x="745" y="162" text-anchor="middle" font-size="9" fill="#718096">→未登録インフォーマル経済</text>
+  </svg>
+  <p class="ref">出所：調査文献を踏まえた筆者整理</p>
+</div>
+
+<h2><span class="section-num">2</span> 収録文献一覧（15本）</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>著者</th>
+      <th>タイトル</th>
+      <th>年</th>
+      <th>掲載誌/機関</th>
+      <th>カテゴリ</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Devereux, M.P. / Vella, J.</td>
+      <td>Taxing the Digitalised Economy: Targeted or System-Wide Reform?</td>
+      <td>2018</td>
+      <td>British Tax Review; Oxford CBT WP 18/23</td>
+      <td><span class="tag tag-ctrl">制度設計</span></td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Devereux, M.P. / Auerbach, A.J. / Keen, M. / Oosterhuis, P. / Schön, W. / Vella, J.</td>
+      <td>Taxing Profit in a Global Economy</td>
+      <td>2021</td>
+      <td>Oxford University Press</td>
+      <td><span class="tag tag-ctrl">制度設計</span></td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Schön, W.</td>
+      <td>One Answer to Why and How to Tax the Digitalized Economy</td>
+      <td>2019</td>
+      <td>Intertax, 47(12), 1003–1022</td>
+      <td><span class="tag tag-retain">理論</span></td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Olbert, M. / Spengel, C.</td>
+      <td>Taxation in the Digital Economy: Recent Policy Developments and the Question of Value Creation</td>
+      <td>2019</td>
+      <td>ZEW Discussion Paper 19-010; International Tax Studies 2</td>
+      <td><span class="tag tag-add">政策分析</span></td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Cui, W.</td>
+      <td>The Digital Services Tax: A Conceptual Defense</td>
+      <td>2019</td>
+      <td>Tax Law Review (NYU); SSRN 3273641</td>
+      <td><span class="tag tag-retain">理論</span></td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>Cui, W. / Hashimzade, N.</td>
+      <td>The Digital Services Tax as a Tax on Location-Specific Rent</td>
+      <td>2019</td>
+      <td>CESifo Working Paper 7737</td>
+      <td><span class="tag tag-retain">理論</span></td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>Hongler, P. / Pistone, P.</td>
+      <td>Blueprints for a New PE Nexus to Tax Business Income in the Era of the Digital Economy</td>
+      <td>2015</td>
+      <td>IBFD; WU International Taxation Research Paper 2015-15</td>
+      <td><span class="tag tag-add">政策提言</span></td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>Arrieta-Ibarra, I. / Goff, L. / Jiménez-Hernández, D. / Lanier, J. / Weyl, E.G.</td>
+      <td>Should We Treat Data as Labor? Moving Beyond "Free"</td>
+      <td>2018</td>
+      <td>AEA Papers and Proceedings, 108, 38–42</td>
+      <td><span class="tag tag-out">データ課税</span></td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>IMF Fiscal Affairs Dept. (Hebous, S. et al.)</td>
+      <td>Tec(h)tonic Shifts: Taxing the "Digital Economy"</td>
+      <td>2020</td>
+      <td>IMF Working Paper WP/20/76</td>
+      <td><span class="tag tag-add">政策分析</span></td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>OECD/G20 Inclusive Framework</td>
+      <td>Progress Report on Amount A of Pillar One</td>
+      <td>2022</td>
+      <td>OECD（税務行政・確実性側面の進捗報告）</td>
+      <td><span class="tag tag-ctrl">政策文書</span></td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>OECD/G20 Inclusive Framework</td>
+      <td>Model Rules for Reporting by Platform Operators with respect to Sellers in the Sharing and Gig Economy (MRDP)</td>
+      <td>2020</td>
+      <td>OECD（2020年6月29日承認）</td>
+      <td><span class="tag tag-ctrl">政策文書</span></td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>EU Council</td>
+      <td>DAC7: Directive 2021/514 amending Directive 2011/16/EU</td>
+      <td>2021</td>
+      <td>EU（2023年1月1日発効）</td>
+      <td><span class="tag tag-ctrl">政策文書</span></td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>Jin, P. / Feng, Z. / Li, G. / Cai, N.</td>
+      <td>The Effect of Platform Data Quality on Tax Compliance in Digital Economy: A Multiagent Based Simulation</td>
+      <td>2023</td>
+      <td>Complexity, 2023, Art. 5511572</td>
+      <td><span class="tag tag-add">実証</span></td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td>Avi-Yonah, R.S. / Kim, Y.R. / Sam, K.</td>
+      <td>A New Framework for Digital Taxation</td>
+      <td>2022</td>
+      <td>Harvard International Law Journal, 63(2), 279–341</td>
+      <td><span class="tag tag-retain">理論</span></td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>Fuest, C. / Spengel, C. / Finke, K. / Heckemeyer, J. / Nusser, H.</td>
+      <td>Profit Shifting and 'Aggressive' Tax Planning by Multinational Firms: Issues and Options for Reform</td>
+      <td>2013</td>
+      <td>ZEW Discussion Paper 13-044（デジタル文脈でも引用継続）</td>
+      <td><span class="tag tag-out">基礎研究</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2><span class="section-num">3</span> 論文別：主要命題と情報問題の整理</h2>
+
+<!-- Paper 1 -->
+<div class="card card-accent">
+  <h3><span class="paper-num">1</span> Devereux &amp; Vella (2018) — Taxing the Digitalised Economy</h3>
+  <p><strong>主要命題：</strong>デジタル化された経済に対する課税改革として、①高度デジタル企業（HDB）を対象とした「ターゲット型改革」と②国際課税制度全体の「システム型改革」を比較し、後者（仕向地主義課税）を支持する。</p>
+  <div class="info-gap">
+    <strong>情報問題：</strong> HDBは物理的拠点なしに市場国から超過利潤を得るため、税務当局は①利潤がどの国で生じたかを観察できない、②ユーザー貢献分の価値を切り分けられない。ターゲット型改革（DST）はこの情報問題を回避するために売上課税に依拠するが、それ自体が経済的歪曲を生む。
+  </div>
+  <p class="ref">出所：British Tax Review 2018(4), 301–320; Oxford CBT WP 18/23 <a href="https://oxfordtax.web.ox.ac.uk/files/wp18-23pdf">リンク</a></p>
+</div>
+
+<!-- Paper 2 -->
+<div class="card card-accent">
+  <h3><span class="paper-num">2</span> Devereux et al. (2021) — Taxing Profit in a Global Economy</h3>
+  <p><strong>主要命題：</strong>現行国際課税制度は根本的に欠陥があり、仕向地主義（sales-based）課税への転換が必要。RPAI（残余利益按分）とDBCFT（仕向地キャッシュフロー税）の2案を詳細に評価。デジタル経済は仕向地基準への移行を必然的に加速させる。</p>
+  <div class="info-gap">
+    <strong>情報問題：</strong> 既存の移転価格ルールはアームズレングス原則に依拠するが、無形資産（データ、アルゴリズム、プラットフォーム価値）の「比較可能取引」が存在しないため、tax authority は適正価格を観察できない。法人の帳簿と実質的価値創造地の乖離が制度的に不可視化される。
+  </div>
+  <p class="ref">出所：Oxford University Press, 2021, ISBN 9780198808077 <a href="https://global.oup.com/academic/product/taxing-profit-in-a-global-economy-9780198808077">リンク</a></p>
+</div>
+
+<!-- Paper 3 -->
+<div class="card card-purple">
+  <h3><span class="paper-num-purple">3</span> Schön (2019) — One Answer to Why and How to Tax the Digitalized Economy</h3>
+  <p><strong>主要命題：</strong> OECDの3提案（「significant market presence」「user contribution」「marketing intangibles」）を検討し、いずれも情報問題を解決しないと批判。「デジタル投資に基づく課税」（digital investment tax）という新たな根拠を提示する。</p>
+  <div class="info-gap">
+    <strong>情報問題：</strong> 「ユーザー貢献」概念は定量化が困難であり、それを課税根拠にすると① contribution の評価基準が恣意的、②国境を越えるユーザーの帰属が判定不能、③二重課税・二重非課税リスクが増大する。「marketing intangibles」も価値配分の情報不足が問題。
+  </div>
+  <p class="ref">出所：Intertax, 47(12), 1003–1022, Dec. 2019 <a href="https://kluwerlawonline.com/journalarticle/Intertax/47.12/TAXI2019105">リンク</a></p>
+</div>
+
+<!-- Paper 4 -->
+<div class="card card-orange">
+  <h3><span class="paper-num-orange">4</span> Olbert &amp; Spengel (2019) — Taxation in the Digital Economy</h3>
+  <p><strong>主要命題：</strong>デジタル経済における直接税（法人利益課税）・間接税（消費課税）双方の課題を概観し、「データ」という新たな価値源泉が既存の税制枠組みで捕捉できないことを示す。</p>
+  <div class="info-gap">
+    <strong>情報問題：</strong> データの価値は外部観察者には不可視であり、企業内部のプロセス（機械学習・アルゴリズム開発）を通じて初めて現れる。この非観測性が移転価格評価を根本的に困難にし、BEPS対策の実効性を限定する。
+  </div>
+  <p class="ref">出所：ZEW Discussion Paper 19-010; International Tax Studies 2 (2019) <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3368092">SSRN</a></p>
+</div>
+
+<!-- Paper 5 & 6 -->
+<div class="card card-purple">
+  <h3><span class="paper-num-purple">5</span> Cui (2019) — The Digital Services Tax: A Conceptual Defense</h3>
+  <h3 style="margin-top:0.8rem;"><span class="paper-num-purple">6</span> Cui &amp; Hashimzade (2019) — DST as a Tax on Location-Specific Rent</h3>
+  <p><strong>主要命題（論文5）：</strong>DSTはプラットフォームが獲得する「location-specific rent（LSR）」を市場国が課税回収する手段として概念的に正当化される。物理的存在・支払い源泉・関連者間利益配分という従来の枠組みがLSRを不可視化する。</p>
+  <p><strong>主要命題（論文6）：</strong>LSRを課税対象とする経済学的根拠を定式化。プラットフォームの二面市場構造においてLSRが隠匿される仕組みを分析。</p>
+  <div class="info-gap">
+    <strong>情報問題：</strong> 二面市場において一方の側（ユーザー）が「無料」でサービスを受け、他方（広告主等）から収益を得る構造のため、市場国における価値創造とキャッシュフローの乖離が生じ、税務当局は課税すべき利潤の所在を把握できない。
+  </div>
+  <p class="ref">出所：Tax Law Review (NYU) 2019, SSRN 3273641 / CESifo WP 7737, 2019 <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3273641">SSRN論文5</a> | <a href="https://ideas.repec.org/p/ces/ceswps/_7737.html">CESifo論文6</a></p>
+</div>
+
+<!-- Paper 7 -->
+<div class="card card-accent">
+  <h3><span class="paper-num">7</span> Hongler &amp; Pistone (2015) — Blueprints for a New PE Nexus</h3>
+  <p><strong>主要命題：</strong>デジタルプレゼンス（仮想PE）の概念設計。物理的存在に依存した恒久的施設概念を再構築し、「便益理論（benefit theory）」に基づく新たなnexus基準を提案。OECD BEPS Action 1の直接的先行研究。</p>
+  <div class="info-gap">
+    <strong>情報問題：</strong> 「significant digital presence」の認定には①ユーザー数、②デジタル取引量、③コンテンツ貢献等の観測が必要だが、これらは企業サーバーの外部からは観測できない。市場国の税務当局は根拠指標の収集手段を持たない。
+  </div>
+  <p class="ref">出所：IBFD, 2015; WU International Taxation Research Paper Series No. 2015-15 <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2591829">SSRN</a></p>
+</div>
+
+<!-- Paper 8 -->
+<div class="card card-orange">
+  <h3><span class="paper-num-orange">8</span> Arrieta-Ibarra et al. (2018) — Should We Treat Data as Labor?</h3>
+  <p><strong>主要命題：</strong>現行のデジタルエコノミーにおけるユーザーデータは「資本（企業が観察して作成するもの）」として扱われているが、これはユーザーの役割を過小評価し、データ経済の利益を不平等に分配する。データを「労働」として扱い、ユーザーに補償するデータ労働運動を提唱。</p>
+  <div class="info-gap">
+    <strong>情報問題（課税への含意）：</strong> データが労働と位置付けられないため、①ユーザーへの「対価」が支払われず申告所得に現れない、②プラットフォーム企業が膨大な価値を「無形」のまま保有し課税所得から隠蔽できる。課税当局は価値の発生地点を特定できない。
+  </div>
+  <p class="ref">出所：AEA Papers and Proceedings, 108, 38–42, May 2018 <a href="https://www.aeaweb.org/articles?id=10.1257%2Fpandp.20181003">AEA</a></p>
+</div>
+
+<!-- Paper 9 -->
+<div class="card card-accent">
+  <h3><span class="paper-num">9</span> Hebous et al. / IMF (2020) — Tec(h)tonic Shifts: Taxing the "Digital Economy"</h3>
+  <p><strong>主要命題：</strong>デジタル化はデジタル企業だけでなく経済全体に影響を与えており、伝統的な「ring-fencing（デジタル部門の切り出し）」は機能しない。ユーザーの活動が法人課税の根拠たりうるという概念的根拠を示す。</p>
+  <div class="info-gap">
+    <strong>情報問題：</strong> ユーザーはオンライン活動を通じてデジタルサービスの価値を生み出す「重要な駆動力」であるが、その貢献分の計量は技術的に不可能に近い。DST（売上課税）はこの問題を回避するが、経済的効率性コストを発生させる。
+  </div>
+  <p class="ref">出所：IMF Working Paper WP/20/76, May 2020 <a href="https://www.imf.org/en/Publications/WP/Issues/2020/05/29/Tec-h-tonic-Shifts-Taxing-the-Digital-Economy-49363">IMF</a></p>
+</div>
+
+<!-- Paper 10 -->
+<div class="card card-accent">
+  <h3><span class="paper-num">10</span> OECD (2022) — Progress Report on Amount A of Pillar One</h3>
+  <p><strong>主要命題：</strong>Pillar One Amount Aの税務行政・確実性側面に関する進捗報告。対象MNEの超過利潤（売上10%超）の25%を市場国に配分する枠組みと、その行政的実施（情報収集・申告・紛争解決）の課題を詳述。</p>
+  <div class="info-gap">
+    <strong>情報問題：</strong> ①売上の市場国帰属（source rules）の判定には企業側の自己申告に依存せざるを得ない、②超過利潤の計算基礎となる財務会計データの信頼性確保が課題、③二重課税防止のための情報交換メカニズムが未成熟。
+  </div>
+  <p class="ref">出所：OECD, October 2022 <a href="https://www.oecd.org/content/dam/oecd/en/publications/reports/2022/10/progress-report-on-the-administration-and-tax-certainty-aspects-of-amount-a-of-pillar-one_da8dad70/2437139f-en.pdf">OECD PDF</a></p>
+</div>
+
+<!-- Paper 11 & 12 -->
+<div class="card card-green">
+  <h3><span class="paper-num-orange">11</span> OECD (2020) — Model Reporting Rules for Digital Platforms (MRDP)</h3>
+  <h3 style="margin-top:0.8rem;"><span class="paper-num-orange">12</span> EU Council (2021) — DAC7 (Directive 2021/514)</h3>
+  <p><strong>主要命題（MRDP/DAC7）：</strong>シェアリング・ギグエコノミーにおけるプラットフォームに、出品者・販売者の所得情報を収集・税務当局に報告することを義務付けるモデルルール。プラットフォームは情報収集の最適な主体（best-placed party）とされる。DAC7はEUでのMRDP実装版（2023年1月1日発効）。</p>
+  <div class="solution-item">
+    <strong>情報問題への対処：</strong> プラットフォームが出品者情報を保有しているという「情報優位性」を活用し、税務当局の情報格差を制度的に補完する。
+  </div>
+  <div class="limit-item">
+    <strong>限界：</strong> ①対象プラットフォームの範囲定義が曖昧（DAC7での "platform" 定義論争）、②国境を越える取引の申告管轄が未確定、③非登録インフォーマルプラットフォームは対象外。
+  </div>
+  <p class="ref">出所：OECD 2020年6月; EU Directive 2021/514, Jan. 2023 <a href="https://www.oecd.org/en/publications/model-rules-for-reporting-by-platform-operators-with-respect-to-sellers-in-the-sharing-and-gig-economy_d7973047-en.html">OECD MRDP</a> | <a href="https://taxation-customs.ec.europa.eu/taxation/tax-transparency-cooperation/administrative-co-operation-and-mutual-assistance/dac7_en">DAC7</a></p>
+</div>
+
+<!-- Paper 13 -->
+<div class="card card-orange">
+  <h3><span class="paper-num-orange">13</span> Jin, Feng, Li &amp; Cai (2023) — Platform Data Quality and Tax Compliance</h3>
+  <p><strong>主要命題：</strong>デジタル経済における税務コンプライアンスに対するプラットフォームデータ品質の影響を、期待効用理論モデルとマルチエージェントシミュレーションにより分析。プラットフォームのデータ共有が情報非対称性を緩和しコンプライアンスを向上させることを示す。</p>
+  <div class="info-gap">
+    <strong>情報問題：</strong> デジタル経済での情報非対称性は伝統的経済より顕著。ユーザーと企業間にもデータ収集・利用に関する情報格差が存在し、プライバシー保護の欠如とともに税務非遵守の温床となる。
+  </div>
+  <p class="ref">出所：Complexity, 2023, Art. 5511572, DOI: 10.1155/2023/5511572 <a href="https://onlinelibrary.wiley.com/doi/10.1155/2023/5511572">Wiley</a></p>
+</div>
+
+<!-- Paper 14 -->
+<div class="card card-purple">
+  <h3><span class="paper-num-purple">14</span> Avi-Yonah, Kim &amp; Sam (2022) — A New Framework for Digital Taxation</h3>
+  <p><strong>主要命題：</strong>OECDのPillar One/TwoとDSTを比較し、どちらも市場国の正当な課税権を十分に回復しないと批判。多国籍企業の「unit of taxation」を再定義し、連結ユニタリー課税（formulary apportionment）への移行を提唱。</p>
+  <div class="info-gap">
+    <strong>情報問題：</strong> アームズレングス原則（ALP）はデジタル無形資産に関して①比較対象取引が存在しない、②グループ内ルーティング操作で課税所得が人為的に移動できる。ユニタリー課税は一定程度この問題を緩和するが、formulaの分子・分母の計測精度が新たな情報問題を生む。
+  </div>
+  <p class="ref">出所：Harvard International Law Journal, 63(2), 279–341, Spring 2022 <a href="https://journals.law.harvard.edu/ilj/wp-content/uploads/sites/84/HLI204_crop-3.pdf">HILJ PDF</a></p>
+</div>
+
+<!-- Paper 15 -->
+<div class="card card-accent">
+  <h3><span class="paper-num">15</span> Fuest, Spengel, Finke, Heckemeyer &amp; Nusser (2013) — Profit Shifting and Aggressive Tax Planning</h3>
+  <p><strong>主要命題：</strong>多国籍企業による利益移転・積極的タックスプランニングの実証分析。IP（知的財産）ベースの利益移転スキームを詳述し、政策オプションを提示。デジタル経済論においても基礎的引用文献として機能。</p>
+  <div class="info-gap">
+    <strong>情報問題：</strong> 移転価格ルールの執行において税務当局と納税者の間の情報非対称性が根本的問題。企業が保有するグループ内取引情報・無形資産評価情報は当局には原則的に不可視。
+  </div>
+  <p class="ref">出所：ZEW Discussion Paper 13-044, October 2013 <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2343124">SSRN</a></p>
+</div>
+
+<h2><span class="section-num">4</span> 既存の解決策とその限界</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>解決策</th>
+      <th>情報問題への対処</th>
+      <th>限界・残存する問題</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>デジタルサービス税（DST）</strong><br>仏・英・伊・ケニア等</td>
+      <td>売上課税により利益配分の情報問題を回避。課税基準が観測可能な売上収益</td>
+      <td>①法人所得税ではないため利益率に無関係・赤字企業にも課税される歪曲、②投資抑制・消費者転嫁、③WTO・二国間租税条約との整合性問題、④企業から当局への売上情報の信頼性検証がなお困難</td>
+    </tr>
+    <tr>
+      <td><strong>Pillar One Amount A</strong><br>OECD, 2021–2023</td>
+      <td>財務会計（IFRS/GAAP）を基礎とする超過利潤計算で代替観測指標を導入。売上帰属ルールを詳細化</td>
+      <td>①売上の市場国帰属判定が企業申告依存、②財務会計と税務所得の乖離、③多国間条約締結の政治的障壁（MLC未発効）、④Amount Aの実効額が小さすぎるという批判</td>
+    </tr>
+    <tr>
+      <td><strong>OECD MRDP / EU DAC7</strong><br>プラットフォーム報告義務</td>
+      <td>プラットフォームの情報優位性を制度的に活用。ギグワーカー・出品者所得を強制的に当局に可視化</td>
+      <td>①対象プラットフォームの定義曖昧性（DAC7 "platform" 解釈論）、②クロスボーダー取引の管轄競合、③非登録・非EU事業者は対象外、④DAC7初年度（2024年1月）データの品質・活用方法が未検証</td>
+    </tr>
+    <tr>
+      <td><strong>仮想恒久的施設（SEP）概念</strong><br>インド・イスラエル等が先行</td>
+      <td>物理的存在に代わる課税nexusとして「significant economic presence」を定義し、課税根拠の論理的基盤を構築</td>
+      <td>①SEPの閾値指標（ユーザー数・収益・データ量等）の観測が困難、②定義の国際的統一が未達成、③PE認定後の利益帰属計算がALPの情報問題を再び惹起する</td>
+    </tr>
+    <tr>
+      <td><strong>HTVI（評価困難無形資産）規定</strong><br>OECD TP Guidelines, Ch.VI</td>
+      <td>将来予測難易度を踏まえた価格改定メカニズム（ex post adjustment）で情報非対称性を一部是正</td>
+      <td>①ex post adjustmentには法的安定性の問題、②合意時点での情報格差は解消されない、③デジタル分野の評価モデル（DCF等）の仮定が企業に有利に設定可能</td>
+    </tr>
+    <tr>
+      <td><strong>CbCR（国別報告書）</strong><br>BEPS Action 13</td>
+      <td>グループ連結情報の可視化により大規模な利益移転のスクリーニングが可能に</td>
+      <td>①集計情報であり取引レベルの証拠にならない、②プライマリー課税当局のみに提供され、市場国当局は入手困難（Section 1 vs Section 3）、③デジタル無形資産の価値配分には直接対処しない</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2><span class="section-num">5</span> 未解決の論点（論文テーマとして有望なもの）</h2>
+
+<div class="unsolved-item">
+  <strong>未解決論点1：ユーザー価値の定量化問題</strong><br>
+  ネットワーク効果・データ提供・コンテンツ生成というユーザー貢献の経済的価値をどう計測し、それを課税基盤に落とし込むか。Cui (2019) のLSR概念は理論的整合性を持つが、実際の計量方法論が確立されていない。<span class="tag tag-retain">理論的空白</span>
+</div>
+
+<div class="unsolved-item">
+  <strong>未解決論点2：Amount A の行政コストと情報コストのトレードオフ</strong><br>
+  Pillar One Amount A の実施には財務会計データの多国間共有・照合という巨大な行政インフラが必要。この「情報コスト」が再配分される税収便益を上回る可能性を定量的に評価した研究が少ない。<span class="tag tag-add">実証的空白</span>
+</div>
+
+<div class="unsolved-item">
+  <strong>未解決論点3：DAC7/MRDP の実効性検証</strong><br>
+  2023-2024年のDAC7初年度データが実際にどれだけ課税ギャップを縮小したか。報告情報の品質・精度・活用方法に関する実証研究は2026年時点でほぼ存在しない。<span class="tag tag-add">実証的空白</span>
+</div>
+
+<div class="unsolved-item">
+  <strong>未解決論点4：デジタル無形資産のHTVI評価モデルへのAI技術応用</strong><br>
+  機械学習・生成AIによる無形資産評価の自動化が進む中、企業側が評価モデルの選択権を持つ状況での情報非対称性がいかに拡大するか。HTVI規定のex post adjusterが機能しうるか。<span class="tag tag-retain">理論的空白</span>
+</div>
+
+<div class="unsolved-item">
+  <strong>未解決論点5：ギグエコノミーと租税法律主義の緊張</strong><br>
+  プラットフォームが労働者か独立請負業者かを自由に分類できる現状は、情報非対称性の問題にとどまらず租税法律主義（課税要件の明確性）との緊張を生む。どの程度の情報開示義務が「事業者の自由」と整合するか。<span class="tag tag-out">法的空白</span>
+</div>
+
+<div class="unsolved-item">
+  <strong>未解決論点6：データ課税論の実装可能性</strong><br>
+  Arrieta-Ibarra et al. (2018) の「データ労働」論、Posner &amp; Weyl (2019)「Radical Markets」のデータ所有権論を実際の課税制度（データ課税・デジタル広告税等）として実装する場合の評価基盤・行政費用・法的根拠の問題。EU AI Act との交錯も未分析。<span class="tag tag-retain">制度設計的空白</span>
+</div>
+
+<div class="unsolved-item">
+  <strong>未解決論点7：Pillar Two GloBE と Pillar One の相互情報問題</strong><br>
+  Pillar Two（15%最低税率）とPillar One（市場国への再配分）は設計上独立しているが、実際の執行では同一企業グループに対してGloBEとAmount Aが同時に適用される。両者の間での情報整合性（qualified domestic top-up tax計算への Amount A の影響等）が理論的に整理されていない。<span class="tag tag-ctrl">政策的空白</span>
+</div>
+
+<h2><span class="section-num">6</span> 調査方法と検索ログ</h2>
+
+<div class="card">
+  <h3>検索実施概要</h3>
+  <table>
+    <thead>
+      <tr><th>方法</th><th>クエリ例</th><th>ヒット件数</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>ローカルDB横断grep（multi_search.py）</td><td>"デジタル経済課税 情報の非対称性", "digital economy taxation platform"</td><td>0件（日本税法DB中心のため対象外）</td></tr>
+      <tr><td>Web検索（複数クエリ並列）</td><td>"digital economy taxation information asymmetry academic paper 2018-2023", "Pillar One Amount A information problem", "Devereux Vella digital services tax", "Becker Fuest digital economy", "gig economy platform taxation Uber Airbnb", "data as labor Arrieta-Ibarra Weyl", "OECD model reporting rules gig economy", "DAC7 information asymmetry", "Hongler Pistone PE nexus", "Jin 2023 platform data quality Complexity" 他12クエリ</td><td>80件以上の学術文献・政策文書を確認</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h2><span class="section-num">7</span> 補足：主要研究者マップ</h2>
+
+<div class="card card-accent">
+  <svg viewBox="0 0 860 260" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;display:block;margin:0.5rem auto;">
+    <!-- 中心：OECD/政策議論 -->
+    <ellipse cx="430" cy="130" rx="80" ry="40" fill="#ebf4ff" stroke="#2c5282" stroke-width="2"/>
+    <text x="430" y="126" text-anchor="middle" font-size="11" font-weight="700" fill="#2c5282">OECD / G20</text>
+    <text x="430" y="142" text-anchor="middle" font-size="9" fill="#4a5568">BEPS Action 1 / Pillar 1</text>
+
+    <!-- Oxford CBT -->
+    <ellipse cx="150" cy="80" rx="90" ry="35" fill="#f0fff4" stroke="#276749" stroke-width="2"/>
+    <text x="150" y="76" text-anchor="middle" font-size="11" font-weight="700" fill="#276749">Oxford CBT</text>
+    <text x="150" y="92" text-anchor="middle" font-size="9" fill="#4a5568">Devereux / Vella / Keen</text>
+    <line x1="235" y1="93" x2="355" y2="120" stroke="#276749" stroke-width="1.5" stroke-dasharray="4"/>
+
+    <!-- ZEW / ifo -->
+    <ellipse cx="700" cy="80" rx="90" ry="35" fill="#faf5ff" stroke="#553c9a" stroke-width="2"/>
+    <text x="700" y="76" text-anchor="middle" font-size="11" font-weight="700" fill="#553c9a">ZEW / ifo</text>
+    <text x="700" y="92" text-anchor="middle" font-size="9" fill="#4a5568">Fuest / Spengel / Olbert</text>
+    <line x1="615" y1="93" x2="505" y2="120" stroke="#553c9a" stroke-width="1.5" stroke-dasharray="4"/>
+
+    <!-- IMF -->
+    <ellipse cx="150" cy="200" rx="90" ry="35" fill="#fffaf0" stroke="#c05621" stroke-width="2"/>
+    <text x="150" y="196" text-anchor="middle" font-size="11" font-weight="700" fill="#c05621">IMF</text>
+    <text x="150" y="212" text-anchor="middle" font-size="9" fill="#4a5568">Hebous / Klemm / de Mooij</text>
+    <line x1="235" y1="183" x2="355" y2="150" stroke="#c05621" stroke-width="1.5" stroke-dasharray="4"/>
+
+    <!-- Max Planck / Law -->
+    <ellipse cx="700" cy="200" rx="100" ry="35" fill="#fff5f5" stroke="#c53030" stroke-width="2"/>
+    <text x="700" y="192" text-anchor="middle" font-size="11" font-weight="700" fill="#c53030">法学系（Harvard/UBC/MPI）</text>
+    <text x="700" y="208" text-anchor="middle" font-size="9" fill="#4a5568">Schön / Avi-Yonah / Cui</text>
+    <line x1="605" y1="183" x2="505" y2="150" stroke="#c53030" stroke-width="1.5" stroke-dasharray="4"/>
+  </svg>
+  <p class="ref">注：矢印はOECD政策議論への学術的影響関係を示す（実線=直接関与、点線=間接的影響）</p>
+</div>
+
+<footer>
+  2026-05-22 — 調査対象：学術論文・政策文書（2015–2023年中心）
+</footer>
+
+</body>
+</html>
