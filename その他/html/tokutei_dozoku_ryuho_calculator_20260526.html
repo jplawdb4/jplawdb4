@@ -538,7 +538,7 @@
           <div class="mini"><div class="label">7 20%相当額</div><div class="value" id="tax7">0円</div></div>
         </div>
         <div class="notice">
-          課税留保金額21は1,000円未満を切り捨てます。欄2は国税庁記載要領の端数調整に合わせ、欄21で切り捨てた端数との比較で切上げを反映します。
+          課税留保金額21は1,000円未満を切り捨てます。短期事業年度の場合、年3,000万円・年1億円の税率区分基準と定額基準額の年2,000万円を月数按分し、税率区分額は1,000円未満を切り捨てます。
         </div>
       </div>
 
@@ -700,6 +700,11 @@
       return Math.floor(value);
     }
 
+    function ratioYen(value, numerator, denominator) {
+      if (!Number.isFinite(value)) return 0;
+      return floorYen((value * numerator) / denominator);
+    }
+
     function floorThousand(value) {
       if (!Number.isFinite(value) || value <= 0) return 0;
       return Math.floor(value / 1000) * 1000;
@@ -750,14 +755,6 @@
       return months;
     }
 
-    function roundedLine2(rawLine2, line21Remainder, remaining) {
-      if (rawLine2 <= 0) return 0;
-      const base = floorThousand(rawLine2);
-      const remainder = rawLine2 - base;
-      const adjusted = remainder > line21Remainder ? base + 1000 : base;
-      return Math.min(floorThousand(remaining), adjusted);
-    }
-
     function publishFinal(months, m19, m20) {
       const rawTaxable = Math.max(0, m19 - m20);
       const m21 = floorThousand(rawTaxable);
@@ -766,11 +763,11 @@
       const band1 = floorThousand(Math.min(m21, threshold30));
       const remainingAfterBand1 = Math.max(0, m21 - band1);
       const rawBand2 = Math.min(remainingAfterBand1, Math.max(0, threshold100 - band1));
-      const band2 = roundedLine2(rawBand2, rawTaxable - m21, remainingAfterBand1);
+      const band2 = floorThousand(rawBand2);
       const band3 = Math.max(0, m21 - band1 - band2);
-      const tax5 = floorYen(band1 * 0.10);
-      const tax6 = floorYen(band2 * 0.15);
-      const tax7 = floorYen(band3 * 0.20);
+      const tax5 = ratioYen(band1, 10, 100);
+      const tax6 = ratioYen(band2, 15, 100);
+      const tax7 = ratioYen(band3, 20, 100);
       const tax8 = tax5 + tax6 + tax7;
 
       setText("tax8", yen(tax8));
@@ -794,12 +791,12 @@
         get("sM9") - get("sM9Inner") + get("sM10") - get("sM11") -
         m15 + get("sOtherAdd") - get("sOtherDeduct")
       );
-      const p2 = floorYen(get("sP1") * 0.25);
+      const p2 = ratioYen(get("sP1"), 25, 100);
       const p3 = floorYen(get("sP3Base") - get("sM10"));
       const p6 = p3;
       const p7 = Math.max(0, floorYen(p2 - p6));
       const p8 = floorYen(20000000 * months / 12);
-      const p33 = floorYen(get("sIncomeEtc") * 0.4);
+      const p33 = ratioYen(get("sIncomeEtc"), 40, 100);
       const p34 = Math.max(p7, p8, p33);
 
       setOut("sM15", m15);
@@ -826,7 +823,7 @@
       }
       const m10 = get("m10");
       const p1 = get("p1");
-      const p2 = floorYen(p1 * 0.25);
+      const p2 = ratioYen(p1, 25, 100);
       const p3 = floorYen(get("p3base") - m10);
       const p4 = get("p4");
       const p5 = get("p5");
@@ -841,7 +838,7 @@
         p[17] - p[18] - p[19] + p[20] + p[21] - p[22] + p[23] + p[24] -
         p[25] + p[26] + p[27] - p[28] + p[29] + p[30] - p[31]
       );
-      const p33 = floorYen(p32 * 0.4);
+      const p33 = ratioYen(p32, 40, 100);
       const p34 = Math.max(p7, p8, p33);
 
       setOut("p2", p2);
@@ -862,9 +859,10 @@
 
       const basisKind = document.getElementById("juminKind").value;
       const basis = basisKind === "22" ? b22 : b23;
-      const j24 = floorYen(basis * 0.104);
-      const j25 = floorYen(get("donation") * 0.4);
-      const j26 = Math.max(0, floorYen((j24 + get("adjB1") * 0.104 - get("adjB6") * 0.104) * 0.2));
+      const j24 = ratioYen(basis, 104, 1000);
+      const j25 = ratioYen(get("donation"), 40, 100);
+      const j26Base = j24 * 1000 + get("adjB1") * 104 - get("adjB6") * 104;
+      const j26 = Math.max(0, floorYen((j26Base * 20) / 100000));
       const j27 = Math.min(j25, j26);
       const j28 = Math.max(0, floorYen(j24 - j27));
       setOut("j24", j24);
