@@ -1,0 +1,948 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>特定同族会社 留保金課税計算シート</title>
+  <style>
+    :root {
+      --ink: #202426;
+      --muted: #65706d;
+      --line: #d7ded9;
+      --paper: #fbfcf8;
+      --panel: #ffffff;
+      --accent: #0f6b4d;
+      --accent-2: #a34d12;
+      --soft: #eef5ef;
+      --warn: #fff4df;
+      --danger: #9f2f2f;
+      --shadow: 0 16px 36px rgba(32, 36, 38, .08);
+      font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    [hidden] { display: none !important; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgba(15, 107, 77, .04) 0 1px, transparent 1px 40px),
+        linear-gradient(0deg, rgba(15, 107, 77, .035) 0 1px, transparent 1px 40px),
+        var(--paper);
+      line-height: 1.55;
+    }
+
+    header {
+      padding: 28px 28px 18px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, .78);
+      backdrop-filter: blur(10px);
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(24px, 3.4vw, 38px);
+      letter-spacing: 0;
+      font-weight: 800;
+      line-height: 1.28;
+      word-break: keep-all;
+    }
+
+    .nowrap { white-space: nowrap; }
+
+    .lead {
+      max-width: 980px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 390px;
+      gap: 20px;
+      padding: 20px 28px 36px;
+      align-items: start;
+    }
+
+    .toolbar,
+    section,
+    aside {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+      padding: 14px;
+      margin-bottom: 18px;
+      align-items: end;
+    }
+
+    .field label,
+    .check label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    input,
+    select {
+      width: 100%;
+      min-height: 38px;
+      padding: 8px 10px;
+      border: 1px solid #c7d1cb;
+      border-radius: 6px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    input:focus,
+    select:focus,
+    button:focus {
+      outline: 2px solid rgba(15, 107, 77, .25);
+      outline-offset: 1px;
+      border-color: var(--accent);
+    }
+
+    button {
+      min-height: 38px;
+      border: 1px solid #b9c5be;
+      border-radius: 6px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:hover { border-color: var(--accent); color: var(--accent); }
+
+    .stack { display: grid; gap: 18px; }
+
+    section h2,
+    aside h2 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 0;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      font-size: 17px;
+      letter-spacing: 0;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 880px;
+    }
+
+    th,
+    td {
+      padding: 10px 10px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    th {
+      background: #f3f7f3;
+      color: #3f4b47;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .no {
+      width: 56px;
+      color: var(--accent);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .amount {
+      width: 190px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .amount input { text-align: right; font-variant-numeric: tabular-nums; }
+
+    .computed {
+      display: block;
+      min-height: 38px;
+      padding: 8px 10px;
+      border: 1px solid #c7d1cb;
+      border-radius: 6px;
+      background: #f5f8f5;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .source {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .formula {
+      color: #46524f;
+      font-size: 12px;
+    }
+
+    aside {
+      position: sticky;
+      top: 14px;
+      overflow: hidden;
+    }
+
+    .result-panel {
+      padding: 16px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .headline-result {
+      padding: 16px;
+      border: 1px solid #a9c5b7;
+      border-radius: 8px;
+      background: linear-gradient(180deg, #f4fbf6, #ffffff);
+    }
+
+    .headline-result .label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .headline-result .value {
+      margin-top: 2px;
+      color: var(--accent);
+      font-size: 32px;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+      word-break: break-word;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .basis-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .mini {
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+    }
+
+    .mini .label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .mini .value {
+      margin-top: 4px;
+      font-size: 18px;
+      font-weight: 850;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .basis {
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      position: relative;
+    }
+
+    .basis.selected {
+      border-color: var(--accent);
+      background: #f1faf4;
+      box-shadow: inset 0 0 0 1px rgba(15, 107, 77, .16);
+    }
+
+    .basis .label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .basis .value {
+      margin-top: 4px;
+      font-size: 18px;
+      font-weight: 850;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .basis .pick {
+      display: inline-flex;
+      min-height: 20px;
+      margin-top: 7px;
+      padding: 1px 7px;
+      border-radius: 999px;
+      background: #e7f3eb;
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 850;
+    }
+
+    .notice {
+      padding: 12px;
+      border: 1px solid #ead2a8;
+      border-radius: 6px;
+      background: var(--warn);
+      color: #5d4620;
+      font-size: 12px;
+    }
+
+    .notice.danger {
+      border-color: #e0b1b1;
+      background: #fff1f1;
+      color: var(--danger);
+    }
+
+    .sources {
+      padding: 0 16px 16px;
+      font-size: 12px;
+    }
+
+    .sources ul {
+      margin: 10px 0 0;
+      padding-left: 18px;
+    }
+
+    a { color: var(--accent); text-decoration-thickness: 1px; }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .actions button {
+      padding: 0 12px;
+    }
+
+    .muted { color: var(--muted); }
+
+    @media print {
+      body { background: #fff; }
+      header,
+      .layout { padding: 12px; }
+      aside { position: static; box-shadow: none; }
+      .toolbar,
+      section,
+      aside { box-shadow: none; break-inside: avoid; }
+      button { display: none; }
+    }
+
+    @media (max-width: 1080px) {
+      .layout { grid-template-columns: 1fr; }
+      aside { position: static; }
+      .toolbar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 660px) {
+      header,
+      .layout { padding-left: 14px; padding-right: 14px; }
+      .toolbar { grid-template-columns: 1fr; }
+      .headline-result .value { font-size: 26px; }
+      .mini-grid { grid-template-columns: 1fr; }
+      .basis-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><span>特定同族会社</span> <span class="nowrap">留保金課税計算シート</span></h1>
+    <p class="lead">
+      法人税法67条の特定同族会社の特別税率について、別表三（一）を作る前の資料から計算します。
+      入力元は別表四・五・六・七・八・十・十七、配当決議資料、組織再編資料等にし、別表三（一）自体の欄番号は結果の対応先としてだけ表示します。
+    </p>
+  </header>
+
+  <main class="layout">
+    <div>
+      <div class="toolbar" aria-label="前提条件">
+        <div class="field">
+          <label for="calcMode">計算モード</label>
+          <select id="calcMode">
+            <option value="simple">簡便版</option>
+            <option value="detailed">詳細版</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="months">事業年度の月数</label>
+          <input id="months" type="number" min="1" max="12" step="1" value="12">
+        </div>
+        <div class="field">
+          <label for="tokutei">別表二18の判定</label>
+          <select id="tokutei">
+            <option value="yes">特定同族会社</option>
+            <option value="no">非該当</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="juminKind">住民税額24の基礎</label>
+          <select id="juminKind">
+            <option value="22">22 中小企業者等以外</option>
+            <option value="23">23 中小企業者等</option>
+          </select>
+        </div>
+        <div class="actions">
+          <button type="button" id="clearBtn">入力をクリア</button>
+          <button type="button" id="printBtn">印刷</button>
+        </div>
+      </div>
+
+      <div id="simpleStack" class="stack" hidden>
+        <section>
+          <h2>簡便版の入力 <span class="tag">通常ケース用</span></h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th class="no">区分</th>
+                  <th>項目</th>
+                  <th class="amount">金額</th>
+                  <th>入力元・計算式</th>
+                </tr>
+              </thead>
+              <tbody id="simpleRows"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <div id="detailedStack" class="stack">
+        <section>
+          <h2>留保控除額の計算 <span class="tag">付表一34相当</span></h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th class="no">欄</th>
+                  <th>項目</th>
+                  <th class="amount">金額</th>
+                  <th>入力元・計算式</th>
+                </tr>
+              </thead>
+              <tbody id="appendixRows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section>
+          <h2>課税留保金額の計算 <span class="tag">別表三（一）21相当</span></h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th class="no">欄</th>
+                  <th>項目</th>
+                  <th class="amount">金額</th>
+                  <th>入力元・計算式</th>
+                </tr>
+              </thead>
+              <tbody id="mainRows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section>
+          <h2>住民税額の計算 <span class="tag">13・24〜28</span></h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th class="no">欄</th>
+                  <th>項目</th>
+                  <th class="amount">金額</th>
+                  <th>入力元・計算式</th>
+                </tr>
+              </thead>
+              <tbody id="juminRows"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <aside>
+      <h2>計算結果 <span class="tag">別表三（一）1〜8</span></h2>
+      <div class="result-panel">
+        <div id="tokuteiNotice" class="notice danger" hidden>
+          別表二18が「特定同族会社」でない場合、このシートの特別税率計算は通常適用しません。判定を先に確認してください。
+        </div>
+        <div class="headline-result">
+          <div class="label">留保金額に対する税額 8</div>
+          <div class="value" id="tax8">0円</div>
+        </div>
+        <div class="mini-grid">
+          <div class="mini"><div class="label">課税留保金額 21</div><div class="value" id="line21">0円</div></div>
+          <div class="mini"><div class="label">当期留保金額 19</div><div class="value" id="line19">0円</div></div>
+          <div class="mini"><div class="label">留保控除額 20</div><div class="value" id="line20">0円</div></div>
+          <div class="mini"><div class="label">月数按分</div><div class="value" id="monthLabel">12/12</div></div>
+        </div>
+        <div>
+          <div class="source" style="margin-bottom:8px;font-weight:800;">留保控除額は3つの基準のうち最大額</div>
+          <div class="basis-grid">
+            <div class="basis" id="basisRetained"><div class="label">積立金基準額</div><div class="value" id="basisRetainedValue">0円</div><div class="pick" id="basisRetainedPick" hidden>採用</div></div>
+            <div class="basis" id="basisFixed"><div class="label">定額基準額</div><div class="value" id="basisFixedValue">0円</div><div class="pick" id="basisFixedPick" hidden>採用</div></div>
+            <div class="basis" id="basisIncome"><div class="label">所得基準額</div><div class="value" id="basisIncomeValue">0円</div><div class="pick" id="basisIncomePick" hidden>採用</div></div>
+          </div>
+        </div>
+        <div class="mini-grid">
+          <div class="mini"><div class="label">1 年3,000万円相当額以下</div><div class="value" id="band1">0円</div></div>
+          <div class="mini"><div class="label">5 10%相当額</div><div class="value" id="tax5">0円</div></div>
+          <div class="mini"><div class="label">2 年3,000万円超1億円以下</div><div class="value" id="band2">0円</div></div>
+          <div class="mini"><div class="label">6 15%相当額</div><div class="value" id="tax6">0円</div></div>
+          <div class="mini"><div class="label">3 年1億円超</div><div class="value" id="band3">0円</div></div>
+          <div class="mini"><div class="label">7 20%相当額</div><div class="value" id="tax7">0円</div></div>
+        </div>
+        <div class="notice">
+          課税留保金額21は1,000円未満を切り捨てます。欄2は国税庁記載要領の端数調整に合わせ、欄21で切り捨てた端数との比較で切上げを反映します。
+        </div>
+      </div>
+
+      <div class="sources">
+        <strong>主な出典</strong>
+        <ul>
+          <li><a href="https://laws.e-gov.go.jp/law/340AC0000000034" target="_blank" rel="noreferrer">e-Gov 法令検索 法人税法</a> 第67条</li>
+          <li><a href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/hojin/shinkoku/itiran2025/pdf/03(01).pdf" target="_blank" rel="noreferrer">国税庁 別表三（一）</a>、<a href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/hojin/shinkoku/itiran2025/pdf/03(01)-ki.pdf" target="_blank" rel="noreferrer">記載の仕方</a></li>
+          <li><a href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/hojin/shinkoku/itiran2025/pdf/03(01)-f1.pdf" target="_blank" rel="noreferrer">国税庁 別表三（一）付表一</a>、<a href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/hojin/shinkoku/itiran2025/pdf/03(01)-f1-ki.pdf" target="_blank" rel="noreferrer">記載の仕方</a></li>
+          <li><a href="https://www.nta.go.jp/publication/pamph/hojin/aramashi2025/pdf/02-04.pdf" target="_blank" rel="noreferrer">国税庁 令和7年版 法人税のあらましと申告の手引 別表三（一）</a></li>
+        </ul>
+        <p class="muted">令和8年4月1日以後開始事業年度は防衛特別法人税の申告が別途必要となるため、提出前に最新様式で確認してください。</p>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    const INPUTS = {};
+    const OUTPUTS = {};
+    const yenFormatter = new Intl.NumberFormat("ja-JP", { maximumFractionDigits: 0 });
+
+    const simpleRows = [
+      ["sM9", "留保", "留保所得金額", "別表四「52の②」。"],
+      ["sM9Inner", "留保", "別表四17の内書控除額", "別表四「17」に金額がある場合のみ入力。通常は0。"],
+      ["sM10", "留保", "前期末配当等の額", "前事業年度内に配当基準日があり、前期終了日の翌日から前期決算確定日までに決議された配当等。"],
+      ["sM11", "留保", "当期末配当等の額", "当期内に配当基準日があり、当期終了日の翌日から当期決算確定日までに決議された配当等。"],
+      ["sTaxCorpLocal", "税額", "法人税額及び地方法人税額の合計額", "別表一・地方法人税申告書から把握する本税ベースの法人税額及び地方法人税額。詳細算式を省略して直接入力。"],
+      ["sResidentTax", "税額", "住民税額", "法人税割額等の住民税額。地方税申告書又は税額計算資料から入力。"],
+      ["sForeignTaxEq", "税額", "外国関係会社等に係る控除対象所得税額等相当額", "該当がなければ0。別表十七（三の六）「1」に相当する元資料から入力。"],
+      ["sOtherAdd", "調整", "その他加算額", "通算法人の留保金加算額など、通常ケース以外の加算がある場合のみ入力。"],
+      ["sOtherDeduct", "調整", "その他控除額", "通算法人の留保金控除額、他の法人株式等の帳簿価額から減算される金額などがある場合のみ入力。"],
+      ["sM15", "計算", "法人税額等の合計額", "法人税額及び地方法人税額＋住民税額−外国関係会社等に係る控除対象所得税額等相当額。マイナスの場合は0。", true],
+      ["sM19", "計算", "当期留保金額", "留保所得金額−内書控除額＋前期末配当等−当期末配当等−法人税額等の合計額＋その他加算額−その他控除額。", true],
+      ["sP1", "控除", "期末資本金の額又は出資金の額", "商業登記、定款、申告書基本情報等。"],
+      ["sP2", "控除", "同上の25%相当額", "期末資本金の額又は出資金の額×25%。", true],
+      ["sP3Base", "控除", "別表五（一）の期首現在利益積立金額", "別表五（一）「31の①」。"],
+      ["sP3", "控除", "期首利益積立金額", "別表五（一）「31の①」−前期末配当等の額。", true],
+      ["sP6", "控除", "期末利益積立金額", "簡便版では組織再編等による増減を扱わず、期首利益積立金額をそのまま使用。組織再編がある場合は詳細版を使用。", true],
+      ["sP7", "控除A", "積立金基準額", "留保控除額の3基準の一つ。期末資本金等の25%相当額−期末利益積立金額。マイナスの場合は0。", true],
+      ["sP8", "控除B", "定額基準額", "留保控除額の3基準の一つ。2,000万円×月数/12。", true],
+      ["sIncomeEtc", "控除", "所得等の金額", "所得基準額の基礎。特殊な益金不算入・損金算入等を反映した所得等の金額。通常ケースでは別表四「52の①」を起点に確認。"],
+      ["sP33", "控除C", "所得基準額", "留保控除額の3基準の一つ。所得等の金額×40%。", true],
+      ["sP34", "控除採用", "留保控除額", "上の3基準（積立金基準額・定額基準額・所得基準額）のいずれか多い金額。", true],
+      ["sM21", "計算", "課税留保金額", "当期留保金額−留保控除額。1,000円未満切捨て。", true]
+    ];
+
+    const appendixRows = [
+      ["p1", "1", "期末資本金の額又は出資金の額", "商業登記、定款、申告書基本情報等。資本金等の額ではなく、資本金の額又は出資金の額。"],
+      ["p2", "2", "同上の25%相当額", "(1)×25%。", true],
+      ["p3base", "3基礎", "別表五（一）の期首現在利益積立金額", "別表五（一）「31の①」。"],
+      ["p3", "3", "期首利益積立金額", "別表五（一）「31の①」− 前期末配当等の額。前期末配当等は下の10欄相当の入力から自動控除。", true],
+      ["p4", "4", "適格合併等により増加した利益積立金額", "適格合併・適格分割型分割・完全支配関係法人の寄附修正事由に係る組織再編税務計算書、契約書、別表五（一）の増加明細。該当がなければ0。"],
+      ["p5", "5", "適格分割型分割等により減少した利益積立金額", "適格分割型分割・完全支配関係法人の寄附修正事由に係る組織再編税務計算書、契約書、別表五（一）の減少明細。該当がなければ0。"],
+      ["p6", "6", "期末利益積立金額", "(3)+(4)−(5)。", true],
+      ["p7", "7 控除A", "積立金基準額", "留保控除額の3基準の一つ。(2)−(6)。マイナスの場合は0。", true],
+      ["p8", "8 控除B", "定額基準額", "留保控除額の3基準の一つ。2,000万円×月数/12。", true],
+      ["p9", "9", "所得金額", "別表四「52の①」。"],
+      ["p10", "10", "非適格合併による譲渡利益額又は譲渡損失額", "別表四「38」。"],
+      ["p11", "11", "受取配当等の益金不算入額", "別表八（一）「5」から通算法人間配当等の額に係る金額を除いた金額。"],
+      ["p12", "12", "外国子会社等から受ける配当等の益金不算入額", "別表八（二）「26」＋別表十七（三の七）「27の計」。"],
+      ["p13", "13", "受贈益の益金不算入額", "別表四「16」。"],
+      ["p14", "14", "法人税額の還付金等", "別表四「19」＋別表四付表「7」。"],
+      ["p15", "15", "欠損金等の当期控除額", "別表七（一）「4の計」＋別表七（三）「9」若しくは「21」又は別表七（四）「10」。"],
+      ["p16", "16", "中間申告の繰戻還付に係る災害損失欠損金額の益金算入額", "別表四「37」。"],
+      ["p17", "17", "通算法人の所得基準額加算額", "通算法人以外は0。通算法人はグループ通算の所得基準額調整計算資料、通算グループ内通知資料から入力。"],
+      ["p18", "18", "通算法人の所得基準額控除額", "通算法人以外は0。通算法人はグループ通算の所得基準額調整計算資料、通算グループ内通知資料から入力。"],
+      ["p19", "19", "他の法人株式等の帳簿価額から減算される金額", "別表八（三）「13」の合計額。"],
+      ["p20", "20", "新鉱床探鉱費等の特別控除額", "別表十（三）「43」。"],
+      ["p21", "21", "対外船舶運航事業者の日本船舶所得の損金算入額", "別表十（四）「20」。"],
+      ["p22", "22", "対外船舶運航事業者の日本船舶所得の益金算入額", "別表十（四）「21」又は「23」。"],
+      ["p23", "23", "特許権等の譲渡等による所得の特別控除額", "別表十（五）「12」。"],
+      ["p24", "24", "沖縄認定法人等の所得の特別控除額", "別表十（一）「15」又は別表十（二）「10」。"],
+      ["p25", "25", "沖縄認定法人等の要加算調整額の益金算入額", "別表十（一）「16」又は別表十（二）「11」。"],
+      ["p26", "26", "収用等の場合等の所得の特別控除額", "別表十（六）「22」＋「37」＋「42」＋「47」＋「52」。"],
+      ["p27", "27", "特別新事業開拓事業者株式取得の特別勘定繰入額", "別表十（七）「12」。"],
+      ["p28", "28", "特別新事業開拓事業者株式取得の特別勘定取崩額", "別表十（七）「18」＋「20」。"],
+      ["p29", "29", "肉用牛売却に係る所得の特別控除額", "別表十（八）「22」。"],
+      ["p30", "30", "超過利子額の損金算入額", "別表十七（二の三）「10」。"],
+      ["p31", "31", "課税対象金額等の益金算入額", "別表十七（三の二）「28」＋別表十七（三の三）「9」＋別表十七（三の四）「11」。"],
+      ["p32", "32", "所得等の金額", "(9)−(10)+(11)+(12)+(13)+(14)+(15)−(16)+(17)−(18)−(19)+(20)+(21)−(22)+(23)+(24)−(25)+(26)+(27)−(28)+(29)+(30)−(31)。", true],
+      ["p33", "33 控除C", "所得基準額", "留保控除額の3基準の一つ。(32)×40%。", true],
+      ["p34", "34 採用", "留保控除額", "3基準（積立金基準額7・定額基準額8・所得基準額33）のいずれか多い金額。", true]
+    ];
+
+    const mainRows = [
+      ["m9", "9", "留保所得金額", "別表四「52の②」。"],
+      ["m9Inner", "9内", "別表四17の内書控除額", "別表四「17」に金額がある場合、記載の仕方2(1)により「9」から減算して19を計算。"],
+      ["m10", "10", "前期末配当等の額", "前事業年度内に配当基準日があり、前事業年度終了日の翌日から前期決算確定日までに決議された配当等。株主総会議事録、取締役会議事録、配当計算書、基準日公告等で確認。"],
+      ["m11", "11", "当期末配当等の額", "当期内に配当基準日があり、当期終了日の翌日から当期決算確定日までに決議された配当等。株主資本等変動計算書の当期中支払配当をそのまま使わない。"],
+      ["c2", "12基礎", "別表一「2」", "法人税額及び地方法人税額12の計算基礎。"],
+      ["c3", "12基礎", "別表一「3」", "法人税額及び地方法人税額12の計算基礎。"],
+      ["c4", "12基礎", "別表一「4」", "法人税額及び地方法人税額12、住民税額22/23の計算基礎。"],
+      ["c6", "12基礎", "別表一「6」", "法人税額及び地方法人税額12、住民税額22/23の計算基礎。"],
+      ["c9outer", "12基礎", "別表一「9の外書」", "法人税額及び地方法人税額12、住民税額22/23の計算基礎。"],
+      ["c11", "12基礎", "別表一「11」", "法人税額及び地方法人税額12、住民税額22/23の計算基礎。"],
+      ["c18", "12基礎", "別表一「18」", "法人税額及び地方法人税額12の計算基礎。"],
+      ["c6_5_2", "12基礎", "別表六（五の二）「5の③」", "法人税額及び地方法人税額12の控除・調整基礎。"],
+      ["lct31", "12基礎", "別表一「31」", "地方法人税額部分の計算基礎。"],
+      ["lct32", "12基礎", "別表一「32」", "地方法人税額部分の計算基礎。"],
+      ["lct36", "12基礎", "別表一「36」", "地方法人税額部分の計算基礎。"],
+      ["lct65", "12基礎", "別表一「65」", "地方法人税額部分の計算基礎。"],
+      ["m12", "12", "法人税額及び地方法人税額の合計額", "上記12基礎から自動計算。マイナス部分は様式の算式に合わせて0判定。", true],
+      ["m13", "13", "住民税額", "このHTMLの住民税額28相当から自動反映。", true],
+      ["m14", "14", "外国関係会社等に係る控除対象所得税額等相当額", "別表十七（三の六）「1」。"],
+      ["m15", "15", "法人税額等の合計額", "(12)+(13)−(14)。マイナスの場合は0。", true],
+      ["m16", "16", "通算法人の留保金加算額", "通算法人以外は0。通算法人はグループ通算の留保金額調整計算資料、通算グループ内通知資料から入力。"],
+      ["m17", "17", "通算法人の留保金控除額", "通算法人以外は0。通算法人はグループ通算の留保金額調整計算資料、通算グループ内通知資料から入力。"],
+      ["m18", "18", "他の法人株式等の帳簿価額から減算される金額", "別表八（三）「13」の合計額から自動反映。", true],
+      ["m19", "19", "当期留保金額", "(9)−9内+(10)−(11)−(15)+(16)−(17)−(18)。", true],
+      ["m20", "20", "留保控除額", "このHTMLで計算した留保控除額34相当から自動反映。", true],
+      ["m21", "21", "課税留保金額", "(19)−(20)。1,000円未満切捨て。", true]
+    ];
+
+    const juminRows = [
+      ["j17base", "22/23基礎", "別表一「17」", "住民税額22/23の共通基礎。"],
+      ["jAdj22", "22控除", "中小企業者等以外の法人の特別控除額等", "別表六（六）「9の②」「9の④〜⑦」「9の⑮〜⑰」「9の㉗〜㉙」の合計。"],
+      ["b22", "22", "中小企業者等以外の法人", "別表一「2」+「4」+「6」+「9の外書」−「11」−「17」− 22控除。マイナスの場合は0。", true],
+      ["jAdj23", "23控除", "中小企業者等の特別控除額等", "別表六（六）「3」「9の②〜⑦」「9の⑩〜⑬」「9の⑮〜㉒」「9の㉗〜㉙」の合計。"],
+      ["b23", "23", "中小企業者等", "別表一「2」+「4」+「6」+「9の外書」−「11」−「17」− 23控除。マイナスの場合は0。", true],
+      ["j24", "24", "住民税額", "選択した(22)又は(23)×10.4%。", true],
+      ["donation", "寄附", "特定寄附金の額の合計額", "特定寄附金の支出明細、寄附金領収書、会計帳簿。該当がなければ0。"],
+      ["j25", "25", "特定寄附金の額の合計額に係る控除額", "特定寄附金の額の合計額×40%。", true],
+      ["adjB1", "26基礎", "別表一「11」＋「17」", "調整地方税額に係る控除額26の算式に使用。"],
+      ["adjB6", "26基礎", "別表六（二）付表六「7の計」", "調整地方税額に係る控除額26の算式に使用。"],
+      ["j26", "26", "調整地方税額に係る控除額", "((24)+(別表一「11」＋「17」)×10.4%−別表六（二）付表六「7の計」×10.4%)×20%。マイナスの場合は0。", true],
+      ["j27", "27", "住民税額から控除される金額", "(25)又は(26)のいずれか少ない金額。", true],
+      ["j28", "28", "住民税額", "(24)−(27)。13欄相当へ自動反映。", true]
+    ];
+
+    function renderRows(rows, targetId) {
+      const target = document.getElementById(targetId);
+      target.innerHTML = rows.map(([id, no, label, source, computed]) => {
+        const control = computed
+          ? `<output class="computed" id="out_${id}">0</output>`
+          : `<input class="yen-input" id="${id}" inputmode="decimal" autocomplete="off" placeholder="0">`;
+        return `
+          <tr>
+            <td class="no">${no}</td>
+            <td>${label}</td>
+            <td class="amount">${control}</td>
+            <td><div class="source">${source}</div></td>
+          </tr>`;
+      }).join("");
+    }
+
+    function parseYen(value) {
+      const normalized = String(value || "").replace(/[^\d.-]/g, "");
+      const parsed = Number(normalized);
+      return Number.isFinite(parsed) ? parsed : 0;
+    }
+
+    function yen(value) {
+      const rounded = Math.round(value || 0);
+      return `${yenFormatter.format(rounded)}円`;
+    }
+
+    function floorYen(value) {
+      if (!Number.isFinite(value)) return 0;
+      return Math.floor(value);
+    }
+
+    function floorThousand(value) {
+      if (!Number.isFinite(value) || value <= 0) return 0;
+      return Math.floor(value / 1000) * 1000;
+    }
+
+    function get(id) {
+      const el = document.getElementById(id);
+      return el ? parseYen(el.value) : 0;
+    }
+
+    function setOut(id, value) {
+      OUTPUTS[id] = value;
+      const el = document.getElementById(`out_${id}`);
+      if (el) el.textContent = yen(value);
+    }
+
+    function setText(id, value) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value;
+    }
+
+    function setBasisDisplay(retainedBasis, fixedBasis, incomeBasis) {
+      const values = {
+        basisRetained: retainedBasis,
+        basisFixed: fixedBasis,
+        basisIncome: incomeBasis
+      };
+      setText("basisRetainedValue", yen(retainedBasis));
+      setText("basisFixedValue", yen(fixedBasis));
+      setText("basisIncomeValue", yen(incomeBasis));
+
+      const max = Math.max(retainedBasis, fixedBasis, incomeBasis);
+      Object.entries(values).forEach(([id, value]) => {
+        const box = document.getElementById(id);
+        const pick = document.getElementById(`${id}Pick`);
+        const selected = value === max;
+        box.classList.toggle("selected", selected);
+        pick.hidden = !selected;
+      });
+    }
+
+    function clampMonths() {
+      const input = document.getElementById("months");
+      let months = Math.trunc(Number(input.value || 12));
+      if (!Number.isFinite(months)) months = 12;
+      months = Math.min(12, Math.max(1, months));
+      input.value = months;
+      return months;
+    }
+
+    function roundedLine2(rawLine2, line21Remainder, remaining) {
+      if (rawLine2 <= 0) return 0;
+      const base = floorThousand(rawLine2);
+      const remainder = rawLine2 - base;
+      const adjusted = remainder > line21Remainder ? base + 1000 : base;
+      return Math.min(floorThousand(remaining), adjusted);
+    }
+
+    function publishFinal(months, m19, m20) {
+      const rawTaxable = Math.max(0, m19 - m20);
+      const m21 = floorThousand(rawTaxable);
+      const threshold30 = 30000000 * months / 12;
+      const threshold100 = 100000000 * months / 12;
+      const band1 = floorThousand(Math.min(m21, threshold30));
+      const remainingAfterBand1 = Math.max(0, m21 - band1);
+      const rawBand2 = Math.min(remainingAfterBand1, Math.max(0, threshold100 - band1));
+      const band2 = roundedLine2(rawBand2, rawTaxable - m21, remainingAfterBand1);
+      const band3 = Math.max(0, m21 - band1 - band2);
+      const tax5 = floorYen(band1 * 0.10);
+      const tax6 = floorYen(band2 * 0.15);
+      const tax7 = floorYen(band3 * 0.20);
+      const tax8 = tax5 + tax6 + tax7;
+
+      setText("tax8", yen(tax8));
+      setText("line21", yen(m21));
+      setText("line19", yen(m19));
+      setText("line20", yen(m20));
+      setText("monthLabel", `${months}/12`);
+      setText("band1", yen(band1));
+      setText("band2", yen(band2));
+      setText("band3", yen(band3));
+      setText("tax5", yen(tax5));
+      setText("tax6", yen(tax6));
+      setText("tax7", yen(tax7));
+
+      return { rawTaxable, m21, band1, band2, band3, tax5, tax6, tax7, tax8 };
+    }
+
+    function calculateSimple(months) {
+      const m15 = Math.max(0, floorYen(get("sTaxCorpLocal") + get("sResidentTax") - get("sForeignTaxEq")));
+      const m19 = floorYen(
+        get("sM9") - get("sM9Inner") + get("sM10") - get("sM11") -
+        m15 + get("sOtherAdd") - get("sOtherDeduct")
+      );
+      const p2 = floorYen(get("sP1") * 0.25);
+      const p3 = floorYen(get("sP3Base") - get("sM10"));
+      const p6 = p3;
+      const p7 = Math.max(0, floorYen(p2 - p6));
+      const p8 = floorYen(20000000 * months / 12);
+      const p33 = floorYen(get("sIncomeEtc") * 0.4);
+      const p34 = Math.max(p7, p8, p33);
+
+      setOut("sM15", m15);
+      setOut("sM19", m19);
+      setOut("sP2", p2);
+      setOut("sP3", p3);
+      setOut("sP6", p6);
+      setOut("sP7", p7);
+      setOut("sP8", p8);
+      setOut("sP33", p33);
+      setOut("sP34", p34);
+      setBasisDisplay(p7, p8, p33);
+
+      const final = publishFinal(months, m19, p34);
+      setOut("sM21", final.m21);
+      document.getElementById("tokuteiNotice").hidden = document.getElementById("tokutei").value !== "no";
+    }
+
+    function calculate() {
+      const months = clampMonths();
+      if (document.getElementById("calcMode").value === "simple") {
+        calculateSimple(months);
+        return;
+      }
+      const m10 = get("m10");
+      const p1 = get("p1");
+      const p2 = floorYen(p1 * 0.25);
+      const p3 = floorYen(get("p3base") - m10);
+      const p4 = get("p4");
+      const p5 = get("p5");
+      const p6 = floorYen(p3 + p4 - p5);
+      const p7 = Math.max(0, floorYen(p2 - p6));
+      const p8 = floorYen(20000000 * months / 12);
+
+      const p = {};
+      for (let i = 9; i <= 31; i += 1) p[i] = get(`p${i}`);
+      const p32 = floorYen(
+        p[9] - p[10] + p[11] + p[12] + p[13] + p[14] + p[15] - p[16] +
+        p[17] - p[18] - p[19] + p[20] + p[21] - p[22] + p[23] + p[24] -
+        p[25] + p[26] + p[27] - p[28] + p[29] + p[30] - p[31]
+      );
+      const p33 = floorYen(p32 * 0.4);
+      const p34 = Math.max(p7, p8, p33);
+
+      setOut("p2", p2);
+      setOut("p3", p3);
+      setOut("p6", p6);
+      setOut("p7", p7);
+      setOut("p8", p8);
+      setOut("p32", p32);
+      setOut("p33", p33);
+      setOut("p34", p34);
+      setBasisDisplay(p7, p8, p33);
+
+      const jCommon = get("c2") + get("c4") + get("c6") + get("c9outer") - get("c11") - get("j17base");
+      const b22 = Math.max(0, floorYen(jCommon - get("jAdj22")));
+      const b23 = Math.max(0, floorYen(jCommon - get("jAdj23")));
+      setOut("b22", b22);
+      setOut("b23", b23);
+
+      const basisKind = document.getElementById("juminKind").value;
+      const basis = basisKind === "22" ? b22 : b23;
+      const j24 = floorYen(basis * 0.104);
+      const j25 = floorYen(get("donation") * 0.4);
+      const j26 = Math.max(0, floorYen((j24 + get("adjB1") * 0.104 - get("adjB6") * 0.104) * 0.2));
+      const j27 = Math.min(j25, j26);
+      const j28 = Math.max(0, floorYen(j24 - j27));
+      setOut("j24", j24);
+      setOut("j25", j25);
+      setOut("j26", j26);
+      setOut("j27", j27);
+      setOut("j28", j28);
+
+      const m9 = get("m9");
+      const m9Inner = get("m9Inner");
+      const m11 = get("m11");
+      const taxCoreForCorporationTax = get("c2") - get("c3") + get("c4") + get("c6") + get("c9outer") - get("c11") - get("c18");
+      const taxCoreBeforeForeignAdjustment = get("c2") - get("c3") + get("c4") + get("c6") + get("c9outer");
+      const m12Part1 = Math.max(0, taxCoreForCorporationTax - get("c6_5_2"));
+      const m12Part2 = Math.max(0, get("lct31") + get("lct32") - get("lct36") - get("lct65"));
+      const m12Part3 = Math.max(0, get("c6_5_2") - taxCoreBeforeForeignAdjustment);
+      const m12 = floorYen(m12Part1 + m12Part2 - m12Part3);
+      const m13 = j28;
+      const m14 = get("m14");
+      const m15 = Math.max(0, floorYen(m12 + m13 - m14));
+      const m16 = get("m16");
+      const m17 = get("m17");
+      const m18 = p[19];
+      const m19 = floorYen(m9 - m9Inner + m10 - m11 - m15 + m16 - m17 - m18);
+      const m20 = p34;
+
+      setOut("m12", m12);
+      setOut("m13", m13);
+      setOut("m15", m15);
+      setOut("m18", m18);
+      setOut("m19", m19);
+      setOut("m20", m20);
+
+      const final = publishFinal(months, m19, m20);
+      setOut("m21", final.m21);
+
+      document.getElementById("tokuteiNotice").hidden = document.getElementById("tokutei").value !== "no";
+    }
+
+    function wireInputs() {
+      document.querySelectorAll(".yen-input").forEach((input) => {
+        INPUTS[input.id] = input;
+        input.addEventListener("input", calculate);
+        input.addEventListener("blur", () => {
+          const value = parseYen(input.value);
+          input.value = value ? yenFormatter.format(value) : "";
+        });
+        input.addEventListener("focus", () => {
+          input.value = parseYen(input.value) || "";
+          input.select();
+        });
+      });
+      ["months", "tokutei", "juminKind"].forEach((id) => {
+        document.getElementById(id).addEventListener("input", calculate);
+      });
+      document.getElementById("calcMode").addEventListener("input", () => {
+        const simple = document.getElementById("calcMode").value === "simple";
+        document.getElementById("simpleStack").hidden = !simple;
+        document.getElementById("detailedStack").hidden = simple;
+        calculate();
+      });
+      document.getElementById("clearBtn").addEventListener("click", () => {
+        Object.values(INPUTS).forEach((input) => { input.value = ""; });
+        calculate();
+      });
+      document.getElementById("printBtn").addEventListener("click", () => window.print());
+    }
+
+    renderRows(simpleRows, "simpleRows");
+    renderRows(appendixRows, "appendixRows");
+    renderRows(mainRows, "mainRows");
+    renderRows(juminRows, "juminRows");
+    wireInputs();
+    const modeParam = new URLSearchParams(window.location ? window.location.search : "").get("mode");
+    if (modeParam === "simple") document.getElementById("calcMode").value = "simple";
+    document.getElementById("simpleStack").hidden = document.getElementById("calcMode").value !== "simple";
+    document.getElementById("detailedStack").hidden = document.getElementById("calcMode").value === "simple";
+    calculate();
+  </script>
+</body>
+</html>
