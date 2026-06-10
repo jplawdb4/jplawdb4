@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>条文ライブラリ | JPLAWDB4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f7f3;--surface:#fff;--p:#00AEC6;--pd:#008193;--p25:#E8FCFF;--navy:#005870;
+--ink:#121921;--ink2:#4d5a66;--ink3:#8b97a1;--line:#e3e8e2;--line2:#cfd7d0;--yellow:#FCE48A;--yellow50:#fef8e1;
+--accent:#b23e59;--sans:"Noto Sans JP","Hiragino Sans",sans-serif}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.95;-webkit-font-smoothing:antialiased}
+::selection{background:rgba(0,174,198,.18)}
+button{font-family:var(--sans)}
+
+/* topbar */
+.topbar{background:var(--surface);border-bottom:1px solid var(--line);box-shadow:0 1px 4px rgba(18,25,33,.06);position:sticky;top:0;z-index:30}
+.topbar-in{width:min(100%,1320px);margin:0 auto;padding:9px 16px;display:flex;align-items:center;gap:12px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:900;font-size:.96rem;color:var(--navy);text-decoration:none;letter-spacing:.03em;white-space:nowrap}
+.brand .mark{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,var(--p),var(--pd));color:#fff;font-size:.78rem;font-weight:900;display:inline-flex;align-items:center;justify-content:center}
+.brand small{font-size:.66rem;font-weight:500;color:var(--ink3)}
+.lawsel{font-family:var(--sans);font-size:.84rem;font-weight:700;color:var(--navy);border:1px solid var(--line2);border-radius:7px;padding:6px 10px;background:var(--bg);max-width:200px}
+.searchbox{flex:1;display:flex;align-items:center;position:relative;max-width:520px}
+.searchbox input{width:100%;font-family:var(--sans);font-size:.86rem;border:1px solid var(--line2);border-radius:8px;padding:8px 12px 8px 34px;background:var(--bg);outline:none;transition:border-color .2s,background .2s}
+.searchbox input:focus{border-color:var(--p);background:#fff}
+.searchbox .ic{position:absolute;left:11px;color:var(--ink3);font-size:.85rem;pointer-events:none}
+.tb-btn{border:1px solid var(--line2);background:#fff;border-radius:7px;padding:6px 12px;font-size:.78rem;font-weight:700;color:var(--navy);cursor:pointer;white-space:nowrap;transition:border-color .2s,background .2s}
+.tb-btn:hover{border-color:var(--p)}
+.tb-btn.on{background:var(--p25);border-color:var(--p);color:var(--pd)}
+.menu-btn{display:none}
+
+/* layout */
+.wrap{width:min(100%,1320px);margin:0 auto;display:grid;grid-template-columns:300px 1fr;align-items:start}
+.side{position:sticky;top:51px;height:calc(100vh - 51px);overflow-y:auto;padding:14px 6px 60px 14px;border-right:1px solid var(--line);background:rgba(255,255,255,.55)}
+.side details{margin:1px 0}
+.side summary{cursor:pointer;list-style:none;font-size:.82rem;font-weight:700;color:var(--navy);padding:4px 10px;border-radius:7px;display:flex;gap:6px;align-items:baseline;line-height:1.55}
+.side summary::before{content:"▸";font-size:.66rem;color:var(--ink3);transition:transform .15s;flex:0 0 auto}
+.side details[open]>summary::before{transform:rotate(90deg)}
+.side summary:hover{background:var(--p25)}
+.side .sec-h{font-size:.72rem;font-weight:700;color:var(--ink3);padding:4px 10px 0 24px}
+.side a{display:flex;gap:6px;font-size:.78rem;color:var(--ink2);text-decoration:none;padding:2px 10px 2px 26px;border-radius:6px;line-height:1.6}
+.side a:hover{background:var(--p25);color:var(--pd)}
+.side a.cur{background:var(--p25);color:var(--pd);font-weight:700}
+.side a .star{color:var(--accent);font-size:.7rem}
+.content{padding:24px 24px 120px 30px;min-width:0}
+
+/* law head */
+.law-head h1{font-size:1.45rem;font-weight:900;color:var(--navy);margin:0;line-height:1.5}
+.law-head .num{font-size:.76rem;color:var(--ink3)}
+.crumb{font-size:.74rem;color:var(--ink3);margin:8px 0 16px;display:flex;gap:6px;flex-wrap:wrap}
+.crumb a{color:var(--pd);text-decoration:none}
+.crumb a:hover{text-decoration:underline}
+
+/* article */
+.ch-title{display:flex;align-items:center;gap:10px;margin:28px 0 12px}
+.ch-title::before{content:"";width:5px;height:22px;border-radius:3px;background:var(--p)}
+.ch-title h2{font-size:1.08rem;font-weight:900;color:var(--navy);margin:0}
+.sec-title{font-size:.92rem;font-weight:700;color:var(--pd);margin:22px 0 8px;border-bottom:2px solid var(--p25);padding-bottom:3px}
+.art{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 20px 14px;margin:0 0 12px;scroll-margin-top:66px;position:relative}
+.art.hl{border-color:var(--p);box-shadow:0 0 0 3px rgba(0,174,198,.15)}
+.art-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px;padding-right:60px}
+.art-t{font-weight:900;color:var(--navy);font-size:.98rem}
+.art-t a{color:inherit;text-decoration:none}
+.art-c{font-size:.78rem;color:var(--pd);background:var(--p25);border-radius:4px;padding:1px 9px;font-weight:700}
+.art-tools{position:absolute;top:12px;right:14px;display:flex;gap:6px}
+.art-tools button{border:1px solid var(--line);background:#fff;border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:.82rem;color:var(--ink3);display:flex;align-items:center;justify-content:center;transition:all .15s}
+.art-tools button:hover{border-color:var(--p);color:var(--pd)}
+.art-tools button.on{color:var(--accent);border-color:var(--accent);background:#fdf3f5}
+.para{display:flex;gap:10px;margin:6px 0}
+.pn{flex:0 0 auto;min-width:24px;height:24px;border-radius:6px;background:var(--bg);border:1px solid var(--line);color:var(--ink2);font-size:.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:5px;padding:0 5px}
+.pn1{opacity:.3}
+.pb{font-size:.89rem;min-width:0;flex:1}
+.item{display:flex;gap:8px;margin:3px 0;font-size:.87rem;flex-wrap:wrap}
+.item .it{flex:0 0 auto;font-weight:700;color:var(--pd);min-width:1.4em}
+.item .ib{flex:1;min-width:15em}
+.item .ib .item .it{color:var(--ink2)}
+.ind{margin-left:1.6em;flex-basis:100%}
+.tbl-wrap{overflow-x:auto;margin:8px 0;width:100%}
+.law-tbl{border-collapse:collapse;font-size:.78rem;background:#fff}
+.law-tbl td{border:1px solid var(--line2);padding:5px 9px;vertical-align:top;min-width:6em}
+a.ref{color:var(--pd);text-decoration:none;border-bottom:1px dashed rgba(0,129,147,.5)}
+a.ref:hover{background:var(--p25)}
+mark{background:var(--yellow);border-radius:2px;padding:0 1px}
+
+/* note */
+.memo{margin-top:10px;border-top:1px dashed var(--line2);padding-top:8px}
+.memo textarea{width:100%;min-height:54px;border:1px solid var(--line2);border-radius:7px;padding:8px 10px;font-family:var(--sans);font-size:.82rem;background:var(--yellow50);outline:none;resize:vertical}
+.memo textarea:focus{border-color:var(--p)}
+.memo .lbl{font-size:.68rem;font-weight:700;color:var(--ink3);letter-spacing:.12em}
+
+/* search results */
+.res-meta{font-size:.8rem;color:var(--ink2);margin:4px 0 14px}
+.res{display:block;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin-bottom:10px;text-decoration:none;color:inherit;transition:border-color .2s,box-shadow .2s}
+.res:hover{border-color:var(--p);box-shadow:0 6px 18px -12px rgba(0,88,112,.3)}
+.res .r-law{font-size:.68rem;font-weight:700;color:var(--pd);background:var(--p25);border-radius:4px;padding:1px 8px;margin-right:8px}
+.res .r-t{font-weight:900;color:var(--navy);font-size:.92rem}
+.res .r-s{font-size:.8rem;color:var(--ink2);margin-top:3px;line-height:1.8}
+
+/* home cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-top:18px}
+.law-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px 22px 16px;text-decoration:none;color:inherit;position:relative;overflow:hidden;transition:all .2s}
+.law-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--p);transform:scaleY(0);transform-origin:top;transition:transform .25s}
+.law-card:hover{border-color:var(--p);box-shadow:0 8px 24px -12px rgba(0,88,112,.3);transform:translateY(-2px)}
+.law-card:hover::before{transform:scaleY(1)}
+.law-card h3{font-size:1.06rem;font-weight:900;color:var(--navy);margin:0 0 2px}
+.law-card .num{font-size:.72rem;color:var(--ink3)}
+.law-card .meta{display:flex;gap:8px;margin-top:10px}
+.chip{font-size:.68rem;font-weight:700;background:var(--p25);color:var(--pd);border-radius:4px;padding:1px 9px}
+.note-foot{font-size:.74rem;color:var(--ink3);margin-top:30px;border-top:1px dashed var(--line2);padding-top:12px}
+.empty{color:var(--ink3);font-size:.86rem;padding:30px 0;text-align:center}
+.loading{color:var(--ink3);font-size:.85rem;padding:40px 0;text-align:center}
+
+@media(max-width:900px){
+.wrap{grid-template-columns:1fr}
+.side{position:fixed;left:0;top:51px;width:min(84vw,310px);background:#fff;z-index:25;transform:translateX(-105%);transition:transform .25s;box-shadow:8px 0 30px rgba(0,0,0,.12);height:calc(100vh - 51px)}
+.side.open{transform:none}
+.menu-btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line2);background:#fff;border-radius:7px;width:34px;height:34px;font-size:1rem;color:var(--navy);cursor:pointer;flex:0 0 auto}
+.brand small{display:none}
+.lawsel{max-width:120px}
+.content{padding:18px 14px 100px}
+}
+</style>
+</head>
+<body>
+<nav class="topbar"><div class="topbar-in">
+<button class="menu-btn" id="menuBtn">☰</button>
+<a class="brand" href="#/"><span class="mark">法</span>JPLAWDB4<small>｜条文ライブラリ</small></a>
+<select class="lawsel" id="lawSel"><option value="">法令を選択…</option></select>
+<div class="searchbox"><span class="ic">🔎</span><input id="q" type="search" placeholder="条文検索（例: 外国関係会社 / 66の6 / 第六十六条の六）"></div>
+<button class="tb-btn" id="noteBtn">📒 ノート</button>
+</div></nav>
+
+<div class="wrap">
+<aside class="side" id="side"></aside>
+<main class="content" id="main"><div class="loading">読み込み中…</div></main>
+</div>
+
+<script>
+'use strict';
+const $=s=>document.querySelector(s);
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+const state={meta:[],laws:{},slug:null,notes:JSON.parse(localStorage.getItem('jp4notes')||'{}')};
+const saveNotes=()=>localStorage.setItem('jp4notes',JSON.stringify(state.notes));
+const noteKey=(slug,id)=>slug+'/'+id;
+
+/* ---------- 漢数字変換 ---------- */
+const KD={'〇':0,'一':1,'二':2,'三':3,'四':4,'五':5,'六':6,'七':7,'八':8,'九':9};
+function kanji2int(s){
+  let total=0,cur=0;
+  for(const ch of s){
+    if(ch==='千'){total+=(cur||1)*1000;cur=0}
+    else if(ch==='百'){total+=(cur||1)*100;cur=0}
+    else if(ch==='十'){total+=(cur||1)*10;cur=0}
+    else if(ch in KD){cur=KD[ch]}
+    else return null;
+  }
+  return total+cur;
+}
+
+/* ---------- データ取得 ---------- */
+async function loadMeta(){
+  state.meta=await (await fetch('data/meta.json')).json();
+  const sel=$('#lawSel');
+  state.meta.forEach(m=>{
+    const o=document.createElement('option');o.value=m.slug;o.textContent=m.title;sel.appendChild(o);
+  });
+}
+async function loadLaw(slug){
+  if(state.laws[slug])return state.laws[slug];
+  const d=await (await fetch('data/'+slug+'.json')).json();
+  d._ids=new Set();d._arts={};
+  d.chapters.forEach((c,ci)=>c.secs.forEach(s=>s.arts.forEach(a=>{
+    d._ids.add(a.id);d._arts[a.id]={a,ci};
+  })));
+  state.laws[slug]=d;return d;
+}
+
+/* ---------- 条文参照の自動リンク ---------- */
+function linkRefs(escText,law,selfId){
+  return escText.replace(/第([〇一二三四五六七八九十百千]+)条((?:の[〇一二三四五六七八九十]+)+)?/g,(m,art,branches)=>{
+    const n=kanji2int(art);if(n===null)return m;
+    let id=String(n);
+    if(branches){
+      for(const b of branches.split('の').slice(1)){
+        const bn=kanji2int(b);if(bn===null)return m;id+='_'+bn;
+      }
+    }
+    if(!law._ids.has(id)||id===selfId)return m;
+    return '<a class="ref" href="#/'+law.slug+'/a/'+id+'">'+m+'</a>';
+  });
+}
+
+/* ---------- 条文描画 ---------- */
+function renderItems(items,law,selfId,depth){
+  return items.map(it=>{
+    let h='<div class="item d'+depth+(depth>1?' ind':'')+'"><span class="it">'+esc(it.t)+'</span><span class="ib">'+linkRefs(esc(it.b),law,selfId);
+    if(it.sub)h+=renderItems(it.sub,law,selfId,depth+1);
+    if(it.tbl)h+=it.tbl.map(renderTable).join('');
+    return h+'</span></div>';
+  }).join('');
+}
+function renderTable(rows){
+  return '<div class="tbl-wrap"><table class="law-tbl">'+rows.map(r=>'<tr>'+r.map(c=>'<td>'+esc(c)+'</td>').join('')+'</tr>').join('')+'</table></div>';
+}
+function renderArt(a,law,opts={}){
+  const k=noteKey(law.slug,a.id);
+  const nt=state.notes[k]||{};
+  const paras=a.paras.map(p=>{
+    const badge=p.n?'<span class="pn">'+esc(p.n)+'</span>':'<span class="pn pn1">1</span>';
+    let body=linkRefs(esc(p.b),law,a.id);
+    if(p.items)body+=renderItems(p.items,law,a.id,1);
+    if(p.tbl)body+=p.tbl.map(renderTable).join('');
+    return '<div class="para">'+badge+'<div class="pb">'+body+'</div></div>';
+  }).join('');
+  const memo=nt.memo!==undefined||opts.memoOpen?
+    '<div class="memo"><div class="lbl">MY NOTE</div><textarea data-k="'+esc(k)+'" placeholder="この条文のメモ…">'+esc(nt.memo||'')+'</textarea></div>':'';
+  return '<article class="art'+(opts.hl?' hl':'')+'" id="a'+a.id+'">'+
+    '<div class="art-tools">'+
+    '<button class="star'+(nt.star?' on':'')+'" data-k="'+esc(k)+'" title="ブックマーク">'+(nt.star?'★':'☆')+'</button>'+
+    '<button class="pen" data-k="'+esc(k)+'" data-id="'+esc(a.id)+'" title="メモ">✎</button></div>'+
+    '<div class="art-h"><span class="art-t"><a href="#/'+law.slug+'/a/'+a.id+'">'+esc(a.t)+'</a></span>'+
+    (a.c?'<span class="art-c">'+esc(a.c)+'</span>':'')+'</div>'+paras+memo+'</article>';
+}
+
+/* ---------- サイドバー ---------- */
+function renderSide(law,curCi,curArt){
+  if(!law){$('#side').innerHTML='';return}
+  let h='';
+  law.chapters.forEach((c,ci)=>{
+    const open=ci===curCi?' open':'';
+    h+='<details'+open+'><summary>'+esc(c.label)+'</summary>';
+    c.secs.forEach(s=>{
+      if(s.label)h+='<div class="sec-h">'+esc(s.label)+'</div>';
+      s.arts.forEach(a=>{
+        const k=noteKey(law.slug,a.id);
+        const star=state.notes[k]&&state.notes[k].star?'<span class="star">★</span>':'';
+        const cur=a.id===curArt?' class="cur"':'';
+        h+='<a'+cur+' href="#/'+law.slug+'/a/'+a.id+'">'+star+esc(a.t)+(a.c?'　'+esc(a.c):'')+'</a>';
+      });
+    });
+    h+='</details>';
+  });
+  $('#side').innerHTML=h;
+}
+
+/* ---------- ビュー ---------- */
+function crumb(parts){
+  return '<div class="crumb">'+parts.map(p=>p.href?'<a href="'+p.href+'">'+esc(p.t)+'</a>':esc(p.t)).join(' › ')+'</div>';
+}
+async function viewHome(){
+  $('#side').innerHTML='';
+  const cards=state.meta.map(m=>
+    '<a class="law-card" href="#/'+m.slug+'"><h3>'+esc(m.title)+'</h3><div class="num">'+esc(m.num)+'</div>'+
+    '<div class="meta"><span class="chip">'+m.chapters+'章</span><span class="chip">'+m.articles+'条</span></div></a>').join('');
+  $('#main').innerHTML='<div class="law-head"><h1>条文ライブラリ</h1><span class="num">主要税法を、迷わずたどる。</span></div>'+
+    '<div class="grid">'+cards+'</div>'+
+    '<div class="note-foot">出典: e-Gov法令検索（法令API）。本則のみ掲載（附則・別表は省略）。表示は機械変換によるもので、正文は官報・e-Govで確認してください。</div>';
+}
+async function viewLaw(slug){
+  const law=await loadLaw(slug);
+  renderSide(law,-1,null);
+  const toc=law.chapters.map((c,ci)=>
+    '<a class="res" href="#/'+slug+'/ch/'+ci+'"><span class="r-t">'+esc(c.label)+'</span>'+
+    '<div class="r-s">'+c.secs.map(s=>s.label).filter(Boolean).map(esc).join(' / ')+'</div></a>').join('');
+  $('#main').innerHTML='<div class="law-head"><h1>'+esc(law.title)+'</h1><span class="num">'+esc(law.num)+'</span></div>'+
+    crumb([{t:'ライブラリ',href:'#/'},{t:law.title}])+
+    '<div class="ch-title"><h2>目次</h2></div>'+toc;
+}
+async function viewChapter(slug,ci){
+  const law=await loadLaw(slug);ci=+ci;
+  const c=law.chapters[ci];if(!c)return viewLaw(slug);
+  renderSide(law,ci,null);
+  let h='<div class="law-head"><h1>'+esc(law.title)+'</h1><span class="num">'+esc(law.num)+'</span></div>'+
+    crumb([{t:'ライブラリ',href:'#/'},{t:law.title,href:'#/'+slug},{t:c.label}])+
+    '<div class="ch-title"><h2>'+esc(c.label)+'</h2></div>';
+  c.secs.forEach(s=>{
+    if(s.label)h+='<div class="sec-title">'+esc(s.label)+'</div>';
+    s.arts.forEach(a=>{h+=renderArt(a,law)});
+  });
+  $('#main').innerHTML=h;bindArtTools();window.scrollTo(0,0);
+}
+async function viewArticle(slug,id){
+  const law=await loadLaw(slug);
+  const e=law._arts[id];if(!e)return viewLaw(slug);
+  const c=law.chapters[e.ci];
+  renderSide(law,e.ci,id);
+  $('#main').innerHTML='<div class="law-head"><h1>'+esc(law.title)+'</h1><span class="num">'+esc(law.num)+'</span></div>'+
+    crumb([{t:'ライブラリ',href:'#/'},{t:law.title,href:'#/'+slug},{t:c.label,href:'#/'+slug+'/ch/'+e.ci},{t:e.a.t}])+
+    renderArt(e.a,law,{hl:true,memoOpen:!!(state.notes[noteKey(slug,id)]||{}).memo});
+  bindArtTools();window.scrollTo(0,0);
+}
+/* 検索: "66の6"/"第六十六条の六"形式 → 直接ジャンプ候補, それ以外は全文 */
+function artText(a){
+  let t=a.t+' '+a.c+' ';
+  const walk=its=>its.forEach(it=>{t+=it.t+it.b+' ';if(it.sub)walk(it.sub)});
+  a.paras.forEach(p=>{t+=p.b+' ';if(p.items)walk(p.items)});
+  return t;
+}
+function snippet(text,kw){
+  const i=text.indexOf(kw);if(i<0)return esc(text.slice(0,90))+'…';
+  const s=Math.max(0,i-45);
+  return (s>0?'…':'')+esc(text.slice(s,i))+'<mark>'+esc(kw)+'</mark>'+esc(text.slice(i+kw.length,i+kw.length+60))+'…';
+}
+async function viewSearch(slug,kw){
+  kw=decodeURIComponent(kw);
+  const scopes=slug?[slug]:state.meta.map(m=>m.slug);
+  let results=[];
+  $('#main').innerHTML='<div class="loading">「'+esc(kw)+'」を検索中…</div>';
+  // 条番号ダイレクトジャンプ（66の6 / 66_6 / 第六十六条の六）
+  const numMatch=kw.match(/^(\d+)(?:[の_-](\d+))*$/);
+  for(const sl of scopes){
+    const law=await loadLaw(sl);
+    if(numMatch){
+      const id=kw.split(/[の_-]/).join('_');
+      if(law._ids.has(id)){
+        const a=law._arts[id].a;
+        results.push({law,a,direct:true,snip:esc(a.c||'').slice(0,80)});
+      }
+    }
+    let cnt=0;
+    law.chapters.forEach(c=>c.secs.forEach(s=>s.arts.forEach(a=>{
+      if(cnt>80)return;
+      const tx=artText(a);
+      if(tx.includes(kw)){results.push({law,a,snip:snippet(tx,kw)});cnt++}
+    })));
+  }
+  if(slug)renderSide(state.laws[slug],-1,null);else $('#side').innerHTML='';
+  const scopeName=slug?state.laws[slug].title:'全法令';
+  if(!results.length){
+    $('#main').innerHTML='<div class="law-head"><h1>検索</h1></div><div class="res-meta">'+esc(scopeName)+' で「'+esc(kw)+'」: 0件</div><div class="empty">見つかりませんでした。条番号（例: 66の6）や別の語で試してください。</div>';
+    return;
+  }
+  $('#main').innerHTML='<div class="law-head"><h1>検索結果</h1></div>'+
+    '<div class="res-meta">'+esc(scopeName)+' で「'+esc(kw)+'」: '+results.length+'件'+(results.length>80*scopes.length?'（上限打切り）':'')+'</div>'+
+    results.map(r=>'<a class="res" href="#/'+r.law.slug+'/a/'+r.a.id+'">'+
+      '<span class="r-law">'+esc(r.law.title)+'</span><span class="r-t">'+esc(r.a.t)+(r.a.c?'　'+esc(r.a.c):'')+'</span>'+
+      '<div class="r-s">'+r.snip+'</div></a>').join('');
+}
+async function viewNotes(){
+  $('#side').innerHTML='';
+  const keys=Object.keys(state.notes).filter(k=>state.notes[k].star||state.notes[k].memo);
+  if(!keys.length){
+    $('#main').innerHTML='<div class="law-head"><h1>📒 法令ノート</h1></div><div class="empty">まだブックマーク・メモがありません。<br>条文カード右上の ☆ / ✎ から登録できます（ブラウザに保存）。</div>';
+    return;
+  }
+  let h='<div class="law-head"><h1>📒 法令ノート</h1><span class="num">'+keys.length+'件（このブラウザに保存）</span></div>';
+  for(const k of keys){
+    const [sl,id]=k.split('/');
+    const law=await loadLaw(sl);
+    const e=law._arts[id];if(!e)continue;
+    const nt=state.notes[k];
+    h+='<a class="res" href="#/'+sl+'/a/'+id+'">'+
+      '<span class="r-law">'+esc(law.title)+'</span>'+
+      (nt.star?'<span class="star" style="color:var(--accent)">★ </span>':'')+
+      '<span class="r-t">'+esc(e.a.t)+(e.a.c?'　'+esc(e.a.c):'')+'</span>'+
+      (nt.memo?'<div class="r-s">📝 '+esc(nt.memo).slice(0,120)+'</div>':'')+'</a>';
+  }
+  $('#main').innerHTML=h;
+}
+
+/* ---------- ノートUI ---------- */
+function bindArtTools(){
+  document.querySelectorAll('.art-tools .star').forEach(b=>b.addEventListener('click',()=>{
+    const k=b.dataset.k;
+    state.notes[k]=state.notes[k]||{};
+    state.notes[k].star=!state.notes[k].star;
+    if(!state.notes[k].star&&!state.notes[k].memo)delete state.notes[k];
+    saveNotes();
+    b.classList.toggle('on');b.textContent=b.classList.contains('on')?'★':'☆';
+  }));
+  document.querySelectorAll('.art-tools .pen').forEach(b=>b.addEventListener('click',()=>{
+    const art=b.closest('.art');
+    let m=art.querySelector('.memo');
+    if(m){m.remove();return}
+    const k=b.dataset.k;
+    const nt=state.notes[k]||{};
+    const d=document.createElement('div');d.className='memo';
+    d.innerHTML='<div class="lbl">MY NOTE</div><textarea data-k="'+esc(k)+'" placeholder="この条文のメモ…">'+esc(nt.memo||'')+'</textarea>';
+    art.appendChild(d);bindMemo(d.querySelector('textarea'));
+    d.querySelector('textarea').focus();
+  }));
+  document.querySelectorAll('.memo textarea').forEach(bindMemo);
+}
+function bindMemo(ta){
+  ta.addEventListener('input',()=>{
+    const k=ta.dataset.k;
+    state.notes[k]=state.notes[k]||{};
+    state.notes[k].memo=ta.value;
+    if(!ta.value&&!state.notes[k].star)delete state.notes[k];
+    saveNotes();
+  });
+}
+
+/* ---------- ルーター ---------- */
+async function route(){
+  const h=location.hash.replace(/^#\/?/,'');
+  const seg=h.split('/');
+  try{
+    if(!seg[0]){await viewHome()}
+    else if(seg[0]==='notes'){await viewNotes()}
+    else if(seg[1]==='a'){state.slug=seg[0];$('#lawSel').value=seg[0];await viewArticle(seg[0],seg[2])}
+    else if(seg[1]==='ch'){state.slug=seg[0];$('#lawSel').value=seg[0];await viewChapter(seg[0],seg[2])}
+    else if(seg[1]==='q'){state.slug=seg[0]==='all'?null:seg[0];await viewSearch(state.slug,seg.slice(2).join('/'))}
+    else{state.slug=seg[0];$('#lawSel').value=seg[0];await viewLaw(seg[0])}
+  }catch(e){
+    $('#main').innerHTML='<div class="empty">読み込みエラー: '+esc(String(e))+'</div>';
+  }
+  $('#side').classList.remove('open');
+}
+
+/* ---------- 起動 ---------- */
+(async()=>{
+  await loadMeta();
+  $('#lawSel').addEventListener('change',e=>{if(e.target.value)location.hash='#/'+e.target.value});
+  $('#noteBtn').addEventListener('click',()=>location.hash='#/notes');
+  $('#menuBtn').addEventListener('click',()=>$('#side').classList.toggle('open'));
+  const q=$('#q');
+  q.addEventListener('keydown',e=>{
+    if(e.key==='Enter'&&q.value.trim()){
+      location.hash='#/'+(state.slug||'all')+'/q/'+encodeURIComponent(q.value.trim());
+    }
+  });
+  window.addEventListener('hashchange',route);
+  await route();
+})();
+</script>
+</body>
+</html>
