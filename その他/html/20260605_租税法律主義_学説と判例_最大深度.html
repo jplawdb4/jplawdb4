@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>租税法律主義 ── 学説と判例の最大深度資産</title>
+<style>
+  :root{
+    --bg:#f5f5f5; --card:#ffffff; --ink:#1d1f23; --sub:#5a6069;
+    --line:#e3e6ea; --accent:#2b4a7a; --accent2:#37557f;
+    --ok:#1f7a44; --okbg:#e8f5ec; --warn:#9a6b00; --warnbg:#fcf3df;
+    --err:#a3282b; --errbg:#fbe9e9; --cfc:#5a3a86; --cfcbg:#f1ebf8;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",system-ui,sans-serif;
+    line-height:1.85;font-size:15px;-webkit-text-size-adjust:100%;}
+  .wrap{max-width:1080px;margin:0 auto;padding:32px 20px 80px;}
+  header.hd{background:linear-gradient(135deg,#2b4a7a,#3f6098);color:#fff;
+    border-radius:16px;padding:34px 36px;box-shadow:0 6px 22px rgba(43,74,122,.22);}
+  header.hd h1{margin:0 0 10px;font-size:26px;letter-spacing:.02em;line-height:1.4;}
+  header.hd p{margin:4px 0;font-size:13.5px;opacity:.94;}
+  .meta-chips{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);
+    border-radius:999px;padding:3px 12px;font-size:12px;}
+  /* TOC */
+  nav.toc{background:var(--card);border-radius:14px;padding:18px 24px;margin:22px 0;
+    box-shadow:0 2px 10px rgba(0,0,0,.05);border:1px solid var(--line);}
+  nav.toc h2{margin:0 0 10px;font-size:14px;color:var(--accent);letter-spacing:.04em;}
+  nav.toc ol{margin:0;padding-left:22px;columns:2;column-gap:32px;font-size:13.5px;}
+  nav.toc a{color:var(--ink);text-decoration:none;}
+  nav.toc a:hover{color:var(--accent);text-decoration:underline;}
+  /* sections */
+  section{background:var(--card);border-radius:14px;padding:26px 30px;margin:20px 0;
+    box-shadow:0 2px 10px rgba(0,0,0,.05);border:1px solid var(--line);}
+  section>h2{margin:0 0 16px;font-size:20px;color:var(--accent);
+    border-bottom:2px solid var(--line);padding-bottom:9px;}
+  h3{font-size:16px;margin:22px 0 8px;color:#26344a;}
+  h4{font-size:14.5px;margin:16px 0 6px;color:#33405a;}
+  p{margin:8px 0;}
+  ul,ol{margin:8px 0;padding-left:22px;}
+  li{margin:5px 0;}
+  strong{color:#15233b;}
+  .lead{color:var(--sub);font-size:14px;margin-bottom:6px;}
+  /* badges */
+  .b{display:inline-block;font-size:11px;font-weight:700;border-radius:5px;
+    padding:1px 7px;margin-right:5px;vertical-align:1px;white-space:nowrap;}
+  .b.ok{background:var(--okbg);color:var(--ok);}
+  .b.warn{background:var(--warnbg);color:var(--warn);}
+  .b.err{background:var(--errbg);color:var(--err);}
+  .b.cfc{background:var(--cfcbg);color:var(--cfc);}
+  /* case card */
+  .case{border:1px solid var(--line);border-left:4px solid var(--accent2);
+    border-radius:9px;padding:12px 16px;margin:11px 0;background:#fcfdfe;}
+  .case .cite{font-weight:700;color:#1b2c47;font-size:14.5px;}
+  .case .hold{font-size:13.5px;color:#333;margin-top:4px;}
+  .case .imp{font-size:13px;color:var(--cfc);margin-top:6px;
+    background:var(--cfcbg);border-radius:6px;padding:6px 10px;}
+  /* correction box */
+  .fix{border:1px solid #ecc9ca;border-left:4px solid var(--err);background:var(--errbg);
+    border-radius:8px;padding:9px 14px;margin:9px 0;font-size:13px;}
+  .fix b{color:var(--err);}
+  .note{border:1px solid #e6d9b3;border-left:4px solid var(--warn);background:var(--warnbg);
+    border-radius:8px;padding:9px 14px;margin:9px 0;font-size:13px;}
+  .cfcbox{border:1px solid #ddd0ee;border-left:4px solid var(--cfc);background:var(--cfcbg);
+    border-radius:8px;padding:11px 15px;margin:12px 0;}
+  .cfcbox h4{margin-top:0;color:var(--cfc);}
+  /* tables */
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px;}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;}
+  th{background:#eef2f7;color:#26344a;font-size:12.5px;}
+  tr:nth-child(even) td{background:#fafbfc;}
+  /* two function split */
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+  .split .col{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#fcfdfe;}
+  .split .col h4{margin-top:0;}
+  .col.lib{border-top:3px solid #2b6ca3;}
+  .col.dem{border-top:3px solid #8a5a2b;}
+  /* principle grid */
+  .pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0;}
+  .pgrid .p{border:1px solid var(--line);border-radius:10px;padding:12px;background:#fcfdfe;
+    text-align:center;}
+  .pgrid .p .n{font-size:22px;font-weight:800;color:var(--accent);}
+  .pgrid .p .t{font-size:13px;font-weight:700;margin:4px 0;}
+  .pgrid .p .d{font-size:11.5px;color:var(--sub);}
+  footer{color:var(--sub);font-size:12px;text-align:center;margin-top:30px;padding-top:14px;
+    border-top:1px solid var(--line);}
+  @media(max-width:720px){
+    .split,.pgrid{grid-template-columns:1fr;}
+    nav.toc ol{columns:1;}
+    .wrap{padding:18px 12px 60px;} section{padding:20px 18px;}
+    header.hd{padding:24px 22px;} header.hd h1{font-size:21px;}
+  }
+  @media print{
+    body{background:#fff;font-size:11.5px;line-height:1.6;}
+    .wrap{max-width:none;padding:0;}
+    section,nav.toc,header.hd{box-shadow:none;border:1px solid #ccc;
+      break-inside:avoid;page-break-inside:avoid;}
+    header.hd{background:#2b4a7a !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .case,.fix,.note,.cfcbox{break-inside:avoid;}
+    nav.toc{display:none;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hd">
+  <h1>租税法律主義 ── 学説と判例の最大深度資産</h1>
+  <p>憲法84条・30条／四原則体系・解釈方法論・通達ソフトロー・比較法・CFC論文「課税要件法定主義への再定位」への接続</p>
+  <p>作成 2026-06-05　方法＝AIワークフロー設計指針のハイブリッド方式（並列8次元リサーチ＋敵対的検証は Workflow、統合は主ループ）</p>
+  <div class="meta-chips">
+    <span class="chip">8次元 × 学説／判例</span>
+    <span class="chip">敵対的検証で引用誤り多数捕捉</span>
+    <span class="chip">確定・要照合・訂正を明示</span>
+    <span class="chip">著者名ハルシネーション厳禁</span>
+  </div>
+</header>
+
+<nav class="toc">
+  <h2>目次</h2>
+  <ol>
+    <li><a href="#s0">淵源と二つの機能</a></li>
+    <li><a href="#s1">① 課税要件法定主義と委任立法の限界</a></li>
+    <li><a href="#s2">② 課税要件明確主義と不確定概念</a></li>
+    <li><a href="#s3">③ 合法性原則</a></li>
+    <li><a href="#s4">④ 手続的保障原則</a></li>
+    <li><a href="#s5">遡及立法禁止</a></li>
+    <li><a href="#s6">解釈方法論（文理・借用概念）</a></li>
+    <li><a href="#s7">通達・ソフトロー・実質課税</a></li>
+    <li><a href="#s8">学説の体系（五学派）</a></li>
+    <li><a href="#s9">比較法と理論的射程</a></li>
+    <li><a href="#s10">検証段が捕えた訂正一覧</a></li>
+    <li><a href="#s11">要原典照合リスト</a></li>
+  </ol>
+  <p style="font-size:11.5px;color:var(--sub);margin:10px 0 0;">
+    凡例：<span class="b ok">確定</span>検証段で一次／準一次確認
+    <span class="b warn">要照合</span>内容は確実だが版・頁・巻号頁の原典照合が未了
+    <span class="b err">訂正</span>既存メモ・資料の誤りの是正
+    <span class="b cfc">CFC</span>論文への含意</p>
+</nav>
+
+<!-- 0 -->
+<section id="s0">
+  <h2>0. 淵源と二つの機能</h2>
+  <p class="lead">マグナ・カルタ(1215)→英権利章典(1689)→明治憲法62条（伊藤博文『憲法義解』）→日本国憲法84条（課税の法律事項）・30条（納税の義務）。</p>
+  <div class="split">
+    <div class="col lib">
+      <h4>自由主義的機能</h4>
+      <p style="font-size:13px;">予測可能性・法的安定性。課税権の恣意的行使から国民の財産・経済生活を守る自由権的側面。<strong>金子宏・田中二郎・谷口勢津夫</strong>の通説が中核に置く。</p>
+      <p style="font-size:12.5px;color:var(--sub);">→ CFCの「例に準じて」が第一義的に脅かすのはこの予測可能性。</p>
+    </div>
+    <div class="col dem">
+      <h4>民主主義的機能</h4>
+      <p style="font-size:13px;">「代表なくして課税なし」・財政民主主義。課税は国民代表（議会）の同意を要するという権力分立・財政統制の側面。<strong>北野弘久</strong>（納税者基本権）・<strong>藤谷武史</strong>（現代的論拠）が前面化。</p>
+      <p style="font-size:12.5px;color:var(--sub);">→ CFCの欠缺が宿るのはこちら＝「誰が課税要件を定めるか」。</p>
+    </div>
+  </div>
+  <div class="cfcbox">
+    <h4><span class="b cfc">CFC</span>再定位の鍵</h4>
+    <p style="font-size:13.5px;margin:0;">租税法律主義を自由主義的機能（明確主義＝予測可能性）に一元化せず、民主主義的機能（法定主義＝誰が課税要件を定めるか）を独立の軸として取り出す。CFCの欠缺は「文言が曖昧」（明確主義側）ではなく「課税標準の決定要素を法律が定めていない」（法定主義側）。</p>
+  </div>
+  <p style="font-size:12px;color:var(--sub);"><span class="b warn">要照合</span>『憲法義解』該当箇所・英権利章典4条の文言は本文化時に原典確認。genryu次元はWorkflowのStructuredOutputが落ちたためtranscript回収（過程叙述のみ、学説本体は§8・§9で補完）。回収部で高確度確認＝大嶋訴訟の正式引用と上記系譜。</p>
+</section>
+
+<!-- 1 -->
+<section id="s1">
+  <h2>① 課税要件法定主義と委任立法の限界</h2>
+  <h3>学説</h3>
+  <ul>
+    <li><span class="b warn">要照合</span><strong>課税要件法定主義（金子宏・通説）</strong>：課税要件（租税債務の成立要件）と賦課・徴収手続は法律で定める。租税債務関係説で課税要件は<strong>①納税義務者②課税物件③課税物件の帰属④課税標準⑤税率</strong>の五要素。罪刑法定主義に対応。出典：金子宏『租税法』弘文堂（第23版2019/第24版）。五要素・委任限界論は確立した通説、版・頁は原典照合のうえ付す。</li>
+    <li><strong>委任立法の限界</strong>：個別的・具体的委任は許されるが一般的・白紙的委任は許されない。委任の目的・内容・程度が委任法律自体から明確に読み取れることを要する。</li>
+    <li><span class="b ok">確定</span><strong>政令委任の範囲＝長島弘</strong>「租税法律主義と租税法における政令委任の範囲──法人税法施行令72条の3に関する合憲性の問題に着目して」税法学571号99-119頁（2014.5、日本税法学会）。<span class="b err">訂正</span>旧メモの著者名空欄を CiNii(CRID:1520009407901803648)＋NDL書誌ID:025608017 で<strong>長島弘</strong>と確定。</li>
+    <li><span class="b ok">確定</span><span class="b warn">頁要照合</span><strong>ソフトロー非法源性＝植田祐美子</strong>「租税法の解釈・適用に係るソフトローの対象領域と今後の課題」税務大学校論叢103号(2021)。ソフトローで定めるべきでない事項＝(a)法源に抵触(b)法改正で対応すべきこと(c)法の趣旨・特色に反すること。</li>
+    <li><strong>規範序列</strong>：憲法84条→法律→政令→省令→（地方税は条例）。通達は行政内部命令にすぎず国民・裁判所を拘束しない。CFC固有：措法66条の6（法律）→措令39条の15（政令）が基準所得金額計算を具体化。</li>
+  </ul>
+  <h3>判例（委任命令統制）</h3>
+  <div class="case">
+    <div class="cite"><span class="b ok">確定</span>児童扶養手当法施行令事件 — 最判平成14年1月31日（第一小法廷）民集56巻1号246頁、平成8(行ツ)42</div>
+    <div class="hold">施行令1条の2第3号括弧書（「父から認知された児童」除外部分）は同法4条1項5号の委任の範囲を逸脱し無効。3対1多数意見、町田顕裁判官反対意見。委任命令逸脱無効の典型。</div>
+  </div>
+  <div class="case">
+    <div class="cite"><span class="b ok">確定</span>医薬品ネット販売事件 — 最判平成25年1月11日（第二小法廷）民集67巻1号1頁、平成24(行ヒ)279号</div>
+    <div class="hold">薬事法施行規則の郵便等販売一律禁止部分は委任の範囲を逸脱し無効。<strong>判断枠組み＝授権の趣旨が、根拠規定の文言だけでなく立法過程の議論をも斟酌し、規制の範囲・程度等に応じて明確に読み取れることを要する。</strong></div>
+    <div class="fix"><b>★出典訂正</b>　旧メモのWikipedia「要指導医薬品ネット販売規制事件」は別事件（最判令和3年3月18日・民集75巻3号552頁）の記事で典拠に使わない。H25判決の一次PDF＝courts.go.jp <code>hanrei-pdf-82895</code>。</div>
+  </div>
+  <div class="case">
+    <div class="cite"><span class="b ok">確定</span>旭川市国民健康保険条例事件 — 最大判平成18年3月1日民集60巻2号587頁（courts id=24926）</div>
+    <div class="hold">①国保料は84条が直接適用されないが、租税類似の公課には84条の趣旨が及ぶ②明確性の程度は強制の度合いと公課の目的・特質を総合考慮③賦課総額の算定基準を条例で定め具体的料率を市長告示に委ねても議会の民主的統制が及ぶから84条の趣旨に反しない＝委任のグラデーション論。</div>
+  </div>
+  <p style="font-size:12.5px;color:var(--sub);"><strong>補強判例（CFC接続・要原典再照合）</strong>：みずほ銀行CFC事件 最判R5.11.6（明示基準なら司法審査可）／固定資産税賦課懈怠 最判H27.7.17（法解釈にも法律主義が及ぶ）／減価償却CFC 東京高判H29.9.6（「例に準じて」は会計差異調整に限定）／泉佐野 最判R2.6.30（告示基準の委任範囲統制）。</p>
+  <div class="cfcbox">
+    <h4><span class="b cfc">CFC</span>含意 ── 課税要件法定主義への再定位</h4>
+    <ol style="margin:0;font-size:13.5px;">
+      <li>政令委任の可否ではなく、<strong>政令が配置分岐を一義的に書き下しているか</strong>が問題。みずほは明示基準なら審査可と示す＝逆に第1項1号「例に準じて」は基準未明示。</li>
+      <li>基準所得金額＝課税標準で法定主義のコアに直結。不利な分岐の新設は通達・Q&A・様式では弱い（植田論と整合）。</li>
+      <li>医薬品事件の「核心的不利益規制を下位規範で創設するには明確な授権が必要」を、通達による不利配置創設の問題性に類推適用。</li>
+      <li>結論は違法無効でなく<strong>法令上の説明可能性＋将来の法令化</strong>に落とす（A02の三条件）。</li>
+    </ol>
+  </div>
+</section>
+
+<!-- 2 -->
+<section id="s2">
+  <h2>② 課税要件明確主義と不確定概念</h2>
+  <h3>学説 ── 金子宏の二分論（中核教義）</h3>
+  <p><span class="b ok">確定（博論が引用）</span><span class="b warn">二分論の頁要照合</span>課税要件明確主義＝租税法律主義（84条）の一内容。課税要件・賦課徴収手続の定めはなるべく一義的・明確であるべき（恣意的課税の排除・予測可能性）。法律のみならず委任に基づく政令・省令にも及ぶ。典拠＝金子宏『租税法〔第20版〕』114頁（弘文堂2015、博論脚注[^23][^24][^55]で引用）。</p>
+  <table>
+    <tr><th>類型</th><th>内容</th><th>帰結</th></tr>
+    <tr><td>① 終局目的ないし価値概念</td><td>内容が一般的・不明確で解釈による意義明確化が困難、恣意・濫用のおそれ</td><td><strong>無効（違憲）</strong></td></tr>
+    <tr><td>② 中間目的ないし経験概念</td><td>法の趣旨・目的に照らして意義を明確になしうる。行政庁に自由裁量を認めるものではない</td><td>必要性・合理性ある限り<strong>許容</strong></td></tr>
+  </table>
+  <div class="note"><b>頁の所在に注意</b>　第20版114頁は<strong>課税要件明確主義一般</strong>の典拠。「終局目的ないし価値概念」「中間目的ないし経験概念」の語が現れる頁は別箇所（341頁系の可能性）。本文化時に金子『租税法』現物で出現頁を直接確認。二分論の実質は野村篤史論文経由で金子説として確認済＝捏造ではない。</div>
+  <h3>判例（明確性原則の規範力）</h3>
+  <div class="case">
+    <div class="cite"><span class="b ok">確定</span>徳島市公安条例事件 — 最大判昭和50年9月10日刑集29巻8号489頁（id=51070）</div>
+    <div class="hold">明確性テストの源流：「<strong>通常の判断能力を有する一般人の理解において、具体的場合に当該行為がその適用を受けるものかどうかの判断を可能ならしめるような基準が読みとれるかどうか</strong>」（憲法31条）。刑罰法規だが租税の課税要件明確主義に援用。</div>
+  </div>
+  <div class="case">
+    <div class="cite"><span class="b ok">確定</span>旭川市国民健康保険条例事件 — 最大判平成18年3月1日民集60巻2号587頁（id=24926）</div>
+    <div class="hold">強制の度合いと公課の目的・性質を総合考慮する<strong>可変的明確性論</strong>。射程の留保＝「84条の趣旨が及ぶ公課」事案であり租税そのものではない。CFCへの援用は一般法理レベルに限定。</div>
+    <div class="fix"><b>★ID訂正</b>　旭川は courts id=<strong>24926</strong>。旧メモが旭川に当てた id=17087 は誤り（＝下記秋田の方）。</div>
+  </div>
+  <div class="case">
+    <div class="cite"><span class="b ok">確定</span>秋田市国民健康保険税条例事件 — 仙台高裁秋田支部昭和57年7月23日・行政事件裁判例集33巻7号1616頁（id=17087）</div>
+    <div class="hold">課税総額の上限のみ定め上限内の各年度具体的課税総額の決定を市長裁量に委ねた条例を憲法92条・84条<strong>違反（違憲・無効）</strong>。課税要件は納税義務者が自己の税額を予測でき不服申立ての合理的判断ができる程度に「一義的かつ明確」に規定されることを要請。明確主義違反を正面から認めた稀有な違憲例。判決後S58条例改正・保険料方式へ移行。</div>
+  </div>
+  <div class="cfcbox">
+    <h4><span class="b cfc">CFC</span>含意 ── 明確主義の射程外という切り分け</h4>
+    <p style="font-size:13.5px;margin:0;">「例に準じて」の問題は古典的vagueness（語義の漠然性）ではない。借用規定は具体的に列挙されている。問題は効果を<strong>どの主体・場所・時点・制度要件へ配置するか</strong>で複数の基準所得金額が残るのにその選択手順が法令上見えない＝「指示対象／仮定主体の配置の不定」。よって<strong>明確主義の射程外にある新型の不明確</strong>として位置づける。金子二分論を硬く援用すると「不確定概念は許容される」に呑まれるため「語義の不明確さではなく当てはめ相手方の配置の欠缺」と限定（不確定概念一般は否定しない）。</p>
+  </div>
+</section>
+
+<!-- 3 -->
+<section id="s3">
+  <h2>③ 合法性原則</h2>
+  <h3>学説</h3>
+  <p><span class="b warn">版頁要照合</span><strong>合法性の原則（金子・通説）</strong>＝四内容の第三。「課税要件が充足されている限り、租税行政庁には租税を減免したり徴収しないというような自由はなく、法律で定められたとおりの租税を徴収しなければならない」。系論＝減免・徴収猶予の裁量なし、和解・なれ合いは不可。例外は法律が権限を明示的に委任した場合のみ。</p>
+  <h3>判例</h3>
+  <div class="case">
+    <div class="cite"><span class="b ok">確定</span>信義則の適用限定 — 最判昭和62年10月30日 集民152号93頁「課税処分と信義則事件」（id=70488）</div>
+    <div class="hold">信義則による違法は「納税者間の平等・公平を犠牲にしてもなお課税を免れさせ信頼を保護しなければ正義に反するといえる『特別の事情』」がある場合に限る。判断要素＝公的見解の表示・信頼に基づく行動・経済的不利益・帰責事由不存在。</div>
+    <div class="fix"><b>★出典＋事件名訂正</b>　旧メモの「判時1262-91」「酒類販売業者青色申告事件」は誤り。正規登載は<strong>集民152号93頁</strong>、標準呼称は「課税処分と信義則事件」（酒類販売は被相続人の業種にすぎず争点は白色更正処分と信義則）。</div>
+  </div>
+  <div class="cfcbox">
+    <h4><span class="b cfc">CFC</span>含意</h4>
+    <p style="font-size:13.5px;margin:0;">合法性原則は「課税要件が法律で一義的に確定していること」を大前提とする。CFC（第1項「例に準じて」）は計算規律が法律レベルで一義的に決まらず、<strong>合法性原則が作動する前提自体が欠ける</strong>。合法性原則は法定主義（①）が満たされて初めて意味を持つ従属原則＝①の欠缺は②③④を基礎から崩す。これが「合法性原則を最上流の法定主義に差し戻す」再定位の核。</p>
+  </div>
+</section>
+
+<!-- 4 -->
+<section id="s4">
+  <h2>④ 手続的保障原則</h2>
+  <h3>学説</h3>
+  <p><span class="b warn">版頁要照合</span>「租税の賦課・徴収は適正な手続で行われ、争訟は公正な手続で解決されなければならない」。根拠＝憲法31条（適正手続）・32条（裁判を受ける権利）。31条の行政・租税手続への準用是非は、判例（成田新法）が利益較量による個別判断を採る。国税通則法は平成23年改正で税務調査手続を法定化。</p>
+  <h3>判例</h3>
+  <div class="case">
+    <div class="cite"><span class="b ok">確定</span>成田新法事件 — 最大判平成4年7月1日民集46巻5号437頁</div>
+    <div class="hold">「憲法31条の法定手続の保障は直接には刑事手続に関するものだが、行政手続が刑事手続でないとの理由のみで全て当然に同条の保障の枠外にあると判断するのは相当ではない」。ただし行政目的の多様性ゆえ常に事前手続を要するわけではない。</div>
+  </div>
+  <div class="case">
+    <div class="cite"><span class="b ok">確定</span>川崎民商事件 — 最大判昭和47年11月22日刑集26巻9号554頁</div>
+    <div class="hold">質問検査権につき憲法35条・38条が税務調査に及び得るとしつつ、税務調査は刑事責任追及の資料取得に直接結びつくものでなく公益上の必要性・合理性があるとして合憲。適正手続論のリーディングケース。</div>
+  </div>
+  <div class="case">
+    <div class="cite"><span class="b ok">確定</span>理由附記の実定化 — 最二小判昭和38年5月31日民集17巻4号617頁</div>
+    <div class="hold">青色申告に係る<strong>更正処分</strong>通知書の理由附記が具体的根拠を欠く場合は不備で取消を免れない。</div>
+    <div class="fix"><b>★事件性質訂正</b>　本判決は「更正処分」の理由附記事件。旧メモの「青色申告承認取消理由附記事件」は別類型との混同。</div>
+  </div>
+  <div class="cfcbox">
+    <h4><span class="b cfc">CFC</span>含意</h4>
+    <p style="font-size:13.5px;margin:0;">実体面の欠缺（CFCの計算規律不特定）を手続（通達・理由附記・事前通知）が事後的に補う構造は「通達補完の非対称性」と直結。<strong>手続的保障は実体的明確性の代替にならない</strong>（成田新法・川崎民商が示すのは手続保障の柔軟性であって実体要件の代替可能性ではない）。</p>
+  </div>
+</section>
+
+<!-- 5 -->
+<section id="s5">
+  <h2>遡及立法禁止（租税法律不遡及の原則）</h2>
+  <h3>学説</h3>
+  <p>「納税者に不利益な遡及適用は許されない」。罪刑法定主義（39条）と異なり明文禁止はなく、84条の趣旨（法的安定性・予測可能性）から導かれる<strong>相対的</strong>原則。<span class="b ok">確定</span>榊原竜三「租税法における遡及立法の合憲性」立命館法政論集第8号(2010)が利益較量枠組みを批判的検討。谷口勢津夫「税法基本判例」第5回が財産権の制約問題として再構成。枠組み＝真正遡及（原則禁止）と不真正遡及（許容余地）の独・期間税論。</p>
+  <h3>判例</h3>
+  <div class="case">
+    <div class="cite"><span class="b ok">確定</span>「損益通算廃止」年度内遡及［千葉］事件 — 最判平成23年9月22日民集65巻6号2756頁（第一小法廷）</div>
+    <div class="hold">措置法31条の損益通算廃止（平16法14号）をH16.1.1以後の譲渡に遡及適用した点の84条適合性。判旨＝84条は法的安定が保たれるべき趣旨を含む。財産権の事後的変更の憲法適合性は「<strong>当該財産権の性質、その内容を変更する程度及びこれを変更することによって保護される公益の性質などを総合的に勘案して</strong>」判断。本件遡及は公益上の要請に基づき不利益は限定的で合理性ありとして合憲。</div>
+    <div class="imp"><span class="b cfc">CFC</span>「総合衡量枠組み」＝最高裁の現実的判断様式（厳格形式主義でなく利益較量）の較正点。租税法律主義は遡及局面ですら相対的に運用される。CFCで法定主義違反を主張する際、過度な形式主義に振れない論証が必要であることの参照系。</div>
+  </div>
+  <div class="fix"><b>★出典要照合</b>　併存判例 最判平成23年9月30日（第二小法廷）も同旨だが、旧メモの「判時2132-39」は今回裏付けられず集番号は要原典照合。判決文が「真正/不真正」の語を明示用語で用いたかも要確認（学説整理上の枠組み）。</div>
+</section>
+
+<!-- 6 -->
+<section id="s6">
+  <h2>解釈方法論 ── 文理・借用概念・趣旨</h2>
+  <h3>借用概念論の諸説 <span class="b ok">確定（今村PDF一次確認）</span></h3>
+  <p class="lead">出典＝今村隆「借用概念論・再考」税大ジャーナル16号(2011)25頁以下（日本大学法科大学院教授。NTA公式PDFを本文抽出し確認）。</p>
+  <table>
+    <tr><th>説</th><th>提唱者</th><th>内容</th></tr>
+    <tr><td>(1) 統一説</td><td>金子宏</td><td>借用概念は原則として私法と同一義に解する。根拠＝予測可能性・法的安定性。借用概念と固有概念（典型＝「所得」）を区別する二分法。</td></tr>
+    <tr><td>(2) 目的適合説</td><td>村井正</td><td>独税法の目的適合説。借用態様を三分類＝①ストレートな借用（所税24①「基金利息」）②目的論的解釈不要（国徴15「抵当権」）③目的論的解釈必要（所税24①「剰余金の配当」）。</td></tr>
+    <tr><td>(3) 独立説</td><td>（今日少数）</td><td>租税法独自の観点で解釈してよい。</td></tr>
+    <tr><td>(4) 水野忠恒説</td><td>水野忠恒</td><td>金子説を出発点としつつ、直ちに同一義とせず性格・立法趣旨をきめ細かく検討して具体的判断。</td></tr>
+    <tr><td>(4') 吉村典久説</td><td>吉村典久</td><td>目的適合説。「直接把握（経済的事象を直接取込）」か「間接把握（私法形式に依拠）」かを区別、判断は租税法規の目的による。</td></tr>
+    <tr><td>(5) 今村隆説</td><td>今村隆</td><td>二分法を批判し「その他の概念」を加える三分法。借用概念論は解釈方法の問題で要件事実（契約認定）と区別。素材＝デット・アサンプション（東京地判H17.7.1）・レポ取引（東京地判H19.4.17）。</td></tr>
+  </table>
+  <h3>文理解釈優先の原則 <span class="b warn">版頁要照合</span></h3>
+  <p>課税要件は法律で一義的に定めるべきで、解釈は原則として文理解釈、みだりに拡張・類推解釈を行わない。趣旨解釈は文言の枠内でのみ許容。金子「租税法解釈論序説」（侵害規範ゆえ厳格、文理困難時のみ目的論的解釈の段階的理解）。谷口勢津夫『税法基本講義』（弘文堂第7版2021＝<strong>単著</strong>）・増田英敏『リーガルマインド租税法』も文理解釈を租税法律主義から基礎づける。</p>
+  <h3>判例</h3>
+  <div class="case">
+    <div class="cite"><span class="b ok">確定</span>ホステス報酬源泉徴収事件 — 最判平成22年3月2日民集64巻2号420頁（第三小法廷、id=38522）</div>
+    <div class="hold">所税施令322条「当該支払金額の計算期間の日数」を、稼働日数ではなく計算期間の全日数（時的連続性をもった概念）と文理解釈。「<strong>租税法規はみだりに規定の文言を離れて解釈すべきものではない</strong>」。納税者勝訴（逆転）。文理解釈優先の代表判例。</div>
+  </div>
+  <div class="case">
+    <div class="cite"><span class="b ok">確定</span>武富士事件 — 最判平成23年2月18日 集民236号71頁・判時2111号3頁（第二小法廷、平成20(行ヒ)139号、id=81080）</div>
+    <div class="hold">贈与税上の「住所」＝「生活の本拠、その者の生活に最も関係の深い一般的生活・全生活の中心」を「客観的に生活の本拠たる実体を具備しているか否かにより決すべき」。租税回避意図があっても客観的実体は消滅せず納税者勝訴。借用概念（住所＝民法）を私法同一義に解した統一説の代表判例。<strong>須藤正彦補足意見</strong>＝租税回避容認への違和感を述べ立法による解決が筋として立法論と法解釈を峻別（「文理絶対主義」でないことを示す素材）。</div>
+    <div class="fix"><b>★★重大訂正（ローカル資料の誤り）</b>　ローカル「外国子会社合算税制の文理解釈と目的論的解釈に関する研究.docx」L103 が武富士を「<strong>民集65巻2号699頁・法人税法132条 同族会社の行為計算否認</strong>」と記述するのは完全な誤り（ヤフー/IBM系132条事件との混同）。本文化時に絶対採用しない。正＝集民236号71頁・贈与税「住所」事件、武富士は<strong>民集には登載なし</strong>。</div>
+  </div>
+  <div class="cfcbox">
+    <h4><span class="b cfc">CFC</span>含意</h4>
+    <p style="font-size:13.5px;margin:0 0 6px;">ホステス・武富士は「文言が一義的だから文理で決まる」事例。CFC第1項は「文言が読替範囲を特定していない」別種の故障（指示対象不在）＝<strong>文理解釈優先原則が機能不全を起こす領域</strong>。両判例を対照軸に使える。</p>
+    <p style="font-size:13.5px;margin:0;">施令39の15<strong>第2項は18個の明示的変換表</strong>を持つ（＝立法者は明示する能力を持つ）のに第1項は「例に準じて」一語のみ＝第1項の欠缺を論証する梃子。趣旨で埋まらない欠缺は通達でなく立法で（須藤補足意見の権限配分論＝令和元改正の立法的読替規定の判例的支柱）。</p>
+  </div>
+</section>
+
+<!-- 7 -->
+<section id="s7">
+  <h2>通達・ソフトロー・実質課税との緊張</h2>
+  <h3>学説</h3>
+  <ul>
+    <li><span class="b warn">41頁逐語要照合</span><strong>ソフトローの限界＝植田103号41頁</strong>：「ソフトローは法源に抵触してはならず、法改正で対応すべきこと・法の趣旨や特色に反することはソフトローで定めてはならない」。</li>
+    <li><span class="b warn">版頁要照合</span><strong>通達の法的性質（金子・通説）</strong>：通達は行政規則で国民・裁判所に直接の法的効力なし。通達による新たな課税要件の創設は許されない（通達課税禁止）。</li>
+    <li><span class="b warn">書誌要照合</span><strong>通達変更と「正当な理由」＝木山泰嗣</strong>「手続法分野における租税法律主義の特色」税法学585号(2021)。二つの歯止め＝①取扱い変更は法令改正が望ましく少なくとも通達で周知②周知前に従前解釈に合理的根拠があった納税者には加算税の「正当な理由」。</li>
+  </ul>
+  <h3>判例</h3>
+  <div class="case">
+    <div class="cite"><span class="b ok">確定</span>パチンコ球遊器事件 — 最判昭和33年3月28日民集12巻4号624頁（第二小法廷、id=53527）</div>
+    <div class="hold">「<strong>本件の課税がたまたま所論通達を機縁として行われたものであっても、通達の内容が法の正しい解釈に合致するものである以上、本件課税処分は法の根拠に基づく処分と解するに妨げがなく</strong>」。射程＝通達それ自体は課税根拠でなく、課税を正当化するのは"法の正しい解釈を表示する限り"のみ。</div>
+    <div class="imp"><span class="b cfc">CFC</span>法律が当てはめの相手方を定めていない領域では表示すべき"正しい解釈"自体が存在しない→通達はその空白を課税強化方向に補う根拠たりえない（＝補充の偏り論）。</div>
+  </div>
+  <div class="case">
+    <div class="cite"><span class="b ok">確定</span>ヤフー事件 — 最判平成28年2月29日民集70巻2号242頁（第一小法廷、山浦善樹裁判長）</div>
+    <div class="hold">法人税法132条の2「不当に」＝「組織再編成に係る各規定を租税回避の手段として濫用すること」（<strong>制度濫用基準</strong>）。考慮要素＝①不自然性②税負担減少以外の合理的事業目的の有無。最高裁が132条の2不当性要件を初判断。</div>
+  </div>
+  <div class="case">
+    <div class="cite"><span class="b ok">確定</span>IBM事件 — 東京高判平成27年3月25日税資265号順号12639（上告不受理 最決H28.2.18で納税者勝訴確定）</div>
+    <div class="hold">法人税法132条1項。控訴審は「純粋経済人として不合理・不自然＝経済的合理性を欠く場合」（<strong>経済合理性基準</strong>）で不当性を否定し132条1項の射程の限界を画定。ヤフー（132条の2）と対をなす。</div>
+  </div>
+  <div class="case">
+    <div class="cite"><span class="b ok">確定</span>双輝汽船事件 — 最判平成19年9月28日民集61巻6号2486頁（第二小法廷）</div>
+    <div class="hold">措法66の6第1〜3項と<strong>法人税法11条</strong>（実質所得者課税）の競合。特定外国子会社の欠損金を実質課税で内国法人の損金に算入できるか（競合時は特別法たる措置法が優先）。青柳達朗2008・髙安滿2007が分析。</div>
+    <div class="fix"><b>★条文訂正</b>　競合条文は「所得税法11条」ではなく<strong>法人税法11条</strong>（内国法人＝法人の事案）。</div>
+  </div>
+  <div class="note"><span class="b warn">要照合</span>通達変更・補足意見＝最判令和2年3月24日（木山585号は判タ1478号21頁と表記、宇賀克也・宮崎裕子各補足意見＝通達の適法性は関連法令の解釈から導かれるか否かで判断）。事件正式名称・判例集（民集or判タ1478-21、固定資産税関連の可能性）は要最終照合。みずほ銀行ケイマンSPC第一審＝東京地判R3.3.16（中村繁隆2021評釈、WLJコラム242号、文理・形式優先で目的論的適用回避を否定）の巻号・帰趨も要照合。</div>
+  <div class="cfcbox">
+    <h4><span class="b cfc">CFC</span>含意 ── 三層</h4>
+    <ol style="margin:0;font-size:13.5px;">
+      <li><strong>通達課税禁止（球遊器）</strong>：当てはめ相手方が法律上不定な領域では通達は空白を補う根拠たりえない。</li>
+      <li><strong>ソフトロー限界（植田41頁）</strong>：第2項が18変換を書けている隣で第1項が沈黙＝立法技術上書ける（法改正で対応すべき）のに書いていない領域。</li>
+      <li><strong>否認＝明文要件説（ヤフー/IBM）</strong>：「個別否認規定で足りる」という査読反論に対し、計算規律の空白は否認規定が扱う濫用的取引の否認とは別問題（否認規定は所得を計算した後に当てはめる装置）と切り分け。</li>
+    </ol>
+  </div>
+</section>
+
+<!-- 8 -->
+<section id="s8">
+  <h2>学説の体系（五学派）</h2>
+  <table>
+    <tr><th>論者</th><th>ポジション</th><th>出典（要照合：頁）</th></tr>
+    <tr><td><strong>金子宏</strong></td><td>通説・四原則の体系化。自由主義的構成。借用概念は統一説</td><td>『租税法』弘文堂（第23版2019/第24版2021）</td></tr>
+    <tr><td>田中二郎</td><td>古典・行政法的構成（侵害留保・法律による行政）</td><td>『租税法』有斐閣・法律学全集（初版1968/第3版1990）</td></tr>
+    <tr><td><strong>北野弘久</strong></td><td>民主主義的租税観・納税者基本権論</td><td>（黒川功補訂）『税法学原論』勁草書房第9版2024、『納税者の権利』岩波新書1981</td></tr>
+    <tr><td>谷口勢津夫</td><td>文理厳格・解釈論。借用概念統一説</td><td>『税法基本講義』弘文堂第7版2021＝<strong>単著</strong>、『税法の基礎理論』清文社</td></tr>
+    <tr><td>増田英敏</td><td>租税法律主義と租税公平主義の「相克」、法律主義優先</td><td>『リーガルマインド租税法』成文堂、税法学566号(2011)</td></tr>
+    <tr><td>中里実</td><td>私法・経済的視座（金子門下）、統一説基調</td><td>中里実・藤谷武史編『租税法律主義の総合的検討』有斐閣2021.12</td></tr>
+    <tr><td><strong>藤谷武史</strong></td><td>財政民主主義・現代。「代表なければ課税なし」を各国比較で再定位</td><td>「論拠としての『租税法律主義』―各国比較」<strong>フィナンシャル・レビュー129号(2017)194-217頁</strong></td></tr>
+    <tr><td>佐藤英明・岡村忠生</td><td>金子系の正統学術型（解釈方法論／機能分析）</td><td>体系書群（要照合）</td></tr>
+  </table>
+  <div class="fix"><b>★訂正</b>　①谷口『税法基本講義』は<strong>単著</strong>（佐藤英明編著ではない＝スタンダード所得税法等との混同）。②藤谷論文の掲載誌は<strong>フィナンシャル・レビュー129号</strong>（税大ジャーナルは誤り。NDL pid/11173477 はFR版のデジタル化）。③『総合的検討』編者は<strong>中里実・藤谷武史</strong>（有斐閣2021.12。増井良啓は第7章執筆者で編者ではない＝BiblioPlaza H_00192本文「中里 実、藤谷 武史（編著）」で確定。本資料の当初「増井良啓編」は誤り。20260605後続DRで是正）。</div>
+  <h4>対立軸の整理</h4>
+  <div class="split">
+    <div class="col">
+      <h4>自由主義 vs 民主主義</h4>
+      <p style="font-size:12.5px;margin:0;">通説（金子・田中・谷口）＝自由権的・予測可能性／法的安定性。北野＝民主主義的・納税者基本権として再構成。藤谷＝財政民主主義として両面を架橋。</p>
+    </div>
+    <div class="col">
+      <h4>形式的法治 vs 実質的法治</h4>
+      <p style="font-size:12.5px;margin:0;">明確主義を厳格に貫く形式的構成（文理解釈優先＝谷口・木山）／租税公平主義による実質的修正を一定許容（増田は相克として法律主義優先で処理）。</p>
+    </div>
+  </div>
+  <div class="cfcbox">
+    <h4><span class="b cfc">CFC</span>含意 ── 再定位の基軸</h4>
+    <p style="font-size:13.5px;margin:0;"><strong>法律自身が課税標準の構成規律を定めているか（法定主義）</strong>と<strong>その規律が一義的・明確か（明確主義）</strong>を分離することで、CFCの欠缺を「明確主義違反（曖昧さ）」でなく「法定主義の射程外＝そもそも法律が構成規律を書いていない別の故障様式」として再定位できる。藤谷の財政民主主義的再定位と中里・藤谷編『総合的検討』は「立法的読替規定（令和元改正・第2項18変換）による欠缺補充＝法定主義の現代的履行」という帰結章に接続する。</p>
+  </div>
+</section>
+
+<!-- 9 -->
+<section id="s9">
+  <h2>比較法と理論的射程</h2>
+  <table>
+    <tr><th>国</th><th>明確性／法定性の装置</th><th>根拠</th></tr>
+    <tr><td>ドイツ</td><td>Tatbestandsmäßigkeit／Bestimmtheitsgebot／Vorbehalt des Gesetzes・Wesentlichkeitstheorie（本質性理論）／Analogieverbot zulasten</td><td>Art.20(3)GG（法治国家）＋Art.20(2)GG（民主主義→議会留保）／Art.80(1)2文（委任の明確性）</td></tr>
+    <tr><td>フランス</td><td>principe de légalité（34条）／incompétence négative（消極的権限不行使）／accessibilité et intelligibilité（OVC）</td><td>憲法34条（assiette/taux/modalités）／1789年人権宣言／2005-530 DC</td></tr>
+    <tr><td>アメリカ</td><td>void-for-vagueness doctrine（fair notice＋権力分立、civil/criminal distinction）</td><td>修正5・14条 Due Process Clause</td></tr>
+    <tr><td>日本</td><td>四原則（法定・明確・合法性・手続）。借用概念統一説で明確性を担保する技法</td><td>憲法84条（財政民主主義＋租税法律主義）・30条</td></tr>
+  </table>
+  <div class="note">
+    <b>独：本質性理論の根拠（補足）</b>　Wesentlichkeitstheorie の憲法的根拠は Art.20(3)GG（法治国家→法律の留保）に加え <strong>Art.20(2)GG（民主主義→議会留保 Parlamentsvorbehalt）の双方</strong>。日本の「法定主義（＝留保・本質性）」と「明確主義（＝Bestimmtheit）」の二分が独でも構造的に並走する傍証。
+  </div>
+  <div class="case">
+    <div class="cite"><span class="b ok">確定</span>仏 décision n°2005-530 DC（2005年12月29日、Loi de finances pour 2006）</div>
+    <div class="hold">租税ニッチ上限措置（plafonnement des niches fiscales、Art.78）が理解不能（inintelligible）であることを理由に違憲。明確性（intelligibilité）が租税分野で正面から違憲事由となった例。</div>
+  </div>
+  <div class="cfcbox">
+    <h4><span class="b cfc">CFC</span>理論的射程の比較法的含意（独自性の補強）</h4>
+    <p style="font-size:13.5px;margin:0 0 6px;">独（Bestimmtheit）・仏（intelligibilité）・米（vagueness）はいずれも<strong>規範文言の曖昧さ</strong>を問題にする。CFCの「例に準じて」が突きつけるのは曖昧さではなく準拠対象（外国関係会社の日本法上の所得）の<strong>不在＝指示対象不在</strong>で、三国の明確主義論の射程の外。</p>
+    <p style="font-size:13.5px;margin:0;">比較法は二重に機能：①「日本だけが特殊な明確主義の緩さを持つのではない」傍証（比較法は核でなく傍証）②「CFCの問題はどの国の明確主義論でも捉えられていない別種の故障」を浮かび上がらせる。独AStGは変換節点を法律本体で列挙（明示度が高い、20260529DRノートで一次確認）のに対し日本第1項は一語＝明示度スペクトラム上で低い傍証。<strong>独を理想化しない</strong>（独もBMF通達依存）。</p>
+  </div>
+  <h4>現代的論点 ── GloBE/Pillar Two</h4>
+  <p style="font-size:13px;">令和5年度改正の国際最低課税額に対する法人税（GloBE国内実装）はOECDモデルルール・コメンタリー・執行ガイダンスへの実質的依存＝課税要件の実質を国際的ソフトローに委ねる現代的委任の極限形。CFCの「例に準じて」（自法への不特定参照）とGloBE（国際文書への参照）は「課税要件の実質的決定の外部化」という同型の構造＝CFCの問題が現代租税立法の構造的傾向の一断面であることを示す。<span class="b warn">要照合</span>GloBE国内法＝法人税法82条以下の条番号・参照の法技術構造。</p>
+</section>
+
+<!-- 10 -->
+<section id="s10">
+  <h2>検証段が捕えた訂正一覧（敵対的検証の成果）</h2>
+  <p class="lead">並列リサーチの各次元に対し独立の検証エージェントが引用照合した結果、以下の誤りを捕捉・是正した。捏造（存在しない判例・架空著者）はゼロ。</p>
+  <table>
+    <tr><th>項目</th><th>誤（旧メモ・ローカル資料）</th><th>正（検証後）</th></tr>
+    <tr><td>武富士事件 巻号頁</td><td>民集65巻2号699頁・法人税法132条 同族会社の行為計算否認（ローカルdoc）</td><td><strong>集民236号71頁・判時2111号3頁、贈与税「住所」事件、民集には登載なし</strong>（132条事件との混同、絶対採用しない）</td></tr>
+    <tr><td>双輝汽船 競合条文</td><td>所得税法11条</td><td><strong>法人税法11条</strong>（内国法人の事案）</td></tr>
+    <tr><td>藤谷武史 論文掲載誌</td><td>税大ジャーナル</td><td><strong>フィナンシャル・レビュー129号(2017)194-217頁</strong></td></tr>
+    <tr><td>信義則限定判例</td><td>判時1262-91・酒類販売業者青色申告事件</td><td><strong>集民152号93頁・「課税処分と信義則事件」</strong></td></tr>
+    <tr><td>医薬品ネット販売 出典URL</td><td>Wikipedia「要指導医薬品ネット販売規制事件」（令和3年の別事件）</td><td><strong>courts hanrei-pdf-82895（H25.1.11判決）</strong></td></tr>
+    <tr><td>秋田/旭川 courts ID</td><td>旭川に id=17087</td><td><strong>旭川=24926、秋田=17087</strong>（別事件）</td></tr>
+    <tr><td>谷口『税法基本講義』</td><td>佐藤英明 編・複数共著</td><td><strong>谷口勢津夫 単著</strong></td></tr>
+    <tr><td>政令委任論文 著者</td><td>（空欄・OCR破損）</td><td><strong>長島弘</strong>（税法学571号99-119頁）</td></tr>
+    <tr><td>青色理由附記 事件性質</td><td>青色申告承認取消理由附記事件</td><td><strong>更正処分の理由附記事件</strong>（最判S38.5.31民集17-4-617）</td></tr>
+    <tr><td>児童扶養手当 裁判所</td><td>（裁判所明記なし）</td><td><strong>第一小法廷、平成8(行ツ)42</strong></td></tr>
+    <tr><td>独 本質性理論 根拠</td><td>Art.20(3)GG のみ</td><td><strong>Art.20(3)＋Art.20(2)GG の双方</strong></td></tr>
+    <tr><td>H23.9.30 併存判例</td><td>判時2132-39</td><td>裏付けられず＝<strong>要原典照合</strong></td></tr>
+  </table>
+</section>
+
+<!-- 11 -->
+<section id="s11">
+  <h2>要原典照合リスト（本文化前の必須タスク）</h2>
+  <p class="lead">著者名・版・頁・巻号頁のハルシネーション厳禁。本文引用前に原典で確定する。</p>
+  <h4>書誌（版・頁）</h4>
+  <ol style="font-size:13px;">
+    <li>金子宏『租税法』── 四要素・委任限界・明確主義二分論・合法性原則・手続的保障・通達課税禁止・借用概念統一説の各頁。第20版114頁は明確主義一般の典拠、二分論の語は別頁（341頁系の可能性）。使用版で確定。</li>
+    <li>植田103号41頁の逐語（05.pdf直接抽出）／木山585号の標題・著者・号（J-STAGE）。</li>
+    <li>田中二郎『租税法』版年（初版1968/第3版1990）／北野『税法学原論』第9版の納税者基本権頁。</li>
+    <li>今村論文経由の村井正・水野忠恒・吉村典久の原典頁。</li>
+    <li>局所DB先行研究（青柳2008・髙安2007・中村2021/2024・安井2024）の掲載誌巻号頁。</li>
+  </ol>
+  <h4>判例（巻号頁・逐語・courts ID）</h4>
+  <ol style="font-size:13px;">
+    <li>令和2.3.24（通達変更・宇賀/宮崎補足意見）の正式引用（民集or判タ1478-21・事件名）。</li>
+    <li>みずほ銀行ケイマンSPC第一審（東京地判R3.3.16）の巻号・帰趨。</li>
+    <li>パチンコ球遊器・旭川・ホステス・大嶋・徳島市・成田新法・川崎民商・ヤフー・IBM・H23.9.22遡及の逐語と巻号頁（多くは確認済だが原典最終照合推奨）。courts旧ID形式（id=53527/52662等）は現在404、現行URL体系に更新。</li>
+  </ol>
+  <h4>比較法</h4>
+  <ol style="font-size:13px;">
+    <li>独 Analogieverbot zulasten の一次条文・判例（Tipke/Lang）。独AStG細目は20260529 DRノート参照。</li>
+    <li>仏 décision n°2005-530 DC の決定番号・日付の最終照合。</li>
+    <li>米 租税固有（civil）の void-for-vagueness 実適用例の要否判断。</li>
+    <li>GloBE国内法（法人税法82条以下）の条番号とモデルルール参照の法技術構造。</li>
+  </ol>
+</section>
+
+<footer>
+  租税法律主義 学説と判例 最大深度資産　2026-06-05　／　Workflow wf_4987117b-86d（8次元並列＋敵対的検証）＋主ループ統合<br>
+  md版：CFC税制/10_作業/論文/research_notes/sessions/20260605_DR_租税法律主義_学説と判例_最大深度.md
+</footer>
+
+</div>
+</body>
+</html>

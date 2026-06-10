@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIワークフロー設計指針 v2 ── LLMエージェント・オーケストレーション</title>
+<style>
+  :root{
+    --bg:#eef1f4; --card:#fff; --ink:#1b2229; --sub:#5a6672; --line:#e4e8ec;
+    --teal:#15707a; --teal-d:#0e5057; --blue:#2c6fa8; --amber:#b3781a; --amberbg:#fdf6e9;
+    --green:#1c7a44; --red:#c0392b; --redbg:#fdecea; --violet:#6c4f9e; --rose:#a23b6e; --chip:#eef4f5;
+  }
+  *{box-sizing:border-box} html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic UI",Meiryo,system-ui,-apple-system,sans-serif;line-height:1.72;font-size:15px;}
+  .wrap{max-width:1120px;margin:0 auto;padding:26px 14px 60px;}
+  .card{background:var(--card);border-radius:16px;box-shadow:0 2px 18px rgba(20,40,60,.07);padding:28px 30px;margin-bottom:20px;}
+  .hero{background:linear-gradient(135deg,var(--teal-d),var(--teal));color:#fff;border-radius:18px;padding:34px 34px 28px;margin-bottom:14px;box-shadow:0 6px 26px rgba(14,80,87,.28);}
+  .hero h1{margin:0 0 8px;font-size:1.66rem;line-height:1.32;}
+  .hero .tag{font-size:.84rem;opacity:.92;}
+  .hero .thesis{margin-top:15px;background:rgba(255,255,255,.13);border-left:4px solid rgba(255,255,255,.6);padding:12px 16px;border-radius:8px;font-size:1.0rem;}
+  .toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+  .toc a{font-size:.8rem;background:rgba(255,255,255,.16);color:#fff;padding:4px 11px;border-radius:18px;text-decoration:none;}
+  .toc a:hover{background:rgba(255,255,255,.28)}
+  .review{background:#fff;border:1.5px solid #d6e3ec;border-left:6px solid var(--blue);border-radius:12px;padding:15px 20px;margin-bottom:20px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;}
+  .review .score{font-size:2rem;font-weight:800;color:var(--blue);line-height:1;}
+  .review .score small{display:block;font-size:.72rem;color:var(--sub);font-weight:600;margin-top:3px;}
+  .review .txt{flex:1;min-width:240px;font-size:.9rem;}
+  .review .txt b{color:var(--blue);}
+  h2{font-size:1.22rem;margin:4px 0 15px;display:flex;align-items:center;gap:11px;}
+  h2 .n{flex:0 0 auto;width:30px;height:30px;border-radius:8px;background:var(--teal);color:#fff;font-size:.92rem;display:grid;place-items:center;font-weight:700;}
+  h2.new .n{background:var(--rose);} h2.meta .n{background:var(--amber);}
+  h3{font-size:1.0rem;margin:16px 0 7px;color:var(--teal-d);}
+  p{margin:.5em 0} ul{margin:.4em 0;padding-left:1.25em} li{margin:.24em 0}
+  .muted{color:var(--sub);font-size:.85rem}
+  .v2{display:inline-block;background:var(--rose);color:#fff;font-size:.68rem;padding:1px 7px;border-radius:10px;margin-left:7px;vertical-align:middle;font-weight:700;}
+  code{background:#eef2f4;padding:1px 6px;border-radius:5px;font-size:.85em;font-family:ui-monospace,Menlo,Consolas,monospace}
+  pre{background:#0e1b23;color:#d7e6ea;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:.82rem;line-height:1.6;}
+  pre .g{color:#7fd6a0} pre .y{color:#e8c477} pre .c{color:#7fb6d6}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin-top:6px;}
+  .pat{border:1px solid var(--line);border-radius:12px;padding:14px 16px;position:relative;overflow:hidden;}
+  .pat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--blue)}
+  .pat.r::before{background:var(--rose)} .pat.t::before{background:var(--teal)}
+  .pat h4{margin:0 0 5px;font-size:1rem;color:var(--blue)} .pat.r h4{color:var(--rose)} .pat.t h4{color:var(--teal-d)}
+  .pat p{margin:5px 0 0;font-size:.88rem}
+  table{border-collapse:collapse;width:100%;font-size:.87rem;margin-top:6px} .scroll{overflow-x:auto}
+  th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+  thead th{background:var(--teal);color:#fff;font-weight:600} tbody th{background:#f3f7f8;white-space:nowrap}
+  .formula{background:#f0f8f3;border:1.5px solid #cfe8d8;border-radius:12px;padding:15px 18px;margin:10px 0;}
+  .formula .eq{font-size:1.05rem;font-weight:700;color:var(--green);text-align:center;margin:8px 0;}
+  .bar{display:flex;height:42px;border-radius:9px;overflow:hidden;margin:10px 0 4px;font-size:.8rem;color:#fff;font-weight:600}
+  .bar div{display:grid;place-items:center;padding:0 6px;text-align:center}
+  .b1{background:#15707a;flex:0 0 44.2%} .b2{background:#2c6fa8;flex:0 0 32.3%} .b3{background:#6c4f9e;flex:0 0 23.5%}
+  .barkey{font-size:.82rem;color:var(--sub)}
+  .meta{background:var(--amberbg);border:1.5px solid #ecd6a8;border-radius:16px;padding:26px 30px;margin-bottom:20px}
+  .irony{font-size:1.0rem;background:#fff;border-left:4px solid var(--amber);padding:11px 16px;border-radius:8px;margin:6px 0 14px}
+  .callout{background:#f4f9f6;border:1px solid #cfe8d8;border-radius:12px;padding:14px 18px;font-size:.9rem}
+  .warn{background:var(--redbg);border:1px solid #f0d2cd;border-radius:10px;padding:12px 16px;font-size:.9rem;margin:8px 0}
+  .warn b{color:var(--red)}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+  .chips span{background:var(--chip);color:var(--teal-d);font-size:.8rem;padding:3px 10px;border-radius:20px}
+  .src{font-size:.84rem;line-height:1.9} .src a{color:var(--blue);text-decoration:none;border-bottom:1px solid #cdddea} .src a:hover{background:#eef5fb}
+  .pri{display:inline-block;width:22px;height:22px;border-radius:6px;color:#fff;font-weight:700;font-size:.78rem;text-align:center;line-height:22px;}
+  .pS{background:var(--red)} .pA{background:var(--amber)} .pB{background:var(--blue)} .pC{background:var(--sub)}
+  @media(max-width:720px){.hero h1{font-size:1.36rem}}
+  @media print{body{background:#fff}.card,.meta,.hero,.review{box-shadow:none;border:1px solid #ddd}.hero{background:var(--teal-d)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <h1>AIワークフロー設計指針 <span style="font-size:1rem;opacity:.85">v2</span><br>LLMエージェント・オーケストレーション</h1>
+    <div class="tag">一次資料（Anthropic / OpenAI / LangGraph / arXiv）検証済み｜ChatGPT 5.5 Pro 査読反映｜2026-06-05</div>
+    <div class="thesis">原則は一つ ── <b>最も単純な解から始め、複雑性は見合うときだけ足す</b>。LLMすら要らないなら使わない。複雑化は性能改善が実証された場合にだけ。</div>
+    <div class="toc">
+      <a href="#flow">判断フロー</a><a href="#ma">multi-agent ROI</a><a href="#cat">5パターン</a><a href="#rel">信頼性</a>
+      <a href="#cp">★Control Plane</a><a href="#sec">★Security&RAG</a><a href="#eval">評価/MAST</a><a href="#cost">コスト</a>
+      <a href="#anti">アンチパターン</a><a href="#meta">★失敗の教訓</a><a href="#hyg">出典規律</a>
+    </div>
+  </div>
+
+  <div class="review">
+    <div class="score">88<small>/100 (5.5 Pro)</small></div>
+    <div class="txt">ChatGPT 5.5 Pro 査読（13分48秒・web検証込み）：<b>「複雑化の順序が正しい」「§失敗の教訓が最も価値が高い」</b>と評価。指摘を反映し v2 へ ── <b>①MAST数値の版ズレ修正 ②判断フローに「LLM不要」と定量ゲート ③multi-agent ROI式 ④§失敗の教訓を「制御プレーン」一般化 ⑤Control Plane / Security&RAG 章を新設 ⑥数値に scope/version 付与。</b></div>
+  </div>
+
+  <!-- 判断フロー -->
+  <div class="card" id="flow">
+    <h2><span class="n">1</span>判断フロー ── 定量ゲートつき<span class="v2">v2</span></h2>
+    <pre><span class="c">タスク受領</span>
+ ├ 段階0：決定論（regex / SQL / ルール / ETL）で足りる？  → <span class="g">YES: LLMを使わない</span>   ★v2追加
+ ├ 段階1：単一LLM呼び出し（+tools / examples）で足りる？ → <span class="g">YES: それで終わり（最頻）</span>
+ ├ 段階2：知識参照が要る？                              → RAG-first（§Security&RAG）
+ ├ 段階3：固定的な多段か？                              → workflow（chaining / routing / parallel）
+ ├ 段階4：制御は固定だが一部に判断が要る？             → <span class="y">hybrid（一部ノードだけagentic）★実務の主役</span>
+ ├ 段階5：ステップが動的・全面分岐？                    → 単一 agent（ReAct）
+ └ 段階6：multi-agent ROIゲートを全て満たす？           → multi-agent（orchestrator-workers）</pre>
+    <p class="muted"><b>multi-agent移行ゲート（全て満たすとき限定）</b>：情報量が1コンテキスト超 ／ 独立サブタスク概ね3以上 ／ 失敗コストが高い高価値 ／ 単一agent evalが閾値未達 ／ ROIが正（次節）。<br>※workflowとagentは直線的発展段階ではない。<b>制御はworkflow・判断だけagent のハイブリッド</b>を中心に（5.5 Pro指摘）。</p>
+  </div>
+
+  <!-- multi-agent ROI -->
+  <div class="card" id="ma">
+    <h2><span class="n">2</span>multi-agent の損益分岐 ── ROI判定式<span class="v2">v2</span></h2>
+    <div class="warn">⚠️ 下表の数値は <b>Anthropic の read-heavy research system の内部評価</b>。一般業務・コード生成・リアルタイム応答へそのまま外挿しない（5.5 Pro指摘）。</div>
+    <div class="scroll"><table>
+      <thead><tr><th>指標（scope: Anthropic研究system内部評価）</th><th>値</th></tr></thead>
+      <tbody>
+        <tr><td>研究タスクで単一Opusを上回る</td><td><b>+90.2%</b></td></tr>
+        <tr><td>チャット比トークン（単一agentは約4×）</td><td><b>≈15×</b></td></tr>
+        <tr><td>性能分散をトークン量で説明</td><td><b>約80%</b></td></tr>
+      </tbody>
+    </table></div>
+    <div class="formula">
+      <div class="eq">期待価値 × 品質改善幅 ＞ 追加コスト ＋ 失敗コスト</div>
+      <div class="muted" style="text-align:center">この不等式が成り立つときだけ multi-agent。「高価値のみ」に判定式を与える（5.5 Pro最優先改訂2）。</div>
+    </div>
+    <h3>分解の粒度 & sub-agent契約</h3>
+    <p>粒度：単純事実探索＝1agent/3-10呼出 ｜ 比較＝2-4 sub/各10-15 ｜ 複雑＝10+ sub。</p>
+    <div class="chips"><span>sub-agentに必須① 目的</span><span>② 出力形式</span><span>③ ツール/情報源</span><span>④ タスクの境界</span><span>＋ schema強制I/O</span><span>＋ context isolation</span></div>
+  </div>
+
+  <!-- 5パターン -->
+  <div class="card" id="cat">
+    <h2><span class="n">3</span>パターンカタログ（Anthropicの5型）</h2>
+    <div class="grid">
+      <div class="pat"><h4>Prompt chaining</h4><p>逐次分解、各段の間にgate（検証）。固定段に分解でき各段の精度を上げたい。</p></div>
+      <div class="pat"><h4>Routing</h4><p>分類して専用処理へ。入力が明確なカテゴリに分かれる。</p></div>
+      <div class="pat"><h4>Parallelization</h4><p>並列分割（sectioning）or 多数決（voting）。高速化／信頼性。</p></div>
+      <div class="pat"><h4>Orchestrator-workers</h4><p>動的分解→委譲→統合。サブタスク数が事前に読めない。</p></div>
+      <div class="pat"><h4>Evaluator-optimizer</h4><p>生成→評価→改善ループ。明確な評価規準があり反復で質が上がる。</p></div>
+      <div class="pat t"><h4>Augmented LLM（基礎）</h4><p>LLM＋retrieval＋tools＋memory。すべての出発点。</p></div>
+    </div>
+    <p class="muted" style="margin-top:10px">LangGraph docs も<b>同型の</b>workflow/agentパターンを提示（「5パターンを名前付き公式実装」とは言い切らない＝5.5 Pro指摘）。「gather→action→verify」はAnthropic後の framing。</p>
+  </div>
+
+  <!-- 信頼性 -->
+  <div class="card" id="rel">
+    <h2><span class="n">4</span>信頼性・制御・人間の監督</h2>
+    <ul>
+      <li><b>ハイブリッド制御</b>：決定的（分岐/ループ/fan-out）＋モデル適応（判断所のみLLM）</li>
+      <li><b>retry + checkpoint + resume</b>・冪等性 ／ <b>多層guardrails</b>（relevance/safety/PII/moderation/blocklist/出力検証）</li>
+      <li><b>HITL承認ゲート</b>（不可逆・高影響の前） ／ <b>stopping conditions</b>（最大反復・予算上限・K回連続で新発見ゼロ）</li>
+      <li>自己レビュー≠独立検証 → <b>敵対的検証</b>を別エージェントで ／ <b>ポカヨケ</b>（schema強制・型・列挙）</li>
+    </ul>
+  </div>
+
+  <!-- Control Plane (new) -->
+  <div class="card" id="cp">
+    <h2 class="new"><span class="n">★</span>Production Control Plane<span class="v2">v2新設</span></h2>
+    <p class="muted">原則レベルの諸要素を<b>実装可能な制御層</b>へ再編。プロダクション運用標準に上げる要（5.5 Pro最優先改訂1）。</p>
+    <div class="scroll"><table>
+      <thead><tr><th>層</th><th>内容</th></tr></thead>
+      <tbody>
+        <tr><th>State / memory</th><td>task state・scratchpad・episodic / long-term memory・artifact store。失敗は状態に蓄積・伝播する</td></tr>
+        <tr><th>Checkpoint / resume</th><td>途中再開・idempotency・schema versioning</td></tr>
+        <tr><th>Observability</th><td>tracing（LangSmith/Langfuse/OpenTelemetry GenAI規約）・metrics・trace replay</td></tr>
+        <tr><th>Cost ledger</th><td>per-task token cap・model routing・early stop・budget exhaustion policy・cost telemetry</td></tr>
+        <tr><th>Resilience</th><td>timeout・degraded mode（single-shot fallback）・縮退運転</td></tr>
+        <tr><th>Governance</th><td>canary・shadow mode・rollback・audit logs・privacy review</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- Security & RAG (new) -->
+  <div class="card" id="sec">
+    <h2 class="new"><span class="n">★</span>Security & RAG<span class="v2">v2新設</span></h2>
+    <div class="warn"><b>RAG文書は「信頼できる知識」ではなく、プロンプトインジェクションを含み得る外部入力。</b>検索結果をそのままagentの指示として扱う設計は危険（5.5 Pro：S優先・別章必須）。</div>
+    <div class="grid">
+      <div class="pat r"><h4>Security</h4><p>tool権限階層・read/write分離・sandbox・allowlist・data exfiltration防止・human approval。RAG文書を<b>不信入力</b>として扱う。toolを持つagentは攻撃面が広い。</p></div>
+      <div class="pat r"><h4>RAG統合</h4><p>hybrid search・reranking・citation extraction・source quality scoring・staleness / cache invalidation・connector権限。multi-agent探索とstatic RAGの組合せが設計の分岐点。</p></div>
+    </div>
+  </div>
+
+  <!-- 評価/MAST -->
+  <div class="card" id="eval">
+    <h2><span class="n">5</span>評価・可観測性 ＆ 失敗の所在<span class="v2">MAST修正</span></h2>
+    <ul>
+      <li><b>step-wise ＋ end-to-end</b> の両建て。<b>eval自動化</b>：golden tasks・regression・capability eval・trace replay・pass@k/pass^k・LLM-judge calibration・production monitoring</li>
+      <li><b>LLM-as-judge</b>：位置バイアスに注意（<b>順序で評価が大きく変動</b>。Wang et al. 2305.17926 が MEC/BPC/HRC で較正。※「約40%」は抄録から確認不能のため数値を断定しない）</li>
+    </ul>
+    <h3>失敗の所在 ── MAST (arXiv:2503.13657, v2／要版管理)</h3>
+    <div class="bar"><div class="b1">specification / 設計 44.2%</div><div class="b2">inter-agent misalignment 32.3%</div><div class="b3">task verification 23.5%</div></div>
+    <p class="barkey">inter-annotator κ0.88。<b>MASTは失敗を「基盤モデルの能力不足」でなく、主にsystem design・協調・検証というシステムレベルの失敗として分類</b>。∴信頼性改善の主戦場はモデル選択でなく設計・協調・検証の制御面。</p>
+    <div class="warn">⚠️ <b>版依存</b>（v1≈37/31/31、v2≈44/32/24）。使用版を明記。「残り○%がモデル能力」とは測定していない＝断定回避。<b>v1指針の 41.8/36.9/21.3 は誤りで、web再確認の上 v2: 44.2/32.3/23.5 に修正した</b>（5.5 Proが検出）。</div>
+  </div>
+
+  <!-- コスト -->
+  <div class="card" id="cost">
+    <h2><span class="n">6</span>コスト・モデル選択・コンテキスト</h2>
+    <div class="grid">
+      <div class="pat"><h4>prompt caching（出典分離）</h4><p>「90%コスト減・85%レイテンシ減・11.5s→2.4s」＝<b>news/prompt-caching 記事</b>。read <b>0.1×</b>/write <b>1.25×</b>(5分)・<b>2×</b>(1時間)＝<b>Claude docs 料金/TTL</b>（5.5 Pro指摘）。</p></div>
+      <div class="pat"><h4>model tiering</h4><p>Haiku/Sonnet/Opus。安いsub-agent＋Opus orchestrator。まず高能力でベースライン→落とせる所を小モデルへ。</p></div>
+      <div class="pat"><h4>context engineering</h4><p>compaction・note-taking・sub-agentのクリーン文脈・memory tool。context rot を防ぐ。</p></div>
+    </div>
+    <p class="muted" style="margin-top:10px"><b>フレームワーク</b>：graph(LangGraph) / conversation(CrewAI,AutoGen) / code(OpenAI Agents SDK・Claude Agent SDK※具体記述はdocs時点依存) / optimization(DSPy) / durable(Temporal)。まずLLM API直叩き、合うときだけframework。</p>
+  </div>
+
+  <!-- アンチパターン -->
+  <div class="card" id="anti">
+    <h2><span class="n">7</span>アンチパターンと「使うべきでない」場面</h2>
+    <div class="grid">
+      <div class="pat r"><h4>設計レベル</h4><p>決定論で足りる所をagent化／不要な増殖・過剰分解／フレームワーク過剰抽象／"Bag of Agents"。</p></div>
+      <div class="pat r"><h4>実行時の崩壊</h4><p>context bloat/rot／silent truncation／"Token Spiral"（$2,847/4時間）／cascading hallucination（<b>17.2×</b>／中央集権で約4.4×）／検証なしfan-out。</p></div>
+    </div>
+    <p class="muted" style="margin-top:8px"><b>使うべきでない</b>：低価値・高頻度、密結合で逐次依存、決定論で書ける手続き、レイテンシ厳守。</p>
+  </div>
+
+  <!-- ★失敗の教訓 -->
+  <div class="meta" id="meta">
+    <h2 class="meta"><span class="n">★</span>一次経験：失敗の教訓（5.5 Proが最高評価）<span class="v2">v2一般化修正</span></h2>
+    <div class="irony">「AIワークフローの作り方」を<b>ワークフローで</b>調べさせたら3本とも StructuredOutput で落ち、最も価値ある一次教訓を生んだ。研究は完遂・検証段は捏造を実際に検出。これは複合障害である：</div>
+    <div class="scroll"><table>
+      <thead><tr><th>観察された失敗</th><th>より一般的な原因</th></tr></thead>
+      <tbody>
+        <tr><td>socket connection closed</td><td>transport / infrastructure failure</td></tr>
+        <tr><td>malformed tag（<code>&lt;corrected_findings"&gt;</code>反復）</td><td>serialization / schema contract failure</td></tr>
+        <tr><td>final synthesis fail</td><td>high-entropy aggregation failure</td></tr>
+        <tr><td>研究結果は残っていた</td><td><b>raw artifact preservation が機能</b></td></tr>
+        <tr><td>transcriptから回収できた</td><td><b>recovery-oriented design が有効</b></td></tr>
+      </tbody>
+    </table></div>
+    <p style="margin-top:12px"><b>一般化（v1「主ループで統合」を修正）</b>：本質は「sub-agentが弱い」でなく<b>最大コンテキスト・最大出力・最大スキーマ制約を最後の一発に集中させたこと</b>。∴ <b style="color:var(--amber)">最終統合は「最も信頼できる制御プレーン」に置く</b>（人間／決定論coordinator／chunked synthesis）。<b>巨大な最終JSONを作らない</b> ── 各subは「短いmanifest＋raw＋source map」、coordinatorはmanifestだけ集約、最終はJSONL/小schema分割。</p>
+    <div class="chips"><span>①schemaフラット</span><span>②段階統合（巨大JSON回避）</span><span>③回収前提</span><span>④裸agentはthrow→null化/try-catch</span><span>⑤研究深度cap＋リトライ</span><span>⑥敵対的検証</span></div>
+  </div>
+
+  <!-- 出典規律 -->
+  <div class="card" id="hyg">
+    <h2><span class="n">8</span>Source hygiene ＆ 検証の再帰</h2>
+    <div class="callout">
+      <b>各数値claimに source・version/date・scope・generalizability を付す</b>（5.5 Pro最優先改訂3）。理由＝MASTはv1/v2で数値が変わり、Anthropicの+90.2%等は内部評価・read-heavy限定、prompt cachingはnews/docsで出典が分かれる。<br><br>
+      <b>検証は二段で誤りを削った</b>：①ワークフロー内の敵対的検証が <b>Galileoの捏造taxonomy・17.2×・URL帰属</b> を検出。②<b>ChatGPT 5.5 Pro査読が私の MAST数値の版ズレを検出</b>（＝「版つきで検証せよ」を他AIが私の原稿で実演＝この指針の主張の再帰的実証）。
+    </div>
+    <h3 style="margin-top:16px">検証済み主要出典</h3>
+    <div class="src">
+      • Anthropic — <a href="https://www.anthropic.com/engineering/building-effective-agents">Building Effective Agents</a> / <a href="https://www.anthropic.com/engineering/multi-agent-research-system">multi-agent research system</a> / <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Demystifying evals</a> / <a href="https://www.anthropic.com/news/prompt-caching">prompt caching</a><br>
+      • OpenAI — <a href="https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf">A practical guide to building agents</a> / Agents SDK・guardrails docs<br>
+      • <a href="https://docs.langchain.com/oss/python/langgraph/">LangGraph</a> / Langfuse / LangSmith / <a href="https://github.com/NVIDIA-NeMo/Guardrails">NeMo Guardrails</a> / OpenTelemetry GenAI conventions<br>
+      • <a href="https://arxiv.org/abs/2503.13657">MAST arXiv:2503.13657</a>（v2: 44.2/32.3/23.5・κ0.88）/ <a href="https://arxiv.org/abs/2305.17926">Wang et al. 2305.17926</a>（位置バイアス）
+    </div>
+    <p class="muted" style="margin-top:14px">査読：ChatGPT 5.5 Pro（じっくり思考 Pro、13分48秒・web検証込み）＝88/100。méthode：v1はワークフロー7次元の検証済み研究をtranscript回収し主ループで統合（最終synthesisのみsocket断→手動統合）。元md：<code>~/.claude/AI_WORKFLOW_DESIGN_GUIDE.md</code></p>
+  </div>
+
+</div>
+</body>
+</html>
