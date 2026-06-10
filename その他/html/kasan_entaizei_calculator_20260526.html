@@ -1,0 +1,502 @@
+﻿<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>加算税・延滞税 計算シミュレーター</title>
+  <style>
+    :root {
+      --bg: #f5f7f8;
+      --paper: #fff;
+      --ink: #172126;
+      --muted: #607078;
+      --line: #d8e1e5;
+      --strong: #12343b;
+      --accent: #0f766e;
+      --accent-soft: #e7f4f2;
+      --warn: #fff7ed;
+      --danger: #b42318;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", Meiryo, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: var(--ink); background: linear-gradient(180deg, #eef3f4, var(--bg) 34%, #edf1ef); }
+    a { color: var(--accent); text-underline-offset: 3px; }
+    .wrap { width: min(1240px, calc(100vw - 32px)); margin: 0 auto; }
+    header { position: sticky; top: 0; z-index: 3; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.88); backdrop-filter: blur(12px); }
+    header .wrap { min-height: 58px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; }
+    .mark { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; background: var(--strong); color: #fff; font-weight: 900; }
+    .pill { display: inline-flex; min-height: 30px; align-items: center; border: 1px solid var(--line); border-radius: 999px; padding: 5px 10px; color: var(--muted); background: #fff; font-size: 12px; white-space: nowrap; }
+    main { padding: 28px 0 54px; }
+    .intro { display: block; margin-bottom: 18px; }
+    h1 { margin: 12px 0 10px; font-size: clamp(30px, 4vw, 48px); line-height: 1.08; letter-spacing: 0; }
+    .lead { max-width: 780px; margin: 0; color: var(--muted); font-size: 15px; line-height: 1.8; }
+    .panel, .card { border: 1px solid var(--line); border-radius: 8px; background: rgba(255,255,255,.94); box-shadow: 0 18px 44px rgba(25,37,44,.10); }
+    .panel h2, .card h2 { margin: 0 0 10px; font-size: 15px; }
+    .workspace { display: grid; grid-template-columns: minmax(360px, 460px) minmax(0, 1fr); gap: 18px; align-items: start; }
+    .panel { padding: 18px; }
+    .section { padding: 16px 0; border-top: 1px solid var(--line); }
+    .section:first-child { padding-top: 0; border-top: 0; }
+    .section-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+    .section-title h2 { margin: 0; }
+    .step { width: 28px; height: 28px; border-radius: 999px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); font-size: 12px; font-weight: 900; }
+    label { display: block; margin: 0 0 6px; color: #34444c; font-size: 12px; font-weight: 700; }
+    .field { margin-bottom: 12px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    input[type="text"], input[type="date"], select { width: 100%; min-height: 42px; border: 1px solid #bdc8cf; border-radius: 7px; background: #fff; color: var(--ink); font: inherit; font-size: 14px; padding: 8px 10px; outline: none; }
+    input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(15,118,110,.12); }
+    .seg { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .option { position: relative; }
+    .option input { position: absolute; opacity: 0; inset: 0; pointer-events: none; }
+    .option span { display: flex; min-height: 40px; align-items: center; justify-content: center; border: 1px solid #bdc8cf; border-radius: 7px; padding: 8px; background: #fff; color: #31424a; font-size: 13px; font-weight: 700; text-align: center; cursor: pointer; }
+    .option input:checked + span { border-color: var(--accent); background: var(--accent-soft); color: #0b4f4a; box-shadow: inset 0 0 0 1px rgba(15,118,110,.22); }
+    .check { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; padding: 10px; border: 1px solid var(--line); border-radius: 7px; background: #fbfcfc; }
+    .check input { margin-top: 3px; }
+    .check strong { display: block; font-size: 13px; }
+    .check span span { display: block; margin-top: 3px; color: var(--muted); font-size: 12px; line-height: 1.55; }
+    .hint { margin: 6px 0 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+    .actions { display: grid; grid-template-columns: 1fr auto; gap: 10px; padding-top: 14px; border-top: 1px solid var(--line); }
+    button { min-height: 44px; border: 0; border-radius: 7px; padding: 10px 14px; font: inherit; font-size: 14px; font-weight: 800; cursor: pointer; }
+    .primary { background: var(--accent); color: #fff; }
+    .secondary { background: #e7ecee; color: #263840; }
+    .results { display: grid; gap: 14px; }
+    .card { padding: 18px; }
+    .total { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 18px; align-items: end; padding: 18px; border-radius: 8px; background: #102d33; color: #fff; }
+    .total span { display: block; color: rgba(255,255,255,.7); font-size: 12px; font-weight: 700; }
+    .total strong { display: block; margin-top: 4px; font-size: clamp(30px, 4vw, 44px); line-height: 1; }
+    .badges { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+    .badge { min-height: 28px; display: inline-flex; align-items: center; border: 1px solid rgba(255,255,255,.25); border-radius: 999px; padding: 5px 9px; color: rgba(255,255,255,.86); font-size: 12px; white-space: nowrap; }
+    .kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+    .kpi { min-height: 88px; border: 1px solid var(--line); border-radius: 7px; padding: 12px; background: #fbfcfc; }
+    .kpi span { display: block; color: var(--muted); font-size: 12px; font-weight: 700; }
+    .kpi strong { display: block; margin-top: 8px; font-size: 20px; line-height: 1.15; }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 7px; }
+    table { width: 100%; min-width: 680px; border-collapse: collapse; background: #fff; }
+    th, td { border-bottom: 1px solid var(--line); padding: 10px 11px; text-align: right; font-size: 13px; white-space: nowrap; }
+    th:first-child, td:first-child { text-align: left; }
+    thead th { background: #f0f5f4; color: #31424a; font-weight: 800; }
+    tbody tr:last-child td { border-bottom: 0; }
+    .note { margin: 12px 0 0; padding: 12px; border-radius: 7px; background: var(--warn); color: #6b3d0a; font-size: 12px; line-height: 1.7; }
+    .error { display: none; margin: 12px 0 0; padding: 12px; border: 1px solid #f2b8b5; border-radius: 7px; background: #fff4f2; color: var(--danger); font-size: 13px; line-height: 1.6; }
+    .error.show { display: block; }
+    .matrix { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    footer { padding: 20px 0 36px; color: var(--muted); font-size: 12px; line-height: 1.7; }
+    @media (max-width: 980px) { .intro, .workspace, .matrix { grid-template-columns: 1fr; } .kpis { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 640px) { .wrap { width: min(100vw - 20px, 1240px); } header .wrap { flex-direction: column; align-items: flex-start; padding: 10px 0; } .pill { white-space: normal; } main { padding-top: 18px; } .panel, .card { padding: 14px; } .grid-2, .seg, .actions, .kpis, .total { grid-template-columns: 1fr; } .badges { justify-content: flex-start; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="brand"><span class="mark">税</span><span>加算税・延滞税 計算シミュレーター</span></div>
+      <div class="pill">税務調査・修正申告・更正・決定の分岐を反映</div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="intro">
+      <div>
+        <h1>追徴税額を一画面で試算</h1>
+        <p class="lead">国税区分、修正申告等の有無、税務調査の段階、重加算税の有無を選んで、加算税と延滞税を同時に計算します。</p>
+      </div>
+
+    </section>
+
+    <section class="workspace">
+      <form class="panel" id="taxForm">
+        <div class="section">
+          <div class="section-title"><h2>基本データ</h2><span class="step">1</span></div>
+          <div class="field">
+            <label>国税の区分</label>
+            <div class="seg" role="radiogroup" aria-label="国税の区分">
+              <label class="option"><input type="radio" name="taxType" value="corporate" checked><span>法人税</span></label>
+              <label class="option"><input type="radio" name="taxType" value="income"><span>所得税</span></label>
+              <label class="option"><input type="radio" name="taxType" value="other"><span>その他国税</span></label>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label for="fiscalEnd">決算日・申告年の基準日</label>
+              <input id="fiscalEnd" type="date" value="2025-12-31">
+              <p class="hint">法人税は2か月後、所得税は翌年3月15日を初期値にします。法定納期限は修正できます。</p>
+            </div>
+            <div class="field"><label for="dueDate">法定納期限</label><input id="dueDate" type="date" value="2026-02-28"></div>
+          </div>
+          <div class="grid-2">
+            <div class="field"><label for="procedureDate">修正申告日・更正等の日</label><input id="procedureDate" type="date" value="2026-05-26"></div>
+            <div class="field"><label for="paymentDate">納付日</label><input id="paymentDate" type="date" value="2026-05-26"></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title"><h2>修正申告等の有無</h2><span class="step">2</span></div>
+          <div class="field">
+            <label for="caseType">発生している手続</label>
+            <select id="caseType">
+              <option value="lateOnly">なし（延滞税のみ・期限後納付）</option>
+              <option value="under" selected>修正申告・更正（過少申告）</option>
+              <option value="nonfile">期限後申告・決定（無申告）</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="procedureType">修正申告等の区分</label>
+            <select id="procedureType">
+              <option value="none">なし</option>
+              <option value="amend" selected>修正申告</option>
+              <option value="correction">更正</option>
+              <option value="determination">決定</option>
+            </select>
+          </div>
+          <label class="check"><input id="auditActive" type="checkbox"><span><strong>税務調査が入っている</strong><span>チェックすると、段階を「調査通知後・更正予知前」に寄せます。調査後の指摘なら下の選択を「更正予知後」にします。</span></span></label>
+          <div class="field">
+            <label for="auditTiming">税務調査・自主修正の段階</label>
+            <select id="auditTiming">
+              <option value="pre_notice">調査通知前・自主修正</option>
+              <option value="post_notice_pre_prediction">調査通知後・更正等予知前</option>
+              <option value="post_prediction" selected>更正等予知後・調査後</option>
+            </select>
+          </div>
+          <label class="check"><input id="concealment" type="checkbox"><span><strong>仮装・隠蔽あり（重加算税）</strong><span>過少申告なら35%、無申告なら40%を基礎にします。延滞税の1年超特例は自動適用しません。</span></span></label>
+          <label class="check"><input id="repeatAdd" type="checkbox"><span><strong>5年以内の前歴等による10%加重を概算反映</strong><span>該当性は個別判断です。チェック時は加算税率に10ポイントを加えます。</span></span></label>
+        </div>
+
+        <div class="section">
+          <div class="section-title"><h2>金額</h2><span class="step">3</span></div>
+          <div class="field"><label for="principal">増差税額・未納本税</label><input id="principal" type="text" inputmode="numeric" value="1,000,000"></div>
+          <div class="field">
+            <label for="originalTax">期限内申告税額（過少申告の15%判定用）</label>
+            <input id="originalTax" type="text" inputmode="numeric" value="500,000">
+            <p class="hint">過少申告加算税では、50万円と期限内申告税額のいずれか多い額を超える部分に高い率を使います。</p>
+          </div>
+          <label class="check"><input id="highNonFiling" type="checkbox" checked><span><strong>無申告加算税の300万円超区分を使う</strong><span>2024年1月1日以後に法定申告期限が到来するものを想定します。古い年分では自動的に50万円超までの区分で計算します。</span></span></label>
+        </div>
+
+        <div class="section">
+          <div class="section-title"><h2>延滞税の特例・除外</h2><span class="step">4</span></div>
+          <label class="check"><input id="autoSpecial" type="checkbox" checked><span><strong>修正申告等の1年超部分の特例を自動控除</strong><span>重加算税に該当しない修正申告・更正・決定について、法定納期限から1年を経過する日の翌日から修正申告日等までを延滞税期間から除外します。</span></span></label>
+          <label class="check"><input id="manualExclude" type="checkbox"><span><strong>除外期間を手入力する</strong><span>個別事情がある場合だけ使います。入力した期間を延滞税の計算日数から除外します。</span></span></label>
+          <div class="grid-2" id="manualExcludeFields" style="display:none;">
+            <div class="field"><label for="excludeStart">除外開始日</label><input id="excludeStart" type="date"></div>
+            <div class="field"><label for="excludeEnd">除外終了日</label><input id="excludeEnd" type="date"></div>
+          </div>
+          <div class="error" id="errorBox"></div>
+          <div class="actions"><button class="primary" id="calcBtn" type="button">計算する</button><button class="secondary" id="resetBtn" type="button">初期化</button></div>
+        </div>
+      </form>
+
+      <div class="results">
+        <section class="card">
+          <div class="total">
+            <div><span>本税・加算税・延滞税の合計</span><strong id="grandTotal">0円</strong></div>
+            <div class="badges" id="resultBadges"></div>
+          </div>
+          <div class="kpis">
+            <div class="kpi"><span>本税</span><strong id="principalOut">0円</strong></div>
+            <div class="kpi"><span>加算税</span><strong id="penaltyOut">0円</strong></div>
+            <div class="kpi"><span>延滞税</span><strong id="lateOut">0円</strong></div>
+            <div class="kpi"><span>延滞日数</span><strong id="daysOut">0日</strong></div>
+          </div>
+          <p class="note" id="resultNote">加算税は計算基礎税額を1万円未満切捨て、確定金額は5,000円未満不徴収・100円未満切捨て。延滞税は1,000円未満不徴収・100円未満切捨てで計算します。</p>
+        </section>
+        <section class="card"><h2>加算税の内訳</h2><div class="table-wrap"><table><thead><tr><th>区分</th><th>基礎税額</th><th>税率</th><th>計算額</th><th>備考</th></tr></thead><tbody id="penaltyRows"></tbody></table></div></section>
+        <section class="card"><h2>延滞税の内訳</h2><div class="table-wrap"><table><thead><tr><th>期間</th><th>区分</th><th>日数</th><th>税率</th><th>端数処理前</th></tr></thead><tbody id="lateRows"></tbody></table></div></section>
+        <section class="card">
+          <h2>内蔵している主な税率</h2>
+          <div class="matrix">
+            <div class="table-wrap"><table><thead><tr><th>延滞税 年</th><th>2か月以内等</th><th>2か月経過後</th></tr></thead><tbody id="lateRateRows"></tbody></table></div>
+            <div class="table-wrap"><table><thead><tr><th>加算税区分</th><th>調査通知前</th><th>通知後・予知前</th><th>予知後等</th></tr></thead><tbody><tr><td>過少申告</td><td>0%</td><td>5% / 10%</td><td>10% / 15%</td></tr><tr><td>無申告</td><td>5%</td><td>10% / 15% / 25%</td><td>15% / 20% / 30%</td></tr><tr><td>重加算</td><td colspan="3">過少35%、無申告40%（前歴等は10%加重）</td></tr></tbody></table></div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap">このHTMLは概算ツールです。正当な理由、調査通知・更正予知の時点、重加算税の該当性、猶予・災害等の免除、消費税・地方消費税の端数処理などは個別確認してください。</footer>
+
+  <script>
+    const LATE_RATES = {
+      2014: { early: 2.9, late: 9.2 }, 2015: { early: 2.8, late: 9.1 }, 2016: { early: 2.8, late: 9.1 },
+      2017: { early: 2.7, late: 9.0 }, 2018: { early: 2.6, late: 8.9 }, 2019: { early: 2.6, late: 8.9 },
+      2020: { early: 2.6, late: 8.9 }, 2021: { early: 2.5, late: 8.8 }, 2022: { early: 2.4, late: 8.7 },
+      2023: { early: 2.4, late: 8.7 }, 2024: { early: 2.4, late: 8.7 }, 2025: { early: 2.4, late: 8.7 },
+      2026: { early: 2.8, late: 9.1 }
+    };
+    const RATE_YEARS = Object.keys(LATE_RATES).map(Number);
+    const MIN_RATE_YEAR = Math.min(...RATE_YEARS);
+    const MAX_RATE_YEAR = Math.max(...RATE_YEARS);
+    const yen = new Intl.NumberFormat("ja-JP", { style: "currency", currency: "JPY", maximumFractionDigits: 0 });
+    const ids = ["fiscalEnd","dueDate","procedureDate","paymentDate","caseType","procedureType","auditActive","auditTiming","concealment","repeatAdd","principal","originalTax","highNonFiling","autoSpecial","manualExclude","manualExcludeFields","excludeStart","excludeEnd","errorBox","calcBtn","resetBtn","grandTotal","resultBadges","principalOut","penaltyOut","lateOut","daysOut","resultNote","penaltyRows","lateRows","lateRateRows"];
+    const el = Object.fromEntries(ids.map(id => [id, document.getElementById(id)]));
+
+    function amount(value) {
+      const normalized = String(value || "").replace(/[円￥¥,\s]/g, "");
+      const num = Number(normalized);
+      return Number.isFinite(num) && num >= 0 ? Math.floor(num) : NaN;
+    }
+    function dateValue(value) {
+      if (!value) return null;
+      const [y, m, d] = value.split("-").map(Number);
+      if (!y || !m || !d) return null;
+      return new Date(y, m - 1, d);
+    }
+    function inputDate(date) { return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`; }
+    function addDays(date, days) { const next = new Date(date); next.setDate(next.getDate() + days); return next; }
+    function addMonths(date, months) {
+      const candidate = new Date(date.getFullYear(), date.getMonth() + months, date.getDate());
+      return candidate.getDate() === date.getDate() ? candidate : new Date(date.getFullYear(), date.getMonth() + months + 1, 0);
+    }
+    function addYears(date, years) {
+      const candidate = new Date(date.getFullYear() + years, date.getMonth(), date.getDate());
+      return candidate.getMonth() === date.getMonth() ? candidate : new Date(date.getFullYear() + years, date.getMonth() + 1, 0);
+    }
+    function nextBusinessDay(date) {
+      const next = new Date(date);
+      while (next.getDay() === 0 || next.getDay() === 6) next.setDate(next.getDate() + 1);
+      return next;
+    }
+    function twoMonthLimit(date) {
+      return addDays(addMonths(addDays(date, 1), 2), -1);
+    }
+    function paymentDueForRate(legalDueDate, procedureDate, caseType, procedureType) {
+      if (caseType === "lateOnly" || !procedureDate) return legalDueDate;
+      if (procedureType === "correction" || procedureType === "determination") return nextBusinessDay(addMonths(procedureDate, 1));
+      return procedureDate;
+    }
+    function daysBetween(startBase, end) {
+      const ms = Date.UTC(end.getFullYear(), end.getMonth(), end.getDate()) - Date.UTC(startBase.getFullYear(), startBase.getMonth(), startBase.getDate());
+      return Math.max(0, Math.round(ms / 86400000));
+    }
+    function minDate(a, b) { return a <= b ? a : b; }
+    function fmtDate(date) { return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}`; }
+    function fmtPeriod(startBase, end) { return `${fmtDate(addDays(startBase, 1))} - ${fmtDate(end)}`; }
+    function truncateBase(n) { return Math.floor(n / 10000) * 10000; }
+    function finalLate(n) { return n < 1000 ? 0 : Math.floor(n / 100) * 100; }
+    function finalPenalty(n) { return n < 5000 ? 0 : Math.floor(n / 100) * 100; }
+    function checkedTaxType() { return document.querySelector('input[name="taxType"]:checked').value; }
+    function showError(message) { el.errorBox.textContent = message; el.errorBox.classList.add("show"); }
+    function clearError() { el.errorBox.textContent = ""; el.errorBox.classList.remove("show"); }
+    function autoDueDate() {
+      const base = dateValue(el.fiscalEnd.value);
+      if (!base) return;
+      const type = checkedTaxType();
+      if (type === "corporate") el.dueDate.value = inputDate(nextBusinessDay(addMonths(base, 2)));
+      if (type === "income") el.dueDate.value = inputDate(nextBusinessDay(new Date(base.getFullYear() + 1, 2, 15)));
+    }
+    function rateForYear(year, tier) { return LATE_RATES[year] ? LATE_RATES[year][tier] : null; }
+    function splitByYear(startBase, end, tier) {
+      const rows = [];
+      let cursor = new Date(startBase);
+      while (cursor < end) {
+        const nextDay = addDays(cursor, 1);
+        const yearEnd = new Date(nextDay.getFullYear(), 11, 31);
+        const segmentEnd = minDate(yearEnd, end);
+        const days = daysBetween(cursor, segmentEnd);
+        if (days > 0) rows.push({ startBase: new Date(cursor), end: new Date(segmentEnd), days, tier, year: nextDay.getFullYear(), rate: rateForYear(nextDay.getFullYear(), tier), excluded: false });
+        cursor = segmentEnd;
+      }
+      return rows;
+    }
+    function subtractPeriod(segments, start, end, label) {
+      if (!start || !end || end < start) return segments;
+      const result = [];
+      for (const seg of segments) {
+        const actualStart = addDays(seg.startBase, 1);
+        const actualEnd = seg.end;
+        if (actualEnd < start || actualStart > end) { result.push(seg); continue; }
+        const leftEnd = addDays(start, -1);
+        if (actualStart <= leftEnd) {
+          const days = daysBetween(addDays(actualStart, -1), leftEnd);
+          if (days > 0) result.push({ ...seg, startBase: addDays(actualStart, -1), end: leftEnd, days });
+        }
+        const rightStart = addDays(end, 1);
+        if (rightStart <= actualEnd) {
+          const days = daysBetween(addDays(rightStart, -1), actualEnd);
+          if (days > 0) result.push({ ...seg, startBase: addDays(rightStart, -1), end: actualEnd, days });
+        }
+        const overlapStart = actualStart > start ? actualStart : start;
+        const overlapEnd = actualEnd < end ? actualEnd : end;
+        const excludedDays = daysBetween(addDays(overlapStart, -1), overlapEnd);
+        if (excludedDays > 0) result.push({ startBase: addDays(overlapStart, -1), end: overlapEnd, days: excludedDays, tier: label, year: overlapStart.getFullYear(), rate: 0, amount: 0, excluded: true });
+      }
+      return result.sort((a, b) => a.startBase - b.startBase || a.end - b.end);
+    }
+    function calculateLateTax(base, dueDate, procedureDate, paymentDate, caseType, procedureType, concealment) {
+      if (paymentDate <= dueDate || base <= 0) return { rows: [], raw: 0, final: 0, days: 0, excludedDays: 0 };
+      if (dueDate.getFullYear() < MIN_RATE_YEAR || paymentDate.getFullYear() > MAX_RATE_YEAR) throw new Error(`延滞税率は${MIN_RATE_YEAR}年から${MAX_RATE_YEAR}年までを内蔵しています。対象期間が範囲外です。`);
+      const rateDueDate = paymentDueForRate(dueDate, procedureDate, caseType, procedureType);
+      const twoMonthEnd = twoMonthLimit(rateDueDate);
+      let rows = [];
+      const earlyEnd = minDate(paymentDate, twoMonthEnd);
+      if (earlyEnd > dueDate) rows = rows.concat(splitByYear(dueDate, earlyEnd, "early"));
+      if (paymentDate > twoMonthEnd) rows = rows.concat(splitByYear(twoMonthEnd, paymentDate, "late"));
+      if (el.autoSpecial.checked && caseType === "under" && !concealment && procedureDate) rows = subtractPeriod(rows, addDays(addYears(dueDate, 1), 1), minDate(procedureDate, paymentDate), "1年超特例控除");
+      if (el.manualExclude.checked) {
+        const exStart = dateValue(el.excludeStart.value);
+        const exEnd = dateValue(el.excludeEnd.value);
+        if (!exStart || !exEnd) throw new Error("手入力の除外期間を使う場合は、除外開始日と除外終了日を入力してください。");
+        rows = subtractPeriod(rows, exStart, exEnd, "手入力控除");
+      }
+      for (const row of rows) row.amount = row.excluded ? 0 : Math.floor(base * (row.rate / 100) * row.days / 365);
+      const raw = rows.reduce((sum, row) => sum + row.amount, 0);
+      const days = rows.filter(row => !row.excluded).reduce((sum, row) => sum + row.days, 0);
+      const excludedDays = rows.filter(row => row.excluded).reduce((sum, row) => sum + row.days, 0);
+      return { rows, raw, final: finalLate(raw), days, excludedDays };
+    }
+    function tierRows(label, basis, tiers) {
+      let remaining = basis;
+      let priorLimit = 0;
+      const rows = [];
+      for (const tier of tiers) {
+        const span = tier.limit === Infinity ? remaining : Math.max(0, Math.min(remaining, tier.limit - priorLimit));
+        if (span > 0) rows.push({ label: `${label} ${tier.label}`, base: truncateBase(span), rate: tier.rate, raw: Math.floor(truncateBase(span) * tier.rate / 100) });
+        remaining -= span;
+        priorLimit = tier.limit;
+        if (remaining <= 0) break;
+      }
+      return rows.filter(row => row.base > 0 && row.rate > 0);
+    }
+    function calculatePenalty(principalRaw, base, originalTax, caseType, timing, concealment, repeat, dueDate) {
+      if (caseType === "lateOnly" || base <= 0) return { rows: [], raw: 0, final: 0 };
+      const add = repeat && (caseType === "nonfile" || concealment) && dueDate >= new Date(2017, 0, 1) ? 10 : 0;
+      const is2017OrLater = dueDate >= new Date(2017, 0, 1);
+      const is2024OrLater = dueDate >= new Date(2024, 0, 1);
+      let rows = [];
+      if (concealment) {
+        const rate = (caseType === "nonfile" ? 40 : 35) + add;
+        const label = caseType === "nonfile" ? "重加算税（無申告）" : "重加算税（過少申告）";
+        rows = [{ label, base, rate, raw: Math.floor(base * rate / 100) }];
+      } else if (caseType === "under") {
+        const threshold = Math.max(originalTax, 500000);
+        let low = 0, high = 0;
+        if (timing === "post_notice_pre_prediction") { low = is2017OrLater ? 5 : 0; high = is2017OrLater ? 10 : 0; }
+        if (timing === "post_prediction") { low = 10; high = 15; }
+        if (low > 0) rows.push({ label: "過少申告加算税 通常分", base, rate: low, raw: Math.floor(base * low / 100) });
+        const extraRate = high - low;
+        const extraBase = truncateBase(Math.max(0, principalRaw - threshold));
+        if (extraRate > 0 && extraBase > 0) rows.push({ label: `過少申告加算税 加重分（${yen.format(threshold)}超）`, base: extraBase, rate: extraRate, raw: Math.floor(extraBase * extraRate / 100) });
+      } else if (caseType === "nonfile") {
+        const use300 = el.highNonFiling.checked && is2024OrLater;
+        if (timing === "pre_notice") {
+          rows = tierRows("無申告加算税", base, [{ limit: Infinity, rate: 5 + add, label: "自主期限後申告" }]);
+        } else if (timing === "post_notice_pre_prediction") {
+          const rates = is2017OrLater ? [10, 15, 25] : [5, 10, 10];
+          rows = use300 ? tierRows("無申告加算税", base, [
+            { limit: 500000, rate: rates[0] + add, label: "50万円以下" },
+            { limit: 3000000, rate: rates[1] + add, label: "50万円超300万円以下" },
+            { limit: Infinity, rate: rates[2] + add, label: "300万円超" }
+          ]) : tierRows("無申告加算税", base, [
+            { limit: 500000, rate: rates[0] + add, label: "50万円以下" },
+            { limit: Infinity, rate: rates[1] + add, label: "50万円超" }
+          ]);
+        } else {
+          rows = use300 ? tierRows("無申告加算税", base, [
+            { limit: 500000, rate: 15 + add, label: "50万円以下" },
+            { limit: 3000000, rate: 20 + add, label: "50万円超300万円以下" },
+            { limit: Infinity, rate: 30 + add, label: "300万円超" }
+          ]) : tierRows("無申告加算税", base, [
+            { limit: 500000, rate: 15 + add, label: "50万円以下" },
+            { limit: Infinity, rate: 20 + add, label: "50万円超" }
+          ]);
+        }
+      }
+      const raw = rows.reduce((sum, row) => sum + row.raw, 0);
+      return { rows, raw, final: finalPenalty(raw) };
+    }
+    function renderPenalty(result) {
+      if (!result.rows.length) { el.penaltyRows.innerHTML = '<tr><td>加算税なし</td><td>0円</td><td>0.0%</td><td>0円</td><td>-</td></tr>'; return; }
+      el.penaltyRows.innerHTML = result.rows.map(row => `<tr><td>${row.label}</td><td>${yen.format(row.base)}</td><td>${row.rate.toFixed(1)}%</td><td>${yen.format(row.raw)}</td><td>合計で判定</td></tr>`).join("") + `<tr><td colspan="3" style="text-align:right;font-weight:800;">合計（5,000円未満不徴収・100円未満切捨て後）</td><td>${yen.format(result.raw)}</td><td style="font-weight:800;">${yen.format(result.final)}</td></tr>`;
+    }
+    function renderLate(result) {
+      if (!result.rows.length) { el.lateRows.innerHTML = '<tr><td>延滞税なし</td><td>対象期間なし</td><td>0日</td><td>0.0%</td><td>0円</td></tr>'; return; }
+      el.lateRows.innerHTML = result.rows.map(row => `<tr><td>${fmtPeriod(row.startBase, row.end)}</td><td>${row.excluded ? row.tier : (row.tier === "early" ? "2か月以内等" : "2か月経過後")}</td><td>${row.days.toLocaleString("ja-JP")}日</td><td>${row.rate.toFixed(1)}%</td><td>${yen.format(row.amount || 0)}</td></tr>`).join("") + `<tr><td colspan="4" style="text-align:right;font-weight:800;">合計（100円未満等処理後）</td><td style="font-weight:800;">${yen.format(result.final)}</td></tr>`;
+    }
+    function renderRateRows() {
+      el.lateRateRows.innerHTML = Object.keys(LATE_RATES).map(Number).sort((a, b) => b - a).map(year => `<tr><td>${year}年</td><td>${LATE_RATES[year].early.toFixed(1)}%</td><td>${LATE_RATES[year].late.toFixed(1)}%</td></tr>`).join("");
+    }
+    function updateBadges(caseType, timing, concealment, lateResult) {
+      const caseLabel = { lateOnly: "延滞税のみ", under: "過少申告", nonfile: "無申告" }[caseType];
+      const timingLabel = { pre_notice: "調査通知前", post_notice_pre_prediction: "通知後・予知前", post_prediction: "予知後等" }[timing];
+      const badges = [caseLabel, timingLabel];
+      if (el.auditActive.checked) badges.push("税務調査あり");
+      if (concealment) badges.push("重加算税");
+      if (lateResult.excludedDays > 0) badges.push(`${lateResult.excludedDays}日控除`);
+      el.resultBadges.innerHTML = badges.map(text => `<span class="badge">${text}</span>`).join("");
+    }
+    function calculate() {
+      clearError();
+      try {
+        const principal = amount(el.principal.value);
+        const originalTax = amount(el.originalTax.value);
+        const dueDate = dateValue(el.dueDate.value);
+        const procedureDate = dateValue(el.procedureDate.value);
+        const paymentDate = dateValue(el.paymentDate.value);
+        const caseType = el.caseType.value;
+        const timing = el.auditTiming.value;
+        const concealment = el.concealment.checked;
+        if (!Number.isFinite(principal)) throw new Error("増差税額・未納本税を正しく入力してください。");
+        if (!Number.isFinite(originalTax)) throw new Error("期限内申告税額を正しく入力してください。");
+        if (!dueDate || !paymentDate) throw new Error("法定納期限と納付日を入力してください。");
+        if (caseType !== "lateOnly" && !procedureDate) throw new Error("修正申告日・更正等の日を入力してください。");
+        if (paymentDate < dueDate) throw new Error("納付日は法定納期限以後の日付にしてください。");
+        if (concealment && timing !== "post_prediction") throw new Error("重加算税を計算する場合は、税務調査・自主修正の段階を『更正等予知後・調査後』にしてください。更正等予知前の自主修正では、この簡易ツールでは重加算税として計算しません。");
+        const base = truncateBase(principal);
+        const lateResult = calculateLateTax(base, dueDate, procedureDate, paymentDate, caseType, el.procedureType.value, concealment);
+        const penaltyResult = calculatePenalty(principal, base, originalTax, caseType, timing, concealment, el.repeatAdd.checked, dueDate);
+        const grand = principal + lateResult.final + penaltyResult.final;
+        el.grandTotal.textContent = yen.format(grand);
+        el.principalOut.textContent = yen.format(principal);
+        el.penaltyOut.textContent = yen.format(penaltyResult.final);
+        el.lateOut.textContent = yen.format(lateResult.final);
+        el.daysOut.textContent = `${lateResult.days.toLocaleString("ja-JP")}日`;
+        renderPenalty(penaltyResult);
+        renderLate(lateResult);
+        updateBadges(caseType, timing, concealment, lateResult);
+        const baseText = base <= 0 ? "計算基礎税額が1万円未満のため附帯税は0円です。" : `計算基礎税額は${yen.format(base)}です。`;
+        el.resultNote.textContent = `${baseText} 加算税は5,000円未満不徴収、延滞税は1,000円未満不徴収です。`;
+      } catch (err) {
+        showError(err.message || String(err));
+      }
+    }
+    function syncProcedure() {
+      if (el.procedureType.value === "determination") el.caseType.value = "nonfile";
+      if (el.procedureType.value === "correction") el.auditTiming.value = "post_prediction";
+      if (el.procedureType.value === "amend" && el.caseType.value === "lateOnly") el.caseType.value = "under";
+    }
+    function reset() {
+      document.querySelector('input[name="taxType"][value="corporate"]').checked = true;
+      el.fiscalEnd.value = "2025-12-31";
+      autoDueDate();
+      el.procedureDate.value = inputDate(new Date());
+      el.paymentDate.value = inputDate(new Date());
+      el.caseType.value = "under";
+      el.procedureType.value = "amend";
+      el.auditActive.checked = false;
+      el.auditTiming.value = "post_prediction";
+      el.concealment.checked = false;
+      el.repeatAdd.checked = false;
+      el.principal.value = "1,000,000";
+      el.originalTax.value = "500,000";
+      el.highNonFiling.checked = true;
+      el.autoSpecial.checked = true;
+      el.manualExclude.checked = false;
+      el.manualExcludeFields.style.display = "none";
+      el.excludeStart.value = "";
+      el.excludeEnd.value = "";
+      calculate();
+    }
+    document.querySelectorAll('input[name="taxType"]').forEach(input => input.addEventListener("change", () => { autoDueDate(); calculate(); }));
+    el.fiscalEnd.addEventListener("change", () => { autoDueDate(); calculate(); });
+    el.procedureType.addEventListener("change", () => { syncProcedure(); calculate(); });
+    el.auditActive.addEventListener("change", () => { if (el.auditActive.checked && el.auditTiming.value === "pre_notice") el.auditTiming.value = "post_notice_pre_prediction"; calculate(); });
+    el.manualExclude.addEventListener("change", () => { el.manualExcludeFields.style.display = el.manualExclude.checked ? "grid" : "none"; calculate(); });
+    ["dueDate","procedureDate","paymentDate","caseType","auditTiming","concealment","repeatAdd","principal","originalTax","highNonFiling","autoSpecial","excludeStart","excludeEnd"].forEach(id => {
+      el[id].addEventListener("change", calculate);
+      el[id].addEventListener("input", calculate);
+    });
+    el.calcBtn.addEventListener("click", calculate);
+    el.resetBtn.addEventListener("click", reset);
+    renderRateRows();
+    reset();
+  </script>
+</body>
+</html>
