@@ -199,9 +199,15 @@ REF = re.compile(
     r'(?:第(?P<para>' + KN + r')項)?'
     r'(?:第(?P<item>' + KN + r')号(?P<itembr>(?:の' + KN + r')*))?'
     r'(?P<iroha>[イロハニホヘトチリヌル])?'
-    r'|(?P<rel>前条|次条|前項|次項|前各項|前' + KN + r'項|前号|次号)'
+    r'|(?P<rel>前条|次条|前項|次項|前各項|前' + KN + r'項|前号|次号|同条|同項|同号)'
     r'(?:第(?P<rpara>' + KN + r')項)?'
     r'(?:第(?P<ritem>' + KN + r')号)?'
+    r'(?P<riroha>[イロハニホヘトチリヌル])?'
+    r'|(?<![条則])第(?P<spara>' + KN + r')項'
+    r'(?:第(?P<sitem>' + KN + r')号(?P<sbr>(?:の' + KN + r')*))?'
+    r'(?P<siroha>[イロハニホヘトチリヌル])?'
+    r'|(?<![項条])第(?P<sitem2>' + KN + r')号(?P<sbr2>(?:の' + KN + r')*)'
+    r'(?P<siroha2>[イロハニホヘトチリヌル])?'
 )
 TSUREF = re.compile(r'(?<![\d－‐−-])(\d+(?:の\d+)+[-−‐]\d+(?:の\d+)*)(?![\d）]*[-−‐])')
 DELEG = re.compile(r'政令で定める|財務省令で定める')
@@ -229,12 +235,33 @@ class Resolver:
         self.self_linkable = self_linkable
         self.refs = []
         self.ext_refs = set()  # (lawid, addr)
+        self.ana = None        # 直近の任意参照（同項・同号・列挙連鎖用）
+        self.ana_named = None  # 直近の条名指し参照（同条用）
+
+    def begin_node(self):
+        self.ana = None
+        self.ana_named = None
+        self.qdepth = 0  # 読替規定等の引用「」深度
+
+    def _upd_ana(self, r, named=False):
+        lk, addr, sub = r
+        a = (sub or addr)
+        ps = a[2:].split('.') if a.startswith('ln') else []
+        if not ps: return
+        ent = dict(ext=addr if lk == 'ext' else None,
+                   lk=None if lk == 'ext' else lk,
+                   art=ps[0], para=ps[1] if len(ps) > 1 else None,
+                   item=ps[2] if len(ps) > 2 else None)
+        self.ana = ent
+        if named: self.ana_named = ent
 
     def ctx(self, addr):
         m = re.match(r'ln([0-9_\-]+)(?:\.(\d+))?(?:\.([0-9_]+))?', addr)
         return m.group(1), m.group(2), m.group(3)
 
-    def resolve(self, mseg, src_addr):
+    CONN = re.compile(r'^(?:から|まで|及び|又は|並びに|若しくは|、|\s)*$')
+
+    def resolve(self, mseg, src_addr, gap=None):
         art, para, item = self.ctx(src_addr)
         g = mseg.groupdict()
         law_key = self.lk; ext_id = None; explicit = False
@@ -269,8 +296,84 @@ class Resolver:
                 if i >= 0 and g['item']: addr += '.' + str(i+1)
             if ext_id: return ('ext', ext_id, addr)
             return (law_key, addr, None)
+        # 列挙・範囲（から/まで/及び/又は等）で直前の参照に連なるか
+        chained = (gap is not None and len(gap) <= 10 and self.CONN.match(gap)
+                   and self.ana and self.ana.get('art'))
+        # 裸の項参照（第三項／第三項第二号イ）
+        if g.get('spara'):
+            p = str(kanji2int(g['spara']))
+            ib = None
+            if g.get('sitem'):
+                ib = str(kanji2int(g['sitem']))
+                for b in (g.get('sbr') or '').split('の')[1:]:
+                    ib += '_' + str(kanji2int(b))
+                if g.get('siroha'):
+                    i = IROHA.find(g['siroha'])
+                    if i >= 0: ib += '.' + str(i+1)
+            if chained:
+                # 直前に参照された条の項（例: 法人税法69条第一項から第三項まで）
+                a = self.ana
+                addr = 'ln' + a['art'] + '.' + p + (('.' + ib) if ib else '')
+                if a.get('ext'): return ('ext', a['ext'], addr)
+                tlk = a['lk']
+                if addr in self.known.get(tlk, ()) or addr.split('.')[0] in self.known.get(tlk, ()):
+                    return (tlk, addr, None)
+                return None
+            if not self.self_linkable: return None
+            addr = f'ln{art}.{p}' + (('.' + ib) if ib else '')
+            return (self.lk, addr, None) if addr in self.known.get(self.lk, ()) else None
+        # 裸の号参照（第二号／第二号の二イ）
+        if g.get('sitem2'):
+            ib = str(kanji2int(g['sitem2']))
+            for b in (g.get('sbr2') or '').split('の')[1:]:
+                ib += '_' + str(kanji2int(b))
+            if g.get('siroha2'):
+                i = IROHA.find(g['siroha2'])
+                if i >= 0: ib += '.' + str(i+1)
+            if chained and self.ana.get('para'):
+                a = self.ana
+                addr = 'ln' + a['art'] + '.' + a['para'] + '.' + ib
+                if a.get('ext'): return ('ext', a['ext'], addr)
+                tlk = a['lk']
+                if addr in self.known.get(tlk, ()) or addr.split('.')[0] in self.known.get(tlk, ()):
+                    return (tlk, addr, None)
+                return None
+            if not self.self_linkable: return None
+            if not para: return None
+            addr = f'ln{art}.{para}.{ib}'
+            return (self.lk, addr, None) if addr in self.known.get(self.lk, ()) else None
         rel = g['rel']
         if not rel: return None
+        # 同条・同項・同号: 直前の参照（照応）から解決。他法令(ext)への照応も可
+        if rel in ('同条', '同項', '同号'):
+            a = self.ana_named if rel == '同条' else self.ana
+            if not a or not a.get('art'): return None
+            t_art = a['art']; t_para = None; t_item = None
+            if rel == '同条':
+                if g['rpara']: t_para = str(kanji2int(g['rpara']))
+                if g['ritem']:
+                    if not t_para: return None
+                    t_item = str(kanji2int(g['ritem']))
+            elif rel == '同項':
+                t_para = a.get('para')
+                if not t_para: return None
+                if g['ritem']: t_item = str(kanji2int(g['ritem']))
+            else:  # 同号
+                t_para = a.get('para'); t_item = a.get('item')
+                if not t_para or not t_item: return None
+            addr = 'ln' + t_art
+            if t_para: addr += '.' + t_para
+            if t_item:
+                addr += '.' + t_item
+                if g.get('riroha'):
+                    i = IROHA.find(g['riroha'])
+                    if i >= 0: addr += '.' + str(i+1)
+            if a.get('ext'):
+                return ('ext', a['ext'], addr)
+            tlk = a['lk']
+            if addr in self.known.get(tlk, ()) or addr.split('.')[0] in self.known.get(tlk, ()):
+                return (tlk, addr, None)
+            return None
         if not self.self_linkable: return None
         if law_key != self.lk: return None
         def num_in(s):
@@ -327,14 +430,26 @@ class Resolver:
                 if d[0] == self.lk and d[1] == src_addr: continue
                 cands.append((st, en, 3, 'term:' + d[0] + '@' + d[1], m))
         cands.sort(key=lambda c: (c[0], c[2], -(c[1]-c[0])))
+        # 各位置の引用「」深度（ノード横断で持ち越し）
+        qd = []; d = getattr(self, 'qdepth', 0)
+        for ch in text:
+            qd.append(d)
+            if ch == '「': d += 1
+            elif ch == '」': d = max(0, d - 1)
+        self.qdepth = d
         out = []; pos = 0
+        prev_ref_end = None
         for st, en, _pri, kind, m in cands:
             if st < pos: continue
             label = text[st:en]
             seg = H.escape(text[pos:st])
+            in_quote = qd[st] > 0 if st < len(qd) else False
             if kind == 'ref':
-                r = self.resolve(m, src_addr)
-                if r:
+                gap = text[prev_ref_end:st] if prev_ref_end is not None else None
+                r = self.resolve(m, src_addr, gap)
+                prev_ref_end = en
+                if r and not in_quote:
+                    self._upd_ana(r, named=bool(m.group('art')) or m.group('rel') in ('前条', '次条'))
                     lk, addr, sub = r
                     if lk == 'ext':
                         self.ext_refs.add((addr, sub) if sub else (addr, ''))
@@ -476,6 +591,8 @@ def build_xml_law(law_key, slug, title, law_num, nodes, deleg_layers):
     arts = []; order = []; nmap = {}
     for n in nodes:
         order.append(n['address'])
+        if n['type'] in ('Article', 'Paragraph'):
+            res.begin_node()  # 照応は項単位（柱書→号→イへ文脈継続）
         h = kakko_html(n['sentence'], res, n['address'], deleg_layers) if n['sentence'] else ''
         ent = dict(t=n['type'], ka=n['ka'], ti=n['title'], h=h, art=n['art'])
         if n.get('caption'): ent['c'] = n['caption']
@@ -504,6 +621,8 @@ def build_tsu(nodes, groups):
     arts = []; order = []; nmap = {}
     for n in nodes:
         order.append(n['address'])
+        if n['type'] == 'Article':
+            res.begin_node()  # 通達は1通達単位で文脈継続（注を含む）
         h = kakko_html(n['sentence'], res, n['address']) if n['sentence'] else ''
         ent = dict(t=n['type'], ka=n['ka'], ti=n['title'], h=h, art=n['art'])
         if n.get('caption'): ent['c'] = n['caption']
@@ -617,7 +736,7 @@ json.dump(preview, open(os.path.join(OUT, 'ext_preview.json'), 'w', encoding='ut
 # ---------- 委任実装の特定（「…に規定する政令で定める」定型句マッチング） ----------
 
 import html as _H
-IMPL_PAT = re.compile(r'data-link="(hou|rei)@(ln[0-9_\.\-]+)"[^>]*>[^<]*</a>に規定する(政令|財務省令)で定める')
+IMPL_PAT = re.compile(r'data-link="(hou|rei)@(ln[0-9_\.\-]+)"[^>]*>[^<]*</a>(?:<[^>]+>|[（）]){0,4}に規定する(政令|財務省令)で定める')
 DELEG_SPAN = re.compile(r'<span class="deleg" data-layer="(rei|kis)" data-t="([^"]*)">')
 
 def _plain_after(html_s, idx, n=14):
