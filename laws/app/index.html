@@ -122,7 +122,7 @@ a.law::after{content:"↗";font-size:.68em;vertical-align:super;margin-left:1px}
 /* 被参照 */
 .bk-sec{margin:18px 0 6px;border:1px solid var(--line);border-radius:9px;overflow:hidden}
 .bk-sec .bk-h{background:var(--pink-soft);color:var(--accent);font-size:.74rem;font-weight:900;padding:4px 14px;letter-spacing:.04em}
-.bk-sec .bk-b{padding:8px 14px;display:flex;flex-wrap:wrap;gap:6px}
+.bk-sec .bk-b{padding:8px 14px;display:flex;flex-wrap:wrap;gap:6px;max-height:150px;overflow-y:auto}
 .bk-sec a{font-size:.72rem;font-weight:700;color:var(--accent);background:#fff;border:1px solid rgba(178,62,89,.35);border-radius:999px;padding:1px 10px;text-decoration:none;transition:.15s}
 .bk-sec a:hover{background:var(--accent);color:#fff}
 .bk-sec a.lawside{color:var(--pd);border-color:rgba(0,129,147,.35)}
@@ -147,6 +147,22 @@ a.law::after{content:"↗";font-size:.68em;vertical-align:super;margin-left:1px}
 #tip .t-ka::before{content:"§ ";color:var(--p)}
 #tip .t-b{color:var(--ink2);display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden}
 
+.bk-sub{font-size:.68rem;font-weight:900;padding:5px 14px 1px;letter-spacing:.04em}
+.bk-sub.rei{color:var(--pd)}.bk-sub.kis{color:#2f7d52}.bk-sub.tsu{color:#8a6d1f}.bk-sub.hou{color:var(--accent)}
+.bk-sec a.rei{color:var(--pd);border-color:rgba(0,129,147,.35)}
+.bk-sec a.rei:hover{background:var(--pd);color:#fff}
+.bk-sec a.kis{color:#2f7d52;border-color:rgba(47,125,82,.35)}
+.bk-sec a.kis:hover{background:#2f7d52;color:#fff}
+.bk-sec a.tsu{color:#8a6d1f;border-color:rgba(138,109,31,.4)}
+.bk-sec a.tsu:hover{background:#8a6d1f;color:#fff}
+.badge.chu{background:var(--yellow50);border-color:#e2d49a;color:#8a6d1f;font-size:.62rem}
+.deleg{background:linear-gradient(transparent 62%,rgba(0,174,198,.22) 62%);cursor:pointer;border-radius:2px}
+.deleg:hover{background:rgba(0,174,198,.16)}
+#pop{position:fixed;z-index:95;max-width:330px;max-height:300px;overflow-y:auto;background:#fff;border:1.5px solid var(--pd);border-radius:10px;box-shadow:0 14px 40px -12px rgba(0,88,112,.4);padding:8px 10px;display:none}
+#pop .pop-h{font-size:.7rem;font-weight:900;color:var(--navy);padding:2px 4px 6px;border-bottom:1px solid var(--line);margin-bottom:6px}
+#pop a{display:block;font-size:.76rem;color:var(--pd);text-decoration:none;padding:2px 6px;border-radius:5px}
+#pop a:hover{background:var(--p25)}
+#pop .pop-empty{font-size:.72rem;color:var(--ink3);padding:4px}
 /* search / home / notes */
 .res-meta{font-size:.78rem;color:var(--ink2);margin:4px 0 12px}
 .res{display:block;background:#fff;border:1px solid var(--line);border-radius:9px;padding:12px 16px;margin-bottom:9px;text-decoration:none;color:inherit;transition:.2s}
@@ -210,7 +226,9 @@ const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const strip=h=>{const d=document.createElement('div');d.innerHTML=h;return d.textContent||''};
 
-const SLUG={hou:'cfc_hou',rei:'cfc_rei'};
+const SLUG={hou:'cfc_hou',rei:'cfc_rei',kis:'cfc_kis',tsu:'cfc_tsu'};
+const PFX={hou:'法',rei:'令',kis:'規',tsu:'通'};
+const LAYERS=[['rei','政令（委任・関連規定）'],['kis','省令（添付書類・記載事項等）'],['tsu','解釈通達'],['hou','法律']];
 const state={meta:[],laws:{},slug:null,notes:JSON.parse(localStorage.getItem('jp4notes')||'{}'),foldLv:0};
 const saveNotes=()=>localStorage.setItem('jp4notes',JSON.stringify(state.notes));
 const nk=(slug,id)=>slug+'/'+id;
@@ -232,8 +250,11 @@ async function loadLaw(slug){
 
 /* ---------- 描画 ---------- */
 function nodeCls(t){return t==='Paragraph'?'para':t==='Item'?'item':t==='Subitem1'?'sub1':t==='Subitem2'?'sub2':'sub3'}
-function badge(n,addr){
-  if(n.t==='Paragraph'){const p=addr.split('.')[1];return '<span class="badge'+(p==='1'?' p1':'')+'">'+p+'</span>'}
+function badge(n,addr,law){
+  if(n.t==='Paragraph'){
+    if(law&&law.key==='tsu')return '<span class="badge'+(n.ti?' chu':' p1')+'">'+esc(n.ti||'¶')+'</span>';
+    const p=addr.split('.')[1];return '<span class="badge'+(p==='1'?' p1':'')+'">'+p+'</span>';
+  }
   return '<span class="badge">'+esc(n.ti||'・')+'</span>';
 }
 function renderTbl(tbls){return (tbls||[]).map(rows=>'<div class="tbl-wrap"><table class="law-tbl">'+rows.map(r=>'<tr>'+r.map(c=>'<td>'+esc(c)+'</td>').join('')+'</tr>').join('')+'</table></div>').join('')}
@@ -253,7 +274,7 @@ function renderArticle(law,artId,hlAddr){
     const n=law.nodes[ad];
     if(n.t==='Article')continue;
     const hl=ad===hlAddr?' hl':'';
-    h+='<div class="node '+nodeCls(n.t)+hl+'" id="n_'+ad.replace(/\./g,'-')+'">'+badge(n,ad)+
+    h+='<div class="node '+nodeCls(n.t)+hl+'" id="n_'+ad.replace(/\./g,'-')+'">'+badge(n,ad,law)+
       '<div class="body">'+n.h+renderTbl(n.tbl)+'</div>'+
       '<a class="node-link" href="#/'+law.slug+'/n/'+ad+'" title="このノードへのリンク">¶</a></div>';
   }
@@ -266,24 +287,33 @@ function renderArticle(law,artId,hlAddr){
     });
   }
   if(bks.length){
-    h+='<div class="bk-sec"><div class="bk-h">⤴ この条を参照している規定（'+bks.length+'）</div><div class="bk-b">'+
-      bks.map(b=>{
-        const slug=SLUG[b.law];
-        const cls=b.law==='hou'?'lawside':'';
-        const tgt=b.addr.split('.')[0].slice(2);
-        return '<a class="'+cls+'" href="#/'+slug+'/n/'+b.addr+'" data-prev="'+b.law+'@'+b.addr+'">'+esc(b.ka)+'</a>';
-      }).join('')+'</div></div>';
+    h+='<div class="bk-sec"><div class="bk-h">⛓ 縦串 — この条を参照している規定（'+bks.length+'）</div>';
+    for(const [lk,label] of LAYERS){
+      if(lk===law.key)continue;
+      const sub=bks.filter(b=>b.law===lk);
+      if(!sub.length)continue;
+      h+='<div class="bk-sub '+lk+'">'+esc(label)+'（'+sub.length+'）</div><div class="bk-b">'+
+        sub.map(b=>'<a class="'+(b.law==='hou'?'lawside':b.law)+'" href="#/'+SLUG[b.law]+'/n/'+b.addr+'" data-prev="'+b.law+'@'+b.addr+'">'+esc(b.ka)+'</a>').join('')+'</div>';
+    }
+    h+='</div>';
   }
   return h;
 }
 
 function relChips(law){
-  const other=law.key==='hou'?'cfc_rei':'cfc_hou';
-  const otherT=law.key==='hou'?'施行令（抜粋）':'本法（抜粋）';
-  return '<div class="rel-row">'+
-    '<a class="rel-chip" href="#/'+other+'">'+otherT+'</a>'+
-    '<a class="rel-chip ext" target="_blank" rel="noopener" href="https://lawzilla.jp/law/'+law.lawzilla+'">Lawzilla本体で開く ↗</a>'+
-    '<a class="rel-chip ext" target="_blank" rel="noopener" href="https://laws.e-gov.go.jp/law/'+law.lawzilla+'">e-Gov ↗</a></div>';
+  const names={cfc_hou:'法律',cfc_rei:'施行令',cfc_kis:'施行規則',cfc_tsu:'通達'};
+  let h='<div class="rel-row">';
+  for(const m of state.meta){
+    if(m.slug===law.slug)continue;
+    h+='<a class="rel-chip" href="#/'+m.slug+'">'+names[m.slug]+'</a>';
+  }
+  if(law.lawzilla){
+    h+='<a class="rel-chip ext" target="_blank" rel="noopener" href="https://lawzilla.jp/law/'+law.lawzilla+'">Lawzilla ↗</a>'+
+       '<a class="rel-chip ext" target="_blank" rel="noopener" href="https://laws.e-gov.go.jp/law/'+law.lawzilla+'">e-Gov ↗</a>';
+  }else if(law.key==='tsu'){
+    h+='<a class="rel-chip ext" target="_blank" rel="noopener" href="https://www.nta.go.jp/law/tsutatsu/kobetsu/hojin/010607/00.htm">国税庁原文 ↗</a>';
+  }
+  return h+'</div>';
 }
 function renderSide(law,curArt){
   if(!law){$('#side').innerHTML='';return}
@@ -306,7 +336,7 @@ function renderRail(law,artId){
   let h='<div class="r-h">⚡ 今すぐジャンプ</div><div class="r-b">';
   for(const ad of addrs){
     const n=law.nodes[ad];
-    const lab=n.t==='Paragraph'?'第'+ad.split('.')[1]+'項':'　第'+esc(n.ti)+'号';
+    const lab=n.t==='Paragraph'?(law.key==='tsu'?(n.ti||'¶'+ad.split('.')[1]):'第'+ad.split('.')[1]+'項'):'　第'+esc(n.ti)+'号';
     h+='<a class="'+(n.t==='Item'?'lv2':'')+'" href="#/'+law.slug+'/n/'+ad+'">'+lab+' <span style="color:var(--ink3);font-size:.66rem">'+esc(strip(n.h).slice(0,14))+'…</span></a>';
   }
   h+='</div>';
@@ -324,7 +354,7 @@ function crumb(parts){return '<div class="crumb">'+parts.map(p=>p.href?'<a href=
 async function viewHome(){
   renderSide(null);renderRail(null);
   const cards=state.meta.map(m=>'<a class="law-card" href="#/'+m.slug+'"><h3>'+esc(m.title)+'</h3><div class="num">'+esc(m.num)+'</div><span class="chip">'+m.articles+'条</span></a>').join('');
-  $('#main').innerHTML='<div class="home-hero"><h1>CFC税制 条文ブラウザ</h1><p>外国子会社合算税制の関連条文を、<span class="em">括弧の折りたたみ</span>・<span class="em">参照の自動リンク</span>・<span class="em">逆参照</span>付きで。</p></div>'+
+  $('#main').innerHTML='<div class="home-hero"><h1>CFC税制 条文ブラウザ</h1><p>法律・施行令・施行規則・通達の<span class="em">4層を縦串</span>で。括弧の折りたたみ・参照リンク・<span class="em">委任チェーン</span>・逆参照付き。</p></div>'+
     '<div class="grid">'+cards+'</div>'+
     '<div class="note-foot">出典: e-Gov法令検索（法令API）。CFC関連条文のみ抜粋（附則・別表省略）。参照リンクは機械解決のため、正確な解釈は原文を確認してください。条文ホバーで参照先プレビュー、（括弧）クリックで折りたたみ。</div>';
 }
@@ -396,7 +426,7 @@ async function viewSearch(slug,kw){
   $('#main').innerHTML='<h1 class="law-title" style="font-size:1.1rem">検索結果</h1>'+
     '<div class="res-meta">'+esc(scopeName)+' で「'+esc(kw)+'」: '+out.length+'件</div>'+
     (out.length?out.map(r=>'<a class="res" href="#/'+r.law.slug+'/a/'+r.id+'">'+
-      '<span class="r-law">'+esc(r.law.key==='hou'?'法':'令')+'</span><span class="r-t">'+esc(r.law._artMap[r.id].a.label)+(r.law._artMap[r.id].a.c?'　'+esc(r.law._artMap[r.id].a.c):'')+'</span>'+
+      '<span class="r-law">'+esc(PFX[r.law.key])+'</span><span class="r-t">'+esc(r.law._artMap[r.id].a.label)+(r.law._artMap[r.id].a.c?'　'+esc(r.law._artMap[r.id].a.c):'')+'</span>'+
       '<div class="r-s">'+r.snip+'</div></a>').join(''):
     '<div class="empty">見つかりませんでした。条番号（例: 66の6）や別の語で試してください。</div>');
 }
@@ -410,7 +440,7 @@ async function viewNotes(){
     const law=await loadLaw(sl);
     if(!law._artMap[id])continue;
     const nt=state.notes[k];const a=law._artMap[id].a;
-    h+='<a class="res" href="#/'+sl+'/a/'+id+'"><span class="r-law">'+esc(law.key==='hou'?'法':'令')+'</span>'+
+    h+='<a class="res" href="#/'+sl+'/a/'+id+'"><span class="r-law">'+esc(PFX[law.key])+'</span>'+
       (nt.star?'<span style="color:var(--accent)">★ </span>':'')+
       '<span class="r-t">'+esc(a.label)+(a.c?'　'+esc(a.c):'')+'</span>'+
       (nt.memo?'<div class="r-s">📝 '+esc(nt.memo).slice(0,140)+'</div>':'')+'</a>';
@@ -463,7 +493,7 @@ async function showTip(a,ev){
     const p1=law.nodes[addr.split('.')[0]+'.1'];
     if(p1)body=strip(p1.h);
   }
-  tip.innerHTML='<div class="t-ka">'+esc((lk==='hou'?'法':'令')+n.ka)+(n.c?'　'+esc(n.c):'')+'</div><div class="t-b">'+esc(body.slice(0,360))+'</div>';
+  tip.innerHTML='<div class="t-ka">'+esc(PFX[lk]+n.ka)+(n.c?'　'+esc(n.c):'')+'</div><div class="t-b">'+esc(body.slice(0,360))+'</div>';
   tip.style.display='block';
   const x=Math.min(ev.clientX+14,innerWidth-500),y=Math.min(ev.clientY+16,innerHeight-200);
   tip.style.left=Math.max(8,x)+'px';tip.style.top=y+'px';
@@ -503,7 +533,44 @@ function bindMemo(ta){
   });
 }
 
+const pop=document.createElement('div');pop.id='pop';document.body.appendChild(pop);
+function showDeleg(sp,ev){
+  const layer=sp.dataset.layer;
+  const node=sp.closest('.node');
+  const law=state.laws[state.slug];
+  if(!node||!law)return;
+  const addr=node.id.slice(2).replace(/-(?=\d+$)/,'.').split('-').join('.')===''?'':node.id.slice(2).split('-').join('.');
+  // node.id は n_ln66_6-1 形式（. を - に置換済）。元アドレスへ戻す:
+  const raw=node.id.slice(2);
+  // 条部分にハイフンを含む通達は対象外（委任スパンは法・令のみ）
+  const parts=raw.split('-');
+  const lnAddr=parts[0]+(parts.length>1?'.'+parts.slice(1).join('.'):'');
+  const artAddr=lnAddr.split('.')[0];
+  let list=(law.backlinks[lnAddr]||[]).filter(b=>b.law===layer);
+  let scope=lnAddr;
+  if(!list.length){
+    // 条単位に拡大
+    const seen=new Set();list=[];
+    for(const ad of (law._artNodes[artAddr.slice(2)]||[])){
+      for(const b of (law.backlinks[ad]||[])){
+        if(b.law===layer&&!seen.has(b.addr)){seen.add(b.addr);list.push(b)}
+      }
+    }
+    scope=artAddr+'（条単位）';
+  }
+  const lname=layer==='rei'?'政令':'省令';
+  pop.innerHTML='<div class="pop-h">'+lname+'への委任 — '+esc(scope.replace('ln',''))+'</div>'+
+    (list.length?list.map(b=>'<a href="#/'+SLUG[b.law]+'/n/'+b.addr+'">'+esc(b.ka)+'</a>').join(''):
+     '<div class="pop-empty">この'+lname+'委任に対応する規定は抜粋範囲に見つかりません</div>');
+  pop.style.display='block';
+  const r=sp.getBoundingClientRect();
+  pop.style.left=Math.max(8,Math.min(r.left,innerWidth-340))+'px';
+  pop.style.top=(r.bottom+6)+'px';
+}
 document.addEventListener('click',e=>{
+  const dg=e.target.closest('.deleg');
+  if(dg){showDeleg(dg,e);e.stopPropagation();return}
+  if(!e.target.closest('#pop'))pop.style.display='none';
   const self=e.target.closest('a.self');
   if(self){
     const [lk,addr]=self.dataset.link.split('@');
@@ -532,6 +599,8 @@ document.querySelectorAll('.kbtn').forEach(b=>b.addEventListener('click',()=>{
 async function route(){
   const seg=location.hash.replace(/^#\/?/,'').split('/');
   hideTip();
+  const _pop=document.getElementById('pop');
+  if(_pop)_pop.style.display='none';
   try{
     if(!seg[0])await viewHome();
     else if(seg[0]==='notes')await viewNotes();
