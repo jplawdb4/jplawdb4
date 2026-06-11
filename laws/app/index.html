@@ -187,6 +187,16 @@ mark.note-hl:hover{background:var(--yellow)}
 .impl-ka .cap{color:var(--pd);font-weight:700;font-size:.7rem;background:var(--p25);border-radius:4px;padding:0 7px;margin-left:6px}
 .impl-more{font-size:.72rem;color:var(--ink3);margin-top:8px}
 .impl-more a{color:var(--pd);text-decoration:none;margin-right:8px}
+.vx{margin:0 0 12px 33px;display:flex;flex-wrap:wrap;gap:5px;align-items:flex-start}
+.vx-b{border:1px solid var(--line2);background:#fff;border-radius:999px;padding:0 11px;font-size:.68rem;font-weight:700;color:var(--ink3);transition:.15s;line-height:1.7}
+.vx-b.rei{color:var(--pd);border-color:rgba(0,129,147,.35)}
+.vx-b.kis{color:#2f7d52;border-color:rgba(47,125,82,.35)}
+.vx-b.tsu{color:#8a6d1f;border-color:rgba(138,109,31,.4)}
+.vx-b.hou{color:var(--accent);border-color:rgba(178,62,89,.35)}
+.vx-b:hover{background:var(--p25)}
+.vx-b.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.vx-sec{flex-basis:100%;border-left:3px solid var(--line2);padding:6px 4px 6px 14px;margin-top:2px;border-radius:4px;background:linear-gradient(90deg,rgba(0,88,112,.035),transparent)}
+.vx-sec .impl-b{font-size:.83rem}
 /* 観察ノート */
 #obsBtn{position:fixed;z-index:88;display:none;background:var(--navy);color:#fff;border:0;border-radius:999px;padding:4px 14px;font-size:.76rem;font-weight:900;box-shadow:0 8px 22px -8px rgba(0,40,60,.6)}
 #obsBtn:hover{background:var(--pd)}
@@ -258,6 +268,8 @@ mark{background:var(--yellow);border-radius:2px;padding:0 1px}
 <button class="kbtn" data-fold="0">全て展開</button>
 <button class="kbtn" data-fold="2">二重以上を畳む</button>
 <button class="kbtn" data-fold="1">全て畳む</button>
+<span class="ctl-l" style="margin-left:10px">縦串</span>
+<button class="kbtn" id="vxAll">⛓ 全展開</button>
 <span class="ctl-hint">テキスト選択→⊕観察でノート化／プレビューは📌で固定・Escで全部閉じる</span>
 </div></div>
 
@@ -357,13 +369,32 @@ function renderArticle(law,artId,hlAddr){
     '<button class="cite-btn" data-cite="'+esc(citeOf(law.key,a0.address))+'" title="引用形式をコピー">'+esc(citeOf(law.key,a0.address))+' ⧉</button>'+
     '<button class="star'+(nt.star?' on':'')+'" data-k="'+esc(k)+'">'+(nt.star?'★':'☆')+'</button>'+
     '<button class="pen" data-k="'+esc(k)+'">✎</button></span></div>';
+  // 項単位にグループ化（各項の直下に縦串バーを置く）
+  const paraGroups=[];let curPg=null;
   for(const ad of addrs){
     const n=law.nodes[ad];
     if(n.t==='Article')continue;
-    const hl=ad===hlAddr?' hl':'';
-    h+='<div class="node '+nodeCls(n.t)+hl+'" id="n_'+ad.replace(/\./g,'-')+'" data-addr="'+ad+'">'+badge(n,ad,law)+
-      '<div class="body">'+n.h+renderTbl(n.tbl)+'</div>'+
-      '<a class="node-link" href="#/'+law.slug+'/n/'+ad+'" title="このノードへのリンク">¶</a></div>';
+    if(n.t==='Paragraph'){curPg={para:ad,list:[ad]};paraGroups.push(curPg)}
+    else if(curPg)curPg.list.push(ad);
+    else{curPg={para:ad,list:[ad]};paraGroups.push(curPg)}
+  }
+  for(const pg of paraGroups){
+    for(const ad of pg.list){
+      const n=law.nodes[ad];
+      const hl=ad===hlAddr?' hl':'';
+      h+='<div class="node '+nodeCls(n.t)+hl+'" id="n_'+ad.replace(/\./g,'-')+'" data-addr="'+ad+'">'+badge(n,ad,law)+
+        '<div class="body">'+n.h+renderTbl(n.tbl)+'</div>'+
+        '<a class="node-link" href="#/'+law.slug+'/n/'+ad+'" title="このノードへのリンク">¶</a></div>';
+    }
+    const bks=collectBks(law,pg.list);
+    const cnt={};bks.forEach(b=>{cnt[b.law]=(cnt[b.law]||0)+1});
+    let bar='';
+    for(const [lk,label] of LAYERS){
+      if(lk===law.key||!cnt[lk])continue;
+      const nm=lk==='rei'?'政令':lk==='kis'?'省令':lk==='tsu'?'通達':'法';
+      bar+='<button class="vx-b '+lk+'" data-layer="'+lk+'">'+nm+' '+cnt[lk]+'</button>';
+    }
+    if(bar)h+='<div class="vx" data-para="'+pg.para+'">'+bar+'</div>';
   }
   if(nt.memo)h+='<div class="memo"><div class="lbl">MY NOTE（条メモ）</div><textarea data-k="'+esc(k)+'">'+esc(nt.memo)+'</textarea></div>';
   const bks=[];
@@ -410,7 +441,7 @@ function renderSide(law,curArt){
       const a=law._artMap[id].a;
       const k=nk(law.slug,id);
       const star=state.notes[k]&&state.notes[k].star?'<span class="star">★ </span>':'';
-      h+='<a'+(id===curArt?' class="cur"':'')+' href="#/'+law.slug+'/a/'+id+'">'+star+esc(a.label)+
+      h+='<a'+(id===curArt?' class="cur"':'')+' href="#/'+law.slug+'/a/'+id+'" data-prev="'+law.key+'@ln'+id+'">'+star+esc(a.label)+
         (a.c?' <span class="cap">'+esc(a.c)+'</span>':'')+'</a>';
     });
   });
@@ -452,7 +483,7 @@ async function viewLaw(slug){
     h+='<div class="grp" style="font-size:.8rem;font-weight:900;color:var(--navy);background:var(--p25);border-radius:6px;padding:4px 12px;margin:16px 0 8px">'+esc(g.label)+'</div>';
     g.arts.forEach(id=>{
       const a=law._artMap[id].a;
-      h+='<a class="res" href="#/'+slug+'/a/'+id+'"><span class="r-t">'+esc(a.label)+'</span>'+
+      h+='<a class="res" href="#/'+slug+'/a/'+id+'" data-prev="'+law.key+'@ln'+id+'"><span class="r-t">'+esc(a.label)+'</span>'+
         (a.c?' <span class="r-s">'+esc(a.c)+'</span>':'')+'</a>';
     });
   });
@@ -511,7 +542,7 @@ async function viewSearch(slug,kw){
   const scopeName=slug?state.laws[slug].title:'全法令';
   $('#main').innerHTML='<h1 class="law-title" style="font-size:1.1rem">検索結果</h1>'+
     '<div class="res-meta">'+esc(scopeName)+' で「'+esc(kw)+'」: '+out.length+'件</div>'+
-    (out.length?out.map(r=>'<a class="res" href="#/'+r.law.slug+'/a/'+r.id+'">'+
+    (out.length?out.map(r=>'<a class="res" href="#/'+r.law.slug+'/a/'+r.id+'" data-prev="'+r.law.key+'@ln'+r.id+'">'+
       '<span class="r-law">'+esc(PFX[r.law.key])+'</span><span class="r-t">'+esc(r.law._artMap[r.id].a.label)+(r.law._artMap[r.id].a.c?'　'+esc(r.law._artMap[r.id].a.c):'')+'</span>'+
       '<div class="r-s">'+r.snip+'</div></a>').join(''):
     '<div class="empty">見つかりませんでした。条番号（例: 66の6）や別の語で試してください。</div>');
@@ -724,6 +755,71 @@ function toast(msg){
   if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;font-size:.78rem;font-weight:700;padding:7px 18px;border-radius:999px;z-index:99;box-shadow:0 10px 30px -8px rgba(0,40,60,.5)';document.body.appendChild(t)}
   t.textContent=msg;t.style.display='block';
   clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.style.display='none',1600);
+}
+
+/* ---------- 縦串インライン展開（URL移動ゼロで4層を読む） ---------- */
+function collectBks(law,addrList){
+  const out=[];const seen=new Set();
+  for(const ad of addrList){
+    for(const b of (law.backlinks[ad]||[])){
+      // 通達は同一通達の重複を排除（条単位）、他は項号単位
+      const key=b.law==='tsu'?b.law+'@'+b.addr.slice(2).split('.')[0]:b.law+'@'+b.addr;
+      if(seen.has(key))continue;
+      seen.add(key);out.push(b);
+    }
+  }
+  return out;
+}
+async function renderVxSec(law,paraAddr,layer){
+  const para=law.nodes[paraAddr];
+  const addrList=(law._artNodes[para.art]||[]).filter(ad=>ad===paraAddr||ad.startsWith(paraAddr+'.'));
+  const bks=collectBks(law,addrList).filter(b=>b.law===layer);
+  let h='';
+  for(const b of bks){
+    const law2=await loadLaw(SLUG[b.law]);
+    if(b.law==='tsu'){
+      const art=b.addr.slice(2).split('.')[0];
+      const e=law2._artMap[art];if(!e)continue;
+      h+='<div class="impl"><div class="impl-ka"><a href="#/'+SLUG[b.law]+'/a/'+art+'">措通'+esc(e.a.label)+'</a>'+
+        (e.a.c?'<span class="cap">'+esc(e.a.c)+'</span>':'')+'</div>';
+      for(const ad2 of (law2._artNodes[art]||[])){
+        const n2=law2.nodes[ad2];if(n2.t==='Article')continue;
+        h+='<div class="impl-b">'+(n2.ti?'<b>（'+esc(n2.ti)+'）</b>':'')+n2.h+'</div>';
+      }
+      h+='</div>';
+    }else{
+      const n2=law2.nodes[b.addr];if(!n2)continue;
+      h+='<div class="impl"><div class="impl-ka"><a href="#/'+SLUG[b.law]+'/n/'+b.addr+'">'+esc(PFX[b.law]+n2.ka)+'</a>'+
+        (n2.c?'<span class="cap">'+esc(n2.c)+'</span>':'')+'</div><div class="impl-b">'+n2.h+renderTbl(n2.tbl)+'</div></div>';
+    }
+  }
+  return h||'<div style="font-size:.74rem;color:var(--ink3)">なし</div>';
+}
+async function toggleVx(btn){
+  const vx=btn.closest('.vx');const layer=btn.dataset.layer;
+  const old=vx.querySelector('.vx-sec[data-layer="'+layer+'"]');
+  if(old){old.remove();btn.classList.remove('on');return}
+  btn.classList.add('on');
+  const law=state.laws[state.slug];
+  const sec=document.createElement('div');
+  sec.className='vx-sec';sec.dataset.layer=layer;
+  sec.innerHTML='<div style="font-size:.74rem;color:var(--ink3)">読み込み中…</div>';
+  vx.appendChild(sec);
+  sec.innerHTML=await renderVxSec(law,vx.dataset.para,layer);
+  applyFold(sec,state.foldLv);
+}
+let vxAllOn=false;
+async function vxToggleAll(){
+  vxAllOn=!vxAllOn;
+  $('#vxAll').classList.toggle('on',vxAllOn);
+  if(!vxAllOn){
+    document.querySelectorAll('.vx-sec').forEach(x=>x.remove());
+    document.querySelectorAll('.vx-b.on').forEach(x=>x.classList.remove('on'));
+    return;
+  }
+  for(const btn of document.querySelectorAll('.vx-b:not(.on)')){
+    await toggleVx(btn);
+  }
 }
 
 /* ---------- 括弧折りたたみ ---------- */
@@ -946,13 +1042,12 @@ document.addEventListener('mouseover',e=>{
     let content=null;
     if(el.dataset.prev){
       const [lk,addr]=el.dataset.prev.split('@');
-      content=await pvContentFor(Object.assign(document.createElement('a'),{className:'self'},{dataset:{}}))||null;
-      // 簡易: data-prevはa.selfと同じ扱い
       const law=await loadLaw(SLUG[lk]);
-      let n=law.nodes[addr]||law.nodes[addr.split('.')[0]];
+      const n=law.nodes[addr]||law.nodes[addr.split('.')[0]];
       if(n){
-        let bodyHtml=n.t==='Article'?(law.nodes[addr.split('.')[0]+'.1']||n).h:n.h;
-        content={ka:PFX[lk]+n.ka,cap:n.c||'',bodyHtml,jump:'#/'+SLUG[lk]+'/n/'+addr,cite:citeOf(lk,addr),quote:strip(bodyHtml).slice(0,300),lk,slug:SLUG[lk],addr};
+        const bodyHtml=n.t==='Article'?((law.nodes[addr.split('.')[0]+'.1']||n).h):n.h;
+        const cap=n.c||((law._artMap[n.art]&&law._artMap[n.art].a.c)||'');
+        content={ka:PFX[lk]+n.ka,cap,bodyHtml,jump:'#/'+SLUG[lk]+'/n/'+addr,cite:citeOf(lk,addr),quote:strip(bodyHtml).slice(0,300),lk,slug:SLUG[lk],addr};
       }
     }else{
       content=await pvContentFor(el);
@@ -979,6 +1074,9 @@ document.addEventListener('click',e=>{
   const pd=e.target.closest('.pv-del');
   if(pd){e.preventDefault();if(confirm('この観察を削除しますか？')){state.obs=state.obs.filter(x=>x.id!==pd.dataset.id);saveObs();pvCloseAll();
     document.querySelectorAll('mark.note-hl[data-note="'+pd.dataset.id+'"]').forEach(m=>m.replaceWith(...m.childNodes));}return}
+  // 縦串インライン展開
+  const vb=e.target.closest('.vx-b');
+  if(vb){toggleVx(vb);return}
   // 引用コピー（条見出し）
   const cbn=e.target.closest('.cite-btn');
   if(cbn){copyText(cbn.dataset.cite);return}
@@ -1029,9 +1127,10 @@ function bindMemo(ta){
   });
 }
 
-document.querySelectorAll('.kbtn').forEach(b=>b.addEventListener('click',()=>{
+$('#vxAll').addEventListener('click',vxToggleAll);
+document.querySelectorAll('.kbtn[data-fold]').forEach(b=>b.addEventListener('click',()=>{
   state.foldLv=+b.dataset.fold;
-  document.querySelectorAll('.kbtn').forEach(x=>x.classList.toggle('on',x===b));
+  document.querySelectorAll('.kbtn[data-fold]').forEach(x=>x.classList.toggle('on',x===b));
   applyFold($('#main'),state.foldLv);
 }));
 
@@ -1039,6 +1138,7 @@ document.querySelectorAll('.kbtn').forEach(b=>b.addEventListener('click',()=>{
 async function route(){
   const seg=location.hash.replace(/^#\/?/,'').split('/');
   pvCloseAll();obsBtn.style.display='none';
+  vxAllOn=false;const _vxa=$('#vxAll');if(_vxa)_vxa.classList.remove('on');
   try{
     if(!seg[0])await viewHome();
     else if(seg[0]==='notes')await viewNotes();
