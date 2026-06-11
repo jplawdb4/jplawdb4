@@ -372,7 +372,8 @@ class Resolver:
             elif kind.startswith('deleg:'):
                 layer = kind.split(':')[1]
                 out.append(seg)
-                out.append(f'<span class="deleg" data-layer="{layer}">{H.escape(label)}</span>')
+                trail = text[en:en+14]
+                out.append(f'<span class="deleg" data-layer="{layer}" data-t="{H.escape(trail)}">{H.escape(label)}</span>')
                 pos = en
             else:  # term
                 dl = kind.split(':', 1)[1]
@@ -612,6 +613,65 @@ for lawid, addrs in ext_targets.items():
 
 json.dump(preview, open(os.path.join(OUT, 'ext_preview.json'), 'w', encoding='utf-8'),
           ensure_ascii=False, separators=(',', ':'))
+
+# ---------- 委任実装の特定（「…に規定する政令で定める」定型句マッチング） ----------
+
+import html as _H
+IMPL_PAT = re.compile(r'data-link="(hou|rei)@(ln[0-9_\.\-]+)"[^>]*>[^<]*</a>に規定する(政令|財務省令)で定める')
+DELEG_SPAN = re.compile(r'<span class="deleg" data-layer="(rei|kis)" data-t="([^"]*)">')
+
+def _plain_after(html_s, idx, n=14):
+    seg = re.sub(r'<[^>]+>', '', html_s[idx:idx+220])
+    return _H.unescape(seg)[:n]
+
+impl_map = {}  # (tgt_law, tgt_addr) -> [(src_law, src_addr, trail)]
+for src_law in ('rei', 'kis'):
+    for addr, nd in laws[src_law]['nodes'].items():
+        h = nd['h']
+        if 'に規定する' not in _H.unescape(re.sub(r'<[^>]+>', '', h[:0])) and 'data-link' not in h:
+            continue
+        for m in IMPL_PAT.finditer(h):
+            tgt_law, tgt_addr, kind = m.group(1), m.group(2), m.group(3)
+            layer_expected = 'rei' if kind == '政令' else 'kis'
+            if src_law != layer_expected: continue
+            trail = _plain_after(h, m.end())
+            impl_map.setdefault((tgt_law, tgt_addr), []).append((src_law, addr, trail))
+
+def _common_prefix(a, b):
+    i = 0
+    while i < min(len(a), len(b)) and a[i] == b[i]: i += 1
+    return i
+
+n_annot = 0
+for lk in ('hou', 'rei'):
+    for addr, nd in laws[lk]['nodes'].items():
+        if 'class="deleg"' not in nd['h']: continue
+        parts = addr.split('.')
+        cand_addrs = [addr]
+        if len(parts) > 2: cand_addrs.append('.'.join(parts[:2]))
+        if len(parts) > 1: cand_addrs.append(parts[0])
+        def annotate(m):
+            global n_annot
+            layer, t_esc = m.group(1), m.group(2)
+            t = _H.unescape(t_esc)
+            cands = []
+            for ca in cand_addrs:
+                cands += [c for c in impl_map.get((lk, ca), []) if c[0] == layer]
+            if not cands: return m.group(0)
+            scored = sorted(((_common_prefix(t, c[2]), c) for c in cands), key=lambda x: -x[0])
+            matched = [c for sc, c in scored if sc >= 4]
+            use = matched if matched else [c for sc, c in scored]
+            seen = set(); keys = []
+            for c in use:
+                k2 = c[0] + '@' + c[1]
+                if k2 not in seen:
+                    seen.add(k2); keys.append(k2)
+            if not keys: return m.group(0)
+            n_annot += 1
+            return f'<span class="deleg" data-layer="{layer}" data-t="{t_esc}" data-impl="{"|".join(keys[:6])}">'
+        nd['h'] = DELEG_SPAN.sub(annotate, nd['h'])
+
+print('impl targets:', len(impl_map), '| annotated deleg spans:', n_annot)
 
 for k, d in laws.items():
     json.dump(d, open(os.path.join(OUT, d['slug'] + '.json'), 'w', encoding='utf-8'),
