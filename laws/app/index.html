@@ -178,6 +178,15 @@ mark.note-hl:hover{background:var(--yellow)}
 .pv .pop-list a{display:block;font-size:.76rem;color:var(--pd);text-decoration:none;padding:2px 6px;border-radius:5px}
 .pv .pop-list a:hover{background:var(--p25)}
 
+.pv-wide{width:min(640px,94vw);max-height:64vh}
+.impl{border-top:1px dashed var(--line2);padding-top:8px;margin-top:10px}
+.impl:first-child{border-top:0;margin-top:0;padding-top:0}
+.impl-ka{font-size:.74rem;font-weight:900;margin-bottom:2px}
+.impl-ka a{color:var(--pd);text-decoration:none}
+.impl-ka a:hover{text-decoration:underline}
+.impl-ka .cap{color:var(--pd);font-weight:700;font-size:.7rem;background:var(--p25);border-radius:4px;padding:0 7px;margin-left:6px}
+.impl-more{font-size:.72rem;color:var(--ink3);margin-top:8px}
+.impl-more a{color:var(--pd);text-decoration:none;margin-right:8px}
 /* 観察ノート */
 #obsBtn{position:fixed;z-index:88;display:none;background:var(--navy);color:#fff;border:0;border-radius:999px;padding:4px 14px;font-size:.76rem;font-weight:900;box-shadow:0 8px 22px -8px rgba(0,40,60,.6)}
 #obsBtn:hover{background:var(--pd)}
@@ -779,7 +788,7 @@ function pvMakeDraggable(win){
 function pvSpawn(content,anchorRect,opts={}){
   // content: {ka, bodyHtml, jump, cite, quote, extHref, extra}
   const win=document.createElement('div');
-  win.className='pv';win.dataset.pv=++PV.seq;
+  win.className='pv'+(content.wide?' pv-wide':'');win.dataset.pv=++PV.seq;
   let foot='';
   if(content.jump)foot+='<a href="'+content.jump+'" class="pv-jump">ジャンプ →</a>';
   if(content.extHref)foot+='<a href="'+content.extHref+'" target="_blank" rel="noopener">Lawzillaで開く ↗</a>';
@@ -871,6 +880,38 @@ async function pvContentFor(el){
   }
   if(el.matches('.deleg')){
     const layer=el.dataset.layer;
+    const lname=layer==='rei'?'政令':'省令';
+    // 委任実装が特定できている場合: 本文をその場で読む
+    if(el.dataset.impl){
+      const items=el.dataset.impl.split('|');
+      let html='';let shown=0;
+      for(const it of items){
+        if(shown>=3)break;
+        const [lk,addr]=it.split('@');
+        const law2=await loadLaw(SLUG[lk]);
+        const n=law2.nodes[addr];
+        if(!n)continue;
+        html+='<div class="impl"><div class="impl-ka"><a href="#/'+SLUG[lk]+'/n/'+addr+'">'+esc(PFX[lk]+n.ka)+'</a>'+
+          (n.c?'<span class="cap">'+esc(n.c)+'</span>':'')+'</div><div class="impl-b">'+n.h+'</div></div>';
+        shown++;
+      }
+      if(items.length>shown){
+        html+='<div class="impl-more">ほか'+(items.length-shown)+'件: ';
+        for(const it of items.slice(shown)){
+          const [lk,addr]=it.split('@');
+          const law2=await loadLaw(SLUG[lk]);
+          const n=law2.nodes[addr];
+          if(n)html+='<a href="#/'+SLUG[lk]+'/n/'+addr+'" data-prev="'+lk+'@'+addr+'">'+esc(PFX[lk]+n.ka)+'</a>';
+        }
+        html+='</div>';
+      }
+      if(html){
+        const [lk0,addr0]=items[0].split('@');
+        return {ka:'「'+lname+'で定める'+esc(el.dataset.t||'')+'」の委任先',bodyHtml:html,wide:true,
+          jump:'#/'+SLUG[lk0]+'/n/'+addr0};
+      }
+    }
+    // フォールバック: 逆参照リスト
     const law=state.laws[state.slug];
     const nodeEl=el.closest('.node');
     if(!law||!nodeEl)return null;
@@ -887,9 +928,8 @@ async function pvContentFor(el){
       }
       scope=artAddr+'（条単位）';
     }
-    const lname=layer==='rei'?'政令':'省令';
     return {ka:lname+'への委任 — '+scope.replace('ln',''),
-      bodyHtml:list.length?'<div class="pop-list">'+list.map(b=>'<a href="#/'+SLUG[b.law]+'/n/'+b.addr+'">'+esc(b.ka)+'</a>').join('')+'</div>':
+      bodyHtml:list.length?'<div class="pop-list">'+list.map(b=>'<a href="#/'+SLUG[b.law]+'/n/'+b.addr+'" data-prev="'+b.law+'@'+b.addr+'">'+esc(b.ka)+'</a>').join('')+'</div>':
       '<span style="color:var(--ink3);font-size:.76rem">この'+lname+'委任に対応する規定は抜粋範囲に見つかりません</span>'};
   }
   return null;
