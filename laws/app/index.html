@@ -52,7 +52,7 @@ button{font-family:var(--sans);cursor:pointer}
 .side a .star{color:var(--accent);font-size:.7rem}
 .content{padding:18px 22px 140px;min-width:0;background:var(--surface);min-height:70vh;border-right:1px solid var(--line)}
 
-/* right rail (今すぐ条文にジャンプ) */
+/* right rail */
 .rail{position:sticky;top:84px;max-height:calc(100vh - 84px);overflow-y:auto;padding:12px 12px 60px 10px}
 .rail .r-h{font-size:.7rem;font-weight:900;color:#fff;background:var(--p);border-radius:7px 7px 0 0;padding:4px 12px;letter-spacing:.06em}
 .rail .r-b{border:1px solid var(--line);border-top:0;border-radius:0 0 7px 7px;background:#fff;padding:8px;display:flex;flex-direction:column;gap:2px}
@@ -79,14 +79,16 @@ button{font-family:var(--sans);cursor:pointer}
 .art-no::before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--p);margin-right:8px;vertical-align:2px}
 .art-cap{font-size:.86rem;color:var(--pd);font-weight:700}
 .art-tools{margin-left:auto;display:flex;gap:6px}
-.art-tools button{border:1px solid var(--line);background:#fff;border-radius:6px;width:27px;height:27px;font-size:.8rem;color:var(--ink3);display:flex;align-items:center;justify-content:center;transition:.15s}
+.art-tools button{border:1px solid var(--line);background:#fff;border-radius:6px;min-width:27px;height:27px;font-size:.78rem;color:var(--ink3);display:flex;align-items:center;justify-content:center;transition:.15s;padding:0 7px}
 .art-tools button:hover{border-color:var(--p);color:var(--pd)}
 .art-tools button.on{color:var(--accent);border-color:var(--accent);background:var(--pink-soft)}
 
 .node{display:flex;gap:9px;margin:8px 0;scroll-margin-top:96px;border-radius:8px;padding:2px 6px 2px 2px}
 .node.hl{background:var(--yellow50);outline:2px solid var(--yellow)}
-.node .badge{flex:0 0 auto;min-width:23px;height:23px;border-radius:6px;background:var(--bg);border:1px solid var(--line);color:var(--ink2);font-size:.68rem;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:7px;padding:0 4px}
+.node .badge{flex:0 0 auto;min-width:23px;height:23px;border-radius:6px;background:var(--bg);border:1px solid var(--line);color:var(--ink2);font-size:.68rem;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:7px;padding:0 4px;cursor:default}
 .badge.p1{opacity:.35}
+.badge.haslink{box-shadow:0 0 0 2px rgba(0,174,198,.18);cursor:pointer}
+.badge.chu{background:var(--yellow50);border-color:#e2d49a;color:#8a6d1f;font-size:.62rem;opacity:1}
 .node .body{font-size:.88rem;min-width:0;flex:1;text-align:justify}
 .node.item{margin-left:26px}.node.item .badge{background:var(--p25);border-color:rgba(0,174,198,.3);color:var(--pd)}
 .node.sub1{margin-left:56px}.node.sub1 .badge{background:var(--pink-soft);border-color:rgba(233,30,99,.25);color:var(--pink)}
@@ -96,7 +98,7 @@ button{font-family:var(--sans);cursor:pointer}
 .node:hover .node-link{opacity:1}
 .node-link:hover{color:var(--pd)}
 
-/* 括弧（Lawzillaの核） */
+/* 括弧 */
 .kakko{color:#5b6a76}
 .kakko-2{color:#8a6d1f}
 .kakko-3{color:#7a5ba6}
@@ -107,28 +109,44 @@ button{font-family:var(--sans);cursor:pointer}
 .kfold{display:inline-block;background:var(--p25);color:var(--pd);font-weight:700;border-radius:4px;padding:0 6px;font-size:.78em;cursor:pointer;border:1px dashed rgba(0,129,147,.4)}
 .kfold:hover{background:var(--p);color:#fff}
 
-/* 参照リンク */
+/* 参照・定義語・委任 */
 a.self{color:var(--pd);text-decoration:none;border-bottom:1.5px solid rgba(0,174,198,.55);cursor:pointer}
 a.self:hover{background:var(--p25)}
 a.law{color:#6a3fa0;text-decoration:none;border-bottom:1.5px dashed rgba(106,63,160,.45)}
 a.law:hover{background:#f2ecfa}
 a.law::after{content:"↗";font-size:.68em;vertical-align:super;margin-left:1px}
+.term{border-bottom:1px dotted #98a6b0;cursor:help;border-radius:2px}
+.term:hover{background:rgba(0,174,198,.1);border-bottom-color:var(--pd)}
+.deleg{background:linear-gradient(transparent 62%,rgba(0,174,198,.22) 62%);cursor:pointer;border-radius:2px}
+.deleg:hover{background:rgba(0,174,198,.16)}
+
+/* 自分のハイライト */
+mark.note-hl{background:linear-gradient(transparent 55%,rgba(252,228,138,.85) 55%);border-bottom:2px solid #e8c64a;cursor:pointer;border-radius:2px;padding:0}
+mark.note-hl:hover{background:var(--yellow)}
 
 /* 表 */
 .tbl-wrap{overflow-x:auto;margin:8px 0}
 .law-tbl{border-collapse:collapse;font-size:.78rem;background:#fff}
 .law-tbl td{border:1px solid var(--line2);padding:5px 9px;vertical-align:top;min-width:6em}
 
-/* 被参照 */
+/* 縦串 */
 .bk-sec{margin:18px 0 6px;border:1px solid var(--line);border-radius:9px;overflow:hidden}
 .bk-sec .bk-h{background:var(--pink-soft);color:var(--accent);font-size:.74rem;font-weight:900;padding:4px 14px;letter-spacing:.04em}
+.bk-sub{font-size:.68rem;font-weight:900;padding:5px 14px 1px;letter-spacing:.04em}
+.bk-sub.rei{color:var(--pd)}.bk-sub.kis{color:#2f7d52}.bk-sub.tsu{color:#8a6d1f}.bk-sub.hou{color:var(--accent)}
 .bk-sec .bk-b{padding:8px 14px;display:flex;flex-wrap:wrap;gap:6px;max-height:150px;overflow-y:auto}
 .bk-sec a{font-size:.72rem;font-weight:700;color:var(--accent);background:#fff;border:1px solid rgba(178,62,89,.35);border-radius:999px;padding:1px 10px;text-decoration:none;transition:.15s}
 .bk-sec a:hover{background:var(--accent);color:#fff}
 .bk-sec a.lawside{color:var(--pd);border-color:rgba(0,129,147,.35)}
 .bk-sec a.lawside:hover{background:var(--pd);color:#fff}
+.bk-sec a.rei{color:var(--pd);border-color:rgba(0,129,147,.35)}
+.bk-sec a.rei:hover{background:var(--pd);color:#fff}
+.bk-sec a.kis{color:#2f7d52;border-color:rgba(47,125,82,.35)}
+.bk-sec a.kis:hover{background:#2f7d52;color:#fff}
+.bk-sec a.tsu{color:#8a6d1f;border-color:rgba(138,109,31,.4)}
+.bk-sec a.tsu:hover{background:#8a6d1f;color:#fff}
 
-/* メモ */
+/* メモ（旧条メモ） */
 .memo{margin:14px 0;border:1px dashed var(--line2);border-radius:9px;padding:10px 14px;background:var(--yellow50)}
 .memo .lbl{font-size:.66rem;font-weight:700;color:var(--ink3);letter-spacing:.14em}
 .memo textarea{width:100%;min-height:52px;border:1px solid var(--line2);border-radius:7px;padding:7px 10px;font-family:var(--sans);font-size:.82rem;background:#fff;outline:none;resize:vertical}
@@ -141,35 +159,56 @@ a.law::after{content:"↗";font-size:.68em;vertical-align:super;margin-left:1px}
 .pager a.next{text-align:right}
 .pager .dir{display:block;font-size:.62rem;font-weight:700;letter-spacing:.16em;color:var(--ink3)}
 
-/* tooltip preview */
-#tip{position:fixed;z-index:90;max-width:480px;background:#fff;border:1.5px solid var(--p);border-radius:10px;box-shadow:0 14px 40px -12px rgba(0,88,112,.4);padding:10px 14px;font-size:.78rem;line-height:1.85;display:none;pointer-events:none}
-#tip .t-ka{font-weight:900;color:var(--navy);font-size:.76rem;margin-bottom:2px}
-#tip .t-ka::before{content:"§ ";color:var(--p)}
-#tip .t-b{color:var(--ink2);display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden}
+/* ===== プレビュー窓（ピン留めスタック） ===== */
+.pv{position:fixed;z-index:90;width:min(480px,92vw);background:#fff;border:1.5px solid var(--p);border-radius:11px;box-shadow:0 16px 44px -12px rgba(0,88,112,.45);display:flex;flex-direction:column;max-height:46vh}
+.pv.pinned{border-color:var(--navy);box-shadow:0 20px 50px -14px rgba(0,40,60,.5)}
+.pv-h{display:flex;align-items:center;gap:8px;padding:6px 10px;border-bottom:1px solid var(--line);background:var(--p25);border-radius:10px 10px 0 0;cursor:grab;user-select:none}
+.pv.pinned .pv-h{background:var(--navy)}
+.pv-ka{font-size:.74rem;font-weight:900;color:var(--navy);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pv.pinned .pv-ka{color:#fff}
+.pv-h button{border:0;background:transparent;font-size:.78rem;color:var(--pd);padding:1px 4px;border-radius:4px}
+.pv.pinned .pv-h button{color:#9fe2ee}
+.pv-h button:hover{background:rgba(255,255,255,.5)}
+.pv-b{padding:8px 14px;font-size:.8rem;line-height:1.95;overflow-y:auto;min-height:0}
+.pv-b .cap{color:var(--pd);font-weight:700;font-size:.74rem}
+.pv-f{display:flex;gap:6px;padding:5px 10px;border-top:1px solid var(--line);flex-wrap:wrap}
+.pv-f button,.pv-f a{border:1px solid var(--line2);background:#fff;border-radius:6px;padding:1px 10px;font-size:.7rem;font-weight:700;color:var(--navy);text-decoration:none;transition:.15s}
+.pv-f button:hover,.pv-f a:hover{border-color:var(--p);color:var(--pd)}
+.pv .defsrc{font-size:.7rem;color:var(--ink3);margin-top:4px}
+.pv .pop-list a{display:block;font-size:.76rem;color:var(--pd);text-decoration:none;padding:2px 6px;border-radius:5px}
+.pv .pop-list a:hover{background:var(--p25)}
 
-.bk-sub{font-size:.68rem;font-weight:900;padding:5px 14px 1px;letter-spacing:.04em}
-.bk-sub.rei{color:var(--pd)}.bk-sub.kis{color:#2f7d52}.bk-sub.tsu{color:#8a6d1f}.bk-sub.hou{color:var(--accent)}
-.bk-sec a.rei{color:var(--pd);border-color:rgba(0,129,147,.35)}
-.bk-sec a.rei:hover{background:var(--pd);color:#fff}
-.bk-sec a.kis{color:#2f7d52;border-color:rgba(47,125,82,.35)}
-.bk-sec a.kis:hover{background:#2f7d52;color:#fff}
-.bk-sec a.tsu{color:#8a6d1f;border-color:rgba(138,109,31,.4)}
-.bk-sec a.tsu:hover{background:#8a6d1f;color:#fff}
-.badge.chu{background:var(--yellow50);border-color:#e2d49a;color:#8a6d1f;font-size:.62rem}
-.deleg{background:linear-gradient(transparent 62%,rgba(0,174,198,.22) 62%);cursor:pointer;border-radius:2px}
-.deleg:hover{background:rgba(0,174,198,.16)}
-#pop{position:fixed;z-index:95;max-width:330px;max-height:300px;overflow-y:auto;background:#fff;border:1.5px solid var(--pd);border-radius:10px;box-shadow:0 14px 40px -12px rgba(0,88,112,.4);padding:8px 10px;display:none}
-#pop .pop-h{font-size:.7rem;font-weight:900;color:var(--navy);padding:2px 4px 6px;border-bottom:1px solid var(--line);margin-bottom:6px}
-#pop a{display:block;font-size:.76rem;color:var(--pd);text-decoration:none;padding:2px 6px;border-radius:5px}
-#pop a:hover{background:var(--p25)}
-#pop .pop-empty{font-size:.72rem;color:var(--ink3);padding:4px}
+/* 観察ノート */
+#obsBtn{position:fixed;z-index:88;display:none;background:var(--navy);color:#fff;border:0;border-radius:999px;padding:4px 14px;font-size:.76rem;font-weight:900;box-shadow:0 8px 22px -8px rgba(0,40,60,.6)}
+#obsBtn:hover{background:var(--pd)}
+#obsDlg{position:fixed;z-index:92;right:18px;top:96px;width:min(380px,94vw);background:#fff;border:2px solid var(--navy);border-radius:12px;box-shadow:0 24px 60px -16px rgba(0,40,60,.55);display:none;flex-direction:column;max-height:80vh}
+#obsDlg .d-h{background:var(--navy);color:#fff;font-size:.78rem;font-weight:900;padding:7px 14px;border-radius:9px 9px 0 0;display:flex;justify-content:space-between;align-items:center}
+#obsDlg .d-h button{border:0;background:transparent;color:#9fe2ee;font-size:.9rem;cursor:pointer}
+#obsDlg .d-b{padding:10px 14px;overflow-y:auto}
+#obsDlg .d-cite{font-size:.74rem;font-weight:900;color:var(--pd);background:var(--p25);border-radius:5px;padding:2px 10px;display:inline-block;margin-bottom:6px}
+#obsDlg label{display:block;font-size:.66rem;font-weight:700;color:var(--ink3);letter-spacing:.1em;margin:8px 0 2px}
+#obsDlg textarea,#obsDlg input{width:100%;border:1px solid var(--line2);border-radius:7px;padding:6px 9px;font-family:var(--sans);font-size:.8rem;outline:none;resize:vertical}
+#obsDlg textarea:focus,#obsDlg input:focus{border-color:var(--p)}
+#obsDlg .d-q{background:var(--yellow50)}
+#obsDlg .d-f{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--line)}
+#obsDlg .d-f button{flex:1;border-radius:7px;padding:6px;font-size:.78rem;font-weight:900;border:1px solid var(--line2);background:#fff;color:var(--ink2)}
+#obsDlg .d-f button.save{background:var(--navy);color:#fff;border-color:var(--navy)}
+#obsDlg .d-f button.save:hover{background:var(--pd)}
+
 /* search / home / notes */
 .res-meta{font-size:.78rem;color:var(--ink2);margin:4px 0 12px}
-.res{display:block;background:#fff;border:1px solid var(--line);border-radius:9px;padding:12px 16px;margin-bottom:9px;text-decoration:none;color:inherit;transition:.2s}
+.res{display:block;background:#fff;border:1px solid var(--line);border-radius:9px;padding:12px 16px;margin-bottom:9px;text-decoration:none;color:inherit;transition:.2s;position:relative}
 .res:hover{border-color:var(--p);box-shadow:0 6px 18px -12px rgba(0,88,112,.3)}
 .res .r-law{font-size:.66rem;font-weight:700;color:var(--pd);background:var(--p25);border-radius:4px;padding:1px 8px;margin-right:8px}
 .res .r-t{font-weight:900;color:var(--navy);font-size:.88rem}
 .res .r-s{font-size:.78rem;color:var(--ink2);margin-top:2px;line-height:1.8}
+.res .r-q{font-size:.78rem;color:var(--ink2);border-left:3px solid var(--yellow);padding-left:9px;margin:5px 0;line-height:1.8}
+.res .r-tools{position:absolute;top:8px;right:10px;display:flex;gap:5px}
+.res .r-tools button{border:1px solid var(--line);background:#fff;border-radius:5px;font-size:.66rem;padding:1px 8px;color:var(--ink2)}
+.res .r-tools button:hover{border-color:var(--p);color:var(--pd)}
+.exp-row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 16px}
+.exp-row button{border:1px solid var(--line2);background:#fff;border-radius:7px;padding:5px 14px;font-size:.76rem;font-weight:700;color:var(--navy)}
+.exp-row button:hover{border-color:var(--p);color:var(--pd)}
 mark{background:var(--yellow);border-radius:2px;padding:0 1px}
 .home-hero{background:linear-gradient(160deg,var(--navy),#00718e 55%,var(--pd));color:#fff;border-radius:12px;padding:30px 30px 26px;margin-bottom:18px}
 .home-hero h1{font-size:1.5rem;font-weight:900;margin:0 0 6px;color:#fff}
@@ -210,7 +249,7 @@ mark{background:var(--yellow);border-radius:2px;padding:0 1px}
 <button class="kbtn" data-fold="0">全て展開</button>
 <button class="kbtn" data-fold="2">二重以上を畳む</button>
 <button class="kbtn" data-fold="1">全て畳む</button>
-<span class="ctl-hint">括弧をクリックでも個別に畳める／〔…〕クリックで復元</span>
+<span class="ctl-hint">テキスト選択→⊕観察でノート化／プレビューは📌で固定・Escで全部閉じる</span>
 </div></div>
 
 <div class="wrap">
@@ -218,7 +257,8 @@ mark{background:var(--yellow);border-radius:2px;padding:0 1px}
 <main class="content" id="main"><div class="loading">読み込み中…</div></main>
 <aside class="rail" id="rail"></aside>
 </div>
-<div id="tip"></div>
+<button id="obsBtn">⊕ 観察</button>
+<div id="obsDlg"></div>
 
 <script>
 'use strict';
@@ -227,10 +267,16 @@ const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'
 const strip=h=>{const d=document.createElement('div');d.innerHTML=h;return d.textContent||''};
 
 const SLUG={hou:'cfc_hou',rei:'cfc_rei',kis:'cfc_kis',tsu:'cfc_tsu'};
+const KEYOF={cfc_hou:'hou',cfc_rei:'rei',cfc_kis:'kis',cfc_tsu:'tsu'};
 const PFX={hou:'法',rei:'令',kis:'規',tsu:'通'};
+const PFX2={hou:'措法',rei:'措令',kis:'措規',tsu:'措通'};
 const LAYERS=[['rei','政令（委任・関連規定）'],['kis','省令（添付書類・記載事項等）'],['tsu','解釈通達'],['hou','法律']];
-const state={meta:[],laws:{},slug:null,notes:JSON.parse(localStorage.getItem('jp4notes')||'{}'),foldLv:0};
+const IROHA='イロハニホヘトチリヌルヲワ';
+
+const state={meta:[],laws:{},slug:null,notes:JSON.parse(localStorage.getItem('jp4notes')||'{}'),
+  obs:JSON.parse(localStorage.getItem('jp4obs')||'[]'),foldLv:0,ext:null};
 const saveNotes=()=>localStorage.setItem('jp4notes',JSON.stringify(state.notes));
+const saveObs=()=>localStorage.setItem('jp4obs',JSON.stringify(state.obs));
 const nk=(slug,id)=>slug+'/'+id;
 
 async function loadMeta(){
@@ -242,44 +288,75 @@ async function loadLaw(slug){
   if(state.laws[slug])return state.laws[slug];
   const d=await(await fetch('data2/'+slug+'.json')).json();
   d._artMap={};d.arts.forEach((a,i)=>d._artMap[a.id]={a,i});
-  // 条→ノードアドレス列
   d._artNodes={};
   d.order.forEach(ad=>{const n=d.nodes[ad];(d._artNodes[n.art]=d._artNodes[n.art]||[]).push(ad)});
   state.laws[slug]=d;return d;
+}
+async function loadExt(){
+  if(state.ext)return state.ext;
+  state.ext=await(await fetch('data2/ext_preview.json')).json();
+  return state.ext;
+}
+
+/* ---------- 引用形式 ---------- */
+function circled(n){
+  n=+n;
+  if(n>=1&&n<=20)return String.fromCharCode(0x2460+n-1);
+  if(n>=21&&n<=35)return String.fromCharCode(0x3251+n-21);
+  if(n>=36&&n<=50)return String.fromCharCode(0x32B1+n-36);
+  return '('+n+')';
+}
+const KAN=['','一','二','三','四','五','六','七','八','九'];
+function int2kanji(n){
+  n=+n;
+  if(n<10)return KAN[n];
+  if(n<100){const t=Math.floor(n/10),r=n%10;return (t>1?KAN[t]:'')+'十'+(r?KAN[r]:'')}
+  return String(n);
+}
+function citeOf(lk,addr){
+  const ps=addr.slice(2).split('.');
+  const art=ps[0];
+  if(lk==='tsu')return PFX2.tsu+art.replace(/_/g,'の');
+  let c=PFX2[lk]+art.replace(/_/g,'の');
+  if(ps[1])c+=circled(ps[1]);
+  if(ps[2])c+=ps[2].split('_').map(int2kanji).join('の');
+  if(ps[3])c+=IROHA[+ps[3]-1]||'';
+  return c;
 }
 
 /* ---------- 描画 ---------- */
 function nodeCls(t){return t==='Paragraph'?'para':t==='Item'?'item':t==='Subitem1'?'sub1':t==='Subitem2'?'sub2':'sub3'}
 function badge(n,addr,law){
+  const has=law&&law.backlinks[addr]?' haslink':'';
   if(n.t==='Paragraph'){
-    if(law&&law.key==='tsu')return '<span class="badge'+(n.ti?' chu':' p1')+'">'+esc(n.ti||'¶')+'</span>';
-    const p=addr.split('.')[1];return '<span class="badge'+(p==='1'?' p1':'')+'">'+p+'</span>';
+    if(law&&law.key==='tsu')return '<span class="badge'+(n.ti?' chu':' p1')+'" data-addr="'+addr+'">'+esc(n.ti||'¶')+'</span>';
+    const p=addr.split('.')[1];
+    return '<span class="badge'+(p==='1'?' p1':'')+has+'" data-addr="'+addr+'">'+p+'</span>';
   }
-  return '<span class="badge">'+esc(n.ti||'・')+'</span>';
+  return '<span class="badge'+has+'" data-addr="'+addr+'">'+esc(n.ti||'・')+'</span>';
 }
 function renderTbl(tbls){return (tbls||[]).map(rows=>'<div class="tbl-wrap"><table class="law-tbl">'+rows.map(r=>'<tr>'+r.map(c=>'<td>'+esc(c)+'</td>').join('')+'</tr>').join('')+'</table></div>').join('')}
 
 function renderArticle(law,artId,hlAddr){
   const addrs=law._artNodes[artId]||[];
-  const art=law.nodes['ln'+artId.replace(/_/g,'_')]; // Article node
   const a0=law._artMap[artId].a;
   const k=nk(law.slug,artId);
   const nt=state.notes[k]||{};
   let h='<div class="art-head"><span class="art-no" id="n_ln'+artId+'">'+esc(a0.label)+'</span>'+
     (a0.c?'<span class="art-cap">'+esc(a0.c)+'</span>':'')+
     '<span class="art-tools">'+
+    '<button class="cite-btn" data-cite="'+esc(citeOf(law.key,a0.address))+'" title="引用形式をコピー">'+esc(citeOf(law.key,a0.address))+' ⧉</button>'+
     '<button class="star'+(nt.star?' on':'')+'" data-k="'+esc(k)+'">'+(nt.star?'★':'☆')+'</button>'+
     '<button class="pen" data-k="'+esc(k)+'">✎</button></span></div>';
   for(const ad of addrs){
     const n=law.nodes[ad];
     if(n.t==='Article')continue;
     const hl=ad===hlAddr?' hl':'';
-    h+='<div class="node '+nodeCls(n.t)+hl+'" id="n_'+ad.replace(/\./g,'-')+'">'+badge(n,ad,law)+
+    h+='<div class="node '+nodeCls(n.t)+hl+'" id="n_'+ad.replace(/\./g,'-')+'" data-addr="'+ad+'">'+badge(n,ad,law)+
       '<div class="body">'+n.h+renderTbl(n.tbl)+'</div>'+
       '<a class="node-link" href="#/'+law.slug+'/n/'+ad+'" title="このノードへのリンク">¶</a></div>';
   }
-  if(nt.memo)h+='<div class="memo"><div class="lbl">MY NOTE</div><textarea data-k="'+esc(k)+'">'+esc(nt.memo)+'</textarea></div>';
-  // 被参照（条単位に集約）
+  if(nt.memo)h+='<div class="memo"><div class="lbl">MY NOTE（条メモ）</div><textarea data-k="'+esc(k)+'">'+esc(nt.memo)+'</textarea></div>';
   const bks=[];
   for(const ad of addrs){
     (law.backlinks[ad]||[]).forEach(b=>{
@@ -340,7 +417,6 @@ function renderRail(law,artId){
     h+='<a class="'+(n.t==='Item'?'lv2':'')+'" href="#/'+law.slug+'/n/'+ad+'">'+lab+' <span style="color:var(--ink3);font-size:.66rem">'+esc(strip(n.h).slice(0,14))+'…</span></a>';
   }
   h+='</div>';
-  // 前後条
   const i=law._artMap[artId].i;
   h+='<div class="r-h bk">条の移動</div><div class="r-b">';
   if(i>0)h+='<a class="bk" href="#/'+law.slug+'/a/'+law.arts[i-1].id+'">← '+esc(law.arts[i-1].label)+'</a>';
@@ -353,10 +429,10 @@ function renderRail(law,artId){
 function crumb(parts){return '<div class="crumb">'+parts.map(p=>p.href?'<a href="'+p.href+'">'+esc(p.t)+'</a>':esc(p.t)).join(' › ')+'</div>'}
 async function viewHome(){
   renderSide(null);renderRail(null);
-  const cards=state.meta.map(m=>'<a class="law-card" href="#/'+m.slug+'"><h3>'+esc(m.title)+'</h3><div class="num">'+esc(m.num)+'</div><span class="chip">'+m.articles+'条</span></a>').join('');
-  $('#main').innerHTML='<div class="home-hero"><h1>CFC税制 条文ブラウザ</h1><p>法律・施行令・施行規則・通達の<span class="em">4層を縦串</span>で。括弧の折りたたみ・参照リンク・<span class="em">委任チェーン</span>・逆参照付き。</p></div>'+
+  const cards=state.meta.map(m=>'<a class="law-card" href="#/'+m.slug+'"><h3>'+esc(m.title)+'</h3><div class="num">'+esc(m.num)+'</div><span class="chip">'+m.articles+'項目</span></a>').join('');
+  $('#main').innerHTML='<div class="home-hero"><h1>CFC税制 条文ブラウザ</h1><p>法律・施行令・施行規則・通達の<span class="em">4層を縦串</span>で。<span class="em">定義語ホバー</span>・ピン留めプレビュー・括弧折りたたみ・<span class="em">選択→観察ノート</span>。</p></div>'+
     '<div class="grid">'+cards+'</div>'+
-    '<div class="note-foot">出典: e-Gov法令検索（法令API）。CFC関連条文のみ抜粋（附則・別表省略）。参照リンクは機械解決のため、正確な解釈は原文を確認してください。条文ホバーで参照先プレビュー、（括弧）クリックで折りたたみ。</div>';
+    '<div class="note-foot">出典: e-Gov法令検索（法令API）・国税庁通達HTML。CFC関連条文のみ抜粋（附則・別表省略）。参照・定義語リンクは機械解決のため、正確な解釈は原文を確認してください。</div>';
 }
 async function viewLaw(slug){
   const law=await loadLaw(slug);
@@ -388,6 +464,7 @@ async function viewArticle(slug,artId,hlAddr){
     '</div>';
   $('#main').innerHTML=h;
   bindTools();applyFold($('#main'),state.foldLv);
+  restoreHighlights(law,artId);
   if(hlAddr){
     const el=document.getElementById('n_'+hlAddr.replace(/\./g,'-'));
     if(el)setTimeout(()=>el.scrollIntoView({block:'center'}),60);
@@ -430,25 +507,217 @@ async function viewSearch(slug,kw){
       '<div class="r-s">'+r.snip+'</div></a>').join(''):
     '<div class="empty">見つかりませんでした。条番号（例: 66の6）や別の語で試してください。</div>');
 }
+
+/* ---------- 観察ノート（資産化の核） ---------- */
+function fmtDate(ts){const d=new Date(ts);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function openObsDlg(o,editId){
+  const dlg=$('#obsDlg');
+  dlg.innerHTML='<div class="d-h"><span>'+(editId?'観察を編集':'⊕ 観察ノート')+'</span><button id="obsClose">✕</button></div>'+
+    '<div class="d-b">'+
+    '<span class="d-cite">'+esc(o.cite)+'</span> <span style="font-size:.7rem;color:var(--ink3)">'+esc(o.ka||'')+'</span>'+
+    '<label>引用（条文）</label><textarea id="obsQ" class="d-q" rows="3">'+esc(o.quote||'')+'</textarea>'+
+    '<label>観察・違和感・コメント</label><textarea id="obsC" rows="4" placeholder="なぜ気になったか、何と矛盾するか…">'+esc(o.comment||'')+'</textarea>'+
+    '<label>タグ（スペース区切り）</label><input id="obsT" value="'+esc((o.tags||[]).join(' '))+'" placeholder="例: 例に準じて 株主相対性">'+
+    '</div>'+
+    '<div class="d-f"><button id="obsCancel">キャンセル</button><button class="save" id="obsSave">保存</button></div>';
+  dlg.style.display='flex';
+  $('#obsClose').onclick=$('#obsCancel').onclick=()=>{dlg.style.display='none'};
+  $('#obsSave').onclick=()=>{
+    const rec={id:editId||('o'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)),
+      ts:editId?(state.obs.find(x=>x.id===editId)||{}).ts||Date.now():Date.now(),
+      lk:o.lk,slug:o.slug,addr:o.addr,ka:o.ka,cite:o.cite,
+      quote:$('#obsQ').value.trim(),comment:$('#obsC').value.trim(),
+      tags:$('#obsT').value.trim().split(/\s+/).filter(Boolean)};
+    if(editId){const i=state.obs.findIndex(x=>x.id===editId);if(i>=0)state.obs[i]=rec;else state.obs.push(rec)}
+    else state.obs.push(rec);
+    saveObs();dlg.style.display='none';
+    const law=state.laws[o.slug];
+    if(law&&location.hash.includes('/'+o.slug+'/'))restoreHighlights(law,o.addr.slice(2).split('.')[0]);
+  };
+  setTimeout(()=>$('#obsC').focus(),50);
+}
+/* 選択→⊕観察 */
+const obsBtn=$('#obsBtn');
+let selCtx=null;
+document.addEventListener('mouseup',e=>{
+  if(e.target.closest('#obsBtn,#obsDlg,.pv'))return;
+  setTimeout(()=>{
+    const sel=getSelection();
+    if(sel.isCollapsed||!sel.toString().trim()){obsBtn.style.display='none';return}
+    const nodeEl=sel.anchorNode&&sel.anchorNode.parentElement&&sel.anchorNode.parentElement.closest('.node');
+    if(!nodeEl||!$('#main').contains(nodeEl)){obsBtn.style.display='none';return}
+    const law=state.laws[state.slug];
+    if(!law){obsBtn.style.display='none';return}
+    const addr=nodeEl.dataset.addr;
+    const n=law.nodes[addr];
+    selCtx={lk:law.key,slug:law.slug,addr,ka:PFX2[law.key].slice(0,2)==='措通'?n.ka:PFX[law.key]+n.ka,cite:citeOf(law.key,addr),quote:sel.toString().trim()};
+    const r=sel.getRangeAt(0).getBoundingClientRect();
+    obsBtn.style.left=Math.min(r.right+6,innerWidth-110)+'px';
+    obsBtn.style.top=Math.max(60,r.top-34)+'px';
+    obsBtn.style.display='block';
+  },10);
+});
+obsBtn.addEventListener('click',()=>{
+  obsBtn.style.display='none';
+  if(selCtx)openObsDlg(selCtx);
+});
+/* ハイライト復元 */
+function restoreHighlights(law,artId){
+  for(const o of state.obs){
+    if(o.slug!==law.slug)continue;
+    if(o.addr.slice(2).split('.')[0]!==artId&&o.addr!=='ln'+artId)continue;
+    const el=document.getElementById('n_'+o.addr.replace(/\./g,'-'));
+    if(!el)continue;
+    const body=el.querySelector('.body');
+    if(!body||body.querySelector('mark.note-hl[data-note="'+o.id+'"]'))continue;
+    let q=o.quote;
+    if(!q)continue;
+    for(const probe of [q,q.slice(0,60),q.slice(0,25)]){
+      if(probe.length<4)break;
+      if(markText(body,probe,o.id))break;
+    }
+  }
+}
+function markText(root,probe,noteId){
+  // 連結テキスト上で検索し、跨いだテキストノードごとに分割してmarkする
+  const tns=[];let full='';
+  const tw=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+  let t;
+  while((t=tw.nextNode())){
+    if(!t.parentElement.closest('mark.note-hl'))tns.push({node:t,start:full.length});
+    full+=t.textContent;
+  }
+  const i=full.indexOf(probe);
+  if(i<0)return false;
+  const end=i+probe.length;
+  const targets=[];
+  for(const e of tns){
+    const s=e.start,len=e.node.textContent.length;
+    const a=Math.max(i,s),b=Math.min(end,s+len);
+    if(a<b)targets.push({node:e.node,from:a-s,to:b-s});
+  }
+  let ok=false;
+  for(const g of targets){
+    const r=document.createRange();
+    r.setStart(g.node,g.from);r.setEnd(g.node,g.to);
+    const m=document.createElement('mark');
+    m.className='note-hl';m.dataset.note=noteId;
+    try{r.surroundContents(m);ok=true}catch(err){}
+  }
+  return ok;
+}
+/* ノートビュー */
 async function viewNotes(){
   renderSide(null);renderRail(null);
-  const keys=Object.keys(state.notes).filter(k=>state.notes[k].star||state.notes[k].memo);
-  if(!keys.length){$('#main').innerHTML='<h1 class="law-title">📒 法令ノート</h1><div class="empty">まだブックマーク・メモがありません。<br>条文見出し右の ☆ / ✎ から登録（このブラウザに保存）。</div>';return}
-  let h='<h1 class="law-title">📒 法令ノート</h1><div class="res-meta">'+keys.length+'件（このブラウザに保存）</div>';
-  for(const k of keys){
-    const [sl,id]=k.split('/');
-    const law=await loadLaw(sl);
-    if(!law._artMap[id])continue;
-    const nt=state.notes[k];const a=law._artMap[id].a;
-    h+='<a class="res" href="#/'+sl+'/a/'+id+'"><span class="r-law">'+esc(PFX[law.key])+'</span>'+
-      (nt.star?'<span style="color:var(--accent)">★ </span>':'')+
-      '<span class="r-t">'+esc(a.label)+(a.c?'　'+esc(a.c):'')+'</span>'+
-      (nt.memo?'<div class="r-s">📝 '+esc(nt.memo).slice(0,140)+'</div>':'')+'</a>';
+  const obs=[...state.obs].sort((a,b)=>b.ts-a.ts);
+  const starKeys=Object.keys(state.notes).filter(k=>state.notes[k].star||state.notes[k].memo);
+  let h='<h1 class="law-title">📒 法令ノート</h1>'+
+    '<div class="res-meta">観察 '+obs.length+'件・条メモ/★ '+starKeys.length+'件（このブラウザに保存）</div>'+
+    '<div class="exp-row">'+
+    '<button id="expMd">⬇ Markdownエクスポート（観察ノート形式）</button>'+
+    '<button id="expJson">⬇ JSONバックアップ</button>'+
+    '<button id="impJson">⬆ JSON読込</button>'+
+    '<input type="file" id="impFile" accept=".json" style="display:none">'+
+    '</div>';
+  if(obs.length){
+    h+='<div class="grp" style="font-size:.8rem;font-weight:900;color:var(--navy);background:var(--p25);border-radius:6px;padding:4px 12px;margin:10px 0 8px">観察ノート</div>';
+    for(const o of obs){
+      h+='<div class="res"><span class="r-law">'+esc(o.cite)+'</span><span class="r-t" style="font-size:.78rem;color:var(--ink3)">'+esc(o.ka||'')+'　'+fmtDate(o.ts)+'</span>'+
+        (o.quote?'<div class="r-q">'+esc(o.quote.slice(0,160))+(o.quote.length>160?'…':'')+'</div>':'')+
+        (o.comment?'<div class="r-s">💭 '+esc(o.comment)+'</div>':'')+
+        (o.tags&&o.tags.length?'<div class="r-s" style="color:var(--pd)">'+o.tags.map(t=>'#'+esc(t)).join(' ')+'</div>':'')+
+        '<div class="r-tools">'+
+        '<button data-act="jump" data-id="'+o.id+'">開く</button>'+
+        '<button data-act="copy" data-id="'+o.id+'">引用⧉</button>'+
+        '<button data-act="edit" data-id="'+o.id+'">編集</button>'+
+        '<button data-act="del" data-id="'+o.id+'">削除</button></div></div>';
+    }
+  }
+  if(starKeys.length){
+    h+='<div class="grp" style="font-size:.8rem;font-weight:900;color:var(--navy);background:var(--p25);border-radius:6px;padding:4px 12px;margin:16px 0 8px">条単位のメモ・ブックマーク</div>';
+    for(const k of starKeys){
+      const [sl,id]=k.split('/');
+      const law=await loadLaw(sl);
+      if(!law._artMap[id])continue;
+      const nt=state.notes[k];const a=law._artMap[id].a;
+      h+='<a class="res" href="#/'+sl+'/a/'+id+'"><span class="r-law">'+esc(PFX[law.key])+'</span>'+
+        (nt.star?'<span style="color:var(--accent)">★ </span>':'')+
+        '<span class="r-t">'+esc(a.label)+(a.c?'　'+esc(a.c):'')+'</span>'+
+        (nt.memo?'<div class="r-s">📝 '+esc(nt.memo).slice(0,140)+'</div>':'')+'</a>';
+    }
+  }
+  if(!obs.length&&!starKeys.length){
+    h+='<div class="empty">まだノートがありません。<br>条文のテキストを選択→「⊕観察」、または条見出しの ☆/✎ から。</div>';
   }
   $('#main').innerHTML=h;
+  $('#expMd').onclick=exportMd;
+  $('#expJson').onclick=()=>download('cfc_notes_'+fmtDate(Date.now())+'.json',JSON.stringify({obs:state.obs,notes:state.notes},null,1));
+  $('#impJson').onclick=()=>$('#impFile').click();
+  $('#impFile').onchange=async e=>{
+    const f=e.target.files[0];if(!f)return;
+    try{
+      const d=JSON.parse(await f.text());
+      if(Array.isArray(d.obs)){
+        const ids=new Set(state.obs.map(o=>o.id));
+        d.obs.forEach(o=>{if(!ids.has(o.id))state.obs.push(o)});
+      }
+      if(d.notes)Object.assign(state.notes,d.notes);
+      saveObs();saveNotes();viewNotes();
+    }catch(err){alert('読込失敗: '+err)}
+  };
+  $('#main').addEventListener('click',e=>{
+    const b=e.target.closest('button[data-act]');
+    if(!b)return;
+    e.preventDefault();e.stopPropagation();
+    const o=state.obs.find(x=>x.id===b.dataset.id);
+    if(!o)return;
+    if(b.dataset.act==='jump')location.hash='#/'+o.slug+'/n/'+o.addr;
+    else if(b.dataset.act==='copy')copyText(o.cite+'\n「'+o.quote+'」');
+    else if(b.dataset.act==='edit')openObsDlg(o,o.id);
+    else if(b.dataset.act==='del'){if(confirm('この観察を削除しますか？')){state.obs=state.obs.filter(x=>x.id!==o.id);saveObs();viewNotes()}}
+  });
+}
+function exportMd(){
+  const obs=[...state.obs].sort((a,b)=>a.cite.localeCompare(b.cite,'ja'));
+  let md='# CFC条文ブラウザ 観察ノート\n\nエクスポート: '+fmtDate(Date.now())+' ／ '+obs.length+'件\n\n';
+  for(const o of obs){
+    md+='## '+o.cite+(o.ka?'（'+o.ka+'）':'')+'\n\n';
+    if(o.quote)md+='> '+o.quote.replace(/\n/g,'\n> ')+'\n\n';
+    if(o.comment)md+=o.comment+'\n\n';
+    const meta=[];
+    if(o.tags&&o.tags.length)meta.push(o.tags.map(t=>'#'+t).join(' '));
+    meta.push(fmtDate(o.ts));
+    meta.push('#/'+o.slug+'/n/'+o.addr);
+    md+='*（'+meta.join(' ／ ')+'）*\n\n---\n\n';
+  }
+  // 条メモも付録に
+  const starKeys=Object.keys(state.notes).filter(k=>state.notes[k].memo);
+  if(starKeys.length){
+    md+='# 付録: 条単位メモ\n\n';
+    for(const k of starKeys){
+      md+='- **'+k+'**: '+state.notes[k].memo.replace(/\n/g,' ')+'\n';
+    }
+  }
+  download('CFC観察ノート_'+fmtDate(Date.now())+'.md',md);
+}
+function download(name,content){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([content],{type:'text/plain;charset=utf-8'}));
+  a.download=name;a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),5000);
+}
+function copyText(t){
+  navigator.clipboard.writeText(t).then(()=>toast('コピーしました'),()=>toast('コピー失敗'));
+}
+let toastTimer=null;
+function toast(msg){
+  let t=$('#toast');
+  if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;font-size:.78rem;font-weight:700;padding:7px 18px;border-radius:999px;z-index:99;box-shadow:0 10px 30px -8px rgba(0,40,60,.5)';document.body.appendChild(t)}
+  t.textContent=msg;t.style.display='block';
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.style.display='none',1600);
 }
 
-/* ---------- 括弧折りたたみ（Lawzillaの核機能） ---------- */
+/* ---------- 括弧折りたたみ ---------- */
 const foldStore=new WeakMap();
 function foldEl(sp){
   if(foldStore.has(sp))return;
@@ -461,10 +730,8 @@ function foldEl(sp){
 function unfoldEl(sp){
   const frag=foldStore.get(sp);
   if(!frag)return;
-  sp.textContent='';
-  sp.appendChild(frag);
-  foldStore.delete(sp);
-  sp.classList.remove('kfold');
+  sp.textContent='';sp.appendChild(frag);
+  foldStore.delete(sp);sp.classList.remove('kfold');
 }
 function kakkoLevel(sp){
   for(const c of sp.classList){if(c==='kakko')return 1;const m=c.match(/^kakko-(\d)/);if(m)return +m[1]}
@@ -477,30 +744,219 @@ function applyFold(root,lv){
   });
 }
 
-/* ---------- ホバープレビュー ---------- */
-const tip=$('#tip');
-async function showTip(a,ev){
-  const dl=a.dataset.link||a.dataset.prev;
-  if(!dl)return;
-  const [lk,addr]=dl.split('@');
-  const law=await loadLaw(SLUG[lk]);
-  let n=law.nodes[addr];
-  if(!n&&addr.includes('.'))n=law.nodes[addr.split('.').slice(0,2).join('.')]||law.nodes[addr.split('.')[0]];
-  if(!n)n=law.nodes[addr.split('.')[0]];
-  if(!n)return;
-  let body=strip(n.h);
-  if(n.t==='Article'){ // 条ノードは本文が無いので第1項を出す
-    const p1=law.nodes[addr.split('.')[0]+'.1'];
-    if(p1)body=strip(p1.h);
-  }
-  tip.innerHTML='<div class="t-ka">'+esc(PFX[lk]+n.ka)+(n.c?'　'+esc(n.c):'')+'</div><div class="t-b">'+esc(body.slice(0,360))+'</div>';
-  tip.style.display='block';
-  const x=Math.min(ev.clientX+14,innerWidth-500),y=Math.min(ev.clientY+16,innerHeight-200);
-  tip.style.left=Math.max(8,x)+'px';tip.style.top=y+'px';
+/* ---------- プレビュー窓（ピン留めスタック） ---------- */
+const PV={hover:null,hoverAnchor:null,closeTimer:null,seq:0};
+function pvClose(win){if(win){win.remove();if(PV.hover===win){PV.hover=null;PV.hoverAnchor=null}}}
+function pvCloseAll(){document.querySelectorAll('.pv').forEach(w=>w.remove());PV.hover=null;PV.hoverAnchor=null}
+function pvScheduleClose(){
+  clearTimeout(PV.closeTimer);
+  PV.closeTimer=setTimeout(()=>{if(PV.hover&&!PV.hover.matches(':hover'))pvClose(PV.hover)},350);
 }
-function hideTip(){tip.style.display='none'}
+function pvCancelClose(){clearTimeout(PV.closeTimer)}
+function pvPin(win){
+  win.classList.add('pinned');
+  if(PV.hover===win){PV.hover=null;PV.hoverAnchor=null}
+  const pinBtn=win.querySelector('.pv-pin');
+  if(pinBtn)pinBtn.textContent='✕',pinBtn.title='閉じる',pinBtn.onclick=()=>pvClose(win);
+}
+function pvMakeDraggable(win){
+  const h=win.querySelector('.pv-h');
+  let sx,sy,ox,oy,drag=false;
+  h.addEventListener('mousedown',e=>{
+    if(e.target.tagName==='BUTTON')return;
+    drag=true;sx=e.clientX;sy=e.clientY;
+    const r=win.getBoundingClientRect();ox=r.left;oy=r.top;
+    if(!win.classList.contains('pinned'))pvPin(win);
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove',e=>{
+    if(!drag)return;
+    win.style.left=Math.max(4,ox+e.clientX-sx)+'px';
+    win.style.top=Math.max(4,oy+e.clientY-sy)+'px';
+  });
+  document.addEventListener('mouseup',()=>{drag=false});
+}
+function pvSpawn(content,anchorRect,opts={}){
+  // content: {ka, bodyHtml, jump, cite, quote, extHref, extra}
+  const win=document.createElement('div');
+  win.className='pv';win.dataset.pv=++PV.seq;
+  let foot='';
+  if(content.jump)foot+='<a href="'+content.jump+'" class="pv-jump">ジャンプ →</a>';
+  if(content.extHref)foot+='<a href="'+content.extHref+'" target="_blank" rel="noopener">Lawzillaで開く ↗</a>';
+  if(content.cite)foot+='<button class="pv-cite">引用⧉</button>';
+  if(content.quote!==undefined)foot+='<button class="pv-obs">⊕観察</button>';
+  win.innerHTML='<div class="pv-h"><span class="pv-ka">'+esc(content.ka)+'</span>'+
+    '<button class="pv-pin" title="ピン留め">📌</button></div>'+
+    '<div class="pv-b">'+(content.cap?'<div class="cap">'+esc(content.cap)+'</div>':'')+content.bodyHtml+
+    (content.extra||'')+'</div>'+
+    (foot?'<div class="pv-f">'+foot+'</div>':'');
+  document.body.appendChild(win);
+  // 位置
+  const W=win.offsetWidth,Hh=win.offsetHeight;
+  let x=anchorRect.left,y=anchorRect.bottom+8;
+  if(y+Hh>innerHeight-10)y=Math.max(8,anchorRect.top-Hh-8);
+  if(x+W>innerWidth-10)x=Math.max(8,innerWidth-W-12);
+  win.style.left=x+'px';win.style.top=y+'px';
+  // events
+  win.addEventListener('mouseenter',pvCancelClose);
+  win.addEventListener('mouseleave',()=>{if(!win.classList.contains('pinned'))pvScheduleClose()});
+  win.querySelector('.pv-pin').onclick=()=>pvPin(win);
+  const cb=win.querySelector('.pv-cite');
+  if(cb)cb.onclick=()=>copyText(content.cite+(content.quote?'\n「'+content.quote.slice(0,200)+'」':''));
+  const ob=win.querySelector('.pv-obs');
+  if(ob)ob.onclick=()=>{pvPin(win);openObsDlg({lk:content.lk,slug:content.slug,addr:content.addr,ka:content.ka,cite:content.cite,quote:(content.quote||'').slice(0,300)})};
+  pvMakeDraggable(win);
+  return win;
+}
+async function pvContentFor(el){
+  // returns content object or null
+  if(el.matches('a.self')){
+    const [lk,addr]=el.dataset.link.split('@');
+    const law=await loadLaw(SLUG[lk]);
+    let n=law.nodes[addr]||law.nodes[addr.split('.').slice(0,3).join('.')]||law.nodes[addr.split('.').slice(0,2).join('.')]||law.nodes[addr.split('.')[0]];
+    if(!n)return null;
+    let bodyHtml=n.h;
+    let cap=n.c||'';
+    if(n.t==='Article'){
+      const p1=law.nodes[addr.split('.')[0]+'.1'];
+      if(p1)bodyHtml=p1.h;
+    }
+    return {ka:PFX[lk]+n.ka,cap,bodyHtml,jump:'#/'+SLUG[lk]+'/n/'+addr,cite:citeOf(lk,addr),
+      quote:strip(bodyHtml).slice(0,300),lk,slug:SLUG[lk],addr};
+  }
+  if(el.matches('a.law[data-ext]')){
+    const ev=await loadExt();
+    const e=ev[el.dataset.ext];
+    if(!e)return null;
+    return {ka:e.ka,cap:e.c||'',bodyHtml:esc(e.t),extHref:el.href,cite:e.ka,quote:e.t.slice(0,300)};
+  }
+  if(el.matches('.term')){
+    const [lk,addr]=el.dataset.def.split('@');
+    const law=await loadLaw(SLUG[lk]);
+    const n=law.nodes[addr];
+    if(!n)return null;
+    return {ka:'定義: '+el.textContent,bodyHtml:n.h,
+      extra:'<div class="defsrc">定義位置: <a href="#/'+SLUG[lk]+'/n/'+addr+'">'+esc(PFX[lk]+n.ka)+'</a></div>',
+      jump:'#/'+SLUG[lk]+'/n/'+addr,cite:citeOf(lk,addr),quote:strip(n.h).slice(0,300),lk,slug:SLUG[lk],addr};
+  }
+  if(el.matches('.kfold')){
+    const frag=foldStore.get(el);
+    if(!frag)return null;
+    const tmp=document.createElement('div');tmp.appendChild(frag.cloneNode(true));
+    return {ka:'〔…〕括弧の内容',bodyHtml:tmp.innerHTML};
+  }
+  if(el.matches('mark.note-hl')){
+    const o=state.obs.find(x=>x.id===el.dataset.note);
+    if(!o)return null;
+    return {ka:'📝 '+o.cite,bodyHtml:(o.comment?esc(o.comment):'<span style="color:var(--ink3)">（コメントなし）</span>')+
+      (o.tags&&o.tags.length?'<div style="color:var(--pd);font-size:.74rem;margin-top:4px">'+o.tags.map(t=>'#'+esc(t)).join(' ')+'</div>':''),
+      extra:'<div class="defsrc"><a href="#" class="pv-edit" data-id="'+o.id+'">編集</a>　<a href="#" class="pv-del" data-id="'+o.id+'">削除</a></div>'};
+  }
+  if(el.matches('.badge.haslink')){
+    const law=state.laws[state.slug];
+    if(!law)return null;
+    const addr=el.dataset.addr;
+    const bks=law.backlinks[addr]||[];
+    if(!bks.length)return null;
+    const byLayer={};
+    bks.forEach(b=>{(byLayer[b.law]=byLayer[b.law]||[]).push(b)});
+    let html='<div class="pop-list">';
+    for(const [lk,label] of LAYERS){
+      if(!byLayer[lk])continue;
+      html+='<div style="font-size:.66rem;font-weight:900;color:var(--ink3);margin-top:4px">'+esc(label)+'</div>';
+      html+=byLayer[lk].map(b=>'<a href="#/'+SLUG[b.law]+'/n/'+b.addr+'">'+esc(b.ka)+'</a>').join('');
+    }
+    html+='</div>';
+    return {ka:'⛓ '+PFX[law.key]+law.nodes[addr].ka+' を参照している規定（'+bks.length+'）',bodyHtml:html};
+  }
+  if(el.matches('.deleg')){
+    const layer=el.dataset.layer;
+    const law=state.laws[state.slug];
+    const nodeEl=el.closest('.node');
+    if(!law||!nodeEl)return null;
+    const lnAddr=nodeEl.dataset.addr;
+    let list=(law.backlinks[lnAddr]||[]).filter(b=>b.law===layer);
+    let scope=lnAddr;
+    if(!list.length){
+      const artAddr=lnAddr.split('.')[0];
+      const seen=new Set();list=[];
+      for(const ad of (law._artNodes[artAddr.slice(2)]||[])){
+        for(const b of (law.backlinks[ad]||[])){
+          if(b.law===layer&&!seen.has(b.addr)){seen.add(b.addr);list.push(b)}
+        }
+      }
+      scope=artAddr+'（条単位）';
+    }
+    const lname=layer==='rei'?'政令':'省令';
+    return {ka:lname+'への委任 — '+scope.replace('ln',''),
+      bodyHtml:list.length?'<div class="pop-list">'+list.map(b=>'<a href="#/'+SLUG[b.law]+'/n/'+b.addr+'">'+esc(b.ka)+'</a>').join('')+'</div>':
+      '<span style="color:var(--ink3);font-size:.76rem">この'+lname+'委任に対応する規定は抜粋範囲に見つかりません</span>'};
+  }
+  return null;
+}
+let hoverTimer=null;
+document.addEventListener('mouseover',e=>{
+  const el=e.target.closest('a.self,a.law[data-ext],.term,.kfold,mark.note-hl,[data-prev],.badge.haslink');
+  clearTimeout(hoverTimer);
+  if(!el){pvScheduleClose();return}
+  if(el.closest('.pv')&&PV.hover&&el.closest('.pv')===PV.hover){/* allow nested hover from hover win: replace */}
+  pvCancelClose();
+  hoverTimer=setTimeout(async()=>{
+    if(PV.hoverAnchor===el&&PV.hover)return;
+    let content=null;
+    if(el.dataset.prev){
+      const [lk,addr]=el.dataset.prev.split('@');
+      content=await pvContentFor(Object.assign(document.createElement('a'),{className:'self'},{dataset:{}}))||null;
+      // 簡易: data-prevはa.selfと同じ扱い
+      const law=await loadLaw(SLUG[lk]);
+      let n=law.nodes[addr]||law.nodes[addr.split('.')[0]];
+      if(n){
+        let bodyHtml=n.t==='Article'?(law.nodes[addr.split('.')[0]+'.1']||n).h:n.h;
+        content={ka:PFX[lk]+n.ka,cap:n.c||'',bodyHtml,jump:'#/'+SLUG[lk]+'/n/'+addr,cite:citeOf(lk,addr),quote:strip(bodyHtml).slice(0,300),lk,slug:SLUG[lk],addr};
+      }
+    }else{
+      content=await pvContentFor(el);
+    }
+    if(!content)return;
+    if(PV.hover)pvClose(PV.hover);
+    const win=pvSpawn(content,el.getBoundingClientRect());
+    PV.hover=win;PV.hoverAnchor=el;
+  },140);
+});
+document.addEventListener('mouseout',e=>{
+  const el=e.target.closest('a.self,a.law[data-ext],.term,.kfold,mark.note-hl,[data-prev],.badge.haslink');
+  if(el&&PV.hoverAnchor===el)pvScheduleClose();
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){pvCloseAll();$('#obsDlg').style.display='none';obsBtn.style.display='none'}
+});
 
-/* ---------- イベント ---------- */
+/* ---------- クリック ---------- */
+document.addEventListener('click',e=>{
+  // プレビュー内の編集/削除
+  const pe=e.target.closest('.pv-edit');
+  if(pe){e.preventDefault();const o=state.obs.find(x=>x.id===pe.dataset.id);if(o)openObsDlg(o,o.id);return}
+  const pd=e.target.closest('.pv-del');
+  if(pd){e.preventDefault();if(confirm('この観察を削除しますか？')){state.obs=state.obs.filter(x=>x.id!==pd.dataset.id);saveObs();pvCloseAll();
+    document.querySelectorAll('mark.note-hl[data-note="'+pd.dataset.id+'"]').forEach(m=>m.replaceWith(...m.childNodes));}return}
+  // 引用コピー（条見出し）
+  const cbn=e.target.closest('.cite-btn');
+  if(cbn){copyText(cbn.dataset.cite);return}
+  // self参照リンク
+  const self=e.target.closest('a.self');
+  if(self){
+    const [lk,addr]=self.dataset.link.split('@');
+    location.hash='#/'+SLUG[lk]+'/n/'+addr;
+    return;
+  }
+  // 畳んだ括弧
+  const kf=e.target.closest('.kfold');
+  if(kf){unfoldEl(kf);e.stopPropagation();return}
+  const kk=e.target.closest('.kakko,.kakko-2,.kakko-3,.kakko-4,.kakko-5');
+  if(kk&&!e.target.closest('a')&&!e.target.closest('.term')&&!e.target.closest('.deleg')&&!getSelection().toString()){foldEl(kk);e.stopPropagation()}
+});
+
+/* ---------- 条メモ・★ ---------- */
 function bindTools(){
   document.querySelectorAll('.art-tools .star').forEach(b=>b.addEventListener('click',()=>{
     const k=b.dataset.k;
@@ -516,7 +972,7 @@ function bindTools(){
     const k=b.dataset.k;
     const nt=state.notes[k]||{};
     const d=document.createElement('div');d.className='memo';
-    d.innerHTML='<div class="lbl">MY NOTE</div><textarea data-k="'+esc(k)+'" placeholder="この条文のメモ…">'+esc(nt.memo||'')+'</textarea>';
+    d.innerHTML='<div class="lbl">MY NOTE（条メモ）</div><textarea data-k="'+esc(k)+'" placeholder="この条文のメモ…">'+esc(nt.memo||'')+'</textarea>';
     const head=$('#main .art-head');
     head.parentNode.insertBefore(d,head.nextSibling);
     bindMemo(d.querySelector('textarea'));d.querySelector('textarea').focus();
@@ -533,62 +989,6 @@ function bindMemo(ta){
   });
 }
 
-const pop=document.createElement('div');pop.id='pop';document.body.appendChild(pop);
-function showDeleg(sp,ev){
-  const layer=sp.dataset.layer;
-  const node=sp.closest('.node');
-  const law=state.laws[state.slug];
-  if(!node||!law)return;
-  const addr=node.id.slice(2).replace(/-(?=\d+$)/,'.').split('-').join('.')===''?'':node.id.slice(2).split('-').join('.');
-  // node.id は n_ln66_6-1 形式（. を - に置換済）。元アドレスへ戻す:
-  const raw=node.id.slice(2);
-  // 条部分にハイフンを含む通達は対象外（委任スパンは法・令のみ）
-  const parts=raw.split('-');
-  const lnAddr=parts[0]+(parts.length>1?'.'+parts.slice(1).join('.'):'');
-  const artAddr=lnAddr.split('.')[0];
-  let list=(law.backlinks[lnAddr]||[]).filter(b=>b.law===layer);
-  let scope=lnAddr;
-  if(!list.length){
-    // 条単位に拡大
-    const seen=new Set();list=[];
-    for(const ad of (law._artNodes[artAddr.slice(2)]||[])){
-      for(const b of (law.backlinks[ad]||[])){
-        if(b.law===layer&&!seen.has(b.addr)){seen.add(b.addr);list.push(b)}
-      }
-    }
-    scope=artAddr+'（条単位）';
-  }
-  const lname=layer==='rei'?'政令':'省令';
-  pop.innerHTML='<div class="pop-h">'+lname+'への委任 — '+esc(scope.replace('ln',''))+'</div>'+
-    (list.length?list.map(b=>'<a href="#/'+SLUG[b.law]+'/n/'+b.addr+'">'+esc(b.ka)+'</a>').join(''):
-     '<div class="pop-empty">この'+lname+'委任に対応する規定は抜粋範囲に見つかりません</div>');
-  pop.style.display='block';
-  const r=sp.getBoundingClientRect();
-  pop.style.left=Math.max(8,Math.min(r.left,innerWidth-340))+'px';
-  pop.style.top=(r.bottom+6)+'px';
-}
-document.addEventListener('click',e=>{
-  const dg=e.target.closest('.deleg');
-  if(dg){showDeleg(dg,e);e.stopPropagation();return}
-  if(!e.target.closest('#pop'))pop.style.display='none';
-  const self=e.target.closest('a.self');
-  if(self){
-    const [lk,addr]=self.dataset.link.split('@');
-    const art=addr.slice(2).split('.')[0];
-    location.hash='#/'+SLUG[lk]+'/n/'+addr;
-    hideTip();
-    return;
-  }
-  const kf=e.target.closest('.kfold');
-  if(kf){unfoldEl(kf);e.stopPropagation();return}
-  const kk=e.target.closest('.kakko,.kakko-2,.kakko-3,.kakko-4,.kakko-5');
-  if(kk&&!e.target.closest('a')){foldEl(kk);e.stopPropagation()}
-});
-document.addEventListener('mouseover',e=>{
-  const a=e.target.closest('a.self,[data-prev]');
-  if(a)showTip(a,e);else hideTip();
-});
-document.addEventListener('scroll',hideTip,true);
 document.querySelectorAll('.kbtn').forEach(b=>b.addEventListener('click',()=>{
   state.foldLv=+b.dataset.fold;
   document.querySelectorAll('.kbtn').forEach(x=>x.classList.toggle('on',x===b));
@@ -598,9 +998,7 @@ document.querySelectorAll('.kbtn').forEach(b=>b.addEventListener('click',()=>{
 /* ---------- router ---------- */
 async function route(){
   const seg=location.hash.replace(/^#\/?/,'').split('/');
-  hideTip();
-  const _pop=document.getElementById('pop');
-  if(_pop)_pop.style.display='none';
+  pvCloseAll();obsBtn.style.display='none';
   try{
     if(!seg[0])await viewHome();
     else if(seg[0]==='notes')await viewNotes();
