@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>特典条項（LOB）をわかりやすく — 租税条約の「特典は誰がもらえるか」</title>
+<style>
+  :root{
+    --bg:#eaeef2; --card:#ffffff; --ink:#1f2730; --sub:#5c656e; --line:#e2e7ec;
+    --accent:#2c6eaa; --accent-d:#23527d; --ok:#2f8f5b; --ng:#c0524f; --warn:#c8862e;
+    --third:#7a5aa8; --chip:#eef4f9; --soft:#f5f8fb;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;padding:26px 14px;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Segoe UI","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    line-height:1.85;font-size:15.5px;-webkit-text-size-adjust:100%;}
+  .wrap{max-width:880px;margin:0 auto;}
+  header.page{background:linear-gradient(135deg,#2c6eaa,#1f3f5e);color:#fff;border-radius:16px;
+    padding:28px 30px;box-shadow:0 6px 20px rgba(0,0,0,.16);margin-bottom:18px;}
+  header.page h1{margin:0 0 10px;font-size:23px;line-height:1.45;}
+  header.page p{margin:0;font-size:13.5px;opacity:.92;}
+  .tldr{background:#fff8ec;border:1px solid #f0dcae;border-left:6px solid var(--warn);
+    border-radius:12px;padding:16px 20px;margin-bottom:18px;font-size:15px;}
+  .tldr b{color:#9a6516;}
+  .card{background:var(--card);border-radius:14px;padding:22px 24px;margin-bottom:16px;
+    box-shadow:0 2px 12px rgba(0,0,0,.06);border:1px solid var(--line);}
+  .card h2{margin:0 0 6px;font-size:18px;color:var(--accent-d);display:flex;align-items:center;gap:10px;}
+  .card h2 .n{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;
+    border-radius:9px;background:var(--accent);color:#fff;font-size:15px;font-weight:700;flex:none;}
+  .card h3{font-size:15px;color:#2f5675;margin:18px 0 6px;}
+  .lead{color:var(--sub);font-size:14px;margin:2px 0 12px;}
+  p{margin:9px 0;}
+  ul{margin:8px 0;padding-left:20px;} li{margin:6px 0;}
+  .fig{margin:14px 0;text-align:center;}
+  .figwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;background:var(--soft);
+    border:1px solid var(--line);border-radius:12px;padding:14px 10px;}
+  .fig svg{display:block;margin:0 auto;max-width:100%;height:auto;}
+  .cap{font-size:12.5px;color:var(--sub);margin-top:8px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0;}
+  .mini{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:13px 15px;}
+  .mini h4{margin:0 0 5px;font-size:14px;color:var(--accent-d);}
+  .mini p{margin:0;font-size:13.5px;color:#36404a;}
+  .pill{display:inline-block;font-size:12px;font-weight:700;padding:2px 10px;border-radius:20px;margin-right:6px;}
+  .pill.ok{background:#e6f3ec;color:var(--ok);} .pill.ng{background:#f7e8e7;color:var(--ng);}
+  .pill.sub{background:#eef4f9;color:var(--accent);}
+  .callout{background:#eef5fb;border-left:4px solid var(--accent);border-radius:0 10px 10px 0;
+    padding:12px 16px;margin:12px 0;font-size:14px;}
+  .callout.ok{background:#eef7f1;border-left-color:var(--ok);}
+  .callout.warn{background:#fbf4e8;border-left-color:var(--warn);}
+  .myth{background:#fbf0ef;border:1px solid #ecccc9;border-radius:12px;padding:6px 18px;margin:12px 0;}
+  .myth .row{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px dashed #e6c9c6;}
+  .myth .row:last-child{border-bottom:none;}
+  .myth .x{color:var(--ng);font-weight:800;font-size:18px;flex:none;line-height:1.4;}
+  .myth .t b{color:#a3413e;}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0;}
+  .tablewrap{overflow-x:auto;}
+  th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top;}
+  th{background:var(--chip);color:#2f5675;}
+  tr.hot td{background:#fbf1f1;} tr.ok td{background:#eef7f1;}
+  .casebar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;}
+  .step{flex:1;min-width:150px;background:var(--soft);border:1px solid var(--line);border-radius:10px;
+    padding:12px 14px;}
+  .step .r{font-size:22px;font-weight:800;}
+  .r0{color:var(--ok);} .r5{color:var(--warn);} .r20{color:var(--ng);}
+  a{color:var(--accent);text-decoration:none;border-bottom:1px solid #b9d2e6;}
+  footer{text-align:center;color:var(--sub);font-size:12px;margin-top:18px;padding-top:14px;border-top:1px solid var(--line);}
+  @media (max-width:560px){
+    body{font-size:15px;padding:18px 10px;} header.page h1{font-size:20px;}
+    .card{padding:17px 16px;} .grid2{grid-template-columns:1fr;} .casebar{flex-direction:column;}
+  }
+  @media print{
+    body{background:#fff;padding:0;} .card,header.page,.tldr{box-shadow:none;break-inside:avoid;}
+    header.page{background:#1f3f5e !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .figwrap{overflow:visible;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="page">
+    <h1>特典条項（LOB）をわかりやすく<br><span style="font-size:16px;font-weight:500;opacity:.95;">租税条約の「特典は“誰が”もらえるか」を決めるルール</span></h1>
+    <p>LOB ＝ Limitation on Benefits ＝ 特典制限条項（日米租税条約では第22条）｜図解版・2026-06-16</p>
+  </header>
+
+  <div class="tldr">
+    <b>ひとことで言うと。</b> 租税条約には「配当・利子・使用料の源泉税を安くする（ときにゼロにする）」という<b>特典</b>があります。LOBは、その特典を<b>「本当にその相手国の住民といえる会社」だけに限定</b>し、関係のない第三国の会社が条約を“いいとこ取り”するのを防ぐ<b>関所（ゲート）</b>です。&nbsp;キーワードは<b>「特典は自動でもらえない。資格（適格者）のある人だけ」</b>。
+  </div>
+
+  <!-- 1 なぜ必要 -->
+  <div class="card">
+    <h2><span class="n">1</span>なぜLOBが必要なの？ — 「条約漁り」を防ぐため</h2>
+    <p class="lead">国どうしの条約は「その2国の住民」を想定して特典を約束します。ところが、条約のない第三国の会社が、条約のある国に<b>ペーパー会社（導管）</b>を1つ挟むだけで特典を横取りできてしまう。これが<b>条約漁り（treaty shopping）</b>です。</p>
+
+    <div class="fig"><div class="figwrap">
+    <svg viewBox="0 0 760 312" role="img" aria-label="条約漁りの図解">
+      <defs>
+        <marker id="arR" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+          <path d="M0,0 L9,3 L0,6 Z" fill="#c0524f"/></marker>
+        <marker id="arG" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+          <path d="M0,0 L9,3 L0,6 Z" fill="#2f8f5b"/></marker>
+      </defs>
+      <g font-family="sans-serif">
+        <text x="380" y="22" text-anchor="middle" font-size="13.5" font-weight="700" fill="#5a3f86">ねらい：米国のペーパー会社を1社挟んで、日本配当の「0%」を横取り</text>
+        <!-- LOB badge + pointer to blocked segment -->
+        <rect x="160" y="44" width="180" height="40" rx="10" fill="#fff" stroke="#c0524f" stroke-width="2.5"/>
+        <text x="250" y="70" text-anchor="middle" font-size="15" font-weight="800" fill="#c0524f">✕ LOB が遮断</text>
+        <path d="M250,84 L250,142" stroke="#c0524f" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#arR)"/>
+        <!-- boxes -->
+        <rect x="20" y="110" width="180" height="90" rx="12" fill="#f1ecf8" stroke="#7a5aa8" stroke-width="1.5"/>
+        <text x="110" y="148" text-anchor="middle" font-size="15" font-weight="700" fill="#5a3f86">第三国の会社</text>
+        <text x="110" y="172" text-anchor="middle" font-size="12" fill="#6b5a86">（条約なしの国）</text>
+        <rect x="300" y="110" width="180" height="90" rx="12" fill="#fbf4e8" stroke="#c8862e" stroke-width="1.5"/>
+        <text x="390" y="142" text-anchor="middle" font-size="14.5" font-weight="700" fill="#9a6516">米国のペーパー会社</text>
+        <text x="390" y="163" text-anchor="middle" font-size="12" fill="#9a6516">（実体のない導管）</text>
+        <text x="390" y="183" text-anchor="middle" font-size="12" fill="#9a6516">＝条約を借りる踏み台</text>
+        <rect x="575" y="110" width="170" height="90" rx="12" fill="#eef4f9" stroke="#2c6eaa" stroke-width="1.5"/>
+        <text x="660" y="150" text-anchor="middle" font-size="15" font-weight="700" fill="#23527d">日本子会社</text>
+        <text x="660" y="174" text-anchor="middle" font-size="12" fill="#23527d">（配当の出どころ）</text>
+        <!-- green conduit (right to left) -->
+        <path d="M575,150 L488,150" fill="none" stroke="#2f8f5b" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arG)"/>
+        <text x="527" y="138" text-anchor="middle" font-size="11.5" fill="#2f8f5b">条約0%</text>
+        <path d="M300,150 L208,150" fill="none" stroke="#2f8f5b" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arG)"/>
+        <text x="250" y="156" text-anchor="middle" font-size="20" font-weight="800" fill="#c0524f">✕</text>
+        <!-- red direct route (bottom) -->
+        <path d="M660,200 C480,268 250,268 112,200" fill="none" stroke="#c0524f" stroke-width="2" marker-end="url(#arR)"/>
+        <text x="386" y="292" text-anchor="middle" font-size="13" font-weight="700" fill="#c0524f">直接なら条約なし → 源泉 20.42%（だから迂回したい）</text>
+      </g>
+    </svg>
+    </div><div class="cap">第三国の会社が米国のペーパー会社を1つ挟んで日本配当の0%を狙う。LOBは「その米国会社は本当に米国の住民といえるのか？」を問い、実体がなければ特典を与えない。</div></div>
+
+    <div class="callout">だから租税条約は、特典を<b>無条件で全員に</b>与えるのではなく、「この人なら特典を使ってよい」という<b>資格テスト</b>を置きます。それがLOB（特典条項）です。</div>
+  </div>
+
+  <!-- 2 仕組み -->
+  <div class="card">
+    <h2><span class="n">2</span>LOBの仕組み — 「適格者」だけが通れる関所</h2>
+    <p class="lead">配当を受け取る会社が、下のテストの<b>どれか1つ</b>を満たせば「<b>適格者（qualified person）</b>」となり、条約の特典が使えます。1つも満たさなければ、特典はゼロ＝国内法どおりの源泉税（日本なら<b>20.42%</b>）になります。</p>
+
+    <div class="fig"><div class="figwrap">
+    <svg viewBox="0 0 580 600" role="img" aria-label="LOB適格者テストのフローチャート">
+      <defs>
+        <marker id="d" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+          <path d="M0,0 L9,3 L0,6 Z" fill="#5c656e"/></marker>
+        <marker id="g" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+          <path d="M0,0 L9,3 L0,6 Z" fill="#2f8f5b"/></marker>
+      </defs>
+      <g font-family="sans-serif">
+        <!-- start -->
+        <rect x="120" y="14" width="340" height="50" rx="10" fill="#2c6eaa"/>
+        <text x="290" y="38" text-anchor="middle" font-size="14.5" font-weight="700" fill="#fff">米国の会社が日本子会社から配当を受け取る</text>
+        <text x="290" y="56" text-anchor="middle" font-size="11.5" fill="#dce8f3">特典（源泉税の軽減・免除）を使いたい</text>
+
+        <!-- right rail: 適格 -->
+        <rect x="438" y="92" width="128" height="396" rx="12" fill="#eef7f1" stroke="#2f8f5b" stroke-width="1.5"/>
+        <text x="502" y="120" text-anchor="middle" font-size="14" font-weight="800" fill="#2f8f5b">✓ 適格者</text>
+        <text x="502" y="142" text-anchor="middle" font-size="11.5" fill="#2f7a52">条約の特典</text>
+        <text x="502" y="160" text-anchor="middle" font-size="11.5" fill="#2f7a52">が使える</text>
+        <text x="502" y="186" text-anchor="middle" font-size="11.5" fill="#2f7a52">（0% / 5%）</text>
+
+        <!-- tests -->
+        <!-- (c) -->
+        <rect x="40" y="92" width="360" height="50" rx="9" fill="#fff" stroke="#2c6eaa" stroke-width="1.4"/>
+        <text x="58" y="113" font-size="13.5" font-weight="700" fill="#23527d">① 上場会社？</text>
+        <text x="58" y="132" font-size="12" fill="#46566a">日米の証券取引所に上場（22条1項(c)）</text>
+        <path d="M400,117 L438,117" stroke="#2f8f5b" stroke-width="2" marker-end="url(#g)"/>
+        <text x="419" y="109" text-anchor="middle" font-size="10.5" fill="#2f8f5b">はい</text>
+
+        <!-- (f) -->
+        <rect x="40" y="168" width="360" height="66" rx="9" fill="#fff" stroke="#2c6eaa" stroke-width="1.4"/>
+        <text x="58" y="189" font-size="13.5" font-weight="700" fill="#23527d">② 所有・基準浸食テスト？</text>
+        <text x="58" y="208" font-size="12" fill="#46566a">株式の50%以上を日米の住民が保有 …かつ</text>
+        <text x="58" y="225" font-size="12" fill="#46566a">第三国への“抜け道”支払が総所得の50%未満（22条1項(f)）</text>
+        <path d="M400,201 L438,201" stroke="#2f8f5b" stroke-width="2" marker-end="url(#g)"/>
+        <text x="419" y="193" text-anchor="middle" font-size="10.5" fill="#2f8f5b">はい</text>
+
+        <!-- (2) -->
+        <rect x="40" y="260" width="360" height="50" rx="9" fill="#fff" stroke="#2c6eaa" stroke-width="1.4"/>
+        <text x="58" y="281" font-size="13.5" font-weight="700" fill="#23527d">③ 能動的に事業をしている？</text>
+        <text x="58" y="300" font-size="12" fill="#46566a">居住国で実際の事業を営む（22条2項）。ただの持株はNG</text>
+        <path d="M400,285 L438,285" stroke="#2f8f5b" stroke-width="2" marker-end="url(#g)"/>
+        <text x="419" y="277" text-anchor="middle" font-size="10.5" fill="#2f8f5b">はい</text>
+
+        <!-- (4) -->
+        <rect x="40" y="336" width="360" height="50" rx="9" fill="#fff" stroke="#2c6eaa" stroke-width="1.4"/>
+        <text x="58" y="357" font-size="13.5" font-weight="700" fill="#23527d">④ 税務当局が「条約漁りでない」と認定？</text>
+        <text x="58" y="376" font-size="12" fill="#46566a">権限ある当局の個別認定（22条4項）</text>
+        <path d="M400,361 L438,361" stroke="#2f8f5b" stroke-width="2" marker-end="url(#g)"/>
+        <text x="419" y="353" text-anchor="middle" font-size="10.5" fill="#2f8f5b">はい</text>
+
+        <!-- down arrows (いいえ) -->
+        <path d="M220,142 L220,168" stroke="#5c656e" stroke-width="1.6" marker-end="url(#d)"/>
+        <path d="M220,234 L220,260" stroke="#5c656e" stroke-width="1.6" marker-end="url(#d)"/>
+        <path d="M220,310 L220,336" stroke="#5c656e" stroke-width="1.6" marker-end="url(#d)"/>
+        <path d="M220,386 L220,452" stroke="#5c656e" stroke-width="1.6" marker-end="url(#d)"/>
+        <text x="234" y="158" font-size="10.5" fill="#80878f">いいえ</text>
+        <text x="234" y="250" font-size="10.5" fill="#80878f">いいえ</text>
+        <text x="234" y="326" font-size="10.5" fill="#80878f">いいえ</text>
+        <text x="234" y="420" font-size="10.5" fill="#80878f">どれも×</text>
+
+        <!-- NG box -->
+        <rect x="40" y="452" width="360" height="56" rx="10" fill="#fbf1f1" stroke="#c0524f" stroke-width="1.8"/>
+        <text x="220" y="476" text-anchor="middle" font-size="14" font-weight="800" fill="#c0524f">✕ 特典なし</text>
+        <text x="220" y="496" text-anchor="middle" font-size="12.5" fill="#a3413e">国内法どおり源泉 20.42%</text>
+
+        <!-- note 0% extra -->
+        <rect x="40" y="528" width="526" height="54" rx="10" fill="#fbf4e8" stroke="#c8862e" stroke-width="1.3"/>
+        <text x="303" y="550" text-anchor="middle" font-size="12.5" font-weight="700" fill="#9a6516">「0%」まで下げるには、②の所有テストに加えて ③能動的事業 も必要</text>
+        <text x="303" y="569" text-anchor="middle" font-size="11.5" fill="#9a6516">（①上場・④当局認定のルートなら能動的事業は不要）</text>
+      </g>
+    </svg>
+    </div><div class="cap">どれか1つ満たせば「適格者」。1つも満たさなければ特典ゼロ。なお3項は“判定の時期”を定める手続的ルールで、この条約に「派生的受益」という別ルートはない。</div></div>
+  </div>
+
+  <!-- 3 適格者テスト早わかり -->
+  <div class="card">
+    <h2><span class="n">3</span>適格者テスト早わかり（日米22条）</h2>
+    <div class="grid2">
+      <div class="mini"><h4>(a) 個人</h4><p>その国に住む個人。</p></div>
+      <div class="mini"><h4>(b) 政府・自治体</h4><p>国・地方公共団体・中央銀行など。</p></div>
+      <div class="mini"><h4>(c) 上場会社</h4><p>日米の取引所に株式が上場・定期取引。子会社も一定範囲で含む。</p></div>
+      <div class="mini"><h4>(d) 年金基金</h4><p>その国の適格な年金基金。</p></div>
+      <div class="mini"><h4>(e) 公益団体</h4><p>その国の非課税の公益目的団体。</p></div>
+      <div class="mini"><h4>(2項) 能動的事業</h4><p>居住国で実際に事業をしていて、所得がその事業と関係する。ただの持株・導管はNG。</p></div>
+    </div>
+
+    <h3>(f) 所有・基準浸食テスト ― いちばん使われる中核ルール</h3>
+    <p class="lead">(a)〜(e)に当てはまらない普通の会社は、<b>2つの条件を“両方”満たす</b>と適格者になります。第三国による迂回を見抜くためのテストです。</p>
+    <div class="fig"><div class="figwrap">
+    <svg viewBox="0 0 700 250" role="img" aria-label="所有テストと基準浸食テスト">
+      <g font-family="sans-serif">
+        <!-- 所有テスト -->
+        <text x="20" y="34" font-size="14" font-weight="700" fill="#23527d">① 所有テスト</text>
+        <text x="20" y="54" font-size="12" fill="#5c656e">日米の住民が 50%以上 を保有しているか</text>
+        <rect x="20" y="66" width="300" height="34" rx="6" fill="#e9eef3" stroke="#cdd6df"/>
+        <rect x="20" y="66" width="186" height="34" rx="6" fill="#cfe6da" stroke="#2f8f5b"/>
+        <line x1="170" y1="60" x2="170" y2="106" stroke="#2f8f5b" stroke-width="2" stroke-dasharray="4 3"/>
+        <text x="113" y="88" text-anchor="middle" font-size="12.5" font-weight="700" fill="#2f7a52">日米の住民 50%以上</text>
+        <text x="170" y="120" text-anchor="middle" font-size="11" fill="#2f8f5b">▲ 50%ライン</text>
+        <text x="262" y="88" text-anchor="middle" font-size="11.5" fill="#80878f">その他</text>
+
+        <!-- 基準浸食テスト -->
+        <text x="380" y="34" font-size="14" font-weight="700" fill="#23527d">② 基準浸食テスト</text>
+        <text x="380" y="54" font-size="12" fill="#5c656e">第三国への“損金になる支払”が総所得の 50%未満 か</text>
+        <rect x="380" y="66" width="300" height="34" rx="6" fill="#e9eef3" stroke="#cdd6df"/>
+        <rect x="380" y="66" width="108" height="34" rx="6" fill="#f6e4c8" stroke="#c8862e"/>
+        <line x1="530" y1="60" x2="530" y2="106" stroke="#c8862e" stroke-width="2" stroke-dasharray="4 3"/>
+        <text x="434" y="88" text-anchor="middle" font-size="11.5" font-weight="700" fill="#9a6516">第三国へ&lt;50%</text>
+        <text x="530" y="120" text-anchor="middle" font-size="11" fill="#c8862e">▲ 50%ライン</text>
+
+        <!-- AND -->
+        <rect x="280" y="160" width="140" height="44" rx="10" fill="#eef7f1" stroke="#2f8f5b" stroke-width="1.6"/>
+        <text x="350" y="180" text-anchor="middle" font-size="13" font-weight="800" fill="#2f8f5b">両方OKで適格</text>
+        <text x="350" y="197" text-anchor="middle" font-size="11" fill="#2f7a52">片方でも欠けると不適格</text>
+        <path d="M150,100 C150,150 250,150 282,176" fill="none" stroke="#2f8f5b" stroke-width="1.6"/>
+        <path d="M520,100 C520,150 430,150 418,176" fill="none" stroke="#c8862e" stroke-width="1.6"/>
+      </g>
+    </svg>
+    </div><div class="cap">所有テスト＝身内（日米の住民）が過半数を持っているか。基準浸食テスト＝利子・使用料などの形で第三国へ所得が“抜けて”いないか。数字はどちらも <b>50%</b>（75%や80%ではない）。</div></div>
+  </div>
+
+  <!-- 4 BO/LOB/PPT -->
+  <div class="card">
+    <h2><span class="n">4</span>LOB・BO・PPT — 似て非なる3つの“濫用防止ツール”</h2>
+    <p class="lead">条約の特典をめぐっては、性質の違う3つの関門が登場します。混同しやすいので、何を問うツールなのかを分けて覚えるのがコツです。</p>
+    <div class="fig"><div class="figwrap">
+    <svg viewBox="0 0 600 300" role="img" aria-label="BO・LOB・PPTの3つのフィルター">
+      <defs>
+        <marker id="dn" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+          <path d="M0,0 L9,3 L0,6 Z" fill="#2c6eaa"/></marker>
+      </defs>
+      <g font-family="sans-serif">
+        <text x="300" y="26" text-anchor="middle" font-size="13" fill="#5c656e">所得（配当など）が特典を受けるまでに通る関門</text>
+        <!-- BO -->
+        <rect x="120" y="42" width="360" height="58" rx="10" fill="#eef4f9" stroke="#2c6eaa" stroke-width="1.5"/>
+        <text x="140" y="66" font-size="14" font-weight="700" fill="#23527d">① BO（受益者）</text>
+        <text x="140" y="86" font-size="12.5" fill="#46566a">問い：この所得は本当にこの会社の“もの”か？（＝帰属）</text>
+        <text x="464" y="58" text-anchor="end" font-size="11" fill="#2c6eaa">客観</text>
+        <path d="M300,100 L300,118" stroke="#2c6eaa" stroke-width="2" marker-end="url(#dn)"/>
+        <!-- LOB -->
+        <rect x="120" y="120" width="360" height="58" rx="10" fill="#eef7f1" stroke="#2f8f5b" stroke-width="1.7"/>
+        <text x="140" y="144" font-size="14" font-weight="700" fill="#2f7a52">② LOB（特典条項）</text>
+        <text x="140" y="164" font-size="12.5" fill="#46566a">問い：受け取る会社は“資格者”か？（＝客観テスト・数値50%）</text>
+        <text x="464" y="136" text-anchor="end" font-size="11" fill="#2f8f5b">客観・ルール</text>
+        <path d="M300,178 L300,196" stroke="#2c6eaa" stroke-width="2" marker-end="url(#dn)"/>
+        <!-- PPT -->
+        <rect x="120" y="198" width="360" height="58" rx="10" fill="#f4eff9" stroke="#7a5aa8" stroke-width="1.5"/>
+        <text x="140" y="222" font-size="14" font-weight="700" fill="#5a3f86">③ PPT（主要目的テスト）</text>
+        <text x="140" y="242" font-size="12.5" fill="#46566a">問い：その取引の“主な狙い”が特典の取得か？（＝主観・目的）</text>
+        <text x="464" y="214" text-anchor="end" font-size="11" fill="#7a5aa8">主観・目的</text>
+        <!-- result -->
+        <rect x="190" y="270" width="220" height="26" rx="8" fill="#2f8f5b"/>
+        <text x="300" y="288" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">すべて通れば特典OK</text>
+      </g>
+    </svg>
+    </div><div class="cap">BOとLOBは「直列」。BOで“誰のものか”を決め、次にLOBで“その会社に資格があるか”を見る。PPTはさらに目的を問う主観テスト。</div></div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>ツール</th><th>何を問う？</th><th>性質</th><th>日米条約での扱い</th></tr></thead>
+      <tbody>
+        <tr><td><b>BO</b> 受益者</td><td>所得の本当の持ち主は誰か（帰属）</td><td>客観（実質）</td><td>10条などの中の要件</td></tr>
+        <tr class="ok"><td><b>LOB</b> 特典条項</td><td>会社に条約の資格があるか</td><td><b>客観・数値ルール</b></td><td><b>22条</b>（本ページの主役）</td></tr>
+        <tr><td><b>PPT</b> 主要目的</td><td>主な狙いが特典取得か</td><td>主観・目的</td><td>条約本文には無し。MLI7条（日本採用）・当局認定・国内法で対応</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- 5 具体例 -->
+  <div class="card">
+    <h2><span class="n">5</span>具体例：日本子会社 → 米国親会社（100%）への配当</h2>
+    <p class="lead">「100%の親会社だから当然ゼロ」と思いがちですが、そう単純ではありません。税率は親会社が<b>どのルートで適格者になるか</b>で変わります。</p>
+    <div class="casebar">
+      <div class="step"><div class="r r20">20.42%</div>国内法（条約の資格なし／届出だけでは下がらない）</div>
+      <div class="step"><div class="r r5">5%</div>10条2(a)：議決権10%以上＋22条の適格者（(f)単独でも可）</div>
+      <div class="step"><div class="r r0">0%</div>10条3(a)：50%以上を6か月＋〔上場(c)／(f)＋<b>能動的事業</b>／当局認定〕</div>
+    </div>
+    <div class="callout warn"><b>つまずきポイント。</b> 100%親会社が<b>純粋持株会社（自分では事業をしない）</b>だと、所有テスト(f)は満たしても<b>能動的事業(2項)を満たさず、0%ルートに届かない</b>ことがあります（正文が "provided that the company satisfies … paragraph 2" と要求）。その場合でも上場(c)や当局認定(4項)のルートで0%、または5%にとどまる、という整理になります。</div>
+    <div class="callout ok"><b>手続（届出書）と実体（LOB）は別物。</b> LOBは「資格そのもの」＝<b>実体要件</b>。届出書（様式1・17）は「資格を示す紙」＝<b>手続要件</b>。資格がないのに紙だけ出しても特典は出ませんし、資格があるのに紙を出し忘れても、原則は<b>還付</b>で取り戻せます（“不徴収でよい”にはならない）。</div>
+  </div>
+
+  <!-- 6 よくある誤解 -->
+  <div class="card">
+    <h2><span class="n">6</span>よくある誤解</h2>
+    <div class="myth">
+      <div class="row"><div class="x">✕</div><div class="t"><b>「届出書を出せば特典がもらえる」</b><br>届出は手続です。LOBの資格がなければ、紙を出しても特典は出ません。逆に資格があれば、出し忘れても還付で回収できます。</div></div>
+      <div class="row"><div class="x">✕</div><div class="t"><b>「100%子会社だから自動で0%」</b><br>親会社が22条の適格者でなければ0%になりません。0%ルートの(f)経由は<b>能動的事業</b>も要ります。</div></div>
+      <div class="row"><div class="x">✕</div><div class="t"><b>「所有テストは75%や80%」</b><br>どちらも<b>50%</b>です（所有50%以上・基準浸食50%未満）。</div></div>
+      <div class="row"><div class="x">✕</div><div class="t"><b>「派生的受益ルートで通す」</b><br>日米2003条約の22条には<b>独立した派生的受益（derivative benefits）の項はありません</b>。3項は“判定時期”を定める源泉徴収のタイミング規則です。（OECDモデル29条や対EUの米国条約にはあります）</div></div>
+      <div class="row"><div class="x">✕</div><div class="t"><b>「LOBは“否認”の規定」</b><br>LOBは“否認”ではなく“<b>資格付与（誰に特典を与えるか）</b>”の規定。客観的な数値テストで適格者を画定します（＝主観で狙いを問うPPTとは別物）。</div></div>
+    </div>
+  </div>
+
+  <!-- 7 まとめ -->
+  <div class="card">
+    <h2><span class="n">7</span>30秒まとめ</h2>
+    <ul>
+      <li><span class="pill sub">何のため</span>第三国による条約の“いいとこ取り”（条約漁り）を防ぐ。</li>
+      <li><span class="pill ok">仕組み</span>「適格者」だけが特典を使える関所。上場(c)／所有・基準浸食(f)／能動的事業(2項)／当局認定(4項)のどれか1つ。</li>
+      <li><span class="pill ok">数値</span>所有50%以上・基準浸食50%未満。0%は (f)＋能動的事業 が必要。</li>
+      <li><span class="pill sub">仲間</span>BO（帰属）→LOB（資格）→PPT（目的）の3段。LOBは客観テスト。</li>
+      <li><span class="pill ng">注意</span>LOB＝実体（資格）、届出書＝手続（紙）。混同しない。</li>
+    </ul>
+    <p style="margin-top:14px;font-size:14px;">さらに詳しい条文・判例・比較法・処分救済は&nbsp;➡&nbsp;<a href="usjp_dividend_lob_20260616.html">日米間配当の源泉徴収と特典条項（LOB）の法的性質（詳細版）</a></p>
+  </div>
+
+  <footer>
+    特典条項（LOB）をわかりやすく ／ 図解版 2026-06-16 ／ 日米租税条約22条（2003本体＋2013議定書）に基づく
+  </footer>
+
+</div>
+</body>
+</html>
