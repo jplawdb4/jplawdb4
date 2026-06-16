@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LOB関連6判決の詳細分析 ― 並列分析を一次資料で照合・再構成</title>
+<style>
+  :root{
+    --bg:#eaeef2; --card:#fff; --ink:#1f2730; --sub:#5c656e; --line:#e2e7ec;
+    --accent:#2c6eaa; --accent-d:#23527d; --ok:#2f8f5b; --warn:#c8862e; --third:#7a5aa8;
+    --red:#b3524f; --soft:#f5f8fb;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;padding:26px 14px;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Segoe UI","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    line-height:1.85;font-size:15.5px;-webkit-text-size-adjust:100%;}
+  .wrap{max-width:920px;margin:0 auto;}
+  header.page{background:linear-gradient(135deg,#2c6eaa,#1f3f5e);color:#fff;border-radius:16px;
+    padding:28px 30px;box-shadow:0 6px 20px rgba(0,0,0,.16);margin-bottom:14px;}
+  header.page h1{margin:0 0 9px;font-size:21px;line-height:1.5;}
+  header.page p{margin:0;font-size:13.5px;opacity:.93;}
+  .back{margin:-2px 0 14px;}
+  .back a{font-size:13px;font-weight:700;color:#2c6eaa;text-decoration:none;background:#eef4f9;
+    border:1px solid #d5e2ee;border-radius:20px;padding:5px 13px;}
+  .card{background:var(--card);border-radius:14px;padding:22px 24px;margin-bottom:16px;
+    box-shadow:0 2px 12px rgba(0,0,0,.06);border:1px solid var(--line);}
+  .card h2{margin:0 0 12px;font-size:18px;color:var(--accent-d);border-bottom:2px solid #eef2f6;padding-bottom:8px;}
+  .lead{color:var(--sub);font-size:14px;margin:2px 0 12px;}
+  .figwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:14px 10px;}
+  .figwrap svg{display:block;margin:0 auto;max-width:100%;height:auto;}
+  .figcap{font-size:12.5px;color:var(--sub);margin:8px 4px 0;}
+  table.sum{width:100%;border-collapse:collapse;font-size:12.8px;margin:4px 0;}
+  table.sum th,table.sum td{border:1px solid #dce3ea;padding:7px 9px;vertical-align:top;text-align:left;}
+  table.sum th{background:#eef4f9;color:var(--accent-d);font-weight:700;white-space:nowrap;}
+  table.sum td.v{font-weight:700;}
+  .v-ok{color:var(--ok);} .v-no{color:var(--red);} .v-mid{color:var(--warn);}
+  /* per-case */
+  .case{background:var(--card);border-radius:14px;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,.06);
+    border:1px solid var(--line);overflow:hidden;}
+  .case .ch{padding:15px 22px;color:#fff;}
+  .ch.jp{background:linear-gradient(135deg,#2c6eaa,#23527d);}
+  .ch.eff{background:linear-gradient(135deg,#a8504d,#7e3b39);}
+  .ch.us{background:linear-gradient(135deg,#5c656e,#3b434c);}
+  .ch h3{margin:0;font-size:16.5px;line-height:1.45;}
+  .ch .meta{font-size:12.3px;opacity:.92;margin-top:4px;}
+  .badge{display:inline-block;font-size:11px;font-weight:700;background:rgba(255,255,255,.2);
+    border:1px solid rgba(255,255,255,.5);border-radius:20px;padding:1px 10px;margin-left:6px;}
+  .cbody{padding:8px 22px 20px;}
+  .sum2{background:#f3f7fb;border-left:4px solid var(--accent);border-radius:0 9px 9px 0;
+    padding:11px 15px;margin:14px 0;font-size:14px;}
+  .lbl{display:inline-block;font-size:11.5px;font-weight:800;letter-spacing:.04em;color:#fff;
+    background:var(--sub);border-radius:5px;padding:2px 9px;margin:14px 0 5px;}
+  .lbl.j{background:var(--accent);} .lbl.a{background:var(--ok);} .lbl.p{background:var(--third);} .lbl.u{background:#9aa3ab;}
+  .cbody p{margin:5px 0 9px;}
+  .qt{border-left:4px solid #c3a14e;background:#fbf8f0;border-radius:0 8px 8px 0;
+    padding:10px 15px;margin:9px 0;font-size:13.6px;color:#3a3526;}
+  .qt cite{display:block;font-size:11.5px;color:#8a7a52;margin-top:5px;font-style:normal;}
+  .conn{background:#f4eff9;border:1px solid #e3d6f0;border-radius:10px;padding:12px 16px;margin:12px 0 6px;font-size:13.8px;}
+  .conn b{color:#5a3f86;}
+  .uc{background:#fbf6ec;border-left:3px solid var(--warn);border-radius:0 8px 8px 0;
+    padding:9px 14px;margin:10px 0 2px;font-size:12.5px;color:#6e5a22;}
+  .uc ul{margin:5px 0 0;padding-left:18px;} .uc li{margin:2px 0;}
+  .callout{background:#fbf6ec;border-left:4px solid var(--warn);border-radius:0 9px 9px 0;padding:13px 17px;margin:10px 0;font-size:14px;}
+  .xref{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;}
+  .xref a{font-size:12.8px;font-weight:700;color:var(--accent);text-decoration:none;background:#eef4f9;
+    border:1px solid #d5e2ee;border-radius:9px;padding:7px 13px;}
+  a{color:var(--accent);}
+  footer{text-align:center;color:var(--sub);font-size:11.5px;margin-top:18px;padding-top:14px;border-top:1px solid var(--line);}
+  @media (max-width:560px){ body{font-size:15px;} header.page h1{font-size:18px;} .card,.cbody{padding-left:16px;padding-right:16px;} .ch{padding-left:16px;padding-right:16px;} table.sum{font-size:11.8px;} }
+  @media print{ body{background:#fff;padding:0;} .card,.case,header.page{box-shadow:none;break-inside:avoid;}
+    header.page,.ch.jp,.ch.eff,.ch.us{-webkit-print-color-adjust:exact;print-color-adjust:exact;} .figwrap{overflow:visible;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="page">
+    <h1>LOB関連6判決の詳細分析<br><span style="font-size:15px;font-weight:500;opacity:.95;">― 並列分析を一次資料で照合し、再構成する</span></h1>
+    <p>特典条項（LOB）と源泉徴収・届出・確認書をめぐる6つの裁判を、事案・争点・判旨・分析・「配置の法定性」への接続で深掘り｜2026-06-17</p>
+  </header>
+
+  <div class="back"><a href="lob_index_20260616.html">← LOBシリーズ目次へ</a></div>
+
+  <!-- 方法 -->
+  <div class="card">
+    <h2>この分析の作り方（と、どこまで確かか）</h2>
+    <p>6つの判決それぞれに分析エンジン（Codex）を1体ずつ割り当て、<b>計6体を並列で走らせて</b>下書きを作らせた。日本の4判決は<b>ローカルに保存した判決全文を読ませて</b>分析させ（憶測でなく本文に基づく）、米国2判決は判例データベースが手元にないため<b>知識ベース＋「要確認」明示</b>で書かせている。</p>
+    <p>その下書きを<b>そのまま貼ってはいない。</b>金額・年月日・条文番号・判示の文言は、こちらで判決全文を grep して<b>一次資料に当て直して照合</b>し（下記の数値・引用は照合済み）、重複や冗長を削って読みやすく組み直した。米国判決の未確認事項は各カード末尾に正直に残している。</p>
+    <div class="callout"><b>一本の問い。</b> 6判決はバラバラに見えて、ぜんぶ同じ一点を照らしている――<b>「届出・確認書・証明といった“書類／手続”を、どの法源に・どれだけ具体的に“配置”したか」で、その書類が「無いと特典そのものが消える効力要件」になるか、「無くても実体的権利は残る手続要件」にとどまるかが決まる。</b></div>
+  </div>
+
+  <!-- 一覧表 -->
+  <div class="card">
+    <h2>6判決ひと目表</h2>
+    <table class="sum">
+      <thead><tr><th>判決</th><th>裁判所・年月日</th><th>結論</th><th>書類／手続の性質</th><th>規律の“配置”</th></tr></thead>
+      <tbody>
+        <tr><td class="v">みなし配当・還付<br><span style="font-weight:400;color:#5c656e;">DB13671</span></td><td>東京地判<br>令和4.2.17</td><td class="v v-ok">還付認容<br>（控訴）</td><td>条約届出は<b>効力要件でない</b>。源泉時軽減と事後還付は<b>並列</b></td><td>実施法3条の2＋実施令2条1項（届出）／8・9項（還付）</td></tr>
+        <tr><td class="v">届出≠効力要件<br><span style="font-weight:400;color:#5c656e;">DB12672</span></td><td>東京地判<br>平成27.5.28</td><td class="v v-mid">請求棄却<br>（PE認定で）</td><td>条約届出は<b>効力要件でない</b>（届出の性質論は原告有利だが結論は別理由）</td><td>実特法12条＝<b>包括委任</b>→省令9条の2</td></tr>
+        <tr><td class="v">源泉・使用料<br><span style="font-weight:400;color:#5c656e;">DB12919</span></td><td>仙台地判<br>平成28.10.19</td><td class="v v-no">請求棄却</td><td>源泉段階では届出未提出ゆえ<b>国内法20%</b>（条約10%でなく）</td><td>省令2条の届出（支払前日まで）／使用料は所法161条7号ロ</td></tr>
+        <tr><td class="v">確認書事件<br><span style="font-weight:400;color:#5c656e;">DB13488</span></td><td>東京地判<br>令和2.12.1</td><td class="v v-no">請求棄却</td><td>確認書は<b>効力要件</b>。期限徒過で非課税が消える（★逆の対照）</td><td>措置法6条7項＝法律本体で条件化＋13項<b>具体的委任</b>→施行令3条の2の2第27項</td></tr>
+        <tr><td class="v">Aiken<br><span style="font-weight:400;color:#5c656e;">米・1971</span></td><td>米租税裁判所<br>56 T.C. 925</td><td class="v v-no">免税否認</td><td>導管法人は条約上の<b>「received by」を欠く</b>（実質的受領なし）</td><td>条約文言の<b>実質解釈</b>→後に規則§1.881-3で国内法化</td></tr>
+        <tr><td class="v">Starr<br><span style="font-weight:400;color:#5c656e;">米・2018</span></td><td>米D.C.巡回区<br>（要確認）</td><td class="v v-mid">破棄差戻</td><td>LOB救済の拒否も<b>司法審査の対象たりうる</b>（政治問題ではない）</td><td>LOB裁量的救済＝<b>当局裁量</b>に配置（但し法に拘束された裁量）</td></tr>
+      </tbody>
+    </table>
+    <p class="figcap">結論欄の色：<span class="v-ok">緑＝納税者勝訴／救済</span>・<span class="v-mid">橙＝届出論では納税者有利だが別理由で敗訴／差戻</span>・<span class="v-no">赤＝課税維持</span>。</p>
+  </div>
+
+  <!-- スペクトラム図 -->
+  <div class="card">
+    <h2>図解：書類は「手続要件」か「効力要件」か ― 決め手は“配置”</h2>
+    <div class="figwrap">
+    <svg viewBox="0 0 720 452" role="img" aria-label="手続要件と効力要件のスペクトラムと配置">
+      <g font-family="sans-serif">
+        <!-- band A: 手続要件側 -->
+        <rect x="12" y="40" width="696" height="132" rx="12" fill="#eef7f1" stroke="#2f8f5b" stroke-width="1.4"/>
+        <text x="28" y="62" font-size="13" font-weight="800" fill="#256b45">手続要件の側 ― 書類が無くても、条約上の実体的権利は残る</text>
+        <rect x="26" y="74" width="218" height="86" rx="9" fill="#fff" stroke="#7bbf99" stroke-width="1.2"/>
+        <text x="135" y="94" text-anchor="middle" font-size="12.5" font-weight="700" fill="#23527d">12672</text>
+        <text x="135" y="112" text-anchor="middle" font-size="10.5" fill="#3a5a4a">条約届出≠効力要件</text>
+        <text x="135" y="128" text-anchor="middle" font-size="10.5" fill="#3a5a4a">実特法12条＝包括委任</text>
+        <text x="135" y="144" text-anchor="middle" font-size="10.5" fill="#3a5a4a">→省令に効力要件は置けない</text>
+        <rect x="251" y="74" width="218" height="86" rx="9" fill="#fff" stroke="#7bbf99" stroke-width="1.2"/>
+        <text x="360" y="94" text-anchor="middle" font-size="12.5" font-weight="700" fill="#23527d">13671</text>
+        <text x="360" y="112" text-anchor="middle" font-size="10.5" fill="#3a5a4a">源泉時軽減と事後還付は</text>
+        <text x="360" y="128" text-anchor="middle" font-size="10.5" fill="#3a5a4a">「並列」＝届出なくても</text>
+        <text x="360" y="144" text-anchor="middle" font-size="10.5" fill="#3a5a4a">還付で実体権を実現</text>
+        <rect x="476" y="74" width="218" height="86" rx="9" fill="#fff" stroke="#cdb98a" stroke-width="1.2"/>
+        <text x="585" y="94" text-anchor="middle" font-size="12.5" font-weight="700" fill="#8a6d1a">12919</text>
+        <text x="585" y="112" text-anchor="middle" font-size="10.5" fill="#6e5a22">源泉段階は届出未提出で</text>
+        <text x="585" y="128" text-anchor="middle" font-size="10.5" fill="#6e5a22">国内税率20%。ただし</text>
+        <text x="585" y="144" text-anchor="middle" font-size="10.5" fill="#6e5a22">徴収事務≠実体権の消滅</text>
+        <!-- band B: 効力要件側 -->
+        <rect x="12" y="184" width="696" height="80" rx="12" fill="#fbf1f1" stroke="#b3524f" stroke-width="1.4"/>
+        <text x="28" y="206" font-size="13" font-weight="800" fill="#9a3f3c">効力要件の側 ― 書類が無いと、減免そのものが消える</text>
+        <rect x="120" y="216" width="480" height="38" rx="9" fill="#fff" stroke="#d98f8c" stroke-width="1.2"/>
+        <text x="360" y="234" text-anchor="middle" font-size="12.5" font-weight="700" fill="#9a3f3c">13488 確認書＝効力要件</text>
+        <text x="360" y="249" text-anchor="middle" font-size="10.5" fill="#86413e">措置法6条7項が法律本体で条件化＋13項で具体的委任→施行令で期限／徒過で非課税喪失</text>
+        <!-- band C: 米国 -->
+        <rect x="12" y="276" width="696" height="120" rx="12" fill="#eef0f2" stroke="#5c656e" stroke-width="1.4"/>
+        <text x="28" y="298" font-size="13" font-weight="800" fill="#3b434c">米国 ― 否認／救済を“別の法源”に配置する</text>
+        <rect x="26" y="310" width="330" height="74" rx="9" fill="#fff" stroke="#9aa3ab" stroke-width="1.2"/>
+        <text x="191" y="330" text-anchor="middle" font-size="12.5" font-weight="700" fill="#3b434c">Aiken（1971）</text>
+        <text x="191" y="348" text-anchor="middle" font-size="10.5" fill="#4a525b">導管否認を「条約文言の実質解釈」</text>
+        <text x="191" y="364" text-anchor="middle" font-size="10.5" fill="#4a525b">（received by）に配置</text>
+        <text x="191" y="380" text-anchor="middle" font-size="10.5" fill="#4a525b">→後に国内規則§1.881-3で明文化</text>
+        <rect x="364" y="310" width="330" height="74" rx="9" fill="#fff" stroke="#9aa3ab" stroke-width="1.2"/>
+        <text x="529" y="330" text-anchor="middle" font-size="12.5" font-weight="700" fill="#3b434c">Starr（2018）</text>
+        <text x="529" y="348" text-anchor="middle" font-size="10.5" fill="#4a525b">LOB救済を「当局の裁量」に配置</text>
+        <text x="529" y="364" text-anchor="middle" font-size="10.5" fill="#4a525b">＝法から離すことではない</text>
+        <text x="529" y="380" text-anchor="middle" font-size="10.5" fill="#4a525b">→裁量でも司法審査は排除されない</text>
+        <!-- caption -->
+        <text x="360" y="420" text-anchor="middle" font-size="12.8" font-weight="800" fill="#23527d">決め手は「書類の名前」ではない ―― 規律を“どの法源に・どれだけ具体的に委任して配置したか”</text>
+        <text x="360" y="440" text-anchor="middle" font-size="11.5" fill="#46566a">法律本体＋具体的委任なら効力要件化（13488）／包括委任の省令どまりなら手続要件（12672・13671）</text>
+      </g>
+    </svg>
+    </div>
+    <p class="figcap">同じ「届出・確認書・証明」でも、左（手続要件）と右（効力要件）に分かれる。分岐させているのは書類の種類ではなく、その提出義務を<b>どの法源にどう配置したか</b>。</p>
+  </div>
+
+  <!-- ===== CASE 1: 13671 ===== -->
+  <div class="case">
+    <div class="ch jp"><h3>① みなし配当に20.42%源泉 → 条約5%との差額を還付<span class="badge">認容・控訴</span></h3>
+      <div class="meta">東京地判 令和4年2月17日／DB順号13671／日本＝ルクセンブルク租税条約10条2項(a)</div></div>
+    <div class="cbody">
+      <div class="sum2">ルクセンブルク法人が、完全子会社2社の会社分割に伴うみなし配当について国内法で20.42%源泉徴収された後、条約10条の5%限度税率を主張して差額の還付を求めた。裁判所は<b>合計13億9448万4302円</b>の還付を認容した（内訳：11億2196万2237円＋2億7252万2065円）。</div>
+
+      <span class="lbl j">争点</span>
+      <p>条約10条2項(a)の5%限度税率（議決権25%以上を一定期間保有する法人への配当）の適用要件、とくに会社分割によるみなし配当で<b>保有期間をどの時点から見るか</b>。あわせて、源泉徴収時に届出で軽減を受けていなくても、<b>事後の還付請求で条約軽減を受けられるか</b>。</p>
+
+      <span class="lbl a">判旨</span>
+      <p>請求認容。判決は、源泉徴収の場面と還付の場面を上下関係でなく<b>並列の制度</b>として捉えた。これがこの判決の背骨である。</p>
+      <div class="qt">「我が国の法制度上、源泉徴収時に軽減税率の適用を受ける方法と、事後的に過大な納付額を還付請求する方法の２つが並列的に定められており、いずれか一方が原則で他方が例外という関係にはない。」<cite>― 判決文より（原文照合済）</cite></div>
+      <p>さらに、源泉段階で届出書が無い場合の処理についても踏み込む。</p>
+      <div class="qt">「配当の支払時（源泉徴収時）において、租税条約に係る届出書が提出されていない場合は国内法上の税率で源泉徴収されることになるから、源泉徴収に係る法律関係に何ら支障は生じない。」<cite>― 判決文より（原文照合済）</cite></div>
+
+      <span class="lbl p">分析</span>
+      <p>条約10条の限度税率は<b>条約上の実体的な課税制限</b>であり、実施法3条の2第1項が国内源泉税率にこれを接続する。これに対し実施令2条1項の届出は<b>源泉徴収義務者が支払時に軽減を適用するための手続</b>にすぎず、同条8項・9項が、源泉段階で軽減を受けられなかった場合の<b>事後還付</b>を別建てで用意する。判決は後者に「軽減を受けなかった理由」の限定が無いことを重視した。つまり――届出が無ければ源泉段階で国内税率で取られるのは正しいが、それは<b>受益者が後から還付で条約の権利を実現することを妨げない</b>。</p>
+
+      <div class="conn"><b>配置への接続。</b> 届出書は、課税権の制限そのものを生み出したり消したりする<b>効力要件ではなく</b>、源泉徴収実務の経路を整える<b>手続的な配置</b>。実体的軽減は条約＋実施法3条の2に配置され、手続経路は実施令2条に配置される――この<b>二層の分離</b>が「並列」判示の正体である。</div>
+
+      <div class="uc"><b>要確認：</b><ul>
+        <li>事件番号は判決文上マスクされており未確認。</li>
+        <li>保有期間要件を最終的にどの文言解釈で満たしたかは本文全体の精査要。控訴後の確定状況も未確認。</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <!-- ===== CASE 2: 12672 ===== -->
+  <div class="case">
+    <div class="ch jp"><h3>② 条約の届出書を出さなくても、特典は当然には消えない<span class="badge">請求棄却（別理由）</span></h3>
+      <div class="meta">東京地判 平成27年5月28日／DB順号12672／日米租税条約7条（事業所得）・5条（PE）</div></div>
+    <div class="cbody">
+      <div class="sum2">米国居住の個人が、日本国内のアパート・倉庫を拠点に自動車用品をネット販売。無申告に対する所得税決定処分等を争った。裁判所は<b>「届出書の不提出だけで条約特典を否定できない」</b>と納税者に有利な前提を示しつつ、<b>結論は請求棄却</b>――国内拠点が条約5条のPEに当たり、7条で日本課税が可能とされたためである。</div>
+
+      <span class="lbl j">争点</span>
+      <p>(1) 実特法省令9条の2の届出書を出さないと、条約7条の軽減・免除を受けられないのか。(2) 国内のアパート等は条約5条のPEか（「保管・引渡しのためにのみ」の除外に当たるか）。(3) PEなら課税できる所得の範囲。</p>
+
+      <span class="lbl a">判旨</span>
+      <p>届出について――省令9条の2は提出義務を定めるが、<b>不提出の場合に条約特典を受けられないとは規定していない</b>。そして実特法12条は「条約の実施に必要な事項」を省令に委ねる<b>一般的・包括的委任</b>にとどまる。憲法84条の租税法律主義のもとで、納税者の地位を左右する要件を下位法令に置くには個別具体的な授権が要る。よって<b>「届出書を提出しなかったことをもって（条約適用を）否定する」ことはできない</b>（原文の趣旨）。裁判所はこの委任統制の文脈で<b>最大判昭和30.3.23（民集9-3-336）・最大判昭和37.2.21（刑集16-2-107）</b>を引く。<br>もっとも勝敗はここで決まらない。アパート等は単なる保管場所でなく販売事業の中核拠点でPEに該当し、7条で帰属所得に課税できるとして、請求は棄却された。</p>
+
+      <span class="lbl p">分析</span>
+      <p>届出の性質論は<b>納税者有利だが、本件処分の適法性を左右しない前提判断＝実質的に傍論に近い</b>。それでも価値は大きい：条約特典の実体要件は<b>条約自体（7条・22条）</b>で判断され、省令上の手続懈怠で条約上の権利を失わせるには<b>法律上の明確な授権が要る</b>、という筋を明示したからである。13671（並列）と同じ方向を、委任統制の角度から支える。</p>
+
+      <div class="conn"><b>配置への接続。</b> 「条約特典を失わせる要件を、どの法形式に置けるか」を厳格に見た判決。<b>包括委任の省令には、特典を失効させる効力要件は配置できない</b>――納税者の実体的地位を動かす要件は条約か法律に配置されねばならない。書類の効力は“配置”で決まる、の典型。</div>
+
+      <div class="uc"><b>要確認：</b><ul>
+        <li>DB冒頭メタの「結果: 取消」は<b>主文「請求をいずれも棄却する」と矛盾</b>（DB表示側の誤りと見られる）。本文上の結論は<b>棄却</b>。</li>
+        <li>事件番号・掲載誌・上訴の帰趨は指定ファイルから未確認。引用2判例の精密な射程対応も要確認。</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <!-- ===== CASE 3: 12919 ===== -->
+  <div class="case">
+    <div class="ch jp"><h3>③ 源泉徴収の現場 ― 届出が無ければ条約10%でなく国内20%<span class="badge">請求棄却</span></h3>
+      <div class="meta">仙台地判 平成28年10月19日／DB順号12919／所得税法161条7号ロ・日韓租税条約12条</div></div>
+    <div class="cbody">
+      <div class="sum2">日本企業が、韓国法人Cへ<b>2億ウォン（円建て1482万4698円）</b>を支払った。これは韓国俳優Eの「出演料」か、それとも<b>既存広告物・画像の著作権使用料</b>か。裁判所は使用料（所法161条7号ロ）と認定。Cが支払日前日までに条約届出を出していなかったため、条約12条2項の10%でなく<b>国内法20%</b>が適用され、源泉所得税<b>2,964,939円</b>の納税告知＋不納付加算税<b>296,000円</b>が適法とされた。</div>
+
+      <span class="lbl j">争点</span>
+      <p>支払金が<b>「著作権の使用料」（161条7号ロ）</b>か、俳優の人的役務提供の対価（161条2号・施行令282条）か。前者なら国内源泉所得として源泉徴収対象になる。</p>
+
+      <span class="lbl a">判旨</span>
+      <p>契約は<b>既に製作済みのCの広告制作物・Eの画像を日本向けに改変して使う</b>ものであり、Eが新たに来日・撮影・出演する労務提供は予定されていない。利用対象は既存著作物で、Cが著作権者として素材提供・改変許諾の中核にいる。よって本件金員は使用料に当たる（所基通161-23も著作物利用の頭金・権利金等を広く使用料に含める）。条約12条2項で10%上限の余地はあるが、<b>届出書が支払日前日までに未提出</b>のため源泉段階では213条1項1号の20%が適用され、各処分は適法。</p>
+
+      <span class="lbl p">分析</span>
+      <p>「俳優・モデル契約」という外形に引きずられず、<b>支払の経済的中心を契約条項から確定</b>した点が実質。源泉徴収義務者にとっては、契約書に「著作権」「画像」「改変」「日本で使用」と並ぶ取引を“単なるモデル料”と処理する<b>分類リスク</b>が高いことを示す。ここでは<b>二段階</b>で効く――(1)使用料該当で源泉対象になり、(2)届出未提出で20%になる。</p>
+
+      <div class="conn"><b>配置への接続。</b> この判決は「源泉徴収の現場で、届出の有無が結果を左右する側」。ただし注意――<b>20%になったのは“実体的権利が消えた”からではなく、源泉段階の徴収事務の問題</b>。13671の論理に照らせば、条約上の10%という実体は、別途の経路（還付等）で観念し得る（本判決はそこは判断対象外）。「源泉では手続が結果を決めるが、それは実体権の消滅とは別」という層の区別が、ここでも効いている。</div>
+
+      <div class="uc"><b>要確認：</b><ul>
+        <li>ここでも DB冒頭メタの「結果: 取消」は本文の<b>請求棄却</b>と矛盾（DB表示側の問題）。</li>
+        <li>届出未提出でも後日の還付等で条約軽減を受け得るかは<b>本判決の判断対象外</b>。先例・学説の引用は判決文上は確認されず。</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <!-- ===== CASE 4: 13488 ===== -->
+  <div class="case">
+    <div class="ch eff"><h3>④ ★逆の対照 ― 確認書は「効力要件」、期限を過ぎれば非課税が消える<span class="badge">請求棄却</span></h3>
+      <div class="meta">東京地判 令和2年12月1日／DB順号13488／租税特別措置法6条（特定民間国外債の利子非課税）</div></div>
+    <div class="cbody">
+      <div class="sum2">信託銀行が発行した<b>額面8億5000万米ドル</b>の社債（特定民間国外債）の利子につき、措置法6条の利子非課税を受けるには「利子受領者確認書」を<b>各利払日の翌月末日まで</b>に提出する必要があった。原告は5回の利払（平成25.4.15〜平成27.4.15）について期限内に提出せず、<b>平成30年5月28日に初めて提出</b>。裁判所は確認書の期限内提出を<b>非課税の適用要件（効力要件）</b>と解し、本税<b>1,667,514,815円</b>・不納付加算税（非居住者分）<b>166,749,000円</b>等の処分を適法として請求を棄却した。</div>
+
+      <span class="lbl j">争点</span>
+      <p>確認書を<b>施行令3条の2の2第27項所定の期限（翌月末日）まで</b>に出すことが、措置法6条7項の非課税の<b>適用要件</b>か。原告は「政令で課税要件を追加するのは憲法84条違反」と主張した。</p>
+
+      <span class="lbl a">判旨</span>
+      <p>期限内提出は適用要件である。理由は四点。(1)<b>文理</b>：6条13項が確認書提出に関する事項を政令に委任し、施行令3条の2の2第27項が「翌月末日まで」と定める体系から、期限内提出が要件と読むのが自然。(2)<b>趣旨</b>：一般民間国外債利子は原則課税で、6条4項・7項は<b>例外的非課税</b>。期限後でも認めれば源泉所得税の法律関係が永久に確定しない。(3)<b>租税法律主義</b>：基本的事項（＝確認書の提出）は<b>法律本体</b>が定め、政令に委ねたのは提出時期という<b>技術的細目</b>。これは許される委任。(4)国際金融商品の実務専門性ゆえ期限の政令委任は合理的。よって施行令の期限規定は<b>6条13項の具体的・個別的委任</b>に基づき有効で、その期限は<b>適用要件</b>。</p>
+
+      <span class="lbl p">分析</span>
+      <p>核心は、確認書が<b>「既に生じた非課税を知らせる届出」ではなく、非課税適用申告書があったものと“みなす”ための要件</b>だと見た点。だから期限後提出で非課税は<b>復活しない</b>――受領者が実質的に非居住者でも、後で確認書を出しても、入口に入れない。これが12672・13671とちょうど<b>逆向き</b>である。</p>
+
+      <div class="conn"><b>配置への接続（このシリーズの要）。</b> 12672では条約届出が<b>包括委任の省令</b>どまりゆえ効力要件になれなかった。13488では、措置法6条が<b>法律本体で「確認書提出があれば非課税とみなす」と条件化</b>し、提出時期だけを<b>具体的に委任</b>して政令に降ろした。<b>同じ“書類の提出”でも、配置の仕方が真逆だから、効力（効力要件／手続要件）も真逆になる。</b>――手続の名前ではなく、法律本体がその手続を減免の発生条件としてどこまで明示的に組み込んだか、が分岐点。</div>
+
+      <div class="uc"><b>要確認：</b><ul>
+        <li>裁判所事件番号は出力上未確認（「過誤納金返還等請求事件」「東京地判 令和2.12.1」「DB13488」までは確認）。</li>
+        <li>判決が引用したとされる文献（甲23・496頁）の書名・著者は判決文上は不明。最高裁判例（大嶋訴訟等）の明示引用の有無も要確認。</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <!-- ===== CASE 5: Aiken ===== -->
+  <div class="case">
+    <div class="ch us"><h3>⑤ Aiken Industries ― 導管法人は条約上「利子を受領」していない<span class="badge">免税否認</span></h3>
+      <div class="meta">米国租税裁判所 1971年／56 T.C. 925／米・ホンジュラス租税条約 利子免税（知識ベース分析・要確認多数）</div></div>
+    <div class="cbody">
+      <div class="sum2">バハマ親会社→ホンジュラス中間法人→米国法人という資金構造のなかで、米国法人が形式上ホンジュラス法人へ支払った利子に、米・ホンジュラス条約の利子免税が使えるかが争われた。租税裁判所は、ホンジュラス法人は受け取った利子をそのままバハマへ流す<b>導管（conduit）にすぎず、利子を自己の経済的利益として受領していない</b>として、免税を否認した。</div>
+
+      <span class="lbl a">判旨・分析</span>
+      <p>裁判所は条約文言の<b>「received by」を形式的名義でなく経済的実質を伴う受領</b>と読み、単なる導管なら免税の前提（＝その者が利子を受領したこと）を欠くとした。これは Gregory v. Helvering 以来の<b>実質優先</b>の系譜に属するが、Aiken の特徴は包括的な否認規定の適用ではなく、<b>条約の受領者要件そのものの解釈</b>として処理した点にある。問題意識は後の<b>beneficial owner（受益者）</b>概念とほぼ同じ。</p>
+
+      <div class="conn"><b>配置への接続。</b> 米国は導管否認を<b>多層に配置</b>した。Aiken はまず<b>条約解釈</b>に否認根拠を置いた（received by の実質解釈）。その不安定さを、後に<b>国内規則 Treas. Reg. §1.881-3（アンチ・コンデュイット規則）</b>で「中間法人を無視して真の資金提供者を受領者とみなす」明文の法技術として制度化し、さらに条約側では<b>LOB条項</b>を発展させた。日本のように一点（22条のゲート＋届出）に寄せるのではなく、<b>解釈・国内規則・条約LOBの三層に分散配置</b>するのが米国型である。</div>
+
+      <div class="uc"><b>要確認（米判例DBが手元に無く知識ベースのため）：</b><ul>
+        <li>判決年月日・事件番号・当事者の正式名称、貸付額・利率・契約日等の取引の正確な構成。</li>
+        <li>米・ホンジュラス条約の該当条項番号と原文、引用先例の正確な一覧。</li>
+        <li>判決中の IRC §881/§1441/§1442 の位置づけ、§1.881-3 の現行文言・制定時期と Aiken との明示的関係。</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <!-- ===== CASE 6: Starr ===== -->
+  <div class="case">
+    <div class="ch us"><h3>⑥ Starr International ― LOB救済の「当局拒否」も司法審査できる<span class="badge">破棄差戻</span></h3>
+      <div class="meta">米連邦控訴裁 D.C.巡回区 2018年（事件番号・巻頁は要確認）／米・スイス租税条約 LOB裁量的救済</div></div>
+    <div class="cbody">
+      <div class="sum2">スイス法人Starrが、米国株式配当の30%源泉につき、米・スイス条約のLOB<b>客観基準を満たさない</b>ため、条約上の<b>権限ある当局（competent authority）の裁量的救済</b>を申請したがIRSに拒否された。地裁は<b>政治問題の法理</b>で却下したが、D.C.巡回区はこれを破棄・差戻し、<b>外交に触れるからといって当然に司法審査不能にはならない</b>とした。</div>
+
+      <span class="lbl a">判旨・分析</span>
+      <p>核心は「条約・外交に関わる＝政治問題」ではない、という点。Baker v. Carr の枠組み（他部門への明確な委任／裁判上適用可能な基準の欠如 等）に照らしても、<b>条約文・国内法・行政記録に照らして当局判断の適法性を審査する</b>のは裁判所の通常の仕事である。ただしこれは「Starrが当然に特典を受ける」判断ではなく、<b>門前払いしてよいか（可審査性）</b>の段階の判断で、IRS拒否がAPA上恣意的だったか等は差戻後の問題。LOB条項を<b>客観基準＋裁量的救済の二層</b>と捉えたとき、第二層への<b>法的統制可能性</b>を示した点に意義がある。</p>
+
+      <div class="conn"><b>配置への接続。</b> LOB適格を満たさない者の救済を<b>「当局の裁量」に配置</b>すると、納税者は条約特典の当然請求権を持たない一方、当局も<b>無基準で拒否できる純粋恩恵ではない</b>。条約文が設立・取得・維持・主目的性といった判断要素を置く以上、それは司法審査の手がかりになる。<b>「裁量に置く」＝「法から離す」ではなく「法が判断余地を行政に配分する」</b>こと。Starrは、その配分を政治問題の名で裁判所の外へ完全には追い出さなかった――裁量的救済という配置が司法審査の<b>全面排除を当然には意味しない</b>と示した事例。</div>
+
+      <div class="uc"><b>要確認（知識ベースのため）：</b><ul>
+        <li>正確な巻頁（910 F.3d 527 とみられるが要確認）・判決日・事件番号（No.17-5238）・課税年・還付額（約$38M）の内訳。</li>
+        <li>米・スイス条約の該当条項番号（Art.10／Art.22の裁量的救済項）、D.C.巡回区がAPA §701(a)(2)までどこまで判断したか、差戻後の帰趨。</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <!-- 通底 -->
+  <div class="card">
+    <h2>6判決を貫く一本 ― 「配置の法定性」</h2>
+    <p>源泉の還付（13671）、条約届出の性質（12672）、源泉現場の届出（12919）、確認書の効力要件性（13488）、導管否認（Aiken）、LOB裁量救済の審査（Starr）。題材はバラバラだが、どれも同じ問いに収束する――<b>「ある規律（書類・手続・救済）を、どの法源に・どれだけ具体的に委任して“配置”したか」</b>。</p>
+    <div class="callout">
+      ・<b>包括委任の省令</b>に置かれた条約届出は、出さなくても実体的権利を奪えない＝<b>手続要件</b>（12672・13671）。<br>
+      ・<b>法律本体</b>が「提出があれば非課税とみなす」と条件化し、時期だけ具体的委任で政令に降ろした確認書は、出さなければ減免が消える＝<b>効力要件</b>（13488）。<br>
+      ・米国は導管否認を<b>条約解釈→国内規則→条約LOB</b>へと配置し直し（Aiken）、LOB救済を<b>当局裁量</b>に配置しつつ<b>司法審査の枠</b>を残した（Starr）。
+    </div>
+    <p>結論はシンプルだ。<b>書類や救済の「効力」は、その名前ではなく“配置”で決まる。</b> これは外国子会社合算税制（CFC）論文の中核命題――課税要件たる規律を、どの法源にどれだけ明示的に配置するかという<b>「配置の法定性」</b>――と同じ軸である。LOBはその配置が（過剰なほど）作り込まれた領域であり、ここに並ぶ6判決は、その配置の濃淡が実際の勝敗を決める瞬間を切り取っている。</p>
+    <div class="xref">
+      <a href="lob_hanrei_zukai_20260616.html">→ 同じ6判決の「構造図解」を見る</a>
+      <a href="lob_cert_haichi_20260616.html">→ 「証明が無くても課税すべきでない？」の論点へ</a>
+      <a href="lob_index_20260616.html">→ シリーズ目次</a>
+    </div>
+  </div>
+
+  <footer>
+    LOB関連6判決の詳細分析 ／ 2026-06-17 ／ 6体並列の下書きを一次資料（判決全文）で照合し再構成 ／ 日本4判決＝本文照合済・米国2判決＝要確認明示
+  </footer>
+
+</div>
+</body>
+</html>
