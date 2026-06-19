@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LOBの法的性質に関する補足メモ</title>
+  <style>
+    :root {
+      --ink:#17202a; --muted:#5b6572; --line:#d8e0e8; --panel:#fff;
+      --blue:#075985; --green:#166534; --red:#991b1b; --amber:#92400e;
+      --bg:#f6f8fb; --soft-blue:#edf6fb; --soft-green:#eef8f3; --soft-red:#fff1f2; --soft-amber:#fff8e6;
+    }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:var(--bg); font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",Meiryo,system-ui,sans-serif; line-height:1.85; letter-spacing:0; }
+    header { background:#f8fafc; border-bottom:1px solid var(--line); }
+    .wrap { width:min(1120px, calc(100% - 40px)); margin:0 auto; }
+    .hero { padding:42px 0 32px; }
+    .eyebrow { color:var(--blue); font-weight:700; font-size:13px; margin-bottom:8px; }
+    h1 { margin:0; font-size:clamp(27px,4vw,42px); line-height:1.25; letter-spacing:0; }
+    .subtitle { max-width:920px; color:var(--muted); margin:14px 0 0; }
+    .meta { display:flex; gap:8px; flex-wrap:wrap; margin-top:18px; font-size:13px; }
+    .pill { border:1px solid var(--line); background:#fff; border-radius:999px; padding:5px 10px; }
+    main { padding:26px 0 68px; }
+    section, nav { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:24px 28px; margin:20px 0; }
+    nav a { color:var(--blue); text-decoration:none; margin-right:15px; white-space:nowrap; font-size:14px; }
+    h2 { font-size:24px; margin:0 0 14px; line-height:1.4; }
+    h3 { font-size:18px; margin:26px 0 8px; }
+    p { margin:0 0 14px; }
+    ul, ol { padding-left:1.4em; }
+    li { margin:6px 0; }
+    table { width:100%; border-collapse:collapse; margin:16px 0 20px; font-size:14px; background:#fff; }
+    th, td { border:1px solid var(--line); padding:10px 12px; vertical-align:top; }
+    th { background:#f1f5f9; text-align:left; }
+    .box { border-radius:8px; padding:15px 17px; margin:16px 0; border:1px solid var(--line); }
+    .bluebox { background:var(--soft-blue); border-color:#b8dce9; }
+    .greenbox { background:var(--soft-green); border-color:#b9dfcf; }
+    .redbox { background:var(--soft-red); border-color:#fecdd3; }
+    .amberbox { background:var(--soft-amber); border-color:#f1d189; }
+    .source { color:var(--blue); text-decoration:none; border-bottom:1px dotted var(--blue); font-size:.94em; margin-left:2px; }
+    .local { font-family:Consolas,"Courier New",monospace; font-size:13px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:2px 5px; word-break:break-all; }
+    .verdict { font-weight:800; color:var(--red); }
+    .ok { color:var(--green); font-weight:800; }
+    .small { color:var(--muted); font-size:13px; }
+    footer { border-top:1px solid var(--line); padding:24px 0 44px; color:var(--muted); font-size:13px; }
+    @media (max-width:760px){ .wrap{width:min(100% - 24px,1120px)} section,nav{padding:18px 16px} nav a{display:inline-block;margin-bottom:6px} table{font-size:13px} th,td{padding:8px} }
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap hero">
+    <div class="eyebrow">Supplemental Deep Research / Legal Nature of LOB</div>
+    <h1>LOBの法的性質に関する補足メモ</h1>
+    <p class="subtitle">日米租税条約22条の特典制限条項が、単なる様式17提出手続ではなく、条約特典の発生を限定する実体的eligibility要件であることを、条約本文・公式技術説明・OECD Action 6・日本側手続規定から確認する。</p>
+    <div class="meta">
+      <span class="pill">作成日: 2026-06-16</span>
+      <span class="pill">対象論点: LOBの法的性質</span>
+      <span class="pill">中心条文: 日米租税条約10条3(a)・22条</span>
+      <span class="pill">結論: 実体的 treaty entitlement 要件</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav>
+    <strong>目次</strong>
+    <a href="#conclusion">1. 結論</a>
+    <a href="#structure">2. 条約構造</a>
+    <a href="#article10">3. 10条3(a)への組込み</a>
+    <a href="#doctrine">4. SAARとしてのLOB</a>
+    <a href="#procedure">5. 様式17との関係</a>
+    <a href="#application">6. 本件帰結</a>
+    <a href="#sources">7. 根拠資料</a>
+  </nav>
+
+  <section id="conclusion">
+    <h2>1. 結論</h2>
+    <div class="box bluebox">
+      <p><strong>LOBは、条約特典を享受できる者を客観的・機械的な基準で限定する実体的eligibility要件であり、条約濫用・条約漁りを防止する特別否認規定、すなわちSAARとして位置づけられる。</strong></p>
+      <p>したがって、様式17はLOB資格を作る書類ではなく、LOBという実体要件を満たしていることを源泉徴収実務で証明するためのフォームである。米国親会社が日米租税条約22条の要件を実体として満たしていなければ、様式17を提出しても条約特典は発生しない。逆に、当時実体として満たしていたなら、様式17の欠缺は手続・証明問題として争う余地があるが、支払時に無源泉処理を正当化するには相応の証拠が必要である。</p>
+    </div>
+    <p>
+      この結論は、条約本文から直接導かれる。日米租税条約22条1項は、他条により締約国居住者に与えられる特典を受けるためには、他の特定条件を満たし、かつ22条の類型に該当する必要がある、という構造を採っている。財務省統合テキスト上も、22条1項は「other Articles」の特典を受けるための条件として書かれている<a class="source" href="https://www.mof.go.jp/tax_policy/summary/international/tax_convention/USA_ST_en.pdf">財務省 日米条約統合テキスト</a>。
+    </p>
+    <p>
+      さらに、配当0%免税の中核条文である10条3項(a)は、22条1項(f)(i)(ii)および22条2項を明示的に条件として取り込んでいる。これは、22条が単に「届出書に何を書くか」という手続ではなく、免税という実体的法効果の発生要件であることの決定的な条約構造上の証拠である。
+    </p>
+    <div class="box redbox">
+      <p><strong>本件への即答:</strong> 「10条3(a)、22条1項(f)(i)(ii)の要件充足が確認できない」という状態は、0%免税の実体的発生要件が確認できない状態である。したがって、届出書だけを根拠に0%免税を適用することはできない。</p>
+    </div>
+  </section>
+
+  <section id="structure">
+    <h2>2. 条約構造から見たLOB</h2>
+    <p>
+      租税条約による配当源泉税の軽減・免除は、単一の要件で発生するものではない。通常、少なくとも次の層を通過する必要がある。
+    </p>
+    <ol>
+      <li>条約の人的適用範囲に入ること、すなわち締約国の居住者であること。</li>
+      <li>配当条項において、配当の受益者であること。</li>
+      <li>配当条項の個別要件、例えば10%以上保有、50%以上保有、6か月保有、PE非関連性等を満たすこと。</li>
+      <li>特典制限条項、すなわち22条LOBにより、条約特典を受ける資格を有すること。</li>
+      <li>国内実施法・省令上の源泉徴収手続として、届出書・様式17・居住者証明書等により支払時点で確認できること。</li>
+    </ol>
+    <p>
+      この順序関係で重要なのは、LOBが「居住者性の後」に来る点である。LOBは、非居住者を居住者にする規定ではない。むしろ、居住者であることを前提に、それでもなお条約特典を与えるべき主体かをふるいにかける。米国財務省の2003年日米条約技術説明も、配当条項の便益は22条に服し、配当の受益者が条約特典を受けるには22条のテストの少なくとも一つを満たさなければならないと説明している<a class="source" href="https://www.irs.gov/pub/irs-trty/japante04.pdf">IRS 2003年技術説明</a>。
+    </p>
+    <p>
+      したがって、「米国法人である」「米国の居住者証明がある」「配当の受益者である」だけでは、LOBを通過したことにならない。これらは必要条件ではあるが、LOBはさらに、上場性、適格者による所有、ベース・エロージョン、能動的事業、又は権限ある当局認定など、条約特典を受ける主体としての十分な結び付きを問う。
+    </p>
+    <h3>2.1 22条1項冒頭の意味</h3>
+    <p>
+      22条1項冒頭は、他条の規定により締約国居住者に与えられる特典を受ける権利を、22条各号の類型該当性にかからせている。これは、22条が条約の外側にある行政手続ではなく、条約本文内部の entitlement clause であることを示す。日本側の実施特例省令9条の2も、特典条項を、租税条約に基づく特典を受ける権利を有する者を類型別基準により制限する規定と定義している。国内手続規定も、LOBを「権利者の制限」と捉えているのであって、様式提出そのものとは捉えていない。
+    </p>
+    <h3>2.2 「客観的・機械的」基準であること</h3>
+    <p>
+      LOBの特徴は、PPTのような主観的目的テストと異なり、法人の法的性質、所有構造、一般的活動、所得流出など、比較的客観的な基準で条約特典資格を判定する点にある。OECD Action 6最終報告も、LOBを、一定条件を満たす主体に条約特典を限定するspecific anti-abuse ruleとして説明し、その条件は主体の法的性質、所有、一般的活動に基づき、居住地国との十分な結び付きを確保するためのものとする<a class="source" href="https://www.oecd.org/content/dam/oecd/en/publications/reports/2015/10/preventing-the-granting-of-treaty-benefits-in-inappropriate-circumstances-action-6-2015-final-report_g1g5906e/9789264241695-en.pdf">OECD Action 6 Final Report</a>。
+    </p>
+  </section>
+
+  <section id="article10">
+    <h2>3. 10条3(a)が22条を免税条件として組み込むことの意味</h2>
+    <p>
+      日米租税条約10条3項(a)は、一定の親子間配当について源泉地国課税を排除する0%免税規定である。しかし、同項は、50%以上・6か月保有だけで免税を認めていない。米国親会社が以下のいずれかを満たすことを要求する。
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>10条3(a)内のルート</th>
+          <th>内容</th>
+          <th>法的意味</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>22条1項(c)(i)又は(c)(ii)</td>
+          <td>公開会社又は一定の公開会社子会社ルート。</td>
+          <td>上場性・公開会社性を根拠に、主体としての条約特典資格を認める。</td>
+        </tr>
+        <tr>
+          <td>22条1項(f)(i)(ii) + 22条2項</td>
+          <td>適格者による50%以上所有、ベース・エロージョン50%未満、配当に関する能動的事業条件。</td>
+          <td>非公開会社等について、所有・所得流出・事業実体を合わせて0%免税を認める。</td>
+        </tr>
+        <tr>
+          <td>22条4項</td>
+          <td>権限ある当局による認定。</td>
+          <td>形式的類型に入らない場合でも、条約特典取得を主目的としないと認定されれば救済される。</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      この構造は決定的である。10条3項(a)は、22条を「別途の濫用防止条項」として横に置いているのではなく、0%免税という特定の法効果の発生条件として本文中に組み込んでいる。つまり、22条1項(f)(i)(ii)を満たすことは、0%免税を受けるための構成要件の一部である。
+    </p>
+    <p>
+      ここから、次の三段論法が成り立つ。第一に、10条3項(a)の0%免税は、同項が列挙するすべての条件を満たす場合に限り発生する。第二に、同項は22条1項(f)(i)(ii)および22条2項を条件として取り込んでいる。第三に、したがって、22条1項(f)(i)(ii)および22条2項を満たすことは、0%免税の実体的発生要件である。
+    </p>
+    <div class="box greenbox">
+      <p><strong>構造上の結論:</strong> 10条3(a)の中に22条が明示的に入っているため、LOBは「税務署に出す紙」ではなく、「免税という条約効果を発生させるための条約上の条件」である。</p>
+    </div>
+    <h3>3.1 5%軽減にもLOBはかかる</h3>
+    <p>
+      0%免税については、10条3項(a)が22条を明示的に取り込むため議論が明快である。しかし、5%軽減についても、22条は無関係ではない。22条1項は、他条の特典一般について適用される。米国財務省技術説明は、配当条項の便益は22条に服し、22条の少なくとも一つのテストを満たす必要があると説明する。したがって、0%が否定された場合に当然5%へ落ちるのではなく、5%を使うためにも、米国親会社が条約特典資格を有することが必要である。
+    </p>
+  </section>
+
+  <section id="doctrine">
+    <h2>4. doctrine上の位置づけ: LOBはSAARであり、PPTとは性質が違う</h2>
+    <p>
+      OECD Action 6は、条約濫用、とりわけ treaty shopping をBEPS上の重要問題と位置づけた。その対応として、条約前文の目的文言、LOB、PPTを組み合わせる枠組みを示している。ここでLOBは、主体の法的性質・所有・活動に基づくspecific anti-abuse ruleとして整理される。一方、PPTは、取引又はアレンジメントの主目的の一つが条約特典取得であり、その付与が条約の目的趣旨に反する場合に特典を否認する一般的・目的基準型のルールである。
+    </p>
+    <p>
+      この違いは、本件の証明責任・資料収集に直結する。LOBは、主観的な租税回避目的を立証して初めて否認する規定ではない。むしろ、定められた客観的カテゴリーに入らなければ、条約特典を受けられないという入口規定である。したがって、税務当局が「租税回避目的」を積極的に証明しなければLOB不適用にできない、という構造ではない。納税者又は源泉徴収義務者側が、条約特典を受ける資格があることを、類型・所有・所得流出・事業・認定のいずれかで示す必要がある。
+    </p>
+    <h3>4.1 居住性・受益者性・分配条項との関係</h3>
+    <p>
+      LOBは、居住性や受益者性を置き換えるものではない。配当条項であれば、まず受領者が米国居住者であり、配当の受益者であり、配当条項の持株要件等を満たす必要がある。そのうえで、22条により条約特典を受ける主体資格を有するかが問われる。つまり、LOBは「他の要件を満たした後の追加的な実体制限」であり、居住性・受益者性・配当条項の個別要件と並ぶ、又はそれらの上に重なる entitlement limitation である。
+    </p>
+    <p>
+      これを実務的に言い換えると、IRS Form 6166があるだけでは足りない。Form 6166は米国居住者性の証明であり、22条1項(f)(i)(ii)の所有・ベース・エロージョンを証明するものではない。また、米国親会社が配当の受益者であるとしても、22条の客観基準を満たさなければ、条約10条の5%又は0%は使えない。
+    </p>
+    <h3>4.2 「否認規定」だが、発動型GAARではない</h3>
+    <p>
+      LOBを特別否認規定と呼ぶことは有益である。ただし、国内法上の包括的否認規定のように、課税庁が個別事案で裁量的に「濫用だから否認する」と宣言して初めて動く規定ではない。条約本文があらかじめ、特典を受けることのできる者の範囲を限定している。したがって、より正確には「客観的適格性基準による条約特典制限規定」である。
+    </p>
+    <p>
+      22条4項の権限ある当局認定は、この機械的基準から外れる者に救済を与えるルートである。これは、LOBが実体要件であることを弱めるものではなく、むしろ強める。なぜなら、22条1項・2項で権利が発生しない者について、権限ある当局が一定の実体判断をした場合に限り、例外的に特典を付与する構造だからである。
+    </p>
+  </section>
+
+  <section id="procedure">
+    <h2>5. 様式17・居住者証明書との関係</h2>
+    <p>
+      国税庁の様式17（米）は、日米租税条約の適用を受ける者が所定のAからDの類型に該当する場合には適用を受けられるが、各条項に別途定められた要件も満たす必要があると説明している<a class="source" href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/joyaku/annai/pdf2/266.pdf">様式17（米）PDF</a>。この説明は、様式17が「条約適格性を宣言するだけの紙」ではなく、条約本文の要件を証明するための付表であることを示す。
+    </p>
+    <p>
+      実施特例省令9条の2は、特典条項を「国内源泉所得に対する租税の軽減又は免除を定める租税条約の規定の適用に関する条件」と捉え、さらに租税条約に基づく特典を受ける権利を有する者を類型別基準により制限する規定を含むものとする。これは、国内手続規定の文脈でも、LOBが「適用を受ける権利」の制限であることを示している。
+    </p>
+    <p>
+      したがって、手続と実体の関係は次のように整理される。
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>項目</th>
+          <th>法的性質</th>
+          <th>欠けた場合</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>日米租税条約22条LOB</td>
+          <td>条約特典を受ける主体資格を限定する実体的要件。</td>
+          <td>満たさなければ、0%・5%・10%等の条約特典は発生しない。</td>
+        </tr>
+        <tr>
+          <td>10条3(a)内の22条参照</td>
+          <td>0%免税の構成要件への組込み。</td>
+          <td>22条1(f)(i)(ii)等を満たさない限り、0%免税は発生しない。</td>
+        </tr>
+        <tr>
+          <td>様式17</td>
+          <td>LOB該当性を示す源泉徴収手続上の証明フォーム。</td>
+          <td>支払時の条約税率適用は困難。後日立証余地は、当時の実体要件充足がある場合に限る。</td>
+        </tr>
+        <tr>
+          <td>居住者証明書</td>
+          <td>相手国居住者性の証明資料。</td>
+          <td>居住者性の証明が不足する。もっとも、LOBの所有・所得流出要件とは別物。</td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>5.1 「届出書は手続要件だからLOBも手続」という誤解</h3>
+    <p>
+      届出書・様式17が手続書類であることは正しい。しかし、そこから「LOBも手続要件である」とはならない。手続書類が証明する対象は、条約本文上の実体要件である。たとえば、建築確認申請書が手続書類であっても、建物の構造安全性が手続要件になるわけではない。同じように、様式17が手続書類であることは、22条の所有要件・ベース・エロージョン要件・能動的事業要件の実体性を消さない。
+    </p>
+    <p>
+      倉庫PE事件の届出書論も、この区別を前提に使うべきである。同事件は、省令上の届出書不提出だけで日米租税条約7条の適用を否定できるかが問題となったものであり、配当源泉徴収・10条3(a)・22条1(f)そのものの事件ではない。したがって、同事件から導けるのは、手続不備だけをもって条約上の実体的保護を常に失わせることへの慎重論であり、LOB実体要件を満たさなくてもよいという結論ではない。
+    </p>
+  </section>
+
+  <section id="application">
+    <h2>6. 本件への帰結</h2>
+    <p>
+      本件で「租税条約届出書はあるが、特典条項の証明書がなく、10条3(a)、22条1項(f)(i)(ii)の要件充足が確認できない」とされる場合、法的に起きていることは、単なる添付書類不足ではない。0%免税の構成要件のうち、条約本文が明示的に要求するLOB資格の充足が確認できない、ということである。
+    </p>
+    <p>
+      したがって、支払時の源泉徴収義務者の判断としては、0%免税を適用できない。さらに、22条一般資格が確認できないなら、10条2項(a)の5%軽減も使えない。結果として、国内法税率20.42%を基準に源泉徴収リスクを把握することになる。
+    </p>
+    <div class="box amberbox">
+      <p><strong>ただし後日立証の余地:</strong> 後日、米国親会社の当時の上位所有、総所得、控除可能支払、能動的事業、居住者性、受益者性を資料で示せるなら、様式17の追完又は相当資料により、当時からLOB実体要件を満たしていたと主張する余地は残る。後日立証は、当時存在した資格の証明であって、当時なかった資格の創設ではない。</p>
+    </div>
+    <h3>6.1 本件で収集すべき資料</h3>
+    <ul>
+      <li>米国親会社の各期株主名簿、種類株式・議決権・価値割合、上位所有図。</li>
+      <li>上位株主が個人、政府、公開会社、年金基金等の22条上の適格者に該当する資料。</li>
+      <li>米国親会社の各期総所得、控除可能支払、支払先の居住地、通常取引除外の根拠。</li>
+      <li>米国親会社が米国内で行う能動的事業の内容、役員・従業員・機能・資産・リスク、単なる持株会社でないことの資料。</li>
+      <li>日本子会社の配当権利確定日と6か月保有期間を確認できる株主名簿・決議資料。</li>
+      <li>様式17、過去提出済み様式17、省略可能性、居住者証明書の提示・保存記録。</li>
+    </ul>
+  </section>
+
+  <section id="sources">
+    <h2>7. 参照資料・根拠資料</h2>
+    <h3>7.1 条約本文・公式説明</h3>
+    <ul>
+      <li>財務省「日米租税条約統合テキスト」<a class="source" href="https://www.mof.go.jp/tax_policy/summary/international/tax_convention/USA_ST_en.pdf">USA_ST_en.pdf</a></li>
+      <li>外務省「日・米租税条約」<a class="source" href="https://www.mofa.go.jp/mofaj/gaiko/treaty/treaty159_1.html">和文正文への入口</a></li>
+      <li>IRS「2003年日米租税条約技術説明」<a class="source" href="https://www.irs.gov/pub/irs-trty/japante04.pdf">japante04.pdf</a></li>
+      <li>米国財務省「2013年改正プロトコル技術説明」<a class="source" href="https://home.treasury.gov/system/files/131/Treaty-Japan-Pr2-TE-10-29-2015.pdf">Treaty-Japan-Pr2-TE-10-29-2015.pdf</a></li>
+      <li>OECD「Preventing the Granting of Treaty Benefits in Inappropriate Circumstances, Action 6」<a class="source" href="https://www.oecd.org/content/dam/oecd/en/publications/reports/2015/10/preventing-the-granting-of-treaty-benefits-in-inappropriate-circumstances-action-6-2015-final-report_g1g5906e/9789264241695-en.pdf">Final Report PDF</a></li>
+      <li>OECD「Preventing tax treaty abuse」<a class="source" href="https://www.oecd.org/en/topics/sub-issues/preventing-tax-treaty-abuse.html">Topic page</a></li>
+      <li>国税庁「特典条項に関する付表（米）」<a class="source" href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/joyaku/annai/pdf2/266.pdf">様式17（米）PDF</a></li>
+      <li>経済産業省「国際税務の基礎知識③ 租税条約詳細」<a class="source" href="https://www.meti.go.jp/policy/external_economy/toshi/kokusaisozei/itaxseminar2021/03_kokusaizeimukiso3.pdf">PDF</a></li>
+    </ul>
+    <h3>7.2 ローカル照合資料</h3>
+    <ul>
+      <li><span class="local">/home/user/jplawdb4/treaty/text/united-states--usa-st-jp-pack-01.txt</span> 日米租税条約10条3項(a)</li>
+      <li><span class="local">/home/user/jplawdb4/treaty/text/united-states--usa-st-jp-pack-02.txt</span> 日米租税条約22条</li>
+      <li><span class="local">/home/user/jplawdb4/law/text/jisshi_tokurei_kisoku/9-2.txt</span> 実施特例省令9条の2の特典条項定義</li>
+      <li><span class="local">/home/user/jplawdb4/law/text/jisshi_tokurei_kisoku/2.txt</span> 実施特例省令2条の届出・免除資料関係</li>
+    </ul>
+    <p class="small">本補足メモは、同日作成の「日米間配当源泉徴収・LOB未確認時の税率判定メモ」を補完し、LOBの法的性質に焦点を絞ったもの。個別期の最終判定には、米国親会社の上位所有・所得流出・能動的事業資料を期別に確認する必要がある。</p>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Prepared as a supplemental HTML research memo. File: lob_legal_nature_supplement.html</p>
+  </div>
+</footer>
+</body>
+</html>

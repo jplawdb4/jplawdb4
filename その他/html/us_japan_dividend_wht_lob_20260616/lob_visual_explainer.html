@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LOBをやさしく理解する：日米配当源泉のための図解メモ</title>
+  <style>
+    :root {
+      --ink:#16202a; --muted:#5d6672; --line:#d9e2ec; --bg:#f6f8fb; --panel:#ffffff;
+      --navy:#0f2f4a; --blue:#075985; --teal:#0f766e; --green:#166534; --amber:#92400e; --red:#991b1b;
+      --soft-blue:#eef7fb; --soft-green:#eef8f2; --soft-amber:#fff7e6; --soft-red:#fff1f2;
+    }
+    * { box-sizing:border-box; }
+    body {
+      margin:0; background:var(--bg); color:var(--ink);
+      font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",Meiryo,system-ui,sans-serif;
+      line-height:1.85; letter-spacing:0;
+    }
+    a { color:var(--blue); text-decoration:none; border-bottom:1px dotted currentColor; }
+    header { background:#fbfdff; border-bottom:1px solid var(--line); }
+    .wrap { width:min(1120px, calc(100% - 40px)); margin:0 auto; }
+    .hero { padding:40px 0 26px; }
+    .eyebrow { color:var(--teal); font-weight:800; font-size:13px; margin-bottom:8px; }
+    h1 { margin:0; font-size:clamp(28px,4vw,43px); line-height:1.24; letter-spacing:0; }
+    .subtitle { max-width:920px; color:var(--muted); margin:14px 0 0; }
+    .meta { display:flex; gap:8px; flex-wrap:wrap; margin-top:18px; font-size:13px; }
+    .pill { border:1px solid var(--line); background:#fff; border-radius:999px; padding:5px 10px; }
+    main { padding:24px 0 68px; }
+    nav, section { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:24px 28px; margin:20px 0; }
+    nav a { margin-right:15px; white-space:nowrap; font-size:14px; }
+    h2 { font-size:24px; line-height:1.35; margin:0 0 12px; }
+    h3 { font-size:18px; margin:24px 0 8px; }
+    p { margin:0 0 14px; }
+    ul, ol { padding-left:1.35em; }
+    li { margin:6px 0; }
+    table { width:100%; border-collapse:collapse; margin:16px 0 20px; font-size:14px; }
+    th, td { border:1px solid var(--line); padding:10px 12px; vertical-align:top; }
+    th { background:#f1f5f9; text-align:left; }
+    .leadbox, .image-note, .rule, .warning, .answer { border-radius:8px; padding:15px 17px; border:1px solid var(--line); margin:16px 0; }
+    .leadbox { background:var(--soft-blue); border-color:#b8dce9; }
+    .answer { background:var(--soft-green); border-color:#b7dfca; }
+    .warning { background:var(--soft-amber); border-color:#efd08a; }
+    .rule { background:#f8fafc; }
+    .visual { display:grid; grid-template-columns:minmax(0, 1.1fr) minmax(300px, .9fr); gap:20px; align-items:stretch; margin:18px 0 22px; }
+    .visual img { width:100%; height:100%; min-height:250px; object-fit:cover; border-radius:8px; border:1px solid var(--line); background:#fff; }
+    .image-note { background:#fff; display:flex; flex-direction:column; justify-content:center; }
+    .image-note .label { color:var(--teal); font-weight:800; font-size:13px; margin-bottom:6px; }
+    .image-note strong { font-size:20px; color:var(--navy); }
+    .cards { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px; margin:14px 0; }
+    .card { border:1px solid var(--line); border-radius:8px; padding:13px 14px; background:#fff; }
+    .card .tag { display:inline-block; font-size:12px; font-weight:800; color:#fff; background:var(--navy); border-radius:999px; padding:2px 8px; margin-bottom:8px; }
+    .card.green .tag { background:var(--green); }
+    .card.amber .tag { background:var(--amber); }
+    .card.red .tag { background:var(--red); }
+    .flow { display:grid; grid-template-columns:repeat(5, 1fr); gap:8px; margin:16px 0 20px; }
+    .step { border:1px solid var(--line); border-radius:8px; background:#fff; padding:12px; position:relative; min-height:92px; }
+    .step:not(:last-child)::after { content:""; position:absolute; right:-8px; top:44px; width:8px; height:2px; background:#91a3b6; }
+    .step b { display:block; color:var(--navy); margin-bottom:4px; }
+    .small { color:var(--muted); font-size:13px; }
+    .quote { border-left:4px solid var(--teal); padding:8px 0 8px 14px; color:#26323f; background:#fbfdff; }
+    footer { border-top:1px solid var(--line); padding:24px 0 44px; color:var(--muted); font-size:13px; }
+    @media (max-width:820px) {
+      .wrap { width:min(100% - 24px,1120px); }
+      nav, section { padding:18px 16px; }
+      nav a { display:inline-block; margin-bottom:6px; }
+      .visual { grid-template-columns:1fr; }
+      .visual img { min-height:auto; aspect-ratio:16/9; }
+      .cards { grid-template-columns:1fr; }
+      .flow { grid-template-columns:1fr; }
+      .step:not(:last-child)::after { display:none; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap hero">
+    <div class="eyebrow">Visual Explainer / Limitation on Benefits</div>
+    <h1>LOBをやさしく理解する</h1>
+    <p class="subtitle">日米間の親子会社配当で「租税条約届出書はあるが、特典条項付表や居住者証明がない」とき、何が問題なのか。LOBを「条約特典の入口ゲート」として、図解で整理する。</p>
+    <div class="meta">
+      <span class="pill">作成日: 2026-06-16</span>
+      <span class="pill">対象: 日米配当源泉</span>
+      <span class="pill">焦点: LOB・様式17・0%免税</span>
+      <span class="pill">画像: imagegen生成 + HTML注記</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav>
+    <strong>目次</strong>
+    <a href="#what">1. LOBとは</a>
+    <a href="#why">2. なぜあるのか</a>
+    <a href="#rates">3. 配当源泉での効き方</a>
+    <a href="#tests">4. 主な判定ルート</a>
+    <a href="#docs">5. 書類との関係</a>
+    <a href="#case">6. 本件での使い方</a>
+    <a href="#sources">7. 根拠資料</a>
+  </nav>
+
+  <section id="what">
+    <h2>1. LOBとは何か</h2>
+    <div class="visual">
+      <img src="assets/lob_gate.png" alt="条約特典の入口ゲートを表す概念図">
+      <div class="image-note">
+        <div class="label">図で見る</div>
+        <strong>LOBは「条約特典の入口ゲート」</strong>
+        <p>租税条約の軽減税率や免税は、相手国の居住者なら誰でも自動で使えるわけではない。LOBは、そのゲートを通れる者をあらかじめ客観的に絞る仕組みである。</p>
+      </div>
+    </div>
+    <div class="leadbox">
+      <p><strong>一言でいうと:</strong> LOBは、条約特典を受けられる人・会社を限定する条項である。英語では <em>Limitation on Benefits</em>、日本語では「特典制限条項」と呼ばれる。</p>
+    </div>
+    <p>ここでいう「特典」とは、源泉税率の軽減や免税である。日米配当の場面なら、国内法では原則20.42%の源泉徴収が問題になるが、日米租税条約により5%又は0%まで下がることがある。その条約特典を使える会社かどうかを判定するのがLOBである。</p>
+    <p>重要なのは、LOBが「書類の名前」ではないことだ。様式17はLOBを証明・申告するための書類であって、LOBそのものは条約本文の中にある実体的な資格要件である。</p>
+  </section>
+
+  <section id="why">
+    <h2>2. なぜLOBがあるのか</h2>
+    <div class="visual">
+      <img src="assets/lob_tests.png" alt="所有関係と支払流出をフィルターで確認する概念図">
+      <div class="image-note">
+        <div class="label">図で見る</div>
+        <strong>条約のただ乗りを防ぐフィルター</strong>
+        <p>形式上は米国法人でも、実質的には第三国の者が条約特典を取りに来ている場合がある。LOBは、所有関係と所得の流れを見て、そのような利用を止める。</p>
+      </div>
+    </div>
+    <p>租税条約は、締約国どうしの二重課税を調整するための約束である。ところが、第三国の投資家が、条約の有利な国に中間会社を置いて、条約特典だけを取りに来ることがある。これが一般に <em>treaty shopping</em> と呼ばれる問題である。</p>
+    <div class="cards">
+      <div class="card">
+        <span class="tag">見た目</span>
+        <p>米国法人が日本法人から配当を受ける。</p>
+      </div>
+      <div class="card amber">
+        <span class="tag">確認点</span>
+        <p>その米国法人は、条約が想定する本来の受益者か。</p>
+      </div>
+      <div class="card green">
+        <span class="tag">LOB</span>
+        <p>所有・所得流出・事業実体などで客観的に判定する。</p>
+      </div>
+    </div>
+    <p>OECD/G20 BEPS Action 6も、条約濫用、特にtreaty shoppingを防ぐことを重要課題としている。LOBは、PPTのような目的テストと異なり、比較的機械的な要件で条約特典の入口を絞るSAAR、つまり特別否認規定として機能する。</p>
+  </section>
+
+  <section id="rates">
+    <h2>3. 配当源泉ではどう効くのか</h2>
+    <div class="visual">
+      <img src="assets/lob_rates.png" alt="税率判定が段階的に進む概念図">
+      <div class="image-note">
+        <div class="label">図で見る</div>
+        <strong>20.42% → 5% → 0% は階段</strong>
+        <p>0%免税は最上段であり、100%親会社という事実だけでは上がれない。5%にも0%にも、受益者性・居住者性・LOB資格が必要になる。</p>
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr><th>段階</th><th>意味</th><th>LOBとの関係</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>20.42%</strong></td>
+          <td>国内法上の原則。上場等でない外国法人向け配当の基本リスク。</td>
+          <td>条約特典を確認できないなら、支払法人はここへ戻る。</td>
+        </tr>
+        <tr>
+          <td><strong>5%</strong></td>
+          <td>日米租税条約10条2(a)の親子会社配当の限度税率。</td>
+          <td>受益者性、米国居住者性、10%以上保有、LOB資格が必要。</td>
+        </tr>
+        <tr>
+          <td><strong>0%</strong></td>
+          <td>日米租税条約10条3(a)の免税。より厳しい特例。</td>
+          <td>50%以上、6か月保有、さらに22条LOBの特定要件が必要。</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="warning">
+      <p><strong>誤解しやすい点:</strong> 「別表二で100%親会社」と分かることは、0%免税の一部資料にはなる。しかし、それだけでは受益者性、米国居住者性、6か月保有、22条1(f)(i)(ii)、22条2の能動的事業関連性までは証明しない。</p>
+    </div>
+    <p>日米租税条約10条3(a)は、0%免税の条件として、配当受益者が一定期間50%以上の議決権ある株式を保有していることに加え、22条1(f)(i)(ii)及び22条2などの条件を直接組み込んでいる。だからLOBは、配当条項の外にある単なる事務手続ではなく、0%免税の発生要件そのものに入っている。</p>
+  </section>
+
+  <section id="tests">
+    <h2>4. LOBの主な判定ルート</h2>
+    <div class="leadbox">
+      <p><strong>イメージ:</strong> 22条には複数の入口がある。上場会社、一定の子会社、年金基金、所有・基準浸食テスト、能動的事業テスト、権限ある当局の裁量救済などである。本件のような非上場の100%親会社では、特に22条1(f)と22条2が問題になりやすい。</p>
+    </div>
+    <div class="cards">
+      <div class="card green">
+        <span class="tag">所有テスト</span>
+        <p>適格な締約国居住者により、一定割合以上が直接又は間接に所有されているか。</p>
+      </div>
+      <div class="card amber">
+        <span class="tag">基準浸食テスト</span>
+        <p>控除可能支払が第三国の者へ大量に流れ、課税ベースが抜けていないか。</p>
+      </div>
+      <div class="card">
+        <span class="tag">能動的事業</span>
+        <p>米国側の事業活動と日本源泉所得に関連又は付随性があるか。</p>
+      </div>
+    </div>
+    <h3>4.1 22条1(f)(i): 所有テスト</h3>
+    <p>ざっくり言えば、「その米国親会社は、条約上ふさわしい人たちに支配されているか」を見る。親会社がさらに第三国ファンドや第三国持株会社に支配されている場合、この入口で詰まることがある。</p>
+    <h3>4.2 22条1(f)(ii): 基準浸食テスト</h3>
+    <p>ざっくり言えば、「米国会社に入った所得が、控除可能支払として第三国へ抜けていないか」を見る。利子、使用料、サービス料などが第三国関係者へ大きく流れる構造では、条約特典だけを米国会社で受ける形になっていないか確認が必要になる。</p>
+    <h3>4.3 22条2: 能動的事業テスト</h3>
+    <p>ざっくり言えば、「その配当は米国側の実際の事業とつながっているか」を見る。単なる投資管理会社や持株だけの会社では、このルートを使う説明が難しくなることがある。</p>
+  </section>
+
+  <section id="docs">
+    <h2>5. 書類との関係</h2>
+    <div class="visual">
+      <img src="assets/lob_docs.png" alt="条約届出書と証明資料パックの概念図">
+      <div class="image-note">
+        <div class="label">図で見る</div>
+        <strong>様式17は「魔法の券」ではなく「証明メモ」</strong>
+        <p>書類が要件を作るのではない。支払日に要件があることを、支払法人と税務署が確認できるようにするための道具である。</p>
+      </div>
+    </div>
+    <p>国税庁No.2888は、特典条項を有する租税条約で軽減・免除を受ける場合、租税条約に関する届出書のほか、特典条項に関する付表、つまり様式17、及び居住者証明書が必要になると説明している。また、様式17は租税条約の適用を受けることができる居住者であるかどうかを判定する書類とされている。</p>
+    <div class="flow">
+      <div class="step"><b>1. 条約届出書</b><span class="small">配当について条約を使う申告</span></div>
+      <div class="step"><b>2. 様式17</b><span class="small">LOB該当性の判定表</span></div>
+      <div class="step"><b>3. 居住者証明</b><span class="small">米国居住者性の証拠</span></div>
+      <div class="step"><b>4. 添付資料</b><span class="small">所有・支払・事業の裏付け</span></div>
+      <div class="step"><b>5. 保管</b><span class="small">調査時に説明できる状態</span></div>
+    </div>
+    <div class="answer">
+      <p><strong>結論:</strong> 届出書の提出は手続要件である。しかし、届出書や様式17が証明しようとしているLOB該当性は実体要件である。ここを混同すると、「書類がないだけだから問題ない」という危ない整理になる。</p>
+    </div>
+  </section>
+
+  <section id="case">
+    <h2>6. 本件ではどう使うか</h2>
+    <div class="visual">
+      <img src="assets/lob_timeline.png" alt="過去分と将来分を分けて対応する概念図">
+      <div class="image-note">
+        <div class="label">図で見る</div>
+        <strong>過去分は証拠で再判定、将来分は支払日前に止める</strong>
+        <p>過去分の後日立証と、将来分の無源泉継続は別問題である。将来分は、証拠がそろわないなら20.42%に戻す。</p>
+      </div>
+    </div>
+    <h3>6.1 過去分</h3>
+    <p>過去分は、様式17がなかったことだけで直ちに全滅と決めるのではなく、支払日時点で実体要件があったかを配当ごとに調べる。後日立証できるのは、当時すでに存在した事実である。後から事実を作ることはできない。</p>
+    <table>
+      <thead>
+        <tr><th>分類</th><th>状態</th><th>対応</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Green</strong></td><td>10条3(a)と22条の要件を後日資料で説明できる。</td><td>0%防御メモを作る。</td></tr>
+        <tr><td><strong>Amber</strong></td><td>0%は弱いが、5%なら説明できる余地がある。</td><td>5%との差額リスクを試算する。</td></tr>
+        <tr><td><strong>Red</strong></td><td>居住者性、受益者性、LOB、所有期間を説明できない。</td><td>20.42%本税・延滞税・不納付加算税をリスク計上する。</td></tr>
+      </tbody>
+    </table>
+    <h3>6.2 将来分</h3>
+    <p>将来分はシンプルにすべきである。支払日前日までに、条約届出書、様式17、居住者証明、所有関係資料、基準浸食資料、必要に応じて能動的事業資料がそろわなければ、0%源泉を継続しない。支払法人は、親会社の便宜ではなく、自社の源泉徴収義務を基準に判断する。</p>
+    <div class="warning">
+      <p><strong>実務メッセージ:</strong> 「LOB資料が出ないなら、支払法人としては20.42%源泉に戻します。親会社側で後日還付請求を検討してください」という運用が、最も説明しやすい。</p>
+    </div>
+  </section>
+
+  <section id="sources">
+    <h2>7. 根拠資料</h2>
+    <ul>
+      <li>国税庁 No.2884「非居住者等に対する源泉徴収・源泉徴収の税率」 <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2884.htm">https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2884.htm</a></li>
+      <li>国税庁 No.2888「租税条約に関する届出書の提出（源泉徴収関係）」 <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2888.htm">https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2888.htm</a></li>
+      <li>財務省「日米租税条約統合テキスト」 <a href="https://www.mof.go.jp/tax_policy/summary/international/tax_convention/USA_ST_en.pdf">https://www.mof.go.jp/tax_policy/summary/international/tax_convention/USA_ST_en.pdf</a></li>
+      <li>国税庁「源泉所得税（租税条約等）関係 様式」 <a href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/joyaku/annai/5320/01.htm">https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/joyaku/annai/5320/01.htm</a></li>
+      <li>IRS Technical Explanation to the 2003 Japan-U.S. Convention <a href="https://www.irs.gov/pub/irs-trty/japante04.pdf">https://www.irs.gov/pub/irs-trty/japante04.pdf</a></li>
+      <li>U.S. Treasury Technical Explanation to the 2013 Protocol <a href="https://home.treasury.gov/system/files/131/Treaty-Japan-Pr2-TE-10-29-2015.pdf">https://home.treasury.gov/system/files/131/Treaty-Japan-Pr2-TE-10-29-2015.pdf</a></li>
+      <li>OECD「Preventing tax treaty abuse」 <a href="https://www.oecd.org/en/topics/sub-issues/preventing-tax-treaty-abuse.html">https://www.oecd.org/en/topics/sub-issues/preventing-tax-treaty-abuse.html</a></li>
+    </ul>
+    <p class="small">本HTMLは、LOBの全論点を網羅する専門意見ではなく、日米配当源泉の判断を理解しやすくするための図解メモである。実際の税率適用は、配当日、株式保有期間、親会社の居住者性・受益者性・所有構造・支払構造・事業実体資料により個別に判定する。</p>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    画像はimagegenにより生成し、正確な法的ラベルと判定条件はHTML本文側で記載した。画像内に条文番号や税率を焼き込まないことで、図の読みやすさと法的正確性を両立している。
+  </div>
+</footer>
+</body>
+</html>

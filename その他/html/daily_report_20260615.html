@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日次レポート 2026-06-15</title>
+<style>
+  :root{
+    --bg:#f5f5f5; --card:#ffffff; --ink:#222; --sub:#666; --line:#e6e6e6;
+    --accent:#2c5f8a; --accent2:#3a7d5d; --warn:#c0772a; --danger:#b04a4a;
+    --chip:#eef3f8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:32px 16px; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,"Segoe UI","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    line-height:1.7; font-size:15px;
+  }
+  .wrap{max-width:900px; margin:0 auto;}
+  header.page{
+    background:linear-gradient(135deg,#2c5f8a,#264f73); color:#fff;
+    border-radius:14px; padding:28px 32px; box-shadow:0 4px 14px rgba(0,0,0,.12);
+    margin-bottom:22px;
+  }
+  header.page h1{margin:0 0 6px; font-size:24px; letter-spacing:.02em;}
+  header.page .meta{font-size:13px; opacity:.92;}
+  .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:14px; margin-bottom:22px;}
+  .stat{
+    background:var(--card); border-radius:12px; padding:16px 18px;
+    box-shadow:0 2px 8px rgba(0,0,0,.06); border:1px solid var(--line);
+  }
+  .stat .num{font-size:24px; font-weight:700; color:var(--accent); line-height:1.2;}
+  .stat .num.green{color:var(--accent2);} .stat .num.warn{color:var(--warn);} .stat .num.gray{color:var(--sub);}
+  .stat .lbl{font-size:12px; color:var(--sub); margin-top:4px;}
+  .card{
+    background:var(--card); border-radius:12px; padding:22px 26px; margin-bottom:18px;
+    box-shadow:0 2px 8px rgba(0,0,0,.06); border:1px solid var(--line);
+  }
+  .card h2{
+    margin:0 0 14px; font-size:17px; color:var(--accent);
+    border-bottom:2px solid var(--line); padding-bottom:8px; display:flex; align-items:center; gap:8px;
+  }
+  .card h2 .n{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:24px; height:24px; border-radius:50%; background:var(--accent); color:#fff;
+    font-size:13px; font-weight:700; flex:none;
+  }
+  .empty{color:var(--sub); font-style:italic;}
+  ul.clean{margin:6px 0; padding-left:20px;} ul.clean li{margin:5px 0;}
+  table{width:100%; border-collapse:collapse; font-size:13.5px; margin:6px 0;}
+  th,td{text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top;}
+  th{background:var(--chip); color:#3a4a58; font-weight:600;}
+  td.r,th.r{text-align:right; white-space:nowrap;}
+  code{background:#f3f4f6; padding:1px 6px; border-radius:5px; font-size:12px; word-break:break-all;}
+  .tag{display:inline-block; font-size:11px; padding:2px 9px; border-radius:20px; background:var(--chip); color:var(--accent); margin-left:6px;}
+  .tag.done{background:#e7f3ec; color:var(--accent2);}
+  .tag.warn{background:#fbf0e2; color:var(--warn);}
+  .tag.s{background:#2c5f8a; color:#fff;}
+  .filelist{font-size:13px;} .filelist .dir{color:var(--sub);} .filelist .fn{font-weight:600;}
+  .barrow{display:flex; align-items:center; gap:10px; margin:7px 0; font-size:13px;}
+  .barrow .name{width:130px; flex:none; color:var(--sub);}
+  .barrow .val{width:70px; flex:none; text-align:right; color:var(--ink);}
+  .bartrack{flex:1; background:#f0f2f4; border-radius:7px; overflow:hidden;}
+  .bar{height:14px; border-radius:7px; background:linear-gradient(90deg,#3a7d5d,#5aa37c);}
+  .bar.blue{background:linear-gradient(90deg,#2c5f8a,#4a86b8);}
+  .priority{display:inline-block; width:20px; height:20px; border-radius:5px; color:#fff; text-align:center; font-size:12px; font-weight:700; line-height:20px; flex:none;}
+  .p-hi{background:var(--danger);} .p-mid{background:var(--warn);} .p-lo{background:var(--accent2);}
+  .task{display:flex; gap:10px; margin:10px 0; align-items:flex-start;}
+  .task .body{flex:1;} .task .body b{color:var(--ink);}
+  .note{font-size:12.5px; color:var(--sub); margin-top:4px;}
+  .callout{background:#f7fafc; border-left:4px solid var(--accent); padding:10px 14px; border-radius:6px; font-size:13px; margin:8px 0;}
+  .callout.warn{background:#fbf6ee; border-left-color:var(--warn);}
+  footer{text-align:center; color:var(--sub); font-size:12px; margin-top:18px; padding-top:14px; border-top:1px solid var(--line);}
+  @media print{ body{background:#fff; padding:0;} .card,.stat,header.page{box-shadow:none; border:1px solid #ddd;} header.page{background:#264f73 !important; -webkit-print-color-adjust:exact; print-color-adjust:exact;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="page">
+    <h1>日次レポート — 2026-06-15</h1>
+    <div class="meta">対象期間：2026-06-15 の作業セッション（日付跨ぎ 06-16 未明まで） ／ 主題：博士論文「外国子会社合算税制／配置規則の欠落と課税標準形成の法定性」</div>
+  </header>
+
+  <div class="grid">
+    <div class="stat"><div class="num gray">0</div><div class="lbl">Git コミット</div></div>
+    <div class="stat"><div class="num">46</div><div class="lbl">作成・更新ファイル</div></div>
+    <div class="stat"><div class="num">21</div><div class="lbl">作業セッション</div></div>
+    <div class="stat"><div class="num">384.7M</div><div class="lbl">総トークン</div></div>
+    <div class="stat"><div class="num warn">$1,248</div><div class="lbl">API換算コスト</div></div>
+    <div class="stat"><div class="num green">S / 92</div><div class="lbl">改3版 評価</div></div>
+  </div>
+
+  <!-- 1 -->
+  <div class="card">
+    <h2><span class="n">1</span>GitHub コミット履歴</h2>
+    <p class="empty">対象ウィンドウ（2026-06-15 00:00 〜 06-17 00:00）に該当するコミットはありません。</p>
+    <div class="note">確認リポジトリ：<code>/mnt/c/Users/PC</code>・<code>ai-law-db</code>・<code>html-preview</code>・<code>jplawdb4</code>・<code>OCC_Vault</code>・<code>GEMINI_TOOLS</code>（6リポジトリ、いずれも該当なし）。本日の論文作業は <code>.docx / .md / .pdf</code> の版管理（output/doc 配下のフォルダ世代）で進行し、Git へはコミットされていません。</div>
+    <div class="callout warn">論文成果物（docx 系統）はバージョン管理外。世代はフォルダ名（<code>v5_2_…</code> / <code>改2</code> / <code>改3</code>）で管理されており、正本確定後に Git 化するか要検討。</div>
+  </div>
+
+  <!-- 2 -->
+  <div class="card">
+    <h2><span class="n">2</span>完了タスク</h2>
+    <div class="note" style="margin-bottom:10px;">セッションの TODO 追跡領域に、追跡中の TODO ファイルはありません。以下は <code>change_logs</code>・QA成果物・<code>dr_activity.log</code> から確認した<strong>実際の完了作業</strong>です。</div>
+    <ul class="clean">
+      <li><b>改2 形式整備版の作成</b> <span class="tag done">QA PASS</span><div class="note">Word目次の再整備（ページ番号右揃え・ドットリーダー・参考文献ブックマークエラー修正・自己参照TOC行削除）、隣接脚注番号の区切り追加、参考文献欄の7区分化、URL確認日を「二〇二六年六月一五日確認」に統一、略語一覧に CFC/OECD/EU/ATAD/IRC/Treas.Reg./TIOPA/AStG/CGI/BOFiP/BMF/BFH/HMRC/CJEU を追加、DOCXメタデータの版番号・更新者名・文字化け除去。<strong>113頁・脚注 174/174 欠番なし</strong>。</div></li>
+      <li><b>引用URL疎通検証</b> <span class="tag warn">22/28 OK</span><div class="note">未疎通6件は環境要因（<code>uscode.house.gov</code> タイムアウト、Légifrance 403、OECD DOI 403）。URL文字列自体の抽出崩れではないことを確認済。</div></li>
+      <li><b>改3版（論文_20260615_142248_改3.docx）の作成・テキスト抽出</b><div class="note">本文 130,318字・脚注 174・付録四・参考文献完備。<code>tmp/eval_ronbun_20260615_kai3/</code> に md/txt/pdf を抽出。</div></li>
+      <li><b>人間筆致改稿（v6 human-voice）</b><div class="note">序章・第一章・第二章（射程の不特定）を <code>rewrites/</code> に作成。</div></li>
+      <li><b>ゼロベース不完全擬制版・第二章</b><div class="note"><code>10_作業/論文/ゼロベース_不完全擬制版_20260615/本文_第二章_射程の不特定.md</code></div></li>
+      <li><b>改3版の評価（本セッション）</b> <span class="tag s">S 判定 92点</span><div class="note">全文（本文13万字＋脚注174）精読。配置規則欠缺＝法定主義層の問題という独自枠組み・五段階判別装置・66条悉皆走査の新発見（保険会社/国又は地方公共団体/構想区域）・五法域の一次資料統制を確認。引用相互参照（注97＝みずほ／156・161の前掲整合）も検証。S下限〜A上位（88–93）の帯と明示。</div></li>
+    </ul>
+  </div>
+
+  <!-- 3 -->
+  <div class="card">
+    <h2><span class="n">3</span>作成・更新ファイル一覧</h2>
+    <div class="note" style="margin-bottom:8px;">2026-06-15 に作成・更新された主要ファイル（論文パイプライン <code>render15_integrated_form_ai_revision_20260615/</code> 配下、計46ファイル）。</div>
+    <table>
+      <thead><tr><th>区分</th><th class="r">点数</th><th>主な内容</th></tr></thead>
+      <tbody>
+        <tr><td>形式整備版 <code>v5_2_kai2_formal_response_…</code></td><td class="r">31</td><td>改2/改3 docx・PDF、最終QA(md/json)、レンダーサンプルPNG(012–019頁)、URL確認json、coreprops修正、目次・脚注整備</td></tr>
+        <tr><td>人間筆致改稿 <code>v6_humanvoice_rewrite_…</code></td><td class="r">6</td><td>序章・第一章・第二章a/b の改稿txt</td></tr>
+        <tr><td>ゼロベース不完全擬制版</td><td class="r">4</td><td>第二章「射程の不特定」本文md ほか</td></tr>
+        <tr><td>評価用抽出 <code>tmp/eval_ronbun_20260615_kai3/</code></td><td class="r">5</td><td>改3抽出 md/txt、paper_kai3 md/txt/pdf</td></tr>
+      </tbody>
+    </table>
+    <div class="filelist" style="margin-top:10px;">
+      <div class="note">代表成果物：</div>
+      <ul class="clean">
+        <li><span class="fn">論文_20260615_142248_改3.docx</span> <span class="dir">— 評価対象の最新版（本文130,318字／脚注174）</span></li>
+        <li><span class="fn">論文_20260615_142248_改2_形式整備.docx / .pdf</span> <span class="dir">— 113頁・QA PASS（DOCX SHA256: 0B14B0…BC1D5）</span></li>
+        <li><span class="fn">formal_response_final_QA_20260615.md / .json</span> <span class="dir">— 形式面最終QA記録</span></li>
+      </ul>
+    </div>
+    <div class="callout">版分岐に注意：<code>改3</code>（評価済S/92）・<code>v6 human-voice</code>・<code>ゼロベース不完全擬制版</code> の3系統が併走中。正本の確定が未了。</div>
+  </div>
+
+  <!-- 4 -->
+  <div class="card">
+    <h2><span class="n">4</span>API 使用コスト</h2>
+    <div class="note" style="margin-bottom:8px;">セッション・トランスクリプト（<code>jsonl</code>）の usage フィールドから<strong>実トークン数を集計</strong>。推計値ではなく実測。モデル：<code>Opus 4.8</code>（全21セッション／1,657アシスタントメッセージ）。</div>
+    <table>
+      <thead><tr><th>トークン種別</th><th class="r">トークン数</th><th class="r">単価/M</th><th class="r">コスト</th></tr></thead>
+      <tbody>
+        <tr><td>入力</td><td class="r">1,000,287</td><td class="r">$15.00</td><td class="r">$15.00</td></tr>
+        <tr><td>出力</td><td class="r">3,647,819</td><td class="r">$75.00</td><td class="r">$273.59</td></tr>
+        <tr><td>キャッシュ書込</td><td class="r">22,564,626</td><td class="r">$18.75</td><td class="r">$423.09</td></tr>
+        <tr><td>キャッシュ読込</td><td class="r">357,493,506</td><td class="r">$1.50</td><td class="r">$536.24</td></tr>
+        <tr style="font-weight:700;"><td>合計</td><td class="r">384,706,238</td><td class="r">—</td><td class="r">$1,247.92</td></tr>
+      </tbody>
+    </table>
+    <div class="barrow"><span class="name">キャッシュ読込</span><div class="bartrack"><div class="bar blue" style="width:93%;"></div></div><span class="val">$536</span></div>
+    <div class="barrow"><span class="name">キャッシュ書込</span><div class="bartrack"><div class="bar blue" style="width:73%;"></div></div><span class="val">$423</span></div>
+    <div class="barrow"><span class="name">出力</span><div class="bartrack"><div class="bar blue" style="width:47%;"></div></div><span class="val">$274</span></div>
+    <div class="barrow"><span class="name">入力</span><div class="bartrack"><div class="bar blue" style="width:3%;"></div></div><span class="val">$15</span></div>
+    <div class="callout warn">
+      留意：<br>
+      ① 標準ティア単価で算出。<code>[1m]</code>（100万コンテキスト）で 20万トークン超のプロンプトには長文プレミアム（入出力最大2倍）が掛かるため、<strong>実請求額はこれより高くなり得る（本値は下限目安）</strong>。平均キャッシュ読込が1メッセージ約216Kで閾値付近のため影響は小さくない。<br>
+      ② サブスクリプション（Max等）利用時、本額は<strong>API換算の消費価値</strong>であり実支払額ではない。<br>
+      ③ 参考換算 ≈ ¥193,000（@¥155/$ 仮定）。
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div class="card">
+    <h2><span class="n">5</span>明日の推奨タスク</h2>
+
+    <div class="task"><span class="priority p-hi">1</span><div class="body">
+      <b>正本の確定（版分岐の解消）</b>
+      <div class="note">改3（S/92）・v6 human-voice・ゼロベース不完全擬制版の3系統を1本へ収束。AI臭排除と査読反映の最新を満たす版を正本に指定し、残りは <code>97_隔離/</code> 等へ退避。<em>確定前に新規改稿を増やさない</em>。</div>
+    </div></div>
+
+    <div class="task"><span class="priority p-hi">2</span><div class="body">
+      <b>評価弱点A への先回り（最重要）</b>
+      <div class="note">「実務的射程の小ささ」批判に対し、<strong>書かれた変換＝賠償責任保険準備金事件で現に争訟成立</strong>の対照を結論部前面へ。設例の数値（過少/過大の差）を事例的に補強し、欠缺が潜在的課税の歪みとして実在することを示す。A寄せ評価者を引き戻す唯一の改善点。</div>
+    </div></div>
+
+    <div class="task"><span class="priority p-mid">3</span><div class="body">
+      <b>未疎通URL6件の代替確認</b>
+      <div class="note"><code>uscode.house.gov</code>（タイムアウト）・Légifrance（403）・OECD DOI（403）。Wayback等のアーカイブURL確認、または資料名表示にとどめる方針を確定。平成31年度改正省令新旧対照表のリンク切れ疑いも併せて処理。<em>取れなければ無理にURLを掲げない（ハルシネーション厳禁）</em>。</div>
+    </div></div>
+
+    <div class="task"><span class="priority p-mid">4</span><div class="body">
+      <b>口頭試問 想定問答の作成（弱点A/B/C）</b>
+      <div class="note">A=実務的射程／B=論証起点が羽島・石井の非主力2文献／C=「明確主義→法定主義」移し替えのタクソノミー性。各々に応答案を用意。Cは Larenz=Canaris 欠缺論と国内学説（増田・木山・髙橋）の二本立てで補強。</div>
+    </div></div>
+
+    <div class="task"><span class="priority p-lo">5</span><div class="body">
+      <b>直近外国判例の一次確認 ＋ 形式最終スイープ</b>
+      <div class="note">CJEU C-524/23（2026-02）・Liberty Global 第10巡回区（2025-08）・Rubis（2025）・東京地判令和7年5月16日（公刊物未登載）を一次確認。確認できなければ補助層として注の限定運用を維持。脚注↔参考文献の機械突合・前掲注ずれ（диф 0/0/0）・PDF再生成で締め。</div>
+    </div></div>
+  </div>
+
+  <footer>
+    日次レポート ／ 生成日時 2026-06-16 00:1x ／ 対象：2026-06-15 作業セッション ／
+    データ出典：git log（6リポジトリ）・TODO追跡領域・change_logs・session jsonl usage 実集計・dr_activity.log
+  </footer>
+
+</div>
+</body>
+</html>

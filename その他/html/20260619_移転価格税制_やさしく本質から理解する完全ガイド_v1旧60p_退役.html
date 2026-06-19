@@ -1,0 +1,2036 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>移転価格税制を、やさしく・本質から理解する完全ガイド</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#121921; --ink-soft:#3a4150; --muted:#6b7280;
+    --line:#e3e6ec; --line-strong:#cbd2dc;
+    --bg:#f4f7f5; --card:#ffffff;
+    --accent:#0f766e; --accent-soft:#e3f4ef;
+    --warn:#b4541a; --warn-soft:#fdf1e8;
+    --danger:#b32d3a; --danger-soft:#fcebed;
+    --good:#2f7d52; --good-soft:#eaf5ee;
+    --insight:#6a3fa0; --insight-soft:#f2ecfa;
+    --gold:#8a6d1f; --gold-soft:#f8f2df;
+    --radius:14px;
+    --shadow:0 1px 2px rgba(20,30,50,.04),0 6px 22px rgba(20,30,50,.07);
+    --shadow-lg:0 3px 8px rgba(20,30,50,.06),0 18px 50px rgba(20,30,50,.10);
+    --serif:"Noto Sans JP","Hiragino Sans",sans-serif;
+    --sans:"Noto Sans JP","Hiragino Sans","Segoe UI",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:var(--sans); line-height:1.95; font-size:16.5px;
+    letter-spacing:.012em; -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  .wrap{max-width:980px; margin:0 auto; padding:0 22px 120px;}
+
+  /* ---- 表紙 ---- */
+  .cover{
+    background:linear-gradient(160deg,#0c2c28 0%,#114c44 52%,#1a7a64 100%);
+    color:#fff; border-radius:0 0 28px 28px; padding:74px 30px 64px;
+    text-align:center; box-shadow:var(--shadow-lg); position:relative; overflow:hidden;
+  }
+  .cover::after{
+    content:""; position:absolute; inset:0;
+    background:
+      radial-gradient(circle at 15% 20%,rgba(255,255,255,.10),transparent 38%),
+      radial-gradient(circle at 85% 80%,rgba(255,255,255,.07),transparent 40%);
+    pointer-events:none;
+  }
+  .cover .kicker{font-size:.86rem; letter-spacing:.3em; opacity:.82; margin:0 0 18px; font-weight:600;}
+  .cover h1{
+    font-family:var(--serif); font-weight:700; font-size:2.35rem; line-height:1.45;
+    margin:0 0 10px; text-shadow:0 2px 18px rgba(0,0,0,.25);
+  }
+  .cover h1 .small{display:block; font-size:1.25rem; opacity:.92; margin-top:14px; font-weight:500;}
+  .cover .lead{max-width:660px; margin:26px auto 0; font-size:1.02rem; line-height:1.9; opacity:.93;}
+  .cover .badges{margin-top:30px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;}
+  .cover .badge{
+    background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.28);
+    padding:7px 15px; border-radius:999px; font-size:.82rem; backdrop-filter:blur(3px);
+  }
+
+  /* ---- 見出し ---- */
+  h2.chap{
+    font-family:var(--serif); font-size:1.7rem; font-weight:700; color:var(--ink);
+    margin:74px 0 6px; padding-top:14px; line-height:1.5;
+  }
+  h2.chap .num{
+    display:inline-block; font-family:var(--sans); font-size:.74rem; font-weight:700;
+    letter-spacing:.18em; color:var(--accent); background:var(--accent-soft);
+    padding:5px 13px; border-radius:999px; margin-bottom:14px;
+  }
+  h2.chap .num.bar{display:block; width:fit-content;}
+  .chap-sub{color:var(--muted); font-size:1rem; margin:0 0 26px; border-bottom:2px solid var(--line); padding-bottom:20px;}
+  h3{font-size:1.24rem; font-weight:700; color:var(--ink); margin:46px 0 12px; padding-left:14px; border-left:4px solid var(--accent); line-height:1.55;}
+  h4{font-size:1.06rem; font-weight:700; color:var(--accent); margin:32px 0 8px;}
+
+  p{margin:0 0 18px; color:var(--ink-soft);}
+  .lead-p{font-size:1.06rem; color:var(--ink); font-weight:500;}
+  strong{color:var(--ink); font-weight:700;}
+  em{font-style:normal; background:linear-gradient(transparent 62%,#ffe9a8 62%); font-weight:600; padding:0 1px;}
+  .term{color:var(--accent); font-weight:700; border-bottom:1px dotted var(--accent);}
+  a{color:var(--accent); text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  ul,ol{margin:0 0 20px; padding-left:1.4em; color:var(--ink-soft);}
+  li{margin:0 0 9px;}
+  li::marker{color:var(--accent);}
+
+  /* ---- カード/ボックス ---- */
+  .card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:30px 32px; box-shadow:var(--shadow); margin:24px 0;}
+
+  .box{border-radius:12px; padding:20px 24px; margin:26px 0; border:1px solid var(--line); position:relative;}
+  .box .box-t{font-weight:700; font-size:.96rem; margin:0 0 8px; display:flex; align-items:center; gap:8px; letter-spacing:.02em;}
+  .box p:last-child{margin-bottom:0;}
+  .box.essence{background:var(--insight-soft); border-color:#d9c9f0;}
+  .box.essence .box-t{color:var(--insight);}
+  .box.note{background:var(--accent-soft); border-color:#c2e6dd;}
+  .box.note .box-t{color:var(--accent);}
+  .box.warn{background:var(--warn-soft); border-color:#f3d8c2;}
+  .box.warn .box-t{color:var(--warn);}
+  .box.danger{background:var(--danger-soft); border-color:#f2cfd4;}
+  .box.danger .box-t{color:var(--danger);}
+  .box.good{background:var(--good-soft); border-color:#c6e6d2;}
+  .box.good .box-t{color:var(--good);}
+  .box.num{background:var(--gold-soft); border-color:#e7dab0;}
+  .box.num .box-t{color:var(--gold);}
+  .box.ex{background:#fbfcfe; border-color:var(--line-strong); border-left:5px solid var(--accent);}
+  .box.ex .box-t{color:var(--ink);}
+
+  blockquote{
+    margin:24px 0; padding:14px 22px; border-left:4px solid var(--line-strong);
+    background:#fafbfc; color:var(--ink-soft); border-radius:0 8px 8px 0; font-size:.97rem;
+  }
+  blockquote .src{display:block; margin-top:8px; font-size:.82rem; color:var(--muted);}
+
+  /* 条文引用 */
+  .statute{
+    font-family:var(--serif); background:#fbfaf6; border:1px solid #e8e1cf;
+    border-radius:10px; padding:18px 22px; margin:22px 0; font-size:.95rem; line-height:1.9; color:#37312a;
+  }
+  .statute .label{
+    font-family:var(--sans); display:inline-block; font-size:.74rem; font-weight:700; color:var(--gold);
+    background:var(--gold-soft); padding:3px 10px; border-radius:6px; margin-bottom:10px; letter-spacing:.04em;
+  }
+  .statute mark{background:#ffe79e; padding:0 2px; border-radius:3px;}
+
+  /* ---- 表 ---- */
+  .tbl-wrap{overflow-x:auto; margin:24px 0; border-radius:12px; box-shadow:var(--shadow);}
+  table{border-collapse:collapse; width:100%; background:var(--card); font-size:.92rem;}
+  th,td{border:1px solid var(--line); padding:11px 14px; text-align:left; vertical-align:top;}
+  thead th{background:#eaf2ef; color:var(--ink); font-weight:700; border-bottom:2px solid var(--line-strong);}
+  tbody tr:nth-child(even){background:#fafbfc;}
+  td.c,th.c{text-align:center;} td.r{text-align:right; font-variant-numeric:tabular-nums;}
+  .tag{display:inline-block; font-size:.74rem; font-weight:700; padding:2px 9px; border-radius:6px; white-space:nowrap;}
+  .tag.a{background:var(--accent-soft); color:var(--accent);}
+  .tag.d{background:var(--danger-soft); color:var(--danger);}
+  .tag.g{background:var(--good-soft); color:var(--good);}
+  .tag.w{background:var(--warn-soft); color:var(--warn);}
+
+  /* ---- 図 ---- */
+  figure{margin:34px 0; text-align:center;}
+  figure svg{max-width:100%; height:auto; border-radius:12px; background:var(--card); border:1px solid var(--line); box-shadow:var(--shadow); padding:8px;}
+  figcaption{font-size:.86rem; color:var(--muted); margin-top:12px; line-height:1.6;}
+  figcaption .fn{font-weight:700; color:var(--ink-soft);}
+
+  /* ---- 目次 ---- */
+  .toc{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:30px 34px; box-shadow:var(--shadow); margin:40px 0;}
+  .toc h2{font-family:var(--serif); font-size:1.3rem; margin:0 0 6px; color:var(--ink);}
+  .toc .toc-note{color:var(--muted); font-size:.86rem; margin:0 0 18px;}
+  .toc ol{list-style:none; padding:0; margin:0; counter-reset:toc;}
+  .toc li{margin:0; border-bottom:1px dashed var(--line); }
+  .toc li:last-child{border-bottom:none;}
+  .toc a{display:flex; align-items:baseline; gap:14px; padding:11px 6px; color:var(--ink-soft); border-radius:8px; transition:background .15s;}
+  .toc a:hover{background:var(--accent-soft); text-decoration:none;}
+  .toc a .tn{font-size:.78rem; font-weight:700; color:var(--accent); min-width:58px; font-family:var(--sans);}
+  .toc a .tt{font-weight:600; color:var(--ink);}
+  .toc a .td{display:block; font-size:.82rem; color:var(--muted); font-weight:400; margin-top:2px;}
+
+  /* ---- 用語ミニ ---- */
+  .mini{display:grid; grid-template-columns:max-content 1fr; gap:6px 18px; margin:20px 0; font-size:.93rem;}
+  .mini dt{font-weight:700; color:var(--accent);}
+  .mini dd{margin:0; color:var(--ink-soft);}
+
+  /* ---- 数値ハイライト ---- */
+  .stat-row{display:flex; flex-wrap:wrap; gap:16px; margin:26px 0;}
+  .stat{flex:1 1 150px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px; text-align:center; box-shadow:var(--shadow);}
+  .stat .v{font-size:1.9rem; font-weight:800; color:var(--accent); font-family:var(--sans); line-height:1.1;}
+  .stat .v.d{color:var(--danger);} .stat .v.g{color:var(--good);} .stat .v.w{color:var(--warn);}
+  .stat .k{font-size:.82rem; color:var(--muted); margin-top:6px;}
+
+  hr.soft{border:none; border-top:1px solid var(--line); margin:50px 0;}
+
+  /* フッター */
+  .doc-foot{margin-top:80px; padding-top:30px; border-top:2px solid var(--line); color:var(--muted); font-size:.85rem; text-align:center;}
+
+  .anchor{position:relative; top:-20px; visibility:hidden;}
+
+  @media (max-width:640px){
+    body{font-size:15.5px;}
+    .cover h1{font-size:1.75rem;}
+    .cover h1 .small{font-size:1.02rem;}
+    h2.chap{font-size:1.4rem;}
+    .card,.toc{padding:22px 20px;}
+    .statute,.box{padding:16px 18px;}
+  }
+  @media print{
+    body{background:#fff; font-size:10.8pt; line-height:1.7;}
+    .wrap{max-width:none; padding:0;}
+    .cover{border-radius:0; box-shadow:none;}
+    .card,.box,figure svg,.toc,.tbl-wrap{box-shadow:none;}
+    h2.chap{page-break-before:always; break-before:page;}
+    h2.chap, h3, h4{page-break-after:avoid;}
+    figure, table, .box, .statute{page-break-inside:avoid;}
+    a{color:var(--ink);}
+  }
+</style>
+</head>
+<body>
+
+<header class="cover">
+  <p class="kicker">TRANSFER PRICING / ARM'S LENGTH PRINCIPLE</p>
+  <h1>その値段、「赤の他人どうし」ならいくら？
+    <span class="small">移転価格税制を、やさしく・本質から理解する完全ガイド</span>
+  </h1>
+  <p class="lead">同じグループの会社どうしは、取引の値段を自分たちで自由に決められます。だから利益は、国境をやすやすと越えていく——その値段を「もし独立した他人どうしならいくらで取引したか」という物差しで測り直し、利益をもとの場所へ引き戻す。
+  名前は難しいけれど、芯は驚くほどシンプルです。この一冊で、制度の<strong>仕組み</strong>と、その奥にある<strong>「価値はどこで生まれたか」という問い</strong>まで、専門知識ゼロから登りきります。</p>
+  <div class="badges">
+    <span class="badge">初心者向け・前提知識ゼロ</span>
+    <span class="badge">図解（SVG）多数</span>
+    <span class="badge">条文・OECD出典を明記</span>
+    <span class="badge">2025年12月時点の現行法</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <nav class="toc">
+    <h2>この本の地図</h2>
+    <p class="toc-note">「なぜ必要か（原理）」から始めて、「どう測るか（道具）」を経て、「どう運用し、どこで揉めるか（実務）」へ。各章は前の章を踏み台にしています。気になる章だけ読んでも構いませんが、初めてなら順番に登るのがいちばん速いです。架空のグループ会社〈NOVA〉が全章を旅の道連れになります。</p>
+    <ol>
+      <li><a href="#c0"><span class="tn">序 章</span><span><span class="tt">なぜ移転価格税制があるのか</span><span class="td">同じ利益を、2つの国が取り合う</span></span></a></li>
+      <li><a href="#c1"><span class="tn">第1章</span><span><span class="tt">移転価格って、結局なに？</span><span class="td">「独立企業間価格」という一本の物差し</span></span></a></li>
+      <li><a href="#c2"><span class="tn">第2章</span><span><span class="tt">独立企業原則という発明</span><span class="td">なぜ世界は、この原理を選んだのか</span></span></a></li>
+      <li><a href="#c3"><span class="tn">第3章</span><span><span class="tt">誰が対象になるのか</span><span class="td">「国外関連者」と50%という線</span></span></a></li>
+      <li><a href="#c4"><span class="tn">第4章</span><span><span class="tt">機能・資産・リスク（FAR）</span><span class="td">「誰が何をして、何を負ったか」で利益は決まる</span></span></a></li>
+      <li><a href="#c5"><span class="tn">第5章</span><span><span class="tt">価格を決める5つの道具</span><span class="td">CUP・RP・CP・TNMM・PSM</span></span></a></li>
+      <li><a href="#c6"><span class="tn">第6章</span><span><span class="tt">比較対象が見つからないとき</span><span class="td">TNMMと「レンジ（幅）」で考える</span></span></a></li>
+      <li><a href="#c7"><span class="tn">第7章</span><span><span class="tt">無形資産という最難関</span><span class="td">ブランド・特許の価値は、誰のものか（DEMPE）</span></span></a></li>
+      <li><a href="#c8"><span class="tn">第8章</span><span><span class="tt">グループ内サービスと便益テスト</span><span class="td">「その本社費、本当に役に立った？」</span></span></a></li>
+      <li><a href="#c9"><span class="tn">第9章</span><span><span class="tt">お金の取引の移転価格</span><span class="td">親子ローン・保証料は「リスクの値段」</span></span></a></li>
+      <li><a href="#c10"><span class="tn">第10章</span><span><span class="tt">寄附金との交差点</span><span class="td">措置法66条の4第3項——日本固有の急所</span></span></a></li>
+      <li><a href="#c11"><span class="tn">第11章</span><span><span class="tt">文書化という説明責任</span><span class="td">マスターファイル・ローカルファイル・CbCR</span></span></a></li>
+      <li><a href="#c12"><span class="tn">第12章</span><span><span class="tt">税務調査と二重課税</span><span class="td">「物語」の競争と、推定課税という刃</span></span></a></li>
+      <li><a href="#c13"><span class="tn">第13章</span><span><span class="tt">争わないための制度</span><span class="td">APA（事前確認）とMAP（相互協議）</span></span></a></li>
+      <li><a href="#c14"><span class="tn">第14章</span><span><span class="tt">数字で追う完全ケース</span><span class="td">NOVAグループの4取引を、実数で解く</span></span></a></li>
+      <li><a href="#c15"><span class="tn">第15章</span><span><span class="tt">世界の潮流と、これから</span><span class="td">BEPS・Amount B・関税とVATの三角関係</span></span></a></li>
+      <li><a href="#c16"><span class="tn">終 章</span><span><span class="tt">価値は、どこで生まれたか</span><span class="td">移転価格の本質に、もう一度立ち返る</span></span></a></li>
+      <li><a href="#ax-a"><span class="tn">付録A</span><span><span class="tt">用語集</span><span class="td">移転価格の必須50語を、一文定義で引く</span></span></a></li>
+      <li><a href="#ax-b"><span class="tn">付録B</span><span><span class="tt">つまずきやすいQ&amp;A</span><span class="td">CFC・関税・寄附金との違いほか、15の疑問</span></span></a></li>
+      <li><a href="#ax-c"><span class="tn">付録C</span><span><span class="tt">実務の勘どころ12</span><span class="td">海外子会社に関わる人が現場で気をつけること</span></span></a></li>
+      <li><a href="#ax-d"><span class="tn">付録D</span><span><span class="tt">一次資料の読みどころ</span><span class="td">OECD・国税庁・条文への導線</span></span></a></li>
+    </ol>
+  </nav>
+
+  <!--====================== 序章 ======================-->
+  <span class="anchor" id="c0"></span>
+  <h2 class="chap"><span class="num bar">序 章</span>なぜ移転価格税制があるのか</h2>
+  <p class="chap-sub">——同じ利益を、2つの国が取り合う</p>
+
+  <p class="lead-p">まず、肩の力を抜いてください。これから扱う「移転価格税制」は、国際課税のなかでも難解さで知られる分野です。専門家でも、分厚いガイドラインを前にため息をつきます。でも、その<strong>考え方そのもの</strong>は、中学生にも説明できるくらいシンプルです。この本は、その「シンプルな芯」をまず手渡し、そのうえで「なぜ実務はあんなに複雑になるのか」「制度はどこで揉めるのか」まで、ゆっくり一緒に登っていきます。</p>
+
+  <h3>一つの素朴な疑問から始めよう</h3>
+  <p>日本のメーカーが、ベトナムにある自社の子会社で部品を作り、それを日本の親会社が買い取って、国内で組み立てて売る——よくある形です。ここで、親会社がベトナムの子会社から部品を「1個いくらで買うか」を考えてみてください。これは、グループの<strong>内部</strong>で決める値段です。さて。</p>
+
+  <div class="box ex">
+    <p class="box-t">🤔 素朴な疑問</p>
+    <p>同じグループの親子だから、部品の値段は自分たちで自由に決められます。では、その値段を<strong>わざと高く（あるいは安く）</strong>設定したら——グループ全体の利益は変わらないのに、<strong>「どの国で、いくら利益が出たことになるか」</strong>を、自由に動かせてしまうのではないでしょうか？</p>
+  </div>
+
+  <p>そのとおりです。ここがすべての出発点になります。たとえば、ベトナムの子会社が部品を1個100円で作れるとして、それを親会社に「300円」で売ったとしましょう。すると、ベトナム側には1個あたり200円の利益が残り、日本側はその分だけ仕入れが高くなって利益が減ります。逆に「110円」で売れば、利益のほとんどは日本側に残る。<strong>同じ部品が、同じだけ作られ、同じだけ売れているのに、値段の決め方ひとつで、利益が日本とベトナムの間を行ったり来たりする</strong>のです。</p>
+
+  <p>「それの何が問題なの？ グループ全体で見れば、儲けは同じでしょう」と思うかもしれません。グループの懐勘定としては、たしかにそうです。ところが、<strong>税金は「国ごと」にかかります</strong>。日本の利益には日本が、ベトナムの利益にはベトナムが課税する。だから、利益がどちらの国に「出たことになるか」は、<strong>どちらの国がいくら税金を取れるか</strong>に直結します。そして、もし日本（法人税の負担が重い国）の利益を、税金の軽い国へと値段の操作で移せたら——グループは、世界全体で払う税金を小さくできてしまう。これが、各国の税務当局がもっとも警戒する事態です。</p>
+
+  <div class="box essence">
+    <p class="box-t">💡 この本がつかみにいく「本質」</p>
+    <p>移転価格税制とは、ひとことで言えば——<br>
+    <strong>「グループ内の会社どうしが決めた取引の値段を、『もし独立した他人どうしなら、いくらで取引したか』という値段に引き直して、それぞれの国の利益（＝課税のもと）を計算し直す」</strong>という制度です。<br>
+    つまり<em>「身内だから自由に決められる値段」を、税金の場面でだけ、「他人どうしの値段」に置き換える</em>装置。これがすべての出発点であり、最後まで効いてくる芯です。</p>
+  </div>
+
+  <h3>専門用語を、一つだけ覚えよう</h3>
+  <p>ここで、この本の主役となる言葉を一つだけ。<span class="term">独立企業間価格</span>（どくりつきぎょうかんかかく）です。英語の頭文字をとって<strong>ALP</strong>（Arm's Length Price）とも呼ばれます。直訳すると「腕の長さ（arm's length）の価格」。腕を伸ばした分だけ距離をとった、<strong>馴れ合いのない他人どうしの間で成立するであろう値段</strong>、という意味です。</p>
+
+  <div class="mini">
+    <dt>移転価格</dt><dd>Transfer Price。グループ内の会社どうし（関連者間）で取引するときに付けられる値段のこと。それ自体は当たり前に存在するもので、悪いものではありません。</dd>
+    <dt>独立企業間価格（ALP）</dt><dd>もし資本関係のない独立した第三者どうしが、同じ取引を同じ条件で行ったら成立したであろう値段。移転価格税制は、この物差し一本で動きます。</dd>
+    <dt>独立企業原則</dt><dd>Arm's Length Principle（ALP原則）。関連者間の取引も「独立企業間価格で行われたもの」として所得を計算すべきだ、という国際的な大原則。OECDが掲げる世界共通のルールです。</dd>
+  </div>
+
+  <p>移転価格税制を一文に圧縮すると、「<strong>関連者との取引は、独立企業間価格で行われたものとみなして、所得を計算し直す</strong>」となります。実際、日本の条文（租税特別措置法66条の4）も、まさにこの言葉で書かれています。本書のほぼすべての章は、この一文の意味を、いろいろな角度から深く理解していく旅だと言ってもいいくらいです。</p>
+
+  <h3>利益は、なぜ国境を越えたがるのか</h3>
+  <p>では、なぜ企業は利益を別の国へ動かしたくなるのでしょう。理由はシンプルで、<strong>国によって法人税の重さが違う</strong>からです。同じ100の利益でも、税率の高い国で出せば手元に残るのは少なく、税率の低い国で出せば多く残る。だとすれば、できるだけ税率の低い国で利益が出たことにしたい——この誘惑は、利益を追求する企業にとって、ごく自然なものです。</p>
+
+  <div class="box note">
+    <p class="box-t">📘 「合法な節税」と「課税の対象」の境目</p>
+    <p>ここを誤解しないでください。グループ内で値段を付けること自体は、まったく正当な経済活動です。移転価格税制は「脱税の摘発」ではありません。問題になるのは、その値段が<strong>「独立企業間価格からズレている」</strong>ときだけ。当局は、ズレた分の利益を、本来あるべき国へ戻すよう計算し直すのです。つまりこの制度は、<em>善悪の判定ではなく、「利益をどの国に配分するか」という、国どうしの取り分の調整</em>だと理解すると、全体像がスッと通ります。</p>
+  </div>
+
+  <p>下の図で、値段の操作によって利益と税額がどう動くかを、いちど目で見ておきましょう。グループ全体の儲けは変わらないのに、<strong>どこに利益を「置く」か</strong>で、世界全体で払う税金が変わってしまう——この一枚が、移転価格税制が存在する理由のすべてを物語っています。</p>
+
+  <figure>
+    <svg viewBox="0 0 880 410" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="移転価格の操作で利益と税額が動く仕組み">
+      <rect x="0" y="0" width="880" height="410" fill="#ffffff"/>
+      <text x="440" y="34" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="700" fill="#1a1d24">同じ取引でも、値段しだいで「税金の合計」が変わる</text>
+      <text x="440" y="56" text-anchor="middle" font-family="sans-serif" font-size="12.5" fill="#6b7280">部品の製造コスト100・最終的な売上はどちらも同じ。動かしたのは「子会社→親会社の値段」だけ</text>
+      <defs><marker id="ar0" markerWidth="11" markerHeight="11" refX="8" refY="3.2" orient="auto"><path d="M0,0 L9,3.2 L0,6.4 Z" fill="#0f766e"/></marker></defs>
+
+      <!-- 左：適正価格 -->
+      <g font-family="sans-serif">
+        <text x="220" y="96" text-anchor="middle" font-size="14" font-weight="700" fill="#2f7d52">① 適正な値段（独立企業間価格＝150）</text>
+        <rect x="60" y="115" width="150" height="92" rx="12" fill="#eaf5ee" stroke="#2f7d52" stroke-width="1.6"/>
+        <text x="135" y="142" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1a1d24">ベトナム子会社</text>
+        <text x="135" y="163" text-anchor="middle" font-size="11" fill="#3a4150">税率 20%</text>
+        <text x="135" y="184" text-anchor="middle" font-size="11.5" fill="#3a4150">利益 50 → 税 10</text>
+        <rect x="230" y="115" width="150" height="92" rx="12" fill="#eaf5ee" stroke="#2f7d52" stroke-width="1.6"/>
+        <text x="305" y="142" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1a1d24">日本 親会社</text>
+        <text x="305" y="163" text-anchor="middle" font-size="11" fill="#3a4150">税率 30%</text>
+        <text x="305" y="184" text-anchor="middle" font-size="11.5" fill="#3a4150">利益 50 → 税 15</text>
+        <path d="M210,161 L228,161" stroke="#0f766e" stroke-width="2" marker-end="url(#ar0)"/>
+        <text x="220" y="151" text-anchor="middle" font-size="10" fill="#6b7280">150で販売</text>
+        <rect x="95" y="225" width="250" height="34" rx="17" fill="#fff" stroke="#2f7d52" stroke-width="2"/>
+        <text x="220" y="247" text-anchor="middle" font-size="13" font-weight="700" fill="#2f7d52">税金の合計 ＝ 25</text>
+      </g>
+
+      <!-- 右：操作価格 -->
+      <g font-family="sans-serif">
+        <text x="650" y="96" text-anchor="middle" font-size="14" font-weight="700" fill="#b32d3a">② 操作した値段（子会社で利益を厚く＝190）</text>
+        <rect x="490" y="115" width="150" height="92" rx="12" fill="#fcebed" stroke="#b32d3a" stroke-width="1.6"/>
+        <text x="565" y="142" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1a1d24">ベトナム子会社</text>
+        <text x="565" y="163" text-anchor="middle" font-size="11" fill="#3a4150">税率 20%</text>
+        <text x="565" y="184" text-anchor="middle" font-size="11.5" fill="#3a4150">利益 90 → 税 18</text>
+        <rect x="660" y="115" width="150" height="92" rx="12" fill="#fcebed" stroke="#b32d3a" stroke-width="1.6"/>
+        <text x="735" y="142" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1a1d24">日本 親会社</text>
+        <text x="735" y="163" text-anchor="middle" font-size="11" fill="#3a4150">税率 30%</text>
+        <text x="735" y="184" text-anchor="middle" font-size="11.5" fill="#3a4150">利益 10 → 税 3</text>
+        <path d="M640,161 L658,161" stroke="#0f766e" stroke-width="2" marker-end="url(#ar0)"/>
+        <text x="650" y="151" text-anchor="middle" font-size="10" fill="#6b7280">190で販売</text>
+        <rect x="525" y="225" width="250" height="34" rx="17" fill="#fff" stroke="#b32d3a" stroke-width="2"/>
+        <text x="650" y="247" text-anchor="middle" font-size="13" font-weight="700" fill="#b32d3a">税金の合計 ＝ 21</text>
+      </g>
+
+      <!-- 下：結論 -->
+      <rect x="150" y="300" width="580" height="86" rx="14" fill="#fbfaf6" stroke="#e8e1cf" stroke-width="1.5"/>
+      <text x="440" y="330" text-anchor="middle" font-family="sans-serif" font-size="13.5" font-weight="700" fill="#8a6d1f">値段を操作するだけで、世界全体の税負担が 25 → 21 に減った</text>
+      <text x="440" y="356" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#3a4150">高税率の日本の利益（50→10）を、低税率のベトナム（50→90）へ移したから。</text>
+      <text x="440" y="375" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#3a4150">移転価格税制は、この②を①の値段（150）に引き直し、日本の利益を本来の50へ戻す。</text>
+    </svg>
+    <figcaption><span class="fn">図0-1</span>　グループ全体の経済実態（製造コスト・最終売上）はまったく同じでも、グループ内の値段を動かすだけで「どの国にいくら利益が出たことになるか」が変わり、世界全体の税負担まで変わってしまう。移転価格税制は、この値段を独立企業間価格（150）に引き直して、利益を本来あるべき場所へ戻す制度である。</figcaption>
+  </figure>
+
+  <h3>影のようについてくる問題——二重課税</h3>
+  <p>ところが、この「引き直し」には、やっかいな影がつきまといます。<strong>二重課税</strong>です。さきほどの例で、日本の当局が「ベトナムへの支払いが高すぎる。本来の値段は150だ」と判断し、日本側の利益を10から50へと引き上げて課税したとしましょう。これで日本は満足です。ところが、<strong>ベトナム側は、すでに90の利益で課税を済ませている</strong>。ベトナムが「では、こちらは利益を50に下げて、払いすぎた税を返します」と応じてくれなければ——同じ40の利益に、日本とベトナムが<strong>二重に課税</strong>してしまうことになります。</p>
+
+  <p>これは企業にとって深刻です。本来、世界のどこかで一度だけ課税されるべき利益に、二つの国が同時に手を伸ばす。放っておけば、グループは二重に税を払わされ、国際的な事業活動そのものが萎縮してしまう。だからこそ移転価格の世界では、<strong>「一国が勝手に引き直して終わり」ではなく、相手国との調整（第13章のMAP＝相互協議）までがセットで考えられている</strong>のです。引き直しの裏には、つねにこの二重課税という影がある——これは本書を通じて何度も顔を出す、重要なテーマです。</p>
+
+  <h3>世界中の国が、同じ物差しを必要とした</h3>
+  <p>利益が国境を越える問題は、もちろん日本だけのものではありません。企業が多国籍化するにつれ、各国はみな同じ壁にぶつかりました。「自分の国の取り分を守りたい。でも、各国がてんでばらばらの基準で利益を奪い合えば、二重課税だらけで国際取引が成り立たない」。そこで必要になったのが、<strong>世界共通の物差し</strong>です。</p>
+
+  <p>その物差しを整えてきたのが<span class="term">OECD</span>（経済協力開発機構）です。OECDは1979年に移転価格に関する報告書をまとめ、1995年には本格的な<strong>「移転価格ガイドライン」</strong>を公表しました。これが世界標準となり、2017年にはBEPS（税源浸食と利益移転）プロジェクトの成果を取り込んで大改訂、現在は<strong>2022年版</strong>が最新です。日本がこの国際標準に沿って自国の移転価格税制（措置法66条の4）を導入したのは、<strong>昭和61年（1986年）</strong>のことでした。</p>
+
+  <div class="box ex">
+    <p class="box-t">🪙 たとえ話：家族の食卓と、よその家の値段</p>
+    <p>家族のあいだでは、「この皿洗い、500円ね」なんて値段は付けません。付けても、同じ財布の中で右から左へ動くだけだからです。ところが、もし家族の一人ひとりが<strong>「別々に税金を払う」</strong>としたらどうでしょう。とたんに、家の中の「値段の付け方」が、誰がいくら税を払うかを左右しはじめます。お小遣いを多くもらった子が、多く納税する——そんな世界です。<br>
+    移転価格税制は、この「家の中の値段」を、<strong>「もし家族でなく、よその家との取引だったら、いくらが妥当か」</strong>という外の相場に照らして測り直す仕組みなのです。グループという一つの家計を、税金のためだけに、国境という線でいったん「他人どうし」に切り分けて見る——その不自然だけれど必要な作業が、これから学ぶことの正体です。</p>
+  </div>
+
+  <h3>これは“悪人狩り”ではない——けれど、桁外れの金額が動く</h3>
+  <p>序章の途中で「移転価格税制は脱税の摘発ではない」と言いました。これは本当に大切なので、もう一歩ふみこみます。移転価格でやり玉に挙がる企業の多くは、帳簿を偽ったわけでも、お金を隠したわけでもありません。ただ、グループ内の取引に「自分たちなりの合理的な値段」を付けていただけ。問題は、その値段が「独立企業間価格」という当局の物差しからズレている、という<strong>見解の相違</strong>なのです。脱税のように「隠す」話ではなく、「見立てが違う」話——だからこそ白黒が簡単につかず、グレーの領域で延々と議論になります。</p>
+  <p>ところが、ただの見解の相違であるにもかかわらず、移転価格課税で動く金額は、しばしば桁外れになります。理由は単純で、対象になる取引が<strong>長年・大量</strong>だから。1個あたりの値段のズレは小さくても、それが何百万個、しかも何年分も積み重なれば、差額は数十億〜数百億円に膨らむ。実際、日本を代表するような大企業が、数百億円規模の更正（追徴）を受けたと報じられた例は、これまで何度もありました（そのうちの多くは、後の相互協議で一部が調整されています）。移転価格が「国際課税の本丸」と呼ばれるのは、この金額の大きさゆえです。</p>
+
+  <div class="box warn">
+    <p class="box-t">⚠️ 「悪意がない」のに巨額——だから、こわい</p>
+    <p>ふつうの税務調査なら「不正をしなければ大丈夫」と言えます。でも移転価格は違います。<strong>誠実に経営していても、価格の見立てが当局と違うだけで、巨額の追徴と二重課税のリスクにさらされる</strong>。しかも、その金額の大きさは、企業の決算を揺るがしかねない。だからこそ、世界中の多国籍企業が移転価格を「最大の税務リスクの一つ」と位置づけ、本書でこれから学ぶFAR分析や文書化に、多大なエネルギーを注ぐのです。「悪いことをしていないのに、なぜそんなに備えが要るのか」——その問いの答えが、ここにあります。</p>
+  </div>
+
+  <p>芯はつかめたでしょうか。<strong>「身内の値段を、他人の値段に引き直す」</strong>——たったこれだけです。次の章では、この芯を少しだけ精密にして、「移転価格って、結局なにを指すのか」「どんな取引が対象になるのか」「全体の作業はどう流れるのか」を、一段くっきりさせていきます。</p>
+
+
+  <!--====================== 第1章 ======================-->
+  <span class="anchor" id="c1"></span>
+  <h2 class="chap"><span class="num">第 1 章</span><br>移転価格って、結局なに？</h2>
+  <p class="chap-sub">——「独立企業間価格」という、一本の物差し</p>
+
+  <p class="lead-p">序章で、移転価格税制の芯——「身内の値段を、他人の値段に引き直す」——を手に入れました。この章では、その芯をもう少しだけ精密にします。具体的には、（1）どんな取引が対象になるのか、（2）「独立企業間価格」をもう一歩深く、（3）実際の作業はどんな順番で流れるのか。この3つを押さえれば、本書の残りの章が「全体地図のどこを歩いているか」が、つねに見えるようになります。</p>
+
+  <h3>グループ内取引には、4つの顔がある</h3>
+  <p>「グループ内の取引」と言っても、その中身はさまざまです。大きく分けると、次の4つの顔を持っています。本書の道連れである架空のグループ会社〈NOVA〉（日本に本社、ベトナムに工場、シンガポールに統括会社、アメリカに開発拠点、EUに販売会社を持つスマート文具メーカー）を例に、見てみましょう。</p>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th style="width:18%">取引の顔</th><th style="width:30%">中身</th><th>NOVAでの例</th></tr></thead>
+    <tbody>
+      <tr><td><strong>① モノ</strong><br>（棚卸資産）</td><td>製品・部品・原材料の売買。移転価格のいちばん古典的な対象。</td><td>ベトナム工場が作った文具本体を、各国の販売会社が仕入れる。</td></tr>
+      <tr><td><strong>② サービス</strong><br>（役務提供）</td><td>経営支援・IT・経理・技術指導など。「目に見えない」ぶん揉めやすい。</td><td>日本本社が、各国子会社にまとめて経理・人事・ITのサポートを提供する。</td></tr>
+      <tr><td><strong>③ 無形資産</strong></td><td>ブランド・特許・ソフトウェア・ノウハウの使用許諾（ライセンス）。最難関。</td><td>アプリの特許とブランドの使用料（ロイヤルティ）を、各国子会社が本社に支払う。</td></tr>
+      <tr><td><strong>④ カネ</strong><br>（金融取引）</td><td>グループ内の貸付け・債務保証・資金集中（キャッシュプール）。利率や保証料が問題に。</td><td>シンガポール統括会社が、各国子会社へ親子ローンを出し、利息を取る。</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>この4つは、後半の章（第7章＝無形資産、第8章＝サービス、第9章＝金融）でそれぞれ深掘りしますが、いまは<strong>「移転価格はモノの値段だけの話ではない」</strong>ことだけ、しっかり頭に入れてください。むしろ近年は、目に見える「モノ」よりも、目に見えない「サービス」「無形資産」「カネ」のほうが、はるかに大きな論点になっています。値段が付けにくいものほど、利益を動かす余地が大きく、当局との攻防が激しくなるからです。</p>
+
+  <h3>「独立企業間価格」を、もう一歩ふみこむ</h3>
+  <p>序章で、独立企業間価格（ALP）とは「他人どうしならいくらか」だと言いました。ここで一つ、大切な感覚を足しておきます。それは——<strong>独立企業間価格は、たいてい「ぴたり一つの数字」には決まらない</strong>、ということです。</p>
+
+  <p>現実の市場を思い浮かべてください。同じような商品でも、お店によって値段に幅があります。独立した他人どうしの取引でも、「この値段でなければ絶対ダメ」という一点には決まらず、ふつうは<strong>「だいたいこのあたり」という幅（レンジ）</strong>に収まります。だから移転価格の世界でも、独立企業間価格は多くの場合「点」ではなく「幅」でとらえます。グループ内の取引価格（の結果としての利益）が、その幅の中に収まっていればセーフ、外れていれば「引き直し」の対象になる。この<strong>「レンジで考える」</strong>という発想は、第6章でくわしく扱う、移転価格のいちばん実務的な勘どころです。いまは「正解は一点に決まるとは限らない」とだけ覚えておいてください。</p>
+
+  <div class="box essence">
+    <p class="box-t">💡 ここが多くの人のつまずきポイント</p>
+    <p>「正しい移転価格は、計算すれば一つに決まるはずだ」——これは自然な思い込みですが、<strong>移転価格に“唯一の正解”はない</strong>のが普通です。あるのは「合理的に説明できる範囲（レンジ）」と、「その範囲を、どれだけ説得力をもって示せるか」。<br>
+    だから移転価格は、数学の問題というより、<em>証拠と論理で「この値段は妥当だ」と説明する競争</em>に近い。この性格が、のちの「文書化」（第11章）や「税務調査」（第12章）が決定的に重要になる理由につながっていきます。</p>
+  </div>
+
+  <h3>移転価格の作業は、5つのステップで流れる</h3>
+  <p>では、実際に「この取引の独立企業間価格はいくらか」を考えるとき、人は何をするのでしょう。世界共通の作業手順は、大きく5つのステップに整理できます。本書の章立ても、おおむねこの流れに沿っています。</p>
+
+  <figure>
+    <svg viewBox="0 0 880 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="移転価格分析の全体像5ステップ">
+      <rect x="0" y="0" width="880" height="360" fill="#ffffff"/>
+      <text x="440" y="34" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="700" fill="#1a1d24">移転価格分析の全体地図——5つのステップ</text>
+      <text x="440" y="56" text-anchor="middle" font-family="sans-serif" font-size="12.5" fill="#6b7280">本書はこの流れに沿って進む。各ステップが対応する章を添えた</text>
+      <defs><marker id="ar1" markerWidth="12" markerHeight="12" refX="8" refY="3.4" orient="auto"><path d="M0,0 L9,3.4 L0,6.8 Z" fill="#0f766e"/></marker></defs>
+
+      <g font-family="sans-serif">
+        <!-- step 1 -->
+        <rect x="40" y="100" width="150" height="150" rx="14" fill="#e3f4ef" stroke="#0f766e" stroke-width="1.8"/>
+        <circle cx="115" cy="132" r="19" fill="#0f766e"/>
+        <text x="115" y="139" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">1</text>
+        <text x="115" y="172" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1a1d24">相手と取引を</text>
+        <text x="115" y="190" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1a1d24">特定する</text>
+        <text x="115" y="214" text-anchor="middle" font-size="10.5" fill="#3a4150">誰が「国外関連者」？</text>
+        <text x="115" y="230" text-anchor="middle" font-size="10.5" fill="#6b7280">→ 第3章</text>
+
+        <!-- step 2 -->
+        <rect x="215" y="100" width="150" height="150" rx="14" fill="#fbfcfe" stroke="#cbd2dc" stroke-width="1.6"/>
+        <circle cx="290" cy="132" r="19" fill="#0f766e"/>
+        <text x="290" y="139" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">2</text>
+        <text x="290" y="172" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1a1d24">取引を正確に</text>
+        <text x="290" y="190" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1a1d24">描き出す</text>
+        <text x="290" y="214" text-anchor="middle" font-size="10.5" fill="#3a4150">機能・資産・リスク</text>
+        <text x="290" y="230" text-anchor="middle" font-size="10.5" fill="#6b7280">→ 第4章（FAR）</text>
+
+        <!-- step 3 -->
+        <rect x="390" y="100" width="150" height="150" rx="14" fill="#fbfcfe" stroke="#cbd2dc" stroke-width="1.6"/>
+        <circle cx="465" cy="132" r="19" fill="#0f766e"/>
+        <text x="465" y="139" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">3</text>
+        <text x="465" y="172" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1a1d24">測り方を</text>
+        <text x="465" y="190" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1a1d24">選ぶ</text>
+        <text x="465" y="214" text-anchor="middle" font-size="10.5" fill="#3a4150">5つの算定方法</text>
+        <text x="465" y="230" text-anchor="middle" font-size="10.5" fill="#6b7280">→ 第5・6章</text>
+
+        <!-- step 4 -->
+        <rect x="565" y="100" width="150" height="150" rx="14" fill="#fbfcfe" stroke="#cbd2dc" stroke-width="1.6"/>
+        <circle cx="640" cy="132" r="19" fill="#0f766e"/>
+        <text x="640" y="139" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">4</text>
+        <text x="640" y="172" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1a1d24">価格（幅）を</text>
+        <text x="640" y="190" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1a1d24">算定する</text>
+        <text x="640" y="214" text-anchor="middle" font-size="10.5" fill="#3a4150">独立企業間価格</text>
+        <text x="640" y="230" text-anchor="middle" font-size="10.5" fill="#6b7280">→ 第7〜9・14章</text>
+
+        <!-- step 5 -->
+        <rect x="740" y="100" width="150" height="150" rx="14" fill="#fbfcfe" stroke="#cbd2dc" stroke-width="1.6"/>
+        <circle cx="815" cy="132" r="19" fill="#0f766e"/>
+        <text x="815" y="139" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">5</text>
+        <text x="815" y="172" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1a1d24">説明できる</text>
+        <text x="815" y="190" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1a1d24">状態にする</text>
+        <text x="815" y="214" text-anchor="middle" font-size="10.5" fill="#3a4150">文書化・調査・紛争解決</text>
+        <text x="815" y="230" text-anchor="middle" font-size="10.5" fill="#6b7280">→ 第11〜13章</text>
+
+        <path d="M192,175 L213,175" stroke="#0f766e" stroke-width="2" marker-end="url(#ar1)"/>
+        <path d="M367,175 L388,175" stroke="#0f766e" stroke-width="2" marker-end="url(#ar1)"/>
+        <path d="M542,175 L563,175" stroke="#0f766e" stroke-width="2" marker-end="url(#ar1)"/>
+        <path d="M717,175 L738,175" stroke="#0f766e" stroke-width="2" marker-end="url(#ar1)"/>
+
+        <rect x="190" y="288" width="500" height="44" rx="12" fill="#f2ecfa" stroke="#d9c9f0" stroke-width="1.5"/>
+        <text x="440" y="307" text-anchor="middle" font-size="12.5" font-weight="700" fill="#6a3fa0">核は②と③——「取引をどう描き、どの物差しを当てるか」</text>
+        <text x="440" y="324" text-anchor="middle" font-size="11" fill="#3a4150">移転価格の議論の9割は、この2つのステップで起きる</text>
+      </g>
+    </svg>
+    <figcaption><span class="fn">図1-1</span>　移転価格分析の5ステップ。まず「誰と・何を」取引したか（①）、それを機能・資産・リスクの観点で正確に描き（②）、最適な測り方を選び（③）、独立企業間価格＝あるべき値段の幅を算定し（④）、最後にそれを証拠と論理で「説明できる状態」にする（⑤）。本書はこの地図に沿って各章を進む。</figcaption>
+  </figure>
+
+  <p>この5ステップのうち、移転価格の議論がもっとも白熱するのは、ステップ②（取引を正確に描く）とステップ③（測り方を選ぶ）です。「その取引で、ベトナム子会社は本当はどんな役割を担い、どんなリスクを負っていたのか」「だとすれば、どの方法で値段を測るのが妥当か」——ここの見立てが、利益配分のすべてを左右します。本書も、この②と③にあたる第4章〜第6章に、いちばん丁寧に紙幅を割いていきます。</p>
+
+  <h3>日本の条文は、どう書いてあるか</h3>
+  <p>ここで、日本の移転価格税制の「本体」となる条文を、初めて見ておきましょう。租税特別措置法（措置法）66条の4の第1項です。少し硬いですが、序章で学んだ芯がそのまま条文になっていることを、確かめてみてください。</p>
+
+  <div class="statute">
+    <span class="label">租税特別措置法 第66条の4 第1項（要旨）</span>
+    法人が、その<mark>国外関連者</mark>との間で資産の販売、資産の購入、役務の提供その他の取引を行った場合に、その取引（＝<mark>国外関連取引</mark>）につき、その法人が支払を受ける対価の額が<mark>独立企業間価格に満たないとき</mark>、又は支払う対価の額が<mark>独立企業間価格を超えるとき</mark>は、その法人の所得の金額の計算上、その国外関連取引は、<mark>独立企業間価格で行われたものとみなす</mark>。
+  </div>
+
+  <p>注目してほしいのは、最後の<strong>「独立企業間価格で行われたものとみなす」</strong>という言葉です。実際の取引価格がいくらであろうと、税金の計算上は「独立企業間価格で取引したことにする（みなす）」——序章で言った「身内の値段を、他人の値段に引き直す」が、まさにこの一語に込められています。そして、この条文には、本書全体の旅程が暗示されています。「国外関連者」とは誰か（→第3章）。「独立企業間価格」はどう算定するのか（→第5章以降）。値段がズレていたとき、何が起きるのか（→第10章・第12章）。一つひとつ、これから解きほぐしていきます。</p>
+
+  <div class="box note">
+    <p class="box-t">📘 「移転価格“税制”」という呼び名について</p>
+    <p>この制度は、独立した「移転価格税」という新しい税金があるわけではありません。あくまで<strong>法人税の所得（課税のもと）を計算し直すためのルール</strong>です。だから日本でも、所得税法や法人税法そのものではなく、特別な調整を定める「租税特別措置法」の中に置かれています。「移転価格税制」とは、<em>「関連者間取引について、所得を独立企業間価格ベースで計算し直すための、法人税の特別ルール一式」</em>を指す呼び名だと理解してください。</p>
+  </div>
+
+  <h3>はじめに、3つの誤解をほどいておく</h3>
+  <p>移転価格には、初めて学ぶ人がほぼ必ずはまる誤解が3つあります。先回りして、ほどいておきましょう。この3つをほどけるかどうかで、これから先の理解のスピードが大きく変わります。</p>
+
+  <div class="box ex">
+    <p class="box-t">🧩 よくある3つの誤解</p>
+    <p><strong>誤解1：「移転価格＝脱税」</strong>。違います。グループ内で値段を付けること自体は、正当な経済活動です。問題になるのは独立企業間価格からの“ズレ”だけ（序章）。帳簿を偽る脱税とはまったく別物で、誠実な会社でも論点になります。<br>
+    <strong>誤解2：「モノの値段の話でしょ」</strong>。違います。むしろ近年の主戦場は、サービス・無形資産・金融という“目に見えない取引”（本章の4類型）です。値段が付けにくいものほど、利益を動かす余地が大きく、当局との攻防が激しくなる。モノは、いまや移転価格のほんの入口にすぎません。<br>
+    <strong>誤解3：「大企業だけの話」</strong>。違います。海外に関連会社があり、そことの取引があれば、中堅・中小企業でも論点になります。文書化の一部の義務には金額のハードルがありますが（第11章）、「独立企業間価格で取引すべき」という原則そのものは、<strong>会社の規模を問わず適用される</strong>のです。</p>
+  </div>
+
+  <p>この3つの誤解をほどくと、移転価格が「一部の悪い大企業を取り締まる、特殊で縁遠い話」ではなく、<strong>国境をまたいで関連会社と取引する、すべての企業に関わる普遍的なルール</strong>だと見えてきます。グローバル化した経済では、それはもはや「特殊な分野」ではなく、国際的に事業をするうえでの「基本の文法」なのです。だからこそ、本書はあなたにこの文法を手渡したい。読み終えるころには、世界経済のニュースの見え方が変わっているはずです。</p>
+
+  <p>移転価格の正体と、全体の流れがつかめました。「身内の値段を他人の値段に引き直す」「対象はモノ・サービス・無形・カネの4つ」「正解は点でなく幅」「作業は5ステップ」。次の章では、いったん立ち止まって考えます——<strong>そもそも、なぜ世界は「独立企業ならいくらか」という、この一見まわりくどい原理を選んだのか</strong>。移転価格税制の土台にある思想を、掘り下げましょう。</p>
+
+  <!--====================== 第2章 ======================-->
+  <span class="anchor" id="c2"></span>
+  <h2 class="chap"><span class="num">第 2 章</span><br>独立企業原則という発明</h2>
+  <p class="chap-sub">——なぜ世界は、この一見まわりくどい原理を選んだのか</p>
+
+  <p class="lead-p">第1章で、移転価格税制は「独立企業間価格」という一本の物差しで動くと学びました。でも、立ち止まって考えると、これは不思議な原理です。親子会社は、現実には一つのグループとして一体で動いているのに、税金のためだけに「もし他人どうしだったら」という<strong>ありもしない仮定</strong>を持ち込む。なぜ、こんなまわりくどいことをするのでしょう。実は、この問いに答えることが、移転価格のいちばん深い部分を理解する近道なのです。</p>
+
+  <h3>法人税は「利益」にかかる——だから国境で揉める</h3>
+  <p>出発点を確認します。法人税は、売上ではなく<strong>「利益（所得）」</strong>にかかります。売上から、原価や経費を引いた残り。ここがポイントです。一つの会社が一つの国だけで活動しているなら、利益の計算は単純です。ところが、グループが国境をまたいで活動すると、とたんに「その利益は、どの国で生まれたのか」という難問が立ち上がります。</p>
+
+  <p>NOVAグループで考えましょう。ベトナムで部品を作り、日本で企画・組み立てをし、シンガポールが資金を回し、アメリカがソフトを開発し、EUで売る。最終的に1台の文具が売れて100の利益が出たとして——その100は、ベトナムのもの？ 日本のもの？ それともEU？ <strong>価値は、いくつもの国の活動が積み重なって生まれている</strong>。だから、利益を一つの国に丸ごと帰属させるわけにはいきません。どこかで、国ごとに「切り分ける」必要がある。</p>
+
+  <div class="box note">
+    <p class="box-t">📘 「separate entity（独立した会社として扱う）」という建前</p>
+    <p>国際課税の世界には、大きな建前が一つあります。<strong>「グループの中の各社を、それぞれ独立した別の会社として扱い、別々に利益を計算する」</strong>——これを separate entity approach（独立企業アプローチ）と呼びます。現実には一体のグループでも、課税のうえでは「ベトナム社」「日本社」を別々の人格として、それぞれの利益を出す。<br>
+    でも、別々に利益を出すには、その<strong>間の取引に値段が要る</strong>。ベトナム社が日本社に部品を渡すとき、いくらで渡したことにするか。その値段しだいで、両社の利益が決まる。だから「独立企業として切り分ける」という建前は、必然的に「その間の値段をどう決めるか＝独立企業間価格」という問いを生むのです。</p>
+  </div>
+
+  <h3>本当は「全体を一括して配分」したい——でも、できない</h3>
+  <p>ここで、鋭い人はこう思うはずです。「そんな面倒なことをせず、グループ全体の利益100を、各国の貢献度に応じて分ければいいのでは？ たとえば売上や従業員数の比で」。実は、その発想は実在します。<span class="term">定式配分</span>（formulary apportionment）と呼ばれ、アメリカの州をまたぐ課税などで実際に使われています。グループ全体の利益を一つの「パイ」とみなし、売上・資産・人件費などの比であらかじめ決めた式で機械的に各地へ配分する方式です。</p>
+
+  <p>定式配分は、一見すっきりしています。値段の操作に左右されず、シンプル。では、なぜ世界はこれを国際課税の標準にしなかったのでしょう。理由は、国家主権にあります。<strong>「配分の式」を世界中の国が一つに合意するのは、ほぼ不可能</strong>だからです。売上を重く見たい国（消費地の大国）、資産や雇用を重く見たい国（生産地）——それぞれの国益が真っ向からぶつかる。式の数字一つで、各国の税収が大きく動く。結局、各国がばらばらの式を使えば、二重課税はかえって増えてしまいます。</p>
+
+  <div class="box essence">
+    <p class="box-t">💡 独立企業原則は「理想」ではなく「妥協の産物」</p>
+    <p>ここが本章の核心です。独立企業原則（ALP）は、<strong>理論的に完璧だから選ばれたのではありません</strong>。むしろ、「全体を一括配分する」という理想が国家主権の壁で実現できないなかで、<em>「各国が、自国内の各社について、第三者market の価格という“共通の物差し”を使って利益を計算する」</em>という、現実的な落としどころとして合意されたものです。<br>
+    第三者の市場価格という、ある程度<strong>客観的で、どの国も(しぶしぶ)受け入れられる基準</strong>を共通言語にすることで、各国がてんでばらばらに利益を奪い合う事態を防ぐ。完璧ではないが、二重課税を最小化するための、人類のとりあえずの知恵——それが独立企業原則なのです。</p>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 880 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="定式配分と独立企業原則の対比">
+      <rect x="0" y="0" width="880" height="400" fill="#ffffff"/>
+      <text x="440" y="34" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="700" fill="#1a1d24">利益を国に分ける、2つの考え方</text>
+      <text x="440" y="56" text-anchor="middle" font-family="sans-serif" font-size="12.5" fill="#6b7280">世界は「右」を選んだ——完璧だからではなく、各国が合意できるから</text>
+
+      <g font-family="sans-serif">
+        <!-- 左：定式配分 -->
+        <rect x="40" y="86" width="380" height="290" rx="14" fill="#fbfcfe" stroke="#cbd2dc" stroke-width="1.6"/>
+        <text x="230" y="116" text-anchor="middle" font-size="14" font-weight="700" fill="#6b7280">A. 定式配分（採用されず）</text>
+        <ellipse cx="230" cy="170" rx="95" ry="38" fill="#f2ecfa" stroke="#6a3fa0" stroke-width="1.8"/>
+        <text x="230" y="166" text-anchor="middle" font-size="12.5" font-weight="700" fill="#6a3fa0">グループ全体の利益</text>
+        <text x="230" y="184" text-anchor="middle" font-size="12.5" font-weight="700" fill="#6a3fa0">＝ 1つのパイ</text>
+        <text x="230" y="232" text-anchor="middle" font-size="11.5" fill="#3a4150">売上・資産・人件費などの</text>
+        <text x="230" y="250" text-anchor="middle" font-size="11.5" fill="#3a4150">「式」で機械的に分ける</text>
+        <line x1="150" y1="270" x2="120" y2="305" stroke="#cbd2dc" stroke-width="1.5"/>
+        <line x1="230" y1="272" x2="230" y2="305" stroke="#cbd2dc" stroke-width="1.5"/>
+        <line x1="310" y1="270" x2="340" y2="305" stroke="#cbd2dc" stroke-width="1.5"/>
+        <text x="120" y="320" text-anchor="middle" font-size="10.5" fill="#3a4150">A国</text>
+        <text x="230" y="320" text-anchor="middle" font-size="10.5" fill="#3a4150">B国</text>
+        <text x="340" y="320" text-anchor="middle" font-size="10.5" fill="#3a4150">C国</text>
+        <text x="230" y="352" text-anchor="middle" font-size="10.5" fill="#b32d3a">✕ 式を世界で1つに合意できない</text>
+
+        <!-- 右：独立企業原則 -->
+        <rect x="460" y="86" width="380" height="290" rx="14" fill="#e3f4ef" stroke="#0f766e" stroke-width="1.8"/>
+        <text x="650" y="116" text-anchor="middle" font-size="14" font-weight="700" fill="#0f766e">B. 独立企業原則（世界標準）</text>
+        <rect x="500" y="150" width="100" height="64" rx="10" fill="#fff" stroke="#0f766e" stroke-width="1.6"/>
+        <text x="550" y="178" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1d24">A国の子会社</text>
+        <text x="550" y="197" text-anchor="middle" font-size="10" fill="#6b7280">独立企業扱い</text>
+        <rect x="700" y="150" width="100" height="64" rx="10" fill="#fff" stroke="#0f766e" stroke-width="1.6"/>
+        <text x="750" y="178" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1d24">B国の子会社</text>
+        <text x="750" y="197" text-anchor="middle" font-size="10" fill="#6b7280">独立企業扱い</text>
+        <line x1="600" y1="182" x2="700" y2="182" stroke="#0f766e" stroke-width="1.6" stroke-dasharray="4 3"/>
+        <text x="650" y="174" text-anchor="middle" font-size="9.5" fill="#6b7280">取引</text>
+        <rect x="520" y="246" width="260" height="50" rx="10" fill="#fbfaf6" stroke="#e8e1cf" stroke-width="1.5"/>
+        <text x="650" y="268" text-anchor="middle" font-size="11" fill="#3a4150">その間の値段を「第三者なら</text>
+        <text x="650" y="285" text-anchor="middle" font-size="11" fill="#3a4150">いくらか（独立企業間価格）」で</text>
+        <text x="650" y="340" text-anchor="middle" font-size="10.5" fill="#2f7d52">○ 客観的な市場価格を共通言語にできる</text>
+      </g>
+    </svg>
+    <figcaption><span class="fn">図2-1</span>　利益を国に分ける2つの方法。左の定式配分は理屈はシンプルだが「配分の式」を各国が合意できない。世界が選んだのは右の独立企業原則——各社を独立企業とみなし、その間の取引を「第三者ならいくらか」で測ることで、客観的な共通言語を確保する道だった。</figcaption>
+  </figure>
+
+  <h3>三層構造——条約・ガイドライン・国内法</h3>
+  <p>独立企業原則は、3つの層で支えられています。この層の違いは、第10章（日本固有の論点）や第13章（国際的な紛争解決）で効いてくるので、ここで整理しておきます。</p>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th style="width:22%">層</th><th style="width:30%">具体例</th><th>役割</th></tr></thead>
+    <tbody>
+      <tr><td><strong>① 条約</strong><br>（国どうしの約束）</td><td>OECDモデル租税条約 第9条（関連企業条項）／各国間の租税条約</td><td>「関連企業間の取引は独立企業間価格で」という原則を、国家間の約束として定める。二重課税が起きたときの調整（相互協議）の根拠にもなる。</td></tr>
+      <tr><td><strong>② ガイドライン</strong><br>（解釈の世界標準）</td><td>OECD移転価格ガイドライン（1995年、2017年・2022年改訂）</td><td>原則をどう当てはめるかの詳細な解釈指針。法律そのものではないが、各国の実務が事実上これに従う「ソフトロー」。</td></tr>
+      <tr><td><strong>③ 国内法</strong><br>（実際に課税する根拠）</td><td>日本＝租税特別措置法66条の4／米国＝内国歳入法482条 など</td><td>実際に自国で課税するための法律。条約・ガイドラインの考え方を、各国が自国の言葉で書き込んだもの。</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>ここに、移転価格という分野の独特な性格が現れています。<strong>実際に課税する力を持つのは③の国内法だけ</strong>です。条約やガイドラインが直接あなたに課税するわけではない。けれども、その国内法の中身は、②のOECDガイドラインという「世界共通の解釈」に強く引っ張られている。つまり<strong>条文は薄く、解釈指針が分厚い</strong>。これは、条文に細かく書き込む日本の他の税制（たとえば外国子会社合算税制）と比べると、際立った特徴です。移転価格の現場では、法律の条文を読むだけでは答えが出ず、OECDガイドラインや国税庁の事務運営要領という「解釈の世界」を読み解く力が、決定的に重要になります。</p>
+
+  <div class="box warn">
+    <p class="box-t">⚠️ 独立企業原則の「泣きどころ」</p>
+    <p>万能に見える独立企業原則にも、深い弱点があります。それは<strong>「比較できる第三者取引が、現実には存在しないことがある」</strong>という点です。世界に一つしかないブランドや特許（第7章）、グループ内でしか起きない統括サービス（第8章）、特殊な金融取引（第9章）——こうした「他人どうしの取引例」が見つからないものについては、「第三者ならいくらか」という問い自体が宙に浮いてしまう。デジタル経済では、この弱点がさらに深刻になります。第15章で見る近年の改革（Amount Bなど）は、まさにこの泣きどころを補うための工夫なのです。</p>
+  </div>
+
+  <h3>100年の歩み——国際連盟から、BEPSまで</h3>
+  <p>独立企業原則は、ある日だれかがふと思いついたものではありません。その源流は、なんと100年近く前にさかのぼります。第一次大戦後の1920〜30年代、国境を越える企業活動が増えるなかで、国際連盟が「二重課税をどう防ぐか」を本格的に研究しました。そのなかで、関連する企業の間の取引を<strong>「もし独立した企業どうしだったら」</strong>という仮定で扱う、という発想の原型が形づくられていきます。独立企業原則は、国際社会が二重課税という共通の難問と格闘するなかで、少しずつ育ってきた知恵なのです。</p>
+  <p>その後、各国が自国版を整えていきます。とりわけ米国は早くから詳細な規則（内国歳入法482条）を発達させ、移転価格の実務をリードしました。そして国際標準をまとめる役を担ったのがOECDです。OECDは1979年に移転価格に関する報告書を、1995年には本格的な「移転価格ガイドライン」を公表。これが世界中の当局と企業の共通言語になりました。2010年代に入ると、多国籍企業の行きすぎた節税が世界的な問題となり、2015年のBEPS最終報告を経て、ガイドラインは2017年・2022年に大きく改訂されます。本書でこれから学ぶDEMPE（第7章）やリスクの実質判定（第4章）は、まさにこのBEPSの成果です。そして日本がこの流れに沿って移転価格税制（措置法66条の4）を導入したのは、1986年（昭和61年）のことでした。</p>
+
+  <div class="box note">
+    <p class="box-t">📘 歴史が教えること——原則は古く安定、運用は進化し続ける</p>
+    <p>この100年の歩みには、大切な含意があります。<strong>「独立企業ならいくらか」という大原則そのものは、ほとんど変わっていない</strong>。変わり続けているのは、それを<em>どう当てはめるか</em>という運用（ガイドラインや各国の規則）のほうです。だから移転価格を学ぶときは、まず変わらない芯（独立企業原則）をしっかりつかみ、その上で「最新の運用はどうなっているか」を追いかける、という二段構えが効きます。本書が原理（第1〜4章）を先に、具体的な運用（第11章以降）を後に置いているのも、この理由からです。芯さえ握っていれば、毎年のように出る改正のニュースにも、振り回されずにすみます。</p>
+  </div>
+
+  <p>独立企業原則が「なぜ選ばれ、どんな限界を抱えるか」が見えました。完璧な理論ではなく、二重課税を防ぐための現実的な妥協。条約・ガイドライン・国内法の三層で支えられ、条文より解釈が分厚い。そして「比較対象がないと宙に浮く」という泣きどころを抱えている——。次の章では、いよいよ具体論に入ります。そもそも、この制度は<strong>「誰と誰の取引」</strong>を対象にするのか。「国外関連者」という、入口の線引きを見ていきましょう。</p>
+
+
+  <!--====================== 第3章 ======================-->
+  <span class="anchor" id="c3"></span>
+  <h2 class="chap"><span class="num">第 3 章</span><br>誰が対象になるのか</h2>
+  <p class="chap-sub">——「国外関連者」と、50%という線</p>
+
+  <p class="lead-p">移転価格税制は、すべての海外取引に網をかけるわけではありません。対象になるのは、あくまで<strong>「身内（関連者）との取引」</strong>だけ。赤の他人と取引する値段は、もともと市場で決まる「他人の値段」そのものなので、引き直す必要がありません。では、どこからが「身内」で、どこからが「他人」なのか。この章では、制度の入口にあたる<span class="term">国外関連者</span>の判定を見ていきます。ここを外すと、そもそも制度の対象かどうかを間違えてしまう、地味だが大切な関門です。</p>
+
+  <h3>原則は「50%以上の株式保有」</h3>
+  <p>いちばん基本的な線は、<strong>株式の保有割合50%以上</strong>です。日本の法人が、外国の法人の株式を50%以上持っていれば（あるいは外国法人に50%以上持たれていれば）、その外国法人は「国外関連者」になります。親子関係を、株のつながりで捉えるわけです。</p>
+
+  <div class="statute">
+    <span class="label">国外関連者とは（措置法66条の4第1項・施行令39条の12 の要旨）</span>
+    内国法人との間に、<mark>(a) 一方が他方の株式の50%以上を直接・間接に保有する関係</mark>（親子関係）、<mark>(b) 同一の者が両法人の株式を50%以上保有する関係</mark>（兄弟関係）、または<mark>(c) 役員の派遣・取引の依存・資金の提供などにより、一方が他方の事業方針を実質的に決定できる関係</mark>（実質支配関係）——これらの「特殊の関係」にある<strong>外国法人</strong>をいう。
+  </div>
+
+  <p>条文の言葉は硬いですが、要するに<strong>「資本で見て50%以上つながっているか（a・b）、または、株は薄くても実質的に支配しているか（c）」</strong>です。3つのパターンを、順番に見ていきましょう。</p>
+
+  <h3>3つのパターン——親子・兄弟・実質支配</h3>
+  <p>第一は<strong>親子関係（a）</strong>。日本のA社が、海外のB社の株式を50%以上持っている。最もわかりやすい形です。第二は<strong>兄弟関係（b）</strong>。日本のA社と海外のC社が、それぞれ同じ親会社（たとえば海外の持株会社）に50%以上持たれている。A社とC社の間に直接の資本関係がなくても、「同じ親を持つ兄弟」として国外関連者になります。</p>
+
+  <p>第三が、もっとも注意を要する<strong>実質支配関係（c）</strong>です。株式の保有割合が50%に満たなくても、たとえば「役員の半数以上を送り込んでいる」「事業活動の大部分をその会社に依存させている」「事業に必要な資金の大部分を融通している」といった事情があれば、<strong>実質的に相手の経営を握っている</strong>とみて、国外関連者と判定されます。「株は数%だから関係ない」という思い込みが、いちばん危ない。形式（株の数字）だけでなく、実質（経営の支配）でも線を引く——独立企業原則を支える「実質で見る」という精神が、ここにも貫かれています。</p>
+
+  <div class="box ex">
+    <p class="box-t">🔍 「間接保有」は掛け算で考える</p>
+    <p>50%の判定では、中間の会社を通じた<strong>間接保有</strong>も合算します。考え方は掛け算です。たとえば日本のA社が、海外のX社を100%持ち、そのX社が海外のY社を60%持っているなら、A社のY社への間接保有割合は 100%×60%＝60%。50%以上なので、Y社もA社の国外関連者になります。<br>
+    実務では「直接は持っていないから対象外」と早合点しがちですが、グループの資本のつながりを上流・下流とも掛け算でたどると、思わぬ会社が国外関連者に含まれることがあります。対象会社の洗い出しは、移転価格対応の地味な第一歩です。</p>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 880 410" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="国外関連者の3つの判定パターン">
+      <rect x="0" y="0" width="880" height="410" fill="#ffffff"/>
+      <text x="440" y="34" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="700" fill="#1a1d24">「国外関連者」になる3つのパターン</text>
+      <text x="440" y="56" text-anchor="middle" font-family="sans-serif" font-size="12.5" fill="#6b7280">資本50%以上（直接＋間接の掛け算）か、株が薄くても実質支配なら該当</text>
+      <defs><marker id="ar3" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#0f766e"/></marker></defs>
+
+      <g font-family="sans-serif">
+        <!-- (a) 親子 -->
+        <text x="155" y="92" text-anchor="middle" font-size="13.5" font-weight="700" fill="#0f766e">(a) 親子関係</text>
+        <rect x="100" y="105" width="110" height="48" rx="10" fill="#e3f4ef" stroke="#0f766e" stroke-width="1.6"/>
+        <text x="155" y="134" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1d24">日本 A社</text>
+        <rect x="100" y="230" width="110" height="48" rx="10" fill="#fff" stroke="#0f766e" stroke-width="1.6"/>
+        <text x="155" y="259" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1d24">海外 B社</text>
+        <path d="M155,153 L155,228" stroke="#0f766e" stroke-width="2" marker-end="url(#ar3)"/>
+        <text x="200" y="195" text-anchor="middle" font-size="11" font-weight="700" fill="#b32d3a">50%以上</text>
+        <text x="155" y="305" text-anchor="middle" font-size="10.5" fill="#3a4150">株でつながる</text>
+
+        <!-- (b) 兄弟 -->
+        <text x="440" y="92" text-anchor="middle" font-size="13.5" font-weight="700" fill="#0f766e">(b) 兄弟関係</text>
+        <rect x="385" y="105" width="110" height="48" rx="10" fill="#f2ecfa" stroke="#6a3fa0" stroke-width="1.6"/>
+        <text x="440" y="134" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1d24">同じ親会社</text>
+        <rect x="320" y="230" width="105" height="48" rx="10" fill="#e3f4ef" stroke="#0f766e" stroke-width="1.6"/>
+        <text x="372" y="259" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1d24">日本 A社</text>
+        <rect x="455" y="230" width="105" height="48" rx="10" fill="#fff" stroke="#0f766e" stroke-width="1.6"/>
+        <text x="507" y="259" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1d24">海外 C社</text>
+        <path d="M415,153 L380,228" stroke="#0f766e" stroke-width="2" marker-end="url(#ar3)"/>
+        <path d="M465,153 L500,228" stroke="#0f766e" stroke-width="2" marker-end="url(#ar3)"/>
+        <text x="345" y="195" text-anchor="middle" font-size="10" font-weight="700" fill="#b32d3a">50%↑</text>
+        <text x="535" y="195" text-anchor="middle" font-size="10" font-weight="700" fill="#b32d3a">50%↑</text>
+        <text x="440" y="305" text-anchor="middle" font-size="10.5" fill="#3a4150">A社とC社が「兄弟」</text>
+
+        <!-- (c) 実質支配 -->
+        <text x="725" y="92" text-anchor="middle" font-size="13.5" font-weight="700" fill="#0f766e">(c) 実質支配</text>
+        <rect x="670" y="105" width="110" height="48" rx="10" fill="#e3f4ef" stroke="#0f766e" stroke-width="1.6"/>
+        <text x="725" y="134" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1d24">日本 A社</text>
+        <rect x="670" y="230" width="110" height="48" rx="10" fill="#fff" stroke="#0f766e" stroke-width="1.6"/>
+        <text x="725" y="259" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1d24">海外 D社</text>
+        <path d="M725,153 L725,228" stroke="#0f766e" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#ar3)"/>
+        <text x="800" y="183" text-anchor="middle" font-size="9.5" fill="#b4541a">株は薄い</text>
+        <text x="800" y="200" text-anchor="middle" font-size="9.5" fill="#b4541a">が…</text>
+        <text x="725" y="305" text-anchor="middle" font-size="10.5" fill="#3a4150">役員・取引・資金で</text>
+        <text x="725" y="321" text-anchor="middle" font-size="10.5" fill="#3a4150">経営を実質支配</text>
+
+        <rect x="180" y="350" width="520" height="40" rx="12" fill="#fbfaf6" stroke="#e8e1cf" stroke-width="1.5"/>
+        <text x="440" y="375" text-anchor="middle" font-size="12" font-weight="700" fill="#8a6d1f">どれか1つに当てはまれば「国外関連者」＝移転価格税制の対象</text>
+      </g>
+    </svg>
+    <figcaption><span class="fn">図3-1</span>　国外関連者の3類型。(a)親子と(b)兄弟は資本50%以上（間接保有は掛け算で合算）、(c)実質支配は株が50%未満でも役員・取引・資金を通じた支配があれば該当する。いずれか1つを満たす外国法人との取引が、移転価格税制の対象になる。</figcaption>
+  </figure>
+
+  <h3>対象は「国外」関連者——国内の身内は別の制度</h3>
+  <p>もう一つ、名前のとおりですが大切な点。移転価格税制が対象にするのは、相手が<strong>「国外（外国法人）」</strong>の関連者である取引だけです。なぜなら、移転価格税制の目的は「利益が<strong>国境を越えて</strong>軽課税国へ流れるのを防ぐ」ことだから。日本国内の親子会社どうしの取引で値段を操作しても、利益は日本国内を動くだけで、日本の税収全体は基本的に変わりません（国内の関連者間取引には、寄附金課税やグループ法人税制といった別の仕組みが用意されています）。移転価格税制は、あくまで<strong>国境をまたぐ関連者取引に特化した制度</strong>なのです。</p>
+
+  <div class="box note">
+    <p class="box-t">📘 外国法人の「PE」も対象になる（発展）</p>
+    <p>少し進んだ話として、外国法人が日本に持つ<strong>支店など（恒久的施設＝PE）</strong>と、その外国法人の本店との「内部取引」にも、移転価格と同じ考え方が及びます（措置法66条の4の3）。同じ法人の中の本店と支店のあいだですら、独立した企業どうしのように扱って所得を計算する——独立企業原則の徹底ぶりがうかがえる部分ですが、本書では入門の範囲を超えるので、「PEにも独立企業原則が及ぶ」とだけ覚えておけば十分です。</p>
+  </div>
+
+  <h3>移転価格とCFC税制——同じ子会社を見る、2つの目</h3>
+  <p>ここで、よく混同される制度との違いを整理しておきましょう。海外子会社にまつわる税制として、移転価格税制とならんで有名なのが<strong>外国子会社合算税制（CFC税制、かつての通称はタックス・ヘイブン対策税制）</strong>です。両者は、同じ海外子会社を相手にしながら、まったく違う角度から見ています。混同すると議論が噛み合わなくなるので、ここで切り分けておきます。</p>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th style="width:18%">　</th><th style="width:41%">移転価格税制（措法66の4）</th><th>CFC税制（措法66の6）</th></tr></thead>
+    <tbody>
+      <tr><td><strong>見るもの</strong></td><td>子会社との<strong>取引の値段</strong></td><td>軽課税国にある子会社の<strong>利益そのもの</strong></td></tr>
+      <tr><td><strong>やること</strong></td><td>取引を独立企業間価格に<strong>引き直して</strong>所得を計算</td><td>子会社の所得を、親会社の所得に<strong>合算</strong>して課税</td></tr>
+      <tr><td><strong>狙い</strong></td><td>価格の歪みによる<strong>利益移転</strong>を防ぐ</td><td>軽課税国に利益をためる<strong>課税の繰延べ</strong>を防ぐ</td></tr>
+      <tr><td><strong>きっかけ</strong></td><td>関連者との取引価格が独立企業間価格とズレている</td><td>子会社の税負担が軽く、かつ実体が乏しい等</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>たとえるなら、移転価格は<strong>「やり取りの値札」</strong>を、CFC税制は<strong>「たまった財布の中身」</strong>を見ています。同じ一つの海外子会社に、両方の制度が同時にかかることもあります。実際、CFC税制で子会社の所得を計算するときに、移転価格による引き直しが反映される場面もある。「別の制度だが、連動しうる」——この関係を頭に入れておくと、海外子会社の税務リスクを立体的にとらえられます。本書はこのうち「取引の値段」を扱う移転価格に絞りますが、海外子会社を持つなら、CFC税制も合わせて視野に入れておくのが賢明です。</p>
+
+  <p>制度の入口——「誰が対象か」が固まりました。資本50%以上か実質支配の関係にある外国法人（国外関連者）との、国境をまたぐ取引。ここから先は、いよいよ本丸です。対象となる取引について、<strong>「独立企業間価格はいくらか」をどう測るのか</strong>。その第一歩として、次章では移転価格分析の心臓部——<strong>機能・資産・リスク（FAR）の分析</strong>に入ります。「誰が、何をして、何を負担したか」を解きほぐすことが、利益配分のすべての土台になります。</p>
+
+  <!--====================== 第4章 ======================-->
+  <span class="anchor" id="c4"></span>
+  <h2 class="chap"><span class="num">第 4 章</span><br>機能・資産・リスク（FAR）</h2>
+  <p class="chap-sub">——「誰が何をして、何を負ったか」で、利益は決まる</p>
+
+  <p class="lead-p">いよいよ移転価格の心臓部に入ります。「独立企業間価格はいくらか」を測る前に、どうしても必要な作業があります。それは、<strong>「その取引で、各社が実際に何をしていたのか」を正確に描き出す</strong>こと。これを<span class="term">機能分析</span>、その中心となる枠組みを頭文字から<strong>FAR</strong>（Functions＝機能、Assets＝資産、Risks＝リスク）と呼びます。移転価格の議論の勝敗は、ここでほぼ決まると言っても過言ではありません。やさしく、しかし丁寧に見ていきましょう。</p>
+
+  <h3>価格は「価値の見返り」——だから貢献を測る</h3>
+  <p>大原則を一つ。<strong>利益は、価値を生んだところに帰属すべきだ</strong>——これが移転価格の根底にある考え方です。たくさんの機能を担い、重要な資産を使い、大きなリスクを負った会社ほど、多くの利益を得るのが「独立企業どうしなら当然」。逆に、言われたとおりに作るだけ・売るだけの会社は、リスクも少ないかわり、得られる利益も小さい。だから、利益を配分するには、まず<strong>「誰がどれだけ価値創造に貢献したか」</strong>を測らなければなりません。その物差しがFARです。</p>
+
+  <div class="box ex">
+    <p class="box-t">⚽ たとえ話：部活の役割分担と、分け前</p>
+    <p>文化祭でクラスがたこ焼き屋を出すとします。仕入れ・会計・調理・接客・宣伝——みんなで役割を分けます。もし利益が出たとき、「全員で等分」が公平でしょうか？ いいえ。<strong>自腹で材料費を立て替えた人（資産・リスク）、売れ残りの損を被ると約束した人（リスク）、一番忙しい調理を担った人（機能）</strong>は、ただ立っていただけの人より多く受け取るのが自然です。<br>
+    FAR分析とは、この「誰がどんな役割（機能）を担い、何を出し（資産）、どんな損のリスクを引き受けたか」を一つずつ書き出す作業。それが分かれば、「この子会社は、利益のどれくらいを受け取るのが妥当か」が見えてきます。</p>
+  </div>
+
+  <h3>F・A・Rを、一つずつ</h3>
+  <p><strong>F（機能 Functions）</strong>は、その会社が実際に担った活動です。研究開発、製造、品質管理、マーケティング、販売、物流、アフターサービス——どの工程を、どの会社が、どの程度の重要度で担ったか。<strong>A（資産 Assets）</strong>は、その会社が事業に投じた資産。工場や機械といった有形資産だけでなく、特許・ブランド・ノウハウといった<strong>無形資産</strong>が、しばしば決定的に重要になります。<strong>R（リスク Risks）</strong>は、その会社が引き受けた不確実性。在庫が売れ残るリスク、為替変動のリスク、製品が欠陥を起こすリスク、開発が失敗するリスクなど。</p>
+
+  <figure>
+    <svg viewBox="0 0 860 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="FAR 機能・資産・リスクの三角形">
+      <rect x="0" y="0" width="860" height="420" fill="#ffffff"/>
+      <text x="430" y="34" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="700" fill="#1a1d24">FAR——利益配分を決める3つの問い</text>
+      <text x="430" y="56" text-anchor="middle" font-family="sans-serif" font-size="12.5" fill="#6b7280">多く担い・多く出し・多く負った会社ほど、多くの利益を得るのが「独立企業なら当然」</text>
+
+      <g font-family="sans-serif">
+        <!-- triangle -->
+        <polygon points="430,90 200,330 660,330" fill="#e3f4ef" stroke="#0f766e" stroke-width="2"/>
+        <!-- F -->
+        <circle cx="430" cy="118" r="26" fill="#0f766e"/>
+        <text x="430" y="126" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">F</text>
+        <text x="430" y="168" text-anchor="middle" font-size="13.5" font-weight="700" fill="#1a1d24">機能 Functions</text>
+        <text x="430" y="188" text-anchor="middle" font-size="11" fill="#3a4150">何を「した」か</text>
+        <text x="430" y="205" text-anchor="middle" font-size="10.5" fill="#6b7280">開発・製造・販売・管理…</text>
+        <!-- A -->
+        <circle cx="218" cy="340" r="26" fill="#0f766e"/>
+        <text x="218" y="348" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">A</text>
+        <text x="218" y="388" text-anchor="middle" font-size="13.5" font-weight="700" fill="#1a1d24">資産 Assets</text>
+        <text x="218" y="407" text-anchor="middle" font-size="10.5" fill="#6b7280">何を「出した」か（特許・設備）</text>
+        <!-- R -->
+        <circle cx="642" cy="340" r="26" fill="#0f766e"/>
+        <text x="642" y="348" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">R</text>
+        <text x="642" y="388" text-anchor="middle" font-size="13.5" font-weight="700" fill="#1a1d24">リスク Risks</text>
+        <text x="642" y="407" text-anchor="middle" font-size="10.5" fill="#6b7280">何を「負った」か（在庫・為替）</text>
+
+        <text x="430" y="270" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f766e">この3つの合計＝</text>
+        <text x="430" y="290" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f766e">価値創造への貢献</text>
+        <text x="430" y="310" text-anchor="middle" font-size="11" fill="#3a4150">＝受け取るべき利益の大きさ</text>
+      </g>
+    </svg>
+    <figcaption><span class="fn">図4-1</span>　FARの三角形。機能（何をしたか）・資産（何を出したか）・リスク（何を負ったか）の3つを書き出すことで、各社の価値創造への貢献度が見える。これが利益配分（＝独立企業間価格）の土台になる。</figcaption>
+  </figure>
+
+  <h3>リスクは「言った者勝ち」ではない——管理と資金で見る</h3>
+  <p>ここで、近年もっとも重要になった論点に触れます。<strong>リスクの帰属</strong>です。契約書に「このリスクはA社が負う」と書いてあれば、そのとおりに利益を配分してよいのでしょうか。かつてはそう扱われがちでしたが、いまは違います。OECDガイドラインは、<strong>「リスクを実際にコントロール（管理・意思決定）している会社、そしてそのリスクを引き受ける財務的な能力のある会社」</strong>に、リスクを帰属させるべきだとします。</p>
+
+  <p>なぜか。考えてみてください。資金も判断力もない小さな子会社に、契約書だけで「全世界の在庫リスクを負う」と書き込み、その見返りに巨額の利益を付け替える——これを許せば、契約書一枚で利益をどこへでも動かせてしまう。だから「紙に書いたリスク」ではなく、<strong>「実際にそのリスクを管理し、損が出たら負担できる実体のある会社か」</strong>を問う。ここでも、本書を貫く<em>「形式ではなく実質で見る」</em>という精神が効いています。</p>
+
+  <div class="box warn">
+    <p class="box-t">⚠️ 「取引を正確に描き出す」が出発点（accurate delineation）</p>
+    <p>OECDガイドラインは、価格を計算する前に、まず<strong>「実際の取引を正確に描き出す（accurately delineate）」</strong>ことを求めます。契約書の文言ではなく、当事者が<strong>現実にどう行動したか</strong>を見て、取引の真の姿を確定する。たとえば契約上は「単純な製造委託」でも、実際にはその子会社が独自に重要な開発をしているなら、取引の正体は違ってきます。<br>
+    この「描写」を誤ると、その後の価格計算がどれだけ精密でも、答えは丸ごと間違う。だから移転価格は、計算技術よりも前に、<strong>「事実をどう捉えるか」という観察</strong>から始まるのです。</p>
+  </div>
+
+  <h3>比較可能性の5要素——「似ているか」を5つの角度で測る</h3>
+  <p>FARで取引を描き出したら、次は「比較できる第三者取引（コンパラブル）」を探します。でも、「似ている」とは何でしょう。OECDは、比較できるかどうかを<strong>5つの要素</strong>で判断するよう求めています。これは移転価格分析の共通言語なので、表で押さえておきましょう。</p>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th style="width:30%">比較可能性の5要素</th><th>何を見るか</th></tr></thead>
+    <tbody>
+      <tr><td><strong>① 資産・役務の特性</strong></td><td>取引されるモノやサービスそのものが似ているか（品質・仕様・ブランドの有無など）。</td></tr>
+      <tr><td><strong>② 機能分析（FAR）</strong></td><td>当事者が担う機能・資産・リスクが似ているか。比較可能性の<strong>核心</strong>。</td></tr>
+      <tr><td><strong>③ 契約条件</strong></td><td>取引の条件（保証、支払期間、数量、独占権など）が似ているか。</td></tr>
+      <tr><td><strong>④ 経済状況（市場）</strong></td><td>取引が行われた市場が似ているか（国・地域、市場規模、競争の程度、取引段階）。</td></tr>
+      <tr><td><strong>⑤ 事業戦略</strong></td><td>当事者の事業戦略が似ているか（市場開拓のための一時的な安値販売など）。</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>このうち、もっとも重要なのは<strong>②の機能分析（FAR）</strong>です。同じ業種の会社でも、担っている機能・資産・リスクが違えば、利益率はまるで変わる。だから「同業だから比較対象にできる」は誤りで、「FARが似ているか」までを見ないと意味がありません。逆に言えば、比較対象が完全に一致することはまずないので、<strong>違いがあれば、その違いを調整する</strong>（あるいは説明する）のが実務です。完璧な比較対象を探すのではなく、「合理的に比較できる程度に似ているものを選び、残った差は調整・説明する」——この現実的な姿勢が、移転価格分析の基本姿勢になります。</p>
+
+  <h3>「限定的な機能の会社」という、便利な考え方</h3>
+  <p>FARの実務でとてもよく出てくるのが、機能とリスクを<strong>意図的に絞った</strong>会社の類型です。たとえば、在庫リスクや価格決定権をほとんど持たず、本社の指示どおりに売るだけの<strong>「限定リスク販売会社」</strong>。あるいは、開発も販売もせず、言われたとおり作るだけの<strong>「受託製造会社」</strong>（第5章のベトナム工場）。こうした会社は、担う機能もリスクも小さい。だから、独立企業として得るべき利益も<strong>「小さいけれど、安定している」</strong>のが自然です。</p>
+  <p>逆に、重要な無形資産を持ち、大きなリスクを引き受けて事業全体を率いる会社（しばしば「起業家的な会社」と呼ばれます）は、変動が大きいかわりに、<strong>残りの利益（うまくいけば大きく、失敗すれば赤字）</strong>を引き受けます。この発想は、第5章の算定方法でも、第7章の残余利益分割でも、繰り返し顔を出します。</p>
+
+  <div class="box ex">
+    <p class="box-t">📐 「リスクが小さい＝利益も小さく安定」の直感</p>
+    <p>あなたが、売れ残りリスクをいっさい負わず、決まった手数料だけもらって店番をするとします。儲かっても損しても、もらえるのは一定の手数料だけ。<strong>安定しているが、大きくは儲からない</strong>。一方、自腹で仕入れて売れ残りリスクを負う店主は、当たれば大儲け、外せば大損。<strong>変動するが、上限がない</strong>。<br>
+    移転価格は、海外子会社が「店番」タイプか「店主」タイプかをFARで見極め、それに見合った利益を割り当てます。だから、ずっと安定して薄利の販売子会社は自然でも、<strong>機能が小さいのに大きな利益や、逆に大きなリスクを負うのに薄利</strong>——という「役割と利益のちぐはぐ」は、当局がまっさきに目をつける点になります。</p>
+  </div>
+
+  <p>「誰が何をして、何を負ったか」を描き出すFAR分析と、「似ているか」を測る比較可能性の5要素——移転価格の土台が据わりました。この土台の上に、いよいよ<strong>具体的な「測り方（算定方法）」</strong>が乗ります。次章では、独立企業間価格を実際に計算するための5つの道具を、一つずつ手に取ってみましょう。</p>
+
+
+  <!--====================== 第5章 ======================-->
+  <span class="anchor" id="c5"></span>
+  <h2 class="chap"><span class="num">第 5 章</span><br>価格を決める、5つの道具</h2>
+  <p class="chap-sub">——CUP・RP・CP・TNMM・PSM を、最短で理解する</p>
+
+  <p class="lead-p">独立企業間価格を計算する方法は、世界共通で大きく<strong>5つ</strong>あります。名前だけ見ると暗号のようですが、一つずつ「何を比べているか」をつかめば、こわくありません。大切なのは、<strong>どれか一つが絶対的に正しいわけではなく、「その取引にいちばん適した方法」を選ぶ</strong>という考え方（最適方法ルール）です。道具箱を開けてみましょう。</p>
+
+  <h3>2つの系統——「価格」を比べるか、「利益」を比べるか</h3>
+  <p>5つの方法は、大きく2系統に分かれます。<strong>伝統的な3方法</strong>（CUP・RP・CP）は、取引の「価格」や「粗利」を直接比べる、素朴で信頼性の高いやり方。<strong>利益ベースの2方法</strong>（TNMM・PSM）は、最終的な「営業利益」のレベルで比べる、データが乏しい現実に対応するやり方です。まず一覧で見渡しましょう。</p>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th style="width:8%">系統</th><th style="width:22%">方法（略称）</th><th style="width:34%">何を比べるか</th><th>向いている場面</th></tr></thead>
+    <tbody>
+      <tr><td rowspan="3"><strong>伝統的<br>3方法</strong></td><td><strong>独立価格比準法</strong><br>（CUP）</td><td>取引の<strong>価格そのもの</strong>を、第三者間の同じ取引の価格と比べる。</td><td>市場価格のある製品（鉱物・穀物など）。最も直接的で信頼性が高い。</td></tr>
+      <tr><td><strong>再販売価格基準法</strong><br>（RP）</td><td>買って転売する会社の<strong>売上総利益率（粗利率）</strong>を、第三者の卸売業者と比べる。</td><td>単純な販売・卸売会社（製品に手を加えない）。</td></tr>
+      <tr><td><strong>原価基準法</strong><br>（CP）</td><td>製造などの<strong>原価へのマークアップ率（上乗せ率）</strong>を、第三者と比べる。</td><td>単純な製造・受託加工の会社。</td></tr>
+      <tr><td rowspan="2"><strong>利益<br>ベース<br>2方法</strong></td><td><strong>取引単位営業利益法</strong><br>（TNMM）</td><td>検証対象の会社の<strong>営業利益率</strong>を、似た機能の第三者企業の利益率（レンジ）と比べる。</td><td>比較対象の「価格・粗利」が手に入らないとき。実務で最頻出（→第6章）。</td></tr>
+      <tr><td><strong>利益分割法</strong><br>（PSM）</td><td>両社が生んだ<strong>合算利益を、貢献度に応じて分割</strong>する。</td><td>両社とも独自の重要な貢献（無形資産など）をしていて、片方だけを検証できないとき。</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="statute">
+    <span class="label">租税特別措置法 第66条の4 第2項（要旨）</span>
+    独立企業間価格とは、国外関連取引の内容・当事者が果たす機能その他の事情を勘案して、<mark>独立価格比準法、再販売価格基準法、原価基準法、利益分割法、取引単位営業利益法</mark>その他これらに準ずる方法のうち、当該取引の内容に照らし<mark>最も適切な方法</mark>により算定した金額をいう。
+  </div>
+
+  <p>条文（第2項）が、5つの方法を名指しで挙げ、最後に「<strong>最も適切な方法</strong>により算定する」と定めていることに注目してください。かつては「まずCUPを試し、ダメなら次……」という優先順位がありましたが、日本では平成23年度の改正で、<strong>取引ごとにいちばん適した方法を選ぶ</strong>（最適方法ルール／best method rule）に変わりました。「唯一の正解の方法」があるのではなく、「この取引なら、この方法がいちばん事実をよく映す」という選択をするのです。</p>
+
+  <h3>伝統的3方法——どこを比べるかの違い</h3>
+  <p>伝統的3方法は、取引の「どの段階の数字」を比べるかが違うだけ、と整理すると見通しがよくなります。<strong>CUP</strong>は、取引価格そのもの（いちばん上流）。<strong>RP</strong>は、転売する会社の粗利率（仕入れた側から見る）。<strong>CP</strong>は、製造する会社の原価への上乗せ率（売る側から見る）。同じ取引でも、「価格で見るか／買い手の粗利で見るか／売り手の上乗せで見るか」という、見る場所の違いなのです。</p>
+
+  <div class="box ex">
+    <p class="box-t">🧮 ミニ計算：原価基準法（CP）のイメージ</p>
+    <p>NOVAのベトナム工場が、親会社の指示どおりに部品を製造するだけの「単純な受託製造会社」だとします。第三者の似た受託製造会社が、<strong>原価に10%上乗せ</strong>して受注しているなら、ベトナム工場も「原価＋10%」が独立企業間価格の目安。<br>
+    部品の製造原価が1個100円なら、独立企業間価格は <strong>100円 ×（1＋10%）＝110円</strong>。もし実際の取引価格が130円だったら、差の20円ぶん、ベトナムに利益が出すぎている——と判断されます。「単純な機能の会社は、ほどほどの安定した利益」という、FARの考え方（第4章）がそのまま数字になっています。</p>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 880 430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="算定方法の選択フローチャート">
+      <rect x="0" y="0" width="880" height="430" fill="#ffffff"/>
+      <text x="440" y="34" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="700" fill="#1a1d24">どの方法を選ぶ？——おおまかな道しるべ</text>
+      <text x="440" y="56" text-anchor="middle" font-family="sans-serif" font-size="12.5" fill="#6b7280">「最も適切な方法」は事案ごと。これは典型的な思考の順番（厳密な優先順位ではない）</text>
+      <defs><marker id="ar5" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#0f766e"/></marker></defs>
+
+      <g font-family="sans-serif">
+        <!-- Q1 -->
+        <rect x="320" y="80" width="240" height="50" rx="10" fill="#fbfaf6" stroke="#8a6d1f" stroke-width="1.6"/>
+        <text x="440" y="102" text-anchor="middle" font-size="12" font-weight="700" fill="#37312a">同じモノの第三者価格はある？</text>
+        <text x="440" y="120" text-anchor="middle" font-size="11" fill="#6b7280">（市場価格・社内比較取引）</text>
+        <path d="M440,130 L440,158" stroke="#0f766e" stroke-width="1.8" marker-end="url(#ar5)"/>
+        <text x="470" y="150" font-size="10.5" fill="#2f7d52">YES</text>
+        <rect x="345" y="160" width="190" height="40" rx="9" fill="#e3f4ef" stroke="#0f766e" stroke-width="1.6"/>
+        <text x="440" y="185" text-anchor="middle" font-size="12" font-weight="700" fill="#0f766e">CUP（独立価格比準法）</text>
+
+        <!-- branch to functions -->
+        <path d="M560,105 L640,105 L640,232" stroke="#0f766e" stroke-width="1.8" marker-end="url(#ar5)"/>
+        <text x="600" y="98" font-size="10.5" fill="#b4541a">NO</text>
+        <rect x="520" y="234" width="250" height="50" rx="10" fill="#fbfaf6" stroke="#8a6d1f" stroke-width="1.6"/>
+        <text x="645" y="256" text-anchor="middle" font-size="12" font-weight="700" fill="#37312a">片方は「単純な機能」だけ？</text>
+        <text x="645" y="274" text-anchor="middle" font-size="11" fill="#6b7280">（単純な販売 or 製造）</text>
+        <path d="M520,259 L420,259" stroke="#0f766e" stroke-width="1.8" marker-end="url(#ar5)"/>
+        <text x="468" y="252" font-size="10.5" fill="#b4541a">NO</text>
+
+        <!-- yes simple -->
+        <path d="M645,284 L645,312" stroke="#0f766e" stroke-width="1.8" marker-end="url(#ar5)"/>
+        <text x="675" y="304" font-size="10.5" fill="#2f7d52">YES</text>
+        <rect x="500" y="314" width="290" height="64" rx="9" fill="#e3f4ef" stroke="#0f766e" stroke-width="1.6"/>
+        <text x="645" y="338" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0f766e">RP / CP / TNMM</text>
+        <text x="645" y="358" text-anchor="middle" font-size="10.5" fill="#3a4150">単純な側を「検証対象」にして</text>
+        <text x="645" y="373" text-anchor="middle" font-size="10.5" fill="#3a4150">粗利率・上乗せ率・営業利益率で測る</text>
+
+        <!-- no: both unique -->
+        <rect x="110" y="234" width="250" height="50" rx="10" fill="#fbfaf6" stroke="#8a6d1f" stroke-width="1.6"/>
+        <text x="235" y="256" text-anchor="middle" font-size="12" font-weight="700" fill="#37312a">両方が独自の重要貢献？</text>
+        <text x="235" y="274" text-anchor="middle" font-size="11" fill="#6b7280">（両社が無形資産など）</text>
+        <path d="M235,284 L235,312" stroke="#0f766e" stroke-width="1.8" marker-end="url(#ar5)"/>
+        <text x="265" y="304" font-size="10.5" fill="#2f7d52">YES</text>
+        <rect x="110" y="314" width="250" height="64" rx="9" fill="#f2ecfa" stroke="#6a3fa0" stroke-width="1.6"/>
+        <text x="235" y="338" text-anchor="middle" font-size="11.5" font-weight="700" fill="#6a3fa0">PSM（利益分割法）</text>
+        <text x="235" y="358" text-anchor="middle" font-size="10.5" fill="#3a4150">合算利益を、貢献度に</text>
+        <text x="235" y="373" text-anchor="middle" font-size="10.5" fill="#3a4150">応じて分け合う</text>
+        <path d="M520,259 L362,259" stroke="#0f766e" stroke-width="1.8" marker-end="url(#ar5)"/>
+      </g>
+    </svg>
+    <figcaption><span class="fn">図5-1</span>　算定方法を選ぶときの、おおまかな思考の順番。まず同一物の第三者価格があればCUP。なければ、片方が「単純な機能」だけならその側を検証対象にしてRP・CP・TNMM。両社とも独自の重要な貢献（無形資産など）をしていればPSM。あくまで典型例で、実際は事案ごとに「最も適切な方法」を選ぶ。</figcaption>
+  </figure>
+
+  <div class="box essence">
+    <p class="box-t">💡 方法選びの芯——「単純な側」を測る</p>
+    <p>実務の知恵を一つ。多くのケースでは、取引する2社のうち<strong>「より単純な機能しか担っていない側」</strong>を検証対象（tested party）に選びます。単純な会社のほうが、比較できる第三者（同じく単純な販売会社・製造会社）を見つけやすいからです。<br>
+    そして、単純な側に「ほどほどの安定した利益」を確保したあと、<strong>残った利益（残余利益）は、独自の無形資産などを持つ“複雑な側”に帰属する</strong>と考える。この「単純な側を固め、残りを複雑な側へ」という発想は、第7章の無形資産（残余利益分割法）で、もう一度きれいな形で現れます。</p>
+  </div>
+
+  <h3>もう一つのミニ計算——再販売価格基準法（RP）</h3>
+  <p>原価基準法（CP）は「作る側」から見ましたが、<strong>再販売価格基準法（RP）</strong>は「買って転売する側」から見ます。NOVAのEU販売会社が、本社から仕入れた文具を、最終消費者に売る場面で考えましょう。RPは、<strong>転売する会社が確保すべき粗利率（売上総利益率）</strong>を、第三者の似た卸売業者と比べて、そこから逆算で適正な仕入価格を出します。</p>
+  <div class="box ex">
+    <p class="box-t">🧮 RP の計算イメージ</p>
+    <p>EU販売会社が、文具を最終消費者へ<strong>1,000で販売</strong>しているとします。第三者の似た単純な卸売業者の<strong>売上総利益率が20%</strong>なら、EUも売上の20%＝200の粗利を確保するのが独立企業として自然。<br>
+    すると、適正な仕入価格（独立企業間価格）は、<strong>1,000 −200 ＝ 800</strong>。もし実際の仕入価格が900だったら、100ぶん本社が利益を取りすぎ＝<strong>EU側の利益が過少</strong>。EU当局から「本社が利益を吸い上げている」と問われる構図です。CP（作る側の原価＋上乗せ）とRP（売る側の売価−粗利）は、同じ取引を<strong>逆の端から</strong>はさみ込んでいる、と捉えると見通しがよくなります。</p>
+  </div>
+
+  <h3>方法に「信頼性の序列」はあるのか</h3>
+  <p>「最適方法ルール」で優先順位はなくなった、と言いました。ただし、これは「どの方法も同じくらい当てになる」という意味ではありません。一般論として、<strong>取引価格そのものを直接比べるCUPがもっとも直接的で信頼性が高く</strong>、粗利を比べるRP・CP、営業利益を比べるTNMMと進むにつれ、「間接的な近似」の度合いが増していきます。利益分割法（PSM）は、両社が独自の貢献をする複雑なケースのための、いわば特別な道具です。</p>
+  <p>では、なぜ最も信頼性の高いはずのCUPが、実務であまり使われないのか。答えは第6章の主題につながります。<strong>CUPに必要な「まったく同じ取引の第三者価格」が、現実にはめったに手に入らない</strong>からです。理論的な理想（CUP）と、データの現実（TNMM）のあいだで、実務は折り合いをつけている——この緊張こそ、移転価格という分野の宿命なのです。</p>
+
+  <p>5つの道具が手に入りました。価格を直接比べる伝統的3方法（CUP・RP・CP）と、利益で比べる2方法（TNMM・PSM）。そして「最も適切な方法」を事案ごとに選ぶ——。次章では、この中で実務上いちばん多く使われる<strong>TNMM</strong>を取り上げ、移転価格でもっとも大切な「<strong>レンジ（幅）で考える</strong>」という発想を、深く掘り下げます。</p>
+
+  <!--====================== 第6章 ======================-->
+  <span class="anchor" id="c6"></span>
+  <h2 class="chap"><span class="num">第 6 章</span><br>比較対象が見つからないとき</h2>
+  <p class="chap-sub">——TNMMと、「レンジ（幅）」で考える発想</p>
+
+  <p class="lead-p">第5章で、いちばん信頼できるのは取引価格を直接比べるCUPだと学びました。でも現実には、まったく同じ取引の第三者価格など、めったに手に入りません。そこで実務でもっとも多用されるのが<strong>TNMM（取引単位営業利益法）</strong>です。そして、このTNMMを理解することは、移転価格でいちばん大切な感覚——<strong>「答えは点ではなく、幅で考える」</strong>——を身につけることでもあります。この章は、入門の山場の一つです。</p>
+
+  <h3>なぜTNMMが、いちばん使われるのか</h3>
+  <p>理由は、ただ一つ。<strong>データが手に入るから</strong>です。CUPに必要な「同一製品の第三者価格」や、RP・CPに必要な「第三者の粗利率」は、外部からはなかなか見えません。ところが、似たような事業をしている上場会社の<strong>営業利益率</strong>なら、公開されている財務データから集められます。「価格や粗利は分からなくても、最終的な儲けの率（営業利益率）なら比べられる」——この現実への割り切りが、TNMMが世界中で多用される理由です。</p>
+
+  <div class="box note">
+    <p class="box-t">📘 PLI——「何の利益率で比べるか」</p>
+    <p>TNMMでは、検証対象の機能に応じて、比べる利益率の種類（<strong>利益水準指標＝PLI</strong>）を選びます。代表的なのは次の3つ。<br>
+    ・<strong>売上営業利益率</strong>（営業利益 ÷ 売上）……販売会社の検証によく使う。<br>
+    ・<strong>総費用営業利益率</strong>（営業利益 ÷ 総費用）……製造・役務提供会社の検証に使う。<br>
+    ・<strong>ベリー比</strong>（売上総利益 ÷ 営業費用）……単純な販売・仲介会社に使うことがある。<br>
+    「どのPLIを選ぶか」も、FAR（第4章）次第。会社の機能の性質に合った“儲けのものさし”を選ぶのがコツです。</p>
+  </div>
+
+  <h3>比較会社を選ぶ——漏斗（じょうご）で絞る</h3>
+  <p>TNMMの品質は、「どんな第三者企業を比較対象に選ぶか」でほぼ決まります。この選定（スクリーニング）は、たくさんの候補を、条件で少しずつ絞り込んでいく<strong>漏斗（じょうご）</strong>のような作業です。データベースから同じ業種の会社を数百社拾い、規模・機能・赤字続きでないか・特殊事情がないか……とふるいにかけ、最終的に数社〜十数社の「似た会社」を残します。</p>
+
+  <p>ここで大切なのは、<strong>「同業ならOK」ではない</strong>こと（第4章で学んだとおり）。同じ「販売業」でも、独自ブランドを持つ会社と、単に仕入れて売るだけの会社では、利益率がまるで違います。検証対象（たいてい単純な機能の会社）と<strong>FARが似た会社</strong>だけを残すこと——これが、説得力のある比較の生命線です。</p>
+
+  <h3>レンジと四分位——「幅の中なら、セーフ」</h3>
+  <p>さて、比較会社を10社選んだとして、その営業利益率は「全社きっかり同じ」にはなりません。3%の会社もあれば、8%の会社もある。バラけます。だからこそ、独立企業間価格は<strong>「点」ではなく「幅（レンジ）」</strong>になるのです。そして、その幅をどう決めるか。実務では<strong>四分位レンジ（IQR）</strong>がよく使われます。</p>
+
+  <p>四分位とは、高校で習う統計です。データを小さい順に並べ、4等分する。下から1/4の点（第1四分位）から、3/4の点（第3四分位）までの範囲を「真ん中あたりの幅」とみなす。上下の極端な値（飛び抜けて高い/低い会社）を切り落とし、<strong>「ふつうの会社が収まる中央の幅」</strong>を取り出すわけです。検証対象の会社の利益率が、この幅の中にあれば「独立企業間価格の範囲内＝セーフ」。外れていれば、引き直しの対象になります。</p>
+
+  <figure>
+    <svg viewBox="0 0 880 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="四分位レンジと中央値への調整">
+      <rect x="0" y="0" width="880" height="420" fill="#ffffff"/>
+      <text x="440" y="34" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="700" fill="#1a1d24">比較会社の利益率を並べ、「中央の幅」を取り出す</text>
+      <text x="440" y="56" text-anchor="middle" font-family="sans-serif" font-size="12.5" fill="#6b7280">幅の中ならセーフ。外れたら中央値（median）まで引き直すのが原則</text>
+
+      <g font-family="sans-serif">
+        <!-- axis -->
+        <line x1="90" y1="250" x2="790" y2="250" stroke="#cbd2dc" stroke-width="2"/>
+        <text x="90" y="278" text-anchor="middle" font-size="11" fill="#6b7280">低い ←</text>
+        <text x="790" y="278" text-anchor="middle" font-size="11" fill="#6b7280">→ 高い（営業利益率）</text>
+
+        <!-- IQR box -->
+        <rect x="300" y="150" width="280" height="60" rx="6" fill="#e3f4ef" stroke="#0f766e" stroke-width="2"/>
+        <line x1="300" y1="150" x2="300" y2="210" stroke="#0f766e" stroke-width="2"/>
+        <line x1="580" y1="150" x2="580" y2="210" stroke="#0f766e" stroke-width="2"/>
+        <text x="300" y="138" text-anchor="middle" font-size="11" font-weight="700" fill="#0f766e">第1四分位</text>
+        <text x="300" y="232" text-anchor="middle" font-size="11" fill="#3a4150">3%</text>
+        <text x="580" y="138" text-anchor="middle" font-size="11" font-weight="700" fill="#0f766e">第3四分位</text>
+        <text x="580" y="232" text-anchor="middle" font-size="11" fill="#3a4150">8%</text>
+        <!-- median -->
+        <line x1="440" y1="150" x2="440" y2="210" stroke="#6a3fa0" stroke-width="2.5"/>
+        <text x="440" y="138" text-anchor="middle" font-size="11" font-weight="700" fill="#6a3fa0">中央値 5.5%</text>
+        <text x="440" y="180" text-anchor="middle" font-size="11" font-weight="700" fill="#0f766e">独立企業間レンジ</text>
+
+        <!-- whiskers (outliers cut) -->
+        <line x1="150" y1="180" x2="300" y2="180" stroke="#cbd2dc" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <line x1="580" y1="180" x2="730" y2="180" stroke="#cbd2dc" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <text x="150" y="160" text-anchor="middle" font-size="9.5" fill="#b4541a">外れ値（切る）</text>
+        <text x="730" y="160" text-anchor="middle" font-size="9.5" fill="#b4541a">外れ値（切る）</text>
+
+        <!-- tested party -->
+        <circle cx="660" cy="320" r="9" fill="#b32d3a"/>
+        <text x="660" y="350" text-anchor="middle" font-size="11" font-weight="700" fill="#b32d3a">検証対象 9%</text>
+        <text x="660" y="367" text-anchor="middle" font-size="10" fill="#6b7280">幅の外＝高すぎ</text>
+        <path d="M660,311 L660,212" stroke="#b32d3a" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <path d="M655,300 Q540,270 445,212" stroke="#b32d3a" stroke-width="1.8" fill="none" marker-end="url(#arm6)"/>
+        <defs><marker id="arm6" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#b32d3a"/></marker></defs>
+        <text x="540" y="300" text-anchor="middle" font-size="10.5" fill="#b32d3a">→ 中央値5.5%まで引き直し</text>
+      </g>
+    </svg>
+    <figcaption><span class="fn">図6-1</span>　比較会社の営業利益率を小さい順に並べ、上下の極端な値を切り落として、第1四分位〜第3四分位（例：3%〜8%）を独立企業間レンジとする。検証対象がこの幅の中ならセーフ。外れている（例：9%）場合は、原則として中央値（5.5%）まで引き直される。</figcaption>
+  </figure>
+
+  <div class="box warn">
+    <p class="box-t">⚠️ 「幅の端っこでもいい」とは限らない</p>
+    <p>レンジの考え方には、注意も要ります。日本の取扱いでは、検証対象がレンジから外れた場合、原則として<strong>レンジの端ではなく「中央値」まで引き直される</strong>のが基本です。「ぎりぎり幅の中に入っていればいい」と端を狙う発想は危うい。また、比較対象が少なかったり質が低かったりすれば、レンジ自体の信頼性が問われます。結局、レンジは「適当に幅を持たせる言い訳」ではなく、<strong>「質の高い比較対象から、誠実に導いた範囲」</strong>でなければ意味がないのです。</p>
+  </div>
+
+  <h3>現実の「ノイズ」とどう付き合うか</h3>
+  <p>最後に、実務の生々しい話を。比較会社のデータには、いろいろな「ノイズ」が混じります。会計年度のズレ、為替変動、そして景気の急変——たとえば感染症の流行で、ある年だけ全業界の利益率が異常になる、といったことが起きます。こうした一時的・特殊な要因は、必要に応じて調整したり、説明を加えたりします。移転価格分析は、無菌室の計算ではなく、<strong>「現実のノイズを、いかに誠実に処理し、説明するか」</strong>という、地に足のついた作業なのです。</p>
+
+  <h3>“5社しか見つからない”問題と、複数年で見る知恵</h3>
+  <p>レンジの考え方は理屈としてきれいですが、現実には<strong>「そもそも、似た会社が数社しか見つからない」</strong>という壁にぶつかります。比較会社が少なければ、レンジの信頼性も下がる。だからこそ第4章の比較可能性が重要で、「数は少なくても、機能（FAR）がよく似た会社」を選ぶことが、量より質として効いてきます。逆に、数だけ揃えようと機能の違う会社まで放り込むと、レンジは広がっても説得力は落ちます。</p>
+  <p>もう一つの実務の知恵が、<strong>複数年で見る</strong>ことです。ある一年だけを切り取ると、たまたまの好不調でゆがみが出る。そこで、比較会社の利益率は<strong>通常3年程度の平均</strong>でならして使うのが一般的です。景気の波や一時的な要因を平準化し、「ふつうの状態での利益率」を取り出すためです。第12章で出てくる「赤字続きの販売子会社」の説明も、単年でなく複数年の流れで見ると、立ち上げ期なのか構造的な問題なのかが見えてきます。</p>
+
+  <div class="box note">
+    <p class="box-t">📘 レンジは「言い訳の幅」ではない</p>
+    <p>初学者がもちやすい誤解に、「レンジがあるなら、その幅のどこかに入れておけば適当でいい」というものがあります。逆です。レンジは<strong>質の高い比較対象から、誠実な手続きで導いてはじめて意味を持つ</strong>。比較対象の選び方、複数年のとり方、調整の根拠——その一つひとつを説明できなければ、レンジそのものが当局に否定されます。「幅がある」ことは「いいかげんでよい」ことの正反対なのです。</p>
+  </div>
+
+  <p>「答えは幅で考える」「比較会社を漏斗で選ぶ」「四分位で中央の幅を取り、外れたら中央値へ」——移転価格のもっとも実務的な感覚が身につきました。ここまでは、比較対象が（苦労すれば）見つかる世界の話でした。次章では、そもそも<strong>「比較対象が、この世に存在しない」</strong>という、移転価格の最難関——無形資産に挑みます。</p>
+
+
+  <!--====================== 第7章 ======================-->
+  <span class="anchor" id="c7"></span>
+  <h2 class="chap"><span class="num">第 7 章</span><br>無形資産という最難関</h2>
+  <p class="chap-sub">——ブランド・特許の価値は、いったい誰のものか（DEMPE）</p>
+
+  <p class="lead-p">移転価格でもっとも難しく、もっとも巨額が動くのが<strong>無形資産</strong>の取引です。ブランド、特許、ソフトウェア、ノウハウ——これらは「世界に一つ」で比較対象がなく、価値が将来の期待で決まり、しかも国境を越えて簡単に「移せる」。多国籍企業の利益の源泉が、いまやモノづくりよりも無形資産にあることを思えば、ここが主戦場になるのは当然です。この章で、難所の地図を手に入れましょう。</p>
+
+  <h3>なぜ無形資産は、これほど難しいのか</h3>
+  <p>理由は3つあります。第一に、<strong>比較対象がない</strong>。あるブランドの価値は、そのブランド固有のもので、「似た第三者取引」がそもそも存在しない（独立企業原則の泣きどころ＝第2章）。第二に、<strong>価値が将来の期待で決まる</strong>。特許がこの先どれだけ儲けを生むかは、誰にも確実には分からない。第三に、<strong>移しやすい</strong>。工場は動かせなくても、特許の名義は契約一枚で軽課税国の子会社へ移せてしまう。この3つが重なり、無形資産は利益移転のもっとも危険な抜け道になりうるのです。</p>
+
+  <h3>DEMPE——「名義」ではなく「貢献」で見る</h3>
+  <p>ここで決定的に重要な考え方が、<span class="term">DEMPE</span>（デンペ）です。これは無形資産に関わる5つの活動の頭文字。<strong>D</strong>evelopment（開発）、<strong>E</strong>nhancement（改良）、<strong>M</strong>aintenance（維持）、<strong>P</strong>rotection（保護）、<strong>E</strong>xploitation（使用・活用）。OECDは、無形資産から生まれる利益は、その<strong>名義上の所有者（法的所有者）</strong>ではなく、<strong>これらDEMPEの活動を実際に担い、関連するリスクを管理し、資金を出した会社</strong>に帰属すべきだ、とします。</p>
+
+  <div class="box essence">
+    <p class="box-t">💡 DEMPEがひっくり返したもの</p>
+    <p>かつては、特許やブランドの「名義」を軽課税国の子会社（ペーパーカンパニー）に置けば、そこに莫大なロイヤルティ収入を集められました。名義人＝所有者＝利益の受け手、という建前だったからです。<br>
+    DEMPEは、この建前を打ち砕きました。<strong>「名義を持っているだけで、開発も改良も保護も実際にはしていない会社には、利益は帰属しない」</strong>。実際に研究者を雇って開発し（D）、ブランドを育て（E）、品質を守り（M）、模倣を訴えて守り（P）、市場で活用している（E）——その<em>汗をかいた会社</em>に利益は流れるべきだ、と。第4章で学んだ「形式（名義）ではなく実質（貢献）で見る」が、無形資産という最難関で、もっとも鮮やかに適用された姿がDEMPEです。</p>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 880 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="DEMPE 無形資産の価値創造の5機能">
+      <rect x="0" y="0" width="880" height="400" fill="#ffffff"/>
+      <text x="440" y="34" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="700" fill="#1a1d24">DEMPE——無形資産の利益は「汗をかいた会社」へ</text>
+      <text x="440" y="56" text-anchor="middle" font-family="sans-serif" font-size="12.5" fill="#6b7280">名義（法的所有者）ではなく、5つの活動への貢献で利益が決まる</text>
+
+      <g font-family="sans-serif">
+        <!-- 5 boxes -->
+        <rect x="40" y="95" width="150" height="110" rx="12" fill="#e3f4ef" stroke="#0f766e" stroke-width="1.6"/>
+        <text x="115" y="124" text-anchor="middle" font-size="22" font-weight="800" fill="#0f766e">D</text>
+        <text x="115" y="150" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1a1d24">開発</text>
+        <text x="115" y="172" text-anchor="middle" font-size="10.5" fill="#3a4150">研究・発明・</text>
+        <text x="115" y="188" text-anchor="middle" font-size="10.5" fill="#3a4150">創作する</text>
+
+        <rect x="205" y="95" width="150" height="110" rx="12" fill="#e3f4ef" stroke="#0f766e" stroke-width="1.6"/>
+        <text x="280" y="124" text-anchor="middle" font-size="22" font-weight="800" fill="#0f766e">E</text>
+        <text x="280" y="150" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1a1d24">改良</text>
+        <text x="280" y="172" text-anchor="middle" font-size="10.5" fill="#3a4150">価値を高める・</text>
+        <text x="280" y="188" text-anchor="middle" font-size="10.5" fill="#3a4150">育てる</text>
+
+        <rect x="370" y="95" width="150" height="110" rx="12" fill="#e3f4ef" stroke="#0f766e" stroke-width="1.6"/>
+        <text x="445" y="124" text-anchor="middle" font-size="22" font-weight="800" fill="#0f766e">M</text>
+        <text x="445" y="150" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1a1d24">維持</text>
+        <text x="445" y="172" text-anchor="middle" font-size="10.5" fill="#3a4150">品質・機能を</text>
+        <text x="445" y="188" text-anchor="middle" font-size="10.5" fill="#3a4150">保ち続ける</text>
+
+        <rect x="535" y="95" width="150" height="110" rx="12" fill="#e3f4ef" stroke="#0f766e" stroke-width="1.6"/>
+        <text x="610" y="124" text-anchor="middle" font-size="22" font-weight="800" fill="#0f766e">P</text>
+        <text x="610" y="150" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1a1d24">保護</text>
+        <text x="610" y="172" text-anchor="middle" font-size="10.5" fill="#3a4150">模倣・侵害から</text>
+        <text x="610" y="188" text-anchor="middle" font-size="10.5" fill="#3a4150">守る</text>
+
+        <rect x="700" y="95" width="150" height="110" rx="12" fill="#e3f4ef" stroke="#0f766e" stroke-width="1.6"/>
+        <text x="775" y="124" text-anchor="middle" font-size="22" font-weight="800" fill="#0f766e">E</text>
+        <text x="775" y="150" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1a1d24">活用</text>
+        <text x="775" y="172" text-anchor="middle" font-size="10.5" fill="#3a4150">市場で使い・</text>
+        <text x="775" y="188" text-anchor="middle" font-size="10.5" fill="#3a4150">稼ぐ</text>
+
+        <!-- vs -->
+        <rect x="120" y="250" width="300" height="100" rx="12" fill="#fcebed" stroke="#b32d3a" stroke-width="1.6"/>
+        <text x="270" y="278" text-anchor="middle" font-size="13" font-weight="700" fill="#b32d3a">名義だけの会社</text>
+        <text x="270" y="304" text-anchor="middle" font-size="11" fill="#3a4150">特許を「持っているだけ」</text>
+        <text x="270" y="326" text-anchor="middle" font-size="11.5" font-weight="700" fill="#b32d3a">→ 利益はほとんど得られない</text>
+
+        <rect x="460" y="250" width="300" height="100" rx="12" fill="#eaf5ee" stroke="#2f7d52" stroke-width="1.6"/>
+        <text x="610" y="278" text-anchor="middle" font-size="13" font-weight="700" fill="#2f7d52">DEMPEを担う会社</text>
+        <text x="610" y="304" text-anchor="middle" font-size="11" fill="#3a4150">実際に開発・改良・保護・活用</text>
+        <text x="610" y="326" text-anchor="middle" font-size="11.5" font-weight="700" fill="#2f7d52">→ 利益が帰属する</text>
+      </g>
+    </svg>
+    <figcaption><span class="fn">図7-1</span>　DEMPEの5機能。無形資産の利益は、特許やブランドの「名義」を持つだけの会社ではなく、開発・改良・維持・保護・活用という活動を実際に担い、リスクを管理し資金を出した会社に帰属する。「汗をかいた者が報われる」という移転価格の精神の、最も鮮明な現れ。</figcaption>
+  </figure>
+
+  <h3>残余利益分割法——「ふつうの利益」を配り、「残り」を無形へ</h3>
+  <p>無形資産が絡む取引では、第5章で予告した<strong>残余利益分割法（RPSM）</strong>がよく使われます。考え方は2段階。まず、両社の「ふつうの機能（製造・販売など）」に対して、第三者なら得られる<strong>基本的な利益（ルーティン利益）</strong>を配分する。そのうえで、<strong>残った利益（残余利益）</strong>を、両社が持つ無形資産への貢献度（研究開発費や重要な機能の比など）に応じて分け合うのです。</p>
+
+  <div class="box ex">
+    <p class="box-t">🧮 イメージ：NOVAのアプリ無形資産</p>
+    <p>NOVAのスマート文具が世界で大ヒットし、グループ全体で残余利益が80億円出たとします。アプリの中核技術はアメリカのNOVA US（開発＝D）が生み、ブランドは日本のNOVA JP（改良・保護＝E・P）が育てた——。<br>
+    まず各国の製造・販売会社に「ふつうの利益」を配ったあと、残った80億円を、US（開発貢献）とJP（ブランド貢献）の<strong>DEMPEへの貢献度</strong>で分け合う。「特許の名義がどこにあるか」ではなく、「誰が価値を生んだか」で80億円の行き先が決まる——これがDEMPEと残余利益分割法の合わせ技です。</p>
+  </div>
+
+  <h3>評価が難しい無形資産（HTVI）と、後出しの調整</h3>
+  <p>最後に、近年の重要論点を一つ。<strong>HTVI</strong>（Hard-To-Value Intangibles＝評価困難な無形資産）です。開発途中の特許のように、取引の時点では「将来いくら儲かるか」がまったく読めない無形資産があります。こうしたものは、移転の時点で安く評価して軽課税国に移し、あとで大化けさせる、という租税回避に使われかねません。</p>
+
+  <p>そこでOECDは、HTVIについて、<strong>当局が「事後に実際どうなったか（実績）」を、評価が妥当だったかを検証する手がかりに使える</strong>という考え方を導入しました。「移転時の予測が外れすぎていたら、当初の値段付けを見直す」という、いわば後出しのチェックを認めたのです。将来の不確実性を逆手に取った利益移転に、網をかける工夫だと理解してください。</p>
+
+  <h3>ロイヤルティ料率は、どう決まるのか</h3>
+  <p>無形資産の使用料＝ロイヤルティは、「売上の何%」という形でよく表されます。では、その料率（売上の3%か5%か）は、どう決まるのでしょう。素朴には「似た第三者のライセンス契約の料率」を探しますが、無形資産は一つとして同じものがないため、それも簡単ではありません。そこで実務では、<strong>「その無形資産がもたらす“ふつう以上の儲け（超過利益）”から逆算する」</strong>発想がよく使われます。無形資産を使うことで生まれる超過利益のうち、どれだけを使用料として支払うのが独立企業として妥当か——という、前節の残余利益分割とまったく同じ考え方です。料率という一見こまかい数字も、結局は「価値創造への貢献」から導かれるのです。</p>
+
+  <h3>育てたブランドは、誰のもの？——マーケティング上の無形資産</h3>
+  <p>もう一つ、悩ましい論点を。販売子会社が、自腹で多額の広告宣伝費をかけて、現地でブランドを育てたとします。ブランドの名義は本社にある。でも、その地域でブランド価値を高めたのは、汗をかいた販売子会社です。この場合、DEMPEの「E（改良・育成）」を担ったのは販売子会社——だから、高めたブランド価値に見合う利益の一部は、<strong>その販売子会社にも帰属しうる</strong>。「名義は本社だから、ブランドの利益は全部本社へ」とは、単純にはならないのです。ここでもDEMPEの「貢献で見る」精神が、当局と企業の攻防の焦点になります。海外子会社が現地で多額の広告費をかけているとき、それは単なる費用ではなく「無形資産を育てる活動」かもしれない——この視点が、思わぬ論点を生みます。</p>
+
+  <p>移転価格の最難関——無形資産を、地図として手に入れました。比較対象がなく、価値は将来の期待で決まり、移しやすい。だからこそ「名義」ではなく「DEMPEの貢献」で利益を帰属させ、残余利益分割法で分け、評価困難なもの（HTVI）には後出しのチェックを効かせる。次章からは、無形資産と並んで「見えにくい取引」の代表である<strong>グループ内サービス</strong>へ。「その本社費、本当に役に立ったの？」という、便益テストの話に入ります。</p>
+
+  <!--====================== 第8章 ======================-->
+  <span class="anchor" id="c8"></span>
+  <h2 class="chap"><span class="num">第 8 章</span><br>グループ内サービスと便益テスト</h2>
+  <p class="chap-sub">——「その本社費、本当に役に立ったの？」</p>
+
+  <p class="lead-p">グループの親会社は、子会社にさまざまなサービスを提供します。経営指導、経理・人事の代行、IT基盤の運用、技術サポート——。そして、その対価を子会社に請求します。ところが、この「サービス料（管理料・本社費）」は、税務調査でもっとも揉めやすい論点の一つです。理由は、サービスが<strong>目に見えない</strong>から。モノなら現物がありますが、「経営指導」の価値は、目で確かめられません。だからこそ、移転価格は一つの鋭い問いを立てます——<strong>「そのサービスは、本当に子会社の役に立ったのか？」</strong>。</p>
+
+  <h3>すべての出発点——便益テスト</h3>
+  <p>グループ内サービスの対価が認められるかどうかは、まず<span class="term">便益テスト</span>（Benefit Test）という関門をくぐります。問いはシンプルです。<strong>「独立した企業だったら、その活動に対して、お金を払ってでも受けたか（あるいは自分で行ったか）？」</strong>。答えがイエスなら、そのサービスには経済的価値があり、対価を請求してよい。ノーなら、対価は認められません。</p>
+
+  <div class="box ex">
+    <p class="box-t">🤔 たとえ話：実家からの「アドバイス」</p>
+    <p>一人暮らしを始めたあなたに、実家から毎月「経営アドバイス料」と称して請求が来たら、納得できるでしょうか。中身が、本当に役立つ専門的な助言（税金の申告を代行してくれる等）なら、「まあ、よその専門家に頼んでも払うお金だし」と納得できます。でも、中身が「元気にしてる？」という親心の電話だけなら——それは<strong>払う筋合いのないもの</strong>です。<br>
+    便益テストは、まさにこの選り分けです。子会社が「よそに頼んででも欲しかったサービス」だけが対価の対象。親会社の自己満足や、ただの親心は、対象外なのです。</p>
+  </div>
+
+  <h3>対価を請求できない3つの典型——株主活動・重複・受動的便益</h3>
+  <p>便益テストをくぐれない、代表的な3パターンがあります。第一が<strong>株主活動（shareholder activity）</strong>。親会社が「株主・出資者としての立場」で行う活動——たとえばグループ全体の連結決算、株主向けのIR、親会社自身が課される規制への対応など——は、子会社のためというより<strong>親会社自身のため</strong>の活動です。だから子会社に請求できません。第二が<strong>重複（duplication）</strong>。子会社が自前ですでに行っていることを、親会社が重ねてやっても、子会社に追加の便益はない。第三が<strong>受動的便益（passive association）</strong>。ただ「有名グループの一員である」というだけで得られる信用などは、誰かが能動的にサービスしたわけではないので、対価の対象になりません。</p>
+
+  <figure>
+    <svg viewBox="0 0 880 430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="便益テストの判断ツリー">
+      <rect x="0" y="0" width="880" height="430" fill="#ffffff"/>
+      <text x="440" y="34" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="700" fill="#1a1d24">便益テスト——その対価は認められるか</text>
+      <text x="440" y="56" text-anchor="middle" font-family="sans-serif" font-size="12.5" fill="#6b7280">「独立企業なら、お金を払ってでも受けたか？」を順に問う</text>
+      <defs><marker id="ar8" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#0f766e"/></marker></defs>
+
+      <g font-family="sans-serif">
+        <rect x="315" y="78" width="250" height="46" rx="10" fill="#fbfaf6" stroke="#8a6d1f" stroke-width="1.6"/>
+        <text x="440" y="106" text-anchor="middle" font-size="12.5" font-weight="700" fill="#37312a">独立企業なら対価を払って受けた？</text>
+
+        <path d="M315,101 L180,101 L180,150" stroke="#0f766e" stroke-width="1.6" marker-end="url(#ar8)"/>
+        <text x="240" y="93" font-size="10.5" fill="#b32d3a">NO</text>
+        <rect x="70" y="152" width="220" height="70" rx="10" fill="#fcebed" stroke="#b32d3a" stroke-width="1.6"/>
+        <text x="180" y="180" text-anchor="middle" font-size="12" font-weight="700" fill="#b32d3a">対価は認められない</text>
+        <text x="180" y="202" text-anchor="middle" font-size="10.5" fill="#3a4150">株主活動・重複・受動的便益</text>
+
+        <path d="M565,101 L700,101 L700,150" stroke="#0f766e" stroke-width="1.6" marker-end="url(#ar8)"/>
+        <text x="640" y="93" font-size="10.5" fill="#2f7d52">YES</text>
+        <rect x="590" y="152" width="220" height="70" rx="10" fill="#eaf5ee" stroke="#2f7d52" stroke-width="1.6"/>
+        <text x="700" y="180" text-anchor="middle" font-size="12" font-weight="700" fill="#2f7d52">対価を請求できる</text>
+        <text x="700" y="202" text-anchor="middle" font-size="10.5" fill="#3a4150">→ 次に「いくらか」を決める</text>
+
+        <path d="M700,222 L700,260" stroke="#0f766e" stroke-width="1.6" marker-end="url(#ar8)"/>
+        <rect x="500" y="262" width="300" height="58" rx="10" fill="#e3f4ef" stroke="#0f766e" stroke-width="1.6"/>
+        <text x="650" y="286" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0f766e">原則：コスト ＋ 適正なマークアップ</text>
+        <text x="650" y="306" text-anchor="middle" font-size="10.5" fill="#3a4150">合理的な配賦キー（売上・人員等）で各社に配る</text>
+
+        <rect x="80" y="262" width="380" height="58" rx="10" fill="#f2ecfa" stroke="#6a3fa0" stroke-width="1.6"/>
+        <text x="270" y="284" text-anchor="middle" font-size="11.5" font-weight="700" fill="#6a3fa0">低付加価値サービスなら「簡素化」</text>
+        <text x="270" y="304" text-anchor="middle" font-size="10.5" fill="#3a4150">定型的な支援業務は、コストに一律5%上乗せでOK</text>
+
+        <rect x="180" y="356" width="520" height="44" rx="12" fill="#fbfcfe" stroke="#cbd2dc" stroke-width="1.5"/>
+        <text x="440" y="383" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1d24">まず「便益があるか」、次に「いくらか（配賦＋マークアップ）」の2段階</text>
+      </g>
+    </svg>
+    <figcaption><span class="fn">図8-1</span>　グループ内サービスは2段階で判断する。まず便益テスト（独立企業なら対価を払って受けたか）をくぐれるか。くぐれれば、原則「コスト＋適正なマークアップ」で価格を決め、合理的な配賦キーで各社に配る。定型的な低付加価値サービスには、一律5%上乗せの簡素化アプローチが使える。</figcaption>
+  </figure>
+
+  <h3>価格は「コスト＋マークアップ」、配り方は「配賦キー」</h3>
+  <p>便益テストをくぐったサービスは、いくらで請求すればよいか。原則は<strong>「かかったコスト＋適正なマークアップ（上乗せ）」</strong>です（第5章の原価基準法・TNMMの考え方）。そして、複数の子会社が共通して受けるサービス（たとえばグループ共通のITシステム）の費用は、<strong>配賦キー</strong>——売上高、従業員数、利用時間など、便益を最もよく反映する合理的な基準——で各社に配ります。「どのキーで配るのが公平か」を、説明できることが大切です。</p>
+
+  <div class="box note">
+    <p class="box-t">📘 低付加価値サービスの「簡素化」——5%ルール</p>
+    <p>経理処理、給与計算、ITサポート、法務の定型業務といった、<strong>付加価値の低い定型的な支援サービス</strong>については、OECDが<strong>簡素化アプローチ</strong>を用意しています。いちいち厳密な比較分析をするのは、コストに見合わない。そこで、これらの<strong>低付加価値グループ内役務</strong>は、コストに<strong>一律5%のマークアップ</strong>を乗せれば独立企業間価格として認める、という割り切りです。日本の事務運営指針も、これに沿った取扱いを定めています。「枝葉のサービスにまで精密な分析を求めず、本丸（無形資産など）にエネルギーを集中する」という、実務的な知恵だと理解してください。</p>
+  </div>
+
+  <h3>本社費は、なぜ毎回もめるのか</h3>
+  <p>グループ内サービスのなかでも、とりわけ<strong>「本社費・経営管理料」</strong>は、税務調査の常連です。なぜ、これほど揉めるのか。それは、本社費が<strong>4つの論点を一度に抱え込む</strong>からです。①そもそも便益があるか（株主活動ではないか）、②他と重複していないか、③価格（コスト＋マークアップ）は妥当か、④各社への配り方（配賦キー）は公平か。この4つのどれを突かれても、本社費の一部は否認されうる。「親会社がやったことなら、全部子会社に請求できる」という思い込みが、いちばん危ういのです。</p>
+
+  <div class="box ex">
+    <p class="box-t">🧾 直接チャージと間接チャージ</p>
+    <p>サービス料の請求には、2つの形があります。特定の子会社のために行った仕事を、その子会社に直接請求する<strong>直接チャージ</strong>（誰のための仕事かが明確で、もめにくい）。複数の子会社が共通で受けるサービスを、配賦キーで按分する<strong>間接チャージ</strong>（「なぜそのキーなのか」をめぐってもめやすい）。<br>
+    実務のコツは、<strong>可能な限り直接チャージにし、どうしても切り分けられないものだけを、合理的なキーで間接チャージする</strong>こと。「どの費用が、どの子会社の、どんな便益に対応するか」が整理されているほど、調査での説明はぐっと楽になります。逆に、何もかも一括して「経営管理料」として配賦していると、中身が見えず、便益テスト（前出）でまとめて否認されるリスクが高まります。</p>
+  </div>
+
+  <p>「便益があるか→いくらか」という2段階、株主活動などの除外、コスト＋マークアップ、低付加価値の5%簡素化——目に見えないサービスの値付けが見えてきました。残る「見えにくい取引」は、最後の一つ。<strong>お金そのものの取引</strong>です。次章では、親子ローンの金利や債務保証料が、どう決まるのかを見ていきます。</p>
+
+
+  <!--====================== 第9章 ======================-->
+  <span class="anchor" id="c9"></span>
+  <h2 class="chap"><span class="num">第 9 章</span><br>お金の取引の移転価格</h2>
+  <p class="chap-sub">——親子ローンの利息・保証料は、「リスクの値段」</p>
+
+  <p class="lead-p">グループ内では、お金そのものもやり取りされます。親会社が子会社にお金を貸す（親子ローン）、子会社の借入を親会社が保証する（債務保証）、グループの資金を一か所に集めて融通し合う（キャッシュプール）。これらにも、当然「適正な値段」——利率や保証料——が問われます。金融取引の移転価格は、2020年にOECDガイドラインに専用の章（第10章）が加わった、比較的新しく、しかし急速に重要性を増している分野です。芯だけ、つかんでおきましょう。</p>
+
+  <h3>金利は「信用力の値段」——ベース＋スプレッド</h3>
+  <p>親会社が子会社に1億円を貸すとき、利率は何%が適正でしょうか。「身内だから無利息」「適当に1%」では通りません。独立企業間では、<strong>金利は借り手の「信用力（returnできない確率）」に応じて決まる</strong>からです。考え方は、世の中のローンと同じ。<strong>基準となる金利（ベースレート）＋上乗せ（スプレッド）</strong>。信用力が低い（倒産リスクが高い）借り手ほど、スプレッドが大きくなる＝高い金利になります。</p>
+
+  <figure>
+    <svg viewBox="0 0 860 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="金利はベースレートとスプレッドの合計">
+      <rect x="0" y="0" width="860" height="340" fill="#ffffff"/>
+      <text x="430" y="34" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="700" fill="#1a1d24">親子ローンの金利＝ベースレート＋スプレッド</text>
+      <text x="430" y="56" text-anchor="middle" font-family="sans-serif" font-size="12.5" fill="#6b7280">スプレッド（上乗せ）は、借り手の信用力で決まる</text>
+
+      <g font-family="sans-serif">
+        <!-- base -->
+        <rect x="120" y="120" width="200" height="70" rx="10" fill="#e3f4ef" stroke="#0f766e" stroke-width="1.6"/>
+        <text x="220" y="150" text-anchor="middle" font-size="13" font-weight="700" fill="#0f766e">ベースレート</text>
+        <text x="220" y="172" text-anchor="middle" font-size="10.5" fill="#3a4150">市場の基準金利（例 2%）</text>
+        <text x="360" y="163" text-anchor="middle" font-size="24" font-weight="800" fill="#6b7280">＋</text>
+        <!-- spread -->
+        <rect x="400" y="120" width="200" height="70" rx="10" fill="#fbfaf6" stroke="#8a6d1f" stroke-width="1.6"/>
+        <text x="500" y="150" text-anchor="middle" font-size="13" font-weight="700" fill="#8a6d1f">スプレッド</text>
+        <text x="500" y="172" text-anchor="middle" font-size="10.5" fill="#3a4150">信用力に応じた上乗せ（例 3%）</text>
+        <text x="640" y="163" text-anchor="middle" font-size="24" font-weight="800" fill="#6b7280">＝</text>
+        <!-- total -->
+        <rect x="680" y="120" width="150" height="70" rx="10" fill="#eaf5ee" stroke="#2f7d52" stroke-width="2"/>
+        <text x="755" y="150" text-anchor="middle" font-size="13" font-weight="700" fill="#2f7d52">適正金利</text>
+        <text x="755" y="174" text-anchor="middle" font-size="14" font-weight="800" fill="#2f7d52">5%</text>
+
+        <rect x="150" y="240" width="560" height="62" rx="12" fill="#fcf6f0" stroke="#f3d8c2" stroke-width="1.5"/>
+        <text x="430" y="264" text-anchor="middle" font-size="11.5" font-weight="700" fill="#b4541a">信用力の評価には「暗黙の支援」を織り込む</text>
+        <text x="430" y="285" text-anchor="middle" font-size="10.5" fill="#3a4150">単独では弱い子会社も、有名グループの一員という事実だけで信用が補われる（無償）</text>
+      </g>
+    </svg>
+    <figcaption><span class="fn">図9-1</span>　親子ローンの適正金利は、市場のベースレートに、借り手の信用力に応じたスプレッドを上乗せして決まる。その信用力の評価では「暗黙の支援」——グループの一員であることによる信用補完——を織り込む点が、グループ内金融に特有の論点になる。</figcaption>
+  </figure>
+
+  <h3>「暗黙の支援」という、グループ特有の論点</h3>
+  <p>ここで、金融取引ならではの大切な考え方が<strong>暗黙の支援（implicit support）</strong>です。子会社が単独で見れば信用力が低くても、「あの有名グループの一員だ」というだけで、市場は「いざとなれば親が助けるだろう」と見て、信用を高く評価します。これは、親会社が正式に保証したわけではなく、<strong>グループに属しているだけで自然に得られる信用補完</strong>。OECDは、この暗黙の支援による信用力の底上げは、<strong>誰のサービスでもないので無償</strong>（対価を取れない）とします。子会社の信用力を評価するときは、この「タダで得ている後光」を織り込んだうえで金利を決めなければなりません。</p>
+
+  <div class="box ex">
+    <p class="box-t">🛡️ 債務保証料は「いくら助かったか」の範囲で</p>
+    <p>親会社が、子会社の銀行借入を正式に<strong>保証</strong>するケースもあります。保証があれば、子会社はより低い金利で借りられる。この保証に対して、親会社は<strong>保証料</strong>を取れます。ただし、その額は「保証によって子会社が得した金利の引下げ分」の範囲が上限の目安。しかも、さきほどの<strong>暗黙の支援</strong>でもともと下がっていた分は差し引きます。<br>
+    つまり保証料は、「正式な保証によって<em>追加で</em>下がった金利分」に対する対価。「グループにいるだけで得ていた分」までは請求できない——ここが、暗黙の支援と正式保証を切り分ける、繊細だが重要なポイントです。</p>
+  </div>
+
+  <h3>キャッシュプール——「便利」の対価を、誰がどう取るか</h3>
+  <p>大きなグループでは、各社の余剰資金と不足資金を一か所（プール）に集め、グループ内で融通し合う<strong>キャッシュプール</strong>という仕組みがよく使われます。銀行を介さず資金を効率化できる便利な仕組みですが、移転価格では「その効率化で生まれた利益（メリット）を、誰がどれだけ受け取るべきか」が問われます。資金を出した会社、資金を借りた会社、そしてプールを運営する会社——それぞれの機能とリスクに応じて、メリットを公平に配分する必要があるのです。ここでも、第4章のFAR（誰が機能を担い、リスクを負ったか）の発想がそのまま効いています。</p>
+
+  <h3>子会社の「信用力」を、どう測るか</h3>
+  <p>親子ローンの金利は信用力で決まる、と言いました。では、その信用力（格付け）は、どう測るのでしょう。理屈の上では、子会社を<strong>「単独の会社として見たときの信用力（スタンドアロン格付け）」</strong>を出発点にします。財務指標——自己資本の厚み、利益率、借入の重さなど——から、第三者の格付けに相当するものを推定するのです。そのうえで、本文で見た<strong>暗黙の支援</strong>（グループの一員であることによる信用の底上げ）を加味して、最終的な信用力を決めます。</p>
+  <p>ここに、金融取引の移転価格の難しさが凝縮されています。「単独で見れば信用力の低い子会社」と「グループの後光で底上げされた信用力」のあいだの、<strong>どこで線を引くか</strong>。高く見積もれば金利は下がり（子会社に有利）、低く見積もれば金利は上がる（親会社に有利）。たった1〜2%の金利差でも、巨額のグループ内融資では大きな金額になります。だからこそ金融取引は、2020年にOECDがガイドラインに専用の章を設けるほど、重要かつ新しい論点になっているのです。「お金の貸し借りなんて単純」と思いきや、その値段（金利）の裏には、信用力という奥深い世界が広がっています。</p>
+
+  <p>これで、移転価格の4つの取引類型——モノ（第5・6章）、無形資産（第7章）、サービス（第8章）、カネ（第9章）——をすべて見終えました。どの取引も、芯は同じ「独立企業ならいくらか」。次の章では、ここまでの一般論からいったん日本に戻り、<strong>日本の移転価格税制に固有の、そして実務でもっとも怖い論点</strong>——寄附金課税との交差点に踏み込みます。ここは、本書のひとつの山場です。</p>
+
+  <!--====================== 第10章 ======================-->
+  <span class="anchor" id="c10"></span>
+  <h2 class="chap"><span class="num bar">第 10 章</span>寄附金との交差点</h2>
+  <p class="chap-sub">——措置法66条の4第3項という、日本固有の急所</p>
+
+  <p class="lead-p">ここまでは、世界共通の移転価格の話でした。この章は少し趣が変わります。日本の移転価格税制には、国際標準にはあまり見られない、<strong>独特で、そして実務上とても怖い仕組み</strong>が組み込まれています。<span class="term">国外関連者に対する寄附金の全額損金不算入</span>（措置法66条の4第3項）です。同じ「子会社にお金が流れすぎている」という状況が、<strong>「移転価格」として扱われるか、「寄附金」として扱われるか</strong>で、結末がまったく変わる。この分かれ道を理解することは、日本の移転価格を本当に理解することと、ほとんど同じです。</p>
+
+  <h3>もう一つの刃——寄附金は「全額」否認される</h3>
+  <p>まず条文を見ましょう。措置法66条の4には、第1項（移転価格の引き直し）とは別に、第3項という規定があります。</p>
+
+  <div class="statute">
+    <span class="label">租税特別措置法 第66条の4 第3項（要旨）</span>
+    法人が、各事業年度において、その<mark>国外関連者に対して支出した寄附金</mark>の額は、その法人の所得の金額の計算上、<mark>全額を損金の額に算入しない</mark>。
+  </div>
+
+  <p>ここで、法人税のしくみを思い出してください。ふつうの寄附金（国内の取引先への金銭の贈与など）は、一定の<strong>損金算入限度額</strong>までは経費（損金）として認められます。ところが、<strong>国外関連者への寄附金は、その限度額がゼロ</strong>。1円も経費に落とせず、全額が課税対象になります。これがどれほど重いか。たとえば子会社へ1億円を「寄附」と認定されれば、その1億円はまるごと日本で課税される利益に加算される——移転価格の「差額の引き直し」よりも、はるかに容赦のない結末になりうるのです。</p>
+
+  <div class="box danger">
+    <p class="box-t">🚨 なぜ「寄附金」のほうが怖いのか——救済の非対称</p>
+    <p>本章のいちばん大切な点です。移転価格課税（第1項）と寄附金課税（第3項）には、<strong>「二重課税からの救済」に決定的な差</strong>があります。<br>
+    ・<strong>移転価格課税</strong>なら、相手国との<strong>相互協議（MAP／第13章）</strong>を通じて、相手国に「では、こちらは利益を減らします」と対応的調整を求められる。租税条約に基づく、国際的な二重課税の救済ルートが開かれています。<br>
+    ・ところが<strong>寄附金課税</strong>は、日本の国内的な課税の色彩が強く、こうした相互協議による救済に<strong>なじみにくい場合がある</strong>。すると、日本では全額課税され、相手国でもその利益はそのまま課税され、<strong>二重課税が解けないまま残る</strong>おそれがある。<br>
+    同じ「お金が流れすぎ」でも、寄附金と認定されると救済の扉が閉じかねない。だからこそ、企業にとって「これは移転価格か、寄附金か」の分かれ道は、死活的に重要なのです。</p>
+  </div>
+
+  <h3>分かれ道は「対価性があるか」——取引か、贈与か</h3>
+  <p>では、何が移転価格と寄附金を分けるのか。鍵は<strong>「対価性（反対給付）があるか」</strong>です。法人税法37条が定める寄附金とは、<strong>「金銭その他の資産又は経済的利益の、贈与又は無償の供与」</strong>。つまり<strong>見返りのない一方的な与え</strong>です。整理すると、こうなります。</p>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th style="width:26%">状況</th><th style="width:30%">扱い</th><th>結末</th></tr></thead>
+    <tbody>
+      <tr><td><strong>対価のある取引</strong>だが、その値段が独立企業間価格とズレている</td><td><span class="tag a">移転価格</span> 第1項で引き直し</td><td>独立企業間価格との<strong>差額</strong>を加算。MAPで二重課税救済の道あり。</td></tr>
+      <tr><td>取引の形をとるが、実質は<strong>見返りのない一方的な供与</strong>（無償・実質贈与）</td><td><span class="tag d">寄附金</span> 第3項で否認</td><td><strong>全額</strong >損金不算入。救済（MAP）になじみにくい場合がある。</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>たとえば、子会社の業績が悪いからと、親会社が「経営指導料」の名目で実際には何の役務も伴わないお金を渡せば、それは取引ではなく<strong>実質的な贈与＝寄附金</strong>と見られます。逆に、ちゃんとした役務の対価だが値段が高すぎる/安すぎる場合は、<strong>移転価格</strong>の問題として差額が調整される。同じお金の流れでも、<strong>「その背後に、見合う反対給付（取引の実態）があるか」</strong>が、運命の分かれ道になるのです。第4章で学んだ「取引を正確に描き出す（accurate delineation）」が、ここで決定的な意味を持ちます。</p>
+
+  <figure>
+    <svg viewBox="0 0 880 430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="移転価格と寄附金の分かれ道">
+      <rect x="0" y="0" width="880" height="430" fill="#ffffff"/>
+      <text x="440" y="34" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="700" fill="#1a1d24">同じ「お金が流れすぎ」——でも、扱いは二手に分かれる</text>
+      <text x="440" y="56" text-anchor="middle" font-family="sans-serif" font-size="12.5" fill="#6b7280">分かれ道は「見合う反対給付（取引の実態）があるか」</text>
+      <defs><marker id="ar10" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#0f766e"/></marker></defs>
+
+      <g font-family="sans-serif">
+        <rect x="315" y="78" width="250" height="56" rx="10" fill="#fbfaf6" stroke="#8a6d1f" stroke-width="1.6"/>
+        <text x="440" y="102" text-anchor="middle" font-size="12.5" font-weight="700" fill="#37312a">国外関連者にお金が流れすぎ</text>
+        <text x="440" y="122" text-anchor="middle" font-size="11.5" fill="#6b7280">見合う反対給付（取引）はある？</text>
+
+        <!-- left: TP -->
+        <path d="M315,106 L175,106 L175,170" stroke="#0f766e" stroke-width="1.8" marker-end="url(#ar10)"/>
+        <text x="232" y="98" font-size="10.5" fill="#2f7d52">YES（取引あり）</text>
+        <rect x="55" y="172" width="240" height="120" rx="12" fill="#e3f4ef" stroke="#0f766e" stroke-width="1.8"/>
+        <text x="175" y="200" text-anchor="middle" font-size="14" font-weight="800" fill="#0f766e">移転価格（第1項）</text>
+        <text x="175" y="226" text-anchor="middle" font-size="11" fill="#3a4150">値段が独立企業間価格と</text>
+        <text x="175" y="243" text-anchor="middle" font-size="11" fill="#3a4150">ズレている</text>
+        <text x="175" y="268" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1d24">→ 差額を加算</text>
+        <text x="175" y="285" text-anchor="middle" font-size="10.5" fill="#2f7d52">MAPで救済の道あり</text>
+
+        <!-- right: 寄附金 -->
+        <path d="M565,106 L705,106 L705,170" stroke="#0f766e" stroke-width="1.8" marker-end="url(#ar10)"/>
+        <text x="650" y="98" font-size="10.5" fill="#b32d3a">NO（一方的な供与）</text>
+        <rect x="585" y="172" width="240" height="120" rx="12" fill="#fcebed" stroke="#b32d3a" stroke-width="1.8"/>
+        <text x="705" y="200" text-anchor="middle" font-size="14" font-weight="800" fill="#b32d3a">寄附金（第3項）</text>
+        <text x="705" y="226" text-anchor="middle" font-size="11" fill="#3a4150">実質は無償・贈与</text>
+        <text x="705" y="243" text-anchor="middle" font-size="11" fill="#3a4150">（見合う役務がない）</text>
+        <text x="705" y="268" text-anchor="middle" font-size="11.5" font-weight="700" fill="#b32d3a">→ 全額 損金不算入</text>
+        <text x="705" y="285" text-anchor="middle" font-size="10.5" fill="#b32d3a">救済になじみにくい</text>
+
+        <rect x="150" y="330" width="580" height="74" rx="12" fill="#f2ecfa" stroke="#d9c9f0" stroke-width="1.5"/>
+        <text x="440" y="356" text-anchor="middle" font-size="12.5" font-weight="700" fill="#6a3fa0">本質：同じ金額でも「寄附金」側に倒れると、救済の扉が閉じうる</text>
+        <text x="440" y="378" text-anchor="middle" font-size="11" fill="#3a4150">だから企業は「これは対価のある取引だ」と、取引の実態を示せることが死活的に重要</text>
+        <text x="440" y="396" text-anchor="middle" font-size="11" fill="#3a4150">（＝第4章「取引を正確に描き出す」が、ここで効いてくる）</text>
+      </g>
+    </svg>
+    <figcaption><span class="fn">図10-1</span>　国外関連者へお金が流れすぎているとき、見合う反対給付（取引の実態）があれば移転価格（第1項）として差額が調整され、MAPによる二重課税救済の道が残る。一方、実質が無償の供与なら寄附金（第3項）として全額否認され、救済になじみにくい。同じ金額でも、どちら側に倒れるかで結末が大きく変わる。</figcaption>
+  </figure>
+
+  <div class="box essence">
+    <p class="box-t">💡 この章の芯——「性質決め」が結果を支配する</p>
+    <p>移転価格というと「値段をいくらに引き直すか」という<strong>量</strong>の問題に見えます。しかし日本の制度では、その手前に<strong>「この支払は、そもそも対価のある取引か、それとも贈与か」という“性質決め”</strong>の問題が、どっしりと横たわっています。そして、量（差額）の調整は救済されうるのに、性質（寄附金）の認定は救済されにくい。<br>
+    だから、海外子会社へのお金の流れは、つねに<strong>「これは見返りのある正当な取引だ」と説明できる状態</strong>にしておくこと——契約だけでなく、実際の役務の中身、便益（第8章）、価格の根拠（第5・6章）まで。次章の<strong>文書化</strong>が決定的に重要になるのは、まさにこの「性質と価格を、後から証拠で示せるか」が、すべてを左右するからです。</p>
+  </div>
+
+  <h3>なぜ、日本にこんな規定があるのか</h3>
+  <p>国外関連者寄附金の全額損金不算入（第3項）は、国際標準であるOECDガイドラインには見られない、日本独自の色合いの強い規定です。なぜ日本はこれを置いたのか。背景には、<strong>「対価性のない、一方的な国外への利益の流出」を、移転価格の枠組みとは別に、確実に塞いでおきたい</strong>、という立法の意思があります。移転価格（第1項）が「取引の値段のズレ」を相手にするのに対し、寄附金（第3項）は「そもそも取引ですらない、ただの利益移転」を相手にする。いわば、移転価格という網の目からこぼれ落ちるものを受け止める、<strong>もう一枚の網</strong>なのです。だから、海外子会社へのお金の流れは、移転価格と寄附金という二重の網で見られていると考えておくのが安全です。</p>
+
+  <h3>実務での、身の守り方</h3>
+  <p>では、寄附金認定という落とし穴を避けるには、どうすればよいか。鍵はただ一つ。<strong>「お金の流れには、必ず“見合う中身”を用意し、それを記録しておく」</strong>ことです。子会社へ支払う管理料には、実際に提供した役務の記録を。資金援助に見える送金には、貸付契約や増資など、明確な法的性質づけを。「なんとなく子会社が苦しいから送る」——これが、いちばん危ない。第8章の便益テストも、第4章の取引の描写も、突きつめれば<strong>「これは贈与ではなく、対価のある取引だ」と示すための備え</strong>でもあったのです。日本で海外子会社を持つなら、この「寄附金に倒されない」備えは、移転価格対応の核心の一つになります。</p>
+
+  <p>日本固有の急所——寄附金との交差点が見えました。対価のある取引のズレは移転価格（救済あり）、見返りのない供与は寄附金（全額否認・救済困難）。この分かれ道を制するのは、結局「取引の実態を、証拠で示せるか」です。次章では、その証拠の体系——<strong>文書化</strong>（マスターファイル・ローカルファイル・CbCR）に進みます。「説明できない価格は、弱い」のです。</p>
+
+  <!--====================== 第11章 ======================-->
+  <span class="anchor" id="c11"></span>
+  <h2 class="chap"><span class="num bar">第 11 章</span>文書化という説明責任</h2>
+  <p class="chap-sub">——マスターファイル・ローカルファイル・CbCR（三点セット）</p>
+
+  <p class="lead-p">ここまで何度も「説明できることが大切」と繰り返してきました。その「説明」を、形にしたものが<strong>文書化</strong>です。文書化と聞くと「役所に出す面倒な書類」と思いがちですが、発想を変えてください。文書化とは、<strong>「自分たちの価格は独立企業間価格だ」と、証拠と論理で示すための“説明ファイル”</strong>です。価格そのものがどんなに正しくても、それを示せなければ、税務調査では弱い。文書化は、ルールの周辺ではなく、<em>ルールの中身そのもの</em>なのです。</p>
+
+  <h3>三点セット——3つの「ズーム」で全体を映す</h3>
+  <p>BEPSプロジェクト（行動13）が世界に広めた文書化の仕組みは、<strong>3つの書類</strong>からなります。面白いのは、これらが<strong>「ズームの倍率」</strong>のように、グループを3つの距離から映す設計になっていることです。</p>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th style="width:24%">書類</th><th style="width:24%">ズーム</th><th>中身</th></tr></thead>
+    <tbody>
+      <tr><td><strong>マスターファイル</strong><br>（事業概況報告事項）</td><td>🌍 グループ全体を<strong>俯瞰</strong></td><td>多国籍グループ全体の組織、事業、無形資産、資金、財務の概要。「このグループは全体としてどう動いているか」の見取り図。</td></tr>
+      <tr><td><strong>ローカルファイル</strong><br>（独立企業間価格の算定書類）</td><td>🔍 個別取引を<strong>拡大</strong></td><td>その国の会社の、個々の国外関連取引の詳細。FAR分析、選んだ算定方法、比較対象、レンジ——本書で学んだ分析そのものを書き込んだ、移転価格の中核文書。</td></tr>
+      <tr><td><strong>国別報告事項</strong><br>（CbCR）</td><td>📊 国ごとに<strong>並べる</strong></td><td>グループが、国ごとに、いくら売上・利益・税・従業員・資産を持つかを一覧化。当局が「利益と実体がズレている国」を一目で見つけるための鳥瞰図。</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 860 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="文書化の三点セット 3つのズーム">
+      <rect x="0" y="0" width="860" height="360" fill="#ffffff"/>
+      <text x="430" y="34" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="700" fill="#1a1d24">文書化の三点セット——3つの距離からグループを映す</text>
+
+      <g font-family="sans-serif">
+        <!-- MF -->
+        <rect x="40" y="80" width="250" height="220" rx="14" fill="#e3f4ef" stroke="#0f766e" stroke-width="1.8"/>
+        <text x="165" y="112" text-anchor="middle" font-size="30">🌍</text>
+        <text x="165" y="148" text-anchor="middle" font-size="14" font-weight="700" fill="#0f766e">マスターファイル</text>
+        <text x="165" y="170" text-anchor="middle" font-size="11" fill="#3a4150">グループ全体の俯瞰図</text>
+        <text x="165" y="208" text-anchor="middle" font-size="10.5" fill="#6b7280">組織・事業・無形資産・</text>
+        <text x="165" y="224" text-anchor="middle" font-size="10.5" fill="#6b7280">資金・財務の概要</text>
+        <text x="165" y="262" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0f766e">連結総収入 1,000億円以上</text>
+        <text x="165" y="280" text-anchor="middle" font-size="10" fill="#6b7280">のグループが提出</text>
+
+        <!-- LF -->
+        <rect x="305" y="80" width="250" height="220" rx="14" fill="#fbfaf6" stroke="#8a6d1f" stroke-width="1.8"/>
+        <text x="430" y="112" text-anchor="middle" font-size="30">🔍</text>
+        <text x="430" y="148" text-anchor="middle" font-size="14" font-weight="700" fill="#8a6d1f">ローカルファイル</text>
+        <text x="430" y="170" text-anchor="middle" font-size="11" fill="#3a4150">個別取引の詳細（中核）</text>
+        <text x="430" y="208" text-anchor="middle" font-size="10.5" fill="#6b7280">FAR・算定方法・</text>
+        <text x="430" y="224" text-anchor="middle" font-size="10.5" fill="#6b7280">比較対象・レンジ</text>
+        <text x="430" y="262" text-anchor="middle" font-size="10.5" font-weight="700" fill="#8a6d1f">取引 50億円以上等で</text>
+        <text x="430" y="280" text-anchor="middle" font-size="10" fill="#6b7280">申告期限までに作成（同時文書化）</text>
+
+        <!-- CbCR -->
+        <rect x="570" y="80" width="250" height="220" rx="14" fill="#f2ecfa" stroke="#6a3fa0" stroke-width="1.8"/>
+        <text x="695" y="112" text-anchor="middle" font-size="30">📊</text>
+        <text x="695" y="148" text-anchor="middle" font-size="14" font-weight="700" fill="#6a3fa0">国別報告事項 CbCR</text>
+        <text x="695" y="170" text-anchor="middle" font-size="11" fill="#3a4150">国ごとの一覧（鳥瞰）</text>
+        <text x="695" y="208" text-anchor="middle" font-size="10.5" fill="#6b7280">国別の売上・利益・税・</text>
+        <text x="695" y="224" text-anchor="middle" font-size="10.5" fill="#6b7280">従業員・資産</text>
+        <text x="695" y="262" text-anchor="middle" font-size="10.5" font-weight="700" fill="#6a3fa0">連結総収入 1,000億円以上</text>
+        <text x="695" y="280" text-anchor="middle" font-size="10" fill="#6b7280">のグループが提出</text>
+      </g>
+    </svg>
+    <figcaption><span class="fn">図11-1</span>　文書化の三点セットは「ズームの倍率」が違う。マスターファイルでグループ全体を俯瞰し、ローカルファイルで個別取引を拡大し、CbCRで国ごとに並べて利益と実体のズレを鳥瞰する。3つで、グループの移転価格の姿を多角的に映し出す。</figcaption>
+  </figure>
+
+  <h3>日本の閾値と期限——「実務の地雷」を踏まないために</h3>
+  <p>日本の文書化制度（平成28年度改正でBEPS行動13に対応）には、具体的な数字があります。<strong>2025年12月時点の現行ルール</strong>として、要点を押さえましょう（数字は改正で動きうるので、実際は必ず最新の国税庁資料を確認してください）。</p>
+
+  <div class="stat-row">
+    <div class="stat"><div class="v">1,000<span style="font-size:.5em">億円</span></div><div class="k">マスターファイル・CbCRの対象<br>（連結総収入金額 以上）</div></div>
+    <div class="stat"><div class="v">50<span style="font-size:.5em">億円</span></div><div class="k">ローカルファイル同時文書化<br>免除の取引金額ライン（未満で免除）</div></div>
+    <div class="stat"><div class="v">3<span style="font-size:.5em">億円</span></div><div class="k">同（無形資産取引）<br>（未満で免除）</div></div>
+  </div>
+
+  <ul>
+    <li><strong>マスターファイル・CbCR</strong>……直前会計年度の<strong>連結総収入金額が1,000億円以上</strong>の多国籍企業グループ（特定多国籍企業グループ）が対象。原則、最終親会社の会計年度終了日の翌日から<strong>1年以内</strong>にe-Taxで提供。</li>
+    <li><strong>ローカルファイル</strong>……国外関連取引について作成。原則、確定申告書の提出期限までに作成・保存する<strong>同時文書化</strong>が義務。ただし、一の国外関連者との前事業年度の取引が<strong>受払合計50億円未満、かつ無形資産取引3億円未満</strong>なら、同時文書化は免除される。</li>
+    <li><strong>免除されても、ゼロではない</strong>……同時文書化を免除されても、調査で求められれば、一定期間内（原則60日以内など、書類の種類により異なる）に提出する義務は残ります。「免除＝何もしなくてよい」ではありません。</li>
+  </ul>
+
+  <div class="box warn">
+    <p class="box-t">⚠️ 「出せない」と、何が起きるか</p>
+    <p>ローカルファイル等を期限までに提示・提出できないと、当局は<strong>推定課税</strong>（類似の事業を営む第三者の利益率などから所得を推定して課税する）や、<strong>同業者への質問検査</strong>（同業他社に情報を求める）に踏み切れます（次章）。<strong>自分で説明できないと、当局の見立てで課税される</strong>——これが文書化を怠ることの、いちばん怖い帰結です。文書化は「作って終わり」ではなく、<strong>中身が分析として筋が通っているか</strong>が問われます。</p>
+  </div>
+
+  <h3>ローカルファイルには、何を書くのか</h3>
+  <p>移転価格の中核文書であるローカルファイルは、実は本書で学んできたことの<strong>「集大成」</strong>です。書くべき中身は、おおむね本書の流れそのもの。①国外関連取引の概要（誰と・何を・いくらで）、②当事者の<strong>FAR分析</strong>（第4章）、③採用した<strong>算定方法と、それを選んだ理由</strong>（第5章）、④<strong>比較対象の選定と、その結果のレンジ</strong>（第6章）、⑤結論（取引価格が独立企業間価格の範囲内であること）。<strong>本書をここまで読んできたあなたは、もうローカルファイルの目次を、自分で書ける</strong>のです。文書化が「ルールの中身そのもの」だというのは、こういう意味でした。</p>
+
+  <div class="box note">
+    <p class="box-t">📘 文書化は「作文」ではなく「設計」</p>
+    <p>いちばん大切なのは、ローカルファイルが<strong>後付けの言い訳ではなく、取引を始める前からの設計</strong>であることです。「課税されそうだから、あとから理屈をこしらえる」のでは、調査で必ず見抜かれます。取引を組む段階で「これは独立企業間価格だ」と言える設計をし、それをそのまま文書にする——これが、説明責任を果たすということの本当の意味です。だから文書化は、税務部門だけの仕事ではなく、取引を設計する事業部門も巻き込んだ、会社全体の営みになります。</p>
+  </div>
+
+  <p>説明責任の体系——三点セットと、日本の閾値・期限がつかめました。マスターファイルで俯瞰、ローカルファイルで詳細、CbCRで鳥瞰。そして「出せないと、当局の見立てで課税される」。では、その「税務調査」とは、実際にどう進み、どこで攻防が起きるのか。次章で、移転価格調査のリアルに踏み込みます。</p>
+
+
+  <!--====================== 第12章 ======================-->
+  <span class="anchor" id="c12"></span>
+  <h2 class="chap"><span class="num bar">第 12 章</span>税務調査と二重課税</h2>
+  <p class="chap-sub">——「物語」の競争と、推定課税という刃</p>
+
+  <p class="lead-p">移転価格の税務調査は、ふつうの税務調査とは少し性格が違います。「経費の証憑があるか」といった事実の確認以上に、<strong>「この取引の利益配分は、どんな物語（ストーリー）で説明されるべきか」</strong>という、解釈と論理の競争になるのです。当局には当局の見立てがあり、企業には企業の見立てがある。どちらが「経済の実態をよりよく説明できるか」を競う——その構造を理解すれば、なぜ文書化（第11章）が決定的なのかが、腑に落ちます。</p>
+
+  <h3>調査は「ストーリーの競争」である</h3>
+  <p>移転価格調査でよく争点になるのは、たとえばこんな場面です。「ずっと赤字が続く海外の販売子会社」。当局は「赤字なのに取引を続けるのは不自然だ。日本の親会社が利益を吸い上げているのでは？」という物語を描く。企業は「これは新市場の立ち上げ期で、独立企業でも初期は赤字を覚悟する。むしろ市場開拓のための事業戦略（第4章の比較可能性5要素の⑤）だ」という物語で応える。どちらの物語が、FARや市場の事実に照らして説得力があるか——それが勝敗を分けます。</p>
+
+  <div class="box ex">
+    <p class="box-t">🔍 移転価格調査の、典型的な争点</p>
+    <ul style="margin-bottom:0">
+      <li><strong>赤字が続く販売子会社</strong>……利益の吸い上げか、正当な立ち上げ・戦略か。</li>
+      <li><strong>高すぎるロイヤルティ</strong>……無形資産への貢献（DEMPE・第7章）に見合っているか。</li>
+      <li><strong>本社管理料</strong>……便益テスト（第8章）をくぐるか、株主活動・重複ではないか。</li>
+      <li><strong>無償・低利の親子ローンや保証</strong>……リスクの値段（第9章）が付いているか。</li>
+      <li><strong>子会社への資金援助</strong>……対価のある取引か、寄附金（第10章）か。</li>
+    </ul>
+  </div>
+
+  <h3>推定課税——「出さないなら、こちらで決める」という刃</h3>
+  <p>第11章で触れた<strong>推定課税</strong>を、もう少し見ておきます。措置法66条の4は、納税者が独立企業間価格の算定に必要な書類を提示・提出しないとき、当局が<strong>類似の事業を営む法人の利益率などを用いて所得を推定し、課税できる</strong>と定めています。さらに、当局はその推定のために、<strong>同業他社に質問・検査する</strong>こともできます。</p>
+
+  <div class="box danger">
+    <p class="box-t">🚨 推定課税の本当の怖さ——反証の難しさ</p>
+    <p>推定課税で当局が用いる「類似法人」の情報は、その会社の秘密にあたるため、<strong>納税者には具体的に開示されないことがあります</strong>（いわゆるシークレット・コンパラブル）。すると企業は、<strong>「何を基準に課税されたのか」が十分に分からないまま、それに反論しなければならない</strong>。これは、防御する側にとって極めて不利です。だからこそ、<strong>自分から先に、筋の通ったローカルファイルを示しておく</strong>こと——「当局に物語を作らせる前に、こちらの物語を証拠付きで提示する」ことが、最大の防御になるのです。文書化の重みが、ここに集約されます。</p>
+  </div>
+
+  <h3>そして、二重課税が生まれる</h3>
+  <p>日本の当局が調査で「日本の利益が少なすぎる」と判断し、増額更正したとします。これで日本の取り分は増えました。しかし序章で見たとおり、これだけでは<strong>二重課税</strong>が発生します。日本が利益を増やした分、本来なら相手国がその分の利益を減らして（＝払いすぎた税を返して）くれなければ、同じ利益に2つの国が課税してしまうからです。この相手国側の調整を<strong>対応的調整（corresponding adjustment）</strong>と呼びます。</p>
+
+  <figure>
+    <svg viewBox="0 0 860 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="移転価格課税で二重課税が生まれる仕組み">
+      <rect x="0" y="0" width="860" height="330" fill="#ffffff"/>
+      <text x="430" y="34" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="700" fill="#1a1d24">なぜ二重課税が生まれるのか</text>
+      <text x="430" y="56" text-anchor="middle" font-family="sans-serif" font-size="12.5" fill="#6b7280">日本が増額しても、相手国が減額（対応的調整）しなければ、同じ利益に二重課税</text>
+
+      <g font-family="sans-serif">
+        <rect x="60" y="90" width="320" height="160" rx="14" fill="#e3f4ef" stroke="#0f766e" stroke-width="1.8"/>
+        <text x="220" y="118" text-anchor="middle" font-size="14" font-weight="700" fill="#0f766e">日本（調査する側）</text>
+        <text x="220" y="150" text-anchor="middle" font-size="11.5" fill="#3a4150">「日本の利益が少なすぎる」</text>
+        <text x="220" y="172" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1d24">利益を +40 増額更正</text>
+        <text x="220" y="200" text-anchor="middle" font-size="11.5" fill="#1a1d24">→ その40に日本が課税</text>
+        <rect x="100" y="212" width="240" height="28" rx="8" fill="#fff" stroke="#0f766e" stroke-width="1.4"/>
+        <text x="220" y="231" text-anchor="middle" font-size="11" font-weight="700" fill="#0f766e">日本：40に課税 ✓</text>
+
+        <rect x="480" y="90" width="320" height="160" rx="14" fill="#fcebed" stroke="#b32d3a" stroke-width="1.8"/>
+        <text x="640" y="118" text-anchor="middle" font-size="14" font-weight="700" fill="#b32d3a">相手国（調整しないと…）</text>
+        <text x="640" y="150" text-anchor="middle" font-size="11.5" fill="#3a4150">すでに同じ40を含む利益で</text>
+        <text x="640" y="172" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1d24">課税を済ませている</text>
+        <text x="640" y="200" text-anchor="middle" font-size="11.5" fill="#1a1d24">→ 減額してくれない</text>
+        <rect x="520" y="212" width="240" height="28" rx="8" fill="#fff" stroke="#b32d3a" stroke-width="1.4"/>
+        <text x="640" y="231" text-anchor="middle" font-size="11" font-weight="700" fill="#b32d3a">相手国：同じ40に課税 ✗</text>
+
+        <path d="M380,170 L478,170" stroke="#b32d3a" stroke-width="2.5"/>
+        <text x="430" y="290" text-anchor="middle" font-size="12.5" font-weight="700" fill="#b32d3a">同じ40に、日本と相手国が二重に課税 → 救済には相互協議（MAP・第13章）が要る</text>
+      </g>
+    </svg>
+    <figcaption><span class="fn">図12-1</span>　移転価格課税の宿命。日本が一方的に増額更正しても、相手国がその分を減額（対応的調整）しなければ、同じ利益に二重課税が生じる。これを解くための国際的なルートが、次章のMAP（相互協議）である。</figcaption>
+  </figure>
+
+  <h3>移転価格調査は、こう進む</h3>
+  <p>移転価格の税務調査は、ふつう年単位の長期戦になります。おおまかな流れはこうです。まず当局が、対象企業の申告・財務データから「利益配分に不自然さがないか」をスクリーニングする。次に、実地調査でFARや取引の実態をヒアリングし、ローカルファイルなどの資料を求める。そこから、当局の見立て（どの方法で、いくらが独立企業間価格か）と企業の主張がぶつかり、議論を重ねる。折り合わなければ更正（課税処分）に至り、企業は不服申立てや、相手国とのMAP（次章）へ進む——。</p>
+  <p>この長い過程で、企業に求められるものは2つです。第一に<strong>一貫性</strong>。ローカルファイルに書いたこと、調査での説明、実際の取引、契約書——これらが少しでも食い違えば、たちまち弱みになります。第二に<strong>準備とスピード</strong>。求められた資料をすぐ出せるか、取引の経緯を説明できる担当者がいるか。「物語の競争」は、結局のところ、<strong>日頃の備えの差</strong>で決まる。だから、調査が始まってから慌てるのではなく、取引を始めるときから「いつ説明を求められても大丈夫」な状態をつくっておく——本書が文書化（前章）をあれほど重視したのは、このためでした。</p>
+
+  <p>移転価格調査が「物語の競争」であること、推定課税という刃の怖さ、そして増額更正が必然的に生む二重課税——調査のリアルが見えました。残された問題は、ただ一つ。<strong>生じてしまった二重課税を、どう解くのか。そして、そもそも争いを未然に防げないのか</strong>。次章では、そのための国際的な制度——APA（事前確認）とMAP（相互協議）に進みます。</p>
+
+  <!--====================== 第13章 ======================-->
+  <span class="anchor" id="c13"></span>
+  <h2 class="chap"><span class="num bar">第 13 章</span>争わないための制度</h2>
+  <p class="chap-sub">——APA（事前確認）とMAP（相互協議）</p>
+
+  <p class="lead-p">前章で、移転価格課税が二重課税を生むこと、そしてその解決には相手国との調整が要ることを見ました。この章では、二重課税に対処する2つの国際的な制度を学びます。一つは、生じてしまった二重課税を<strong>後から解く</strong>MAP（相互協議）。もう一つは、そもそも争いが起きないよう<strong>未来の価格ルールを先に合意しておく</strong>APA（事前確認）。「治療」と「予防」——この2つを知れば、移転価格の不確実性と、どう付き合えばよいかが見えてきます。</p>
+
+  <h3>MAP（相互協議）——二重課税を、国どうしで解く</h3>
+  <p><span class="term">MAP</span>（Mutual Agreement Procedure＝相互協議）は、租税条約に基づき、<strong>二重課税が生じたときに、両国の税務当局が話し合って解決する</strong>手続です。前章の例で言えば、日本が利益を40増額したとき、企業は日本の当局にMAPを申し立てる。すると日本とベトナムの「権限ある当局」が協議のテーブルにつき、「では、その40をどちらの国の利益とするか」を交渉して、二重課税を解消します。根拠は租税条約（OECDモデル条約でいう第25条）。<strong>国家間の約束（条約）があるからこそ成り立つ救済</strong>です。</p>
+
+  <p>ここで、第10章の話を思い出してください。<strong>移転価格課税ならMAPの対象になりやすい</strong>のに、<strong>寄附金課税はこのMAPになじみにくい場合がある</strong>——だから「寄附金のほうが怖い」のでした。MAPという救済ルートの存在こそが、移転価格課税と寄附金課税を分ける、実務上の決定的な違いだったわけです。</p>
+
+  <h3>APA（事前確認）——未来の価格ルールを、先に合意する</h3>
+  <p><span class="term">APA</span>（Advance Pricing Arrangement＝事前確認）は、発想を逆転させます。争いが起きてから解くのではなく、<strong>「これから数年間、この取引の独立企業間価格はこの方法で算定します」というルールを、あらかじめ税務当局と合意しておく</strong>のです。合意できれば、その期間は「この方法で計算している限り、移転価格課税はされない」という安心が得られる。企業にとっては、移転価格リスクという最大の不確実性を、先に消せる強力な手段です。</p>
+
+  <div class="box note">
+    <p class="box-t">📘 APAの3つのタイプ</p>
+    <ul style="margin-bottom:0">
+      <li><strong>一国間APA（ユニラテラル）</strong>……自国（日本）の当局とだけ合意する。手続は軽いが、相手国は拘束されないので、相手国で課税されれば二重課税は残りうる。</li>
+      <li><strong>二国間APA（バイラテラル）</strong>……日本と相手国の<strong>両方の当局</strong>が合意する（相互協議を伴う）。両国が拘束されるので、二重課税の心配がほぼ消える。実務で最も望ましいとされる形。</li>
+      <li><strong>多国間APA（マルチラテラル）</strong>……3か国以上が関わる取引で、複数国が合意する。手続は重いが、複雑なグループには有効。</li>
+    </ul>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 860 350" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="APAとMAPの違い 予防と治療">
+      <rect x="0" y="0" width="860" height="350" fill="#ffffff"/>
+      <text x="430" y="34" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="700" fill="#1a1d24">APAとMAP——「予防」と「治療」</text>
+      <text x="430" y="56" text-anchor="middle" font-family="sans-serif" font-size="12.5" fill="#6b7280">時間軸で見ると、役割の違いがはっきりする</text>
+
+      <g font-family="sans-serif">
+        <!-- timeline -->
+        <line x1="80" y1="180" x2="780" y2="180" stroke="#cbd2dc" stroke-width="3"/>
+        <text x="430" y="172" text-anchor="middle" font-size="11" fill="#6b7280">取引の時間 →</text>
+        <text x="240" y="205" text-anchor="middle" font-size="11" fill="#6b7280">取引が起きる前</text>
+        <text x="620" y="205" text-anchor="middle" font-size="11" fill="#6b7280">課税・二重課税が起きた後</text>
+
+        <!-- APA -->
+        <rect x="100" y="86" width="280" height="74" rx="12" fill="#e3f4ef" stroke="#0f766e" stroke-width="1.8"/>
+        <text x="240" y="114" text-anchor="middle" font-size="14" font-weight="700" fill="#0f766e">APA（事前確認）＝予防</text>
+        <text x="240" y="138" text-anchor="middle" font-size="11" fill="#3a4150">未来の算定方法を先に合意し、</text>
+        <text x="240" y="153" text-anchor="middle" font-size="11" fill="#3a4150">争い自体を防ぐ</text>
+        <path d="M240,160 L240,178" stroke="#0f766e" stroke-width="2"/>
+
+        <!-- MAP -->
+        <rect x="480" y="86" width="280" height="74" rx="12" fill="#fcf6f0" stroke="#b4541a" stroke-width="1.8"/>
+        <text x="620" y="114" text-anchor="middle" font-size="14" font-weight="700" fill="#b4541a">MAP（相互協議）＝治療</text>
+        <text x="620" y="138" text-anchor="middle" font-size="11" fill="#3a4150">生じた二重課税を、両国の</text>
+        <text x="620" y="153" text-anchor="middle" font-size="11" fill="#3a4150">当局の協議で解消する</text>
+        <path d="M620,160 L620,178" stroke="#b4541a" stroke-width="2"/>
+
+        <!-- both need two countries -->
+        <rect x="230" y="250" width="400" height="64" rx="12" fill="#f2ecfa" stroke="#d9c9f0" stroke-width="1.5"/>
+        <text x="430" y="276" text-anchor="middle" font-size="12" font-weight="700" fill="#6a3fa0">どちらも、二重課税を本当に防ぐには「両国の合意」が要る</text>
+        <text x="430" y="298" text-anchor="middle" font-size="11" fill="#3a4150">＝二国間APA／MAP。移転価格は、つまるところ国どうしの交渉でもある</text>
+      </g>
+    </svg>
+    <figcaption><span class="fn">図13-1</span>　APAは取引の前に算定方法を合意して争いを「予防」し、MAPは生じた二重課税を当局協議で「治療」する。いずれも、二重課税を本当に解消するには相手国の合意（二国間APA／MAP）が必要。移転価格は、最終的には国どうしの交渉という側面を持つ。</figcaption>
+  </figure>
+
+  <div class="box essence">
+    <p class="box-t">💡 移転価格は、半分は「国際交渉」である</p>
+    <p>APAもMAPも、その核心は<strong>「国と国の合意」</strong>です。ここに、移転価格という分野の独特な本質が現れています。一国だけでは、二重課税は完全には解けない。独立企業間価格に「唯一の正解」がない（第1章）以上、最後は<strong>関係する国どうしが、どこで折り合うかを交渉する</strong>しかない。移転価格は、純粋な法律問題でも計算問題でもなく、<em>国家間の利益配分をめぐる、半ば外交的な営み</em>でもあるのです。だから企業に求められるのは、計算力だけでなく、<strong>自社の立場を、両国の当局に対して筋の通った物語として示す力</strong>になります。</p>
+  </div>
+
+  <h3>APAは“保険”である——コストと使いどころ</h3>
+  <p>APA（事前確認）は強力ですが、ただではありません。申請には、詳細な分析資料の作成と、当局との長い協議（二国間APAなら、合意まで年単位かかることも）が必要で、相応のコストと手間がかかります。だからAPAは、すべての取引に使うものではなく、<strong>「不確実性が大きく、金額も大きい取引」</strong>——たとえば無形資産（第7章）、金融取引（第9章）、利益分割が必要な複雑な取引——に絞って使うのが定石です。</p>
+  <p>発想は<strong>「保険」</strong>に似ています。保険料（APAのコストと手間）を払って、将来の大事故（巨額の更正と二重課税）のリスクを消す。事故の確率と被害が大きい取引ほど、保険の価値は高い。逆に、ありふれた小さな取引にまでAPAをかけるのは、保険のかけすぎです。日本では、事前確認も相互協議も件数が積み上がっており、処理に時間がかかることが課題とされますが、それでも<strong>「先に安心を買えること」の価値</strong>から、重要な取引を抱える企業にとって有力な選択肢であり続けています。</p>
+
+  <p>二重課税を解く（MAP）・防ぐ（APA）制度が見えました。そして、どちらも本質は「国どうしの合意」。これで、移転価格の制度の全体像——原理（第1〜3章）、測り方（第4〜9章）、日本固有の論点（第10章）、運用と紛争解決（第11〜13章）——が出そろいました。次章では、ここまで学んだすべてを、道連れだったNOVAグループの<strong>4つの取引で、実際に数字を当てて解いて</strong>みます。知識を「使える力」に変える、総仕上げです。</p>
+
+  <!--====================== 第14章 ======================-->
+  <span class="anchor" id="c14"></span>
+  <h2 class="chap"><span class="num bar">第 14 章</span>数字で追う、完全ケース</h2>
+  <p class="chap-sub">——NOVAグループの4取引を、実数で解く</p>
+
+  <p class="lead-p">いよいよ総仕上げです。ここまで学んだ「FAR → 方法選択 → 価格（幅）の算定 → 争点」という流れを、道連れだったNOVAグループの4つの取引——モノ・サービス・無形・カネ——に、実際に数字を当てて解いてみます。一つひとつ追えば、ばらばらだった知識が「使える一つの力」につながるはずです。なお、ここで使う金額はすべて<strong>理解のための仮の設例</strong>であり、実在の基準値ではありません。考え方の筋道に注目してください。</p>
+
+  <figure>
+    <svg viewBox="0 0 880 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="NOVAグループの全体像と4つの取引">
+      <rect x="0" y="0" width="880" height="420" fill="#ffffff"/>
+      <text x="440" y="32" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="700" fill="#1a1d24">NOVAグループ——5つの会社と、4つの取引</text>
+
+      <g font-family="sans-serif">
+        <!-- center JP -->
+        <rect x="360" y="180" width="160" height="70" rx="12" fill="#0f766e" stroke="#0c5d57" stroke-width="2"/>
+        <text x="440" y="208" text-anchor="middle" font-size="13.5" font-weight="700" fill="#fff">日本 NOVA JP</text>
+        <text x="440" y="228" text-anchor="middle" font-size="10.5" fill="#d8f0ea">本社・企画・ブランド・管理</text>
+
+        <!-- VN -->
+        <rect x="60" y="80" width="150" height="64" rx="10" fill="#fff" stroke="#0f766e" stroke-width="1.6"/>
+        <text x="135" y="106" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1a1d24">ベトナム VN</text>
+        <text x="135" y="126" text-anchor="middle" font-size="10" fill="#6b7280">製造</text>
+        <!-- US -->
+        <rect x="60" y="290" width="150" height="64" rx="10" fill="#fff" stroke="#0f766e" stroke-width="1.6"/>
+        <text x="135" y="316" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1a1d24">米国 US</text>
+        <text x="135" y="336" text-anchor="middle" font-size="10" fill="#6b7280">ソフト開発（無形D）</text>
+        <!-- SG -->
+        <rect x="670" y="80" width="150" height="64" rx="10" fill="#fff" stroke="#0f766e" stroke-width="1.6"/>
+        <text x="745" y="106" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1a1d24">シンガポール SG</text>
+        <text x="745" y="126" text-anchor="middle" font-size="10" fill="#6b7280">統括・資金</text>
+        <!-- EU -->
+        <rect x="670" y="290" width="150" height="64" rx="10" fill="#fff" stroke="#0f766e" stroke-width="1.6"/>
+        <text x="745" y="316" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1a1d24">EU 販売</text>
+        <text x="745" y="336" text-anchor="middle" font-size="10" fill="#6b7280">マーケ・販売</text>
+
+        <!-- arrows with labels -->
+        <line x1="210" y1="118" x2="358" y2="190" stroke="#8a6d1f" stroke-width="2"/>
+        <rect x="232" y="135" width="90" height="22" rx="6" fill="#fbfaf6" stroke="#e8e1cf"/>
+        <text x="277" y="150" text-anchor="middle" font-size="10" font-weight="700" fill="#8a6d1f">① モノ（部品）</text>
+
+        <line x1="210" y1="316" x2="358" y2="242" stroke="#6a3fa0" stroke-width="2"/>
+        <rect x="225" y="268" width="120" height="22" rx="6" fill="#f2ecfa" stroke="#d9c9f0"/>
+        <text x="285" y="283" text-anchor="middle" font-size="10" font-weight="700" fill="#6a3fa0">③ 無形（アプリ特許）</text>
+
+        <line x1="520" y1="206" x2="668" y2="118" stroke="#0f766e" stroke-width="2"/>
+        <rect x="540" y="138" width="120" height="22" rx="6" fill="#e3f4ef" stroke="#c2e6dd"/>
+        <text x="600" y="153" text-anchor="middle" font-size="10" font-weight="700" fill="#0f766e">④ カネ（親子ローン）</text>
+
+        <line x1="520" y1="232" x2="668" y2="316" stroke="#b4541a" stroke-width="2"/>
+        <rect x="540" y="268" width="130" height="22" rx="6" fill="#fcf6f0" stroke="#f3d8c2"/>
+        <text x="605" y="283" text-anchor="middle" font-size="10" font-weight="700" fill="#b4541a">② サービス＋③ロイヤルティ</text>
+
+        <text x="440" y="392" text-anchor="middle" font-size="11.5" fill="#6b7280">本社JPを軸に、モノ・サービス・無形・カネの4取引が国境をまたいで流れる</text>
+      </g>
+    </svg>
+    <figcaption><span class="fn">図14-1</span>　NOVAグループの全体像。日本の本社（JP）を軸に、ベトナムの製造、米国のソフト開発、シンガポールの統括・資金、EUの販売が、モノ・サービス・無形・カネの4つの取引で結ばれている。以下、この4取引を一つずつ実数で解く。</figcaption>
+  </figure>
+
+  <h3>ケースA（モノ）——ベトナム工場の製造価格</h3>
+  <p>ベトナムのVN社は、本社JPの設計図どおりに文具本体を製造し、JPに販売しています。VNは独自の技術や販売機能を持たず、<strong>言われたとおりに作るだけの単純な受託製造会社</strong>。</p>
+  <div class="box ex">
+    <p class="box-t">🧮 FAR → 方法 → 計算</p>
+    <p><strong>FAR（第4章）</strong>：VNの機能は製造のみ、重要な無形資産なし、在庫・市場リスクも限定的＝<strong>単純な機能</strong>。だからVNを検証対象にする。<br>
+    <strong>方法（第5章）</strong>：単純な製造会社なので<strong>原価基準法（CP）</strong>。第三者の受託製造会社のマークアップ率（レンジ6〜10%、中央値8%）を比較対象にする。<br>
+    <strong>計算</strong>：VNの製造原価が1個100円なら、独立企業間価格は <strong>100 ×（1＋8%）＝108円</strong>。<br>
+    <strong>争点</strong>：もし実際の販売価格が120円だったら、1個あたり12円ぶんVNの利益が過大＝JPの仕入が過大＝<strong>日本の利益が少なすぎる</strong>。当局は差額を日本の利益に加算する。逆に95円なら、VNが薄利すぎて、ベトナム当局から問われる側になる。</p>
+  </div>
+
+  <h3>ケースB（サービス）——本社の管理サービス料</h3>
+  <p>本社JPは、全子会社にまとめて経理・人事・ITのサポートを提供し、その費用を請求しています。年間コストは総額1億円。</p>
+  <div class="box ex">
+    <p class="box-t">🧮 便益テスト → 価格 → 配賦</p>
+    <p><strong>便益テスト（第8章）</strong>：このうち、グループ連結決算やJPの株主向けIRにかかる費用2,000万円は<strong>株主活動</strong>＝子会社に請求できない。残る8,000万円は、各子会社が「よそに頼んででも受けたい定型支援」＝<strong>便益あり</strong>。<br>
+    <strong>価格（低付加価値の簡素化）</strong>：定型的な支援なので、コストに<strong>一律5%</strong>上乗せ。8,000万円 ×（1＋5%）＝<strong>8,400万円</strong>。<br>
+    <strong>配賦</strong>：これを各子会社の売上高比などの<strong>合理的な配賦キー</strong>で配る。<br>
+    <strong>争点</strong>：もしJPが株主活動分2,000万円まで子会社に請求していたら、その分は否認される。「便益のない費用を子会社に付け替えた」と見られるからだ。</p>
+  </div>
+
+  <h3>ケースC（無形）——アプリとブランドのロイヤルティ</h3>
+  <p>NOVAの大ヒットしたスマート文具。アプリの中核技術は米国US社が開発（D）し、ブランドは本社JPが育て守ってきた（E・P）。各国販売会社は、この無形資産の使用料（ロイヤルティ）を払っています。グループ全体で、ふつうの製造・販売の利益を配ったあとに残る<strong>残余利益が80億円</strong>。</p>
+  <div class="box ex">
+    <p class="box-t">🧮 DEMPE → 残余利益分割（第7章）</p>
+    <p><strong>DEMPE</strong>：アプリ特許の名義がどこにあっても、利益は<strong>実際に価値を生んだ会社</strong>へ。中核技術を開発したUS（D）と、ブランドを育て守ったJP（E・P）が、無形資産の主役。<br>
+    <strong>残余利益分割（RPSM）</strong>：まず各社の製造・販売機能に「ふつうの利益（ルーティン利益）」を配る。残った<strong>80億円</strong>を、両社の無形資産への貢献度——たとえば研究開発費や重要機能の比——で分割。仮に貢献度がUS : JP ＝ 6 : 4 なら、<strong>USへ48億円、JPへ32億円</strong>。<br>
+    <strong>争点</strong>：もしグループが、開発もブランド育成もしていない軽課税国のペーパー会社に特許の名義を置き、そこへ80億円を集めていたら——DEMPEにより、その配分は否認される。「名義」では利益を取れない。</p>
+  </div>
+
+  <h3>ケースD（カネ）——シンガポール統括の親子ローン</h3>
+  <p>資金を統括するSG社が、ベトナムのVN社に、設備投資資金として1億円を貸し付けています。</p>
+  <div class="box ex">
+    <p class="box-t">🧮 信用力 → ベース＋スプレッド（第9章）</p>
+    <p><strong>信用力の評価</strong>：VN単独では信用力は高くないが、<strong>有名なNOVAグループの一員</strong>という<strong>暗黙の支援</strong>を織り込むと、信用力は底上げされる（この底上げは無償）。<br>
+    <strong>金利の算定</strong>：市場のベースレート2% ＋ VNの（底上げ後の）信用力に応じたスプレッド3% ＝ <strong>適正金利5%</strong>。1億円なら年500万円の利息が独立企業間。<br>
+    <strong>争点</strong>：もしSGがVNに<strong>無利息</strong>で貸していたら、本来あるべき利息500万円ぶん、SGの利益が過少（またはVNへの実質的な利益供与）と見られる。逆に、暗黙の支援を無視して高すぎる金利（例8%）を取っていれば、VNの利益が不当に削られているとベトナム側から問われる。</p>
+  </div>
+
+  <div class="box essence">
+    <p class="box-t">💡 4ケースを貫く、たった一つの問い</p>
+    <p>4つの取引は、対象もモノもばらばらでした。でも、解き方はすべて同じ一つの問いに還元されます——<strong>「もし、この会社たちが赤の他人どうしだったら、この取引はいくらで、利益はどう分かれていたか」</strong>。製造の単純な利益（A）、便益に見合うサービス料（B）、価値を生んだ者への無形の対価（C）、リスクに見合う金利（D）。すべて「独立企業ならどうか」の一点から導かれる。<br>
+    そして、どのケースでも勝負を決めるのは、計算式そのものより、<strong>「その会社が実際に何をして、何を負ったか（FAR）を、証拠でどう示すか」</strong>でした。移転価格の総体が、この4ケースに凝縮されています。</p>
+  </div>
+
+  <h3>4ケースに共通する「解く手順」</h3>
+  <p>4つのケースを解いて気づいたと思いますが、手順はいつも同じでした。対象がモノでも無形でもカネでも、たどる道は一本。改めて、どんな移転価格の問題にも使える「解く手順」として、整理しておきましょう。これは本書全体の要約でもあります。</p>
+
+  <div class="box num">
+    <p class="box-t">🧭 移転価格を解く、5つの問い</p>
+    <ol style="margin-bottom:0">
+      <li><strong>誰と誰の取引か？</strong>……相手は国外関連者か（第3章）。そもそも制度の対象かを確かめる。</li>
+      <li><strong>取引の実態は？</strong>……契約書ではなく、実際に各社が何をして何を負ったか（FAR）を描き出す（第4章）。ここが9割。</li>
+      <li><strong>どちらが“単純な側”か？</strong>……機能の小さい側を検証対象に選ぶと、比較対象が見つけやすい（第5章）。</li>
+      <li><strong>どの方法が最適か？</strong>……CUP・RP・CP・TNMM・PSMから、その取引に最も適した方法を選ぶ（第5・6章）。</li>
+      <li><strong>独立企業間の“幅”に入っているか？</strong>……結果が独立企業間レンジの中ならセーフ、外れれば引き直し（第6章）。</li>
+    </ol>
+  </div>
+
+  <p>この5つの問いは、そのまま<strong>ローカルファイルの骨格</strong>（第11章）であり、<strong>税務調査で問われること</strong>（第12章）でもあります。逆に言えば、この5つに自分の言葉で答えられる取引は、強い。答えに詰まる取引こそ、リスクが潜んでいる場所です。海外子会社との取引を見たら、まずこの5つを当ててみる——それが、本書で身につけた「移転価格の目」なのです。</p>
+
+  <p>知識が「解く力」につながりました。FAR → 方法 → 算定 → 争点。どんな取引も、この流れと「独立企業ならいくらか」の一点で解ける。最終章の手前、次章では視野をぐっと広げます。移転価格をめぐる<strong>世界の大きな潮流</strong>——BEPS、Amount B、そして関税・消費税との衝突——を俯瞰し、この制度がどこへ向かうのかを見ていきましょう。</p>
+
+  <!--====================== 第15章 ======================-->
+  <span class="anchor" id="c15"></span>
+  <h2 class="chap"><span class="num bar">第 15 章</span>世界の潮流と、これから</h2>
+  <p class="chap-sub">——BEPS・Amount B・そして関税とVATの三角関係</p>
+
+  <p class="lead-p">最後に、視野をぐっと広げます。移転価格は、いま大きく動いている分野です。国際的な租税回避への対抗（BEPS）、複雑さを減らそうとする簡素化（Amount B）、そして移転価格と隣り合う他の税（関税・消費税）との緊張——。これらの潮流を俯瞰すると、ここまで学んだ原理が、未来にどう効いてくるかが見えてきます。細部は変わっても、芯は変わらない。そのことを確かめる章です。</p>
+
+  <h3>BEPS——「価値創造の場所で課税する」という旗</h3>
+  <p>2010年代、多国籍企業が各国の制度のすき間を突いて税負担を極小化していることが、世界的な問題になりました。これに対しOECDとG20が立ち上げたのが<strong>BEPS</strong>（Base Erosion and Profit Shifting＝税源浸食と利益移転）プロジェクトです。2015年の最終報告は、移転価格に深い影響を与えました。本書で学んだ多くが、実はBEPSの成果です——<strong>DEMPE</strong>による無形資産課税（第7章）、リスクの実質判定（第4章）、そして文書化の<strong>三点セット・CbCR</strong>（第11章）。</p>
+
+  <p>BEPSが掲げた旗印は、一言でいえば<strong>「利益は、価値が創造された場所で課税されるべきだ（align taxation with value creation）」</strong>。名義や契約の操作で利益を軽課税国へ移すのを許さず、<em>実際に価値を生んだ活動のあるところ</em>へ利益を引き戻す——本書を貫いてきた「形式ではなく実質で見る」という精神は、まさにこのBEPSの思想と一つのものなのです。</p>
+
+  <h3>Amount B——「複雑すぎる」への、簡素化の答え</h3>
+  <p>一方で、移転価格には逆向きの悩みもあります。<strong>分析が複雑でコストがかかりすぎる</strong>こと。とりわけ、ありふれた販売・流通活動についてまで、毎回ぶ厚い比較分析をするのは、企業にも当局にも負担が重い。そこでOECDが2024年に打ち出したのが<span class="term">Amount B</span>です。これは、<strong>基礎的な販売・流通活動（baseline distribution）について、独立企業間の利益率をあらかじめ定型的に決めておく</strong>という、簡素化アプローチです。</p>
+
+  <div class="box note">
+    <p class="box-t">📘 Amount Bが映す、2つの方向</p>
+    <p>Amount Bは、移転価格が同時に<strong>2つの方向</strong>へ進んでいることを象徴しています。一方では、無形資産やデジタルのような<strong>難しい領域は、より精密に</strong>（BEPS）。他方では、ありふれた<strong>定型的な領域は、より簡単に</strong>（Amount B、第8章の低付加価値サービスの5%簡素化も同じ発想）。<br>
+    「精密化」と「簡素化」は矛盾ではありません。<strong>限られたエネルギーを、本当に争うべき難所（無形資産など）に集中させ、枝葉は定型処理で済ませる</strong>——という、賢いメリハリなのです。</p>
+  </div>
+
+  <h3>隣の税との三角関係——関税とVAT</h3>
+  <p>意外な盲点を一つ。移転価格（法人税）は、<strong>関税</strong>や<strong>消費税（VAT）</strong>と、同じ「輸入価格」を見ているのに、<strong>力の向きが逆</strong>になることがあります。輸入する子会社の立場で考えてみてください。輸入価格を<strong>低く</strong>すれば、関税は安くなる（関税は価格に対してかかるから）。でも、輸入価格が低いほど、国内で売ったときの利益は大きくなり、<strong>法人税は増える</strong>。逆に輸入価格を高くすれば、法人税は減るが関税は増える。<strong>同じ一つの取引価格を、法人税の当局と関税の当局が、反対側から引っぱっている</strong>のです。</p>
+
+  <figure>
+    <svg viewBox="0 0 860 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="移転価格・関税・VATの三角関係">
+      <rect x="0" y="0" width="860" height="380" fill="#ffffff"/>
+      <text x="430" y="34" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="700" fill="#1a1d24">同じ「輸入価格」を、3つの税が違う向きから見る</text>
+      <text x="430" y="56" text-anchor="middle" font-family="sans-serif" font-size="12.5" fill="#6b7280">価格を動かすと、ある税は得をし、別の税は損をする——だから整合が要る</text>
+
+      <g font-family="sans-serif">
+        <!-- center -->
+        <circle cx="430" cy="210" r="60" fill="#fbfaf6" stroke="#8a6d1f" stroke-width="2"/>
+        <text x="430" y="205" text-anchor="middle" font-size="13" font-weight="700" fill="#37312a">輸入価格</text>
+        <text x="430" y="225" text-anchor="middle" font-size="11" fill="#6b7280">（同じ1つの数字）</text>
+
+        <!-- TP -->
+        <rect x="330" y="86" width="200" height="58" rx="10" fill="#e3f4ef" stroke="#0f766e" stroke-width="1.6"/>
+        <text x="430" y="110" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f766e">法人税（移転価格）</text>
+        <text x="430" y="130" text-anchor="middle" font-size="10.5" fill="#3a4150">価格を下げる＝国内利益↑＝税↑</text>
+        <line x1="430" y1="144" x2="430" y2="150" stroke="#0f766e" stroke-width="2"/>
+
+        <!-- 関税 -->
+        <rect x="70" y="280" width="220" height="58" rx="10" fill="#fcebed" stroke="#b32d3a" stroke-width="1.6"/>
+        <text x="180" y="304" text-anchor="middle" font-size="12.5" font-weight="700" fill="#b32d3a">関税</text>
+        <text x="180" y="324" text-anchor="middle" font-size="10.5" fill="#3a4150">価格を下げる＝関税↓（逆向き）</text>
+        <line x1="290" y1="300" x2="378" y2="240" stroke="#b32d3a" stroke-width="2"/>
+
+        <!-- VAT -->
+        <rect x="570" y="280" width="220" height="58" rx="10" fill="#f2ecfa" stroke="#6a3fa0" stroke-width="1.6"/>
+        <text x="680" y="304" text-anchor="middle" font-size="12.5" font-weight="700" fill="#6a3fa0">消費税（VAT）</text>
+        <text x="680" y="324" text-anchor="middle" font-size="10.5" fill="#3a4150">インボイス・実態との整合が必要</text>
+        <line x1="570" y1="300" x2="482" y2="240" stroke="#6a3fa0" stroke-width="2"/>
+      </g>
+    </svg>
+    <figcaption><span class="fn">図15-1</span>　移転価格（法人税）・関税・消費税は、同じ「輸入価格」という一つの数字を、それぞれ違う向きから見ている。価格を下げれば法人税は増え関税は減る——という逆向きの力が働くため、一つの税だけ最適化すると別の税で問題が起きる。3つの整合を考える視点が求められる。</figcaption>
+  </figure>
+
+  <h3>そして、グローバル・ミニマム課税の時代へ</h3>
+  <p>もう一つ、近年の大きな動きが<strong>グローバル・ミニマム課税</strong>（第2の柱／Pillar Two）です。大規模な多国籍企業グループ（年間総収入7.5億ユーロ以上）について、どの国でも最低<strong>15%</strong>の税負担を確保しようという国際的な枠組みです。移転価格との関係はこうです。<strong>移転価格は「利益をどの国に配分するか」を決め、グローバル・ミニマム課税は「配分された利益に、最低限これだけは課税する」を決める</strong>。二段構えで、利益移転による過度な節税に網をかけているのです。移転価格でいくら利益を低税率国に寄せても、そこで最低15%は課税される——という「底」ができたわけです。</p>
+
+  <h3>もう一つの柱——Amount A と、市場国の取り分</h3>
+  <p>本章で触れたAmount Bは「第1の柱（Pillar One）」の一部でした。その第1の柱には、もっと大きなもう一つの構想<strong>Amount A</strong>があります。これは、超大規模なグローバル企業（とくに巨大デジタル企業）の利益の一部を、<strong>物理的な拠点がなくても、製品やサービスが売れている“市場国”に、課税権として配分する</strong>、という野心的な仕組みです。国際的な合意形成が進められています。</p>
+  <p>なぜこれが画期的かというと、<strong>独立企業原則そのものの“外側”に踏み出している</strong>からです。独立企業原則は「各社の機能（FAR）に応じて利益を配る」発想でした（第2章）。ところがデジタル企業は、その国に支店も工場もないまま、巨額の利益を上げてしまう。すると「機能のある場所」を基準にする独立企業原則では、市場国に利益を配れない。そこでAmount Aは、それとは別に「巨大企業の利益の一定割合を、定式的に市場国へ配る」——いわば第2章で見た<strong>定式配分の発想を、部分的に取り入れた</strong>ものなのです。100年続いた独立企業原則の世界が、デジタル経済の圧力の前で、少しずつ形を変えようとしている。その最前線が、このAmount Aです。</p>
+
+  <div class="box insight">
+    <p class="box-t">🔭 これからの実務家に必要な、たった一つの力</p>
+    <p>制度はこれからも変わり続けます。新しい略語が次々に登場し、数字も毎年のように動くでしょう。でも、振り回される必要はありません。本書が一貫して伝えてきた芯——<strong>「価値が生まれた場所に、利益と税が帰属すべきだ」</strong>——さえ握っていれば、どんな新制度も「その芯を、新しい現実（デジタルなど）にどう当てはめ直そうとしているのか」として読み解けます。暗記すべきは数字ではなく、原理。これからの時代に必要なのは、<strong>変わらない芯から、変わり続ける細部を読み解く力</strong>なのです。</p>
+  </div>
+
+  <p>BEPSによる精密化、Amount Bによる簡素化、関税・VATとの三角関係、そしてグローバル・ミニマム課税という底。制度は動き続けます。でも、どの潮流も、本書で学んだ芯——<strong>「価値が生まれた場所に、利益を帰属させる」</strong>——の上で動いている。細部の数字は改正で変わっても、この芯さえ握っていれば、新しいニュースも読み解けます。いよいよ、最後の章です。</p>
+
+
+  <!--====================== 終章 ======================-->
+  <span class="anchor" id="c16"></span>
+  <h2 class="chap"><span class="num bar">終 章</span>価値は、どこで生まれたか</h2>
+  <p class="chap-sub">——移転価格の本質に、もう一度立ち返る</p>
+
+  <p class="lead-p">長い旅も、ここで終わりです。序章で「考え方そのものはシンプル」とお約束しました。15の章を経たいま、その約束の意味を、いちばん深いところで確かめましょう。移転価格税制とは、結局のところ、何だったのでしょうか。</p>
+
+  <h3>すべては、一つの問いだった</h3>
+  <p>振り返れば、本書のすべての章は、たった一つの問いをめぐっていました。<strong>「この利益は、どの国で生まれたのか」</strong>。グループ内の値段を操作すれば、利益は国境を越えてしまう（序章）。だから「他人どうしならいくらか（独立企業間価格）」という物差しを当て（第1〜2章）、誰が価値を生んだかをFARで見極め（第4章）、無形資産は名義でなく貢献（DEMPE）で測り（第7章）、最後は文書と協議で「あるべき配分」を確定する（第11〜13章）。</p>
+
+  <p>これらはすべて、<strong>「価値が創造された場所に、利益と税が帰属すべきだ」</strong>という、たった一つの規範の現れでした。移転価格税制は、無味乾燥な計算ルールの集まりではありません。<em>「儲けは、それを生んだところに」</em>という、素朴で、しかし奥深い公平の感覚を、国境をまたぐ世界で実現しようとする、壮大な試みなのです。</p>
+
+  <div class="box essence">
+    <p class="box-t">💡 この制度が抱える、美しい不完全さ</p>
+    <p>同時に、本書は移転価格の<strong>限界</strong>も隠しませんでした。独立企業間価格に「唯一の正解」はなく（第1章）、比較対象がそもそも存在しないことがあり（第2・7章）、最後は国どうしの交渉で折り合うしかない（第13章）。<br>
+    でも、この不完全さは、欠陥というより<strong>誠実さ</strong>だと、私は思います。「価値がどこで生まれたか」という問いに、機械的に割り切れる答えなどない。だからこそ、事実を丁寧に観察し（FAR）、筋の通った物語を、証拠とともに示す。移転価格が「計算」である以上に「説明」であり「対話」であるのは、扱っている問いが、それだけ本質的に難しいからにほかなりません。割り切れなさと正面から向き合うこの制度のかたちは、むしろ知的に誠実なのです。</p>
+  </div>
+
+  <h3>あなたが手にした、本当の力</h3>
+  <p>序章から終章まで、専門知識ゼロから、ここまで登ってきました。あなたはいま、<strong>専門家でも難解とためらうこの制度を、なぜ必要かから、条文の急所、実務の攻防まで、自分の言葉で語れる地点</strong>に立っています。ここで得たのは、たんなる移転価格の知識ではありません。<strong>複雑に見えるものを、たった一つの芯から捉えなおす力</strong>です。その力は、移転価格を超えて、これから出会うどんな難しいテーマにも、きっと効くはずです。</p>
+
+  <div class="box good" style="margin-top:32px;">
+    <p class="box-t">🎓 ほんとうの、おわりに</p>
+    <p>序章＋本編15章。長い一冊を、最後まで歩いてくれて、ありがとうございました。<br>
+    ニュースで「多国籍企業の課税」「BEPS」「タックスヘイブン」という言葉を見たとき、あなたはもう、モヤッとしません。その裏で何が問われているか——<strong>「価値はどこで生まれ、利益はどこに帰属すべきか」</strong>——を、構造として読み解けるからです。<br>
+    では、いちばん大切な一文を、もう一度だけ。——<em>「グループ内の値段を、独立企業ならいくらかに引き直し、利益を“価値が生まれた場所”へ帰す。ただし、その答えは一点には決まらない。だから最後は、事実を誠実に観察し、説明し、国どうしで折り合いをつける。」</em><br>
+    これが、移転価格税制の、すべてです。</p>
+  </div>
+
+  <!--====================== 付録A ======================-->
+  <span class="anchor" id="ax-a"></span>
+  <h2 class="chap"><span class="num bar">付 録 A</span>用語集——移転価格の必須50語</h2>
+  <p class="chap-sub">——一文定義＋ひとこと。迷ったら、ここへ戻る</p>
+
+  <p class="lead-p">本書に登場した用語を、すぐ引けるように50語に整理しました。それぞれ「一文の定義」と「ひとことの補足」をつけています。本文を読み返すときの索引としても、ニュースで知らない言葉に出会ったときの辞書としても使ってください。</p>
+
+  <div class="card">
+    <h4>1. 基本概念</h4>
+    <dl class="mini">
+      <dt>移転価格</dt><dd>グループ内（関連者間）の取引につけられる値段。それ自体は正当な経済活動。独立企業間価格とズレたときに、課税の対象になる。</dd>
+      <dt>独立企業間価格（ALP）</dt><dd>もし独立した第三者どうしなら成立したであろう値段。移転価格税制の唯一の物差し。多くの場合、一点でなく「幅（レンジ）」で捉える。</dd>
+      <dt>独立企業原則</dt><dd>関連者間の取引も「独立企業間価格で行われたもの」として所得を計算すべきだ、という国際的な大原則。OECDが掲げる世界標準。</dd>
+      <dt>国外関連者</dt><dd>資本50%以上の関係（親子・兄弟）または実質支配の関係にある外国法人。この相手との取引が、移転価格税制の対象になる。</dd>
+      <dt>国外関連取引</dt><dd>国外関連者との間で行う、資産の売買・役務提供・無形資産の使用許諾・金銭の貸借などの取引。</dd>
+      <dt>独立企業アプローチ（separate entity）</dt><dd>グループ内の各社を、それぞれ独立した別の会社として扱い、別々に所得を計算する建前。移転価格の出発点。</dd>
+      <dt>定式配分</dt><dd>グループ全体の利益を、売上・資産・人件費などの式で各国へ機械的に配る方式。独立企業原則の対案だが、各国が式に合意できず、国際標準にはならなかった。</dd>
+      <dt>二重課税</dt><dd>同じ利益に、2つの国が課税してしまう状態。移転価格の引き直しが一方的に行われると生じる。解消にはMAPなどの国際的調整が要る。</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h4>2. 取引の分析（FAR・比較可能性）</h4>
+    <dl class="mini">
+      <dt>FAR</dt><dd>機能（Functions）・資産（Assets）・リスク（Risks）の頭文字。各社の価値創造への貢献度を測る、移転価格分析の中心枠組み。</dd>
+      <dt>機能分析</dt><dd>取引で各社が実際に担った活動・使った資産・負ったリスクを書き出す作業。移転価格の議論の9割は、ここで決まる。</dd>
+      <dt>比較可能性の5要素</dt><dd>資産役務の特性／機能分析／契約条件／経済状況／事業戦略。「似ているか」を測る5つの角度。核は機能分析。</dd>
+      <dt>取引の正確な描写（accurate delineation）</dt><dd>契約書の文言でなく、当事者が実際にどう行動したかを見て、取引の真の姿を確定すること。価格計算の前提。</dd>
+      <dt>検証対象（tested party）</dt><dd>利益率などを検証する対象に選ぶ側。通常は、比較対象を見つけやすい「単純な機能の側」を選ぶ。</dd>
+      <dt>コンパラブル</dt><dd>比較対象となる第三者の取引や企業。機能（FAR）が似ているほど、比較の説得力が高い。</dd>
+      <dt>限定リスク会社</dt><dd>機能・リスクを意図的に絞った会社（限定リスク販売会社・受託製造会社など）。得る利益は「小さいが安定」が独立企業として自然。</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h4>3. 算定方法とレンジ</h4>
+    <dl class="mini">
+      <dt>独立価格比準法（CUP）</dt><dd>取引価格そのものを第三者の同じ取引と比べる方法。最も直接的で信頼性が高いが、比較対象が見つかりにくい。</dd>
+      <dt>再販売価格基準法（RP）</dt><dd>転売する会社の売上総利益率（粗利率）を第三者と比べ、適正な仕入価格を逆算する方法。単純な販売会社向け。</dd>
+      <dt>原価基準法（CP）</dt><dd>製造などの原価へのマークアップ率を第三者と比べる方法。単純な製造・受託加工会社向け。</dd>
+      <dt>取引単位営業利益法（TNMM）</dt><dd>検証対象の営業利益率を、似た機能の第三者企業のレンジと比べる方法。データが手に入りやすく、実務で最頻出。</dd>
+      <dt>利益分割法（PSM）</dt><dd>両社が生んだ合算利益を、貢献度に応じて分割する方法。両社とも独自の重要な貢献（無形資産など）をするケース向け。</dd>
+      <dt>残余利益分割法（RPSM）</dt><dd>まず各社にふつうの利益を配り、残った残余利益を無形資産への貢献度で分ける方法。無形資産が絡む取引でよく使う。</dd>
+      <dt>最適方法ルール</dt><dd>5つの方法のうち、その取引に最も適した方法を選ぶという考え方。日本は平成23年度改正で優先順位制から移行。</dd>
+      <dt>PLI（利益水準指標）</dt><dd>TNMMで比べる利益率の種類。売上営業利益率・総費用営業利益率・ベリー比など。会社の機能に合うものを選ぶ。</dd>
+      <dt>ベリー比</dt><dd>売上総利益÷営業費用。単純な販売・仲介会社の検証に使われることがあるPLIの一つ。</dd>
+      <dt>レンジ</dt><dd>独立企業間価格の「幅」。第三者の利益率がばらつくため、価格は一点でなく範囲で捉える。中に収まればセーフ。</dd>
+      <dt>四分位レンジ（IQR）</dt><dd>比較対象を小さい順に並べ、上下の極端値を切り、第1〜第3四分位を独立企業間レンジとする統計手法。外れたら原則は中央値へ引き直し。</dd>
+      <dt>シークレット・コンパラブル</dt><dd>推定課税で当局が使う、納税者に開示されない比較対象情報。反論が難しく、防御側に不利になりうる。</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h4>4. 無形資産・サービス・金融</h4>
+    <dl class="mini">
+      <dt>無形資産</dt><dd>ブランド・特許・ソフトウェア・ノウハウなど。比較対象がなく、価値が将来の期待で決まり、移しやすいため、移転価格の最難関。</dd>
+      <dt>DEMPE</dt><dd>無形資産に関わる5活動（開発・改良・維持・保護・活用）の頭文字。利益は名義人でなく、これらを実際に担った会社に帰属する。</dd>
+      <dt>HTVI</dt><dd>評価困難な無形資産。取引時に将来価値が読めないもの。当局は事後の実績を、当初評価の妥当性検証に使える。</dd>
+      <dt>ロイヤルティ</dt><dd>無形資産の使用料。「売上の何%」で表されることが多く、料率は無形資産がもたらす超過利益から導かれる。</dd>
+      <dt>便益テスト</dt><dd>グループ内サービスの対価が認められるかの関門。「独立企業なら、お金を払ってでも受けたか」を問う。</dd>
+      <dt>株主活動</dt><dd>親会社が株主の立場で行う活動（連結決算・IRなど）。子会社のためでないので、サービス料を請求できない。</dd>
+      <dt>低付加価値グループ内役務（IGS）</dt><dd>経理・IT・人事などの定型的支援。コストに一律5%上乗せで独立企業間価格とする簡素化アプローチがある。</dd>
+      <dt>暗黙の支援（implicit support）</dt><dd>グループの一員であることで自然に得られる信用の底上げ。誰のサービスでもないので無償。金利算定で織り込む。</dd>
+      <dt>キャッシュプール</dt><dd>グループの余剰・不足資金を一か所に集めて融通し合う仕組み。生まれたメリットを各社にどう配分するかが論点。</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h4>5. 日本固有の論点・文書化・調査</h4>
+    <dl class="mini">
+      <dt>国外関連者寄附金</dt><dd>国外関連者への寄附金。日本では全額が損金不算入。移転価格と違いMAPによる救済になじみにくく、実務上とくに怖い。</dd>
+      <dt>推定課税</dt><dd>必要な書類が提示されないとき、当局が類似法人の利益率などで所得を推定して課税できる仕組み。反論が難しい。</dd>
+      <dt>対応的調整</dt><dd>一方の国が増額更正したとき、相手国がその分を減額して二重課税を解く調整。MAPを通じて行われる。</dd>
+      <dt>マスターファイル（事業概況報告事項）</dt><dd>グループ全体の組織・事業・無形資産・財務の概要。連結総収入1,000億円以上のグループが提出。</dd>
+      <dt>ローカルファイル</dt><dd>個々の国外関連取引の詳細（FAR・算定方法・比較対象・レンジ）を記す中核文書。原則、申告期限までに作成（同時文書化）。</dd>
+      <dt>CbCR（国別報告事項）</dt><dd>グループの国別の売上・利益・税・従業員・資産の一覧。利益と実体のズレを当局が鳥瞰するための書類。</dd>
+      <dt>同時文書化</dt><dd>ローカルファイルを確定申告書の提出期限までに作成・保存する義務。一定金額未満の取引は免除されるが、調査時の提出義務は残る。</dd>
+      <dt>更正期間（除斥期間）</dt><dd>課税処分ができる期間の上限。移転価格課税は通常の法人税より長く、法定申告期限から原則7年とされる。</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h4>6. 紛争解決・国際的な枠組み</h4>
+    <dl class="mini">
+      <dt>APA（事前確認）</dt><dd>将来の取引の独立企業間価格の算定方法を、事前に当局と合意しておく制度。一国間・二国間・多国間がある。争いの「予防」。</dd>
+      <dt>MAP（相互協議）</dt><dd>租税条約に基づき、二重課税を両国の当局が協議して解消する手続。生じた二重課税の「治療」。</dd>
+      <dt>権限ある当局</dt><dd>租税条約上、相互協議を行う各国の当局（日本は国税庁）。MAPやAPAの交渉主体。</dd>
+      <dt>BEPS</dt><dd>税源浸食と利益移転。多国籍企業の行きすぎた節税への国際的対抗策（2015年最終報告）。DEMPEや文書化はこの成果。</dd>
+      <dt>Amount A（第1の柱）</dt><dd>超大規模企業の利益の一部を、拠点がなくても市場国へ配分する構想。独立企業原則の外で、定式配分の発想を部分的に取り入れる。</dd>
+      <dt>Amount B（第1の柱）</dt><dd>基礎的な販売・流通活動の独立企業間利益を定型化する簡素化アプローチ（2024年）。分析コストと紛争を減らす狙い。</dd>
+      <dt>グローバル・ミニマム課税（第2の柱）</dt><dd>大規模グループに、どの国でも最低15%の税負担を確保する枠組み。移転価格で配分された利益に「底」を設ける。</dd>
+      <dt>恒久的施設（PE）</dt><dd>外国法人が他国に持つ支店など。本店との内部取引にも、独立企業原則と同じ考え方（措法66の4の3）が及ぶ。</dd>
+    </dl>
+  </div>
+
+  <!--====================== 付録B ======================-->
+  <span class="anchor" id="ax-b"></span>
+  <h2 class="chap"><span class="num bar">付 録 B</span>つまずきやすいQ&amp;A——15の疑問</h2>
+  <p class="chap-sub">——本文を読んでなお残る「よくある疑問」に、まとめて答える</p>
+
+  <p class="lead-p">本書を読み終えたあとに、よく出てくる疑問を15個、Q&amp;A形式でまとめました。隣接する制度との違いや、「結局どうすればいいの？」という実務の入口を中心に。気になるものから、どうぞ。</p>
+
+  <div class="card">
+    <h4>Q1. 移転価格税制とCFC税制は、何が違うの？</h4>
+    <p>同じ海外子会社を、違う角度から見る2つの制度です。<strong>移転価格は「取引の値段」</strong>を独立企業間価格に引き直す。<strong>CFC税制は「子会社にたまった利益そのもの」</strong>を親会社に合算する。狙いも違い、移転価格は価格の歪みによる利益移転の防止、CFCは軽課税国での課税繰延べの防止です。同じ子会社に両方が及ぶこともあります。（→第3章）</p>
+
+    <h4>Q2. 移転価格と関税は、同じ輸入価格を見ているのに、なぜ話が逆になるの？</h4>
+    <p>力の向きが逆だからです。輸入価格を<strong>下げる</strong>と、関税は安くなる（関税は価格にかかる）が、国内の利益が増えて<strong>法人税は増える</strong>。上げれば逆。同じ一つの価格を、関税の当局と法人税の当局が反対側から引っぱっている。だから一方だけ最適化すると、もう一方で問題が起きます。（→第15章）</p>
+
+    <h4>Q3. 移転価格と「寄附金」は、どう違うの？</h4>
+    <p>分かれ道は「対価性（見合う反対給付）があるか」。対価のある取引の値段がズレていれば<strong>移転価格</strong>（差額を引き直し、MAPで救済の道あり）。見返りのない一方的な供与なら<strong>寄附金</strong>（全額損金不算入、救済になじみにくい）。同じ金額でも寄附金側に倒れると結末が重い。日本固有の急所です。（→第10章）</p>
+
+    <h4>Q4. 中小企業でも、移転価格の対象になるの？</h4>
+    <p>なります。海外に関連会社があり、そこと取引していれば、規模を問わず「独立企業間価格で取引すべき」という原則は適用されます。文書化の一部の義務には金額のハードルがありますが（マスターファイル等は連結総収入1,000億円以上）、原則そのものに大企業・中小の区別はありません。（→第1章・第11章）</p>
+
+    <h4>Q5. 赤字が続く海外の販売子会社は、なぜ問題視されるの？</h4>
+    <p>独立した会社なら、赤字が続けば撤退や値上げをするはず。それでも取引が続くのは「親会社が利益を吸い上げているのでは」と疑われるからです。ただし、新市場の立ち上げ期や明確な事業戦略なら、独立企業でも一時的な赤字はありえます。要は「その赤字を、事実とFARで説明できるか」。（→第12章）</p>
+
+    <h4>Q6. なぜ「唯一の正しい価格」がないの？ 計算すれば決まりそうなのに。</h4>
+    <p>現実の市場でも、同じような取引の値段には幅があるからです。独立企業間価格も「ぴたり一点」ではなく「合理的な範囲（レンジ）」で捉えるのが普通。だから移転価格は、唯一解を求める数学ではなく、「この範囲が妥当だ」と証拠と論理で示す作業に近いのです。（→第1章・第6章）</p>
+
+    <h4>Q7. 文書化は、必ず作らないといけないの？ 作らないとどうなる？</h4>
+    <p>一定規模ではマスターファイル・CbCRの提出義務があり、ローカルファイルも原則は申告期限までの作成（同時文書化）が必要です。一定金額未満の取引は同時作成が免除されますが、調査で求められれば提出義務は残ります。出せないと、当局が類似法人の利益率などで課税する<strong>推定課税</strong>に踏み切れる——これが最大のリスクです。（→第11・12章）</p>
+
+    <h4>Q8. APA（事前確認）は、中小企業でも使えるの？ 使うべき？</h4>
+    <p>制度上は規模を問わず使えますが、申請には相応のコストと時間がかかります。だからAPAは「保険」のようなもので、<strong>不確実性が大きく金額も大きい取引</strong>（無形資産・金融・複雑な利益分割など）に絞って使うのが定石。ありふれた小さな取引には、かけすぎです。（→第13章）</p>
+
+    <h4>Q9. 二重課税は、MAP（相互協議）で必ず解決するの？</h4>
+    <p>必ずではありません。MAPは両国の当局の「協議」であり、合意を保証する制度ではない（近年は実効性向上の取り組みが進んでいますが）。だからこそ、事前のAPAで「二国間で先に合意しておく」ことの価値が高いのです。また、寄附金課税はそもそもMAPになじみにくい点に注意。（→第10・13章）</p>
+
+    <h4>Q10. 無形資産が「最難関」なのは、なぜ？</h4>
+    <p>3つの理由から。①世界に一つで比較対象がない、②価値が将来の期待で決まり不確実、③契約一枚で軽課税国へ移せる。だから「名義」ではなく「実際に開発・育成・保護・活用した会社（DEMPE）」に利益を帰属させる、という考え方が要になります。（→第7章）</p>
+
+    <h4>Q11. 海外子会社への出向者の給与や出向料も、移転価格の問題になるの？</h4>
+    <p>なりえます。出向は「人を通じた役務の提供」とも見え、給与の負担割合や出向料が適正かが問われます。場合によっては、出向の実態しだいで便益テスト（第8章）や寄附金（第10章）の論点にもつながる。「誰のための、どんな役務か」を整理しておくことが大切です。</p>
+
+    <h4>Q12. 移転価格課税を受けると、具体的に何が起きる？ 罰則はあるの？</h4>
+    <p>更正（課税処分）により、増えた所得に対する追徴税額と、延滞税・過少申告加算税などがかかります。ただし移転価格は基本的に「見解の相違」なので、仮装隠蔽を伴う重加算税にはふつうなじみません。とはいえ金額が巨額になりやすく、相手国が調整しなければ二重課税も残る——そこが重いのです。（→第12章）</p>
+
+    <h4>Q13. グローバル・ミニマム課税ができたら、移転価格はもう要らないのでは？</h4>
+    <p>いいえ、別物で、両方必要です。移転価格は「利益をどの国に配分するか」を決め、グローバル・ミニマム課税は「配分された利益に最低15%は課税する」という底を設ける。順番でいえば、まず移転価格で配分し、その上に最低税率がかぶさる。配分の問題が消えるわけではありません。（→第15章）</p>
+
+    <h4>Q14. サーバーも人もない国で売れたデジタルサービスは、どう課税するの？</h4>
+    <p>これが、独立企業原則の泣きどころです。従来の考え方は「機能のある場所」に利益を配るので、拠点のない市場国には配れない。そこで、拠点がなくても市場国に課税権を配る<strong>Amount A</strong>という新しい仕組みの国際合意が模索されています。独立企業原則が、デジタル経済の前で形を変えようとしている最前線です。（→第15章）</p>
+
+    <h4>Q15. 結局、移転価格対応は、何から始めればいい？</h4>
+    <p>まず<strong>「国外関連者との取引の棚卸し」</strong>から。誰と・何を・いくらで取引しているかを一覧にする。次に、主要な取引について「解く5つの問い」（→第14章）を当ててみる。説明に詰まる取引が、リスクの所在です。そこから、FARの整理と文書化に進む。完璧を一度に目指すより、大きい取引から順に固めるのが現実的です。（→付録C）</p>
+  </div>
+
+  <!--====================== 付録C ======================-->
+  <span class="anchor" id="ax-c"></span>
+  <h2 class="chap"><span class="num bar">付 録 C</span>実務の勘どころ——12のポイント</h2>
+  <p class="chap-sub">——海外子会社に関わる人が、現場で本当に気をつけること</p>
+
+  <p class="lead-p">最後に、知識を「現場の感覚」に落とし込みます。実際に海外関連会社との取引に関わる人が、移転価格でつまずかないために押さえるべき勘どころを、12個に絞りました。専門家に相談するときも、この12個を知っているかどうかで、話の通じ方がまるで違います。</p>
+
+  <div class="card">
+    <h4>1. まず「国外関連取引の棚卸し」から始める</h4>
+    <p>すべての出発点。誰（どの国外関連者）と、何を（モノ・サービス・無形・カネ）、いくらで取引しているかを、一覧にする。間接保有（掛け算）で思わぬ会社が国外関連者に含まれることもあるので、資本関係も上流・下流とたどる。「対象取引を把握していなかった」が、いちばん危ない初歩のつまずきです。（→第3章）</p>
+
+    <h4>2. FARは「契約書」ではなく「実際の行動」で書く</h4>
+    <p>移転価格の勝敗の9割はFAR分析で決まります。そして当局が見るのは、契約書の文言ではなく、各社が<strong>実際に</strong>何をして、何を負ったか（取引の正確な描写）。「契約上は単純な製造委託」でも、実態として独自開発をしていれば、話は変わる。まず事実を、ありのままに書き出すことです。（→第4章）</p>
+
+    <h4>3. 契約と実態のズレを、放置しない</h4>
+    <p>契約書には「リスクはA社が負う」とあるのに、実際はB社が管理している——こうしたズレは、調査で真っ先に突かれます。契約を実態に合わせるか、実態を契約に合わせるか。どちらにせよ、<strong>紙と現実を一致させておく</strong>。ズレたまま放置するのが、いちばんの弱みになります。（→第4章）</p>
+
+    <h4>4. 文書化は「取引前の設計」、後付けは見抜かれる</h4>
+    <p>ローカルファイルは、課税されそうになってから慌ててこしらえる「作文」ではありません。取引を組む段階で「これは独立企業間価格だ」と言える<strong>設計</strong>をし、それをそのまま文書にする。後付けの理屈は、一貫性の欠如としてすぐ見抜かれます。文書化は税務部門だけでなく、事業部門も巻き込む営みです。（→第11章）</p>
+
+    <h4>5. レンジは「数」より「質」——機能の近い比較対象を</h4>
+    <p>比較会社をたくさん集めても、機能（FAR）が違えば意味がありません。「同業だから」ではなく「FARが似ているか」で選ぶ。数合わせのために機能の違う会社を入れると、レンジは広がっても説得力は落ちます。複数年（通常3年程度）でならして、一時的なゆがみを平準化するのも実務の知恵です。（→第6章）</p>
+
+    <h4>6. 無形資産は「名義」ではなく「貢献（DEMPE）」で見る</h4>
+    <p>ブランドや特許の名義を軽課税国の会社に置いただけでは、利益はそこに帰属しません。実際に開発・改良・維持・保護・活用（DEMPE）を担った会社へ。とくに、海外販売子会社が多額の広告費でブランドを育てている場合、その子会社にブランド価値の一部が帰属しうる点に注意。（→第7章）</p>
+
+    <h4>7. 本社費は「便益」と「配賦の根拠」を説明できる形に</h4>
+    <p>本社の管理料は、調査の常連論点。便益のない株主活動（連結決算・IR等）は請求できず、重複サービスもダメ。請求できるものは、コスト＋適正なマークアップで、合理的な配賦キーで配る。可能な限り直接チャージにし、「どの費用が、どの子会社の、どんな便益に対応するか」を整理しておくこと。（→第8章）</p>
+
+    <h4>8. お金の取引（金利・保証料）も対象——無利息・ゼロ保証料は危険</h4>
+    <p>親子ローンの無利息や、不自然に低い金利、ゼロの保証料は、利益供与とみなされかねません。金利は「ベースレート＋信用力に応じたスプレッド」。子会社の信用力は、単独の信用力に「暗黙の支援」を織り込んで評価する。金融取引も立派な移転価格の対象だと心得ましょう。（→第9章）</p>
+
+    <h4>9. 「寄附金」に倒されない——送金には、見合う中身と記録を</h4>
+    <p>日本固有の急所。国外関連者への送金が「見返りのない一方的な供与（寄附金）」と認定されると、全額損金不算入で、MAPの救済もなじみにくい。お金の流れには必ず<strong>見合う中身（役務・貸付・出資など）と、その記録</strong>を用意する。「子会社が苦しいから、なんとなく送る」が最も危険です。（→第10章）</p>
+
+    <h4>10. 二重課税はMAP、大型・不確実な取引はAPAで予防</h4>
+    <p>課税されてしまった二重課税は、相手国とのMAP（相互協議）で解く道があります。ただし合意は保証されない。だから、金額が大きく不確実性の高い取引（無形・金融・利益分割）は、APA（事前確認）で先に当局と合意して「保険」をかけておくのが賢い。予防が、最良の対処です。（→第13章）</p>
+
+    <h4>11. CFC税制・関税・グローバル・ミニマム課税と「合わせて」見る</h4>
+    <p>移転価格だけを最適化すると、隣の制度で問題が起きます。輸入価格を下げれば法人税は増え関税は減る（逆向き）。海外子会社の利益はCFC税制でも見られる。大規模グループはグローバル・ミニマム課税（最低15%）の対象にもなる。一つの取引を、複数の税の目で立体的に見る視点を。（→第3・15章）</p>
+
+    <h4>12. 「数字は改正で動く」——必ず最新の条文・資料を確認する</h4>
+    <p>本書の文書化の閾値（1,000億円・50億円・3億円）、グローバル・ミニマム課税の15%といった数字は、2025年12月時点のものです。閾値も税率も国際情勢で動きます。実際の判断では、必ず<strong>その時点の最新の条文・国税庁資料</strong>と専門家の確認を。原理を理解したうえで、数字は最新を当てる——この二段構えが効きます。（→付録D）</p>
+  </div>
+
+  <!--====================== 付録D ======================-->
+  <span class="anchor" id="ax-d"></span>
+  <h2 class="chap"><span class="num bar">付 録 D</span>一次資料の読みどころ</h2>
+  <p class="chap-sub">——もっと深く知りたい人のための、確かな道しるべ</p>
+
+  <p class="lead-p">移転価格は、解説書よりも一次資料（OECD・国税庁・条文）に当たるのがいちばん確実です。とはいえ、どれも分厚い。そこで、主要な資料を「何のための資料で、どこを読むとよいか」という読みどころとともに紹介します。制度は更新されるので、参照時は必ず最新版を確認してください。</p>
+
+  <div class="card">
+    <h4>OECD（国際標準）</h4>
+    <dl class="mini">
+      <dt>OECD移転価格ガイドライン（2022年版）</dt><dd>移転価格の世界標準。独立企業原則・算定方法・比較可能性・無形資産・グループ内サービス・金融取引まで網羅。本書の各章の“原典”。まずは無形資産（第6章）と金融取引（第10章）の章が読みごたえあり。</dd>
+      <dt>BEPS 行動8-10 最終報告（2015）</dt><dd>「価値創造との整合」。無形資産・リスク・資本・利益分割の考え方。DEMPEやリスクの実質判定の出どころ。</dd>
+      <dt>BEPS 行動13 最終報告（2015）</dt><dd>文書化とCbCR。マスターファイル・ローカルファイル・CbCRという三点セットの思想を確認できる。</dd>
+      <dt>BEPS 行動14（2015）</dt><dd>相互協議（MAP）の実効性向上。二重課税の解決をめぐる国際的な最低基準。</dd>
+      <dt>Pillar One – Amount B（2024）</dt><dd>基礎的な販売・流通活動の簡素化アプローチ。なぜ簡素化が必要とされるのか（実務コストと紛争）が読みどころ。</dd>
+      <dt>Transfer Pricing Country Profile: Japan</dt><dd>日本の制度を国際的な型に当てはめた整理。各論点について日本がどう対応しているかが一覧でき、全体像の把握に便利。</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h4>日本の条文・通達（国税庁）</h4>
+    <dl class="mini">
+      <dt>租税特別措置法 66条の4</dt><dd>日本の移転価格税制の本体。第1項＝独立企業間価格での取引とみなす、第2項＝算定方法、第3項＝国外関連者寄附金の全額損金不算入。まずこの3項を押さえる。</dd>
+      <dt>同 66条の4の3</dt><dd>外国法人のPE（恒久的施設）と本店の内部取引への適用。独立企業原則がPEにも及ぶことを定める。</dd>
+      <dt>同施行令39条の12／施行規則22条の10</dt><dd>国外関連者の範囲（50%基準・実質支配）や、ローカルファイルに記載すべき事項の細目。実務の具体は、ここに下りてくる。</dd>
+      <dt>移転価格事務運営要領（事務運営指針）</dt><dd>当局が調査・執行でどう考えるかを示した、実務上きわめて重要な指針。比較対象の選定やレンジの扱いなど、現場の運用が読み取れる。</dd>
+      <dt>移転価格税制に係る文書化制度のFAQ（国税庁）</dt><dd>マスターファイル・ローカルファイル・CbCRの閾値・期限・様式を、具体的に確認できる。数字を当たるならまずここ。</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h4>条約・周辺領域</h4>
+    <dl class="mini">
+      <dt>OECDモデル租税条約 第9条・第25条</dt><dd>第9条が関連企業条項（独立企業原則の条約上の根拠と対応的調整）、第25条が相互協議（MAP）。二重課税の救済が「条約に支えられている」ことが分かる。</dd>
+      <dt>WCO 関税評価と移転価格のガイド（世界税関機構）</dt><dd>同じ取引価格を、関税と法人税が逆方向から見る緊張関係を扱う。第15章の「三角関係」をさらに知りたい人へ。</dd>
+    </dl>
+    <p style="margin-top:18px; font-size:.9rem; color:var(--muted);">※ 各資料の正式名称・発行年は変わりうるため、参照時は発行主体（OECD・国税庁等）の最新の公表物で確認してください。本ガイドの数値も2025年12月時点のものです。</p>
+  </div>
+
+  <div class="box good" style="margin-top:36px;">
+    <p class="box-t">📚 ここまで来たあなたへ</p>
+    <p>用語集（A）、Q&amp;A（B）、実務の勘どころ（C）、そして一次資料への道しるべ（D）。これで、本書はあなたの「移転価格の道具箱」になりました。本編で<strong>原理</strong>をつかみ、付録で<strong>引く・確かめる</strong>。難しいと言われるこの分野を、あなたはもう、自分の足で歩いていけます。<br>
+    迷ったら、いつでも序章の一文に戻ってください——<em>「その値段、赤の他人どうしならいくら？」</em>。すべては、ここから始まるのですから。</p>
+  </div>
+
+</div>
+
+<footer class="doc-foot">
+  <p>移転価格税制を、やさしく・本質から理解する完全ガイド<br>
+  条文・制度の記述は租税特別措置法66条の4ほか、およびOECD移転価格ガイドライン（2022年版）に基づき、2025年12月時点の現行法・公表資料により確認。本文中の金額・税率は理解のための設例であり、実際の判断では最新の条文・国税庁資料および専門家の確認によること。</p>
+</footer>
+
+</body>
+</html>
