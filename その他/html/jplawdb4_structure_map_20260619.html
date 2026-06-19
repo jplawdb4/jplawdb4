@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>jplawdb4 構造アトラス — 自己文書版（20260619）</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Yu Gothic', sans-serif;
+    background: #f5f5f5; padding: 20px; line-height: 1.6; color: #2d3748;
+  }
+  .page {
+    background: white; width: 297mm; min-height: 210mm;
+    margin: 0 auto 30px; padding: 15mm;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15); page-break-after: always;
+    position: relative;
+  }
+  h1 { font-size: 22px; color: #1a365d; border-bottom: 3px solid #2b6cb0; padding-bottom: 10px; margin-bottom: 18px; }
+  h2 { font-size: 16px; color: #2c5282; margin: 18px 0 10px 0; padding-left: 10px; border-left: 4px solid #4299e1; }
+  .subtitle { font-size: 12px; color: #718096; margin-top: -10px; margin-bottom: 14px; }
+  .fig-container { display: flex; justify-content: center; margin: 16px 0; }
+  svg { max-width: 100%; height: auto; }
+  .meta-box { background: #faf5ff; border: 1px solid #9f7aea; border-radius: 8px; padding: 14px; margin: 14px 0; }
+  .meta-box h3 { color: #553c9a; font-size: 14px; margin-bottom: 8px; }
+  .meta-box p, .meta-box li { font-size: 12px; color: #4a5568; }
+  .warning-box { background: #fff5f5; border: 2px solid #e53e3e; border-radius: 8px; padding: 14px; margin: 14px 0; }
+  .warning-box h3 { color: #c53030; font-size: 14px; margin-bottom: 8px; }
+  .warning-box p, .warning-box li { font-size: 12px; color: #4a5568; }
+  .insight-box { background: #f0fff4; border: 1px solid #38a169; border-radius: 8px; padding: 14px; margin: 14px 0; }
+  .insight-box h3 { color: #276749; font-size: 14px; margin-bottom: 8px; }
+  .insight-box p, .insight-box li { font-size: 12px; color: #4a5568; }
+  .link-section { background: #f7fafc; border: 1px solid #a0aec0; border-radius: 8px; padding: 12px; margin: 10px 0; font-size: 11px; }
+  .link-section h4 { color: #2d3748; font-size: 12px; margin-bottom: 8px; }
+  ul { margin-left: 20px; }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 11px; }
+  th, td { border: 1px solid #cbd5e0; padding: 7px 9px; text-align: left; vertical-align: top; }
+  th { background: #edf2f7; color: #2d3748; font-weight: bold; }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; margin: 12px 0; font-size: 11px; }
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .legend-color { width: 20px; height: 14px; border-radius: 3px; }
+  a { color: #2b6cb0; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code { font-family: 'SFMono-Regular', Consolas, 'Courier New', monospace; background: #edf2f7; padding: 1px 5px; border-radius: 3px; font-size: 0.92em; color: #1a365d; }
+  /* リポジトリツリー */
+  .tree { font-family: 'SFMono-Regular', Consolas, 'Courier New', monospace; font-size: 12px;
+    background: #1a202c; color: #e2e8f0; border-radius: 8px; padding: 16px 18px; line-height: 1.55; overflow-x: auto; white-space: pre; }
+  .tree .d { color: #63b3ed; font-weight: bold; }
+  .tree .c { color: #f6ad55; }
+  .tree .n { color: #a0aec0; }
+  .tree .g { color: #68d391; }
+  /* コードボックス（ヘッダー形式比較） */
+  .hdr-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 12px 0; }
+  .codebox { background: #1a202c; color: #e2e8f0; border-radius: 6px; padding: 10px 12px;
+    font-family: 'SFMono-Regular', Consolas, monospace; font-size: 10px; line-height: 1.5; white-space: pre-wrap; }
+  .codebox b { color: #f6ad55; }
+  .codebox .lbl { display: block; color: #63b3ed; font-weight: bold; margin-bottom: 6px; font-size: 11px; }
+  /* 統計ストリップ */
+  .stats { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0; }
+  .stat { flex: 1; min-width: 120px; background: linear-gradient(135deg,#ebf8ff,#bee3f8); border: 1px solid #2b6cb0;
+    border-radius: 8px; padding: 10px 12px; text-align: center; }
+  .stat .num { font-size: 20px; font-weight: bold; color: #1a365d; }
+  .stat .lab { font-size: 10px; color: #4a5568; }
+  .cover-lead { font-size: 13px; color: #4a5568; margin: 6px 0 4px; }
+  .footer-note { font-size: 10px; color: #a0aec0; text-align: right; margin-top: 14px; border-top: 1px solid #e2e8f0; padding-top: 6px; }
+  .pageno { position: absolute; bottom: 8mm; right: 15mm; font-size: 10px; color: #a0aec0; }
+  @media print {
+    body { background: white; padding: 0; }
+    .page { box-shadow: none; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== 共有 SVG defs（gradient / marker をドキュメント全体で再利用） ========== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gradBlue" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ebf8ff"/><stop offset="100%" stop-color="#bee3f8"/></linearGradient>
+    <linearGradient id="gradOrange" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#feebc8"/><stop offset="100%" stop-color="#fbd38d"/></linearGradient>
+    <linearGradient id="gradRed" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fed7d7"/><stop offset="100%" stop-color="#feb2b2"/></linearGradient>
+    <linearGradient id="gradGreen" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#c6f6d5"/><stop offset="100%" stop-color="#9ae6b4"/></linearGradient>
+    <linearGradient id="gradPurple" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#e9d8fd"/><stop offset="100%" stop-color="#d6bcfa"/></linearGradient>
+    <linearGradient id="gradYellow" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fffff0"/><stop offset="100%" stop-color="#fef3c7"/></linearGradient>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2b6cb0"/></marker>
+    <marker id="arrowOrange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#dd6b20"/></marker>
+    <marker id="arrowRed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#e53e3e"/></marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#38a169"/></marker>
+    <marker id="arrowPurple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#805ad5"/></marker>
+    <marker id="arrowGray" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#4a5568"/></marker>
+  </defs>
+</svg>
+
+<!-- ===================== PAGE 1: 全体像 ===================== -->
+<div class="page">
+  <h1>図1：jplawdb4 全体構造 — 3サブシステム＋パイプライン</h1>
+  <p class="subtitle">日本税法AIデータベース｜一見ひとつのDBだが、実体は「テキストコーパス／条文ブラウザ／DR成果HTML」の3系統＋ビルドパイプラインが同居した GitHub Pages 静的サイト</p>
+
+  <div class="stats">
+    <div class="stat"><div class="num">626<span style="font-size:13px">MB</span></div><div class="lab">総容量</div></div>
+    <div class="stat"><div class="num">22,056</div><div class="lab">総ファイル（追跡20,300）</div></div>
+    <div class="stat"><div class="num">99<span style="font-size:13px">%</span></div><div class="lab">.txt（19,882本）</div></div>
+    <div class="stat"><div class="num">9</div><div class="lab">コーパスドメイン</div></div>
+    <div class="stat"><div class="num">87<span style="font-size:13px">カ国</span></div><div class="lab">租税条約</div></div>
+  </div>
+
+  <div class="fig-container">
+  <svg width="980" height="600" viewBox="0 0 980 600" role="img" aria-label="全体構造図">
+    <!-- 入口層 -->
+    <rect x="30" y="12" width="920" height="46" rx="8" fill="url(#gradYellow)" stroke="#d69e2e" stroke-width="2"/>
+    <text x="490" y="32" text-anchor="middle" font-size="13" font-weight="bold" fill="#744210">AIエージェント入口層</text>
+    <text x="490" y="50" text-anchor="middle" font-size="11" fill="#744210">llms.txt ／ llms2.txt ／ README.md ／ 各ドメイン quickstart.txt（命名規則・コスト表・直接アクセス指示）</text>
+    <line x1="490" y1="58" x2="490" y2="84" stroke="#4a5568" stroke-width="2" marker-end="url(#arrowGray)"/>
+
+    <!-- A: テキストコーパス -->
+    <rect x="30" y="90" width="290" height="352" rx="12" fill="url(#gradGreen)" stroke="#38a169" stroke-width="3"/>
+    <text x="175" y="118" text-anchor="middle" font-size="15" font-weight="bold" fill="#276749">[A] テキストコーパスDB</text>
+    <text x="175" y="138" text-anchor="middle" font-size="11" fill="#276749">正本 text/ ＋ 発見索引 shards/（同型反復）</text>
+    <line x1="55" y1="148" x2="295" y2="148" stroke="#38a169" stroke-width="1"/>
+    <text x="60" y="170" font-size="11" fill="#22543d">law　　　　6,421</text>
+    <text x="190" y="170" font-size="11" fill="#22543d">guide　　372</text>
+    <text x="60" y="190" font-size="11" fill="#22543d">tsutatsu　4,402</text>
+    <text x="190" y="190" font-size="11" fill="#22543d">paper　　213</text>
+    <text x="60" y="210" font-size="11" fill="#22543d">accounting 3,800</text>
+    <text x="190" y="210" font-size="11" fill="#22543d">treaty　 179</text>
+    <text x="60" y="230" font-size="11" fill="#22543d">qa　　　　3,093</text>
+    <text x="190" y="230" font-size="11" fill="#22543d">beppyo　 45</text>
+    <text x="60" y="250" font-size="11" fill="#22543d">hanketsu　1,249</text>
+    <line x1="55" y1="266" x2="295" y2="266" stroke="#38a169" stroke-width="1"/>
+    <text x="175" y="288" text-anchor="middle" font-size="11" fill="#276749">9ドメイン・約19,800本の .txt</text>
+    <text x="175" y="312" text-anchor="middle" font-size="11" fill="#276749">1ファイル ≤ 9,999トークン保証</text>
+    <text x="175" y="336" text-anchor="middle" font-size="11" fill="#276749">UTF-8・404なし（全ファイル存在）</text>
+    <rect x="55" y="356" width="240" height="68" rx="6" fill="#fff" stroke="#38a169" stroke-width="1"/>
+    <text x="175" y="378" text-anchor="middle" font-size="11" font-weight="bold" fill="#276749">アクセス2経路</text>
+    <text x="175" y="397" text-anchor="middle" font-size="10" fill="#4a5568">ID判明 → 直接1読（0.3-10K tok）</text>
+    <text x="175" y="414" text-anchor="middle" font-size="10" fill="#4a5568">不明 → shard検索3回（8-15K tok）</text>
+
+    <!-- B: laws ブラウザ -->
+    <rect x="345" y="90" width="290" height="352" rx="12" fill="url(#gradBlue)" stroke="#2b6cb0" stroke-width="3"/>
+    <text x="490" y="118" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a365d">[B] laws/ 条文ブラウザ</text>
+    <text x="490" y="138" text-anchor="middle" font-size="11" fill="#2c5282">人間向け SPA（GitHub Pages 配信）</text>
+    <line x1="370" y1="148" x2="610" y2="148" stroke="#2b6cb0" stroke-width="1"/>
+    <text x="490" y="170" text-anchor="middle" font-size="11" font-weight="bold" fill="#2c5282">対話型 4アプリ</text>
+    <text x="490" y="188" text-anchor="middle" font-size="10" fill="#4a5568">app（CFC）・app_tp（移転価格）</text>
+    <text x="490" y="204" text-anchor="middle" font-size="10" fill="#4a5568">app_ftc（外税控除）・app_houjin（法人税）</text>
+    <text x="490" y="226" text-anchor="middle" font-size="11" font-weight="bold" fill="#2c5282">静的 4法令ブラウザ</text>
+    <text x="490" y="244" text-anchor="middle" font-size="10" fill="#4a5568">法人税247条・所得税296条</text>
+    <text x="490" y="260" text-anchor="middle" font-size="10" fill="#4a5568">措置法496条・国税通則法194条</text>
+    <line x1="370" y1="274" x2="610" y2="274" stroke="#2b6cb0" stroke-width="1"/>
+    <rect x="365" y="286" width="250" height="138" rx="6" fill="#fff" stroke="#2b6cb0" stroke-width="1"/>
+    <text x="490" y="307" text-anchor="middle" font-size="11" font-weight="bold" fill="#1a365d">データモデル＆機能</text>
+    <text x="490" y="327" text-anchor="middle" font-size="10" fill="#4a5568">e-Gov法令XML → 法/令/規/通 4層</text>
+    <text x="490" y="343" text-anchor="middle" font-size="10" fill="#4a5568">ノードJSON（ln66_4.2.1.1 形式）</text>
+    <text x="490" y="363" text-anchor="middle" font-size="10" fill="#4a5568">・参照ホバー展開／委任ホバー</text>
+    <text x="490" y="379" text-anchor="middle" font-size="10" fill="#4a5568">・縦串インライン展開／全文検索</text>
+    <text x="490" y="395" text-anchor="middle" font-size="10" fill="#4a5568">・観察ノート（localStorage）</text>
+    <text x="490" y="415" text-anchor="middle" font-size="10" fill="#718096">1URLフラット版 ＋ classic.html</text>
+
+    <!-- C: その他 DR -->
+    <rect x="660" y="90" width="290" height="352" rx="12" fill="url(#gradPurple)" stroke="#9f7aea" stroke-width="3"/>
+    <text x="805" y="118" text-anchor="middle" font-size="15" font-weight="bold" fill="#553c9a">[C] その他 DR成果HTML</text>
+    <text x="805" y="138" text-anchor="middle" font-size="11" fill="#553c9a">研究成果物の置き場（最大85M）</text>
+    <line x1="685" y1="148" x2="925" y2="148" stroke="#9f7aea" stroke-width="1"/>
+    <text x="805" y="172" text-anchor="middle" font-size="11" fill="#44337a">git追跡 74ファイル</text>
+    <text x="805" y="194" text-anchor="middle" font-size="11" fill="#44337a">index.json 目録 16件（公開6件）</text>
+    <line x1="685" y1="206" x2="925" y2="206" stroke="#9f7aea" stroke-width="1"/>
+    <text x="690" y="230" font-size="10" fill="#4a5568">・条文構造マップ（CFC/留保金…）</text>
+    <text x="690" y="248" font-size="10" fill="#4a5568">・10万字教材ガイド＋SVG図解</text>
+    <text x="690" y="266" font-size="10" fill="#4a5568">・加算税/延滞税 計算機（単体HTML）</text>
+    <text x="690" y="284" font-size="10" fill="#4a5568">・daily_report 日次レポート</text>
+    <text x="690" y="302" font-size="10" fill="#4a5568">・cross-border 構造図解パック</text>
+    <rect x="685" y="318" width="240" height="106" rx="6" fill="#fff5f5" stroke="#e53e3e" stroke-width="1.5"/>
+    <text x="805" y="338" text-anchor="middle" font-size="10" font-weight="bold" fill="#c53030">⚠ README記載と実体の乖離</text>
+    <text x="805" y="357" text-anchor="middle" font-size="10" fill="#4a5568">README「DR成果は公開リポジトリ</text>
+    <text x="805" y="372" text-anchor="middle" font-size="10" fill="#4a5568">外で private 管理」</text>
+    <text x="805" y="392" text-anchor="middle" font-size="10" fill="#4a5568">→ 実体は その他/ が74本コミット済</text>
+    <text x="805" y="410" text-anchor="middle" font-size="10" font-weight="bold" fill="#c53030">＝記載が陳腐化</text>
+
+    <!-- パイプライン帯 -->
+    <line x1="175" y1="490" x2="175" y2="444" stroke="#dd6b20" stroke-width="2.5" marker-end="url(#arrowOrange)"/>
+    <line x1="490" y1="490" x2="490" y2="444" stroke="#dd6b20" stroke-width="2.5" marker-end="url(#arrowOrange)"/>
+    <rect x="30" y="490" width="920" height="48" rx="8" fill="url(#gradOrange)" stroke="#dd6b20" stroke-width="2"/>
+    <text x="490" y="510" text-anchor="middle" font-size="13" font-weight="bold" fill="#c05621">ビルド・保守パイプライン（Python 20本）</text>
+    <text x="490" y="528" text-anchor="middle" font-size="10" fill="#7b341e">build_*.py → insert_tables → split_oversized → verify_integrity（≤9,999tok ゲート）→ lean_shards → _shard_routing.json → update_quickstarts</text>
+
+    <!-- 基盤帯 -->
+    <rect x="30" y="548" width="920" height="44" rx="8" fill="#1a365d"/>
+    <text x="490" y="567" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">基盤：Git リポジトリ github.com/jplawdb4/jplawdb4 ／ GitHub Pages 静的配信（.nojekyll）</text>
+    <text x="490" y="584" text-anchor="middle" font-size="10" fill="#cbd5e0">base = https://jplawdb4.github.io/jplawdb4/　｜　main = 全DB正本 ／ gh-pages = 公開サブセット</text>
+  </svg>
+  </div>
+
+  <div class="meta-box">
+    <h3>【構造の核心】</h3>
+    <p>設計の第一制約は <b>LLMのコンテキストウィンドウ</b>（llms.txt 冒頭で明言）。「ID判明 → 1回の読み込みで確実に取れる」を最優先に、全ファイルを ≤9,999トークンに分割し、UTF-8・404なしを保証する。<b>テキストコーパス（A）が本体</b>であり、条文ブラウザ（B）と DR成果HTML（C）は同居する別系統。3者は e-Gov法令XML という素材を共有しつつ、生成系統も配信形態も異なる。</p>
+  </div>
+  <div class="pageno">jplawdb4 構造アトラス — 1 / 9</div>
+</div>
+
+<!-- ===================== PAGE 2: リポジトリ地図 ===================== -->
+<div class="page">
+  <h1>図2：リポジトリ地図（ディレクトリツリー）</h1>
+  <p class="subtitle">トップレベル16項目。<code>{domain}/text/</code>（正本）＋<code>{domain}/shards/</code>（索引）の対構造が9ドメインで反復する</p>
+
+  <div class="tree"><span class="d">jplawdb4/</span>  <span class="n">626MB / 22,056 files / 追跡20,300 / git: jplawdb4/jplawdb4</span>
+├─ <span class="g">[A] テキストコーパス</span>  <span class="n">各ドメイン = text/(正本) + shards/(TSV索引)</span>
+│  ├─ <span class="d">law/</span>        text/  <span class="n">6,421本   条文27法令（法法/所法/措法/消法/相法/通則/会社…）  直接のみ</span>
+│  ├─ <span class="d">tsutatsu/</span>   text/  <span class="n">4,402本   通達（法基通/所基通/消基通/措通…）              直接のみ</span>
+│  ├─ <span class="d">accounting/</span> text/+shards/  <span class="n">3,800本  会計基準(ASBJ/FSA議事録/JICPA)        shard</span>
+│  ├─ <span class="d">qa/</span>         text/+shards/  <span class="n">3,093本  NTA Q&amp;A(質疑応答/タックスアンサー/文書回答) 直接+shard</span>
+│  ├─ <span class="d">hanketsu/</span>   text/+shards/  <span class="n">1,249本  判決990+裁決255                       shard</span>
+│  ├─ <span class="d">guide/</span>      text/+shards/  <span class="n">372本    NTA手引き（年度別）                     直接</span>
+│  ├─ <span class="d">paper/</span>      text/+shards/  <span class="n">213本    OECD-TPG / BEPS / NTA文献              shard</span>
+│  ├─ <span class="d">treaty/</span>     text/+shards/  <span class="n">179本    租税条約 87カ国                         shard</span>
+│  └─ <span class="d">beppyo/</span>     text/ +check/flow/lookup/rel  <span class="n">45本  法人税別表              直接</span>
+├─ <span class="g">[B] laws/</span>  <span class="n">条文ブラウザ（GitHub Pages SPA）</span>
+│  ├─ <span class="d">app/ app_tp/ app_ftc/ app_houjin/</span>  <span class="n">対話型 = index.html + classic.html + data2/*.json(4層)</span>
+│  ├─ <span class="d">hojinzei/ shotokuzei/ sozei_tokuso/ kokuzei_tsusoku/</span>  <span class="n">静的 = 章別HTML</span>
+│  └─ index.html  laws.json  <span class="n">ランディング＋静的法令目録</span>
+├─ <span class="g">[C] その他/</span>  <span class="n">85M・最大ドメイン</span>
+│  ├─ <span class="d">html/</span>  <span class="n">*.html DR成果（構造マップ/教材/計算機/daily_report…） 74本追跡</span>
+│  └─ index.json  index.html  <span class="n">手編集キュレーション目録（16件）</span>
+├─ <span class="c">build_beppyo_laws.py  build_jisshi_tokurei.py  build_taiyounensuu.py</span>  <span class="n">条文ビルダ</span>
+├─ <span class="c">insert_tables.py  split_oversized.py  trim_and_resplit.py  unify_fields.py</span>  <span class="n">text/保守</span>
+├─ <span class="c">lean_shards.py  migrate.py  update_quickstarts.py  verify_integrity.py</span>  <span class="n">索引/検証</span>
+├─ _shard_routing.json  <span class="n">41KB ── shard横断ルータ（domain→shard→doc_code/topics）</span>
+├─ llms.txt  llms2.txt  README.md  <span class="n">AI入口ドキュメント</span>
+├─ .insert_tables_cache/  <span class="n">e-Gov API応答キャッシュ 15 JSON + 5 XML（コミット済＝オフライン再現可）</span>
+└─ .nojekyll  .gitignore  .gitattributes(*.pdf binary)</div>
+
+  <div class="link-section">
+    <h4>このアトラスからの参照（相対パス・実在確認済）</h4>
+    <p>• AI入口： <a href="https://github.com/jplawdb4/jplawdb4/blob/main/llms.txt">../../llms.txt</a>　• 概要： <a href="https://github.com/jplawdb4/jplawdb4/blob/main/README.md">../../README.md</a>　• 条文ブラウザ： <a href="../../laws/index.html">../../laws/index.html</a>　• 目録： <a href="../../その他/index.json">../../その他/index.json</a></p>
+  </div>
+  <div class="pageno">jplawdb4 構造アトラス — 2 / 9</div>
+</div>
+
+<!-- ===================== PAGE 3: コーパス① 9ドメイン ===================== -->
+<div class="page">
+  <h1>図3：[A] テキストコーパス① — 9ドメインと規模</h1>
+  <p class="subtitle">ファイル数（text/直下の .txt 実測）と、アクセス方式（直接アクセス／shard検索）</p>
+
+  <div class="fig-container">
+  <svg width="980" height="370" viewBox="0 0 980 370" role="img" aria-label="ドメイン別ファイル数 棒グラフ">
+    <!-- 軸 -->
+    <line x1="175" y1="22" x2="175" y2="344" stroke="#cbd5e0" stroke-width="1"/>
+    <!-- law 6421 直接=green -->
+    <text x="8" y="47" font-size="12" fill="#2d3748">law（条文）</text>
+    <rect x="175" y="30" width="720" height="24" rx="3" fill="#9ae6b4" stroke="#38a169"/>
+    <text x="903" y="47" font-size="11" font-weight="bold" fill="#276749">6,421</text>
+    <!-- tsutatsu 4402 green -->
+    <text x="8" y="83" font-size="12" fill="#2d3748">tsutatsu（通達）</text>
+    <rect x="175" y="66" width="493" height="24" rx="3" fill="#9ae6b4" stroke="#38a169"/>
+    <text x="676" y="83" font-size="11" font-weight="bold" fill="#276749">4,402</text>
+    <!-- accounting 3800 shard=orange -->
+    <text x="8" y="119" font-size="12" fill="#2d3748">accounting（会計）</text>
+    <rect x="175" y="102" width="426" height="24" rx="3" fill="#fbd38d" stroke="#dd6b20"/>
+    <text x="609" y="119" font-size="11" font-weight="bold" fill="#c05621">3,800</text>
+    <!-- qa 3093 both=blue -->
+    <text x="8" y="155" font-size="12" fill="#2d3748">qa（Q&amp;A）</text>
+    <rect x="175" y="138" width="347" height="24" rx="3" fill="#bee3f8" stroke="#2b6cb0"/>
+    <text x="530" y="155" font-size="11" font-weight="bold" fill="#1a365d">3,093</text>
+    <!-- hanketsu 1249 orange -->
+    <text x="8" y="191" font-size="12" fill="#2d3748">hanketsu（判決裁決）</text>
+    <rect x="175" y="174" width="140" height="24" rx="3" fill="#fbd38d" stroke="#dd6b20"/>
+    <text x="323" y="191" font-size="11" font-weight="bold" fill="#c05621">1,249</text>
+    <!-- guide 372 green -->
+    <text x="8" y="227" font-size="12" fill="#2d3748">guide（手引き）</text>
+    <rect x="175" y="210" width="42" height="24" rx="3" fill="#9ae6b4" stroke="#38a169"/>
+    <text x="225" y="227" font-size="11" font-weight="bold" fill="#276749">372</text>
+    <!-- paper 213 orange -->
+    <text x="8" y="263" font-size="12" fill="#2d3748">paper（文献）</text>
+    <rect x="175" y="246" width="24" height="24" rx="3" fill="#fbd38d" stroke="#dd6b20"/>
+    <text x="207" y="263" font-size="11" font-weight="bold" fill="#c05621">213</text>
+    <!-- treaty 179 orange -->
+    <text x="8" y="299" font-size="12" fill="#2d3748">treaty（条約）</text>
+    <rect x="175" y="282" width="20" height="24" rx="3" fill="#fbd38d" stroke="#dd6b20"/>
+    <text x="203" y="299" font-size="11" font-weight="bold" fill="#c05621">179</text>
+    <!-- beppyo 45 green -->
+    <text x="8" y="335" font-size="12" fill="#2d3748">beppyo（別表）</text>
+    <rect x="175" y="318" width="6" height="24" rx="2" fill="#9ae6b4" stroke="#38a169"/>
+    <text x="189" y="335" font-size="11" font-weight="bold" fill="#276749">45</text>
+  </svg>
+  </div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-color" style="background:#9ae6b4;border:1px solid #38a169;"></div>直接アクセスのみ</div>
+    <div class="legend-item"><div class="legend-color" style="background:#fbd38d;border:1px solid #dd6b20;"></div>shard検索</div>
+    <div class="legend-item"><div class="legend-color" style="background:#bee3f8;border:1px solid #2b6cb0;"></div>直接＋shard 両対応</div>
+  </div>
+
+  <table>
+    <tr><th>ドメイン</th><th>内容</th><th>text本数</th><th>アクセス</th><th>入口</th></tr>
+    <tr><td>law</td><td>条文27法令（法人税法・所得税法・措置法・消費税法・相続税法・国税通則法・会社法ほか）</td><td>6,421</td><td>直接のみ</td><td>law/quickstart.txt</td></tr>
+    <tr><td>tsutatsu</td><td>通達（法基通・所基通・消基通・相基通・評基通・措通）</td><td>4,402</td><td>直接のみ</td><td>tsutatsu/quickstart.txt</td></tr>
+    <tr><td>accounting</td><td>会計基準（ASBJ基準/適用指針・FSA議事録・JICPA）</td><td>3,800</td><td>shard</td><td>accounting/quickstart.txt</td></tr>
+    <tr><td>qa</td><td>NTA Q&amp;A（質疑応答事例・タックスアンサー・文書回答事例）</td><td>3,093</td><td>直接＋shard</td><td>qa/quickstart.txt</td></tr>
+    <tr><td>hanketsu</td><td>判決990件・裁決255件</td><td>1,249</td><td>shard</td><td>hanketsu/quickstart.txt</td></tr>
+    <tr><td>guide</td><td>NTA手引き（申告書記載要領等・年度別）</td><td>372</td><td>直接</td><td>guide/quickstart.txt</td></tr>
+    <tr><td>paper</td><td>OECD-TPG2022・BEPS行動計画・NTA移転価格事務運営要領</td><td>213</td><td>shard</td><td>paper/quickstart.txt</td></tr>
+    <tr><td>treaty</td><td>租税条約 87カ国（pack分割形式）</td><td>179</td><td>shard</td><td>treaty/quickstart.txt</td></tr>
+    <tr><td>beppyo</td><td>法人税別表（+ check/flow/lookup/rel の相互参照基盤）</td><td>45</td><td>直接</td><td>beppyo/quickstart.txt</td></tr>
+  </table>
+
+  <div class="insight-box">
+    <h3>💡 構造の含意</h3>
+    <p><b>law と tsutatsu には shard検索が存在しない＝直接アクセス一択。</b>条文番号・通達番号がそのままパスに変換できる（命名規則は図5）。判決・QA・文献・条約は ID が分からないため shard検索（3回・8-15K tok）でメタデータを引いてから本文へ到達する。ファイル数最大は law(6,421)・最小は beppyo(45) だが、容量最大は会計の議事録を含む accounting(57M) と その他(85M)。</p>
+  </div>
+  <div class="pageno">jplawdb4 構造アトラス — 3 / 9</div>
+</div>
+
+<!-- ===================== PAGE 4: コーパス② 正準構造 ===================== -->
+<div class="page">
+  <h1>図4：[A] テキストコーパス② — 正本(text/)と索引(shards/)の分離</h1>
+  <p class="subtitle">全ドメインに反復する正準構造。text/=真実の源、shards/=発見用TSV索引、_shard_routing.json=横断ルータ</p>
+
+  <div class="fig-container">
+  <svg width="980" height="430" viewBox="0 0 980 430" role="img" aria-label="text/とshards/の関係図">
+    <!-- 入口 quickstart -->
+    <rect x="380" y="14" width="220" height="44" rx="8" fill="url(#gradYellow)" stroke="#d69e2e" stroke-width="2"/>
+    <text x="490" y="33" text-anchor="middle" font-size="12" font-weight="bold" fill="#744210">quickstart.txt</text>
+    <text x="490" y="50" text-anchor="middle" font-size="10" fill="#744210">各ドメインの入口（routing表注入済）</text>
+
+    <!-- routing -->
+    <line x1="490" y1="58" x2="490" y2="86" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrowBlue)"/>
+    <rect x="350" y="88" width="280" height="58" rx="8" fill="url(#gradBlue)" stroke="#2b6cb0" stroke-width="2.5"/>
+    <text x="490" y="110" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a365d">_shard_routing.json（41KB）</text>
+    <text x="490" y="129" text-anchor="middle" font-size="10" fill="#4a5568">domain → shard → doc_codes / topics を写像</text>
+
+    <!-- shards 群 -->
+    <line x1="430" y1="146" x2="300" y2="186" stroke="#dd6b20" stroke-width="2" marker-end="url(#arrowOrange)"/>
+    <rect x="80" y="188" width="380" height="150" rx="10" fill="url(#gradOrange)" stroke="#dd6b20" stroke-width="2"/>
+    <text x="270" y="210" text-anchor="middle" font-size="13" font-weight="bold" fill="#c05621">{domain}/shards/</text>
+    <text x="270" y="229" text-anchor="middle" font-size="10" fill="#7b341e">発見用 TSV 索引（本文の連結ではない）</text>
+    <rect x="100" y="240" width="340" height="34" rx="5" fill="#fff" stroke="#dd6b20"/>
+    <text x="270" y="262" text-anchor="middle" font-size="10" fill="#4a5568">index.json … shard数・行数・各shardの first/last</text>
+    <rect x="100" y="280" width="340" height="46" rx="5" fill="#fff" stroke="#dd6b20"/>
+    <text x="270" y="299" text-anchor="middle" font-size="10" fill="#4a5568">shard-NN.txt … TSV 1行=1レコード</text>
+    <text x="270" y="316" text-anchor="middle" font-size="9" fill="#718096">例(hanketsu): id / date / court / title / topics / keywords / laws</text>
+
+    <!-- text 群 -->
+    <line x1="550" y1="146" x2="690" y2="186" stroke="#38a169" stroke-width="2" marker-end="url(#arrowGreen)"/>
+    <rect x="520" y="188" width="400" height="150" rx="10" fill="url(#gradGreen)" stroke="#38a169" stroke-width="2"/>
+    <text x="720" y="210" text-anchor="middle" font-size="13" font-weight="bold" fill="#276749">{domain}/text/{doc_code}/{item_id}.txt</text>
+    <text x="720" y="229" text-anchor="middle" font-size="10" fill="#22543d">正本＝真実の源（全文・1ファイル=1条文/1事例）</text>
+    <rect x="540" y="240" width="360" height="86" rx="5" fill="#fff" stroke="#38a169"/>
+    <text x="720" y="260" text-anchor="middle" font-size="10" font-weight="bold" fill="#276749">ヘッダー（メタ）＋本文</text>
+    <text x="720" y="279" text-anchor="middle" font-size="10" fill="#4a5568">≤ 9,999トークン／UTF-8／404なし</text>
+    <text x="720" y="298" text-anchor="middle" font-size="10" fill="#4a5568">大型は分割：末尾に</text>
+    <text x="720" y="314" text-anchor="middle" font-size="9" fill="#718096">--- split 1/N → next: {stem}_2.txt ---</text>
+
+    <!-- shard → text 解決 -->
+    <line x1="460" y1="300" x2="540" y2="300" stroke="#4a5568" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrowGray)"/>
+    <text x="500" y="293" text-anchor="middle" font-size="9" fill="#4a5568">本文へ</text>
+
+    <!-- 2経路ラベル -->
+    <rect x="80" y="356" width="840" height="60" rx="8" fill="#f7fafc" stroke="#a0aec0" stroke-width="1.5"/>
+    <text x="270" y="378" text-anchor="middle" font-size="11" font-weight="bold" fill="#c05621">経路A：ID不明</text>
+    <text x="270" y="397" text-anchor="middle" font-size="10" fill="#4a5568">routing → shards 検索（3回）→ text 本文</text>
+    <text x="270" y="411" text-anchor="middle" font-size="9" fill="#718096">8-15K tok（最終手段）</text>
+    <line x1="490" y1="362" x2="490" y2="410" stroke="#cbd5e0"/>
+    <text x="710" y="378" text-anchor="middle" font-size="11" font-weight="bold" fill="#276749">経路B：ID判明</text>
+    <text x="710" y="397" text-anchor="middle" font-size="10" fill="#4a5568">text へ直接アクセス（1回）</text>
+    <text x="710" y="411" text-anchor="middle" font-size="9" fill="#718096">0.3-10K tok（最適・推奨）</text>
+  </svg>
+  </div>
+
+  <table>
+    <tr><th>操作</th><th>読み込み回数</th><th>トークン</th><th>適用</th></tr>
+    <tr><td>直接アクセス</td><td style="background:#c6f6d5;">1回</td><td>0.3-10K</td><td>条文/通達/別表/QA（ID判明時）</td></tr>
+    <tr><td>shard検索 → 本文</td><td style="background:#feebc8;">3回</td><td>8-15K</td><td>判決/QA/文献/条約（ID不明時）</td></tr>
+    <tr><td>10論点横断（直接）</td><td>10回</td><td>30-50K</td><td>最適</td></tr>
+    <tr><td>10論点横断（shard）</td><td style="background:#fed7d7;">30回</td><td>100-150K</td><td>コンテキスト圧迫（避ける）</td></tr>
+  </table>
+
+  <div class="meta-box">
+    <h3>【設計の核心】役割分離</h3>
+    <p><code>text/</code> は完全な本文（遅いが正確）、<code>shards/</code> は事前分割された TSV メタデータ（速い発見用）、<code>index.json</code> は shard 一覧（範囲検索を可能に）、<code>_shard_routing.json</code> は全ドメイン横断ルータ（topic/doc_code → 対象 shard）。この4段により「ID判明→1読」を担保しつつ、未知の論点には段階的 narrowing を提供する。</p>
+  </div>
+  <div class="pageno">jplawdb4 構造アトラス — 4 / 9</div>
+</div>
+
+<!-- ===================== PAGE 5: コーパス③ 命名規則とヘッダー ===================== -->
+<div class="page">
+  <h1>図5：[A] テキストコーパス③ — 命名規則とヘッダー形式</h1>
+  <p class="subtitle">区切り文字3種が意味を持つ。これがユーザー質問→パスの「一発変換」を可能にする（llms.txt の鉄則）</p>
+
+  <div class="fig-container">
+  <svg width="980" height="250" viewBox="0 0 980 250" role="img" aria-label="命名規則と変換例">
+    <!-- 区切り3種 -->
+    <rect x="20" y="14" width="300" height="96" rx="8" fill="url(#gradBlue)" stroke="#2b6cb0" stroke-width="2"/>
+    <text x="170" y="38" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a365d">「-」（半角ハイフン）</text>
+    <text x="170" y="60" text-anchor="middle" font-size="12" fill="#2c5282">＝「の」（階層）</text>
+    <text x="170" y="84" text-anchor="middle" font-size="11" fill="#4a5568">66の6 → 66-6　／　66の6の2 → 66-6-2</text>
+    <text x="170" y="102" text-anchor="middle" font-size="10" fill="#718096">条番号・通達番号の主区切り</text>
+
+    <rect x="340" y="14" width="300" height="96" rx="8" fill="url(#gradGreen)" stroke="#38a169" stroke-width="2"/>
+    <text x="490" y="38" text-anchor="middle" font-size="14" font-weight="bold" fill="#276749">「_」（アンダースコア）</text>
+    <text x="490" y="60" text-anchor="middle" font-size="12" fill="#276749">＝「・」（並列）／フォルダ区切り</text>
+    <text x="490" y="84" text-anchor="middle" font-size="11" fill="#4a5568">36・37共 → 36_37_common</text>
+    <text x="490" y="102" text-anchor="middle" font-size="10" fill="#718096">フォルダ名：hojinzei_seirei</text>
+
+    <rect x="660" y="14" width="300" height="96" rx="8" fill="url(#gradPurple)" stroke="#9f7aea" stroke-width="2"/>
+    <text x="810" y="38" text-anchor="middle" font-size="14" font-weight="bold" fill="#553c9a">「--」（二重ハイフン）</text>
+    <text x="810" y="60" text-anchor="middle" font-size="12" fill="#553c9a">＝treaty 専用</text>
+    <text x="810" y="84" text-anchor="middle" font-size="11" fill="#4a5568">国名 -- ドキュメントID</text>
+    <text x="810" y="102" text-anchor="middle" font-size="10" fill="#718096">australia--synthesized…</text>
+
+    <!-- 変換例 -->
+    <rect x="60" y="140" width="240" height="50" rx="8" fill="#1a365d"/>
+    <text x="180" y="162" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">「措法66の6の2」</text>
+    <text x="180" y="180" text-anchor="middle" font-size="10" fill="#cbd5e0">ユーザーの言い方</text>
+    <line x1="300" y1="165" x2="370" y2="165" stroke="#4a5568" stroke-width="2" marker-end="url(#arrowGray)"/>
+    <text x="335" y="156" text-anchor="middle" font-size="9" fill="#4a5568">変換</text>
+    <rect x="375" y="135" width="540" height="60" rx="8" fill="url(#gradYellow)" stroke="#d69e2e" stroke-width="2"/>
+    <text x="645" y="160" text-anchor="middle" font-size="13" font-weight="bold" fill="#744210">law/text/sozei_tokubetsu/66-6-2.txt</text>
+    <text x="645" y="181" text-anchor="middle" font-size="10" fill="#7b341e">措置法=sozei_tokubetsu（フォルダ_）／「の」2つ→「-」2つ／漢数字→算用</text>
+
+    <line x1="180" y1="190" x2="180" y2="216" stroke="#4a5568" stroke-width="1" stroke-dasharray="3,3"/>
+    <text x="490" y="228" text-anchor="middle" font-size="11" fill="#c53030" font-weight="bold">よくある誤り： ✗ sozei-tokubetsu　✗ 66_6.txt　✗ sochi_tokubetsu　✗ hojin_zei</text>
+  </svg>
+  </div>
+
+  <h2>ヘッダー形式（3系統）</h2>
+  <div class="hdr-grid">
+    <div class="codebox"><span class="lbl">① YAML frontmatter</span>hanketsu / paper / treaty
+
+<b>---</b>
+id: '10860'
+date: '2008-01-15'
+court: 大阪高等裁判所
+<b>---</b>
+（本文）</div>
+    <div class="codebox"><span class="lbl">② key-value ＋ 空行</span>law / tsutatsu / guide / accounting
+
+doc: 法人税基本通達
+item: 1-1-1 / title: …
+source_url: https://...
+<span style="color:#718096">（空行）</span>
+（本文）</div>
+    <div class="codebox"><span class="lbl">③ key-value ＋ ---</span>qa
+
+title: タイトル
+doc_code: bunshokaito_hojin
+item_id: 010521-01
+source_url: https://...
+<b>---</b>
+（本文）</div>
+  </div>
+
+  <div class="warning-box">
+    <h3>⚠️ 本文中マーカーは分割境界を兼ねる</h3>
+    <p>本文の位置マーカー <code>[pN]</code>（項）／<code>[pN-iM]</code>（号）／<code>[pN-iM-sK]</code>（イロハ）は、<code>split_oversized.py</code> が9,999トークン超ファイルを分割する際の境界としても使われる（図7）。<code>unify_fields.py</code> がヘッダー差異（<code>source_page/url→source_url</code>、<code>tax_types→topics</code>）を吸収し、3系統間の項目名を正規化する。</p>
+  </div>
+  <div class="pageno">jplawdb4 構造アトラス — 5 / 9</div>
+</div>
+
+<!-- ===================== PAGE 6: laws ブラウザ ===================== -->
+<div class="page">
+  <h1>図6：[B] laws/ 条文ブラウザ — 4層ノードモデル</h1>
+  <p class="subtitle">e-Gov法令XMLを「法／令／規／通」4層のノードJSONへ。参照・委任・定義をクライアントだけで解決する純HTML/JS SPA</p>
+
+  <div class="fig-container">
+  <svg width="980" height="400" viewBox="0 0 980 400" role="img" aria-label="laws 4層ノードモデル図">
+    <!-- 4層 -->
+    <rect x="40" y="20" width="560" height="74" rx="8" fill="url(#gradBlue)" stroke="#2b6cb0" stroke-width="2.5"/>
+    <text x="70" y="46" font-size="14" font-weight="bold" fill="#1a365d">法 (hou)　法律</text>
+    <text x="70" y="68" font-size="10" fill="#4a5568">ノード例 ln66_4.2.1.1（条→項→号→イ）</text>
+    <text x="70" y="85" font-size="10" fill="#4a5568">第66条の4第2項第1号イ</text>
+
+    <rect x="40" y="104" width="560" height="62" rx="8" fill="url(#gradGreen)" stroke="#38a169" stroke-width="2"/>
+    <text x="70" y="130" font-size="14" font-weight="bold" fill="#276749">令 (rei)　政令（施行令）</text>
+    <text x="70" y="150" font-size="10" fill="#4a5568">「政令で定める」の委任先</text>
+
+    <rect x="40" y="176" width="560" height="62" rx="8" fill="url(#gradOrange)" stroke="#dd6b20" stroke-width="2"/>
+    <text x="70" y="202" font-size="14" font-weight="bold" fill="#c05621">規 (kis)　省令（施行規則）</text>
+    <text x="70" y="222" font-size="10" fill="#4a5568">「財務省令で定める」の委任先</text>
+
+    <rect x="40" y="248" width="560" height="62" rx="8" fill="url(#gradPurple)" stroke="#9f7aea" stroke-width="2"/>
+    <text x="70" y="274" font-size="14" font-weight="bold" fill="#553c9a">通 (tsu)　通達</text>
+    <text x="70" y="294" font-size="10" fill="#4a5568">行政解釈（基本通達・措通）</text>
+
+    <!-- 関係矢印 -->
+    <path d="M 600 135 Q 660 115 600 57" fill="none" stroke="#38a169" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrowGreen)"/>
+    <text x="678" y="100" text-anchor="middle" font-size="10" fill="#276749">委任(deleg)</text>
+    <text x="678" y="114" text-anchor="middle" font-size="9" fill="#718096">政令で定める</text>
+    <path d="M 600 207 Q 700 150 600 75" fill="none" stroke="#2b6cb0" stroke-width="1.5" stroke-dasharray="4,4" marker-end="url(#arrowBlue)"/>
+    <text x="730" y="150" text-anchor="middle" font-size="10" fill="#2b6cb0">backlinks</text>
+    <text x="730" y="164" text-anchor="middle" font-size="9" fill="#718096">被参照(令→法)</text>
+
+    <!-- 機能パネル -->
+    <rect x="640" y="190" width="300" height="120" rx="8" fill="#fff" stroke="#a0aec0" stroke-width="1.5"/>
+    <text x="790" y="212" text-anchor="middle" font-size="12" font-weight="bold" fill="#2d3748">クライアント機能（JS埋込）</text>
+    <text x="655" y="234" font-size="10" fill="#4a5568">・参照/定義ホバー展開（ピン留め可）</text>
+    <text x="655" y="252" font-size="10" fill="#4a5568">・委任ホバー＝委任先本文を即表示</text>
+    <text x="655" y="270" font-size="10" fill="#4a5568">・縦串インライン展開・括弧畳み</text>
+    <text x="655" y="288" font-size="10" fill="#4a5568">・全文検索・観察ノート(localStorage)</text>
+
+    <!-- 入口 -->
+    <rect x="640" y="20" width="300" height="150" rx="8" fill="url(#gradYellow)" stroke="#d69e2e" stroke-width="1.5"/>
+    <text x="790" y="42" text-anchor="middle" font-size="12" font-weight="bold" fill="#744210">2レイアウト</text>
+    <text x="655" y="64" font-size="10" fill="#7b341e">index.html … 1URLフラット（4層を1頁、</text>
+    <text x="655" y="79" font-size="10" fill="#7b341e">　リンクは頁内スクロール化）</text>
+    <text x="655" y="98" font-size="10" fill="#7b341e">classic.html … 条別ページ＋章TOC</text>
+    <text x="655" y="120" font-size="10" fill="#7b341e">データ：data2/*.json（nodes/order/</text>
+    <text x="655" y="135" font-size="10" fill="#7b341e">　groups/backlinks/terms）</text>
+    <text x="655" y="155" font-size="10" fill="#7b341e">依存ゼロ（CDN/サーバ無し・静的）</text>
+  </svg>
+  </div>
+
+  <table>
+    <tr><th>種別</th><th>ディレクトリ</th><th>対象</th><th>規模</th></tr>
+    <tr><td rowspan="4">対話型<br>（4層JSON）</td><td>laws/app</td><td>CFC（外国子会社合算税制）</td><td>data2 約2.1M</td></tr>
+    <tr><td>laws/app_tp</td><td>移転価格税制（措法66条の4系）</td><td>data2 約0.5M</td></tr>
+    <tr><td>laws/app_ftc</td><td>外国税額控除</td><td>data2 約0.4M</td></tr>
+    <tr><td>laws/app_houjin</td><td>法人税（CFC/TP/FTC関連）</td><td>data2 約0.8M</td></tr>
+    <tr><td rowspan="4">静的<br>（章別HTML）</td><td>laws/hojinzei</td><td>法人税法</td><td>19章 / 247条</td></tr>
+    <tr><td>laws/shotokuzei</td><td>所得税法</td><td>27章 / 296条</td></tr>
+    <tr><td>laws/sozei_tokuso</td><td>租税特別措置法</td><td>9章 / 496条</td></tr>
+    <tr><td>laws/kokuzei_tsusoku</td><td>国税通則法</td><td>13章 / 194条</td></tr>
+  </table>
+
+  <div class="warning-box">
+    <h3>⚠️ 保守上の負債：コード重複</h3>
+    <p>対話型4アプリは ~800行のJS＋~240行のCSSを各 HTML に<b>個別に重複埋め込み</b>（共通基盤なし、slug名のみ差異）。テンプレート抽象化（シェル＋JSON注入）で各アプリを大幅縮小できる余地がある。各アプリのビルダ（build_cfc_v4 / build_tp_v1 / build_ftc / build_houjin）も独立並列。</p>
+  </div>
+  <div class="link-section">
+    <h4>ブラウザ入口</h4>
+    <p>• <a href="../../laws/index.html">../../laws/index.html</a>（ランディング）　• base公開URL： https://jplawdb4.github.io/jplawdb4/laws/</p>
+  </div>
+  <div class="pageno">jplawdb4 構造アトラス — 6 / 9</div>
+</div>
+
+<!-- ===================== PAGE 7: パイプライン ===================== -->
+<div class="page">
+  <h1>図7：ビルド・保守パイプライン（Python 20本）</h1>
+  <p class="subtitle">RAW（e-Gov法令API・NTAサイト）→ text/ → 保守・検証 → shards/ → ルーティング → GitHub Pages 配信</p>
+
+  <div class="fig-container">
+  <svg width="980" height="500" viewBox="0 0 980 500" role="img" aria-label="ビルドパイプライン フロー図">
+    <!-- RAW -->
+    <rect x="300" y="14" width="380" height="50" rx="8" fill="#1a365d"/>
+    <text x="490" y="35" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">RAW ソース</text>
+    <text x="490" y="54" text-anchor="middle" font-size="10" fill="#cbd5e0">e-Gov法令API v2(JSON) / v1(XML)　・　NTAサイト HTML</text>
+    <!-- cache -->
+    <rect x="720" y="14" width="240" height="50" rx="8" fill="url(#gradYellow)" stroke="#d69e2e" stroke-width="1.5"/>
+    <text x="840" y="34" text-anchor="middle" font-size="11" font-weight="bold" fill="#744210">.insert_tables_cache/</text>
+    <text x="840" y="52" text-anchor="middle" font-size="9" fill="#7b341e">API応答 15 JSON+5 XML（コミット済）</text>
+    <line x1="720" y1="39" x2="682" y2="39" stroke="#d69e2e" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrowOrange)"/>
+
+    <line x1="490" y1="64" x2="490" y2="86" stroke="#4a5568" stroke-width="2" marker-end="url(#arrowGray)"/>
+    <!-- build -->
+    <rect x="300" y="88" width="380" height="44" rx="8" fill="url(#gradOrange)" stroke="#dd6b20" stroke-width="2"/>
+    <text x="490" y="108" text-anchor="middle" font-size="12" font-weight="bold" fill="#c05621">build_*.py（条文ビルダ）</text>
+    <text x="490" y="124" text-anchor="middle" font-size="9" fill="#7b341e">build_beppyo_laws / build_jisshi_tokurei / build_taiyounensuu</text>
+
+    <line x1="490" y1="132" x2="490" y2="154" stroke="#4a5568" stroke-width="2" marker-end="url(#arrowGray)"/>
+    <!-- text -->
+    <rect x="320" y="156" width="340" height="46" rx="8" fill="url(#gradGreen)" stroke="#38a169" stroke-width="2.5"/>
+    <text x="490" y="177" text-anchor="middle" font-size="13" font-weight="bold" fill="#276749">text/ 正本（.txt レコード）</text>
+    <text x="490" y="194" text-anchor="middle" font-size="9" fill="#22543d">law/text/{lawdir}/{article}.txt ほか9ドメイン</text>
+
+    <line x1="490" y1="202" x2="490" y2="224" stroke="#4a5568" stroke-width="2" marker-end="url(#arrowGray)"/>
+    <!-- 保守 -->
+    <rect x="180" y="226" width="620" height="48" rx="8" fill="#fff" stroke="#dd6b20" stroke-width="1.5"/>
+    <text x="490" y="246" text-anchor="middle" font-size="11" font-weight="bold" fill="#c05621">text/ 保守パス</text>
+    <text x="490" y="264" text-anchor="middle" font-size="9" fill="#4a5568">insert_tables（表をMD挿入）→ unify_fields（項目名統一）→ trim_and_resplit（不要メタ除去）→ split_oversized（分割）</text>
+
+    <line x1="490" y1="274" x2="490" y2="296" stroke="#4a5568" stroke-width="2" marker-end="url(#arrowGray)"/>
+    <!-- gate -->
+    <rect x="290" y="298" width="400" height="44" rx="22" fill="url(#gradRed)" stroke="#e53e3e" stroke-width="2.5"/>
+    <text x="490" y="318" text-anchor="middle" font-size="12" font-weight="bold" fill="#c53030">verify_integrity.py（品質ゲート）</text>
+    <text x="490" y="335" text-anchor="middle" font-size="9" fill="#7b341e">≤9,999tok・孤児/欠落チャンク無・分割注記整合・二重分割無 → 違反で exit 1</text>
+
+    <line x1="490" y1="342" x2="490" y2="364" stroke="#4a5568" stroke-width="2" marker-end="url(#arrowGray)"/>
+    <!-- shards -->
+    <rect x="320" y="366" width="340" height="40" rx="8" fill="url(#gradOrange)" stroke="#dd6b20" stroke-width="2"/>
+    <text x="490" y="391" text-anchor="middle" font-size="12" font-weight="bold" fill="#c05621">shards/（TSV索引）＋ index.json</text>
+
+    <!-- shards 保守 -->
+    <line x1="320" y1="386" x2="200" y2="386" stroke="#4a5568" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrowGray)"/>
+    <rect x="20" y="364" width="170" height="44" rx="6" fill="#fff" stroke="#dd6b20"/>
+    <text x="105" y="383" text-anchor="middle" font-size="10" font-weight="bold" fill="#c05621">migrate / lean_shards</text>
+    <text x="105" y="399" text-anchor="middle" font-size="9" fill="#4a5568">URL相対化・列削減</text>
+
+    <line x1="490" y1="406" x2="490" y2="428" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrowBlue)"/>
+    <!-- routing + deploy -->
+    <rect x="250" y="430" width="220" height="46" rx="8" fill="url(#gradBlue)" stroke="#2b6cb0" stroke-width="2"/>
+    <text x="360" y="450" text-anchor="middle" font-size="11" font-weight="bold" fill="#1a365d">_shard_routing.json</text>
+    <text x="360" y="467" text-anchor="middle" font-size="9" fill="#4a5568">→ update_quickstarts → quickstart.txt</text>
+    <line x1="470" y1="453" x2="510" y2="453" stroke="#4a5568" stroke-width="2" marker-end="url(#arrowGray)"/>
+    <rect x="512" y="430" width="220" height="46" rx="8" fill="#1a365d"/>
+    <text x="622" y="450" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">GitHub Pages 配信</text>
+    <text x="622" y="467" text-anchor="middle" font-size="9" fill="#cbd5e0">静的ファイル（.nojekyll）</text>
+  </svg>
+  </div>
+
+  <div class="meta-box">
+    <h3>【トークン閾値とゲート】</h3>
+    <p><code>MAX_TOKENS=9999</code>（tiktoken cl100k_base）が全体の駆動制約。<code>split_oversized</code> は target 9,900tok で分割、<code>lean_shards</code> は shard を ≤9,500tok に再パック。閾値の駆動理由は GitHub Pages やファイルサイズではなく <b>LLMのコンテキストウィンドウ</b>。各 build スクリプトは末尾で <code>split_oversized</code>＋<code>verify_integrity</code> を自走する。</p>
+  </div>
+  <div class="warning-box">
+    <h3>⚠️ ビルダが存在しないドメイン</h3>
+    <p>qa / hanketsu / guide / accounting / paper / treaty の text/ には<b>生成スクリプトが無い</b>。<code>migrate.py</code> 内の旧URL（<code>…/html-preview/ai-nta-qa-db/…</code>）から、<b>前身リポジトリ群（ai-nta-qa-db 等）からの移植</b>と判明。条文系（law/別表/実特法/耐用年数）のみ本リポジトリ内ビルダを持つ。</p>
+  </div>
+  <div class="pageno">jplawdb4 構造アトラス — 7 / 9</div>
+</div>
+
+<!-- ===================== PAGE 8: Git / デプロイ ===================== -->
+<div class="page">
+  <h1>図8：Git・デプロイモデル</h1>
+  <p class="subtitle">main＝全DB正本。gh-pages＝テキスト剥ぎの公開サブセット。ghp-*＝UI/デプロイ実験。shard-lean＝トークン最適化</p>
+
+  <div class="fig-container">
+  <svg width="980" height="380" viewBox="0 0 980 380" role="img" aria-label="Git ブランチモデル図">
+    <!-- main -->
+    <rect x="60" y="150" width="240" height="80" rx="10" fill="#1a365d"/>
+    <text x="180" y="180" text-anchor="middle" font-size="15" font-weight="bold" fill="#fff">main</text>
+    <text x="180" y="202" text-anchor="middle" font-size="10" fill="#cbd5e0">全ソースの正本</text>
+    <text x="180" y="218" text-anchor="middle" font-size="10" fill="#cbd5e0">20,300ファイル（text含む）</text>
+
+    <!-- gh-pages -->
+    <line x1="300" y1="175" x2="660" y2="70" stroke="#e53e3e" stroke-width="2" marker-end="url(#arrowRed)"/>
+    <rect x="660" y="40" width="300" height="74" rx="8" fill="url(#gradRed)" stroke="#e53e3e" stroke-width="2"/>
+    <text x="810" y="63" text-anchor="middle" font-size="13" font-weight="bold" fill="#c53030">gh-pages（公開サブセット）</text>
+    <text x="810" y="83" text-anchor="middle" font-size="10" fill="#4a5568">text コーパスを剥ぎ取り（約91万行削除）</text>
+    <text x="810" y="100" text-anchor="middle" font-size="10" fill="#4a5568">＋編集記事HTML（lob/usjp dividend 等）</text>
+
+    <!-- shard-lean -->
+    <line x1="300" y1="190" x2="660" y2="160" stroke="#38a169" stroke-width="2" marker-end="url(#arrowGreen)"/>
+    <rect x="660" y="135" width="300" height="50" rx="8" fill="url(#gradGreen)" stroke="#38a169" stroke-width="2"/>
+    <text x="810" y="157" text-anchor="middle" font-size="12" font-weight="bold" fill="#276749">shard-lean（最適化）</text>
+    <text x="810" y="175" text-anchor="middle" font-size="10" fill="#4a5568">shard 474 → 91・全shard ≤10K tok 化</text>
+
+    <!-- ghp-recolor -->
+    <line x1="300" y1="205" x2="660" y2="225" stroke="#9f7aea" stroke-width="2" marker-end="url(#arrowPurple)"/>
+    <rect x="660" y="205" width="300" height="50" rx="8" fill="url(#gradPurple)" stroke="#9f7aea" stroke-width="2"/>
+    <text x="810" y="227" text-anchor="middle" font-size="12" font-weight="bold" fill="#553c9a">ghp-recolor2 / 3 / -all</text>
+    <text x="810" y="245" text-anchor="middle" font-size="10" fill="#4a5568">配色実験（pastel-chic・WCAG AA）</text>
+
+    <!-- ghp-ftc-houjin -->
+    <line x1="300" y1="218" x2="660" y2="295" stroke="#dd6b20" stroke-width="2" marker-end="url(#arrowOrange)"/>
+    <rect x="660" y="275" width="300" height="50" rx="8" fill="url(#gradOrange)" stroke="#dd6b20" stroke-width="2"/>
+    <text x="810" y="297" text-anchor="middle" font-size="12" font-weight="bold" fill="#c05621">ghp-ftc-houjin</text>
+    <text x="810" y="315" text-anchor="middle" font-size="10" fill="#4a5568">FTC/法人税ブラウザのデプロイ用</text>
+
+    <!-- Pages -->
+    <line x1="180" y1="230" x2="180" y2="300" stroke="#4a5568" stroke-width="2" marker-end="url(#arrowGray)"/>
+    <rect x="40" y="300" width="280" height="56" rx="8" fill="url(#gradYellow)" stroke="#d69e2e" stroke-width="2"/>
+    <text x="180" y="324" text-anchor="middle" font-size="12" font-weight="bold" fill="#744210">GitHub Pages 配信</text>
+    <text x="180" y="343" text-anchor="middle" font-size="9" fill="#7b341e">.nojekyll ／ base = jplawdb4.github.io/jplawdb4/</text>
+  </svg>
+  </div>
+
+  <table>
+    <tr><th>ブランチ</th><th>役割（確認した範囲）</th></tr>
+    <tr><td>main</td><td>全ソースの正本（テキストコーパス含む20,300ファイル・現HEAD）</td></tr>
+    <tr><td>gh-pages</td><td>公開用サブセット。main から約91万行削除＝text剥ぎ、編集記事HTML（lob_kokubetsu / usjp_dividend_lob 等）を追加</td></tr>
+    <tr><td>ghp-recolor2 / 3 / -all</td><td>配色実験（UIのみ。recolor-all が最大）</td></tr>
+    <tr><td>ghp-ftc-houjin</td><td>FTC・法人税ブラウザのデプロイ用（未マージ）</td></tr>
+    <tr><td>shard-lean</td><td>トークン最適化（shard 474→91、全shard ≤10K化）</td></tr>
+  </table>
+
+  <div class="warning-box">
+    <h3>⚠️ 要確認：Pages 配信ブランチ</h3>
+    <p>GitHub Pages が main / gh-pages のどちらを配信しているかはローカルからは断定不可（リポジトリ設定依存）。READMEの直接URL例（text への直アクセス）が機能するなら main 配信の可能性が高いが、<b>GitHub の Pages 設定で要確認</b>。</p>
+  </div>
+  <div class="pageno">jplawdb4 構造アトラス — 8 / 9</div>
+</div>
+
+<!-- ===================== PAGE 9: その他 + 設計思想 + 要確認 ===================== -->
+<div class="page">
+  <h1>図9：[C] その他DR成果 ＋ 設計思想 ＋ 要確認事項</h1>
+  <p class="subtitle">研究成果物の置き場の構造、DB全体を貫く3原則、そして調査で判明した不整合・陳腐化</p>
+
+  <h2>[C] その他/ の構造</h2>
+  <table>
+    <tr><th>項目</th><th>内容</th></tr>
+    <tr><td>html/*.html</td><td>DR成果（条文構造マップ・10万字教材ガイド・加算税/延滞税計算機・daily_report・cross-border構造図解パック）。git追跡74ファイル</td></tr>
+    <tr><td>index.json</td><td><b>手編集</b>のキュレーション目録。16件（うち published=true は6件）。各項目に id/title/date/tags/laws/summary/file/published</td></tr>
+    <tr><td>命名</td><td>記述的な日本語タイトル＋ISO日付（例 cfc_structure_map_20260610.html）。一部はサブフォルダ＋index.html形式</td></tr>
+  </table>
+
+  <div class="meta-box">
+    <h3>【設計思想 — 3原則（llms.txt）】</h3>
+    <p><b>① コンテキスト第一：</b>1ファイル0.3-10Kトークン、ID指定で404にならない（全ファイル存在保証）。<br>
+    <b>② 確実性保証：</b>UTF-8・文字化けなし、NTA原文と同一内容。「Web検索に逃げるな（文字化け・ノイズ混入リスク）」。<br>
+    <b>③ コスト設計：</b>直接1回(0.3-10K) ≫ shard検索3回(8-15K)。横断は直接アクセスを積む。</p>
+  </div>
+
+  <div class="warning-box">
+    <h3>⚠️ 要確認・不整合（推測と事実を分離）</h3>
+    <p>🔴 <b>README陳腐化：</b>README「DR成果HTMLは公開リポジトリ外でprivate管理」と記すが、実体は その他/ が74ファイルコミット済（.gitignore も除外せず）＝記載が実態と乖離。<br>
+    🟡 <b>accounting shard 数：</b>index.json は311 shard と記すが物理ファイルは約13＝メタデータ陳腐化の疑い（未確定）。<br>
+    🟡 <b>Pages配信ブランチ：</b>main / gh-pages いずれか未確定（GitHub設定要確認）。<br>
+    🟡 <b>update_quickstarts.py：</b>未呼出のデッドコード（MARKER_TEXT_SEP未定義）＝無害。<br>
+    🟡 <b>laws/4アプリ：</b>~800行JSの個別重複＝保守負債（共通化余地）。</p>
+  </div>
+
+  <div class="insight-box">
+    <h3>💡 この地図自体について（自己文書）</h3>
+    <p>本アトラスは <code>その他/html/jplawdb4_structure_map_20260619.html</code> として保存され、<code>その他/index.json</code> に追記される。<b>DBが自分自身の構造地図を内部に持つ</b>という再帰的構成であり、原則①（全ファイル存在保証）に従い、このHTML自体も追跡対象の成果物として目録に載る。</p>
+  </div>
+
+  <div class="link-section">
+    <h4>一次情報源（このアトラスの根拠）</h4>
+    <p>• <a href="https://github.com/jplawdb4/jplawdb4/blob/main/llms.txt">../../llms.txt</a>（命名規則・コスト表の原典）　• <a href="https://github.com/jplawdb4/jplawdb4/blob/main/README.md">../../README.md</a>（フォルダ構成・ヘッダー形式）　• <a href="../../laws/index.html">../../laws/index.html</a>（条文ブラウザ）</p>
+  </div>
+  <div class="footer-note">jplawdb4 構造アトラス ／ 作成 2026-06-19 ／ 数値は実測・laws.json・git 実査に基づく。要確認項目は明示。</div>
+  <div class="pageno">jplawdb4 構造アトラス — 9 / 9</div>
+</div>
+
+</body>
+</html>
