@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workflowツール完全図解 — 決定論的マルチエージェント・オーケストレーション</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"Noto Sans JP","Hiragino Sans",sans-serif;background:#f1f5f9;padding:24px;color:#1e293b;}
+.card{max-width:960px;margin:0 auto 22px;background:#fff;border-radius:14px;box-shadow:0 2px 16px rgba(0,0,0,.08);padding:24px 28px;}
+.card svg{width:100%;display:block;}
+h1{font-size:1.5rem;font-weight:800;letter-spacing:.02em;}
+h2{font-size:1.12rem;font-weight:800;border-left:5px solid #1e40af;padding-left:10px;margin-bottom:10px;}
+h3{font-size:.95rem;font-weight:700;color:#1e40af;margin:14px 0 6px;}
+p.lead{font-size:.85rem;color:#475569;line-height:1.8;margin-bottom:14px;}
+p.note{font-size:.78rem;color:#64748b;line-height:1.7;margin-top:10px;}
+.meta-line{font-size:.75rem;color:#64748b;margin-top:6px;}
+.tag{display:inline-block;background:#1e40af;color:#fff;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-right:6px;}
+.tag.a{background:#7c3aed;}.tag.d{background:#dc2626;}.tag.s{background:#16a34a;}.tag.n{background:#64748b;}
+table.ref{width:100%;border-collapse:collapse;font-size:.78rem;margin:10px 0;}
+table.ref th{background:#0f172a;color:#fff;padding:6px 9px;text-align:left;font-weight:700;white-space:nowrap;}
+table.ref td{border:1px solid #e2e8f0;padding:6px 9px;line-height:1.6;vertical-align:top;}
+table.ref tr:nth-child(even) td{background:#f8fafc;}
+table.ref code{background:#eef2ff;color:#3730a3;padding:0 4px;border-radius:3px;font-size:.92em;}
+.tbl-wrap{overflow-x:auto;}
+pre{background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px 16px;font-size:.74rem;line-height:1.65;overflow-x:auto;margin:10px 0;}
+pre .cm{color:#7dd3fc;} pre .kw{color:#f472b6;} pre .st{color:#a5f3a5;} pre .fn{color:#fbbf24;} pre .jp{color:#94a3b8;}
+code{font-family:ui-monospace,"Cascadia Code",Consolas,monospace;}
+.warn-box{background:#fef2f2;border:1.5px solid #fca5a5;border-radius:10px;padding:12px 16px;font-size:.8rem;line-height:1.7;margin:12px 0;}
+.ok-box{background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:12px 16px;font-size:.8rem;line-height:1.7;margin:12px 0;}
+.info-box{background:#f5f3ff;border:1.5px solid #c4b5fd;border-radius:10px;padding:12px 16px;font-size:.8rem;line-height:1.7;margin:12px 0;}
+.toc{font-size:.8rem;line-height:2;column-count:2;column-gap:30px;}
+.toc a{color:#1e40af;text-decoration:none;}
+.toc a:hover{text-decoration:underline;}
+ul.dense{font-size:.8rem;line-height:1.8;padding-left:20px;}
+/* ===== foreignObject utility classes (SVG内共用) ===== */
+.fo{display:flex;flex-direction:column;justify-content:center;align-items:center;height:100%;text-align:center;gap:2px;padding:3px 9px;font-family:'Noto Sans JP',sans-serif;line-height:1.35;}
+.fol{align-items:flex-start;text-align:left;}
+.fr{display:flex;flex-direction:row;justify-content:center;align-items:center;height:100%;gap:5px;font-family:'Noto Sans JP',sans-serif;flex-wrap:wrap;padding:2px 8px;}
+.f6{font-size:6.5px;}.f7{font-size:7px;}.f75{font-size:7.5px;}.f8{font-size:8px;}.f9{font-size:9px;}.f10{font-size:10px;}.f11{font-size:11px;}.f12{font-size:12px;}
+.b{font-weight:700;}.b8{font-weight:800;}.sb{font-weight:600;}
+.cw{color:#fff;}.csub{color:#475569;}.cmut{color:#64748b;}.cp{color:#1e40af;}.ca{color:#7c3aed;}.cd{color:#dc2626;}.cs{color:#16a34a;}.cwm{color:#92400e;}.cink{color:#1e293b;}.cb2{color:#93c5fd;}.cb3{color:#bfdbfe;}.csl{color:#94a3b8;}.cy{color:#fde68a;}
+.mono{font-family:ui-monospace,'Cascadia Code',Consolas,monospace;}
+.bd{display:inline-block;padding:1.5px 6px;border-radius:3px;font-weight:700;}
+@media(max-width:600px){
+  body{padding:8px;}
+  .card{padding:12px 12px;border-radius:10px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .card svg{min-width:720px;}
+  .toc{column-count:1;}
+}
+@media print{
+  body{background:#fff;padding:0;}
+  .card{box-shadow:none;break-inside:avoid;max-width:100%;}
+  pre{white-space:pre-wrap;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ ヘッダー ============ -->
+<div class="card">
+  <h1>Workflowツール 完全図解マニュアル</h1>
+  <div class="meta-line">決定論的マルチエージェント・オーケストレーション — Claude Code組み込みツール</div>
+  <div class="meta-line">底本: システムプロンプト内ツール定義（英語原文）の全文転写 <code>~/.claude/WORKFLOW_TOOL_MANUAL.md</code> ／ 転写日 2026-07-05</div>
+  <p class="lead" style="margin-top:12px;">
+    Workflowツールは、<b>制御フローをLLMではなくJavaScriptスクリプトが握る</b>マルチエージェント実行機構である。
+    ループ・分岐・ファンアウトが決定論的に走り、途中停止からのレジューム（キャッシュ再生）を内蔵する。
+    本書はツール定義の全記述 — 起動ゲート、スクリプト仕様、API 8種、並列モデル、品質パターン7種、レジューム機構、全制約値 — を
+    12枚のSVG図解と参照表に写像したものである。図中の数値・挙動はすべて原文の記述に基づき、推測による補完はない。
+  </p>
+  <div class="info-box"><b>検証注記</b>：本書の範囲は「ツール定義に書かれていること」に限る。<code>/workflows</code> 画面のUI詳細、課金、内部実装などは原文に記述がないため扱わない。原文と突き合わせる場合は上記転写ファイルを参照。</div>
+</div>
+
+<!-- ============ 目次 ============ -->
+<div class="card">
+  <h2>目次</h2>
+  <div class="toc">
+    <a href="#s1">§1 全体アーキテクチャ</a><br>
+    <a href="#s2">§2 起動ゲート — 明示オプトイン</a><br>
+    <a href="#s3">§3 スクリプトの解剖</a><br>
+    <a href="#s4">§4 agent() 全オプション</a><br>
+    <a href="#s5">§5 pipeline vs parallel</a><br>
+    <a href="#s6">§6 バリア正当化テスト</a><br>
+    <a href="#s7">§7 schema 構造化出力</a><br>
+    <a href="#s8">§8 budget 共有プール</a><br>
+    <a href="#s9">§9 workflow() 入れ子</a><br>
+    <a href="#s10">§10 品質パターン（検証系）</a><br>
+    <a href="#s11">§11 品質パターン（探索系）</a><br>
+    <a href="#s12">§12 Resume 機構</a><br>
+    <a href="#s13">§13 注釈付きコード例全集</a><br>
+    <a href="#s14">§14 リファレンス表</a>
+  </div>
+</div>
+
+<!-- ============ §1 全体アーキテクチャ ============ -->
+<div class="card" id="s1">
+  <h2>§1 全体アーキテクチャ</h2>
+  <p class="lead">呼び出すと即座にタスクIDが返り、本体はバックグラウンドで走る。メインループは待たずに次の作業へ移れる。完了は <code>&lt;task-notification&gt;</code> で届き、進行中は <code>/workflows</code> でライブ監視できる。</p>
+  <svg viewBox="0 0 880 644" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Workflowツールの全体アーキテクチャ：呼出し、エンジン内部、完了通知</title>
+  <defs><filter id="sh_wf01"><feDropShadow dx="0.5" dy="0.5" stdDeviation="1.5" flood-opacity="0.07"/></filter></defs>
+  <rect width="880" height="42" rx="10" fill="#0f172a"/>
+  <foreignObject x="0" y="0" width="880" height="42"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f12 b8 cw">全体アーキテクチャ — 呼出し → 背景実行 → 通知</span><span class="f75 csl">tool result は即返却・本体は background task として走る</span></div></foreignObject>
+
+  <!-- A 呼出し -->
+  <rect x="10" y="52" width="860" height="152" rx="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+  <text x="25" y="70" font-size="10" font-weight="700" fill="#1e40af" font-family="'Noto Sans JP',sans-serif">A. 呼出しと即時返却（ノンブロッキング）</text>
+  <rect x="25" y="80" width="330" height="78" rx="8" fill="#1e40af" filter="url(#sh_wf01)"/>
+  <foreignObject x="25" y="80" width="330" height="78"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f12 b8 cw">Claude メインループ</span><span class="f8 cb2 mono">Workflow({script | scriptPath | name, args})</span><span class="f7 cb3">起動後ただちに自由 — 別作業を継続できる</span></div></foreignObject>
+  <rect x="525" y="80" width="330" height="78" rx="8" fill="#7c3aed" filter="url(#sh_wf01)"/>
+  <foreignObject x="525" y="80" width="330" height="78"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f12 b8 cw">Workflowエンジン</span><span class="f8" style="color:#ddd6fe;">決定論的JSインタプリタ（バックグラウンド）</span><span class="f7" style="color:#ddd6fe;">スクリプトはセッションdir配下に自動保存される</span></div></foreignObject>
+  <line x1="355" y1="102" x2="513" y2="102" stroke="#1e40af" stroke-width="2"/>
+  <polygon points="513,97.5 525,102 513,106.5" fill="#1e40af"/>
+  <text x="440" y="96" text-anchor="middle" font-size="7.5" font-weight="600" fill="#1e40af" font-family="'Noto Sans JP',sans-serif">script送信</text>
+  <line x1="525" y1="136" x2="367" y2="136" stroke="#7c3aed" stroke-width="2"/>
+  <polygon points="367,131.5 355,136 367,140.5" fill="#7c3aed"/>
+  <text x="440" y="130" text-anchor="middle" font-size="7.5" font-weight="600" fill="#7c3aed" font-family="'Noto Sans JP',sans-serif">taskID＋保存先scriptPathを即返却</text>
+  <foreignObject x="25" y="168" width="830" height="30"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f7 bd" style="background:#1e40af;color:#fff;">tool resultにrunId（resume用）</span><span class="f7 bd" style="background:#1e40af;color:#fff;">scriptはインライン渡し推奨（先にWrite不要）</span><span class="f7 bd" style="background:#1e40af;color:#fff;">反復時は{scriptPath}で再投入</span></div></foreignObject>
+
+  <!-- B エンジン内部 -->
+  <rect x="10" y="214" width="860" height="232" rx="10" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="1.5"/>
+  <text x="25" y="232" font-size="10" font-weight="700" fill="#7c3aed" font-family="'Noto Sans JP',sans-serif">B. エンジン内部 — スクリプトがエージェント群を統率する</text>
+  <rect x="25" y="240" width="830" height="62" rx="7" fill="#fff" stroke="#7c3aed" stroke-width="1.5" filter="url(#sh_wf01)"/>
+  <foreignObject x="25" y="240" width="830" height="62"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f9 b ca">スクリプト実行環境（plain JS・async文脈・fs/Node API無し）</span><div class="fr" style="height:auto;"><span class="f75 bd mono" style="background:#ede9fe;color:#5b21b6;">agent()</span><span class="f75 bd mono" style="background:#ede9fe;color:#5b21b6;">pipeline()</span><span class="f75 bd mono" style="background:#ede9fe;color:#5b21b6;">parallel()</span><span class="f75 bd mono" style="background:#ede9fe;color:#5b21b6;">phase()</span><span class="f75 bd mono" style="background:#ede9fe;color:#5b21b6;">log()</span><span class="f75 bd mono" style="background:#ede9fe;color:#5b21b6;">args</span><span class="f75 bd mono" style="background:#ede9fe;color:#5b21b6;">budget</span><span class="f75 bd mono" style="background:#ede9fe;color:#5b21b6;">workflow()</span></div></div></foreignObject>
+  <line x1="125" y1="302" x2="125" y2="320" stroke="#7c3aed" stroke-width="2"/><polygon points="120.5,320 125,332 129.5,320" fill="#7c3aed"/>
+  <line x1="335" y1="302" x2="335" y2="320" stroke="#7c3aed" stroke-width="2"/><polygon points="330.5,320 335,332 339.5,320" fill="#7c3aed"/>
+  <line x1="545" y1="302" x2="545" y2="320" stroke="#7c3aed" stroke-width="2"/><polygon points="540.5,320 545,332 549.5,320" fill="#7c3aed"/>
+  <line x1="755" y1="302" x2="755" y2="320" stroke="#7c3aed" stroke-width="2"/><polygon points="750.5,320 755,332 759.5,320" fill="#7c3aed"/>
+  <rect x="25" y="332" width="200" height="66" rx="7" fill="#1e40af" filter="url(#sh_wf01)"/>
+  <foreignObject x="25" y="332" width="200" height="66"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f9 b8 cw">サブエージェント #1</span><span class="f7 cb3">独立コンテキスト</span><span class="f7 cb3">最終テキスト＝返り値</span></div></foreignObject>
+  <rect x="235" y="332" width="200" height="66" rx="7" fill="#1e40af" filter="url(#sh_wf01)"/>
+  <foreignObject x="235" y="332" width="200" height="66"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f9 b8 cw">サブエージェント #2</span><span class="f7 cb3">schema指定で構造化出力</span><span class="f7 cb3">§7参照</span></div></foreignObject>
+  <rect x="445" y="332" width="200" height="66" rx="7" fill="#1e40af" filter="url(#sh_wf01)"/>
+  <foreignObject x="445" y="332" width="200" height="66"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f9 b8 cw">サブエージェント #3</span><span class="f7 cb3">MCPツールへは</span><span class="f7 cb3">ToolSearch経由で到達可</span></div></foreignObject>
+  <rect x="655" y="332" width="200" height="66" rx="7" fill="#1e40af" filter="url(#sh_wf01)"/>
+  <foreignObject x="655" y="332" width="200" height="66"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f9 b8 cw">サブエージェント #N</span><span class="f7 cb3">超過分はキューに入り</span><span class="f7 cb3">枠が空き次第実行</span></div></foreignObject>
+  <rect x="25" y="410" width="270" height="24" rx="5" fill="#0f172a"/>
+  <foreignObject x="25" y="410" width="270" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f75 b cw">同時実行 min(16, CPUコア−2)</span></div></foreignObject>
+  <rect x="305" y="410" width="270" height="24" rx="5" fill="#0f172a"/>
+  <foreignObject x="305" y="410" width="270" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f75 b cw">生涯上限 1000体／workflow</span></div></foreignObject>
+  <rect x="585" y="410" width="270" height="24" rx="5" fill="#0f172a"/>
+  <foreignObject x="585" y="410" width="270" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f75 b cw">1呼出し ≤4096アイテム（超過は明示エラー）</span></div></foreignObject>
+
+  <!-- C 完了 -->
+  <rect x="10" y="456" width="860" height="112" rx="10" fill="#fffbeb" stroke="#fbbf24" stroke-width="1.5"/>
+  <text x="25" y="474" font-size="10" font-weight="700" fill="#92400e" font-family="'Noto Sans JP',sans-serif">C. 完了・監視・記録</text>
+  <rect x="25" y="482" width="270" height="74" rx="7" fill="#fff" stroke="#f59e0b" stroke-width="1.5" filter="url(#sh_wf01)"/>
+  <foreignObject x="25" y="482" width="270" height="74"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cwm mono">&lt;task-notification&gt;</span><span class="f7 csub">完了時にメインループへ通知が届く</span><span class="f7 cmut">背景実行の帰着点</span></div></foreignObject>
+  <rect x="305" y="482" width="270" height="74" rx="7" fill="#fff" stroke="#f59e0b" stroke-width="1.5" filter="url(#sh_wf01)"/>
+  <foreignObject x="305" y="482" width="270" height="74"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cwm mono">/workflows</span><span class="f7 csub">ライブ進捗表示。phase()単位のグループbox・log()のナレータ行</span></div></foreignObject>
+  <rect x="585" y="482" width="270" height="74" rx="7" fill="#fff" stroke="#f59e0b" stroke-width="1.5" filter="url(#sh_wf01)"/>
+  <foreignObject x="585" y="482" width="270" height="74"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cwm mono">journal.jsonl</span><span class="f7 csub">各agentの「実際の返り値」を記録</span><span class="f7 cmut">空結果診断の一次資料（§12）</span></div></foreignObject>
+
+  <rect x="25" y="580" width="830" height="46" rx="7" fill="#fff" stroke="#dc2626" stroke-width="2" filter="url(#sh_wf01)"/>
+  <foreignObject x="25" y="580" width="830" height="46"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f9 b cd">核心：制御フロー（ループ・分岐・ファンアウト）はモデルでなくスクリプトが握る＝決定論</span><span class="f75 csub">「multi-step orchestration where control flow should be deterministic rather than model-driven」のためのツール</span></div></foreignObject>
+  </svg>
+  <p class="note">ワークフローの存在意義は3つ — <b>網羅</b>（分解して並列にカバー）、<b>確信</b>（独立視点と敵対的検証を経てからコミット）、<b>規模</b>（1コンテキストに収まらない移行・監査・横断調査）。スクリプトは「何をファンアウトし、何を検証し、何を統合するか」の構造をコード化する場所である。</p>
+</div>
+
+<!-- ============ §2 起動ゲート ============ -->
+<div class="card" id="s2">
+  <h2>§2 起動ゲート — 明示オプトイン必須</h2>
+  <p class="lead">数十体のエージェントと大量トークンを消費し得るため、<b>規模はユーザーが請求するものであって推定するものではない</b>。以下5条件のいずれかが成立しない限り、Claudeはこのツールを呼んではならない。</p>
+  <svg viewBox="0 0 880 700" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Workflow起動の明示オプトイン5条件と不成立時の代替行動</title>
+  <defs><filter id="sh_wf02"><feDropShadow dx="0.5" dy="0.5" stdDeviation="1.5" flood-opacity="0.07"/></filter></defs>
+  <rect width="880" height="42" rx="10" fill="#0f172a"/>
+  <foreignObject x="0" y="0" width="880" height="42"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f12 b8 cw">起動ゲート — 明示オプトインの5条件</span><span class="f75 csl">「並列にすれば有益」だけでは絶対に不成立</span></div></foreignObject>
+
+  <rect x="10" y="52" width="860" height="206" rx="10" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+  <text x="25" y="70" font-size="10" font-weight="700" fill="#16a34a" font-family="'Noto Sans JP',sans-serif">オプトイン成立条件（いずれか1つで足りる）</text>
+  <rect x="25" y="78" width="270" height="78" rx="7" fill="#fff" stroke="#16a34a" stroke-width="1.5" filter="url(#sh_wf02)"/>
+  <foreignObject x="25" y="78" width="270" height="78"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cs">① キーワード「ultracode」</span><span class="f7 csub">プロンプトに含まれる（system-reminderが確認を出す）</span></div></foreignObject>
+  <rect x="305" y="78" width="270" height="78" rx="7" fill="#fff" stroke="#16a34a" stroke-width="1.5" filter="url(#sh_wf02)"/>
+  <foreignObject x="305" y="78" width="270" height="78"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cs">② セッションでUltracode ON</span><span class="f7 csub">オプトインが常設化する（下段参照）。OFF通知が来たら通常ルールへ復帰</span></div></foreignObject>
+  <rect x="585" y="78" width="270" height="78" rx="7" fill="#fff" stroke="#16a34a" stroke-width="1.5" filter="url(#sh_wf02)"/>
+  <foreignObject x="585" y="78" width="270" height="78"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cs">③ ユーザー自身の言葉での依頼</span><span class="f7 csub">“use a workflow” “fan out agents” “orchestrate with subagents”等。依頼文がユーザーの言葉であることが要件</span></div></foreignObject>
+  <rect x="25" y="166" width="410" height="78" rx="7" fill="#fff" stroke="#16a34a" stroke-width="1.5" filter="url(#sh_wf02)"/>
+  <foreignObject x="25" y="166" width="410" height="78"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cs">④ スキル／スラッシュコマンドの指示</span><span class="f7 csub">ユーザーが起動したスキルの手順書に「Workflowを呼べ」と明記されている場合</span></div></foreignObject>
+  <rect x="445" y="166" width="410" height="78" rx="7" fill="#fff" stroke="#16a34a" stroke-width="1.5" filter="url(#sh_wf02)"/>
+  <foreignObject x="445" y="166" width="410" height="78"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cs">⑤ 名前付き・保存済みワークフローの指名</span><span class="f7 csub">組込み or <span class="mono">.claude/workflows/</span> の特定ワークフローの実行指示</span></div></foreignObject>
+
+  <line x1="440" y1="258" x2="440" y2="270" stroke="#0f172a" stroke-width="2"/>
+  <polygon points="435.5,270 440,282 444.5,270" fill="#0f172a"/>
+  <rect x="240" y="284" width="400" height="32" rx="7" fill="#0f172a" filter="url(#sh_wf02)"/>
+  <foreignObject x="240" y="284" width="400" height="32"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f9 b8 cw">GATE：いずれか成立しているか？</span></div></foreignObject>
+  <polyline points="330,316 330,336 230,336 230,348" stroke="#16a34a" stroke-width="2" fill="none"/>
+  <polygon points="225.5,348 230,360 234.5,348" fill="#16a34a"/>
+  <text x="278" y="332" text-anchor="middle" font-size="7.5" font-weight="700" fill="#16a34a" font-family="'Noto Sans JP',sans-serif">YES</text>
+  <polyline points="550,316 550,336 650,336 650,348" stroke="#dc2626" stroke-width="2" fill="none"/>
+  <polygon points="645.5,348 650,360 654.5,348" fill="#dc2626"/>
+  <text x="602" y="332" text-anchor="middle" font-size="7.5" font-weight="700" fill="#dc2626" font-family="'Noto Sans JP',sans-serif">NO</text>
+
+  <rect x="25" y="360" width="410" height="108" rx="7" fill="#f0fdf4" stroke="#16a34a" stroke-width="2" filter="url(#sh_wf02)"/>
+  <foreignObject x="25" y="360" width="410" height="108"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f9 b8 cs">起動可</span><span class="f75 csub">大規模並列・大量トークン消費をユーザーが承知済み</span><span class="f75 csub"><b>定石＝ハイブリッド</b>：まずインラインで偵察（ファイル列挙・diff把握・チャネル探索）→ 作業リスト確定 → Workflowでpipeline投入</span><span class="f7 cmut">「タスクの前に形を知る」必要はない — オーケストレーション段の前に知ればよい</span></div></foreignObject>
+  <rect x="445" y="360" width="410" height="108" rx="7" fill="#fef2f2" stroke="#dc2626" stroke-width="2" filter="url(#sh_wf02)"/>
+  <foreignObject x="445" y="360" width="410" height="108"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f9 b8 cd">起動禁止 — 代替は2つ</span><span class="f75 csub">① 個別サブエージェントで足りるなら <b>Agentツール</b></span><span class="f75 csub">② ワークフロー化する価値があるなら、構成案と概算コストを提示して<b>ユーザーに可否を尋ねる</b></span><span class="f7 cmut">次回は“use a workflow”と言えば確認を省略できる旨を案内する</span></div></foreignObject>
+
+  <rect x="10" y="482" width="860" height="114" rx="10" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="1.5"/>
+  <text x="25" y="500" font-size="10" font-weight="700" fill="#7c3aed" font-family="'Noto Sans JP',sans-serif">Ultracode ON時はデフォルトが反転する</text>
+  <rect x="25" y="508" width="830" height="80" rx="7" fill="#fff" stroke="#7c3aed" stroke-width="1.5" filter="url(#sh_wf02)"/>
+  <foreignObject x="25" y="508" width="830" height="80"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b ca">実質的タスクはすべて既定でワークフロー化。トークンコストは制約でない</span><span class="f75 csub">多相作業（理解→設計→実装→レビュー）は相ごとに1ワークフローを連続実行し、相間で自分が結果を読んで次を決める（自分がループに残る）</span><span class="f75 csub">単独作業が許されるのは「会話的な応答ターン」と「自明な機械的編集」のみ。発見には敵対的検証を傾斜適用</span></div></foreignObject>
+
+  <rect x="25" y="610" width="830" height="48" rx="7" fill="#fff" stroke="#dc2626" stroke-width="2" filter="url(#sh_wf02)"/>
+  <foreignObject x="25" y="610" width="830" height="48"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f9 b cd">「明らかに並列化が有益なタスク」であっても、5条件不成立なら呼ばない — 規模の請求権はユーザーにある</span></div></foreignObject>
+  </svg>
+</div>
+
+<!-- ============ §3 スクリプトの解剖 ============ -->
+<div class="card" id="s3">
+  <h2>§3 スクリプトの解剖 — meta純リテラル契約と実行環境</h2>
+  <p class="lead">すべてのスクリプトは <code>export const meta = {...}</code> で始まらなければならない。metaは<b>純リテラル</b>（変数・関数呼出し・スプレッド・テンプレート補間の一切を禁止）。本体はトップレベルawaitが使えるasync文脈のplain JavaScriptである。</p>
+  <svg viewBox="0 0 880 744" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Workflowスクリプトの構造：metaブロック、実行環境、禁止API、反復サイクル</title>
+  <defs><filter id="sh_wf03"><feDropShadow dx="0.5" dy="0.5" stdDeviation="1.5" flood-opacity="0.07"/></filter></defs>
+  <rect width="880" height="42" rx="10" fill="#0f172a"/>
+  <foreignObject x="0" y="0" width="880" height="42"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f12 b8 cw">スクリプトの解剖</span><span class="f75 csl">meta＝契約 ／ 本体＝制御フロー ／ script引数 ≤512KB</span></div></foreignObject>
+
+  <rect x="10" y="52" width="860" height="196" rx="10" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="1.5"/>
+  <text x="25" y="70" font-size="10" font-weight="700" fill="#7c3aed" font-family="'Noto Sans JP',sans-serif">① export const meta — 純リテラル契約（変数・関数呼出し・spread・テンプレート補間は不可）</text>
+  <rect x="25" y="78" width="410" height="158" rx="7" fill="#1e1b4b" filter="url(#sh_wf03)"/>
+  <foreignObject x="25" y="78" width="410" height="158"><div xmlns="http://www.w3.org/1999/xhtml" class="fo fol mono" style="gap:3px;padding:8px 14px;"><span class="f8" style="color:#c4b5fd;">export const meta = {</span><span class="f8 cw">&#160;&#160;name: 'find-flaky-tests',&#160;<span class="cy">← 必須</span></span><span class="f8 cw">&#160;&#160;description: '…',&#160;<span class="cy">← 必須・許可ダイアログに表示</span></span><span class="f8 cw">&#160;&#160;whenToUse: '…',&#160;<span class="csl">← 任意・一覧に表示</span></span><span class="f8 cw">&#160;&#160;phases: [&#160;<span class="csl">← 任意</span></span><span class="f8 cw">&#160;&#160;&#160;&#160;{ title:'Scan', detail:'…', model:'…' },</span><span class="f8 cw">&#160;&#160;],</span><span class="f8" style="color:#c4b5fd;">}</span></div></foreignObject>
+  <rect x="445" y="78" width="410" height="46" rx="7" fill="#fff" stroke="#7c3aed" stroke-width="1.5" filter="url(#sh_wf03)"/>
+  <foreignObject x="445" y="78" width="410" height="46"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f75 b ca">phasesのtitleはphase()呼出しと「完全一致」でマッチ</span><span class="f7 csub">一致しないphase()はエラーでなく、独自の進捗グループを作るだけ</span></div></foreignObject>
+  <rect x="445" y="134" width="410" height="46" rx="7" fill="#fff" stroke="#7c3aed" stroke-width="1.5" filter="url(#sh_wf03)"/>
+  <foreignObject x="445" y="134" width="410" height="46"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f75 b ca">phaseエントリのmodelは「その相のモデル上書き」の宣言表示</span><span class="f7 csub">実際の上書きはagent()のopts.model側で行う</span></div></foreignObject>
+  <rect x="445" y="190" width="410" height="46" rx="7" fill="#fff" stroke="#7c3aed" stroke-width="1.5" filter="url(#sh_wf03)"/>
+  <foreignObject x="445" y="190" width="410" height="46"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f75 b ca">ツール引数のtitle/descriptionは無視される</span><span class="f7 csub">名称・説明はすべてmetaブロックが正</span></div></foreignObject>
+
+  <rect x="10" y="258" width="860" height="118" rx="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+  <text x="25" y="276" font-size="10" font-weight="700" fill="#1e40af" font-family="'Noto Sans JP',sans-serif">② 本体 — async文脈のplain JavaScript</text>
+  <rect x="25" y="284" width="270" height="80" rx="7" fill="#fff" stroke="#3b82f6" stroke-width="1.5" filter="url(#sh_wf03)"/>
+  <foreignObject x="25" y="284" width="270" height="80"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cp">await直書きOK</span><span class="f7 csub">本体全体がasync文脈で実行される。IIFEラップ不要</span></div></foreignObject>
+  <rect x="305" y="284" width="270" height="80" rx="7" fill="#fff" stroke="#3b82f6" stroke-width="1.5" filter="url(#sh_wf03)"/>
+  <foreignObject x="305" y="284" width="270" height="80"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cp">TypeScript構文は不可</span><span class="f7 csub">型注釈（<span class="mono">: string[]</span>）・interface・genericsはパース失敗する</span></div></foreignObject>
+  <rect x="585" y="284" width="270" height="80" rx="7" fill="#fff" stroke="#3b82f6" stroke-width="1.5" filter="url(#sh_wf03)"/>
+  <foreignObject x="585" y="284" width="270" height="80"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cp">標準ビルトインは可</span><span class="f7 csub">JSON / Math / Array 等。ただしファイルシステム・Node.js APIへのアクセスは無し</span></div></foreignObject>
+
+  <rect x="10" y="386" width="860" height="140" rx="10" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.5"/>
+  <text x="25" y="404" font-size="10" font-weight="700" fill="#dc2626" font-family="'Noto Sans JP',sans-serif">③ 禁止API — 呼ぶとthrow（resume＝決定論的再生を壊すため）</text>
+  <rect x="25" y="412" width="270" height="102" rx="7" fill="#fff" stroke="#dc2626" stroke-width="1.5" filter="url(#sh_wf03)"/>
+  <foreignObject x="25" y="412" width="270" height="102"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cd mono">Date.now() ✕</span><span class="f7 csub">対策：タイムスタンプは<b>argsで注入</b>する</span><span class="f7 cmut">結果への時刻刻印はワークフロー返却後にメインループで行う</span></div></foreignObject>
+  <rect x="305" y="412" width="270" height="102" rx="7" fill="#fff" stroke="#dc2626" stroke-width="1.5" filter="url(#sh_wf03)"/>
+  <foreignObject x="305" y="412" width="270" height="102"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cd mono">Math.random() ✕</span><span class="f7 csub">対策：乱数の代わりに<b>プロンプト／ラベルをindexで変化</b>させて多様性を出す</span></div></foreignObject>
+  <rect x="585" y="412" width="270" height="102" rx="7" fill="#fff" stroke="#dc2626" stroke-width="1.5" filter="url(#sh_wf03)"/>
+  <foreignObject x="585" y="412" width="270" height="102"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cd mono">new Date()（引数なし）✕</span><span class="f7 csub">引数なし現在時刻の取得が禁止対象</span><span class="f7 cmut">3つとも「再実行時に同じ値を返せない」＝キャッシュ再生の破壊者</span></div></foreignObject>
+
+  <rect x="10" y="536" width="860" height="122" rx="10" fill="#fffbeb" stroke="#fbbf24" stroke-width="1.5"/>
+  <text x="25" y="554" font-size="10" font-weight="700" fill="#92400e" font-family="'Noto Sans JP',sans-serif">④ 反復サイクル — インライン投入→自動保存→編集→scriptPath再投入</text>
+  <rect x="25" y="562" width="185" height="66" rx="7" fill="#92400e" filter="url(#sh_wf03)"/>
+  <foreignObject x="25" y="562" width="185" height="66"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">1. scriptインライン投入</span><span class="f7 cy">先にWriteしない（原文の明示指示）</span></div></foreignObject>
+  <line x1="210" y1="595" x2="228" y2="595" stroke="#92400e" stroke-width="2"/><polygon points="228,590.5 240,595 228,599.5" fill="#92400e"/>
+  <rect x="240" y="562" width="185" height="66" rx="7" fill="#92400e" filter="url(#sh_wf03)"/>
+  <foreignObject x="240" y="562" width="185" height="66"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">2. セッションdirへ自動保存</span><span class="f7 cy">tool resultにパスが返る</span></div></foreignObject>
+  <line x1="425" y1="595" x2="443" y2="595" stroke="#92400e" stroke-width="2"/><polygon points="443,590.5 455,595 443,599.5" fill="#92400e"/>
+  <rect x="455" y="562" width="185" height="66" rx="7" fill="#92400e" filter="url(#sh_wf03)"/>
+  <foreignObject x="455" y="562" width="185" height="66"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">3. Write/Editで修正</span><span class="f7 cy">保存済みファイルを直接編集</span></div></foreignObject>
+  <line x1="640" y1="595" x2="658" y2="595" stroke="#92400e" stroke-width="2"/><polygon points="658,590.5 670,595 658,599.5" fill="#92400e"/>
+  <rect x="670" y="562" width="185" height="66" rx="7" fill="#92400e" filter="url(#sh_wf03)"/>
+  <foreignObject x="670" y="562" width="185" height="66"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">4. {scriptPath}で再起動</span><span class="f7 cy">resumeFromRunId併用でキャッシュ再生（§12）</span></div></foreignObject>
+  <foreignObject x="25" y="634" width="830" height="18"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f7 cwm sb">全文再送は不要 — 編集済みファイルをパスで指すだけでよい</span></div></foreignObject>
+
+  <rect x="25" y="672" width="830" height="48" rx="7" fill="#fff" stroke="#dc2626" stroke-width="2" filter="url(#sh_wf03)"/>
+  <foreignObject x="25" y="672" width="830" height="48"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f9 b cd">入力の優先順位： scriptPath ＞ script ＞ name</span><span class="f75 csub">nameは組込み or .claude/workflows/ の定義済みワークフローを解決する</span></div></foreignObject>
+  </svg>
+</div>
+
+<!-- ============ §4 agent() ============ -->
+<div class="card" id="s4">
+  <h2>§4 agent(prompt, opts) — 全オプション図解</h2>
+  <p class="lead">1体のサブエージェントを起動する最小単位。戻り値は3通り、オプションは7種。<b>model / effort は省略が最良の既定</b>（セッション設定を継承する）である点が繰り返し強調されている。</p>
+  <svg viewBox="0 0 880 764" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>agent関数の戻り値3通りと7つのオプションの図解</title>
+  <defs><filter id="sh_wf04"><feDropShadow dx="0.5" dy="0.5" stdDeviation="1.5" flood-opacity="0.07"/></filter></defs>
+  <rect width="880" height="42" rx="10" fill="#0f172a"/>
+  <foreignObject x="0" y="0" width="880" height="42"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f12 b8 cw mono">agent(prompt: string, opts?): Promise&lt;any&gt;</span><span class="f75 csl">サブエージェント1体の起動 — すべてのパターンの原子</span></div></foreignObject>
+
+  <rect x="240" y="58" width="400" height="50" rx="8" fill="#1e40af" filter="url(#sh_wf04)"/>
+  <foreignObject x="240" y="58" width="400" height="50"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f11 b8 cw">agent(prompt, opts)</span><span class="f7 cb3">promptがそのままサブエージェントのタスクになる</span></div></foreignObject>
+  <line x1="440" y1="108" x2="440" y2="120" stroke="#1e40af" stroke-width="2"/>
+  <polygon points="435.5,120 440,132 444.5,120" fill="#1e40af"/>
+  <rect x="25" y="134" width="830" height="20" rx="5" fill="#64748b"/>
+  <foreignObject x="25" y="134" width="830" height="20"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f8 b cw">戻り値は3通り</span></div></foreignObject>
+  <rect x="25" y="160" width="270" height="78" rx="7" fill="#fff" stroke="#1e40af" stroke-width="1.5" filter="url(#sh_wf04)"/>
+  <foreignObject x="25" y="160" width="270" height="78"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cp">schema無し → string</span><span class="f7 csub">サブエージェントの最終テキストがそのまま返る（生データ前提・§4下段）</span></div></foreignObject>
+  <rect x="305" y="160" width="270" height="78" rx="7" fill="#fff" stroke="#16a34a" stroke-width="1.5" filter="url(#sh_wf04)"/>
+  <foreignObject x="305" y="160" width="270" height="78"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cs">schema有り → 検証済みobject</span><span class="f7 csub">JSON Schema検証を通過したオブジェクト。パース処理は一切不要（§7）</span></div></foreignObject>
+  <rect x="585" y="160" width="270" height="78" rx="7" fill="#fff" stroke="#dc2626" stroke-width="1.5" filter="url(#sh_wf04)"/>
+  <foreignObject x="585" y="160" width="270" height="78"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cd">null → 消えた場合</span><span class="f7 csub">①実行中にユーザーがスキップ ②リトライ後も恒久APIエラーで死亡</span><span class="f7 cd sb">→ 必ず .filter(Boolean)</span></div></foreignObject>
+
+  <rect x="10" y="250" width="860" height="296" rx="10" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="1.5"/>
+  <text x="25" y="268" font-size="10" font-weight="700" fill="#7c3aed" font-family="'Noto Sans JP',sans-serif">opts — 7つのオプション</text>
+  <rect x="25" y="276" width="270" height="84" rx="7" fill="#fff" stroke="#7c3aed" stroke-width="1.5" filter="url(#sh_wf04)"/>
+  <foreignObject x="25" y="276" width="270" height="84"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b ca mono">label</span><span class="f7 csub">進捗ツリーの表示ラベルを上書き。<span class="mono">`review:${d.key}`</span> のように識別子を織り込む</span></div></foreignObject>
+  <rect x="305" y="276" width="270" height="84" rx="7" fill="#fff" stroke="#7c3aed" stroke-width="1.5" filter="url(#sh_wf04)"/>
+  <foreignObject x="305" y="276" width="270" height="84"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b ca mono">phase</span><span class="f7 csub">進捗グループへの明示割当。pipeline/parallel内ではグローバルphase()状態と競合（レース）するため<b>こちらを使う</b>。同一文字列＝同一グループbox</span></div></foreignObject>
+  <rect x="585" y="276" width="270" height="84" rx="7" fill="#fff" stroke="#7c3aed" stroke-width="1.5" filter="url(#sh_wf04)"/>
+  <foreignObject x="585" y="276" width="270" height="84"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b ca mono">schema</span><span class="f7 csub">JSON Schemaを渡すとStructuredOutputツール呼出しが強制され、検証済みオブジェクトが返る（§7）</span></div></foreignObject>
+  <rect x="25" y="370" width="270" height="84" rx="7" fill="#fff" stroke="#7c3aed" stroke-width="1.5" filter="url(#sh_wf04)"/>
+  <foreignObject x="25" y="370" width="270" height="84"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b ca mono">model</span><span class="f7 csub"><b>既定＝省略</b>でメインループのモデル（セッション解決値）を継承 — ほぼ常にこれが正解。別tierが適すると<b>高い確信</b>がある時のみ指定。迷ったら省略</span></div></foreignObject>
+  <rect x="305" y="370" width="270" height="84" rx="7" fill="#fff" stroke="#7c3aed" stroke-width="1.5" filter="url(#sh_wf04)"/>
+  <foreignObject x="305" y="370" width="270" height="84"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b ca mono">effort</span><span class="f7 csub">'low'|'medium'|'high'|'xhigh'|'max'。省略でセッション値継承。機械的な段は<b>low</b>、最難の検証／審査段だけ高tier</span></div></foreignObject>
+  <rect x="585" y="370" width="270" height="84" rx="7" fill="#fff" stroke="#7c3aed" stroke-width="1.5" filter="url(#sh_wf04)"/>
+  <foreignObject x="585" y="370" width="270" height="84"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b ca mono">isolation: 'worktree'</span><span class="f7 csub">専用git worktreeで実行。<b>高価</b>（〜200-500ms＋ディスク／体）。並列でファイル変更が衝突する時<b>のみ</b>。未変更なら自動削除</span></div></foreignObject>
+  <rect x="25" y="464" width="830" height="66" rx="7" fill="#fff" stroke="#7c3aed" stroke-width="1.5" filter="url(#sh_wf04)"/>
+  <foreignObject x="25" y="464" width="830" height="66"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b ca mono">agentType</span><span class="f7 csub">既定のworkflowサブエージェントの代わりにカスタムagent型（'general-purpose'・'code-reviewer'等）を使用。Agentツールと同一レジストリから解決。schemaと併用可 — カスタムagentのsystem promptにStructuredOutput指示が追記される</span></div></foreignObject>
+
+  <rect x="10" y="556" width="860" height="130" rx="10" fill="#fffbeb" stroke="#fbbf24" stroke-width="1.5"/>
+  <text x="25" y="574" font-size="10" font-weight="700" fill="#92400e" font-family="'Noto Sans JP',sans-serif">サブエージェント側に組み込まれた前提</text>
+  <rect x="25" y="582" width="410" height="94" rx="7" fill="#fff" stroke="#f59e0b" stroke-width="1.5" filter="url(#sh_wf04)"/>
+  <foreignObject x="25" y="582" width="410" height="94"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cwm">「最終テキスト＝返り値」と教示済み</span><span class="f7 csub">人間向けメッセージではないと知らされているため、挨拶や整形なしの<b>生データ</b>で返してくる。呼び出し側はそれを前提に設計する</span></div></foreignObject>
+  <rect x="445" y="582" width="410" height="94" rx="7" fill="#fff" stroke="#f59e0b" stroke-width="1.5" filter="url(#sh_wf04)"/>
+  <foreignObject x="445" y="582" width="410" height="94"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cwm">MCPツールへの到達性</span><span class="f7 csub">セッション接続済みの全MCPツールにToolSearch経由で到達可（スキーマはagentごとにオンデマンド読込）。<b>注意</b>：対話認証型MCP（claude.ai系）はheadless／cron実行では不在の可能性</span></div></foreignObject>
+
+  <rect x="25" y="698" width="830" height="46" rx="7" fill="#fff" stroke="#dc2626" stroke-width="2" filter="url(#sh_wf04)"/>
+  <foreignObject x="25" y="698" width="830" height="46"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f9 b cd">原則：省略が最良の既定 — model／effortの明示は例外的行為</span><span class="f75 csub">上書きの根拠を言えないなら書かない</span></div></foreignObject>
+  </svg>
+</div>
+
+<!-- ============ §5 pipeline vs parallel ============ -->
+<div class="card" id="s5">
+  <h2>§5 pipeline() vs parallel() — バリアの実コストをタイムラインで見る</h2>
+  <p class="lead">原文が最も紙幅を割く論点。<b>既定はpipeline</b>。parallelは「全結果を同時に必要とする」ことを証明できたときだけ使うバリア（同期壁）である。下図は探索段の所要が A=180／B=300／C=540、検証段が各160の場合の実時間比較。</p>
+  <svg viewBox="0 0 880 700" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>parallelバリア型とpipeline型の実行タイムライン比較</title>
+  <defs><filter id="sh_wf05"><feDropShadow dx="0.5" dy="0.5" stdDeviation="1.5" flood-opacity="0.07"/></filter></defs>
+  <rect width="880" height="42" rx="10" fill="#0f172a"/>
+  <foreignObject x="0" y="0" width="880" height="42"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f12 b8 cw">pipeline() vs parallel() — バリアが生む遊休時間</span><span class="f75 csl">■探索段(S1) ■検証段(S2) ▨待機＝ムダ ／ 横軸＝経過時間</span></div></foreignObject>
+
+  <!-- A: parallel -->
+  <rect x="10" y="52" width="860" height="214" rx="10" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.5"/>
+  <text x="25" y="70" font-size="10" font-weight="700" fill="#dc2626" font-family="'Noto Sans JP',sans-serif">A. parallel()バリア型 — 最遅の完了まで全員が待ち合わせる</text>
+  <rect x="25" y="82" width="130" height="26" rx="5" fill="#64748b"/>
+  <foreignObject x="25" y="82" width="130" height="26"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f8 b cw">アイテム A</span></div></foreignObject>
+  <rect x="170" y="82" width="180" height="26" rx="4" fill="#1e40af"/>
+  <foreignObject x="170" y="82" width="180" height="26"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f7 b cw">S1 探索 (180)</span></div></foreignObject>
+  <rect x="350" y="82" width="360" height="26" rx="4" fill="#fee2e2" stroke="#fca5a5" stroke-width="1" stroke-dasharray="4 3"/>
+  <foreignObject x="350" y="82" width="360" height="26"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f7 b cd">待機 360 — ワーカー枠が遊休</span></div></foreignObject>
+  <rect x="710" y="82" width="160" height="26" rx="4" fill="#7c3aed"/>
+  <foreignObject x="710" y="82" width="160" height="26"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f7 b cw">S2 検証 (160)</span></div></foreignObject>
+  <rect x="25" y="118" width="130" height="26" rx="5" fill="#64748b"/>
+  <foreignObject x="25" y="118" width="130" height="26"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f8 b cw">アイテム B</span></div></foreignObject>
+  <rect x="170" y="118" width="300" height="26" rx="4" fill="#1e40af"/>
+  <foreignObject x="170" y="118" width="300" height="26"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f7 b cw">S1 探索 (300)</span></div></foreignObject>
+  <rect x="470" y="118" width="240" height="26" rx="4" fill="#fee2e2" stroke="#fca5a5" stroke-width="1" stroke-dasharray="4 3"/>
+  <foreignObject x="470" y="118" width="240" height="26"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f7 b cd">待機 240</span></div></foreignObject>
+  <rect x="710" y="118" width="160" height="26" rx="4" fill="#7c3aed"/>
+  <foreignObject x="710" y="118" width="160" height="26"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f7 b cw">S2 検証 (160)</span></div></foreignObject>
+  <rect x="25" y="154" width="130" height="26" rx="5" fill="#64748b"/>
+  <foreignObject x="25" y="154" width="130" height="26"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f8 b cw">アイテム C（最遅）</span></div></foreignObject>
+  <rect x="170" y="154" width="540" height="26" rx="4" fill="#1e40af"/>
+  <foreignObject x="170" y="154" width="540" height="26"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f7 b cw">S1 探索 (540)</span></div></foreignObject>
+  <rect x="710" y="154" width="160" height="26" rx="4" fill="#7c3aed"/>
+  <foreignObject x="710" y="154" width="160" height="26"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f7 b cw">S2 検証 (160)</span></div></foreignObject>
+  <line x1="710" y1="78" x2="710" y2="186" stroke="#dc2626" stroke-width="2" stroke-dasharray="5 3"/>
+  <text x="706" y="196" text-anchor="end" font-size="7.5" font-weight="700" fill="#dc2626" font-family="'Noto Sans JP',sans-serif">◀ バリア：最遅C(540)の完了まで全アイテムのS2が開始できない</text>
+  <rect x="25" y="204" width="830" height="50" rx="7" fill="#fff" stroke="#dc2626" stroke-width="1.5" filter="url(#sh_wf05)"/>
+  <foreignObject x="25" y="204" width="830" height="50"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cd">全体完了 = 540 + 160 = 700。AとBのワーカー枠は合計600単位が遊休</span><span class="f7 csub">原文：「5体のfinderのうち最遅が最速の3倍なら、速い側の遊休はその2/3に達する」</span></div></foreignObject>
+
+  <!-- B: pipeline -->
+  <rect x="10" y="276" width="860" height="190" rx="10" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+  <text x="25" y="294" font-size="10" font-weight="700" fill="#16a34a" font-family="'Noto Sans JP',sans-serif">B. pipeline()型 — 各アイテムが自分のペースで次段へ進む（これが既定）</text>
+  <rect x="25" y="306" width="130" height="26" rx="5" fill="#64748b"/>
+  <foreignObject x="25" y="306" width="130" height="26"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f8 b cw">アイテム A</span></div></foreignObject>
+  <rect x="170" y="306" width="180" height="26" rx="4" fill="#1e40af"/>
+  <foreignObject x="170" y="306" width="180" height="26"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f7 b cw">S1 (180)</span></div></foreignObject>
+  <rect x="350" y="306" width="160" height="26" rx="4" fill="#7c3aed"/>
+  <foreignObject x="350" y="306" width="160" height="26"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f7 b cw">S2 (160) → 340で完了</span></div></foreignObject>
+  <rect x="25" y="342" width="130" height="26" rx="5" fill="#64748b"/>
+  <foreignObject x="25" y="342" width="130" height="26"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f8 b cw">アイテム B</span></div></foreignObject>
+  <rect x="170" y="342" width="300" height="26" rx="4" fill="#1e40af"/>
+  <foreignObject x="170" y="342" width="300" height="26"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f7 b cw">S1 (300)</span></div></foreignObject>
+  <rect x="470" y="342" width="160" height="26" rx="4" fill="#7c3aed"/>
+  <foreignObject x="470" y="342" width="160" height="26"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f7 b cw">S2 (160) → 460で完了</span></div></foreignObject>
+  <rect x="25" y="378" width="130" height="26" rx="5" fill="#64748b"/>
+  <foreignObject x="25" y="378" width="130" height="26"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f8 b cw">アイテム C（最遅）</span></div></foreignObject>
+  <rect x="170" y="378" width="540" height="26" rx="4" fill="#1e40af"/>
+  <foreignObject x="170" y="378" width="540" height="26"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f7 b cw">S1 (540)</span></div></foreignObject>
+  <rect x="710" y="378" width="160" height="26" rx="4" fill="#7c3aed"/>
+  <foreignObject x="710" y="378" width="160" height="26"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f7 b cw">S2 (160)</span></div></foreignObject>
+  <rect x="25" y="414" width="830" height="42" rx="7" fill="#fff" stroke="#16a34a" stroke-width="1.5" filter="url(#sh_wf05)"/>
+  <foreignObject x="25" y="414" width="830" height="42"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cs">wall-clock = 最遅の単一アイテム連鎖（C=700）であり「段ごとの最遅の総和」ではない。Aは340で完了・遊休ゼロ</span><span class="f7 csub">AがS2にいる間、Bはまだ S1 — 段をまたぐ同時進行こそがpipelineの本体</span></div></foreignObject>
+
+  <!-- C: callbacks -->
+  <rect x="10" y="478" width="860" height="140" rx="10" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="1.5"/>
+  <text x="25" y="496" font-size="10" font-weight="700" fill="#7c3aed" font-family="'Noto Sans JP',sans-serif">C. ステージコールバックの仕様</text>
+  <rect x="25" y="504" width="270" height="102" rx="7" fill="#fff" stroke="#7c3aed" stroke-width="1.5" filter="url(#sh_wf05)"/>
+  <foreignObject x="25" y="504" width="270" height="102"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b ca mono">(prevResult, originalItem, index)</span><span class="f7 csub">全段がこの3引数を受け取る。後段はoriginalItem/indexで元の文脈を取得 — 前段の返り値に文脈を織り込んで運ぶ必要がない</span></div></foreignObject>
+  <rect x="305" y="504" width="270" height="102" rx="7" fill="#fff" stroke="#7c3aed" stroke-width="1.5" filter="url(#sh_wf05)"/>
+  <foreignObject x="305" y="504" width="270" height="102"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b ca">段の途中でthrow</span><span class="f7 csub">そのアイテムはnullに落ち、残りの段はskip。<b>他のアイテムは続行</b>する。parallel()のthunkのthrowも同様に該当要素がnull化（呼出し自体はrejectしない）</span></div></foreignObject>
+  <rect x="585" y="504" width="270" height="102" rx="7" fill="#fff" stroke="#7c3aed" stroke-width="1.5" filter="url(#sh_wf05)"/>
+  <foreignObject x="585" y="504" width="270" height="102"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b ca">段の中に並列を入れ子可</span><span class="f7 csub">段の中でparallel()を呼び「1アイテム→N体検証」が可能（canonical例・§13）。bugs次元の検証はperf次元のレビュー中に走る</span></div></foreignObject>
+
+  <rect x="25" y="630" width="830" height="48" rx="7" fill="#fff" stroke="#dc2626" stroke-width="2" filter="url(#sh_wf05)"/>
+  <foreignObject x="25" y="630" width="830" height="48"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f9 b cd">DEFAULT TO pipeline() — 原文の大文字強調。バリアは証明責任を伴う例外</span><span class="f75 csub">When in doubt: pipeline.</span></div></foreignObject>
+  </svg>
+</div>
+
+<!-- ============ §6 バリア正当化 ============ -->
+<div class="card" id="s6">
+  <h2>§6 バリア正当化テスト — smell test付き</h2>
+  <p class="lead">バリア（parallelによる同期壁）が許されるのは「段Nが段N−1の<b>全体</b>を必要とする」場合だけ。原文は正当化される3ケースと、正当化にならない3つの言い訳を明示的に列挙している。</p>
+  <svg viewBox="0 0 880 560" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>バリアが正当化される3ケースと正当化されない3つの理由、smell test</title>
+  <defs><filter id="sh_wf06"><feDropShadow dx="0.5" dy="0.5" stdDeviation="1.5" flood-opacity="0.07"/></filter></defs>
+  <rect width="880" height="42" rx="10" fill="#0f172a"/>
+  <foreignObject x="0" y="0" width="880" height="42"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f12 b8 cw">バリア正当化テスト</span><span class="f75 csl">「クロスアイテム依存」の証明ができるか</span></div></foreignObject>
+
+  <rect x="25" y="58" width="410" height="216" rx="7" fill="#f0fdf4" stroke="#16a34a" stroke-width="2" filter="url(#sh_wf06)"/>
+  <foreignObject x="25" y="58" width="410" height="216"><div xmlns="http://www.w3.org/1999/xhtml" class="fo fol" style="gap:6px;padding:10px 16px;"><span class="f9 b8 cs">✓ バリアが正しい3ケース</span><span class="f75 cink"><b>① 全結果のdedup/merge</b> — 高価な後段の前に全発見を突合して重複排除する（例：全finderの発見をfile+lineでdedupしてから検証へ）</span><span class="f75 cink"><b>② ゼロ件での早期exit</b> — 「バグ0件→検証段を丸ごとスキップ」のような総数依存の分岐</span><span class="f75 cink"><b>③ 相互参照プロンプト</b> — 段Nのプロンプトが「他の発見」と比較させる構造のとき</span><span class="f7 cmut">共通項：段N−1の“全体”が段Nの入力として本質的に必要</span></div></foreignObject>
+  <rect x="445" y="58" width="410" height="216" rx="7" fill="#fef2f2" stroke="#dc2626" stroke-width="2" filter="url(#sh_wf06)"/>
+  <foreignObject x="445" y="58" width="410" height="216"><div xmlns="http://www.w3.org/1999/xhtml" class="fo fol" style="gap:6px;padding:10px 16px;"><span class="f9 b8 cd">✕ 正当化にならない3つの言い訳</span><span class="f75 cink"><b>①「先にflatten/map/filterしたい」</b> — pipeline段の中でやればよい：<span class="mono f7">pipeline(items, stageA, r =&gt; transform([r]).flat(), stageB)</span></span><span class="f75 cink"><b>②「ステージが概念的に別物」</b> — それこそpipelineが表現するもの。分離≠同期</span><span class="f75 cink"><b>③「コードが綺麗」</b> — バリア遅延は実費。可読性で実時間を買ってはならない</span></div></foreignObject>
+
+  <rect x="10" y="288" width="860" height="188" rx="10" fill="#fffbeb" stroke="#fbbf24" stroke-width="1.5"/>
+  <text x="25" y="306" font-size="10" font-weight="700" fill="#92400e" font-family="'Noto Sans JP',sans-serif">Smell test — この形を書いたら書き直す</text>
+  <rect x="25" y="316" width="410" height="146" rx="7" fill="#1e1b4b" filter="url(#sh_wf06)"/>
+  <foreignObject x="25" y="316" width="410" height="146"><div xmlns="http://www.w3.org/1999/xhtml" class="fo fol mono" style="gap:4px;padding:10px 14px;"><span class="f8 cd b">NG（不要バリア）</span><span class="f8 cw">const a = await parallel(...)</span><span class="f8 cw">const b = transform(a)</span><span class="f7 csl">// ↑ flatten/map/filterのみ＝横断依存なし</span><span class="f8 cw">const c = await parallel(b.map(...))</span><span class="f7 cy">中間のtransformはバリアを要求していない</span></div></foreignObject>
+  <rect x="445" y="316" width="410" height="146" rx="7" fill="#14532d" filter="url(#sh_wf06)"/>
+  <foreignObject x="445" y="316" width="410" height="146"><div xmlns="http://www.w3.org/1999/xhtml" class="fo fol mono" style="gap:4px;padding:10px 14px;"><span class="f8 b" style="color:#86efac;">OK（pipeline内に変換を吸収）</span><span class="f8 cw">pipeline(items,</span><span class="f8 cw">&#160;&#160;stageA,</span><span class="f8 cw">&#160;&#160;r =&gt; transform([r]).flat(),</span><span class="f8 cw">&#160;&#160;stageB)</span><span class="f7" style="color:#bbf7d0;">アイテムごとに変換 → 待ち合わせ消滅</span></div></foreignObject>
+
+  <rect x="25" y="490" width="830" height="48" rx="7" fill="#fff" stroke="#dc2626" stroke-width="2" filter="url(#sh_wf06)"/>
+  <foreignObject x="25" y="490" width="830" height="48"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f9 b cd">判定基準は一つ：中間処理に「アイテム横断の依存」があるか。なければpipelineに書き直す</span></div></foreignObject>
+  </svg>
+</div>
+
+<!-- ============ §7 schema ============ -->
+<div class="card" id="s7">
+  <h2>§7 schema — 構造化出力の強制と自動リトライ</h2>
+  <p class="lead">optsにJSON Schemaを渡すと、サブエージェントはStructuredOutputツールの呼出しを強制される。検証は<b>ツールコール層</b>で行われるため、型不一致はモデル自身が再試行する — スクリプト側にパース・検証コードは一切不要。</p>
+  <svg viewBox="0 0 880 424" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>schemaオプションによる構造化出力の検証ループ</title>
+  <defs><filter id="sh_wf07"><feDropShadow dx="0.5" dy="0.5" stdDeviation="1.5" flood-opacity="0.07"/></filter></defs>
+  <rect width="880" height="42" rx="10" fill="#0f172a"/>
+  <foreignObject x="0" y="0" width="880" height="42"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f12 b8 cw">schema — 構造化出力の強制・検証・自動リトライ</span><span class="f75 csl">「最後にJSONだけ返して」方式との決定的な違い</span></div></foreignObject>
+
+  <rect x="25" y="80" width="190" height="80" rx="7" fill="#1e40af" filter="url(#sh_wf07)"/>
+  <foreignObject x="25" y="80" width="190" height="80"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw mono">agent(prompt, {schema})</span><span class="f7 cb3">JSON Schemaオブジェクトをoptsに直渡し</span></div></foreignObject>
+  <line x1="215" y1="120" x2="223" y2="120" stroke="#1e40af" stroke-width="2"/><polygon points="223,115.5 235,120 223,124.5" fill="#1e40af"/>
+  <rect x="235" y="80" width="190" height="80" rx="7" fill="#7c3aed" filter="url(#sh_wf07)"/>
+  <foreignObject x="235" y="80" width="190" height="80"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">サブエージェント実行</span><span class="f7" style="color:#ddd6fe;">StructuredOutputツールの呼出しを<b>強制</b>される</span></div></foreignObject>
+  <line x1="425" y1="120" x2="433" y2="120" stroke="#7c3aed" stroke-width="2"/><polygon points="433,115.5 445,120 433,124.5" fill="#7c3aed"/>
+  <rect x="445" y="80" width="190" height="80" rx="7" fill="#92400e" filter="url(#sh_wf07)"/>
+  <foreignObject x="445" y="80" width="190" height="80"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">ツールコール層で検証</span><span class="f7 cy">JSON Schemaと突合 — スクリプトの外側で実施</span></div></foreignObject>
+  <line x1="635" y1="120" x2="643" y2="120" stroke="#16a34a" stroke-width="2"/><polygon points="643,115.5 655,120 643,124.5" fill="#16a34a"/>
+  <rect x="655" y="80" width="200" height="80" rx="7" fill="#16a34a" filter="url(#sh_wf07)"/>
+  <foreignObject x="655" y="80" width="200" height="80"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">検証済みオブジェクト</span><span class="f7" style="color:#bbf7d0;">agent()の解決値として返る。JSON.parse不要・try/catch不要</span></div></foreignObject>
+
+  <polyline points="540,160 540,196 330,196 330,172" stroke="#dc2626" stroke-width="2" fill="none"/>
+  <polygon points="325.5,172 330,160 334.5,172" fill="#dc2626"/>
+  <text x="435" y="190" text-anchor="middle" font-size="7.5" font-weight="700" fill="#dc2626" font-family="'Noto Sans JP',sans-serif">不一致 → モデルに自動リトライさせる（呼出し側は関与しない）</text>
+
+  <rect x="25" y="216" width="410" height="88" rx="7" fill="#fff" stroke="#16a34a" stroke-width="1.5" filter="url(#sh_wf07)"/>
+  <foreignObject x="25" y="216" width="410" height="88"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cs">なぜ「末尾にJSONを書かせる」より強いか</span><span class="f7 csub">出力訓練の約束は破られ得るが、ツールコール層の検証は<b>構造的保証</b>。型不一致はagent()に到達する前に弾かれ、モデル側で再生成される</span></div></foreignObject>
+  <rect x="445" y="216" width="410" height="88" rx="7" fill="#fff" stroke="#7c3aed" stroke-width="1.5" filter="url(#sh_wf07)"/>
+  <foreignObject x="445" y="216" width="410" height="88"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b ca">agentTypeとの併用</span><span class="f7 csub">カスタムagent型を指定した場合も併用可 — そのagentのsystem promptにStructuredOutput指示が追記される形で合成される</span></div></foreignObject>
+
+  <rect x="25" y="318" width="830" height="48" rx="7" fill="#fff" stroke="#dc2626" stroke-width="2" filter="url(#sh_wf07)"/>
+  <foreignObject x="25" y="318" width="830" height="48"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f9 b cd">多段ワークフローの接着剤 — 前段の出力を後段が.map/.filterで機械的に扱えるのはschemaがあるから</span><span class="f75 csub">codex-flowの「--output-schemaで空出力即失敗」問題（既知の罠）とは別物：こちらは検証がリトライを駆動する</span></div></foreignObject>
+  </svg>
+</div>
+
+<!-- ============ §8 budget ============ -->
+<div class="card" id="s8">
+  <h2>§8 budget — ターン全体で共有されるトークンプール</h2>
+  <p class="lead">ユーザーの「+500k」型指示がターンの目標トークン量になる。プールは<b>メインループ＋全ワークフロー共有</b>であり、上限は助言ではなく<b>強制</b> — 超過後のagent()はthrowする。</p>
+  <svg viewBox="0 0 880 520" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>budgetオブジェクトの共有プール構造とハードシーリング</title>
+  <defs><filter id="sh_wf08"><feDropShadow dx="0.5" dy="0.5" stdDeviation="1.5" flood-opacity="0.07"/></filter></defs>
+  <rect width="880" height="42" rx="10" fill="#0f172a"/>
+  <foreignObject x="0" y="0" width="880" height="42"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f12 b8 cw mono">budget: { total, spent(), remaining() }</span><span class="f75 csl">ターンのトークン目標 — ハードシーリング</span></div></foreignObject>
+
+  <rect x="25" y="58" width="350" height="60" rx="7" fill="#0f172a" filter="url(#sh_wf08)"/>
+  <foreignObject x="25" y="58" width="350" height="60"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f9 b8 cw">ユーザー指示「+500k」</span><span class="f7 csl">この形式の指示がターンの目標量を設定する</span></div></foreignObject>
+  <line x1="375" y1="88" x2="433" y2="88" stroke="#0f172a" stroke-width="2"/><polygon points="433,83.5 445,88 433,92.5" fill="#0f172a"/>
+  <rect x="445" y="58" width="410" height="60" rx="7" fill="#fff" stroke="#1e40af" stroke-width="1.5" filter="url(#sh_wf08)"/>
+  <foreignObject x="445" y="58" width="410" height="60"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cp mono">budget.total: number | null</span><span class="f7 csub">指示が無ければnull（このときremaining()はInfinity — 下段の暴走ガード参照）</span></div></foreignObject>
+
+  <rect x="10" y="130" width="860" height="152" rx="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+  <text x="25" y="148" font-size="10" font-weight="700" fill="#1e40af" font-family="'Noto Sans JP',sans-serif">共有プールの構造（per-workflowではない）</text>
+  <rect x="45" y="160" width="500" height="28" rx="5" fill="#1e40af"/>
+  <foreignObject x="45" y="160" width="500" height="28"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f75 b cw">spent() ＝ メインループ＋全ワークフローの出力トークン合算</span></div></foreignObject>
+  <rect x="545" y="160" width="290" height="28" rx="5" fill="#e2e8f0"/>
+  <foreignObject x="545" y="160" width="290" height="28"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f75 b" style="color:#334155;">remaining() = max(0, total−spent())</span></div></foreignObject>
+  <rect x="45" y="200" width="790" height="34" rx="5" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+  <foreignObject x="45" y="200" width="790" height="34"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f8 b cd">HARD CEILING：spent() が total に達すると、以後のagent()はthrow — 助言でなく強制打切り</span></div></foreignObject>
+  <foreignObject x="45" y="242" width="790" height="30"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f7 bd" style="background:#1e40af;color:#fff;">入れ子workflow()の消費も同じ財布からspent()に算入（§9）</span><span class="f7 bd" style="background:#1e40af;color:#fff;">total未設定ならremaining()=Infinity</span></div></foreignObject>
+
+  <rect x="25" y="296" width="410" height="124" rx="7" fill="#1e1b4b" filter="url(#sh_wf08)"/>
+  <foreignObject x="25" y="296" width="410" height="124"><div xmlns="http://www.w3.org/1999/xhtml" class="fo fol mono" style="gap:4px;padding:10px 14px;"><span class="f8 b" style="color:#c4b5fd;">動的ループ（budget消化まで回す）</span><span class="f8 cw">while (budget.total &amp;&amp;</span><span class="f8 cw">&#160;&#160;&#160;&#160;budget.remaining() &gt; 50_000) {</span><span class="f8 cw">&#160;&#160;const r = await agent("Find bugs…", {schema})</span><span class="f8 cw">&#160;&#160;bugs.push(...r.bugs)</span><span class="f8 cw">}</span><span class="f7 cy">⚠ budget.totalガード必須 — 無いとInfinityで1000体上限まで暴走する</span></div></foreignObject>
+  <rect x="445" y="296" width="410" height="124" rx="7" fill="#1e1b4b" filter="url(#sh_wf08)"/>
+  <foreignObject x="445" y="296" width="410" height="124"><div xmlns="http://www.w3.org/1999/xhtml" class="fo fol mono" style="gap:4px;padding:10px 14px;"><span class="f8 b" style="color:#c4b5fd;">静的スケーリング（艦隊サイズを予算で決定）</span><span class="f8 cw">const FLEET = budget.total</span><span class="f8 cw">&#160;&#160;? Math.floor(budget.total / 100_000)</span><span class="f8 cw">&#160;&#160;: 5</span><span class="f7 cy">予算があれば100kトークンあたり1体、無ければ既定5体</span></div></foreignObject>
+
+  <rect x="25" y="434" width="830" height="48" rx="7" fill="#fff" stroke="#dc2626" stroke-width="2" filter="url(#sh_wf08)"/>
+  <foreignObject x="25" y="434" width="830" height="48"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f9 b cd">予算はユーザーの深度指定 — 「+500k」と言われたら遠慮なく使い切る設計にするのが正しい応答</span></div></foreignObject>
+  </svg>
+</div>
+
+<!-- ============ §9 workflow() ============ -->
+<div class="card" id="s9">
+  <h2>§9 workflow() — 入れ子実行は1段まで</h2>
+  <p class="lead">保存済みワークフローや別スクリプトを、実行中のワークフロー内から子として呼べる。子は親の実行資源（同時実行枠・agentカウンタ・abortシグナル・トークン予算）を<b>共有</b>する — 独立した財布を持たない。</p>
+  <svg viewBox="0 0 880 512" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>workflow関数による子ワークフローの入れ子実行と共有資源</title>
+  <defs><filter id="sh_wf09"><feDropShadow dx="0.5" dy="0.5" stdDeviation="1.5" flood-opacity="0.07"/></filter></defs>
+  <rect width="880" height="42" rx="10" fill="#0f172a"/>
+  <foreignObject x="0" y="0" width="880" height="42"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f12 b8 cw mono">workflow(nameOrRef, args?): Promise&lt;any&gt;</span><span class="f75 csl">子ワークフローのインライン実行 — 入れ子は1段のみ</span></div></foreignObject>
+
+  <rect x="25" y="58" width="830" height="252" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+  <text x="40" y="78" font-size="10" font-weight="700" fill="#1e40af" font-family="'Noto Sans JP',sans-serif">親ワークフロー</text>
+  <rect x="45" y="88" width="380" height="76" rx="7" fill="#1e40af" filter="url(#sh_wf09)"/>
+  <foreignObject x="45" y="88" width="380" height="76"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw mono">workflow('保存名' | {scriptPath}, args)</span><span class="f7 cb3">nameは{name:...}と同一レジストリで解決（組込＋.claude/workflows/）</span><span class="f7 cb3">argsはそのまま子のargsグローバルになる</span></div></foreignObject>
+  <line x1="425" y1="126" x2="443" y2="126" stroke="#1e40af" stroke-width="2"/><polygon points="443,121.5 455,126 443,130.5" fill="#1e40af"/>
+  <rect x="455" y="88" width="380" height="160" rx="8" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="470" y="106" font-size="9" font-weight="700" fill="#7c3aed" font-family="'Noto Sans JP',sans-serif">子ワークフロー</text>
+  <foreignObject x="470" y="112" width="350" height="70"><div xmlns="http://www.w3.org/1999/xhtml" class="fo fol" style="gap:3px;"><span class="f75 cink">・返り値＝子のreturnがそのまま親に返る</span><span class="f75 cink">・/workflows上は「▸ name」グループとして表示</span><span class="f75 cink">・子のagent消費はbudget.spent()に算入</span></div></foreignObject>
+  <rect x="470" y="186" width="350" height="50" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+  <foreignObject x="470" y="186" width="350" height="50"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cd">子の中でのworkflow() → throw</span><span class="f7 csub">入れ子は1段のみ。孫は存在できない</span></div></foreignObject>
+  <rect x="45" y="258" width="790" height="38" rx="6" fill="#0f172a"/>
+  <foreignObject x="45" y="258" width="790" height="38"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f8 b cw">親子で共有：</span><span class="f75 bd" style="background:#1e293b;color:#93c5fd;">同時実行枠</span><span class="f75 bd" style="background:#1e293b;color:#93c5fd;">agentカウンタ（生涯1000）</span><span class="f75 bd" style="background:#1e293b;color:#93c5fd;">abortシグナル</span><span class="f75 bd" style="background:#1e293b;color:#93c5fd;">トークン予算</span></div></foreignObject>
+
+  <rect x="25" y="324" width="270" height="84" rx="7" fill="#fff" stroke="#dc2626" stroke-width="1.5" filter="url(#sh_wf09)"/>
+  <foreignObject x="25" y="324" width="270" height="84"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cd">throw①：未知のname</span><span class="f7 csub">レジストリに存在しない名前を渡した場合</span></div></foreignObject>
+  <rect x="305" y="324" width="270" height="84" rx="7" fill="#fff" stroke="#dc2626" stroke-width="1.5" filter="url(#sh_wf09)"/>
+  <foreignObject x="305" y="324" width="270" height="84"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cd">throw②：読めないscriptPath</span><span class="f7 csub">パス不正・ファイル不在</span></div></foreignObject>
+  <rect x="585" y="324" width="270" height="84" rx="7" fill="#fff" stroke="#dc2626" stroke-width="1.5" filter="url(#sh_wf09)"/>
+  <foreignObject x="585" y="324" width="270" height="84"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cd">throw③：子の構文エラー</span><span class="f7 csub">子スクリプトがパースできない場合</span></div></foreignObject>
+  <foreignObject x="25" y="414" width="830" height="22"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f75 cwm sb">3つともthrowするので、劣化継続したい場合はtry/catchで受ける設計にする（原文：「catch to handle gracefully」）</span></div></foreignObject>
+
+  <rect x="25" y="446" width="830" height="48" rx="7" fill="#fff" stroke="#dc2626" stroke-width="2" filter="url(#sh_wf09)"/>
+  <foreignObject x="25" y="446" width="830" height="48"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f9 b cd">用途：定型処理のライブラリ化 — 「調査→レポート」等の再利用単位を保存し、argsだけ変えて呼ぶ</span></div></foreignObject>
+  </svg>
+</div>
+
+<!-- ============ §10 品質パターン 検証系 ============ -->
+<div class="card" id="s10">
+  <h2>§10 品質パターン① 検証系 — 見つけた主張を疑う構造</h2>
+  <p class="lead">「もっともらしいが誤り（plausible-but-wrong）」の発見を生き残らせないための3パターン。CFC論文運用でのスワーム校閲（指摘も修正案も一次資料照合）と同じ思想が、ここではスクリプト構造として強制される。</p>
+  <svg viewBox="0 0 880 764" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>敵対的検証、多レンズ検証、ジャッジパネルの3パターン</title>
+  <defs><filter id="sh_wf10"><feDropShadow dx="0.5" dy="0.5" stdDeviation="1.5" flood-opacity="0.07"/></filter></defs>
+  <rect width="880" height="42" rx="10" fill="#0f172a"/>
+  <foreignObject x="0" y="0" width="880" height="42"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f12 b8 cw">品質パターン① 検証系</span><span class="f75 csl">Adversarial verify ／ Perspective-diverse verify ／ Judge panel</span></div></foreignObject>
+
+  <rect x="10" y="52" width="860" height="216" rx="10" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.5"/>
+  <text x="25" y="70" font-size="10" font-weight="700" fill="#dc2626" font-family="'Noto Sans JP',sans-serif">A. Adversarial verify — N体の独立懐疑者に「反証せよ」と命じる</text>
+  <rect x="25" y="112" width="250" height="88" rx="7" fill="#1e40af" filter="url(#sh_wf10)"/>
+  <foreignObject x="25" y="112" width="250" height="88"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f9 b8 cw">finding / claim</span><span class="f7 cb3">検証対象の発見・主張</span><span class="f7 cb3">1件ごとに懐疑者を派遣</span></div></foreignObject>
+  <line x1="275" y1="156" x2="310" y2="156" stroke="#dc2626" stroke-width="2"/>
+  <line x1="310" y1="105" x2="310" y2="225" stroke="#dc2626" stroke-width="2"/>
+  <line x1="310" y1="105" x2="333" y2="105" stroke="#dc2626" stroke-width="2"/><polygon points="333,100.5 345,105 333,109.5" fill="#dc2626"/>
+  <line x1="310" y1="165" x2="333" y2="165" stroke="#dc2626" stroke-width="2"/><polygon points="333,160.5 345,165 333,169.5" fill="#dc2626"/>
+  <line x1="310" y1="225" x2="333" y2="225" stroke="#dc2626" stroke-width="2"/><polygon points="333,220.5 345,225 333,229.5" fill="#dc2626"/>
+  <rect x="345" y="80" width="230" height="50" rx="6" fill="#fff" stroke="#dc2626" stroke-width="1.5" filter="url(#sh_wf10)"/>
+  <foreignObject x="345" y="80" width="230" height="50"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f75 b cd">懐疑者1「反証を試みよ」</span><span class="f7 csub">不確実ならrefuted=trueを既定とせよ</span></div></foreignObject>
+  <rect x="345" y="140" width="230" height="50" rx="6" fill="#fff" stroke="#dc2626" stroke-width="1.5" filter="url(#sh_wf10)"/>
+  <foreignObject x="345" y="140" width="230" height="50"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f75 b cd">懐疑者2（独立・同型）</span><span class="f7 csub">互いの判定を知らない</span></div></foreignObject>
+  <rect x="345" y="200" width="230" height="50" rx="6" fill="#fff" stroke="#dc2626" stroke-width="1.5" filter="url(#sh_wf10)"/>
+  <foreignObject x="345" y="200" width="230" height="50"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f75 b cd">懐疑者3（独立・同型）</span><span class="f7 csub">parallelで同時派遣</span></div></foreignObject>
+  <line x1="575" y1="165" x2="633" y2="165" stroke="#16a34a" stroke-width="2"/><polygon points="633,160.5 645,165 633,169.5" fill="#16a34a"/>
+  <rect x="645" y="124" width="210" height="82" rx="7" fill="#f0fdf4" stroke="#16a34a" stroke-width="2" filter="url(#sh_wf10)"/>
+  <foreignObject x="645" y="124" width="210" height="82"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cs">生存判定（多数決）</span><span class="f75 cink">非反証 ≥2/3 → 採用</span><span class="f75 cink">反証 過半数 → 棄却</span><span class="f7 cmut mono">votes.filter(v=&gt;!v.refuted).length &gt;= 2</span></div></foreignObject>
+
+  <rect x="10" y="278" width="860" height="168" rx="10" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="1.5"/>
+  <text x="25" y="296" font-size="10" font-weight="700" fill="#7c3aed" font-family="'Noto Sans JP',sans-serif">B. Perspective-diverse verify — 同型N体でなく「レンズ」を分散させる</text>
+  <rect x="25" y="304" width="200" height="56" rx="7" fill="#7c3aed" filter="url(#sh_wf10)"/>
+  <foreignObject x="25" y="304" width="200" height="56"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">correctness</span><span class="f7" style="color:#ddd6fe;">論理として正しいか</span></div></foreignObject>
+  <rect x="235" y="304" width="200" height="56" rx="7" fill="#7c3aed" filter="url(#sh_wf10)"/>
+  <foreignObject x="235" y="304" width="200" height="56"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">security</span><span class="f7" style="color:#ddd6fe;">安全性の穴は無いか</span></div></foreignObject>
+  <rect x="445" y="304" width="200" height="56" rx="7" fill="#7c3aed" filter="url(#sh_wf10)"/>
+  <foreignObject x="445" y="304" width="200" height="56"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">perf</span><span class="f7" style="color:#ddd6fe;">性能上の問題か</span></div></foreignObject>
+  <rect x="655" y="304" width="200" height="56" rx="7" fill="#7c3aed" filter="url(#sh_wf10)"/>
+  <foreignObject x="655" y="304" width="200" height="56"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">does-it-reproduce</span><span class="f7" style="color:#ddd6fe;">実際に再現するか</span></div></foreignObject>
+  <rect x="25" y="372" width="830" height="60" rx="7" fill="#fff" stroke="#7c3aed" stroke-width="1.5" filter="url(#sh_wf10)"/>
+  <foreignObject x="25" y="372" width="830" height="60"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b ca">使い分け：findingが複数の壊れ方をし得るならこちら</span><span class="f75 csub">冗長性（同一プロンプト×N体）が拾えない失敗様式を、多様性（レンズ×N種）が拾う — 原文「diversity catches failure modes redundancy can't」</span></div></foreignObject>
+
+  <rect x="10" y="456" width="860" height="240" rx="10" fill="#fffbeb" stroke="#fbbf24" stroke-width="1.5"/>
+  <text x="25" y="474" font-size="10" font-weight="700" fill="#92400e" font-family="'Noto Sans JP',sans-serif">C. Judge panel — 解空間が広いときはN案並列生成→採点→統合</text>
+  <rect x="25" y="482" width="270" height="60" rx="7" fill="#fff" stroke="#f59e0b" stroke-width="1.5" filter="url(#sh_wf10)"/>
+  <foreignObject x="25" y="482" width="270" height="60"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cwm">案① MVP-first</span><span class="f7 csub">最小実装優先の角度から独立生成</span></div></foreignObject>
+  <rect x="305" y="482" width="270" height="60" rx="7" fill="#fff" stroke="#f59e0b" stroke-width="1.5" filter="url(#sh_wf10)"/>
+  <foreignObject x="305" y="482" width="270" height="60"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cwm">案② risk-first</span><span class="f7 csub">リスク潰し優先の角度から独立生成</span></div></foreignObject>
+  <rect x="585" y="482" width="270" height="60" rx="7" fill="#fff" stroke="#f59e0b" stroke-width="1.5" filter="url(#sh_wf10)"/>
+  <foreignObject x="585" y="482" width="270" height="60"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cwm">案③ user-first</span><span class="f7 csub">利用者体験優先の角度から独立生成</span></div></foreignObject>
+  <line x1="440" y1="542" x2="440" y2="552" stroke="#92400e" stroke-width="2"/><polygon points="435.5,552 440,564 444.5,552" fill="#92400e"/>
+  <rect x="25" y="564" width="830" height="36" rx="6" fill="#92400e"/>
+  <foreignObject x="25" y="564" width="830" height="36"><div xmlns="http://www.w3.org/1999/xhtml" class="fr"><span class="f8 b cw">並列ジャッジ群がスコアリング</span></div></foreignObject>
+  <line x1="440" y1="600" x2="440" y2="610" stroke="#16a34a" stroke-width="2"/><polygon points="435.5,610 440,622 444.5,610" fill="#16a34a"/>
+  <rect x="25" y="622" width="830" height="60" rx="7" fill="#f0fdf4" stroke="#16a34a" stroke-width="2" filter="url(#sh_wf10)"/>
+  <foreignObject x="25" y="622" width="830" height="60"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cs">勝者をベースに統合 — 次点案の良いアイデアを接ぎ木（graft）する</span><span class="f75 csub">原文：「解空間が広いときは one-attempt-iterated（一案を磨き続ける）に勝る」</span></div></foreignObject>
+
+  <rect x="25" y="708" width="830" height="46" rx="7" fill="#fff" stroke="#dc2626" stroke-width="2" filter="url(#sh_wf10)"/>
+  <foreignObject x="25" y="708" width="830" height="46"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f9 b cd">共通思想：発見者と検証者を分離し、検証者には「疑え」という役割を構造として与える</span></div></foreignObject>
+  </svg>
+</div>
+
+<!-- ============ §11 品質パターン 探索系 ============ -->
+<div class="card" id="s11">
+  <h2>§11 品質パターン② 探索系 — 「全部見つけた」を構造で担保する</h2>
+  <p class="lead">発見タスクの敵は「早すぎる打ち切り」と「無言の切り詰め」。件数カウンタではなく<b>乾き（dry）</b>で終了を判定し、絞った範囲は必ずlog()で開示する。</p>
+  <svg viewBox="0 0 880 800" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>loop-until-dry、マルチモーダルスイープ、完全性批評、無言の切り詰め禁止の4パターン</title>
+  <defs><filter id="sh_wf11"><feDropShadow dx="0.5" dy="0.5" stdDeviation="1.5" flood-opacity="0.07"/></filter></defs>
+  <rect width="880" height="42" rx="10" fill="#0f172a"/>
+  <foreignObject x="0" y="0" width="880" height="42"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f12 b8 cw">品質パターン② 探索系</span><span class="f75 csl">Loop-until-dry ／ Multi-modal sweep ／ Completeness critic ／ No silent caps</span></div></foreignObject>
+
+  <rect x="10" y="52" width="860" height="242" rx="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+  <text x="25" y="70" font-size="10" font-weight="700" fill="#1e40af" font-family="'Noto Sans JP',sans-serif">A. Loop-until-dry — 連続Kラウンド新発見ゼロまで回す</text>
+  <rect x="25" y="80" width="200" height="92" rx="7" fill="#1e40af" filter="url(#sh_wf11)"/>
+  <foreignObject x="25" y="80" width="200" height="92"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">① FINDERS並列投入</span><span class="f7 cb3">このバリアは正当（ラウンドの全発見を集めてdedupするため）</span></div></foreignObject>
+  <polygon points="225,121.5 235,126 225,130.5" fill="#1e40af"/>
+  <rect x="235" y="80" width="200" height="92" rx="7" fill="#7c3aed" filter="url(#sh_wf11)"/>
+  <foreignObject x="235" y="80" width="200" height="92"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">② seen対比でdedup</span><span class="f7" style="color:#ddd6fe;">プレーンコードで実施（agentでない）</span><span class="f7 cy b">confirmedでなくseenと比較！審査棄却分が毎回再出現→永久不収束を防ぐ</span></div></foreignObject>
+  <polygon points="435,121.5 445,126 435,130.5" fill="#7c3aed"/>
+  <rect x="445" y="80" width="200" height="92" rx="7" fill="#16a34a" filter="url(#sh_wf11)"/>
+  <foreignObject x="445" y="80" width="200" height="92"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">③ 新規あり</span><span class="f7" style="color:#bbf7d0;">dry=0にリセット → 多レンズ審査（§10-B）→ confirmedへ追加</span></div></foreignObject>
+  <polygon points="645,121.5 655,126 645,130.5" fill="#16a34a"/>
+  <rect x="655" y="80" width="200" height="92" rx="7" fill="#92400e" filter="url(#sh_wf11)"/>
+  <foreignObject x="655" y="80" width="200" height="92"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">④ 新規ゼロ</span><span class="f7 cy">dry++（乾きカウント加算）して次ラウンドへ</span></div></foreignObject>
+  <polyline points="755,172 755,196 125,196 125,184" stroke="#64748b" stroke-width="2" fill="none"/>
+  <polygon points="120.5,184 125,172 129.5,184" fill="#64748b"/>
+  <text x="440" y="192" text-anchor="middle" font-size="7.5" font-weight="600" fill="#64748b" font-family="'Noto Sans JP',sans-serif">次ラウンド（dry&lt;2 の間繰り返し）</text>
+  <rect x="25" y="212" width="830" height="66" rx="7" fill="#fff" stroke="#1e40af" stroke-width="1.5" filter="url(#sh_wf11)"/>
+  <foreignObject x="25" y="212" width="830" height="66"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cp mono">while (dry &lt; 2) — 連続2ラウンド新発見ゼロで終了</span><span class="f75 csub">単純カウンタ（while count &lt; N）は「尾」を取り逃す。発見数は事前に分からないのだから、終了条件は枯渇の観測であるべき</span></div></foreignObject>
+
+  <rect x="10" y="304" width="860" height="152" rx="10" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="1.5"/>
+  <text x="25" y="322" font-size="10" font-weight="700" fill="#7c3aed" font-family="'Noto Sans JP',sans-serif">B. Multi-modal sweep — 検索の「切り口」を分散させる</text>
+  <rect x="25" y="330" width="200" height="64" rx="7" fill="#7c3aed" filter="url(#sh_wf11)"/>
+  <foreignObject x="25" y="330" width="200" height="64"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">by-container</span><span class="f7" style="color:#ddd6fe;">入れ物（ディレクトリ・チャネル）から辿る</span></div></foreignObject>
+  <rect x="235" y="330" width="200" height="64" rx="7" fill="#7c3aed" filter="url(#sh_wf11)"/>
+  <foreignObject x="235" y="330" width="200" height="64"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">by-content</span><span class="f7" style="color:#ddd6fe;">中身（キーワード・パターン）で探す</span></div></foreignObject>
+  <rect x="445" y="330" width="200" height="64" rx="7" fill="#7c3aed" filter="url(#sh_wf11)"/>
+  <foreignObject x="445" y="330" width="200" height="64"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">by-entity</span><span class="f7" style="color:#ddd6fe;">主体（人・モジュール・組織）から辿る</span></div></foreignObject>
+  <rect x="655" y="330" width="200" height="64" rx="7" fill="#7c3aed" filter="url(#sh_wf11)"/>
+  <foreignObject x="655" y="330" width="200" height="64"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">by-time</span><span class="f7" style="color:#ddd6fe;">時系列（更新順・イベント順）で辿る</span></div></foreignObject>
+  <rect x="25" y="404" width="830" height="42" rx="7" fill="#fff" stroke="#7c3aed" stroke-width="1.5" filter="url(#sh_wf11)"/>
+  <foreignObject x="25" y="404" width="830" height="42"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f75 csub">各agentは他の切り口の発見に<b>盲目</b>。一つの検索角度で全部は見つからないときに有効 — RAG／grep／web並列の発想と同型</span></div></foreignObject>
+
+  <rect x="10" y="466" width="860" height="142" rx="10" fill="#fffbeb" stroke="#fbbf24" stroke-width="1.5"/>
+  <text x="25" y="484" font-size="10" font-weight="700" fill="#92400e" font-family="'Noto Sans JP',sans-serif">C. Completeness critic — 欠落を問う最終監査人</text>
+  <rect x="25" y="494" width="410" height="100" rx="7" fill="#fff" stroke="#f59e0b" stroke-width="1.5" filter="url(#sh_wf11)"/>
+  <foreignObject x="25" y="494" width="410" height="100"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cwm">最終agentに問わせる</span><span class="f75 csub">「何が欠けているか — 未実行の検索様式は？未検証の主張は？未読の一次資料は？」</span></div></foreignObject>
+  <rect x="445" y="494" width="410" height="100" rx="7" fill="#fff" stroke="#f59e0b" stroke-width="1.5" filter="url(#sh_wf11)"/>
+  <foreignObject x="445" y="494" width="410" height="100"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cwm">出力＝次ラウンドの作業リスト</span><span class="f75 csub">批評が見つけた欠落がそのまま次の投入対象になる。loop-until-dryの「乾き」判定を賢くする補助輪</span></div></foreignObject>
+
+  <rect x="10" y="618" width="860" height="106" rx="10" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.5"/>
+  <text x="25" y="636" font-size="10" font-weight="700" fill="#dc2626" font-family="'Noto Sans JP',sans-serif">D. No silent caps — 無言の切り詰め禁止</text>
+  <rect x="25" y="644" width="830" height="68" rx="7" fill="#fff" stroke="#dc2626" stroke-width="1.5" filter="url(#sh_wf11)"/>
+  <foreignObject x="25" y="644" width="830" height="68"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cd">top-N・サンプリング・リトライ無し等で範囲を絞ったら、削った分をlog()で必ず開示する</span><span class="f75 csub">無言の打ち切りは「全部カバーした」と誤読される — 完了報告の誠実性の問題（品質保証3ステップと同根）</span></div></foreignObject>
+
+  <rect x="25" y="736" width="830" height="48" rx="7" fill="#fff" stroke="#dc2626" stroke-width="2" filter="url(#sh_wf11)"/>
+  <foreignObject x="25" y="736" width="830" height="48"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f9 b cd">スケールは依頼文に比例させる：“find any bugs”＝小規模＋単票検証 ／ “thoroughly audit”＝大finderプール＋3〜5票敵対検証＋統合段</span><span class="f75 csub">迷ったら、研究・レビュー・監査は厚めに、クイックチェックは薄めに</span></div></foreignObject>
+  </svg>
+  <p class="note">原文の結び：「これらのパターンは網羅列挙ではない — タスクが求めるなら新しいハーネスを構成せよ（トーナメント方式、自己修復ループ、段階的エスカレーション等）」。部品庫と選択判断で毎回設計する<code>/flaw</code>の思想と同じ構えである。</p>
+</div>
+
+<!-- ============ §12 Resume ============ -->
+<div class="card" id="s12">
+  <h2>§12 Resume機構 — 最長不変プレフィックスのキャッシュ再生</h2>
+  <p class="lead">停止・強制終了・スクリプト編集後、<code>resumeFromRunId</code> で再投入すると、<b>変更されていない先頭からのagent()呼出し列</b>はキャッシュから即時に結果を返し、最初の変更点以降だけがライブ実行される。Date.now()等の禁止はこの機構の代償である。</p>
+  <svg viewBox="0 0 880 664" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>resumeFromRunIdによるキャッシュ再生の仕組み</title>
+  <defs><filter id="sh_wf12"><feDropShadow dx="0.5" dy="0.5" stdDeviation="1.5" flood-opacity="0.07"/></filter></defs>
+  <rect width="880" height="42" rx="10" fill="#0f172a"/>
+  <foreignObject x="0" y="0" width="880" height="42"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f12 b8 cw mono">Workflow({scriptPath, resumeFromRunId: 'wf_…'})</span><span class="f75 csl">同一セッション内のみ・再開前に旧runをTaskStopで停止</span></div></foreignObject>
+
+  <rect x="10" y="52" width="860" height="148" rx="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+  <text x="25" y="70" font-size="10" font-weight="700" fill="#1e40af" font-family="'Noto Sans JP',sans-serif">Run 1（runId: wf_abc123）— 各agent()の(prompt, opts)と返り値がjournalに刻まれる</text>
+  <rect x="25" y="80" width="140" height="54" rx="7" fill="#1e40af" filter="url(#sh_wf12)"/>
+  <foreignObject x="25" y="80" width="140" height="54"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">agent① 完了</span><span class="f7 cb3">結果記録済</span></div></foreignObject>
+  <rect x="197" y="80" width="140" height="54" rx="7" fill="#1e40af" filter="url(#sh_wf12)"/>
+  <foreignObject x="197" y="80" width="140" height="54"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">agent② 完了</span><span class="f7 cb3">結果記録済</span></div></foreignObject>
+  <rect x="369" y="80" width="140" height="54" rx="7" fill="#1e40af" filter="url(#sh_wf12)"/>
+  <foreignObject x="369" y="80" width="140" height="54"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">agent③ 完了</span><span class="f7 cb3">結果記録済</span></div></foreignObject>
+  <rect x="541" y="80" width="140" height="54" rx="7" fill="#b45309" filter="url(#sh_wf12)"/>
+  <foreignObject x="541" y="80" width="140" height="54"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">agent④ 実行中</span><span class="f7 cy">ここでTaskStop／中断</span></div></foreignObject>
+  <rect x="713" y="80" width="140" height="54" rx="7" fill="#94a3b8" filter="url(#sh_wf12)"/>
+  <foreignObject x="713" y="80" width="140" height="54"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">agent⑤ 未実行</span><span class="f7" style="color:#e2e8f0;">キューのまま終了</span></div></foreignObject>
+  <rect x="25" y="146" width="830" height="42" rx="6" fill="#0f172a"/>
+  <foreignObject x="25" y="146" width="830" height="42"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cw mono">&lt;transcriptDir&gt;/journal.jsonl</span><span class="f7 csl">各agentの「実際の返り値」の記録。空か否かを推測せずここを読む</span></div></foreignObject>
+
+  <rect x="25" y="212" width="830" height="54" rx="7" fill="#7c3aed" filter="url(#sh_wf12)"/>
+  <foreignObject x="25" y="212" width="830" height="54"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f9 b8 cw">スクリプト編集：agent③のプロンプトを修正（自動保存されたscriptPathのファイルをWrite/Edit）</span><span class="f7" style="color:#ddd6fe;">→ Workflow({scriptPath, resumeFromRunId:'wf_abc123'}) で再投入</span></div></foreignObject>
+
+  <rect x="10" y="280" width="860" height="176" rx="10" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+  <text x="25" y="298" font-size="10" font-weight="700" fill="#16a34a" font-family="'Noto Sans JP',sans-serif">Run 2 — 最長不変プレフィックスはキャッシュヒット、編集点以降はライブ実行</text>
+  <rect x="25" y="308" width="140" height="54" rx="7" fill="#16a34a" filter="url(#sh_wf12)"/>
+  <foreignObject x="25" y="308" width="140" height="54"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">agent① キャッシュ</span><span class="f7" style="color:#bbf7d0;">即時返却（0秒）</span></div></foreignObject>
+  <rect x="197" y="308" width="140" height="54" rx="7" fill="#16a34a" filter="url(#sh_wf12)"/>
+  <foreignObject x="197" y="308" width="140" height="54"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">agent② キャッシュ</span><span class="f7" style="color:#bbf7d0;">(prompt,opts)不変</span></div></foreignObject>
+  <rect x="369" y="308" width="140" height="54" rx="7" fill="#b45309" filter="url(#sh_wf12)"/>
+  <foreignObject x="369" y="308" width="140" height="54"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">agent③ ライブ</span><span class="f7 cy">編集点 — ここから再実行</span></div></foreignObject>
+  <rect x="541" y="308" width="140" height="54" rx="7" fill="#b45309" filter="url(#sh_wf12)"/>
+  <foreignObject x="541" y="308" width="140" height="54"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">agent④ ライブ</span><span class="f7 cy">編集点以降はすべて</span></div></foreignObject>
+  <rect x="713" y="308" width="140" height="54" rx="7" fill="#b45309" filter="url(#sh_wf12)"/>
+  <foreignObject x="713" y="308" width="140" height="54"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b8 cw">agent⑤ ライブ</span><span class="f7 cy">未実行分も走る</span></div></foreignObject>
+  <line x1="369" y1="372" x2="369" y2="380" stroke="#dc2626" stroke-width="2" stroke-dasharray="4 3"/>
+  <rect x="25" y="386" width="830" height="58" rx="7" fill="#fff" stroke="#16a34a" stroke-width="1.5" filter="url(#sh_wf12)"/>
+  <foreignObject x="25" y="386" width="830" height="58"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cs">キャッシュ判定単位＝agent()呼出しの(prompt, opts)。同一script＋同一args → 100%キャッシュヒット</span><span class="f75 csub">この決定論を守るためにDate.now()／Math.random()／引数なしnew Date()が禁止されている（§3③）</span></div></foreignObject>
+
+  <rect x="25" y="470" width="270" height="102" rx="7" fill="#fff" stroke="#f59e0b" stroke-width="1.5" filter="url(#sh_wf12)"/>
+  <foreignObject x="25" y="470" width="270" height="102"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cwm">運用①：再開の前提</span><span class="f7 csub">旧runをTaskStopで停止してから再投入。resumeFromRunIdは<b>同一セッション内のみ</b>有効。形式は ^wf_[a-z0-9-]{6,}$</span></div></foreignObject>
+  <rect x="305" y="470" width="270" height="102" rx="7" fill="#fff" stroke="#f59e0b" stroke-width="1.5" filter="url(#sh_wf12)"/>
+  <foreignObject x="305" y="470" width="270" height="102"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cwm">運用②：空結果の診断</span><span class="f7 csub">「なぜ空？」を考える前にjournal.jsonlをRead。<b>キャッシュされた結果が非空とは限らない</b> — 推測診断の禁止</span></div></foreignObject>
+  <rect x="585" y="470" width="270" height="102" rx="7" fill="#fff" stroke="#f59e0b" stroke-width="1.5" filter="url(#sh_wf12)"/>
+  <foreignObject x="585" y="470" width="270" height="102"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f8 b cwm">運用③：journal不在時の退路</span><span class="f7 csub">transcriptディレクトリの<span class="mono">agent-&lt;id&gt;.jsonl</span>を読み、継続スクリプトを手書きする（fallback手順として原文に明記）</span></div></foreignObject>
+
+  <rect x="25" y="588" width="830" height="48" rx="7" fill="#fff" stroke="#dc2626" stroke-width="2" filter="url(#sh_wf12)"/>
+  <foreignObject x="25" y="588" width="830" height="48"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><span class="f9 b cd">Resumeがあるから「まず投げて、観察して、直して、続きから」が成立する — 長大ワークフローの試行錯誤コストを崩す中核機構</span></div></foreignObject>
+  </svg>
+</div>
+
+<!-- ============ §13 コード例全集 ============ -->
+<div class="card" id="s13">
+  <h2>§13 注釈付きコード例全集（原文の5例）</h2>
+
+  <h3>例1 — canonical：pipeline＋段内parallel（次元別レビュー→発見即検証）</h3>
+  <pre><code><span class="kw">export const</span> meta = {
+  name: <span class="st">'review-changes'</span>,
+  description: <span class="st">'Review changed files across dimensions, verify each finding'</span>,
+  phases: [{ title: <span class="st">'Review'</span> }, { title: <span class="st">'Verify'</span> }],
+}
+<span class="kw">const</span> DIMENSIONS = [{key: <span class="st">'bugs'</span>, prompt: <span class="st">'...'</span>}, {key: <span class="st">'perf'</span>, prompt: <span class="st">'...'</span>}]
+<span class="kw">const</span> results = <span class="kw">await</span> <span class="fn">pipeline</span>(
+  DIMENSIONS,
+  d =&gt; <span class="fn">agent</span>(d.prompt, {label: <span class="st">`review:${d.key}`</span>, phase: <span class="st">'Review'</span>, schema: FINDINGS_SCHEMA}),
+  review =&gt; <span class="fn">parallel</span>(review.findings.map(f =&gt; () =&gt;
+    <span class="fn">agent</span>(<span class="st">`Adversarially verify: ${f.title}`</span>, {label: <span class="st">`verify:${f.file}`</span>, phase: <span class="st">'Verify'</span>, schema: VERDICT_SCHEMA})
+      .then(v =&gt; ({...f, verdict: v}))
+  ))
+)
+<span class="kw">const</span> confirmed = results.flat().filter(Boolean).filter(f =&gt; f.verdict?.isReal)
+<span class="kw">return</span> { confirmed }
+<span class="cm">// bugs次元の検証は、perf次元がまだレビュー中でも走る — 実時間のムダなし</span>
+<span class="jp">// 注釈：段内のparallelは「1 findingのN検証待ち」であってステージ間バリアではない。</span>
+<span class="jp">// phaseはopts側で明示（pipeline内でグローバルphase()を呼ぶとレースする — §4）</span></code></pre>
+
+  <h3>例2 — バリアが正しい例：全発見をdedupしてから高価な検証へ</h3>
+  <pre><code><span class="kw">const</span> all = <span class="kw">await</span> <span class="fn">parallel</span>(DIMENSIONS.map(d =&gt; () =&gt; <span class="fn">agent</span>(d.prompt, {schema: FINDINGS_SCHEMA})))
+<span class="kw">const</span> deduped = <span class="fn">dedupeByFileAndLine</span>(all.filter(Boolean).flatMap(r =&gt; r.findings))  <span class="cm">// ← 全体を同時に必要とする＝バリア正当</span>
+<span class="kw">const</span> verified = <span class="kw">await</span> <span class="fn">parallel</span>(deduped.map(f =&gt; () =&gt; <span class="fn">agent</span>(<span class="fn">verifyPrompt</span>(f), {schema: VERDICT_SCHEMA})))
+<span class="jp">// 注釈：dedupは「アイテム横断依存」の典型 — §6の正当化ケース①に該当</span></code></pre>
+
+  <h3>例3 — loop-until-count と loop-until-budget</h3>
+  <pre><code><span class="cm">// 件数目標型</span>
+<span class="kw">const</span> bugs = []
+<span class="kw">while</span> (bugs.length &lt; 10) {
+  <span class="kw">const</span> result = <span class="kw">await</span> <span class="fn">agent</span>(<span class="st">"Find bugs in this codebase."</span>, {schema: BUGS_SCHEMA})
+  bugs.push(...result.bugs)
+  <span class="fn">log</span>(<span class="st">`${bugs.length}/10 found`</span>)
+}
+
+<span class="cm">// 予算消化型 — budget.totalガードが無いとremaining()=Infinityで1000体上限まで暴走</span>
+<span class="kw">while</span> (budget.total &amp;&amp; budget.remaining() &gt; 50_000) {
+  <span class="kw">const</span> result = <span class="kw">await</span> <span class="fn">agent</span>(<span class="st">"Find bugs in this codebase."</span>, {schema: BUGS_SCHEMA})
+  bugs.push(...result.bugs)
+  <span class="fn">log</span>(<span class="st">`${bugs.length} found, ${Math.round(budget.remaining()/1000)}k remaining`</span>)
+}</code></pre>
+
+  <h3>例4 — 複合：exhaustive review（find→seen対比dedup→多レンズ審査→loop-until-dry）</h3>
+  <pre><code><span class="kw">const</span> seen = <span class="kw">new</span> Set(), confirmed = []
+<span class="kw">let</span> dry = 0
+<span class="kw">while</span> (dry &lt; 2) {                                             <span class="cm">// loop-until-dry</span>
+  <span class="kw">const</span> found = (<span class="kw">await</span> <span class="fn">parallel</span>(FINDERS.map(f =&gt; () =&gt;         <span class="cm">// バリア：ラウンドの全finderを収集（正当）</span>
+    <span class="fn">agent</span>(f.prompt, {phase: <span class="st">'Find'</span>, schema: BUGS})))).filter(Boolean).flatMap(r =&gt; r.bugs)
+  <span class="kw">const</span> fresh = found.filter(b =&gt; !seen.has(<span class="fn">key</span>(b)))          <span class="cm">// seen対比dedup — プレーンコードで（agentでない）</span>
+  <span class="kw">if</span> (!fresh.length) { dry++; <span class="kw">continue</span> }
+  dry = 0; fresh.forEach(b =&gt; seen.add(<span class="fn">key</span>(b)))
+  <span class="kw">const</span> judged = <span class="kw">await</span> <span class="fn">parallel</span>(fresh.map(b =&gt; () =&gt;           <span class="cm">// 新規バグ全件を同時審査…</span>
+    <span class="fn">parallel</span>([<span class="st">'correctness'</span>,<span class="st">'security'</span>,<span class="st">'repro'</span>].map(lens =&gt; () =&gt;  <span class="cm">// …各3レンズで</span>
+      <span class="fn">agent</span>(<span class="st">`Judge "${b.desc}" via the ${lens} lens — real?`</span>, {phase: <span class="st">'Verify'</span>, schema: VERDICT})))
+      .then(vs =&gt; ({ b, real: vs.filter(Boolean).filter(v =&gt; v.real).length &gt;= 2 }))))
+  confirmed.push(...judged.filter(v =&gt; v.real).map(v =&gt; v.b))
+}
+<span class="kw">return</span> confirmed
+<span class="cm">// dedupはconfirmedでなく「seen」と比較 — さもないと審査棄却分が毎ラウンド再出現し永久に収束しない</span></code></pre>
+
+  <h3>例5 — Adversarial verify（多数決の骨格）</h3>
+  <pre><code><span class="kw">const</span> votes = <span class="kw">await</span> <span class="fn">parallel</span>(Array.from({length: 3}, () =&gt; () =&gt;
+  <span class="fn">agent</span>(<span class="st">`Try to refute: ${claim}. Default to refuted=true if uncertain.`</span>, {schema: VERDICT})))
+<span class="kw">const</span> survives = votes.filter(Boolean).filter(v =&gt; !v.refuted).length &gt;= 2
+<span class="jp">// 注釈：「不確実ならrefuted=true」— 立証責任を発見側に置く。生存には積極的な非反証が2票必要</span></code></pre>
+</div>
+
+<!-- ============ §14 リファレンス表 ============ -->
+<div class="card" id="s14">
+  <h2>§14 リファレンス表</h2>
+
+  <h3>14-1 ツールパラメータ</h3>
+  <div class="tbl-wrap"><table class="ref">
+    <tr><th>パラメータ</th><th>型・制約</th><th>説明</th></tr>
+    <tr><td><code>script</code></td><td>string ≤512KB</td><td>インライン本体。冒頭に<code>export const meta</code>必須。投入と同時にセッションdirへ自動保存され、パスが結果に返る</td></tr>
+    <tr><td><code>scriptPath</code></td><td>string</td><td><b>優先度最高</b>。自動保存されたファイルを編集して再投入する反復用</td></tr>
+    <tr><td><code>name</code></td><td>string</td><td>定義済みワークフロー名（組込み or <code>.claude/workflows/</code>）を解決</td></tr>
+    <tr><td><code>args</code></td><td>any</td><td>スクリプト内グローバル<code>args</code>にそのまま渡る。<b>JSON値のまま渡す</b> — 文字列化すると<code>args.map</code>等がthrow</td></tr>
+    <tr><td><code>resumeFromRunId</code></td><td><code>^wf_[a-z0-9-]{6,}$</code></td><td>同一セッション内のみ。再開前に旧runをTaskStopで停止</td></tr>
+    <tr><td><code>title</code> / <code>description</code></td><td>string</td><td><b>無視される</b>（metaブロックで設定する）</td></tr>
+  </table></div>
+
+  <h3>14-2 実行制約の全定数</h3>
+  <div class="tbl-wrap"><table class="ref">
+    <tr><th>制約</th><th>値</th><th>超過時の挙動</th></tr>
+    <tr><td>同時agent実行数</td><td>min(16, CPUコア−2)／workflow</td><td>キューイングされ枠が空き次第実行（エラーにならない）</td></tr>
+    <tr><td>生涯agent数</td><td>1000体／workflow</td><td>暴走ループのbackstop（実用ワークフローの遥か上に設定）</td></tr>
+    <tr><td>parallel/pipeline 1呼出しのアイテム数</td><td>≤4096</td><td><b>明示エラー</b>（無言の切り詰めではない）</td></tr>
+    <tr><td>script引数サイズ</td><td>≤512KB</td><td>—</td></tr>
+    <tr><td>workflow()入れ子深度</td><td>1段</td><td>子の中の呼出しはthrow</td></tr>
+    <tr><td><code>Date.now()</code> / <code>Math.random()</code> / 引数なし<code>new Date()</code></td><td>使用不可</td><td>throw（resume破壊防止）</td></tr>
+    <tr><td>TypeScript構文</td><td>使用不可</td><td>パースエラー</td></tr>
+    <tr><td>fs／Node.js API</td><td>使用不可</td><td>—（標準JSビルトインのみ）</td></tr>
+    <tr><td>budget超過後のagent()</td><td>—</td><td>throw（ハードシーリング）</td></tr>
+  </table></div>
+
+  <h3>14-3 null／エラー処理マトリクス</h3>
+  <div class="tbl-wrap"><table class="ref">
+    <tr><th>事象</th><th>挙動</th><th>呼出し側の作法</th></tr>
+    <tr><td>実行中にユーザーがagentをスキップ</td><td>そのagent()がnullに解決</td><td rowspan="2"><code>.filter(Boolean)</code>を常用</td></tr>
+    <tr><td>リトライ後も恒久APIエラー</td><td>そのagent()がnullに解決</td></tr>
+    <tr><td>parallel()のthunkがthrow</td><td>該当要素がnull。<b>呼出し自体は決してrejectしない</b></td><td>結果配列を<code>.filter(Boolean)</code>してから使う</td></tr>
+    <tr><td>pipeline()の段がthrow</td><td>そのアイテムがnull化・残段skip。他アイテムは続行</td><td>最終結果で<code>.filter(Boolean)</code></td></tr>
+    <tr><td>schema不一致</td><td>ツールコール層で弾かれモデルが自動再試行</td><td>関与不要</td></tr>
+    <tr><td>workflow()のname不明／scriptPath不可読／子構文エラー</td><td>throw</td><td>劣化継続したければtry/catch</td></tr>
+    <tr><td>4096超のアイテム投入</td><td>明示エラー</td><td>分割する</td></tr>
+  </table></div>
+
+  <h3>14-4 定番の単相ワークフロー5類型（ターンをまたいで連鎖させる）</h3>
+  <div class="tbl-wrap"><table class="ref">
+    <tr><th>類型</th><th>形</th></tr>
+    <tr><td><b>Understand</b></td><td>関連サブシステムへ並列リーダー → 構造化マップ</td></tr>
+    <tr><td><b>Design</b></td><td>N独立アプローチのジャッジパネル → スコア付き統合</td></tr>
+    <tr><td><b>Review</b></td><td>次元分解 → 発見 → 敵対的検証（§13例1）</td></tr>
+    <tr><td><b>Research</b></td><td>マルチモーダルスイープ → 深読み → 統合</td></tr>
+    <tr><td><b>Migrate</b></td><td>対象サイト発見 → 各個変換（worktree隔離）→ 検証</td></tr>
+  </table></div>
+  <p class="note">大きな作業ではこれらを<b>順に複数回</b>実行し、各結果を自分で読んでから次の相を決める — 自分がループに残る。1ワークフロー＝1つの well-scoped なファンアウト。</p>
+
+  <h3>14-5 swarm2 / codex-flow との位置づけ（参考・原文外）</h3>
+  <div class="tbl-wrap"><table class="ref">
+    <tr><th>観点</th><th>Workflowツール</th><th>swarm2 / codex-flow（既存運用）</th></tr>
+    <tr><td>実行主体</td><td>Claudeサブエージェントのみ</td><td>Codex exec（GPT-5.5 xhigh）が全実行</td></tr>
+    <tr><td>制御フロー</td><td>JSスクリプトによる決定論（組み込み）</td><td>coordctl／runner.py（自作基盤）</td></tr>
+    <tr><td>レジューム</td><td>runIdキャッシュ再生を内蔵</td><td>runner.pyの--resume／state.json</td></tr>
+    <tr><td>構造化出力</td><td>schema＋ツールコール層検証（自動リトライ）</td><td>「最後にJSONのみ」＋呼出し側検証（--output-schemaは既知の罠）</td></tr>
+    <tr><td>起動条件</td><td>ユーザーの明示オプトイン必須</td><td>/swarm2等のスキル起動</td></tr>
+  </table></div>
+  <p class="note">この行のみ本マニュアル外の比較情報（当環境の運用メモに基づく）。Codexを実行部隊にしたい場合は従来どおりswarm2／codex-flowが適役で、Workflowは「Claude系サブエージェントの決定論的統率＋レジューム」が欲しいときの選択肢。</p>
+
+  <div class="ok-box"><b>ふりかえり（本書の検証）</b>：全12図・全表の記述は転写ファイル <code>~/.claude/WORKFLOW_TOOL_MANUAL.md</code> の原文と突合済み。数値（16／1000／4096／512KB／200-500ms／wf_正規表現）はすべて原文の値。§14-5のみ運用メモ由来と明示。</div>
+  <div class="meta-line" style="margin-top:14px;">底本：Claude Codeシステムプロンプト内 Workflowツール定義（英語原文）／転写 2026-07-05 ／ 図解形式：foreignObject+flexbox（svg2規約）</div>
+</div>
+
+</body>
+</html>
