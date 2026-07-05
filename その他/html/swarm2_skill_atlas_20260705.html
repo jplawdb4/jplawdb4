@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SWARM2 ATLAS — 品質最優先スワームの全構造</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0a0f1c; --panel:#0f1729; --panel2:#131e33; --line:#1e2c47;
+  --opus:#22d3ee; --codex:#fbbf24; --human:#a78bfa;
+  --pass:#34d399; --fail:#fb7185; --steel:#8496b0; --ink:#dbe4f0; --dim:#7487a3;
+}
+body{font-family:"Noto Sans JP","Hiragino Sans",sans-serif;background:var(--bg);color:var(--ink);padding:26px 18px;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact;}
+.wrap{max-width:1020px;margin:0 auto;}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px 26px;margin-bottom:22px;}
+.panel svg{width:100%;display:block;}
+h1{font-size:1.45rem;font-weight:800;letter-spacing:.04em;}
+h1 .en{color:var(--opus);font-family:ui-monospace,Consolas,monospace;font-size:.85em;letter-spacing:.14em;}
+h2{font-size:1.02rem;font-weight:800;margin-bottom:4px;letter-spacing:.02em;}
+h2 .no{font-family:ui-monospace,Consolas,monospace;color:var(--opus);font-size:.8em;letter-spacing:.12em;margin-right:8px;}
+p.lead{font-size:.82rem;color:var(--dim);line-height:1.85;margin:8px 0 14px;}
+p.lead b{color:var(--ink);}
+.meta{font-size:.72rem;color:var(--dim);font-family:ui-monospace,Consolas,monospace;margin-top:6px;}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;font-size:.74rem;color:var(--dim);}
+.legend span::before{content:"■ ";}
+.lg-opus::before{color:var(--opus);} .lg-codex::before{color:var(--codex);} .lg-human::before{color:var(--human);}
+.lg-pass::before{color:var(--pass);} .lg-fail::before{color:var(--fail);}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:12px;}
+.rule-card{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--opus);border-radius:8px;padding:14px 16px;font-size:.8rem;line-height:1.75;}
+.rule-card b{color:var(--opus);display:block;margin-bottom:4px;font-size:.86rem;}
+.quote{border:1px dashed var(--codex);border-radius:10px;padding:14px 18px;margin:14px 0;font-size:.85rem;line-height:1.9;color:#fde68a;background:rgba(251,191,36,.05);}
+table.rf{width:100%;border-collapse:collapse;font-size:.76rem;margin-top:10px;}
+table.rf th{background:#16233c;color:var(--opus);text-align:left;padding:7px 10px;font-family:ui-monospace,Consolas,monospace;font-weight:700;letter-spacing:.05em;}
+table.rf td{border-top:1px solid var(--line);padding:7px 10px;line-height:1.7;color:var(--ink);vertical-align:top;}
+table.rf td:first-child{font-family:ui-monospace,Consolas,monospace;color:var(--codex);white-space:nowrap;}
+code{font-family:ui-monospace,Consolas,monospace;background:#16233c;color:#7dd3fc;padding:1px 6px;border-radius:4px;font-size:.9em;}
+.tbl-wrap{overflow-x:auto;}
+/* SVG foreignObject utilities */
+.d{font-family:'Noto Sans JP',sans-serif;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:2px;padding:4px 10px;line-height:1.4;}
+.dl{align-items:flex-start;text-align:left;}
+.dr{flex-direction:row;flex-wrap:wrap;gap:6px;justify-content:center;}
+.mo{font-family:ui-monospace,Consolas,monospace;}
+.s7{font-size:7.5px;} .s8{font-size:8px;} .s9{font-size:9px;} .s10{font-size:10px;} .s11{font-size:11px;} .s12{font-size:12px;} .s13{font-size:13px;}
+.w7{font-weight:700;} .w8{font-weight:800;}
+.tO{color:#22d3ee;} .tC{color:#fbbf24;} .tH{color:#a78bfa;} .tP{color:#34d399;} .tF{color:#fb7185;}
+.tI{color:#dbe4f0;} .tD{color:#7487a3;} .tS{color:#8496b0;} .tY{color:#fde68a;}
+.chip{display:inline-block;border-radius:4px;padding:1.5px 7px;font-weight:700;}
+@media(max-width:640px){
+  body{padding:10px 6px;}
+  .panel{padding:12px 10px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .panel svg{min-width:780px;}
+  .grid3{grid-template-columns:1fr;}
+}
+@media print{ .panel{break-inside:avoid;} body{padding:0;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ============ HEADER ============ -->
+<div class="panel" style="border-top:3px solid var(--opus);">
+  <h1><span class="en">SWARM2&nbsp;//&nbsp;ATLAS</span>　品質最優先スワームの全構造</h1>
+  <p class="lead" style="margin-bottom:6px;">
+    swarm2は<b>速度でなく品質を最適化する</b>汎用オーケストレーション。品質は「才能ある1回の生成」からではなく、
+    <b>狂気的粒度の仕様 × 独立検証 × 敵対的批評 × 有界修理</b>の反復構造から生まれる — という設計思想を、
+    紳士協定でなく<b>構造（token照合・per-agent既読・単一書き手lock）</b>で保証する。
+  </p>
+  <div class="legend">
+    <span class="lg-human">人間＝操舵・サインオフ</span>
+    <span class="lg-opus">Opus＝設計・管理・検証（成果物を一文字も書かない）</span>
+    <span class="lg-codex">Codex exec (GPT-5.5 xhigh)＝唯一の実行者</span>
+    <span class="lg-pass">pass／昇格</span>
+    <span class="lg-fail">fail／欠陥</span>
+  </div>
+  <div class="meta">底本: ~/.claude/skills/swarm2/{SKILL.md, reference/SPEC_CARD.md, reference/QUALITY_PIPELINE.md} ／ 図解 2026-07-05</div>
+</div>
+
+<!-- ============ 鉄則 ============ -->
+<div class="panel">
+  <h2><span class="no">00</span>鉄則 — 3つの不変原理</h2>
+  <div class="grid3">
+    <div class="rule-card"><b>① 実行はCodexのみ</b>Opusは（ネストしても）全員が設計・管理・検証者。書くのは仕様・検証判定・統合指示だけ。成果物の本文は一文字も書かない。</div>
+    <div class="rule-card" style="border-left-color:var(--codex);"><b style="color:var(--codex);">② 仕様なき委譲は禁止</b>全dispatchは事前にspec cardを書く。曖昧な指示はCodexの平均品質しか引き出さない — <b>仕様の粒度が出力品質の上限を決める</b>。</div>
+    <div class="rule-card" style="border-left-color:var(--fail);"><b style="color:var(--fail);">③ 未検証の成果物は存在しないのと同じ</b>品質ラダーを昇りきるまで「完了」を主張しない。段のスキップは下方向のみ・人間だけが許可できる。</div>
+  </div>
+</div>
+
+<!-- ============ ORGANISM ============ -->
+<div class="panel">
+  <h2><span class="no">01</span>全体組織図 — 人間 / Opus管理層 / Codex実行部隊</h2>
+  <p class="lead">3種のアクターが coordctl v7 台帳（SQLite）を介して協調する。人間の操舵は per-agent 既読で<b>全管理者に確実に届き</b>、Codexの成果物は書き手と別人の独立Opusが token 照合つきで検証する。</p>
+  <svg viewBox="0 0 1000 680" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>swarm2の全体組織：人間、Opus管理層、Codex実行部隊、coordctl台帳、固定レール</title>
+  <defs>
+    <filter id="gA_op"><feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#22d3ee" flood-opacity="0.25"/></filter>
+    <filter id="gA_cx"><feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#fbbf24" flood-opacity="0.25"/></filter>
+    <filter id="gA_hu"><feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#a78bfa" flood-opacity="0.25"/></filter>
+  </defs>
+  <rect x="2" y="2" width="996" height="676" rx="10" fill="none" stroke="#1e2c47" stroke-width="1.5"/>
+  <path d="M2,26 L2,2 L26,2" fill="none" stroke="#22d3ee" stroke-width="2"/>
+  <path d="M974,678 L998,678 L998,654" fill="none" stroke="#22d3ee" stroke-width="2"/>
+  <text x="24" y="30" font-size="10" fill="#22d3ee" font-family="ui-monospace,Consolas,monospace" letter-spacing="3">ORGANISM</text>
+
+  <!-- HUMAN -->
+  <rect x="30" y="66" width="190" height="210" rx="9" fill="#131e33" stroke="#a78bfa" stroke-width="1.5" filter="url(#gA_hu)"/>
+  <foreignObject x="30" y="66" width="190" height="210"><div xmlns="http://www.w3.org/1999/xhtml" class="d dl" style="gap:5px;padding:12px 14px;"><span class="s12 w8 tH">人間（主宰）</span><span class="s8 tI">・<span class="mo">human-say</span>で操舵</span><span class="s8 tI">・gate／invariant／DoD ルーブリック変更のサインオフ</span><span class="s8 tI">・tripwire裁定（中心方針変更・完了直前・高重要未確認）</span><span class="s8 tI">・ラダー段スキップの許可（下方向のみ）</span><span class="s8 tI">・L5修理max超過のescalate受け</span></div></foreignObject>
+
+  <!-- human-say flow -->
+  <line x1="220" y1="110" x2="268" y2="110" stroke="#a78bfa" stroke-width="2" stroke-dasharray="6 4"/>
+  <polygon points="268,105.5 280,110 268,114.5" fill="#a78bfa"/>
+  <text x="250" y="100" text-anchor="middle" font-size="8" fill="#a78bfa" font-family="'Noto Sans JP',sans-serif" font-weight="700">human-say</text>
+
+  <!-- OPUS zone -->
+  <rect x="280" y="56" width="420" height="300" rx="10" fill="none" stroke="#22d3ee" stroke-width="1" stroke-dasharray="3 4"/>
+  <text x="296" y="74" font-size="9" fill="#22d3ee" font-family="ui-monospace,Consolas,monospace" letter-spacing="2">OPUS MANAGEMENT — 深さ≤3・幅≤6・wide&gt;deep</text>
+  <rect x="300" y="84" width="380" height="58" rx="8" fill="#0d2233" stroke="#22d3ee" stroke-width="1.5" filter="url(#gA_op)"/>
+  <foreignObject x="300" y="84" width="380" height="58"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s11 w8 tO">TOP OPUS — orchestrator</span><span class="s8 tD">見積・トポロジ選択・spec card執筆・検証verdict・統合・自己改善</span></div></foreignObject>
+  <line x1="380" y1="142" x2="380" y2="158" stroke="#22d3ee" stroke-width="1.5"/><polygon points="376,158 380,168 384,158" fill="#22d3ee"/>
+  <line x1="490" y1="142" x2="490" y2="158" stroke="#22d3ee" stroke-width="1.5"/><polygon points="486,158 490,168 494,158" fill="#22d3ee"/>
+  <line x1="600" y1="142" x2="600" y2="158" stroke="#22d3ee" stroke-width="1.5"/><polygon points="596,158 600,168 604,158" fill="#22d3ee"/>
+  <rect x="316" y="168" width="128" height="52" rx="7" fill="#0d2233" stroke="#22d3ee" stroke-width="1.2"/>
+  <foreignObject x="316" y="168" width="128" height="52"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s9 w7 tO">Opus管理者 #1</span><span class="s7 tD">item群をclaim・card執筆</span></div></foreignObject>
+  <rect x="426" y="168" width="128" height="52" rx="7" fill="#0d2233" stroke="#22d3ee" stroke-width="1.2"/>
+  <foreignObject x="426" y="168" width="128" height="52"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s9 w7 tO">Opus管理者 #2</span><span class="s7 tD">動的ループ（tick）で自走</span></div></foreignObject>
+  <rect x="536" y="168" width="128" height="52" rx="7" fill="#0d2233" stroke="#22d3ee" stroke-width="1.2"/>
+  <foreignObject x="536" y="168" width="128" height="52"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s9 w7 tO">Opus管理者 #≤6</span><span class="s7 tD">min(N,6)で頭打ち</span></div></foreignObject>
+  <rect x="300" y="240" width="380" height="58" rx="8" fill="#0d2233" stroke="#22d3ee" stroke-width="1.5" stroke-dasharray="7 3"/>
+  <foreignObject x="300" y="240" width="380" height="58"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s10 w8 tO">独立検証Opus（fresh-context・書き手≠検証者）</span><span class="s8 tD">gate機械チェック＋反証質問＋根拠の逐語照合 → verdictを<span class="mo tO">verify --token</span>で記録</span></div></foreignObject>
+  <text x="490" y="320" text-anchor="middle" font-size="8.5" fill="#7487a3" font-family="'Noto Sans JP',sans-serif">検証は委譲不可 — 自己検証・token不一致・author不明(stakes≥med)は exit4 で構造拒否</text>
+
+  <!-- CODEX fleet -->
+  <rect x="760" y="56" width="210" height="300" rx="10" fill="none" stroke="#fbbf24" stroke-width="1" stroke-dasharray="3 4"/>
+  <text x="776" y="74" font-size="9" fill="#fbbf24" font-family="ui-monospace,Consolas,monospace" letter-spacing="2">CODEX EXEC FLEET</text>
+  <rect x="776" y="88" width="178" height="66" rx="7" fill="#2a1f06" stroke="#fbbf24" stroke-width="1.3" filter="url(#gA_cx)"/>
+  <foreignObject x="776" y="88" width="178" height="66"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s9 w8 tC">codex exec #1</span><span class="s7 tY mo">xhigh・per-task起動</span><span class="s7 tD mo">…"&lt;card全文&gt;" &lt;/dev/null</span></div></foreignObject>
+  <rect x="776" y="166" width="178" height="66" rx="7" fill="#2a1f06" stroke="#fbbf24" stroke-width="1.3"/>
+  <foreignObject x="776" y="166" width="178" height="66"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s9 w8 tC">codex exec #2</span><span class="s7 tD">調査・起草・根拠紐付け・変換・修理のすべて</span></div></foreignObject>
+  <rect x="776" y="244" width="178" height="66" rx="7" fill="#2a1f06" stroke="#fbbf24" stroke-width="1.3"/>
+  <foreignObject x="776" y="244" width="178" height="66"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s9 w8 tC">codex exec #N</span><span class="s7 tD">並列ファンアウトはcodex-flowで管理</span></div></foreignObject>
+
+  <!-- dispatch / return flows -->
+  <line x1="700" y1="120" x2="748" y2="120" stroke="#fbbf24" stroke-width="2"/>
+  <polygon points="748,115.5 760,120 748,124.5" fill="#fbbf24"/>
+  <text x="729" y="110" text-anchor="middle" font-size="8" fill="#fbbf24" font-family="'Noto Sans JP',sans-serif" font-weight="700">spec card全文</text>
+  <line x1="760" y1="280" x2="712" y2="280" stroke="#34d399" stroke-width="2"/>
+  <polygon points="712,275.5 700,280 712,284.5" fill="#34d399"/>
+  <text x="731" y="296" text-anchor="middle" font-size="8" fill="#34d399" font-family="'Noto Sans JP',sans-serif" font-weight="700">成果物→独立検証へ</text>
+
+  <!-- coordctl bus -->
+  <line x1="490" y1="356" x2="490" y2="378" stroke="#8496b0" stroke-width="1.5"/><polygon points="486,378 490,388 494,378" fill="#8496b0"/>
+  <rect x="150" y="390" width="700" height="66" rx="8" fill="#131e33" stroke="#8496b0" stroke-width="1.5"/>
+  <foreignObject x="150" y="390" width="700" height="66"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s11 w8 tS mo">coordctl v7 — SQLite協調台帳</span><div class="d dr" style="height:auto;"><span class="s8 chip" style="background:#1c2a44;color:#93c5fd;">claim / lease（衝突回避）</span><span class="s8 chip" style="background:#1c2a44;color:#93c5fd;">dispatch span記録</span><span class="s8 chip" style="background:#1c2a44;color:#93c5fd;">verify --token（本人性照合）</span><span class="s8 chip" style="background:#1c2a44;color:#93c5fd;">msg_reads（per-agent既読）</span><span class="s8 chip" style="background:#1c2a44;color:#93c5fd;">tick --agent（自他区別）</span><span class="s8 chip" style="background:#1c2a44;color:#93c5fd;">trace</span></div></div></foreignObject>
+  <text x="500" y="476" text-anchor="middle" font-size="8.5" fill="#7487a3" font-family="'Noto Sans JP',sans-serif">message ≠ authority：msgはcontrol表に触れない・禁止kindはexit4 ／ 補助: agcoord.py（自己採番・統合ロック）・agmeta.py（メトリクス・learnings）・agworker.sh（常設管理者起動）</text>
+
+  <!-- principle band -->
+  <rect x="150" y="494" width="700" height="44" rx="8" fill="rgba(34,211,238,.07)" stroke="#22d3ee" stroke-width="1.2"/>
+  <foreignObject x="150" y="494" width="700" height="44"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s11 w8 tO">Opusは一文字も成果物を書かない — 書くのは仕様・検証判定・統合指示だけ</span></div></foreignObject>
+
+  <!-- invariant rail -->
+  <text x="30" y="570" font-size="9" fill="#fb7185" font-family="ui-monospace,Consolas,monospace" letter-spacing="2">INVARIANT RAIL — 自己改変不可の固定レール</text>
+  <line x1="30" y1="580" x2="970" y2="580" stroke="#fb7185" stroke-width="1"/>
+  <line x1="30" y1="646" x2="970" y2="646" stroke="#fb7185" stroke-width="1"/>
+  <foreignObject x="30" y="584" width="940" height="58"><div xmlns="http://www.w3.org/1999/xhtml" class="d dr" style="gap:7px;"><span class="s8 chip" style="background:#2a1220;color:#fda4af;">実行＝Codexのみ</span><span class="s8 chip" style="background:#2a1220;color:#fda4af;">仕様なき委譲禁止</span><span class="s8 chip" style="background:#2a1220;color:#fda4af;">検証委譲不可＋token照合＋書き手≠検証者</span><span class="s8 chip" style="background:#2a1220;color:#fda4af;">統合＝単一書き手</span><span class="s8 chip" style="background:#2a1220;color:#fda4af;">深さ≤3・幅≤6</span><span class="s8 chip" style="background:#2a1220;color:#fda4af;">gate・invariant・DoD変更＝人間サインオフ</span><span class="s8 chip" style="background:#2a1220;color:#fda4af;">段スキップ＝人間のみ</span><span class="s8 chip" style="background:#2a1220;color:#fda4af;">dispatch後60秒の稼働確認は省略不可</span></div></foreignObject>
+  </svg>
+</div>
+
+<!-- ============ QUALITY LADDER ============ -->
+<div class="panel">
+  <h2><span class="no">02</span>品質ラダー L0→L7 — 全work-itemが昇る8段</h2>
+  <p class="lead">下から昇る。stakes（重要度）に応じて出口が変わり、<b>低=L3・中=L4(1レンズ)・高=L4(N≥2)＋L7必須</b>。fail は有界修理（L5）を経て独立再検証に戻る。<b>時間配分の3割はL0（仕様）に使う</b> — ここを削ると後段すべてが薄まる。</p>
+  <svg viewBox="0 0 1000 900" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>品質ラダーL0からL7の8段と、stakes別出口、修理ループ</title>
+  <defs>
+    <filter id="gB_op"><feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#22d3ee" flood-opacity="0.2"/></filter>
+    <linearGradient id="gB_rail" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#1e2c47"/><stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="996" height="896" rx="10" fill="none" stroke="#1e2c47" stroke-width="1.5"/>
+  <path d="M2,26 L2,2 L26,2" fill="none" stroke="#22d3ee" stroke-width="2"/>
+  <text x="24" y="30" font-size="10" fill="#22d3ee" font-family="ui-monospace,Consolas,monospace" letter-spacing="3">QUALITY LADDER</text>
+
+  <!-- ladder rails -->
+  <rect x="120" y="60" width="5" height="790" fill="url(#gB_rail)"/>
+  <rect x="600" y="60" width="5" height="790" fill="url(#gB_rail)"/>
+  <text x="112" y="56" font-size="9" fill="#22d3ee" font-family="ui-monospace,Consolas,monospace">品質 ▲</text>
+
+  <!-- L7 (top) -->
+  <rect x="140" y="70" width="445" height="76" rx="8" fill="#0d2233" stroke="#22d3ee" stroke-width="1.5" filter="url(#gB_op)"/>
+  <foreignObject x="140" y="70" width="445" height="76"><div xmlns="http://www.w3.org/1999/xhtml" class="d dl" style="gap:3px;padding:8px 14px;"><span class="s11 w8 tO mo">L7 audit <span class="s8 chip" style="background:#0d3341;color:#67e8f9;">Opus</span></span><span class="s8 tI">完成主張の前の全体監査：completeness critic「何が欠けているか」＋ DoDルーブリックで採点可能な完了判定</span></div></foreignObject>
+  <!-- L6 -->
+  <rect x="140" y="166" width="445" height="76" rx="8" fill="#0d2233" stroke="#22d3ee" stroke-width="1.5"/>
+  <foreignObject x="140" y="166" width="445" height="76"><div xmlns="http://www.w3.org/1999/xhtml" class="d dl" style="gap:3px;padding:8px 14px;"><span class="s11 w8 tO mo">L6 integrate <span class="s8 chip" style="background:#0d3341;color:#67e8f9;">Opus・lock</span></span><span class="s8 tI">単一書き手（統合ロック保持者）だけが統合。統合後に横断一貫性チェック（用語／参照／重複）</span></div></foreignObject>
+  <!-- L5 -->
+  <rect x="140" y="262" width="445" height="86" rx="8" fill="#2a1f06" stroke="#fbbf24" stroke-width="1.5"/>
+  <foreignObject x="140" y="262" width="445" height="86"><div xmlns="http://www.w3.org/1999/xhtml" class="d dl" style="gap:3px;padding:8px 14px;"><span class="s11 w8 tC mo">L5 repair <span class="s8 chip" style="background:#3b2c08;color:#fde68a;">Codex・有界</span></span><span class="s8 tI">fail→修理チケット→Codex再委譲→<b>独立再検証</b>。差分最小主義（欠陥票の欠陥だけ直す・ついで改変禁止＝退行防止）</span><span class="s8 tF w7">max超過（exit5）＝人間へescalate</span></div></foreignObject>
+  <!-- L4 -->
+  <rect x="140" y="368" width="445" height="86" rx="8" fill="#0d2233" stroke="#22d3ee" stroke-width="1.5" stroke-dasharray="7 3"/>
+  <foreignObject x="140" y="368" width="445" height="86"><div xmlns="http://www.w3.org/1999/xhtml" class="d dl" style="gap:3px;padding:8px 14px;"><span class="s11 w8 tO mo">L4 critique <span class="s8 chip" style="background:#0d3341;color:#67e8f9;">独立Opusパネル</span></span><span class="s8 tI">敵対的批評 —「仕様を超えて弱いところはどこか」。stakes高はレンズ違いN≥2を<b>並列</b>（正確性／完全性・欠落／論理一貫性／様式・読者体験）</span><span class="s8 tD">起動句「反駁せよ。迷ったら欠陥あり側に倒せ」— 反駁されなければ昇格</span></div></foreignObject>
+  <!-- L3 -->
+  <rect x="140" y="474" width="445" height="86" rx="8" fill="#0d2233" stroke="#22d3ee" stroke-width="1.5" stroke-dasharray="7 3"/>
+  <foreignObject x="140" y="474" width="445" height="86"><div xmlns="http://www.w3.org/1999/xhtml" class="d dl" style="gap:3px;padding:8px 14px;"><span class="s11 w8 tO mo">L3 verify <span class="s8 chip" style="background:#0d3341;color:#67e8f9;">独立Opus・token照合</span></span><span class="s8 tI">fresh-contextの検証者が (a) gate機械チェック (b) 反証質問を全て突く (c) 根拠サンプリングK件（stakes高は全件）を一次資料と逐語照合</span><span class="s8 tD mo">verify --token 〜 自称検証者は構造的に不可能</span></div></foreignObject>
+  <!-- L2 -->
+  <rect x="140" y="580" width="445" height="80" rx="8" fill="#2a1f06" stroke="#fbbf24" stroke-width="1.5"/>
+  <foreignObject x="140" y="580" width="445" height="80"><div xmlns="http://www.w3.org/1999/xhtml" class="d dl" style="gap:3px;padding:8px 14px;"><span class="s11 w8 tC mo">L2 evidence <span class="s8 chip" style="background:#3b2c08;color:#fde68a;">Codex・別dispatch</span></span><span class="s8 tI">全主張に根拠を紐付け（一次資料の所在＋逐語）。<b>根拠なき主張はL2で死ぬ</b>。起草と根拠付けは混ぜない — 混ぜると根拠が後付けの飾りになる</span></div></foreignObject>
+  <!-- L1 -->
+  <rect x="140" y="680" width="445" height="70" rx="8" fill="#2a1f06" stroke="#fbbf24" stroke-width="1.5"/>
+  <foreignObject x="140" y="680" width="445" height="70"><div xmlns="http://www.w3.org/1999/xhtml" class="d dl" style="gap:3px;padding:8px 14px;"><span class="s11 w8 tC mo">L1 draft <span class="s8 chip" style="background:#3b2c08;color:#fde68a;">Codex</span></span><span class="s8 tI">spec card<b>全文</b>をプロンプトに貼って起草（パス参照だけにしない＝読み落とし防止）。実行中はrenewでリース維持</span></div></foreignObject>
+  <!-- L0 -->
+  <rect x="140" y="770" width="445" height="80" rx="8" fill="#0d2233" stroke="#22d3ee" stroke-width="2" filter="url(#gB_op)"/>
+  <foreignObject x="140" y="770" width="445" height="80"><div xmlns="http://www.w3.org/1999/xhtml" class="d dl" style="gap:3px;padding:8px 14px;"><span class="s11 w8 tO mo">L0 spec <span class="s8 chip" style="background:#0d3341;color:#67e8f9;">Opus</span></span><span class="s8 tI">itemをclaimしspec cardを書く（目的／入力／出力スキーマ／根拠要求／禁止／gate／反証質問）</span><span class="s8 tY w7">全工程の3割をここに使う — 仕様の粒度が品質の上限</span></div></foreignObject>
+
+  <!-- repair loop: L3/L4 fail -> L5 -> back -->
+  <polyline points="585,517 640,517 640,305 585,305" stroke="#fb7185" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+  <polygon points="585,300.5 573,305 585,309.5" fill="#fb7185"/>
+  <text x="648" y="420" font-size="8.5" fill="#fb7185" font-family="'Noto Sans JP',sans-serif" font-weight="700">fail</text>
+  <polyline points="585,411 662,411 662,530" stroke="#fb7185" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+  <polyline points="585,330 700,330 700,500 597,500" stroke="#34d399" stroke-width="2" fill="none"/>
+  <polygon points="597,495.5 585,500 597,504.5" fill="#34d399"/>
+  <text x="706" y="486" font-size="8.5" fill="#34d399" font-family="'Noto Sans JP',sans-serif" font-weight="700">修理後は独立再検証へ（同じ規律）</text>
+
+  <!-- stakes exits -->
+  <text x="760" y="70" font-size="9" fill="#8496b0" font-family="ui-monospace,Consolas,monospace" letter-spacing="2">STAKES別の出口</text>
+  <rect x="760" y="80" width="210" height="88" rx="8" fill="#131e33" stroke="#fb7185" stroke-width="1.5"/>
+  <foreignObject x="760" y="80" width="210" height="88"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s10 w8 tF">stakes 高</span><span class="s8 tI">L4をレンズ違いN≥2並列</span><span class="s8 tI">＋ <b>L7必須</b></span><span class="s7 tD">学術・法務・高リスク成果物</span></div></foreignObject>
+  <rect x="760" y="392" width="210" height="70" rx="8" fill="#131e33" stroke="#fbbf24" stroke-width="1.5"/>
+  <foreignObject x="760" y="392" width="210" height="70"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s10 w8 tC">stakes 中</span><span class="s8 tI">L4（1レンズ）まで昇って完了</span></div></foreignObject>
+  <rect x="760" y="498" width="210" height="70" rx="8" fill="#131e33" stroke="#34d399" stroke-width="1.5"/>
+  <foreignObject x="760" y="498" width="210" height="70"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s10 w8 tP">stakes 低</span><span class="s8 tI">L3（独立検証）まで昇って完了</span></div></foreignObject>
+  <line x1="970" y1="168" x2="970" y2="392" stroke="#1e2c47" stroke-width="1"/>
+  <foreignObject x="760" y="592" width="210" height="120"><div xmlns="http://www.w3.org/1999/xhtml" class="d dl" style="gap:4px;"><span class="s8 tD">・出口の位置＝重要度の宣言。上げる分には自由、下げるのは人間だけ</span><span class="s8 tD">・「軽いitemはL2をL1のcard §4に統合してよい」のもstakes低のみ</span></div></foreignObject>
+
+  <rect x="140" y="862" width="830" height="0" fill="none"/>
+  <text x="500" y="878" text-anchor="middle" font-size="9.5" fill="#fb7185" font-family="'Noto Sans JP',sans-serif" font-weight="700">未検証の成果物は存在しないのと同じ — ラダーを昇りきるまで「完了」は語れない</text>
+  </svg>
+</div>
+
+<!-- ============ SPEC CARD ============ -->
+<div class="panel">
+  <h2><span class="no">03</span>spec card — 狂気的粒度の委譲仕様書（8節）</h2>
+  <p class="lead">1 dispatch = 1 card。書けない項目があるなら、それは委譲でなく<b>まず診断（Opusの仕事）が必要なサイン</b>。dispatchプロンプトにはcard全文を貼る。</p>
+  <svg viewBox="0 0 1000 620" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>spec cardの8節構成と自己チェック</title>
+  <defs><filter id="gC_op"><feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#22d3ee" flood-opacity="0.18"/></filter></defs>
+  <rect x="2" y="2" width="996" height="616" rx="10" fill="none" stroke="#1e2c47" stroke-width="1.5"/>
+  <path d="M2,26 L2,2 L26,2" fill="none" stroke="#22d3ee" stroke-width="2"/>
+  <text x="24" y="30" font-size="10" fill="#22d3ee" font-family="ui-monospace,Consolas,monospace" letter-spacing="3">SPEC CARD ANATOMY</text>
+
+  <!-- document mock -->
+  <rect x="40" y="52" width="450" height="530" rx="8" fill="#0d1526" stroke="#22d3ee" stroke-width="1.5" filter="url(#gC_op)"/>
+  <rect x="40" y="52" width="450" height="34" rx="8" fill="#0d2233"/>
+  <foreignObject x="40" y="52" width="450" height="34"><div xmlns="http://www.w3.org/1999/xhtml" class="d dr"><span class="s10 w8 tO mo"># SPEC: &lt;item&gt; / &lt;一意ID&gt;</span><span class="s7 tD mo">specs/SPEC_&lt;item&gt;_&lt;連番&gt;.md</span></div></foreignObject>
+  <foreignObject x="52" y="94" width="426" height="480"><div xmlns="http://www.w3.org/1999/xhtml" class="d dl" style="gap:8px;justify-content:flex-start;padding:8px 10px;"
+    ><span class="s9 tI"><b class="tO">§1 目的</b>（1-2文）— 全体のどこに嵌まり、何が達成されたら成功か</span
+    ><span class="s9 tI"><b class="tO">§2 入力資源</b> — <b>全て実在パス・実在URL＋該当箇所（頁・条・節）</b>。「適当に探せ」禁止。参照禁止（汚染源・古い版）も明記</span
+    ><span class="s9 tI"><b class="tO">§3 出力仕様</b> — 形式（スキーマ／見出し構成）・分量の下限-上限・正確な保存先</span
+    ><span class="s9 tI"><b class="tO">§4 根拠要求</b>（L2の契約）— 全主張に <span class="mo s8 tY">[根拠: 資料ID 所在 "逐語20字前後"]</span>。根拠を発見できなければ削除せず<span class="tY">「⚠️未確認: 理由」</span>と明示 — 黙って断言するのが最悪</span
+    ><span class="s9 tI"><b class="tO">§5 禁止事項</b> — 出典の創作（書誌・頁・判例番号・URLのでっち上げ）／仕様外ファイルへの書込み／プロジェクト固有禁止（AI臭語彙・比喩等）</span
+    ><span class="s9 tI"><b class="tO">§6 gate</b> — 検証者が<b>そのまま実行できる機械チェック</b>：<span class="mo s8 tD">grep -c '⚠️未確認' ≤ N ／ リンク全生存 ／ schema validate ／ テスト通過</span></span
+    ><span class="s9 tI"><b class="tO">§7 反証質問</b>（≥3）— 「もっともらしいが間違い」になるとしたらどこか、を書き手目線で。検証者はまずここを突く</span
+    ><span class="s9 tI"><b class="tO">§8 完了の定義</b> — 何が揃ったらcloseか（DoDルーブリックの該当行）</span
+  ></div></foreignObject>
+
+  <!-- annotations right -->
+  <rect x="530" y="52" width="440" height="96" rx="8" fill="#131e33" stroke="#fbbf24" stroke-width="1.3"/>
+  <foreignObject x="530" y="52" width="440" height="96"><div xmlns="http://www.w3.org/1999/xhtml" class="d dl" style="gap:4px;padding:10px 16px;"><span class="s10 w8 tC">なぜこの粒度か</span><span class="s8 tI">Codexの出力品質は仕様の粒度で決まる。曖昧な指示は平均品質しか引き出さない。cardだけ読んだ第三者が<b>会話の文脈ゼロで作業を再現できる</b>ことが基準</span></div></foreignObject>
+  <rect x="530" y="162" width="440" height="180" rx="8" fill="#131e33" stroke="#22d3ee" stroke-width="1.3"/>
+  <foreignObject x="530" y="162" width="440" height="180"><div xmlns="http://www.w3.org/1999/xhtml" class="d dl" style="gap:6px;padding:10px 16px;"><span class="s10 w8 tO">Opusの自己チェック（card執筆時）</span><span class="s8 tI">☑ このcardだけで第三者が作業を再現できるか</span><span class="s8 tI">☑ 入力資源は全て実在確認したか（パスをlsした／URLを開いた）</span><span class="s8 tI">☑ gateは機械的か（「良い感じか確認」はgateではない）</span><span class="s8 tI">☑ 反証質問は本気か（形式的な3つはL4で見抜かれる）</span></div></foreignObject>
+  <rect x="530" y="356" width="440" height="110" rx="8" fill="rgba(251,191,36,.06)" stroke="#fbbf24" stroke-width="1.3" stroke-dasharray="6 3"/>
+  <foreignObject x="530" y="356" width="440" height="110"><div xmlns="http://www.w3.org/1999/xhtml" class="d dl" style="gap:5px;padding:10px 16px;"><span class="s10 w8 tC">素材契約（20260705追加・dispatch前の前段装置）</span><span class="s8 tI">ローカル<b>素材台帳</b>をCodexと共有。所在の推測記載は禁止。台帳に無い素材はウェブDR（URL・確認日付き）→<b>主宰の一次照合</b>→台帳昇格を経てから本文に使う</span><span class="s8 tY w7">素材在庫が語れることの天井を決める — QAを増やす前に、照合できる素材を増やせ</span></div></foreignObject>
+  <rect x="530" y="480" width="440" height="102" rx="8" fill="#131e33" stroke="#8496b0" stroke-width="1.2"/>
+  <foreignObject x="530" y="480" width="440" height="102"><div xmlns="http://www.w3.org/1999/xhtml" class="d dl" style="gap:5px;padding:10px 16px;"><span class="s10 w8 tS">L0の前段（起動時必読の3文書）</span><span class="s8 tI"><b class="mo tO">DECOMPOSE.md</b> — ゴール一文→work-item群の分解6段（意図読解→基線実測→標的外部化→分解軸→横断メタitem→予算割付け）</span><span class="s8 tI"><b class="mo tO">GOAL_CONTRACT.md</b> — 完了を分布で定義・AIで閉じられない要素は非目標へ・緊急停止条項</span><span class="s8 tI"><b class="mo tO">LESSONS.md</b> — 実戦教訓9条（基線md5照合・idle≠完了 等）</span></div></foreignObject>
+  </svg>
+</div>
+
+<!-- ============ V7 GUARANTEES ============ -->
+<div class="panel">
+  <h2><span class="no">04</span>coordctl v7 — 紳士協定を構造保証に変えた3修正</h2>
+  <p class="lead">v1で実際に踏んだ4欠陥のうち協調系の3つを、DBスキーマレベルで潰した。「守るべきルール」ではなく<b>「破れない構造」</b>になっているのがswarm2の核。</p>
+  <svg viewBox="0 0 1000 470" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>coordctl v7の3つの構造修正：token照合、per-agent既読、tick自他区別</title>
+  <rect x="2" y="2" width="996" height="466" rx="10" fill="none" stroke="#1e2c47" stroke-width="1.5"/>
+  <path d="M2,26 L2,2 L26,2" fill="none" stroke="#22d3ee" stroke-width="2"/>
+  <text x="24" y="30" font-size="10" fill="#22d3ee" font-family="ui-monospace,Consolas,monospace" letter-spacing="3">STRUCTURAL GUARANTEES (v1 → v7)</text>
+
+  <!-- col1 -->
+  <rect x="36" y="56" width="296" height="130" rx="8" fill="#2a1220" stroke="#fb7185" stroke-width="1.3"/>
+  <foreignObject x="36" y="56" width="296" height="130"><div xmlns="http://www.w3.org/1999/xhtml" class="d dl" style="gap:4px;padding:10px 14px;"><span class="s9 w8 tF">v1の欠陥①</span><span class="s10 w7 tI">検証者を名乗るだけで verdict を書けた</span><span class="s8 tD">書き手が自分の成果物を「独立検証済み」にできる — 検証の独立性が紳士協定だった</span></div></foreignObject>
+  <line x1="184" y1="186" x2="184" y2="204" stroke="#34d399" stroke-width="2"/><polygon points="180,204 184,214 188,204" fill="#34d399"/>
+  <rect x="36" y="214" width="296" height="170" rx="8" fill="#0b2018" stroke="#34d399" stroke-width="1.5"/>
+  <foreignObject x="36" y="214" width="296" height="170"><div xmlns="http://www.w3.org/1999/xhtml" class="d dl" style="gap:4px;padding:10px 14px;"><span class="s9 w8 tP mo">v7: verify --token</span><span class="s8 tI">検証者の本人性を<b>agents表のAGENT_TOKEN</b>で照合。自称verifierは exit4 で構造拒否</span><span class="s8 tI">・自己検証（書き手＝検証者）拒否</span><span class="s8 tI">・token不一致 拒否</span><span class="s8 tI">・<b>author不明はstakes≥medでfail-closed</b>（不明を通さない側に倒す）</span></div></foreignObject>
+
+  <!-- col2 -->
+  <rect x="352" y="56" width="296" height="130" rx="8" fill="#2a1220" stroke="#fb7185" stroke-width="1.3"/>
+  <foreignObject x="352" y="56" width="296" height="130"><div xmlns="http://www.w3.org/1999/xhtml" class="d dl" style="gap:4px;padding:10px 14px;"><span class="s9 w8 tF">v1の欠陥②</span><span class="s10 w7 tI">既読フラグが全体共有だった</span><span class="s8 tD">人間のhuman-sayを最初の1体が既読化すると、残りの管理者には二度と届かない — 操舵の消失</span></div></foreignObject>
+  <line x1="500" y1="186" x2="500" y2="204" stroke="#34d399" stroke-width="2"/><polygon points="496,204 500,214 504,204" fill="#34d399"/>
+  <rect x="352" y="214" width="296" height="170" rx="8" fill="#0b2018" stroke="#34d399" stroke-width="1.5"/>
+  <foreignObject x="352" y="214" width="296" height="170"><div xmlns="http://www.w3.org/1999/xhtml" class="d dl" style="gap:4px;padding:10px 14px;"><span class="s9 w8 tP mo">v7: msg_reads表</span><span class="s8 tI">既読が<b>agentごと</b>の別表に。human-sayは全管理者それぞれが自分で既読化するまで各自のtickに現れ続ける</span><span class="s8 tI">→ 人間の操舵が<b>全管理者に確実に届く</b>ことがスキーマで保証される</span></div></foreignObject>
+
+  <!-- col3 -->
+  <rect x="668" y="56" width="296" height="130" rx="8" fill="#2a1220" stroke="#fb7185" stroke-width="1.3"/>
+  <foreignObject x="668" y="56" width="296" height="130"><div xmlns="http://www.w3.org/1999/xhtml" class="d dl" style="gap:4px;padding:10px 14px;"><span class="s9 w8 tF">v1の欠陥③</span><span class="s10 w7 tI">tickが自他の仕事を混同した</span><span class="s8 tD">自分が継続すべき保持中の仕事と、他人が処理中の仕事が同じ顔で見え、取り違え・放置が起きる</span></div></foreignObject>
+  <line x1="816" y1="186" x2="816" y2="204" stroke="#34d399" stroke-width="2"/><polygon points="812,204 816,214 820,204" fill="#34d399"/>
+  <rect x="668" y="214" width="296" height="170" rx="8" fill="#0b2018" stroke="#34d399" stroke-width="1.5"/>
+  <foreignObject x="668" y="214" width="296" height="170"><div xmlns="http://www.w3.org/1999/xhtml" class="d dl" style="gap:4px;padding:10px 14px;"><span class="s9 w8 tP mo">v7: tick --agent &lt;自id&gt;</span><span class="s8 tI">自分の<b>held</b>（継続すべき仕事）と他人の<b>in_flight</b>を区別して返す。各管理者の動的ループ（action / next_wake_s / stop を台帳が計算・固定スケジュール無し）の基礎</span></div></foreignObject>
+
+  <rect x="36" y="404" width="928" height="42" rx="8" fill="rgba(52,211,153,.06)" stroke="#34d399" stroke-width="1.2"/>
+  <foreignObject x="36" y="404" width="928" height="42"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s10 w8 tP">honor system の排除 — ルールを「守らせる」のではなく、破る操作を exit code で物理的に失敗させる</span></div></foreignObject>
+  </svg>
+</div>
+
+<!-- ============ WATCH TIMELINE ============ -->
+<div class="panel">
+  <h2><span class="no">05</span>稼働確認 — 「投げたら信じる」の禁止（invariant）</h2>
+  <p class="lead">過去の実害：stdin hang と auth切れが<b>無音で全滅</b>し1時間空費。以後、dispatch後60秒の <code>codex_watch.sh</code> は省略不可の固定レールになった。</p>
+  <svg viewBox="0 0 1000 480" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>dispatch後の稼働確認タイムライン：60秒3点判定、90秒再判定、再投、人間報告</title>
+  <rect x="2" y="2" width="996" height="476" rx="10" fill="none" stroke="#1e2c47" stroke-width="1.5"/>
+  <path d="M2,26 L2,2 L26,2" fill="none" stroke="#fbbf24" stroke-width="2"/>
+  <text x="24" y="30" font-size="10" fill="#fbbf24" font-family="ui-monospace,Consolas,monospace" letter-spacing="3">DISPATCH WATCH — NEVER FIRE-AND-FORGET</text>
+
+  <!-- time axis -->
+  <line x1="60" y1="70" x2="950" y2="70" stroke="#1e2c47" stroke-width="2"/>
+  <circle cx="90" cy="70" r="5" fill="#fbbf24"/>
+  <text x="90" y="56" text-anchor="middle" font-size="9" fill="#fbbf24" font-family="ui-monospace,Consolas,monospace">t=0</text>
+  <circle cx="380" cy="70" r="5" fill="#22d3ee"/>
+  <text x="380" y="56" text-anchor="middle" font-size="9" fill="#22d3ee" font-family="ui-monospace,Consolas,monospace">t≈60s</text>
+  <circle cx="660" cy="70" r="5" fill="#8496b0"/>
+  <text x="660" y="56" text-anchor="middle" font-size="9" fill="#8496b0" font-family="ui-monospace,Consolas,monospace">+90s</text>
+  <circle cx="880" cy="70" r="5" fill="#a78bfa"/>
+  <text x="880" y="56" text-anchor="middle" font-size="9" fill="#a78bfa" font-family="ui-monospace,Consolas,monospace">escalate</text>
+
+  <rect x="36" y="92" width="200" height="96" rx="8" fill="#2a1f06" stroke="#fbbf24" stroke-width="1.4"/>
+  <foreignObject x="36" y="92" width="200" height="96"><div xmlns="http://www.w3.org/1999/xhtml" class="d dl" style="gap:3px;padding:9px 12px;"><span class="s9 w8 tC">dispatch</span><span class="s8 tI mo">codex exec … "&lt;card全文&gt;" &lt;/dev/null</span><span class="s8 tF w7">背景/並列は &lt;/dev/null 必須</span><span class="s7 tD">（無いと無限ハング・出力0）</span></div></foreignObject>
+  <rect x="280" y="92" width="200" height="132" rx="8" fill="#0d2233" stroke="#22d3ee" stroke-width="1.4"/>
+  <foreignObject x="280" y="92" width="200" height="132"><div xmlns="http://www.w3.org/1999/xhtml" class="d dl" style="gap:3px;padding:9px 12px;"><span class="s9 w8 tO mo">codex_watch.sh（3点判定）</span><span class="s8 tI">① プロセス生存数</span><span class="s8 tI">② 各outのバイト成長（15秒×2サンプル）</span><span class="s8 tI">③ 致命マーカー（stream error / Rate limit / usage limit / unauthorized…）</span></div></foreignObject>
+  <line x1="236" y1="140" x2="268" y2="140" stroke="#22d3ee" stroke-width="2"/><polygon points="268,135.5 280,140 268,144.5" fill="#22d3ee"/>
+
+  <!-- OK branch -->
+  <polyline points="480,120 540,120" stroke="#34d399" stroke-width="2" fill="none"/>
+  <polygon points="540,115.5 552,120 540,124.5" fill="#34d399"/>
+  <rect x="552" y="96" width="220" height="50" rx="8" fill="#0b2018" stroke="#34d399" stroke-width="1.4"/>
+  <foreignObject x="552" y="96" width="220" height="50"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s9 w8 tP">正常稼働</span><span class="s8 tI">10分超のジョブは以後10分毎に再確認</span></div></foreignObject>
+
+  <!-- STALLED branch -->
+  <polyline points="480,196 540,196" stroke="#fb7185" stroke-width="2" fill="none"/>
+  <polygon points="540,191.5 552,196 540,200.5" fill="#fb7185"/>
+  <rect x="552" y="166" width="220" height="92" rx="8" fill="#2a1220" stroke="#fb7185" stroke-width="1.4"/>
+  <foreignObject x="552" y="166" width="220" height="92"><div xmlns="http://www.w3.org/1999/xhtml" class="d dl" style="gap:3px;padding:9px 12px;"><span class="s9 w8 tF mo">STALLED / DEAD-ERR / HANG?</span><span class="s8 tI">プロセス生存数が期待通りなら<b>90秒後に再判定</b></span><span class="s7 tD">xhighは初期化が遅い。生きているレーンへの再投は<b>二重書き</b>を起こす</span></div></foreignObject>
+  <line x1="662" y1="258" x2="662" y2="280" stroke="#fb7185" stroke-width="2"/><polygon points="658,280 662,290 666,280" fill="#fb7185"/>
+  <rect x="552" y="290" width="220" height="66" rx="8" fill="#131e33" stroke="#fbbf24" stroke-width="1.4"/>
+  <foreignObject x="552" y="290" width="220" height="66"><div xmlns="http://www.w3.org/1999/xhtml" class="d dl" style="gap:3px;padding:9px 12px;"><span class="s9 w8 tC">再判定でも異常 → 単発再投</span><span class="s8 tI">同一レーンに1回だけ再dispatch</span></div></foreignObject>
+  <line x1="772" y1="323" x2="800" y2="323" stroke="#a78bfa" stroke-width="2"/><polygon points="800,318.5 812,323 800,327.5" fill="#a78bfa"/>
+  <rect x="812" y="290" width="152" height="66" rx="8" fill="#1c1533" stroke="#a78bfa" stroke-width="1.4"/>
+  <foreignObject x="812" y="290" width="152" height="66"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s9 w8 tH">2回目の失敗</span><span class="s8 tI">＝人間へ即報告</span></div></foreignObject>
+
+  <rect x="36" y="386" width="928" height="66" rx="8" fill="rgba(251,113,133,.06)" stroke="#fb7185" stroke-width="1.2"/>
+  <foreignObject x="36" y="386" width="928" height="66"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s10 w8 tF">INCIDENT LOG：stdin hang（&lt;/dev/null欠落）＋auth切れ → 全レーン無音死・1時間空費</span><span class="s8 tD">「静かであること」は「順調であること」と区別がつかない。だから沈黙を検査対象にする — 稼働確認はこの実害から固定レール化された</span></div></foreignObject>
+  </svg>
+</div>
+
+<!-- ============ TOPOLOGY ============ -->
+<div class="panel">
+  <h2><span class="no">06</span>トポロジ選択 — 最安が既定・wide&gt;deep</h2>
+  <p class="lead">タスクの規模と判断の深さで4形態を使い分ける速いヒューリスティック。どの形でも<b>統合だけは常に1管理者・単一書き手（lock）・fan-out禁止</b>。</p>
+  <svg viewBox="0 0 1000 560" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>swarm2の4トポロジ：inline、中規模、大規模ツリー、stakes高パネル</title>
+  <rect x="2" y="2" width="996" height="556" rx="10" fill="none" stroke="#1e2c47" stroke-width="1.5"/>
+  <path d="M2,26 L2,2 L26,2" fill="none" stroke="#22d3ee" stroke-width="2"/>
+  <text x="24" y="30" font-size="10" fill="#22d3ee" font-family="ui-monospace,Consolas,monospace" letter-spacing="3">TOPOLOGY SELECTOR</text>
+
+  <!-- Q1 inline -->
+  <rect x="36" y="50" width="452" height="210" rx="9" fill="#0d1526" stroke="#1e2c47" stroke-width="1.2"/>
+  <text x="56" y="74" font-size="10" fill="#34d399" font-family="'Noto Sans JP',sans-serif" font-weight="800">小（1 item・light）→ inline</text>
+  <rect x="76" y="92" width="130" height="44" rx="7" fill="#0d2233" stroke="#22d3ee" stroke-width="1.2"/>
+  <foreignObject x="76" y="92" width="130" height="44"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s9 w7 tO">今のOpus</span><span class="s7 tD">spec card→自分でL3</span></div></foreignObject>
+  <line x1="206" y1="114" x2="244" y2="114" stroke="#fbbf24" stroke-width="2"/><polygon points="244,109.5 256,114 244,118.5" fill="#fbbf24"/>
+  <rect x="256" y="92" width="130" height="44" rx="7" fill="#2a1f06" stroke="#fbbf24" stroke-width="1.2"/>
+  <foreignObject x="256" y="92" width="130" height="44"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s9 w7 tC">codex exec ×1</span></div></foreignObject>
+  <foreignObject x="56" y="156" width="412" height="90"><div xmlns="http://www.w3.org/1999/xhtml" class="d dl" style="gap:3px;"><span class="s8 tD">追加プロセスなし。card→1実行→自分で独立検証（fresh-context subagent）まで。オーバーヘッド最小の既定形</span></div></foreignObject>
+
+  <!-- Q2 mid -->
+  <rect x="512" y="50" width="452" height="210" rx="9" fill="#0d1526" stroke="#1e2c47" stroke-width="1.2"/>
+  <text x="532" y="74" font-size="10" fill="#fbbf24" font-family="'Noto Sans JP',sans-serif" font-weight="800">中（heavy・判断moderate）→ 1 Opus＋Codex数体</text>
+  <rect x="552" y="92" width="130" height="44" rx="7" fill="#0d2233" stroke="#22d3ee" stroke-width="1.2"/>
+  <foreignObject x="552" y="92" width="130" height="44"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s9 w7 tO">1 Opus</span><span class="s7 tD">orchestrator</span></div></foreignObject>
+  <line x1="682" y1="114" x2="712" y2="114" stroke="#fbbf24" stroke-width="2"/><polygon points="712,109.5 724,114 712,118.5" fill="#fbbf24"/>
+  <rect x="724" y="86" width="100" height="26" rx="5" fill="#2a1f06" stroke="#fbbf24" stroke-width="1"/>
+  <foreignObject x="724" y="86" width="100" height="26"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s8 w7 tC">codex ×k</span></div></foreignObject>
+  <rect x="724" y="118" width="100" height="26" rx="5" fill="#2a1f06" stroke="#fbbf24" stroke-width="1"/>
+  <foreignObject x="724" y="118" width="100" height="26"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s8 w7 tC">codex-flow並列</span></div></foreignObject>
+  <rect x="838" y="92" width="110" height="44" rx="7" fill="#0d2233" stroke="#22d3ee" stroke-width="1.2" stroke-dasharray="5 3"/>
+  <foreignObject x="838" y="92" width="110" height="44"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s8 w7 tO">独立検証</span><span class="s7 tD">subagent</span></div></foreignObject>
+  <foreignObject x="532" y="156" width="412" height="90"><div xmlns="http://www.w3.org/1999/xhtml" class="d dl" style="gap:3px;"><span class="s8 tD">並列ファンアウトの依存DAG・リトライ・resumeはcodex-flowのrunner.pyに委ね、Opusはspec作成と結果Read・verdictに徹する</span></div></foreignObject>
+
+  <!-- Q3 large tree -->
+  <rect x="36" y="276" width="452" height="210" rx="9" fill="#0d1526" stroke="#1e2c47" stroke-width="1.2"/>
+  <text x="56" y="300" font-size="10" fill="#22d3ee" font-family="'Noto Sans JP',sans-serif" font-weight="800">大（N多・判断deep）→ 2層ツリー</text>
+  <rect x="196" y="312" width="130" height="38" rx="7" fill="#0d2233" stroke="#22d3ee" stroke-width="1.4"/>
+  <foreignObject x="196" y="312" width="130" height="38"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s9 w7 tO">top Opus</span></div></foreignObject>
+  <line x1="226" y1="350" x2="146" y2="374" stroke="#22d3ee" stroke-width="1.5"/>
+  <line x1="261" y1="350" x2="261" y2="374" stroke="#22d3ee" stroke-width="1.5"/>
+  <line x1="296" y1="350" x2="376" y2="374" stroke="#22d3ee" stroke-width="1.5"/>
+  <rect x="86" y="376" width="120" height="34" rx="6" fill="#0d2233" stroke="#22d3ee" stroke-width="1.1"/>
+  <foreignObject x="86" y="376" width="120" height="34"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s8 w7 tO">Opus管理者×min(N,6)</span></div></foreignObject>
+  <rect x="216" y="376" width="90" height="34" rx="6" fill="#0d2233" stroke="#22d3ee" stroke-width="1.1"/>
+  <foreignObject x="216" y="376" width="90" height="34"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s8 w7 tO">Opus管理者</span></div></foreignObject>
+  <rect x="326" y="376" width="90" height="34" rx="6" fill="#0d2233" stroke="#22d3ee" stroke-width="1.1"/>
+  <foreignObject x="326" y="376" width="90" height="34"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s8 w7 tO">Opus管理者</span></div></foreignObject>
+  <line x1="146" y1="410" x2="146" y2="428" stroke="#fbbf24" stroke-width="1.5"/><polygon points="142.5,428 146,437 149.5,428" fill="#fbbf24"/>
+  <line x1="261" y1="410" x2="261" y2="428" stroke="#fbbf24" stroke-width="1.5"/><polygon points="257.5,428 261,437 264.5,428" fill="#fbbf24"/>
+  <line x1="371" y1="410" x2="371" y2="428" stroke="#fbbf24" stroke-width="1.5"/><polygon points="367.5,428 371,437 374.5,428" fill="#fbbf24"/>
+  <rect x="96" y="437" width="100" height="28" rx="5" fill="#2a1f06" stroke="#fbbf24" stroke-width="1"/>
+  <foreignObject x="96" y="437" width="100" height="28"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s8 w7 tC">各Codex</span></div></foreignObject>
+  <rect x="211" y="437" width="100" height="28" rx="5" fill="#2a1f06" stroke="#fbbf24" stroke-width="1"/>
+  <foreignObject x="211" y="437" width="100" height="28"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s8 w7 tC">各Codex</span></div></foreignObject>
+  <rect x="321" y="437" width="100" height="28" rx="5" fill="#2a1f06" stroke="#fbbf24" stroke-width="1"/>
+  <foreignObject x="321" y="437" width="100" height="28"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s8 w7 tC">各Codex</span></div></foreignObject>
+
+  <!-- Q4 panel -->
+  <rect x="512" y="276" width="452" height="210" rx="9" fill="#0d1526" stroke="#1e2c47" stroke-width="1.2"/>
+  <text x="532" y="300" font-size="10" fill="#fb7185" font-family="'Noto Sans JP',sans-serif" font-weight="800">stakes高 → L4独立Opusパネル並列（レンズ違い）</text>
+  <rect x="532" y="316" width="150" height="44" rx="7" fill="#131e33" stroke="#8496b0" stroke-width="1.2"/>
+  <foreignObject x="532" y="316" width="150" height="44"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s8 w7 tI">成果物（L3通過済）</span></div></foreignObject>
+  <line x1="682" y1="338" x2="712" y2="338" stroke="#fb7185" stroke-width="2"/><polygon points="712,333.5 724,338 712,342.5" fill="#fb7185"/>
+  <rect x="724" y="308" width="108" height="30" rx="5" fill="#0d2233" stroke="#22d3ee" stroke-width="1.1"/>
+  <foreignObject x="724" y="308" width="108" height="30"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s8 w7 tO">批評: 正確性</span></div></foreignObject>
+  <rect x="724" y="344" width="108" height="30" rx="5" fill="#0d2233" stroke="#22d3ee" stroke-width="1.1"/>
+  <foreignObject x="724" y="344" width="108" height="30"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s8 w7 tO">批評: 完全性</span></div></foreignObject>
+  <rect x="844" y="308" width="108" height="30" rx="5" fill="#0d2233" stroke="#22d3ee" stroke-width="1.1"/>
+  <foreignObject x="844" y="308" width="108" height="30"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s8 w7 tO">批評: 論理</span></div></foreignObject>
+  <rect x="844" y="344" width="108" height="30" rx="5" fill="#0d2233" stroke="#22d3ee" stroke-width="1.1"/>
+  <foreignObject x="844" y="344" width="108" height="30"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s8 w7 tO">批評: 様式</span></div></foreignObject>
+  <foreignObject x="532" y="386" width="412" height="88"><div xmlns="http://www.w3.org/1999/xhtml" class="d dl" style="gap:3px;"><span class="s8 tD">同一レンズN体の冗長より<b class="tI">レンズ多様性</b>が失敗モードを広く覆う。指摘はfinding msgで共有し、採否のverdictは管理Opusが下す</span></div></foreignObject>
+
+  <rect x="36" y="500" width="928" height="42" rx="8" fill="rgba(34,211,238,.07)" stroke="#22d3ee" stroke-width="1.2"/>
+  <foreignObject x="36" y="500" width="928" height="42"><div xmlns="http://www.w3.org/1999/xhtml" class="d"><span class="s10 w8 tO">統合フェーズだけは形が固定 — 1管理者・単一書き手（lock）・fan-out禁止。並列は生成まで、収束は一点で</span></div></foreignObject>
+  </svg>
+</div>
+
+<!-- ============ MODES & SETUP ============ -->
+<div class="panel">
+  <h2><span class="no">07</span>2モードとセットアップ</h2>
+  <div class="grid3" style="grid-template-columns:1fr 1fr;">
+    <div class="rule-card"><b>その場モード</b>今のOpusがorchestrator。独立検証・批評は<b>fresh-context subagent</b>（Agent tool）で立てる。単発の重タスク向け。</div>
+    <div class="rule-card" style="border-left-color:var(--human);"><b style="color:var(--human);">常設モード</b><code>AGCOORD_DB=&lt;db&gt; agworker.sh</code>×N で常設Opus管理者を自動採番起動。各管理者は<code>tick --agent</code>の動的ループで自走（固定スケジュール無し）。人間操舵は<code>coordctl human-say</code>。</div>
+  </div>
+  <table class="rf">
+    <tr><th>STEP</th><th>内容</th></tr>
+    <tr><td>1 init</td><td><code>agcoord.py --db &lt;DB&gt; init</code> → <code>AGCOORD_DB</code> / <code>AGCOORD_TEAM</code> をexport</td></tr>
+    <tr><td>2 設計</td><td>work-item定義 → 各itemの<b>spec card骨子</b>・<b>DoDルーブリック</b>（採点可能な完了条件）・<b>gate</b>（機械チェック）を先に書く。<b>ここに時間を使う</b></td></tr>
+    <tr><td>3 起動</td><td>その場=orchestrator直接 ／ 常設=<code>agworker.sh</code>×N</td></tr>
+    <tr><td>4 運転</td><td>wake手順は <code>reference/LOOP_TEMPLATE.md</code>（各wake冒頭で<code>start-trace</code>→全動詞に<code>--trace</code>）</td></tr>
+  </table>
+  <div class="quote">プロジェクト適用で差し替えるのは5つだけ — <b>work-item／spec cardの内核／DoDルーブリック／gate／L4批評レンズ</b>。シェル（協調・ラダー・トポロジ・自己改善・レール）は不変。だからswarm2は税法DRにも論文にもコードベースにも同じ骨格で適用できる。</div>
+  <div class="tbl-wrap"><table class="rf">
+    <tr><th>参照ファイル</th><th>役割</th></tr>
+    <tr><td>SPEC_CARD.md</td><td>委譲仕様書テンプレート（狂気的粒度の型・8節）</td></tr>
+    <tr><td>QUALITY_PIPELINE.md</td><td>ラダーL0-L7の運用詳細とcoordctlコマンド</td></tr>
+    <tr><td>LOOP_TEMPLATE.md</td><td>管理者wake手順（動的ループ・v7動詞）</td></tr>
+    <tr><td>DECOMPOSE.md</td><td>起動時必読。ゴール一文→work-item群の分解手続き6段＋自己チェック</td></tr>
+    <tr><td>GOAL_CONTRACT.md</td><td>起動時必読。GOAL契約（完了は分布で定義・非目標切出し・緊急停止条項）</td></tr>
+    <tr><td>LESSONS.md</td><td>起動時必読。実戦教訓9条（基線md5照合・検証層の誤り対策・idle≠完了・/goalレーン・三層管理ループ等）</td></tr>
+    <tr><td>../swarm/ (v1資産)</td><td>META_LOOP.md（自己改善）・swarm_theatre.py（読み取り専用viewer・同一スキーマ）</td></tr>
+  </table></div>
+  <p class="lead" style="margin-top:14px;margin-bottom:0;">自己改善の境界：method（やり方）は自動で学習・更新してよいが、<b>gate・invariant・DoDルーブリックの変更は人間サインオフ</b>。スワームは賢くなれるが、自分の合格基準を自分で緩めることはできない。</p>
+  <div class="meta" style="margin-top:12px;">底本: ~/.claude/skills/swarm2/ 一式（SKILL.md 89行・reference 6文書・scripts 5本）／ 全図の記述は原文と突合済み・数値/コマンドは原文の値</div>
+</div>
+
+</div>
+</body>
+</html>
