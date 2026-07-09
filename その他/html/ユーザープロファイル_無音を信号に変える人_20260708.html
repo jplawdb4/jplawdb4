@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>無音を信号に変える人 — ユーザープロファイリング報告書</title>
+<style>
+  :root{
+    --ink:#1c2530; --sub:#56606e; --line:#dfe4ea; --bg:#eef1f4; --paper:#fff;
+    --accent:#5a2d82; --accent2:#7a4fa3; --accent-soft:#f2ecf8;
+    --blue:#1f4e79; --blue-soft:#eef3fa; --red:#9e2820; --red-soft:#fbeae8;
+    --green:#1d6b3f; --green-soft:#eaf5ee; --amber:#8a5a00; --amber-soft:#fdf6e6;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Hiragino Mincho ProN","Yu Mincho",YuMincho,"Noto Serif JP",serif;
+    line-height:2.0;font-size:15px;}
+  .paper{max-width:840px;margin:28px auto;background:var(--paper);
+    padding:56px 64px 72px;box-shadow:0 4px 28px rgba(20,30,50,.10);border-radius:4px;}
+  .doctype{font-family:sans-serif;font-size:11.5px;letter-spacing:.16em;color:var(--accent);
+    text-align:center;margin-bottom:8px;}
+  h1.title{font-size:23px;text-align:center;line-height:1.6;margin:6px 0 6px;font-weight:700;}
+  .subtitle{font-size:15px;text-align:center;color:var(--sub);margin:0 0 6px;}
+  .meta-line{font-family:sans-serif;font-size:11.5px;text-align:center;color:var(--sub);
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    padding:8px 0;margin:18px 0 28px;}
+  .abstract{background:var(--accent-soft);border:1px solid #ddd0ec;border-radius:6px;
+    padding:18px 22px;margin:0 0 28px;font-size:14px;}
+  .abstract h3{margin:0 0 8px;font-size:13px;font-family:sans-serif;color:var(--accent);letter-spacing:.08em;}
+  .toc{font-family:sans-serif;font-size:13px;background:#fafbfc;border:1px solid var(--line);
+    border-radius:6px;padding:16px 22px;margin:0 0 30px;}
+  .toc b{color:var(--accent);} .toc ol{margin:8px 0 0;padding-left:22px;} .toc li{margin:4px 0;}
+  .toc a{color:var(--ink);text-decoration:none;} .toc a:hover{color:var(--accent);}
+  h2.h{font-family:sans-serif;font-size:18px;margin:40px 0 14px;padding-bottom:8px;
+    border-bottom:2px solid var(--accent);color:var(--accent);scroll-margin-top:12px;}
+  h2.h .n{color:var(--accent2);margin-right:10px;}
+  h3.sh{font-family:sans-serif;font-size:15px;margin:26px 0 8px;color:var(--blue);font-weight:700;}
+  p{margin:13px 0;text-align:justify;}
+  .key{background:linear-gradient(transparent 62%,#efe3fb 62%);font-weight:700;}
+  .box{border-radius:6px;padding:15px 20px;margin:18px 0;font-size:14px;font-family:sans-serif;line-height:1.85;}
+  .box.thesis{background:var(--accent-soft);border-left:4px solid var(--accent);}
+  .box.note{background:var(--blue-soft);border-left:4px solid var(--blue);}
+  .box.caveat{background:var(--amber-soft);border-left:4px solid var(--amber);}
+  .box.thesis b{color:var(--accent);} .box.note b{color:var(--blue);} .box.caveat b{color:var(--amber);}
+  table{width:100%;border-collapse:collapse;margin:18px 0;font-size:12.8px;font-family:sans-serif;}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top;line-height:1.7;}
+  th{background:var(--accent);color:#fff;font-weight:600;}
+  td.lbl{background:#f6f3fa;font-weight:700;white-space:nowrap;}
+  tr:nth-child(even) td:not(.lbl){background:#fafbfc;}
+  .src{font-size:11px;color:var(--sub);font-family:sans-serif;}
+  .fn-list{border-top:1px solid var(--line);margin-top:36px;padding-top:16px;}
+  .fn-list h3{font-family:sans-serif;font-size:13px;color:var(--accent);letter-spacing:.08em;}
+  .fn-list ol{padding-left:22px;} .fn-list li{margin:6px 0;font-size:12px;color:var(--sub);font-family:sans-serif;}
+  .fn-list a{color:var(--blue);text-decoration:none;border-bottom:1px dotted var(--blue);}
+  a.ext{color:var(--blue);text-decoration:none;border-bottom:1px dotted var(--blue);}
+  .diagram{border:1px solid var(--line);border-radius:6px;padding:18px;margin:18px 0;
+    background:#fafbfc;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;
+    line-height:1.5;overflow-x:auto;white-space:pre;}
+  .dtitle{font-family:sans-serif;font-weight:700;font-size:12.5px;margin-bottom:8px;white-space:normal;}
+  footer{font-family:sans-serif;font-size:11.5px;color:var(--sub);margin-top:34px;
+    border-top:1px solid var(--line);padding-top:14px;line-height:1.8;}
+  @media (max-width:680px){.paper{padding:30px 22px;}table{font-size:11.5px;}
+    .tblwrap{overflow-x:auto;}}
+  .tblwrap{overflow-x:auto;}
+  @media print{body{background:#fff;}.paper{box-shadow:none;margin:0;max-width:100%;}
+    .tblwrap{overflow:visible;}td.lbl{white-space:normal;}table{font-size:10.5px;}
+    .diagram{white-space:pre-wrap;}}
+</style>
+</head>
+<body>
+<div class="idx-nav" style="max-width:840px;margin:12px auto 0;padding:0 12px;font-family:sans-serif;font-size:12.5px;"><a href="../index.html" style="color:#5a2d82;text-decoration:none;border-bottom:1px dotted #5a2d82;">&#8592; 成果物インデックスへ</a></div>
+<div class="paper">
+
+  <div class="doctype">PROFILING DEEP RESEARCH ／ swarm4 LΩ・289レーン・敵対検証済み</div>
+  <h1 class="title">無音を信号に変える人<br>― ユーザープロファイリング報告書とスキル10選 ―</h1>
+  <p class="subtitle">作業痕跡12,807発話・永続記憶95件・スキル棚卸52個から再構成した一人の研究者の作業様式</p>
+  <div class="meta-line">2026-07-07〜08 ／ 分析実行=独立289レーン（観察・掘削・敵対検証の三層）／ 素材=本人の作業環境コンテキストパックのみ・全主張に逐語アンカー</div>
+
+  <div class="abstract">
+    <h3>要旨（ABSTRACT）</h3>
+    <p style="margin:0;">本報告書は、依頼者本人を対象とするプロファイリングである。素材は作業環境から機械抽出したコンテキスト（グローバル指示・永続記憶95件・スキル棚卸52個・活動ログ・環境インベントリ・本人がAIに打ち込んだ実プロンプト12,807件）に限定し、分析は独立289レーンが担った。知覚相（観察5＋ゼロベース再導出2）から掘削105レーン、直接発話分析11レーン、スキル生態系掃引・照合130レーン、敵対検証69レーンを経て、中心主張12件を各3名の独立反証者で票決した。中心発見は、<span class="key">研究主題（信号を生まない欠缺）と運用上の最深の不快（無音失敗）が同じ認知の型の両面をなす</span>こと、および<span class="key">認知の二相運転</span>（対象に向かうときは観察起点の帰納、道具を作るときは原理起点の演繹）である。終章で、検証済みルーブリック10軸に基づき、実在照合済みのスキル10選と自作候補6設計を提示する。</p>
+  </div>
+
+  <div class="toc">
+    <b>目次</b>
+    <ol>
+      <li><a href="#s1">方法と限界</a></li>
+      <li><a href="#s2">中核像 — 無音を信号に変える人</a></li>
+      <li><a href="#s3">認知様式 — 二相運転と一字差への粘着</a></li>
+      <li><a href="#s4">品質と疑い — 三段の礼法と失敗の遺跡化</a></li>
+      <li><a href="#s5">委譲の統治 — AI群の憲法化</a></li>
+      <li><a href="#s6">美学と文体 — AI臭は論証汚染である</a></li>
+      <li><a href="#s7">直接発話の弧 — 「こんばんは」からswarm4まで</a></li>
+      <li><a href="#s8">発火点マップ — 快と不快</a></li>
+      <li><a href="#s9">矛盾と緊張 — 弁の理論</a></li>
+      <li><a href="#s10">未充足ニーズ — 統合制御盤</a></li>
+      <li><a href="#s11">スキル10選と自作候補</a></li>
+      <li><a href="#s12">敵対検証の記録</a></li>
+    </ol>
+    <span style="color:var(--sub);"><a href="#a1">付録A 語彙目録抜粋</a> ／ <a href="#a2">付録B 数字</a> ／ <a href="#a3">付録C 回さなかったもの</a> ／ 主要参照</span>
+  </div>
+
+  <!-- ============================ I ============================ -->
+  <h2 class="h" id="s1"><span class="n">I</span>方法と限界</h2>
+
+  <p>依頼原文は「わたし（ユーザー）を狂気的粒度でプロファイリングしてください。その際コンテキストだけCodexに渡し、Codexに分析させてください」である。この指定に従い、オーケストレータは分析内容を一切注入せず、素材の機械抽出・レーン設計・検証・統合のみを担った。人物に関する全ての観察・仮説・評価は独立レーンの産物であり、本文の各主張には産出レーンと逐語アンカーを付す。</p>
+
+  <p>実行はswarm4のLΩ外環ループに拠った。初回知覚相では、内容の方向づけを与えない観察レーン5本（気質分散：最大主義・史家・門外漢・最小主義・無指定）と、依頼原文だけを渡すゼロベース再導出2本を先行させ、その読みからバーナム文禁止（誰にでも当てはまる記述の禁止・固有逐語根拠の必須化）と自覚性列（本人が自覚していそうな傾向か、運用から漏れて見える傾向か）を全レーンの仕様に焼き込んだ。</p>
+
+  <div class="tblwrap"><table>
+    <tr><th>波</th><th>内容</th><th>レーン数</th><th>産出</th></tr>
+    <tr><td class="lbl">R0 知覚</td><td>観察5（気質分散）＋ゼロベース再導出2</td><td>7</td><td>仕様の較正・依頼解釈の突合（乖離なし）</td></tr>
+    <tr><td class="lbl">W1 掘削</td><td>24次元×3視角＋横断7×2＋自由巡回8＋ニーズ系11</td><td>105</td><td>仮説906件・干渉マップ（36レンズ収束ほか）</td></tr>
+    <tr><td class="lbl">W2a 生態系</td><td>スキル生態系の掃引（公式・GitHub・市場・日英コミュニティ）</td><td>40</td><td>実在候補521件（重複排除後）</td></tr>
+    <tr><td class="lbl">F 直接発話</td><td>本人の実プロンプト12,807件（Claude 7,816＋Codex 4,991）の分析</td><td>11</td><td>運用記録では見えない生の言葉の層・通時変化</td></tr>
+    <tr><td class="lbl">W2b 照合</td><td>プロファイル×候補の適合評価（クラスタ32＋ギャップ探索15＋自作設計10）</td><td>57</td><td>推薦候補167件・自作設計収束6件</td></tr>
+    <tr><td class="lbl">W3a 敵対検証</td><td>中心主張12件×独立反証者3（証拠実在・反例探索・過剰一般化）</td><td>36</td><td>評決と較正（第XII章）</td></tr>
+    <tr><td class="lbl">W3b 実在照合</td><td>スキル候補33件の現物確認（構造・鮮度・ライセンス・導入形態）</td><td>33</td><td>全件到達確認・正直な適合再評価</td></tr>
+    <tr><td class="lbl">終相</td><td>統合・批評・検収</td><td>—</td><td>本報告書</td></tr>
+  </table></div>
+
+  <div class="box caveat"><b>検証注記（本報告書の限界）：</b>
+  ①素材は主にAI協働の作業記録であり、<b>非AI作業・生活全般への外挿はできない</b>。この限界は82レーンが独立に指摘した（全編を通じ最大の収束）。本報告書が描くのは「AIと働くときのこの人物」である。
+  ②自己言及性：分析手法（swarm4）自体が分析対象の設計物であり、方法選択の時点で対象の作業様式が混入している。
+  ③敵対検証の評決には「事実の反証」と「言い過ぎの矯正」が混在する。裁定原則（反証のみ拘束・矯正は文言較正）と各裁定はjournalに記録し、第XII章に全て開示した。
+  ④直接発話の分析は打鍵記録のみで、AI応答への反応（何を採り何を捨てたか）は未分析。</div>
+
+  <!-- ============================ II ============================ -->
+  <h2 class="h" id="s2"><span class="n">II</span>中核像 — 無音を信号に変える人</h2>
+
+  <div class="box thesis"><b>中心命題：</b>この人物の研究主題と運用上の最深の不快は、素材の中で反復して同型の対応を示す。博士論文の中心概念は「信号を生まない欠缺」——争われないまま残るため、存在が観測されない法の空隙——であり、作業運用で最も強く忌避されるものの一つが「無音失敗」——exit 0の空出力・完了偽装・送信されたふり——である。研究でも運用でも、<b>観測されないものを観測可能にする</b>志向が繰り返し現れる。因果や人格の中心への統合はここでは主張しない。対応関係そのものが、独立3系統のレーンで観測された事実である。<span class="src">〔自由巡回Q1・観察O2・掘削D21aが独立に収束。敵対検証CL10で逐語確認〕</span></div>
+
+  <p>観察レーンO2は環境全体に「ハルシネーションを記録し、二度踏まないための遺跡化」を見た。誤典拠・削除済み論点・未確認事項が、失敗としてではなく<span class="key">将来の安全装置として保存</span>されている。自由巡回Q1は同じ構造を運用側に見た：「満足の核は、曖昧な違和感がログ・台帳・争点・信号へ変換された瞬間にある。逆に、exit0空出力、送信済み風、評価スコア上昇だけのような『見かけの進捗』は強い失望トリガーになる」。</p>
+
+  <p>もう一つの中核は、Q1が「AI群の憲法化」と名づけた統治への志向である。この人物はAIを使いたいのではなく、役割・権限・検証・修復を分離した秩序の中でAI群を動かしたい。「喜びは、多数AIが動くこと自体でなく、衝突・反証・訂正が権限秩序の中で成果に変わることにある」<span class="src">〔Q1〕</span>。swarm v1からv4への系譜、書き手と検証者の分離、評価軸を自分で緩められない不変条件の設計。単独の執筆者でありながら、書き手・検証者・校閲役を分離する運用を一人で敷いている<span class="src">〔O3〕</span>。</p>
+
+  <p>人物の外形は次のとおり確定した（3/3生存）：国際租税法（CFC税制）を主戦場とし、博士論文を提出可能な形へ詰める後期段階にある研究者。所属・職位・年齢は素材から確定できない<span class="src">〔X2a・CL11〕</span>。</p>
+
+  <h3 class="sh">専門地図 — 厚い場所と薄い場所</h3>
+  <div class="tblwrap"><table>
+    <tr><th>層</th><th>領域</th><th>厚みの根拠</th></tr>
+    <tr><td class="lbl">最厚</td><td>CFC税制、なかでも措令39の15第1項1号の「配置規則の法定性」をめぐる条文・通達・判例・比較法の交差点</td><td>専用RAG（論文8,187＋脚注7,709チャンク）・通達の発遣/改正履歴の詰め・条文ブラウザの自作まで作業環境化<span class="src">〔D09a〕</span></td></tr>
+    <tr><td class="lbl">厚</td><td>特定同族会社・留保金課税（外国親会社支配の国内判定への接続）／源泉徴収×租税条約の手続接合（届出・LOB・還付）</td><td>判定案件群とメソッドの相互参照・独立コーパス化<span class="src">〔D09b〕</span></td></tr>
+    <tr><td class="lbl">中厚</td><td>租税条約一般・匿名組合・PE/非居住者課税・法人税別表</td><td>CFC配置論の外延検証・手続接合として運用<span class="src">〔D09b/c〕</span></td></tr>
+    <tr><td class="lbl">薄</td><td>組織再編税制の完成運用・移転価格の体系コーパス化・OECD TPG後半（解説7/13章で中断）・GloBE（意図的に射程確認へ抑制）</td><td>構想はあるが実装密度が低い、または戦略的に抑えている<span class="src">〔D09b/c〕</span></td></tr>
+    <tr><td class="lbl">自覚された弱点</td><td>隣接領域の広さよりも「CFC中心命題の外周証拠」——独仏二次文献の現物頁照合・pin-cite・未検証書誌</td><td>図書館依存領域とローカル資産化済み領域の差として明確<span class="src">〔D09a-12/c-12〕</span></td></tr>
+  </table></div>
+  <p>比較法は厚いが独立目的ではなく、「日本法の特異性を浮かせる限定的な対照装置」として管理される。過剰な比較法拡張は本人自身が「罠」と明示している<span class="src">〔D09a-04〕</span>。</p>
+
+  <!-- ============================ III ============================ -->
+  <h2 class="h" id="s3"><span class="n">III</span>認知様式 — 二相運転と一字差への粘着</h2>
+
+  <h3 class="sh">1　二相運転：叙述の帰納と設計の演繹</h3>
+  <p>当初、掘削105レーン中36レーンが「抽象命題は到達点であり、叙述は観察から始まる（帰納型）」に収束した。本報告書の敵対検証はこの多数派をそのまま通さなかった。反証者は、システムの改稿・再設計の局面では「本質」「ファーストプリンシパル」「ゼロベース」を先置きする指示が反復されている反例を突きつけた<span class="src">〔CL01r2/r3〕</span>。裁定の結果、主張は次の形に較正された。</p>
+
+  <div class="tblwrap"><table>
+    <tr><th></th><th>対象に向かうとき（論文・分析）</th><th>道具を作るとき（システム・方法論）</th></tr>
+    <tr><td class="lbl">起点</td><td>条文の一語・判旨の接続詞・通達の沈黙という細部の観察</td><td>「何が本質か」「設計原理」「ゼロベース再導出」</td></tr>
+    <tr><td class="lbl">運動</td><td>観察→違和感→診断→帰結（抽象は最後に浮上する）</td><td>原理→分解→工程化→検証（演繹で骨格を切る）</td></tr>
+    <tr><td class="lbl">禁じ手</td><td>演繹的な導入・理論名の先出し・比喩</td><td>表層修正の積み増し・「小手先対応」</td></tr>
+    <tr><td class="lbl">典型句</td><td>「狂気的な観察から自然に導出したい」</td><td>「ファーストプリンシパルで」「全体の再設計が必要」</td></tr>
+  </table></div>
+  <p class="src" style="margin-top:-8px;">〔W1干渉マップ36レンズ＋反証CL01r2/r3の統合。逐語：slice_feedback「観察→分岐→診断→帰結」／prompts_claude_6「何が本質か、をファーストプリンシパル」〕</p>
+
+  <h3 class="sh">2　一字差への粘着</h3>
+  <p>認知の発火点として最も証拠の厚いものは、<span class="key">一字差・沈黙・接続詞への粘着</span>である（30レーン収束・逐語確認済み）。措置法施行令の「例に準じて」の一語、同条第2項が18の読み替えを明文で置くのに第1項が沈黙するという対比、判旨の接続詞の選び方。これらは研究対象であると同時に、この人物の目が自然に吸い寄せられる場所である。ただし敵対検証により「認知上の<i>最も強い</i>発火点」という比較級は支持されず（AI臭排除・情報密度など別系統の強い発火点が並存する）、「研究・執筆域における強い発火点の一つ」に較正した<span class="src">〔CL02裁定〕</span>。</p>
+
+  <h3 class="sh">3　違和感の制度化</h3>
+  <p>「違和感」はこの人物の語彙で最も機能負荷の高い語の一つである。違和感は感想ではなく研究の発火点であり、観察ノート・診断装置・swarm4のsignalsチャネル（根拠不要・言語化不完全でも記録してよい欄）として<span class="key">制度として実装</span>されている。言語化できないものを捨てずに運搬する仕組みが、本素材の中では道具の世代を跨いで反復して観察される<span class="src">〔O3・X4a「違和感」・スキル棚卸swarm4〕</span>。</p>
+
+  <!-- ============================ IV ============================ -->
+  <h2 class="h" id="s4"><span class="n">IV</span>品質と疑い — 三段の礼法と失敗の遺跡化</h2>
+
+  <h3 class="sh">1　完成の条件</h3>
+  <p>「完了」はこの人物にとって報告語ではなく検証済み状態である。チェック→修正→再検証の三段はグローバル指示に明文化され、「見出しだけ直して完了と言うな」「チェックのみで修正を怠るな」という失敗由来の規範に裏打ちされている。完成の宣言には、リンクの生存・データの実在・所在のフルパスが要求される<span class="src">〔D02・D22a-12・F06「成果物のフルパスを書いて」〕</span>。</p>
+
+  <p>興味深い緊張が直接発話から見つかった。作業中の文書では「未確認は未確認と書く」ことが成果とされるのに、完成版では保留語の残存が嫌われる<span class="src">〔F06「完成版なので」〕</span>。この二つは矛盾ではなく層の分離である。本文は決断された形を取り、未確認事項は検証注記欄に隔離して正直に開示する——本人の学術フォーマット仕様そのものがこの解決を制度化している。</p>
+
+  <h3 class="sh">2　失敗の遺跡化</h3>
+  <p>この環境の永続記憶には、成功のレシピより失敗の記録が濃い。stdinハングで無限に待つCodex、書き込みで固まるWordのNormal.dotm、レート制限が送信を無音で握り潰すChatGPT、脚注IDの片側書き換えで壊れるdocx。これらは全て「事故→記録→ルール化→プリセット化」の精製工程を通り、否定制約として次の作業に焼き込まれている。CLAUDE.mdの自己更新ルール（ミスが起きたら同じミスを繰り返さないよう自分を書き換える）は、この精製工程の憲法である<span class="src">〔D20・O5・reference系記憶18件〕</span>。</p>
+
+  <h3 class="sh">3　評価への疑い — FRESHの哲学</h3>
+  <p>「評価は必ずFRESHで（新規スレッドで）」という反復は、3/3で生存した数少ない主張の一つである。作業では文脈を豊かにし（文脈パック・resume・フォーク）、評価では文脈を断つ。これは<span class="key">継続文脈への不信の制度化</span>であり、二重運用である。同じ疑いは点数そのものにも向く：S評価を執拗に追いながら、評価スコアの汚染（おだて・文脈迎合・物差し自体の劣化）を常に警戒し、ブラインド再評価や複数AI相互評価で裏を取る<span class="src">〔CL07・O3「S98への高揚とブラインドB78への冷却が同じ記録群に並んでいる」〕</span>。</p>
+
+  <p>モデル間の不一致をエラーではなく<span class="key">盲点検出器</span>として使う運用も3/3で生存した。Claude・Codex・ChatGPTの見解が食い違う場所は、修正すべきノイズではなく、掘るべき場所として扱われる<span class="src">〔CL03〕</span>。</p>
+
+  <!-- ============================ V ============================ -->
+  <h2 class="h" id="s5"><span class="n">V</span>委譲の統治 — AI群の憲法化</h2>
+
+  <div class="diagram"><span class="dtitle">図1　委譲の統治構造（作業記録からの再構成）</span>
+  ┌─────────────────────────────────────────────┐
+  │ 人間（主宰）                                  │
+  │  握って離さないもの:                          │
+  │   ベース版の選択 ／ 未照合素材の本文採用      │
+  │   文体の最終裁定 ／ 「本質」の判定            │
+  └──────────────┬──────────────────────────────┘
+                 │ 仕様なき委譲の禁止（spec card・文脈パック）
+  ┌──────────────▼──────────────────────────────┐
+  │ 設計・管理層（Opus/Claude）                   │
+  │  分解 ／ 検証設計 ／ 統合（単一書き手）       │
+  ├──────────────┬──────────────────────────────┤
+  │ 実行層（Codex群 = 馬車馬）                    │
+  │  調査 ／ 起草 ／ 照合 ── 大量・並列・使い捨て │
+  └──────────────┴──────────────────────────────┘
+   横断原則: 書き手≠検証者 ／ 未検証成果物は不存在扱い
+             無音失敗の検出 ／ 評価軸の自己緩和禁止
+  </div>
+
+  <p>自律への態度は「放任ではなく、任せる範囲を事前に切る統治」である。号令待ちは禁止され、確定した後工程は最後まで走ることが期待される。しかしベース版の選択と未照合素材の採用だけは、指定または明文の既定ルールで決まり、迷ったら人間に戻る<span class="src">〔CL09裁定・D22a-01〕</span>。直接発話はこの両面を一文で示す：「逐一支持しなきゃダメなのかな？」と自律不足に苛立ちながら、「勝手に進めないで」と方向の無断変更を制止する<span class="src">〔FC4〕</span>。求められているのは自由に動くAIではなく、<span class="key">目的を正確に保持したまま自律的に深掘りするAI</span>である。</p>
+
+  <p>宣言上の序列は「Codex &gt;&gt;&gt; Claude Code」だが、生活基盤（永続記憶・スキル棚卸52個・フック・活動ログ・失敗の遺跡群）はClaude側に堆積しており、支配権の宣言と生活の実態がずれている（3/3生存）。Codexは信頼される実行力だが記憶を持たない短期実行層であり、記憶・フック・活動ログ・失敗の教訓はClaude側に堆積し続ける<span class="src">〔CL08・O2〕</span>。</p>
+
+  <p>統治の語彙だけでは、この関係の熱量は説明しきれない。この人物はAnthropicが公開したClaudeの憲法文書を自らの設定の最上位（ツール運用より上位）に置き、満足時には「天才、好き」という親密表現を、不満時には強い叱責を返す。AIを純粋な道具として扱う運用と、作業人格として遇する構えが同居しており、他方で成果物へのAI関与の表示は絶対的に禁止される。この同居の意味づけは素材からは確定できないため、観察の記録にとどめる<span class="src">〔context_soul_note・O1・FC4。確信度中〕</span>。</p>
+
+  <!-- ============================ VI ============================ -->
+  <h2 class="h" id="s6"><span class="n">VI</span>美学と文体 — AI臭は論証汚染である</h2>
+
+  <p>AI臭への嫌悪は文体趣味ではない。3/3で生存した主張：<span class="key">AI臭排除は博士論文の学術的説得力の条件</span>として制度化されている。滑らかな説明・比喩・キャッチーな略号・全部説明して閉じる態度は、「根拠との距離を隠すもの」として警戒される。求める文体は「人間の学者の地声」——頭の動き、摩擦、留保、執着、呼吸を持つ文の体であり、語彙の置換では到達できないとされる<span class="src">〔CL06・Q1-02・slice_feedback「AI臭の根は語彙でなく文の体」〕</span>。</p>
+
+  <p>比喩の扱いには内外の二重基準があり、これは矛盾ではなく弁である（第IX章）。外に出る学術本文では「鏡像構造」「穴と壁」まで禁止する一方、内部の道具には「知覚」「共鳴」「馬車馬」という感覚的な名を与える。外の言葉は対象を曇らせてはならず、内の言葉は探索を駆動すればよい<span class="src">〔D22a-03〕</span>。</p>
+
+  <p>視覚の美学は一貫している：明朝体の本文に紫のアクセント、白カードに角丸と影、A4印刷対応、スマホで読める自己完結ファイル、そして<span class="key">見やすさより情報密度</span>（1スライド1000字超・条文引用と数値を削らない）。装飾ではなく「学術・法務の高密度な入れ物」としてのHTML。AI生成クレジットや透かしは、いかなる成果物にも絶対に入れない<span class="src">〔D06・X2a-22/23・グローバル指示〕</span>。本報告書自体、この様式仕様に従って組まれている。</p>
+
+  <!-- ============================ VII ============================ -->
+  <h2 class="h" id="s7"><span class="n">VII</span>直接発話の弧 — 「こんばんは」からswarm4まで</h2>
+
+  <p>本人がAIに実際に打ち込んだ12,807件の発話は、運用記録では見えない層を開いた。最初期と最新期の対比は、約8ヶ月の変貌を示す。</p>
+
+  <div class="tblwrap"><table>
+    <tr><th>軸</th><th>初期（2025年末）</th><th>後期（2026年7月）</th></tr>
+    <tr><td class="lbl">入り方</td><td>「こんばんは」— 挨拶から始まる探索</td><td>「5.5Proに投げて」— 即時投入型の作業指令</td></tr>
+    <tr><td class="lbl">依頼の単位</td><td>「この判決を分析して下さい」— 単一資料</td><td>「全体の再設計が必要」— 品質が生まれる仕組みの設計</td></tr>
+    <tr><td class="lbl">姿勢</td><td>「いい方法あるかな？」— 方法を尋ねる</td><td>「あなたの設計に一任する」— 設計と実行を分担させる</td></tr>
+    <tr><td class="lbl">IT語彙</td><td>「フロントエンドって何？」</td><td>「オーケストレーターとして」「Codex馬車馬モードで」</td></tr>
+    <tr><td class="lbl">品質語</td><td>「最高品質のピンボール」— 抽象的な最高</td><td>「S上位にするためには」— 評価体系・QA・敵対査読</td></tr>
+    <tr><td class="lbl">体制</td><td>Claude単体</td><td>「Codex300体程度投入」— 多モデル研究基盤</td></tr>
+  </table></div>
+  <p class="src" style="margin-top:-8px;">〔FD1通時比較・全逐語は実プロンプト由来〕</p>
+
+  <p>この弧の核心は、AI利用の習熟ではなく<span class="key">AIを使った研究と思考の作業様式そのものの再設計</span>である。後期の関心は成果物の品質より上流の「品質が生まれる仕組み」の制御に移った。信頼は「任せる」へ拡大し続けたが、<span class="key">任せた分だけ失敗への許容度は下がった</span>。称賛と叱責の振幅は大きい（「うわ、あんたすごいな」「天才、好き」⇄強い罵倒）。情動特性そのものは打鍵記録から判断できない。作業ログ上で言えるのは、これらの表現が達成基準からの乖離・回復と隣接して出現することまでである<span class="src">〔FD1・F06・FC4〕</span>。</p>
+
+  <p>二つの生の癖を記録する。第一に、長時間の自律運転では「待っていればいいの？」が反復され、進捗の見えない待機が不安の源になる（これは第X章の「無音失敗の可視化」ニーズの発話側の顔である）。第二に、「次」「おねがい」「続けて」で通じることを前提にした省略発話——共有文脈への深い依存であり、文脈を失う相手（fresh起動のCodex）には文脈パックを設計して補う<span class="src">〔F06・FC4〕</span>。完了の条件は納品ではなく資産化である：「資産化も忘れずにね」。成果物はDB・索引・HTML・スキルに変換されて初めて完了する<span class="src">〔FC4・F06「直感的にどんどん資産化していきたい」〕</span>。</p>
+
+  <!-- ============================ VIII ============================ -->
+  <h2 class="h" id="s8"><span class="n">VIII</span>発火点マップ — 快と不快</h2>
+
+  <div class="tblwrap"><table>
+    <tr><th>快の発火点</th><th>不快の発火点</th></tr>
+    <tr><td>見落とされた細部が大きな論点に化ける瞬間</td><td>出典・条文番号・頁・著者名を推測で埋めること</td></tr>
+    <tr><td>曖昧な違和感がログ・台帳・争点へ言語化された瞬間</td><td>無音失敗（exit 0空出力・完了偽装・送信されたふり）</td></tr>
+    <tr><td>自分の問題意識をAIが深く受け止めて言語化したとき</td><td>質問に答えないまま作業に入られること</td></tr>
+    <tr><td>成果が再利用可能な資産（DB・スキル・索引）に変わること</td><td>勝手なGit操作・所在不明の成果物・目的の取り違え</td></tr>
+    <tr><td>多数のAIの衝突・反証が秩序の中で成果に変わること</td><td>情報密度の低い要約・薄いスライド・「小手先対応」</td></tr>
+    <tr><td>AIが問題意識を表層でなく設計原理の水準で受け止めたとき（「うわ、あんたすごいな」が出る局面）</td><td>同じものの再生産・見かけだけの進捗・評価の物差し汚染</td></tr>
+  </table></div>
+  <p class="src" style="margin-top:-8px;">〔X2a・Q1・F06・FC4・CL10裁定。注記：本表は証拠の厚い発火点の列挙であり、網羅ではない（反証者r2は「便利さ・MVP到達・ゼロベース再構成」でも快が発火する実例を挙げた）〕</p>
+
+  <!-- ============================ IX ============================ -->
+  <h2 class="h" id="s9"><span class="n">IX</span>矛盾と緊張 — 弁の理論</h2>
+
+  <p>掘削レーンが列挙した「矛盾」の多くは、敵対検証と統合の過程で別の姿を現した。その大半は、<span class="key">別々の局面に取り付けられた制御弁</span>として読める。「この人物の緊張は、自由と統制の間にあるのではなく、自由を成立させるための統制をどこに置くかにある」<span class="src">〔D22a統合〕</span>。ただし全てが弁で解消するわけではない。末尾に、弁では説明しきれず未解消のまま残る緊張を分けて記す。</p>
+
+  <div class="tblwrap"><table>
+    <tr><th>見かけの矛盾</th><th>実際の弁</th></tr>
+    <tr><td>トークン効率の直列既定 ⇄ Codex300体の大量投入</td><td><b>stakes弁</b>：軽量なら畳む、高stakesの学術・税務では厚い検証基盤を惜しまない</td></tr>
+    <tr><td>本文の比喩禁止 ⇄ 「知覚・共鳴・馬車馬」という詩的な道具名</td><td><b>内外弁</b>：外の言葉は対象を曇らせない、内の言葉は探索を駆動する</td></tr>
+    <tr><td>HTML優先 ⇄ MD既定納品</td><td><b>工程弁</b>：見る完成物はHTML、回す反復物はMD（焼込は故障点なので明示時のみ）</td></tr>
+    <tr><td>自律完走の要求 ⇄ 人間ゲートの固持</td><td><b>区画弁</b>：許可された区画内での完走能力として自律を評価する</td></tr>
+    <tr><td>公開基盤（gh-pages）⇄ 漏出への強い警戒</td><td><b>公開弁</b>：匿名化・検証注記・クレジット排除を通過したものだけが外に出る</td></tr>
+    <tr><td>作業の文脈継承（resume・フォーク）⇄ 評価のFRESH</td><td><b>評価弁</b>：作ると測るで文脈の扱いを反転させ、評価汚染を遮断する</td></tr>
+    <tr><td>サブエージェント不信 ⇄ swarm大量投入</td><td><b>回収弁</b>：嫌いなのは複数主体ではなく、固まる・回収不能・検証不能な委譲</td></tr>
+  </table></div>
+
+  <p>「逆に分離が守られる限り、大量投入・自律完走・高密度納品はむしろ快感の発火点になる」<span class="src">〔D22a〕</span>。この弁の分離が崩れた瞬間、すなわち軽い作業に重い足場、本文に装置語、評価に文脈迎合が現れた瞬間に、即座に違和感が表明される。</p>
+
+  <h3 class="sh">コスト会計 — stakes弁の中身</h3>
+  <p>投入量の弁は、単純な節約と浪費の切替ではない。この人物の会計単位は金銭やトークンそのものではなく、<span class="key">誤りの残存コストと復旧コスト</span>である。高stakesの学術・税務判定では「独立検証で何が捕まるか」が大量投入の支払理由になり（15体校閲が条文番号の誤りを捕捉した実績が保険料の根拠として記録されている）、単発の軽作業では協調基盤そのものが過剰コストと裁定される。共有資源や壊れやすい工程（ブラウザ自動化・Wordベイク）は並列化せず直列に戻す。反復中の納品はMD（数十秒）に寄せ、焼込（5〜10分・故障点）は明示依頼まで遅延する。並列にも損切り規律があり、異常は単発再投→2回目で人間へ上げる<span class="src">〔D14a/b〕</span>。</p>
+
+  <h3 class="sh">未解消の緊張</h3>
+  <p>弁で回収できない緊張が少なくとも二つ残る。第一に、<span class="key">自律付与の拡大と進捗不安の共存</span>。「あなたの設計に一任する」と「待っていればいいの？」は同じ時期の発話であり、任せる範囲の拡大が待機の不安を消していない（第X章の無音失敗可視化ニーズはこの緊張の道具側の表現である）。第二に、<span class="key">粒度の最大化とスキル・成果物の増殖</span>。狂気的粒度の追求は資産を増やし続けるが、正典の維持・stale参照の発生・散乱への自己批判も同時に記録されており、堆積の速度が整理の速度を上回る局面がある<span class="src">〔F06・O2・D24c unease〕</span>。</p>
+
+  <!-- ============================ X ============================ -->
+  <h2 class="h" id="s10"><span class="n">X</span>未充足ニーズ — 統合制御盤</h2>
+
+  <p>反復する摩擦から導かれた未充足ニーズの中心は、「もっと賢い生成器」ではない。<span class="key">研究資産を壊さず前へ進める統合制御盤</span>である（解釈統合。中核は反証に生存、詳細は較正済み）<span class="src">〔D21a・CL04裁定〕</span>。なお敵対検証は「統制機能はswarm運用内に既に埋め込まれている」と正しく指摘しており、空白は正確には<span class="key">単体で再利用可能な検収・台帳ツールの形</span>にある<span class="src">〔CL12裁定〕</span>。</p>
+
+  <div class="tblwrap"><table>
+    <tr><th>ニーズ</th><th>摩擦の証拠</th></tr>
+    <tr><td class="lbl">文体裁定の一体化</td><td>AI臭の指摘→裁定→再発防止が別作業に散り、違和感の再指摘が続く</td></tr>
+    <tr><td class="lbl">執筆中の証拠レイヤ</td><td>「出典確認を後でやる」構造が残る。主張と一次資料の結線を生成時に張りたい</td></tr>
+    <tr><td class="lbl">版系統の管理</td><td>多枝化した論文版のベース誤認が高コスト摩擦として反復</td></tr>
+    <tr><td class="lbl">無音失敗の可視化</td><td>「走行中ブラインド」への不満・「待っていればいいの？」の反復</td></tr>
+    <tr><td class="lbl">文脈カプセル</td><td>fresh実行者への文脈再注入の負担（PROJECT_CONTEXT運用は既に発明済み・その定型化）</td></tr>
+    <tr><td class="lbl">中断企画のレーダー</td><td>再訪されないまま沈む未完（TPG章別解説7/13で中断中ほか）</td></tr>
+  </table></div>
+
+  <p>独立に走った自作設計10レーンは、互いを見ずに<span class="key">6つの設計に強く収束</span>した。収束数は独立レーンの一致であり、需要の実在を示す：①証拠状態台帳（ready/未照合/照合不能を分ける一次照合台帳・10レーン中7）②レーン収穫ゲート（空出力・DONE偽装の検収・3）③docxベイク前検収（脚注ID・目次・匿名化・4）④版系統ゲート（ベース固定・差分適用可否・4）⑤公開前検収（機密混入・クレジット・リンク切れ・4）⑥文脈カプセル生成（3）。これらは第XI章の「自作候補」として仕様骨子まで起こしてある。</p>
+
+  <!-- ============================ XI ============================ -->
+  <h2 class="h" id="s11"><span class="n">XI</span>スキル10選と自作候補</h2>
+
+  <p>選定は三段で行った。生態系掃引40レーンが実在候補521件を集め、照合57レーンがプロファイル（検証済みルーブリック10軸：一次照合耐性・文脈パック適合・観察密度・学術文体制御・情報密度維持・自律完走力・並列隔離統合・失敗可視化・動的設計力・既存体系との差分接続）で評価し、最終候補33件を実在照合レーンが1件ずつ現物確認した（リポジトリ構造・SKILL.md実体・最終更新・ライセンス・導入形態）。<span class="key">全件が2026-07-07時点で実在・到達確認済み</span>。以下の10選はその中からの主宰選定である。順序は推奨順ではなく用途系統順。</p>
+
+  <div class="tblwrap"><table>
+    <tr><th style="width:26%;">スキル</th><th>何をするか・なぜ刺さるか・導入条件</th></tr>
+    <tr>
+      <td class="lbl">1. academic-research-skills<br><span class="src"><a class="ext" href="https://github.com/Imbad0202/academic-research-skills">Imbad0202/academic-research-skills</a><br>plugin/skill・2026-07-04 v3.15.0</span></td>
+      <td>研究→執筆→投稿前レビューを束ねる学術統合スイート。source verification・citation compliance・integrity gateを明示的に持つ。<b>刺さる軸</b>：一次照合耐性・自律完走。<b>条件</b>：丸ごと導入せずclaim audit系部品を既存swarmに接ぐのが安全（運用衝突回避）。CC BY-NC 4.0のため業務利用は要確認。トリガーは英語・繁体中文中心で日本語運用は調整余地。</td>
+    </tr>
+    <tr>
+      <td class="lbl">2. academic-writing-skills<br><span class="src"><a class="ext" href="https://github.com/bahayonghang/academic-writing-skills">bahayonghang/academic-writing-skills</a><br>skill・2026-07-06更新</span></td>
+      <td>生成ではなく<b>既存原稿の検収</b>に特化：de-AI polish・引用の穴の探索・引用捏造禁止・未検証事項のpending保持・quote anchor。「勝手に書く」「未確認を断言する」を構造的に避ける設計思想が、完成稿を壊さず磨く工程に合う。<b>条件</b>：英中LaTeX/Typst中心のため、日本語法学の脚注文化への適応は移植作業（その設計思想の移植だけでも価値がある）。</td>
+    </tr>
+    <tr>
+      <td class="lbl">3. fact-checker ＋ deep-research<br><span class="src"><a class="ext" href="https://github.com/daymade/claude-code-skills">daymade/claude-code-skills</a><br>skill×2・2026年更新</span></td>
+      <td>引用台帳つき調査（全主張にsource_type・未検証分類を強制）と公式出典優先のファクトチェック。<b>claims.tsv文化と同じ思想の外部実装</b>で、運用ルールの突合・改良源になる。<b>条件</b>：日本法DB（e-Gov・裁判所）への専用導線はないため素材取得は既存ルートで。</td>
+    </tr>
+    <tr>
+      <td class="lbl">4. claim-quorum<br><span class="src"><a class="ext" href="https://github.com/edhodapp/claim-quorum">edhodapp/claim-quorum</a><br>command・2026-06-10</span></td>
+      <td>一つの主張を複数モデル（Claude/Codex/Gemini）に独立レビューさせ定足数で判定。<b>「モデル間不一致を盲点検出器として使う」という検証済みの固有型（CL03・3/3生存）を、そのまま器械化した道具</b>。<b>条件</b>：外部CLI課金・quota依存で運用コスト高。AGPL系のため再配布時注意。</td>
+    </tr>
+    <tr>
+      <td class="lbl">5. humanizer-ja<br><span class="src"><a class="ext" href="https://github.com/gonta223/humanizer-ja">gonta223/humanizer-ja</a><br>skill・2026-03-23</span></td>
+      <td>日本語のAI臭を20項目（定型句・全角ダッシュ・均一な敬語等）で検出・修正する手順書型スキル。<b>AI臭排除規範への日本語圏からの直撃打</b>であり、自作の文体憲章・警戒語リストとの突合で相互強化できる。<b>条件</b>：「体験・自分の声を入れる」指示は論文本文には過剰（口語化リスク）。note記事・序論・解説向けに限定するか、規則だけ移植。</td>
+    </tr>
+    <tr>
+      <td class="lbl">6. tax-law-mcp<br><span class="src"><a class="ext" href="https://github.com/kentaroajisaka/tax-law-mcp">kentaroajisaka/tax-law-mcp</a><br>MCP・2026-06-18 v0.5.3</span></td>
+      <td>e-Gov・国税庁・国税不服審判所を直接引く日本税法特化MCP。条文・通達・裁決の<b>幻覚抑止を取得段階で行う</b>思想が一次照合文化と合致。既存のe-gov-law-fetcher（自作）と役割重複はあるが、通達・裁決への導線が差分。<b>条件</b>：検索精度に既知の弱さ（WebSearch併用が前提）。npx常用はsupply-chainリスクがあるためローカル固定・監査後利用。</td>
+    </tr>
+    <tr>
+      <td class="lbl">7. safe-docx<br><span class="src"><a class="ext" href="https://github.com/UseJunior/safe-docx">UseJunior/safe-docx</a><br>skill+MCP・2026-07-07更新</span></td>
+      <td><b>トラックチェンジ（変更履歴）付きdocx編集</b>。段落ID・fingerprint・revision extractionで「どこを誰が変えたか」が残る。docx脚注事故の歴史と、指導教員・査読対応の往復に直撃。<b>条件</b>：必ずコピーに対して実行し使用版を固定（releaseとmainのversion差あり）。日本語特化ではないため脚注・複雑書式は要実機検証。</td>
+    </tr>
+    <tr>
+      <td class="lbl">8. pdf-mcp<br><span class="src"><a class="ext" href="https://github.com/jztan/pdf-mcp">jztan/pdf-mcp</a><br>MCP・2026-07-03 v1.19.1</span></td>
+      <td>大量PDFの構造化読取MCP。<b>CJK検索・縦書き・OCR・隠しテキスト検出</b>まで対応し、和文税務PDF・古い官報型資料の一次照合の物理層になる。W3b照合で唯一の「採用推奨」評決。<b>条件</b>：注釈の作成・編集は非対応（読取専用）。機密PDFはローカル実行・依存監査を先に。</td>
+    </tr>
+    <tr>
+      <td class="lbl">9. japan-business-data<br><span class="src"><a class="ext" href="https://github.com/Kokai-Data/japan-business-data">Kokai-Data/japan-business-data</a><br>plugin/MCP・2026-07-04</span></td>
+      <td>法人番号・EDINET・法令・調達等、日本の公的ビジネス情報6源泉を出典付きで束ねる。<b>特定同族会社判定・UBO遡及の案件系ワークフローの事実取得層に直撃</b>。<b>条件</b>：小規模プロジェクト（star 1）で応答品質・継続性は未確証。判定の最終根拠は従来どおり一次資料で。</td>
+    </tr>
+    <tr>
+      <td class="lbl">10. legal-translation<br><span class="src"><a class="ext" href="https://github.com/LegalQuants/lq-skills">LegalQuants/lq-skills</a><br>skill・2026-05 v0.2.0</span></td>
+      <td>法務文書翻訳を「専門家向けドラフト」と定義し、法域ペアの必須確認・条項別信頼度帯［H/M/L］・Translator’s Notes・定義語/条番号/金額の保持を強制。<b>独英の比較法原典（AStG・英CFC・条約文）を扱う工程の安全弁</b>になる。<b>条件</b>：日本租税法特化の用語検証はないため、租税条約用語集を自前referencesに追加して使う。</td>
+    </tr>
+  </table></div>
+
+  <div class="box note"><b>次点（実在照合済み・条件が重いか重複が大きいもの）：</b>
+  docx-mcp（SecurityRonin・docx監査/脚注管理。safe-docxと役割分担可能だがOOXML直編集の破損リスク）／agent-review-panel（多視点レビュー編成。自作swarm系と重複大）／deep-research ladder（hint-shu・L0-L5の深度制御が明快）／199-biotechnologies deep-research（出典信頼度採点）／superpowers（obra・開発工程の規律化。研究基盤の開発作業向け）／ra-skills（t46・科研費/研究事務）／claude-code-zotero-skill（shoei05・Zotero導入時に）／blind-review（wenboxia・読者盲検。FRESH文化と同型だが実装は薄い）。</div>
+
+  <div class="box note"><b>自作候補（独立10レーンが収束した6設計・実在スキルでは埋まらない部分）：</b>
+  ①<b>evidence-status-ledger</b>：主張・引用・頁・URLをready/未照合/照合不能で管理し、未照合を成果物に混ぜない一次照合台帳（収束7/10レーン——最も強い需要信号）
+  ②<b>lane-harvest-gate</b>：swarm/Codex成果の空出力・DONE偽装・スキーマ逸脱を収穫時に機械検収
+  ③<b>docx-bake-preflight</b>：脚注XML・目次・匿名化・Word COM事故をベイク前に一括点検
+  ④<b>base-lineage-gate</b>：多枝化した版系統のベース固定・差分適用可否の裁定
+  ⑤<b>publication-leak-gate</b>：公開前の機密混入・AIクレジット・リンク切れ・スマホ閲覧性の検収
+  ⑥<b>context-canon-packer</b>：委譲前に正典・禁止事項・保存先を1頁の文脈カプセルへ圧縮。<br>
+  これに加え、圧縮の過程で落ちた<b>実害直結の検収サブゲート</b>を記録する（各1〜2レーンの提案・収束は弱いが事故履歴に直結）：HTMLレンダ検収（文字クリップ・崩れ）／公開後の到達確認（gh-pages 404・キャッシュ）／ChatGPT送信管制（添付残存・無音遮断の検知）／全域資産索引（散乱成果物のasset-indexer）。</div>
+
+  <!-- ============================ XII ============================ -->
+  <h2 class="h" id="s12"><span class="n">XII</span>敵対検証の記録</h2>
+
+  <p>中心主張12件を、各3名の独立反証者（証拠実在攻撃・反例探索攻撃・過剰一般化攻撃）に「潰すこと」を仕事として与えた（迷ったらrefuted側に倒す指示つき）。評決の裁定原則：<span class="key">事実の反証のみが主張を落とし、言い過ぎの矯正は文言の較正として取り込む</span>。裁定は全てjournalに記録した。</p>
+
+  <div class="tblwrap"><table>
+    <tr><th>主張</th><th>評決</th><th>裁定</th></tr>
+    <tr><td>CL01 観察起点の帰納型</td><td>1生存/2反証</td><td><b>較正</b>：二相運転へ拡張（反証者の反例が発見を豊かにした事例）</td></tr>
+    <tr><td>CL02 一字差粘着が最強の発火点</td><td>1生存/2反証</td><td><b>較正</b>：比較級を削除・研究/執筆域に限定。粘着自体は逐語確認</td></tr>
+    <tr><td>CL03 モデル間不一致=盲点検出器</td><td><b>3生存</b></td><td>採用</td></tr>
+    <tr><td>CL04 ニーズの中心=統合制御盤</td><td>1生存/2反証</td><td><b>較正採用</b>：1件は手続的棄却（検証の独立性維持のため出典レーン非開示が原因）。解釈統合と明示</td></tr>
+    <tr><td>CL05 狂気的粒度=三重密度</td><td>0生存/3反証</td><td><b>較正</b>：「三重密度」は解釈定式と明示。「長さではなく」は落とし、字数・網羅の増量要求も併存すると訂正</td></tr>
+    <tr><td>CL06 AI臭排除=学術的説得力の条件</td><td><b>3生存</b></td><td>採用</td></tr>
+    <tr><td>CL07 評価FRESH=文脈不信の制度化</td><td><b>3生存</b></td><td>採用</td></tr>
+    <tr><td>CL08 序列宣言と生活基盤のズレ</td><td><b>3生存</b></td><td>採用</td></tr>
+    <tr><td>CL09 自律と人間ゲートの境界</td><td>2較正/1反証</td><td><b>較正</b>：「常に」を削除。既定ルールによる自動選択の存在を反映</td></tr>
+    <tr><td>CL10 快・不快の発火点</td><td>1生存/2反証</td><td><b>較正</b>：列挙は実在・非網羅と明記（第VIII章の注記）</td></tr>
+    <tr><td>CL11 博士論文後期の国際租税法研究者</td><td><b>3生存</b></td><td>採用（所属・職位は確定不能と明示）</td></tr>
+    <tr><td>CL12 道具の空白=補助・統制領域</td><td>1支持/2反証</td><td><b>較正</b>：空白は「単体で再利用可能な検収・台帳ツール」の形に限定</td></tr>
+  </table></div>
+
+  <p>全体として、複数レーンの収束が強い主張ほど「言い過ぎ」の形で削られた。収束は真実性の証拠だが、収束の熱が断定の強さを密輸する——この較正過程自体が、本報告書の対象人物が自分の道具（書き手と検証者の分離・評決の分離）に焼き込んでいる教訓の追試になった。</p>
+
+  <!-- ============================ 付録 ============================ -->
+  <h2 class="h" id="a1"><span class="n">付A</span>語彙目録（抜粋）</h2>
+  <div class="tblwrap"><table>
+    <tr><th>語</th><th>意味と機能</th></tr>
+    <tr><td class="lbl">リモート納品で</td><td>自己完結ファイルをSendUserFileで送る納品形式の起動語（「HTMLで」「ファイルで送って」同義）</td></tr>
+    <tr><td class="lbl">学術フォーマットで</td><td>明朝＋紫・要旨・目次・検証注記の論文体HTMLテンプレの起動語</td></tr>
+    <tr><td class="lbl">FRESH</td><td>評価・査読を新規スレッドで行う。継続文脈の汚染を遮断する評価弁</td></tr>
+    <tr><td class="lbl">ベース版</td><td>改稿の起点となる版。指定は人間ゲート事項・無指定なら直前納品版</td></tr>
+    <tr><td class="lbl">AI臭</td><td>LLM特有の文体・構成の臭い。文体監査の起動語。「根は語彙でなく文の体」</td></tr>
+    <tr><td class="lbl">人間の学者の手つき</td><td>頭の動き・摩擦・留保・執着を持つ文の体。本文執筆のregister指定</td></tr>
+    <tr><td class="lbl">狂気的な観察</td><td>条文・判例・通達の細部への徹底粘着。論点導出の始動装置であり自己規定</td></tr>
+    <tr><td class="lbl">違和感</td><td>問題意識の出発点。感想ではなく制度化された研究の発火点</td></tr>
+    <tr><td class="lbl">沈黙</td><td>条文・通達が書いていないこと。欠缺論証を起動する観察対象</td></tr>
+    <tr><td class="lbl">配置</td><td>博士論文の核概念。規範を法源上どこに置くか</td></tr>
+    <tr><td class="lbl">Codex馬車馬</td><td>Codexを大量実行の作業層として投入する体制の呼称</td></tr>
+    <tr><td class="lbl">正典</td><td>参照の一元化された基準版（journal・素材台帳・runner）。多重帳簿の禁止と対</td></tr>
+    <tr><td class="lbl">資産化</td><td>成果をDB・索引・スキル・HTMLへ変換すること。事実上の完了条件</td></tr>
+    <tr><td class="lbl">情報の天井</td><td>非公開情報で結論が頭打ちになる限界。計算資源では破れないと認識済み</td></tr>
+    <tr><td class="lbl">上場≠非同族</td><td>早合点を反転する注意語の代表例。違和感から制度の深部へ入る型の縮図</td></tr>
+  </table></div>
+
+  <h2 class="h" id="a2"><span class="n">付B</span>数字</h2>
+  <div class="tblwrap"><table>
+    <tr><th>項目</th><th>値</th></tr>
+    <tr><td class="lbl">総レーン数</td><td>289（＋終相批評レーン）。全レーンCOMPLETE・無音失敗0件（ブート渋滞は保留則で全件自然回復）</td></tr>
+    <tr><td class="lbl">総処理トークン</td><td>約1億3,911万（入力76.5M・キャッシュ56.0M・出力1.0M・推論0.4M）</td></tr>
+    <tr><td class="lbl">分析素材</td><td>コンテキストパック中核17ファイル約0.79MB＋実プロンプト10ファイル12,807件（Claude 7,816／Codex 4,991）＝計約2.5MB</td></tr>
+    <tr><td class="lbl">仮説・観察</td><td>掘削仮説906件（W1機械集計）・signals行1,264件（全波。うちW1: finding 233/peak 114/unease 119/followup 75）</td></tr>
+    <tr><td class="lbl">スキル調査</td><td>実在候補521件（重複排除後）→照合167件→現物確認33件→10選＋次点8＋自作6</td></tr>
+    <tr><td class="lbl">実行時間</td><td>2026-07-07 20:45頃〜07-08 00:40頃（約4時間・7波）</td></tr>
+    <tr><td class="lbl">運転事故</td><td>2件（dispatch作業ディレクトリ逸走1・環境変数不達によるdry-run化1）。いずれも即時検知・再投入・journal記録。レーン成果への影響なし</td></tr>
+  </table></div>
+
+  <h2 class="h" id="a3"><span class="n">付C</span>回さなかったもの（no silent caps）</h2>
+  <p><b>未分析の素材</b>：①非AI作業・生活全般（素材上不可能・全編最大の限界）。②AI応答への反応ログ——打鍵は分析したが、返答のどれを採りどれを捨てたかの対応分析は未実施。③ChatGPT・Geminiへの発話履歴。④スキル候補521件のうち現物照合したのは33件で、残りはカタログ確認まで。⑤直接発話の通時分析は最初期と最新期の対比のみで、中間4チャンクの連続変化は未追跡。⑥自作候補6設計は仕様骨子までで実装していない。⑦干渉マップの単独指摘（1レーンのみの指摘）群は、収束優先の紙幅配分により本文未収載（run内に全件保存）。</p>
+  <p><b>回したが本文に浅くしか入れなかったレンズ</b>（各3レーンの成果がrun内に完存する）：D06美学の細部（テンプレのデザイントークン水準の分析）／D15言語風景（日英混在・命名規則の全量）／D17発信・教育活動の構造／D19道具作りの系統樹／X1年表・X3一日の再構成・X4語彙目録の全量（本文は抜粋のみ）／自由巡回Q2〜Q8の単独発見群。理由はいずれも紙幅と収束優先の配分であり、証拠の弱さではない。</p>
+
+  <div class="fn-list">
+    <h3>主要参照（素材と検証の所在）</h3>
+    <ol>
+      <li>コンテキストパック：/home/user/profile_swarm4/inputs/（INDEX.md起点・17ファイル。グローバル指示・永続記憶95件のスライス・スキル棚卸・設定サニタイズ・活動ログ・環境インベントリ・実プロンプト10分割）</li>
+      <li>レーン成果物一式：/home/user/profile_swarm4/runs/{r0,w1,w2a,f,w2b,w3a,w3b}/（各*.final.md・journal.d正典）</li>
+      <li>裁定記録：/home/user/profile_swarm4/journal.d/orchestrator.jsonl（INTENT・観察イベント・評決裁定・ratchet）</li>
+      <li>スキル候補台帳：/home/user/profile_swarm4/out/skill_candidates.tsv（521件）・w2b_recommendations.tsv（167件）</li>
+      <li>10選の一次URL：本文第XI章の各リンク（全て2026-07-07〜08確認）</li>
+    </ol>
+  </div>
+
+  <footer>本報告書の全主張は上記所在の逐語アンカーへ遡及可能である。評決・裁定・棄却理由を含む全過程はjournalに append-only で保存されており、本文とjournalが食い違う場合はjournalを正とする。素材はすべて依頼者本人の作業環境内で処理され、外部送信していない（スキル生態系調査のweb照会を除く）。</footer>
+
+</div>
+<div class="idx-nav" style="max-width:840px;margin:0 auto 24px;padding:0 12px;font-family:sans-serif;font-size:12.5px;text-align:center;"><a href="../index.html" style="color:#5a2d82;text-decoration:none;border-bottom:1px dotted #5a2d82;">&#8592; 成果物インデックスへ戻る</a></div>
+</body>
+</html>

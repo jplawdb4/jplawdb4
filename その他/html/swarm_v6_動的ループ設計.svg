@@ -1,0 +1,184 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1360" font-family="-apple-system,'Hiragino Sans','Noto Sans JP',sans-serif">
+<defs>
+<marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#5b6573"/></marker>
+<marker id="arB" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1f5fb0"/></marker>
+<marker id="arP" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#6b46c1"/></marker>
+<marker id="arR" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#b54708"/></marker>
+<filter id="sh" x="-5%" y="-5%" width="110%" height="115%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#1b2330" flood-opacity="0.10"/></filter>
+</defs>
+
+<rect width="1000" height="1360" fill="#f5f5f5"/>
+
+<!-- ===== HEADER ===== -->
+<text x="40" y="58" font-size="30" font-weight="800" fill="#1b2330">swarm v6 — 動的ループ設計</text>
+<text x="41" y="90" font-size="16" fill="#5b6573">状態(tick)が次の一手と間隔を決め、欠陥が尽きると<tspan font-weight="700" fill="#b3261e">自分で止まる</tspan>。Opusは設計と検証、Codexが実行。レールは構造で固定。</text>
+<rect x="40" y="104" width="180" height="4" rx="2" fill="#1f5fb0"/>
+
+<!-- ===== BAND 2: ROLE SPLIT ===== -->
+<text x="40" y="150" font-size="14" font-weight="700" fill="#8a93a0">① 役割の二分（鉄則）</text>
+<rect x="40" y="162" width="430" height="96" rx="14" fill="#fff" stroke="#cfe0f5" filter="url(#sh)"/>
+<rect x="40" y="162" width="6" height="96" rx="3" fill="#1f5fb0"/>
+<text x="66" y="192" font-size="19" font-weight="800" fill="#1f5fb0">Opus 4.8 ― 設計・管理・検証</text>
+<text x="66" y="218" font-size="13.5" fill="#36404f">タスク見積／構造選択／分解／<tspan font-weight="700">検証</tspan>／統合／自己改善</text>
+<text x="66" y="240" font-size="13" fill="#b3261e" font-weight="700">★ ネストしても決して leaf 実行者にならない</text>
+
+<rect x="530" y="162" width="430" height="96" rx="14" fill="#fff" stroke="#ddd1f3" filter="url(#sh)"/>
+<rect x="530" y="162" width="6" height="96" rx="3" fill="#6b46c1"/>
+<text x="556" y="192" font-size="19" font-weight="800" fill="#6b46c1">Codex (GPT-5.5 xhigh) ― 唯一の実行者</text>
+<text x="556" y="218" font-size="13.5" fill="#36404f">調査／起草／圧縮／一括変換 ＝ 実際の作業</text>
+<text x="556" y="240" font-size="13" fill="#5b6573">per-task 起動・並列ファンアウト可</text>
+
+<line x1="472" y1="200" x2="528" y2="200" stroke="#6b46c1" stroke-width="2" marker-end="url(#arP)"/>
+<text x="500" y="194" font-size="11" fill="#6b46c1" text-anchor="middle" font-weight="700">委譲</text>
+<line x1="528" y1="226" x2="472" y2="226" stroke="#1f5fb0" stroke-width="2" marker-end="url(#arB)"/>
+<text x="500" y="240" font-size="11" fill="#1f5fb0" text-anchor="middle" font-weight="700">結果</text>
+
+<!-- ===== BAND 3: THE DYNAMIC LOOP ===== -->
+<text x="40" y="298" font-size="14" font-weight="700" fill="#8a93a0">② 動的ループの中核 ― 各 wake で tick が状態を読み、行動と次間隔を決める</text>
+<rect x="40" y="312" width="920" height="372" rx="16" fill="#fff" stroke="#e4e8ee" filter="url(#sh)"/>
+
+<!-- wake + tick engine (left) -->
+<circle cx="170" cy="430" r="46" fill="#eef3fa" stroke="#1f5fb0" stroke-width="2"/>
+<text x="170" y="426" font-size="16" font-weight="800" fill="#1f5fb0" text-anchor="middle">wake</text>
+<text x="170" y="446" font-size="11" fill="#5b6573" text-anchor="middle">レール再ロード</text>
+
+<line x1="216" y1="430" x2="260" y2="430" stroke="#5b6573" stroke-width="2" marker-end="url(#ar)"/>
+
+<rect x="262" y="392" width="150" height="78" rx="12" fill="#1b2330"/>
+<text x="337" y="424" font-size="18" font-weight="800" fill="#fff" text-anchor="middle">tick</text>
+<text x="337" y="446" font-size="11" fill="#c7d2e0" text-anchor="middle">live state を読む</text>
+<text x="337" y="461" font-size="10" fill="#9fb0c4" text-anchor="middle">（読取専用・control非更新）</text>
+
+<line x1="414" y1="430" x2="452" y2="430" stroke="#5b6573" stroke-width="2" marker-end="url(#ar)"/>
+
+<!-- ladder (right): 7 rungs -->
+<text x="612" y="346" font-size="13" font-weight="700" fill="#36404f" text-anchor="middle">優先ラダー（高→低）＝action ／ cadence</text>
+<!-- rung helper rows -->
+<g font-size="13">
+<rect x="456" y="356" width="312" height="30" rx="7" fill="#fdecdc" stroke="#f3c89e"/>
+<text x="468" y="376" font-weight="800" fill="#b3261e">escalate</text>
+<text x="756" y="376" text-anchor="end" fill="#b54708">max超過 → 人間・自己wake停止</text>
+
+<rect x="456" y="390" width="312" height="30" rx="7" fill="#eef3fa" stroke="#cfe0f5"/>
+<text x="468" y="410" font-weight="800" fill="#1f5fb0">await_work</text>
+<text x="756" y="410" text-anchor="end" fill="#5b6573">Codex実行中 → poll(短・通知が主)</text>
+
+<rect x="456" y="424" width="312" height="30" rx="7" fill="#fff6ed" stroke="#f3d9bf"/>
+<text x="468" y="444" font-weight="800" fill="#b54708">repair</text>
+<text x="756" y="444" text-anchor="end" fill="#5b6573">open欠陥 → active(短)</text>
+
+<rect x="456" y="458" width="312" height="30" rx="7" fill="#fff6ed" stroke="#f3d9bf"/>
+<text x="468" y="478" font-weight="800" fill="#b54708">review</text>
+<text x="756" y="478" text-anchor="end" fill="#5b6573">needs_review → 書き手≠検証者</text>
+
+<rect x="456" y="492" width="312" height="30" rx="7" fill="#eef3fa" stroke="#cfe0f5"/>
+<text x="468" y="512" font-weight="800" fill="#1f5fb0">work</text>
+<text x="756" y="512" text-anchor="end" fill="#5b6573">未着手あり → active(短)</text>
+
+<rect x="456" y="526" width="312" height="30" rx="7" fill="#fde8e6" stroke="#e6b3ae"/>
+<text x="468" y="546" font-weight="800" fill="#b3261e">stop</text>
+<text x="756" y="546" text-anchor="end" fill="#b3261e">DoD達成+保留0 → ループ終了</text>
+
+<rect x="456" y="560" width="312" height="30" rx="7" fill="#eef1f5" stroke="#d8dee6"/>
+<text x="468" y="580" font-weight="800" fill="#5b6573">diagnose</text>
+<text x="756" y="580" text-anchor="end" fill="#5b6573">不明 → idle(長)</text>
+</g>
+<line x1="430" y1="370" x2="452" y2="370" stroke="#5b6573" stroke-width="1.5" marker-end="url(#ar)"/>
+<path d="M337,470 L337,610 L612,610" fill="none" stroke="#5b6573" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="345" y="540" font-size="10" fill="#8a93a0" transform="rotate(90 345 540)"></text>
+
+<!-- back-loop: ScheduleWakeup(next_wake_s) -->
+<path d="M612,610 L880,610 L880,430 L772,430" fill="none" stroke="#1f5fb0" stroke-width="2" marker-end="url(#arB)"/>
+<rect x="788" y="588" width="172" height="44" rx="10" fill="#eef3fa" stroke="#1f5fb0"/>
+<text x="874" y="606" font-size="12.5" font-weight="700" fill="#1f5fb0" text-anchor="middle">ScheduleWakeup</text>
+<text x="874" y="623" font-size="11" fill="#5b6573" text-anchor="middle">directive.next_wake_s</text>
+
+<!-- stop exit -->
+<path d="M612,541 L420,541 L420,648 L470,648" fill="none" stroke="#b3261e" stroke-width="2" marker-end="url(#arR)"/>
+<rect x="472" y="630" width="120" height="36" rx="10" fill="#fde8e6" stroke="#b3261e"/>
+<text x="532" y="653" font-size="13" font-weight="800" fill="#b3261e" text-anchor="middle">自己終了</text>
+<text x="170" y="640" font-size="11.5" fill="#8a93a0" text-anchor="middle" font-style="italic">固定スケジュール無し</text>
+<text x="170" y="657" font-size="11.5" fill="#8a93a0" text-anchor="middle" font-style="italic">＝状態が駆動</text>
+
+<!-- ===== BAND 4: WORK PIPELINE ===== -->
+<text x="40" y="722" font-size="14" font-weight="700" fill="#8a93a0">③ action=work の中身 ― 診断駆動・書き手≠検証者・有界repair</text>
+<rect x="40" y="736" width="920" height="250" rx="16" fill="#fff" stroke="#e4e8ee" filter="url(#sh)"/>
+
+<g font-size="13.5" text-anchor="middle">
+<rect x="64" y="772" width="150" height="60" rx="11" fill="#eef3fa" stroke="#cfe0f5"/>
+<text x="139" y="798" font-weight="800" fill="#1f5fb0">診断 [Opus]</text>
+<text x="139" y="818" font-size="11.5" fill="#5b6573">何が実質欠けるか</text>
+
+<rect x="238" y="772" width="150" height="60" rx="11" fill="#eef3fa" stroke="#cfe0f5"/>
+<text x="313" y="798" font-weight="800" fill="#1f5fb0">分解 [Opus]</text>
+<text x="313" y="818" font-size="11.5" fill="#5b6573">Codexタスク仕様</text>
+
+<rect x="412" y="772" width="150" height="60" rx="11" fill="#f3eefb" stroke="#ddd1f3"/>
+<text x="487" y="798" font-weight="800" fill="#6b46c1">委譲 [Codex]</text>
+<text x="487" y="818" font-size="11.5" fill="#5b6573">実行・並列可</text>
+
+<rect x="586" y="772" width="160" height="60" rx="11" fill="#eef3fa" stroke="#cfe0f5"/>
+<text x="666" y="794" font-weight="800" fill="#1f5fb0">検証 [Opus]</text>
+<text x="666" y="812" font-size="11" fill="#b3261e" font-weight="700">書き手≠検証者</text>
+<text x="666" y="827" font-size="10.5" fill="#5b6573">一次資料で照合</text>
+</g>
+<line x1="214" y1="802" x2="236" y2="802" stroke="#5b6573" stroke-width="2" marker-end="url(#ar)"/>
+<line x1="388" y1="802" x2="410" y2="802" stroke="#6b46c1" stroke-width="2" marker-end="url(#arP)"/>
+<line x1="562" y1="802" x2="584" y2="802" stroke="#5b6573" stroke-width="2" marker-end="url(#ar)"/>
+
+<!-- pass -->
+<line x1="746" y1="790" x2="864" y2="790" stroke="#1a7f47" stroke-width="2" marker-end="url(#ar)"/>
+<text x="800" y="783" font-size="11.5" fill="#1a7f47" font-weight="700" text-anchor="middle">pass</text>
+<rect x="822" y="772" width="116" height="36" rx="10" fill="#eaf6ef" stroke="#a9dcbd"/>
+<text x="880" y="795" font-size="13" font-weight="800" fill="#1a7f47" text-anchor="middle">統合 → DoD</text>
+
+<!-- fail → repair bounded -->
+<rect x="412" y="876" width="334" height="86" rx="12" fill="#fff6ed" stroke="#f3d9bf"/>
+<text x="579" y="900" font-size="13" font-weight="800" fill="#b54708" text-anchor="middle">fail → 有界 repair ループ</text>
+<text x="579" y="922" font-size="11.5" fill="#5b6573" text-anchor="middle">repairチケット(attempt+1) → 再委譲[Codex] → 独立再検証</text>
+<text x="579" y="942" font-size="11.5" fill="#b3261e" text-anchor="middle" font-weight="700">max超過 → escalate（人間ゲート）</text>
+<path d="M666,832 L666,874" fill="none" stroke="#b54708" stroke-width="2" marker-end="url(#arR)"/>
+<text x="690" y="860" font-size="11.5" fill="#b54708" font-weight="700">fail</text>
+<path d="M412,919 C300,919 300,802 410,802" fill="none" stroke="#b54708" stroke-width="1.6" stroke-dasharray="5 3" marker-end="url(#arR)"/>
+<text x="300" y="868" font-size="10.5" fill="#b54708" text-anchor="middle">再委譲</text>
+
+<!-- ===== BAND 5: INVARIANTS ===== -->
+<text x="40" y="1024" font-size="14" font-weight="700" fill="#8a93a0">④ 固定レール（invariant・自己改変不可・構造で強制）</text>
+<g font-size="12.5" text-anchor="middle">
+<rect x="40" y="1038" width="178" height="58" rx="11" fill="#1b2330"/>
+<text x="129" y="1064" fill="#fff" font-weight="700">実行=Codexのみ</text>
+<text x="129" y="1082" fill="#9fb0c4" font-size="10.5">Opusは実行しない</text>
+
+<rect x="226" y="1038" width="178" height="58" rx="11" fill="#1b2330"/>
+<text x="315" y="1064" fill="#fff" font-weight="700">検証は委譲不可</text>
+<text x="315" y="1082" fill="#9fb0c4" font-size="10.5">書き手≠検証者(v3)</text>
+
+<rect x="412" y="1038" width="178" height="58" rx="11" fill="#1b2330"/>
+<text x="501" y="1064" fill="#fff" font-weight="700">統合=単一書き手</text>
+<text x="501" y="1082" fill="#9fb0c4" font-size="10.5">global lock</text>
+
+<rect x="598" y="1038" width="178" height="58" rx="11" fill="#1b2330"/>
+<text x="687" y="1058" fill="#fff" font-weight="700">message≠authority</text>
+<text x="687" y="1076" fill="#9fb0c4" font-size="10.5">情報は運ぶが権限は</text>
+<text x="687" y="1090" fill="#9fb0c4" font-size="10.5">発火しない(v5)</text>
+
+<rect x="784" y="1038" width="176" height="58" rx="11" fill="#7a1d1a"/>
+<text x="872" y="1058" fill="#fff" font-weight="700">物差しの変更は</text>
+<text x="872" y="1076" fill="#fff" font-weight="700">人間サインオフ</text>
+<text x="872" y="1090" fill="#f0c9c5" font-size="10.5">gate/invariant</text>
+</g>
+
+<!-- self-improvement note -->
+<text x="40" y="1136" font-size="14" font-weight="700" fill="#8a93a0">⑤ 再帰的自己改善（agmeta）</text>
+<rect x="40" y="1150" width="920" height="80" rx="14" fill="#fff" stroke="#e4e8ee" filter="url(#sh)"/>
+<text x="64" y="1180" font-size="13.5" fill="#36404f">人間の訂正・過程の繰返し失敗を観測 → <tspan font-weight="700" fill="#1f5fb0">propose</tspan> → 別Opusが <tspan font-weight="700" fill="#1f5fb0">validate</tspan> → ルーティング：</text>
+<text x="64" y="1204" font-size="13" fill="#1a7f47" font-weight="700">method=自動適用</text>
+<text x="240" y="1204" font-size="13" fill="#5b6573">／</text>
+<text x="258" y="1204" font-size="13" fill="#b3261e" font-weight="700">gate・invariant=人間署名</text>
+<text x="520" y="1204" font-size="13" fill="#5b6573">＝システムは自分の物差しを自分で緩められない（Goodhart防止）。</text>
+<text x="64" y="1222" font-size="11.5" fill="#8a93a0">ループの“プロンプトの重み”は方向の増幅器。自己終了＋毎wakeのレール再ロードとセットで初めて品質機構になる。</text>
+
+<!-- footer -->
+<line x1="40" y1="1268" x2="960" y2="1268" stroke="#e4e8ee"/>
+<text x="40" y="1294" font-size="12" fill="#8a93a0">work → await_work → repair → 再verify → stop ― 状態がループを駆動し、欠陥が尽きると自分で止まる自己改善オーケストレーション</text>
+</svg>

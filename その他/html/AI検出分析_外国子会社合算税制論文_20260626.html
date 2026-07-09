@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI生成検出 多次元分析レポート</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Serif JP',serif;background:#f5f5f0;color:#1a1a1a;line-height:1.85;padding:2rem}
+.container{max-width:960px;margin:0 auto;background:#fff;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.08);overflow:hidden}
+header{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);color:#fff;padding:3rem 2.5rem 2.5rem}
+header h1{font-size:1.6rem;font-weight:700;margin-bottom:.5rem;letter-spacing:.03em}
+header .subtitle{font-size:.95rem;opacity:.8;margin-bottom:1.5rem}
+header .meta{font-size:.82rem;opacity:.6;font-family:'Noto Sans JP',sans-serif}
+.content{padding:2.5rem}
+h2{font-size:1.25rem;color:#0f3460;border-left:4px solid #0f3460;padding-left:.8rem;margin:2.5rem 0 1rem}
+h3{font-size:1.05rem;color:#333;margin:1.5rem 0 .6rem}
+p{margin-bottom:1rem;text-indent:1em}
+p.no-indent{text-indent:0}
+
+/* Score Dashboard */
+.dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1.5rem 0}
+.score-card{background:#f8f9fa;border-radius:10px;padding:1.2rem;text-align:center;border:1px solid #e9ecef;position:relative;overflow:hidden}
+.score-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
+.score-card.low::before{background:linear-gradient(90deg,#27ae60,#2ecc71)}
+.score-card.mid::before{background:linear-gradient(90deg,#f39c12,#e67e22)}
+.score-card.high::before{background:linear-gradient(90deg,#e74c3c,#c0392b)}
+.score-card .label{font-family:'Noto Sans JP',sans-serif;font-size:.78rem;color:#666;margin-bottom:.4rem}
+.score-card .score{font-size:2rem;font-weight:700;line-height:1}
+.score-card .score.green{color:#27ae60}
+.score-card .score.amber{color:#e67e22}
+.score-card .score.red{color:#c0392b}
+.score-card .desc{font-size:.72rem;color:#888;margin-top:.3rem;font-family:'Noto Sans JP',sans-serif}
+
+/* Verdict box */
+.verdict{background:linear-gradient(135deg,#f8f4e8,#fdf9ee);border:2px solid #d4a574;border-radius:10px;padding:1.8rem;margin:2rem 0}
+.verdict h3{color:#8b5e3c;margin-top:0;font-size:1.15rem}
+.verdict .conclusion{font-size:1.1rem;font-weight:700;color:#5a3921;margin:.8rem 0}
+
+/* Detail table */
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.88rem}
+th{background:#0f3460;color:#fff;padding:.6rem .8rem;text-align:left;font-weight:500;font-family:'Noto Sans JP',sans-serif}
+td{padding:.5rem .8rem;border-bottom:1px solid #eee}
+tr:hover td{background:#f8f9fa}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.72rem;font-weight:500;font-family:'Noto Sans JP',sans-serif}
+.tag-low{background:#d5f5e3;color:#1e8449}
+.tag-mid{background:#fdebd0;color:#b9770e}
+.tag-high{background:#fadbd8;color:#922b21}
+
+/* Evidence boxes */
+.evidence{background:#f0f4f8;border-left:3px solid #0f3460;padding:1rem 1.2rem;margin:1rem 0;border-radius:0 8px 8px 0;font-size:.88rem}
+.evidence.positive{border-left-color:#27ae60;background:#eafaf1}
+.evidence.negative{border-left-color:#e74c3c;background:#fdf2f0}
+.evidence.neutral{border-left-color:#f39c12;background:#fef9e7}
+.evidence strong{font-family:'Noto Sans JP',sans-serif}
+
+/* Dimension detail sections */
+.dimension{border:1px solid #e9ecef;border-radius:8px;margin:1.5rem 0;overflow:hidden}
+.dimension-header{background:#f8f9fa;padding:.8rem 1.2rem;cursor:pointer;font-family:'Noto Sans JP',sans-serif;font-weight:500;display:flex;justify-content:space-between;align-items:center}
+.dimension-body{padding:1.2rem}
+
+/* Radar placeholder */
+.radar-container{text-align:center;margin:1.5rem 0}
+
+/* Print */
+@media print{
+  body{background:#fff;padding:0}
+  .container{box-shadow:none;border-radius:0}
+  header{background:#1a1a2e !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .score-card::before{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div class="idx-nav" style="max-width:840px;margin:12px auto 0;padding:0 12px;font-family:sans-serif;font-size:12.5px;"><a href="../index.html" style="color:#5a2d82;text-decoration:none;border-bottom:1px dotted #5a2d82;">&#8592; 成果物インデックスへ</a></div>
+<div class="container">
+<header>
+  <h1>AI生成検出 多次元ディープ分析レポート</h1>
+  <div class="subtitle">対象：「外国子会社合算税制における本邦法令参照の限界」（166,009字・脚注236・全8章＋結論）</div>
+  <div class="meta">分析日：2026-06-26 ｜ 手法：Codex(GPT-5.5 xhigh)×7並列ワーカー + Opus 4.6統合検証 ｜ 消費トークン：約830K</div>
+</header>
+
+<div class="content">
+
+<!-- ===== 総合判定 ===== -->
+<div class="verdict">
+  <h3>総合判定</h3>
+  <p class="conclusion">「人間の独自研究 × AI整文」——研究の知的核は人間、散文の仕上げにAI補助の痕跡あり</p>
+  <p class="no-indent" style="font-size:.92rem">7次元の独立分析を統合した結果、この論文は<strong>二層構造</strong>を持つと判定される。研究内容（命題・観察・典拠・独自性）の層はAI単独生成の兆候が極めて低く（確信度18〜32）、人間の研究者による長期の条文観察と先行研究精読に基づく独自研究である。一方、散文表現（文体・構文パターン・段落構成の均質性）の層はAI補助または強い整文の痕跡を中程度に示す（確信度55〜68）。両層の乖離が、この論文の最大の特徴である。</p>
+</div>
+
+<!-- ===== スコアダッシュボード ===== -->
+<h2>7次元スコア一覧</h2>
+<div class="dashboard">
+  <div class="score-card mid">
+    <div class="label">1. AI臭マーカー</div>
+    <div class="score amber">62</div>
+    <div class="desc">列挙パターン・文末均質に検出</div>
+  </div>
+  <div class="score-card mid">
+    <div class="label">2. 語彙統計</div>
+    <div class="score amber">68</div>
+    <div class="desc">「ではなく」65回・対概念整理</div>
+  </div>
+  <div class="score-card mid">
+    <div class="label">3. 構造均質性</div>
+    <div class="score amber">52</div>
+    <div class="desc">章構成は人間的、段落は均質</div>
+  </div>
+  <div class="score-card low">
+    <div class="label">4. 脚注・典拠</div>
+    <div class="score green">32</div>
+    <div class="desc">架空引用なし・実在性高い</div>
+  </div>
+  <div class="score-card low">
+    <div class="label">5. 法学規範適合</div>
+    <div class="score green">38</div>
+    <div class="desc">術語正確・帰納的・慎重</div>
+  </div>
+  <div class="score-card mid">
+    <div class="label">6. 文体一貫性</div>
+    <div class="score amber">50</div>
+    <div class="desc">声は一貫、整いすぎの指摘</div>
+  </div>
+  <div class="score-card low">
+    <div class="label">7. 内容独自性</div>
+    <div class="score green">18</div>
+    <div class="desc">極めて独自・条文密着型研究</div>
+  </div>
+</div>
+
+<p class="no-indent" style="font-size:.85rem;color:#666;text-align:center">スコア＝AI生成確信度（0＝人間確実、100＝AI確実）。緑≤35、黄36〜64、赤≥65。</p>
+
+<!-- ===== レーダーチャート（SVG） ===== -->
+<div class="radar-container">
+<svg width="400" height="380" viewBox="0 0 400 380">
+  <defs>
+    <style>
+      .axis-label{font-family:'Noto Sans JP',sans-serif;font-size:11px;fill:#555}
+      .score-label{font-family:'Noto Sans JP',sans-serif;font-size:12px;font-weight:700;fill:#0f3460}
+    </style>
+  </defs>
+  <!-- Background rings -->
+  <g transform="translate(200,180)">
+    <polygon points="0,-140 133.7,-43.3 82.6,113.3 -82.6,113.3 -133.7,-43.3" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+    <polygon points="0,-105 100.3,-32.5 62.0,85.0 -62.0,85.0 -100.3,-32.5" fill="none" stroke="#e8e8e8" stroke-width="1"/>
+    <polygon points="0,-70 66.9,-21.7 41.3,56.7 -41.3,56.7 -66.9,-21.7" fill="none" stroke="#f0f0f0" stroke-width="1"/>
+    <polygon points="0,-35 33.4,-10.8 20.7,28.3 -20.7,28.3 -33.4,-10.8" fill="none" stroke="#f5f5f5" stroke-width="1"/>
+    <!-- Axes -->
+    <line x1="0" y1="0" x2="0" y2="-145" stroke="#ddd" stroke-width="1"/>
+    <line x1="0" y1="0" x2="138" y2="-45" stroke="#ddd" stroke-width="1"/>
+    <line x1="0" y1="0" x2="85" y2="117" stroke="#ddd" stroke-width="1"/>
+    <line x1="0" y1="0" x2="-85" y2="117" stroke="#ddd" stroke-width="1"/>
+    <line x1="0" y1="0" x2="-138" y2="-45" stroke="#ddd" stroke-width="1"/>
+    <!-- Data polygon (scores: 62,68,52,32,38,50,18 → normalize to 7 axes on pentagon... using 7 axes) -->
+  </g>
+  <!-- Actually use 7-axis radar -->
+  <g transform="translate(200,185)">
+    <!-- 7-axis background -->
+    <g opacity=".15">
+      <polygon points="0,-140 97,-101 134,-12 99,87 -1,140 -100,87 -135,-12" fill="none" stroke="#666" stroke-width="1"/>
+      <polygon points="0,-105 73,-76 101,-9 74,65 -1,105 -75,65 -101,-9" fill="none" stroke="#666" stroke-width="1"/>
+      <polygon points="0,-70 48,-50 67,-6 49,44 -1,70 -50,44 -68,-6" fill="none" stroke="#666" stroke-width="1"/>
+      <polygon points="0,-35 24,-25 34,-3 25,22 0,35 -25,22 -34,-3" fill="none" stroke="#666" stroke-width="1"/>
+    </g>
+    <!-- Axes -->
+    <line x1="0" y1="0" x2="0" y2="-145" stroke="#ccc"/>
+    <line x1="0" y1="0" x2="100" y2="-105" stroke="#ccc"/>
+    <line x1="0" y1="0" x2="138" y2="-14" stroke="#ccc"/>
+    <line x1="0" y1="0" x2="102" y2="90" stroke="#ccc"/>
+    <line x1="0" y1="0" x2="-2" y2="145" stroke="#ccc"/>
+    <line x1="0" y1="0" x2="-103" y2="90" stroke="#ccc"/>
+    <line x1="0" y1="0" x2="-139" y2="-14" stroke="#ccc"/>
+    <!-- Data: 62,68,52,32,38,50,18 → scale to 140 -->
+    <polygon points="0,-86.8 68,-71.4 92.9,-7.3 32.6,28.8 -0.7,53.2 -51.5,45 -25.2,-2.5"
+             fill="rgba(15,52,96,.15)" stroke="#0f3460" stroke-width="2.5"/>
+    <circle cx="0" cy="-86.8" r="4" fill="#e67e22"/>
+    <circle cx="68" cy="-71.4" r="4" fill="#e67e22"/>
+    <circle cx="92.9" cy="-7.3" r="4" fill="#e67e22"/>
+    <circle cx="32.6" cy="28.8" r="4" fill="#27ae60"/>
+    <circle cx="-0.7" cy="53.2" r="4" fill="#27ae60"/>
+    <circle cx="-51.5" cy="45" r="4" fill="#e67e22"/>
+    <circle cx="-25.2" cy="-2.5" r="4" fill="#27ae60"/>
+    <!-- Labels -->
+    <text x="0" y="-155" text-anchor="middle" class="axis-label">AI臭マーカー</text>
+    <text x="115" y="-110" text-anchor="start" class="axis-label">語彙統計</text>
+    <text x="150" y="-5" text-anchor="start" class="axis-label">構造均質性</text>
+    <text x="115" y="100" text-anchor="start" class="axis-label">脚注・典拠</text>
+    <text x="0" y="165" text-anchor="middle" class="axis-label">法学規範適合</text>
+    <text x="-115" y="100" text-anchor="end" class="axis-label">文体一貫性</text>
+    <text x="-150" y="-5" text-anchor="end" class="axis-label">内容独自性</text>
+    <!-- Score labels -->
+    <text x="8" y="-90" class="score-label">62</text>
+    <text x="73" y="-68" class="score-label">68</text>
+    <text x="97" y="-3" class="score-label">52</text>
+    <text x="38" y="33" class="score-label">32</text>
+    <text x="8" y="50" class="score-label">38</text>
+    <text x="-57" y="42" class="score-label">50</text>
+    <text x="-20" y="5" class="score-label">18</text>
+  </g>
+</svg>
+</div>
+
+<!-- ===== 二層構造の詳述 ===== -->
+<h2>核心所見：「内容」と「表現」の乖離</h2>
+
+<div class="evidence positive">
+  <strong>内容層（AI確信度：低）</strong><br>
+  条文の号単位での悉皆走査、先行研究（羽島・石井）の対立を配置規則欠落の「徴表」に組み替える処理、国会会議録の消極証拠としての限定的使用、比較法の証拠対応表——いずれも、AIが教科書的知識を再構成して生成する論文には見られない、研究者固有の「発見」の層である。Worker 7（内容独自性）は確信度18と判定し、「AIが中身を作った証拠は弱い」と結論した。
+</div>
+
+<div class="evidence negative">
+  <strong>表現層（AI確信度：中〜高）</strong><br>
+  「AではなくB」の否定対比65回、「第一に/第二に/第三に」各10回、「である。」文末185文（全体の19%）、「本稿は」63回——これらの反復パターンはLLMの文体的指紋と整合する。Worker 1（AIマーカー）は列挙パターンに確信度75、文末単調に70、テンプレ結語に72を付けた。Worker 2（語彙統計）は「各段落が『主張、理由、区別、帰結』の形にきれいに収まりすぎ」と指摘し、確信度68とした。
+</div>
+
+<div class="evidence neutral">
+  <strong>中間層（構造・文体一貫性）</strong><br>
+  章構成は第二章12節・第五章10節に厚みが寄り、第三章・第四章は2節に抑えられるなど、論点の重さに応じた人間的偏りがある。一方、段落レベルでは「問題の所在→区別→基準化→帰結→射程限定」という論証パターンが過度に均質であり、AIによる段落構成の整形が疑われる。温度変化・熱量偏在は人間的だが、初稿の揺れや疲労感が最終稿で均されている。
+</div>
+
+<!-- ===== 各次元の詳細 ===== -->
+<h2>次元別分析詳細</h2>
+
+<!-- Dimension 1 -->
+<div class="dimension">
+<div class="dimension-header">
+  1. AI臭マーカー検出（確信度：62/100）
+  <span class="tag tag-mid">中程度</span>
+</div>
+<div class="dimension-body">
+
+<table>
+<tr><th>マーカー</th><th>検出</th><th>数値</th><th>確信度</th></tr>
+<tr><td>段落長・文長の均質性</td><td>中程度</td><td>段落中央値272字、200-399字が125/231段落</td><td><span class="tag tag-mid">62</span></td></tr>
+<tr><td>AI頻出抽象語</td><td>低い</td><td>「構造的」「本質的」「体系的」= 0回。「包括的」1回</td><td><span class="tag tag-low">48</span></td></tr>
+<tr><td>Hedging表現</td><td>中程度</td><td>「うる」43、「べき」65、「可能性」7</td><td><span class="tag tag-mid">55</span></td></tr>
+<tr><td>機械的列挙</td><td>強い</td><td>「第一に/第二に/第三に」各10回</td><td><span class="tag tag-high">75</span></td></tr>
+<tr><td>具体性の欠如</td><td>不検出</td><td>「措置法」30、「施行令」35、「羽島」43、「石井」38</td><td><span class="tag tag-low">20</span></td></tr>
+<tr><td>接続詞の整然</td><td>強め</td><td>「ここで」37、「これに対し」25、「なお」23、「しかし」20</td><td><span class="tag tag-mid">68</span></td></tr>
+<tr><td>感情・主観の欠如</td><td>弱い</td><td>「私は」「筆者」「思う」= 0回。法学論文では自然</td><td><span class="tag tag-low">35</span></td></tr>
+<tr><td>文末の単調さ</td><td>強い</td><td>「である。」185文、「する。」107文、「ではない。」43文</td><td><span class="tag tag-high">70</span></td></tr>
+<tr><td>テンプレ的結語</td><td>強い</td><td>「にある。」17文、「なければならない。」15文</td><td><span class="tag tag-high">72</span></td></tr>
+<tr><td>章節冒頭末尾定型</td><td>中〜強</td><td>「本稿は」17回、「第X章では」各2回</td><td><span class="tag tag-mid">66</span></td></tr>
+</table>
+
+<p class="no-indent" style="font-size:.88rem"><strong>特記事項：</strong>AI典型語（「構造的」「本質的」「包括的」「重要な示唆」）がほぼゼロである点は注目に値する。これらの語を意識的に排除した形跡があり、AI臭除去の処理が行われた可能性を示す。一方で、「配置」245回・「当てはめ」179回という主題固有語の高反復は、AI生成よりも単一テーマへの執着を反映している。</p>
+</div>
+</div>
+
+<!-- Dimension 2 -->
+<div class="dimension">
+<div class="dimension-header">
+  2. 語彙統計分析（確信度：68/100）
+  <span class="tag tag-high">やや高い</span>
+</div>
+<div class="dimension-body">
+<p class="no-indent">最もAI確信度が高かった次元。主な根拠は以下の通り。</p>
+
+<table>
+<tr><th>指標</th><th>数値</th><th>評価</th></tr>
+<tr><td>「ではなく」出現</td><td>65回</td><td>AI的な対概念整理パターンが顕著</td></tr>
+<tr><td>文末「である。」</td><td>142回（17.8%）</td><td>法学論文として自然だが偏り</td></tr>
+<tr><td>「の」連鎖（3連以上）</td><td>205件</td><td>名詞連鎖が多いが法学論文では許容範囲</td></tr>
+<tr><td>文長中央値</td><td>60字（SD=36）</td><td>変動ありで均一すぎない</td></tr>
+<tr><td>文長範囲</td><td>7〜254字</td><td>短文と長文が混在（人間的）</td></tr>
+</table>
+
+<p class="no-indent" style="font-size:.88rem"><strong>ワーカーの結論：</strong>「AI生成またはAI補助の可能性がやや高いが、純粋な文体統計だけで断定はできない」。文長分布の変動、助詞の正確さ、語彙多様性は人間らしさを支え、一方で「AではなくB」の反復と段落の論証パターンの均一性がAI整文を示唆する。</p>
+</div>
+</div>
+
+<!-- Dimension 3 -->
+<div class="dimension">
+<div class="dimension-header">
+  3. 構造均質性分析（確信度：52/100）
+  <span class="tag tag-mid">中程度</span>
+</div>
+<div class="dimension-body">
+<p class="no-indent"><strong>章レベル</strong>では人間的な偏りが明確。節数の分布（第二章12節、第三章2節、第五章10節、第四章2節）は論点の重さに応じた設計。「小括」は第七章のみで機械的配置でない。議論の深度も章によって異なり、第五章の設例・双方向性分析が最も密である。</p>
+<p class="no-indent"><strong>段落レベル</strong>では均質性が目立つ。各段落が「問題の所在→区別→基準化→帰結→射程限定」という運動を反復し、終端も「である。」型に寄る。この二重性（章は人間的、段落はAI的）が構造分析の核心所見。</p>
+<p class="no-indent" style="font-size:.88rem"><strong>章間接続：</strong>「第二章でみたとおり」「第五章でみる」「第八章につながる」等の接続は実質的な論理依存を作っており、有機的と判定。ただし序章末尾の各章紹介はやや設計メモ的で、AIの章案内パターンに近い。</p>
+</div>
+</div>
+
+<!-- Dimension 4 -->
+<div class="dimension">
+<div class="dimension-header">
+  4. 脚注・典拠分析（確信度：32/100）
+  <span class="tag tag-low">低い</span>
+</div>
+<div class="dimension-body">
+<p class="no-indent">236件の脚注を精査した結果、<strong>典型的なAI架空引用パターンは検出されなかった</strong>。主要文献・判例・外国法一次資料の多くが実在確認され、本文主張との接続説明も厚い。</p>
+
+<p class="no-indent"><strong>肯定的要素（人間らしさ）：</strong></p>
+<ul style="margin:0 0 1rem 2rem;font-size:.9rem">
+<li>金子宏『租税法』、田中二郎『租税法』等の定番から、税大論叢・租税資料館賞論文等の専門文献まで幅広い</li>
+<li>判例引用は民集巻号・行裁例集巻号・判タ号等が具体的</li>
+<li>外国法（IRC、TIOPA、AStG、CGI）は公式DB（eCFR、legislation.gov.uk、gesetze-im-internet.de、Légifrance）を参照し、確認日付付き</li>
+<li>e-Gov法令検索の時点指定データによる確認記述あり</li>
+</ul>
+
+<p class="no-indent"><strong>注意点：</strong></p>
+<ul style="margin:0 0 1rem 2rem;font-size:.9rem">
+<li>引用形式に揺れ（「措置法施行令」「施行令」「措令」の混在、外国法の空白・略記の乱れ）</li>
+<li>「本稿執筆過程において」大量検索をしたとする脚注（[37]、[106]、[140]、[168]）——検索ログが添付されていない</li>
+<li>頁番号の曖昧さ（「五一八頁前後」「四六一頁以下」）が残る箇所あり</li>
+<li>[184]に内部参照ミスの指摘あり</li>
+</ul>
+</div>
+</div>
+
+<!-- Dimension 5 -->
+<div class="dimension">
+<div class="dimension-header">
+  5. 法学論文規範適合（確信度：38/100）
+  <span class="tag tag-low">低い</span>
+</div>
+<div class="dimension-body">
+
+<table>
+<tr><th>項目</th><th>評価</th><th>備考</th></tr>
+<tr><td>敬体/常体の一貫性</td><td><span class="tag tag-low">自然</span></td><td>「である」調で完全統一</td></tr>
+<tr><td>法学術語</td><td><span class="tag tag-low">正確</span></td><td>「課税要件法定主義」「法源欠缺」等を精密に使い分け</td></tr>
+<tr><td>条文引用形式</td><td><span class="tag tag-low">適切</span></td><td>正式引用と略語一覧の併用</td></tr>
+<tr><td>判例引用</td><td><span class="tag tag-mid">弱い</span></td><td>本文は事件名のみ、判決年月日は脚注依存</td></tr>
+<tr><td>先行研究への敬意</td><td><span class="tag tag-low">自然</span></td><td>批判は攻撃的でなく丁寧。ただし「羽島は」等呼び捨て</td></tr>
+<tr><td>問題提起の仕方</td><td><span class="tag tag-low">優良</span></td><td>帰納的観察から問いを立てる構成</td></tr>
+<tr><td>「本稿」「筆者」の使用</td><td><span class="tag tag-mid">やや多い</span></td><td>「本稿」63回。「本稿は」の連続はAI的に見える</td></tr>
+<tr><td>不自然な外来語</td><td><span class="tag tag-low">軽微</span></td><td>「ベースライン」「接続仕様」がやや工学的</td></tr>
+<tr><td>問題意識の一貫性</td><td><span class="tag tag-low">強い</span></td><td>全章が「配置規則の欠落」に収斂</td></tr>
+<tr><td>結論の慎重さ</td><td><span class="tag tag-low">かなり慎重</span></td><td>内容選択は立法者に返すと明示</td></tr>
+</table>
+
+<p class="no-indent" style="font-size:.88rem"><strong>ワーカーの結論：</strong>「法学博士論文としての文体・構成にはかなり適合。AI生成の強い兆候はない。ただし論述が整いすぎている点で疑いは中程度に残る」。造語（「配置規則法定性」「配置依存文言」）の既存学説との接続をさらに厚くすべきとの指摘あり。</p>
+</div>
+</div>
+
+<!-- Dimension 6 -->
+<div class="dimension">
+<div class="dimension-header">
+  6. 文体一貫性分析（確信度：50/100）
+  <span class="tag tag-mid">中程度</span>
+</div>
+<div class="dimension-body">
+<p class="no-indent">冒頭部から末尾部にかけて4セクションを比較した結果：</p>
+
+<ul style="margin:0 0 1rem 2rem;font-size:.9rem">
+<li><strong>語彙の変化：</strong>A（問い・欠缺・法源所在）→ B（通達・裁判所・手続）→ C（比較法・改正・書ける）→ D（制約・遮断・一義的明記）。論文の進行に伴う自然な役割変化</li>
+<li><strong>温度の変化：</strong>あり。A=慎重な問題提起、B=冷たい実務分析、C=温度上昇（「書くべきだ」方向）、D=規範的圧（法的要件として冷たく詰める）</li>
+<li><strong>推敲の痕跡：</strong>あり。Aでは射程限定の予防線が多い。Bでは通達三分類に整理痕。C/Dでは比較法・事件を結論へ段階的に接続</li>
+<li><strong>著者の「声」：</strong>強い一貫性。「AではなくB」「問題はXではなくY」「法源に置く」「もっとも」「これに対し」が全体を貫く</li>
+<li><strong>熱量の偏在：</strong>あり（人間的）。通達補充の限界、保険業設例、六つの制約が最も密</li>
+</ul>
+
+<p class="no-indent" style="font-size:.88rem"><strong>ワーカーの結論：</strong>「強い癖を持った同一筆者、または一人の編集者が全体をかなり均した文章」。AI的均質性だけで説明するより、法学論文として強く推敲された文章と見る方が妥当。ただし初稿の揺れや疲労感が最終稿で均されている点は、AI整文を否定しきれない。</p>
+</div>
+</div>
+
+<!-- Dimension 7 -->
+<div class="dimension">
+<div class="dimension-header">
+  7. 内容独自性分析（確信度：18/100）
+  <span class="tag tag-low">極めて低い</span>
+</div>
+<div class="dimension-body">
+<p class="no-indent">この論文が「AI生成の一般論再構成」ではない根拠は明確である：</p>
+
+<div class="evidence positive">
+<strong>人間の独自研究を示す要素</strong><br>
+<ol style="margin:.5rem 0 0 1.5rem;font-size:.9rem">
+<li>措置法施行令39条の15第1項1号の「例に準じて」という特定文言への異常な集中</li>
+<li>「語義は明確だが配置規則が欠けている」——明確性問題と法定性問題を分離する独自の切り口</li>
+<li>同一施行令の第2項が18の号で当てはめを書き下しているのに第1項1号では書いていない、という対照の発見</li>
+<li>羽島説と石井説が同じ趣旨を共有しながら反対結論に達する事実を「配置規則欠落の徴表」として使う——先行研究の組み替え</li>
+<li>借用規定66か条の悉皆走査、配置依存文言の四類型への局在の発見</li>
+<li>国会会議録の使い方：「積極証拠ではなく消極事実に限定して用いる」という慎重さ</li>
+<li>比較法を「制度比較」ではなく「証拠対応」として限定的に使用</li>
+<li>「補充の非対称」——通達が課税方向にのみ偏り、減額方向を支えないという発見</li>
+</ol>
+</div>
+
+<p class="no-indent" style="font-size:.88rem"><strong>ワーカーの結論：</strong>「人間の独自研究に典型的な特徴がかなり優勢。AI支援による整文・構成整理の可能性は否定できないが、『一般論をもっともらしく再構成したAI生成論文』と見る根拠は弱い」</p>
+</div>
+</div>
+
+<!-- ===== 統合診断 ===== -->
+<h2>統合診断</h2>
+
+<h3>最も蓋然性の高いシナリオ</h3>
+<p class="no-indent">全7次元の分析を統合すると、この論文は以下のプロファイルに最も適合する：</p>
+
+<div class="verdict" style="border-color:#0f3460">
+<h3 style="color:#0f3460">推定される執筆プロセス</h3>
+<p class="no-indent" style="font-size:.95rem">
+<strong>（1）研究の知的核（人間）：</strong>条文の号単位での観察、先行研究の対立構造の発見、「配置規則の欠落」という問題設定、国会会議録・比較法・通達の証拠収集——これらは長期にわたる独自の研究活動に基づく。AIが単独でこの切り口を生成する蓋然性は極めて低い。<br><br>
+<strong>（2）散文の整形（AI補助の蓋然性あり）：</strong>「AではなくB」の対概念整理、「第一に/第二に/第三に」の列挙、「本稿は…示す」の自己位置づけ、「である。」型文末の偏り、段落の論証パターンの均質性——これらの表現層の特徴は、LLMによる起草または強い整文処理と整合する。<br><br>
+<strong>（3）AI臭の意識的除去の痕跡：</strong>AI典型語（「構造的」「本質的」「体系的」「重要な示唆」）がゼロであることは、自然な執筆ではまず起こらない。これらの語を意識的に排除した処理が行われたことを示唆する。排除されたが、より深い表現パターン（列挙、対概念、文末均質性）は残った。
+</p>
+</div>
+
+<h3>注意すべき限界</h3>
+<ul style="margin:0 0 1rem 1.5rem;font-size:.9rem">
+<li>AI検出は本質的に確率的推定であり、確定的診断ではない。高度に推敲された人間の法学論文も、これらの特徴の一部を示しうる</li>
+<li>日本語法学論文の「である」調は元来単調になりやすく、文末パターンのAI確信度は割り引いて読むべきである</li>
+<li>列挙パターン（「第一に、第二に」）は法学の論証慣行でもあり、AIの指紋とは限らない</li>
+<li>GPT-5.5による分析自体がAIの判断であり、メタ的なバイアスが含まれる可能性がある</li>
+</ul>
+
+<h3>定量サマリ</h3>
+<table>
+<tr><th>区分</th><th>次元</th><th>AI確信度</th><th>重み</th></tr>
+<tr><td rowspan="3">表現層</td><td>AI臭マーカー</td><td>62</td><td>高</td></tr>
+<tr><td>語彙統計</td><td>68</td><td>高</td></tr>
+<tr><td>文体一貫性</td><td>50</td><td>中</td></tr>
+<tr style="background:#f8f9fa"><td colspan="2"><strong>表現層 加重平均</strong></td><td><strong>61</strong></td><td></td></tr>
+<tr><td rowspan="2">構造層</td><td>構造均質性</td><td>52</td><td>中</td></tr>
+<tr><td>法学規範適合</td><td>38</td><td>中</td></tr>
+<tr style="background:#f8f9fa"><td colspan="2"><strong>構造層 加重平均</strong></td><td><strong>45</strong></td><td></td></tr>
+<tr><td rowspan="2">内容層</td><td>脚注・典拠</td><td>32</td><td>高</td></tr>
+<tr><td>内容独自性</td><td>18</td><td>最高</td></tr>
+<tr style="background:#f8f9fa"><td colspan="2"><strong>内容層 加重平均</strong></td><td><strong>23</strong></td><td></td></tr>
+<tr style="background:#0f3460;color:#fff"><td colspan="2"><strong>総合（内容重み2倍）</strong></td><td><strong>40</strong></td><td></td></tr>
+</table>
+
+<p class="no-indent" style="font-size:.85rem;color:#666;margin-top:.5rem">総合スコア40は「AI補助の可能性あり、AI単独生成の蓋然性は低い」の領域に位置する。内容の重みを等倍にすると約43、表現のみで見ると61となる。</p>
+
+<!-- ===== 改善提言 ===== -->
+<h2>AI検出耐性を高めるための改善提言</h2>
+
+<table>
+<tr><th>優先度</th><th>項目</th><th>具体的対策</th></tr>
+<tr><td><span class="tag tag-high">最高</span></td><td>列挙パターンの解消</td><td>「第一に/第二に/第三に」の10回連続を、接続詞の変化（「まず」「つぎに」「さらに」「加えて」「これとは別に」等）で崩す</td></tr>
+<tr><td><span class="tag tag-high">最高</span></td><td>文末の多様化</td><td>「である。」偏重（19%）を、「〜する」「〜にほかならない」「〜といってよい」「〜をみておこう」等で分散させる</td></tr>
+<tr><td><span class="tag tag-high">高</span></td><td>「AではなくB」の削減</td><td>65回中20回程度を「Bこそが問題の核心であり」「Aとは異なり」「Aの議論から離れて」等に置換</td></tr>
+<tr><td><span class="tag tag-mid">中</span></td><td>「本稿は」の削減</td><td>63回中半数を「以下では」「この検討では」「ここで問うのは」「筆者が注目するのは」に分散</td></tr>
+<tr><td><span class="tag tag-mid">中</span></td><td>段落構成の揺れの導入</td><td>全段落が「主張→理由→区別→帰結」に収まる均質性を崩す。一部段落で結論先行や疑問文開始を導入</td></tr>
+<tr><td><span class="tag tag-mid">中</span></td><td>人間的な「声」の挿入</td><td>「筆者」を数箇所で使用。「率直にいえば」「いささか驚くべきことに」等の主観的表現を最小限挿入</td></tr>
+<tr><td><span class="tag tag-low">低</span></td><td>引用形式の統一</td><td>「措置法施行令」「施行令」「措令」の混在を整理。外国法の略記・空白を校正</td></tr>
+</table>
+
+</div><!-- /content -->
+</div><!-- /container -->
+<div class="idx-nav" style="max-width:840px;margin:0 auto 24px;padding:0 12px;font-family:sans-serif;font-size:12.5px;text-align:center;"><a href="../index.html" style="color:#5a2d82;text-decoration:none;border-bottom:1px dotted #5a2d82;">&#8592; 成果物インデックスへ戻る</a></div>
+</body>
+</html>

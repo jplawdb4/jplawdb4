@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karpathy式LLM Wikiによるセカンドブレイン構築 ― 批判的検証レポート</title>
+<style>
+  :root{
+    --ink:#1c2530; --sub:#56606e; --line:#dfe4ea; --bg:#eef1f4; --paper:#fff;
+    --accent:#5a2d82; --accent2:#7a4fa3; --accent-soft:#f2ecf8;
+    --blue:#1f4e79; --blue-soft:#eef3fa; --red:#9e2820; --red-soft:#fbeae8;
+    --green:#1d6b3f; --green-soft:#eaf5ee; --amber:#8a5a00; --amber-soft:#fdf6e6;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Hiragino Mincho ProN","Yu Mincho",YuMincho,"Noto Serif JP",serif;
+    line-height:2.0;font-size:15px;}
+  .paper{max-width:840px;margin:28px auto;background:var(--paper);
+    padding:56px 64px 72px;box-shadow:0 4px 28px rgba(20,30,50,.10);border-radius:4px;}
+  .doctype{font-family:sans-serif;font-size:11.5px;letter-spacing:.16em;color:var(--accent);
+    text-align:center;margin-bottom:8px;}
+  h1.title{font-size:23px;text-align:center;line-height:1.6;margin:6px 0 6px;font-weight:700;}
+  .subtitle{font-size:15px;text-align:center;color:var(--sub);margin:0 0 6px;}
+  .meta-line{font-family:sans-serif;font-size:11.5px;text-align:center;color:var(--sub);
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    padding:8px 0;margin:18px 0 28px;}
+  .abstract{background:var(--accent-soft);border:1px solid #ddd0ec;border-radius:6px;
+    padding:18px 22px;margin:0 0 28px;font-size:14px;}
+  .abstract h3{margin:0 0 8px;font-size:13px;font-family:sans-serif;color:var(--accent);letter-spacing:.08em;}
+  .toc{font-family:sans-serif;font-size:13px;background:#fafbfc;border:1px solid var(--line);
+    border-radius:6px;padding:16px 22px;margin:0 0 30px;}
+  .toc b{color:var(--accent);} .toc ol{margin:8px 0 0;padding-left:22px;} .toc li{margin:4px 0;}
+  .toc a{color:var(--ink);text-decoration:none;} .toc a:hover{color:var(--accent);}
+  h2.h{font-family:sans-serif;font-size:18px;margin:40px 0 14px;padding-bottom:8px;
+    border-bottom:2px solid var(--accent);color:var(--accent);scroll-margin-top:12px;}
+  h2.h .n{color:var(--accent2);margin-right:10px;}
+  h3.sh{font-family:sans-serif;font-size:15px;margin:26px 0 8px;color:var(--blue);font-weight:700;}
+  p{margin:13px 0;text-align:justify;}
+  .key{background:linear-gradient(transparent 62%,#efe3fb 62%);font-weight:700;}
+  .box{border-radius:6px;padding:15px 20px;margin:18px 0;font-size:14px;font-family:sans-serif;line-height:1.85;}
+  .box.thesis{background:var(--accent-soft);border-left:4px solid var(--accent);}
+  .box.note{background:var(--blue-soft);border-left:4px solid var(--blue);}
+  .box.caveat{background:var(--amber-soft);border-left:4px solid var(--amber);}
+  .box.danger{background:var(--red-soft);border-left:4px solid var(--red);}
+  .box.thesis b{color:var(--accent);} .box.note b{color:var(--blue);}
+  .box.caveat b{color:var(--amber);} .box.danger b{color:var(--red);}
+  table{width:100%;border-collapse:collapse;margin:18px 0;font-size:12.8px;font-family:sans-serif;}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top;line-height:1.7;}
+  th{background:var(--accent);color:#fff;font-weight:600;}
+  td.lbl{background:#f6f3fa;font-weight:700;white-space:nowrap;}
+  tr:nth-child(even) td:not(.lbl){background:#fafbfc;}
+  .ok{color:var(--green);font-weight:700;} .ng{color:var(--red);font-weight:700;}
+  .fn{font-size:12px;color:var(--sub);font-family:sans-serif;line-height:1.7;}
+  .fn-list{border-top:1px solid var(--line);margin-top:36px;padding-top:16px;}
+  .fn-list h3{font-family:sans-serif;font-size:13px;color:var(--accent);letter-spacing:.08em;}
+  .fn-list ol{padding-left:22px;} .fn-list li{margin:6px 0;font-size:12px;color:var(--sub);font-family:sans-serif;}
+  .fn-list a{color:var(--blue);text-decoration:none;border-bottom:1px dotted var(--blue);}
+  sup.r{color:var(--accent);font-weight:700;font-size:11px;font-family:sans-serif;cursor:pointer;}
+  .diagram{border:1px solid var(--line);border-radius:6px;padding:18px;margin:18px 0;
+    background:#fafbfc;font-family:sans-serif;font-size:12.5px;}
+  pre.code{border:1px solid var(--line);border-left:4px solid var(--accent2);border-radius:6px;
+    padding:14px 18px;margin:16px 0;background:#1e2230;color:#e6e9ef;overflow-x:auto;
+    font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;font-size:12px;line-height:1.65;}
+  pre.code .c{color:#8b95a7;} pre.code .k{color:#c9a4f0;}
+  footer{font-family:sans-serif;font-size:11.5px;color:var(--sub);margin-top:34px;
+    border-top:1px solid var(--line);padding-top:14px;line-height:1.8;}
+  @media (max-width:680px){.paper{padding:30px 22px;}table{font-size:11.5px;}pre.code{font-size:11px;}}
+  @media print{body{background:#fff;}.paper{box-shadow:none;margin:0;max-width:100%;}}
+</style>
+</head>
+<body>
+<div class="idx-nav" style="max-width:840px;margin:12px auto 0;padding:0 12px;font-family:sans-serif;font-size:12.5px;"><a href="../index.html" style="color:#5a2d82;text-decoration:none;border-bottom:1px dotted #5a2d82;">&#8592; 成果物インデックスへ</a></div>
+<div class="paper">
+
+  <div class="doctype">ACADEMIC DEEP RESEARCH ／ AIナレッジマネジメント・個人知識基盤</div>
+  <h1 class="title">Karpathy式「LLM Wiki」によるセカンドブレイン構築<br>― 批判的検証と研究Vaultへの実装設計 ―</h1>
+  <p class="subtitle">バズ手法の解剖・誇張の検証・既存資産（OCC_Vault×ChromaDB）への重ね方</p>
+  <div class="meta-line">2026年6月27日　／　調査体制: 設計・実機検証 ＋ Codex 馬車馬ディープリサーチ　／　出典スタンス: 一次確認分のみ確定・他は明示</div>
+
+  <!-- 要旨 -->
+  <div class="abstract">
+    <h3>要旨（ABSTRACT）</h3>
+    <p style="margin:0;">Andrej Karpathy が公開した <span class="key">LLM Wiki / Personal Knowledge Base Pattern</span> は、従来のRAG（毎回ベクトル検索して一時回答を生成）とは発想を異にし、AIエージェントが <span class="key">永続するMarkdown Wikiを生資料とユーザーの間に増分的に構築・保守する</span> アーキテクチャである。三層（raw sources／wiki／schema）と三操作（Ingest／Query／Lint）から成り、Vannevar Bush の Memex（1945）の「参照保守の手間」をLLMで解決した点に新規性がある<sup class="r">1</sup>。本稿は本パターンを批判的に検証し、(1)「15分でセカンドブレイン完成・コーディング不要」は<span class="key">接続までの話で、研究運用には誇張</span>であること、(2) RAGの代替ではなく <span class="key">RAGの上に置く知識編集レイヤー</span>であること、(3) 法学博士論文用途では <span class="key">原資料・脚注・典拠のimmutable化</span>が品質の分岐点であること、を示す。あわせて、利用者が既に保有する OCC_Vault（84ノート・10桁分類）と ChromaDB RAG・判例DBへの<span class="key">層分け実装設計</span>と、実機検証で判明した実装手順の誤り（gitルートの所在）を補正した「今夜の最小手順」を提示する。</p>
+  </div>
+
+  <!-- 目次 -->
+  <div class="toc">
+    <b>目次</b>
+    <ol>
+      <li><a href="#i">結論 ― 使えるが、宣伝は誇張</a></li>
+      <li><a href="#ii">アーキテクチャの解剖 ― RAG と LLM Wiki</a></li>
+      <li><a href="#iii">接続方式の4選択肢と「15分」の検証</a></li>
+      <li><a href="#iv">CLAUDE.md（schema）の設計とテンプレ</a></li>
+      <li><a href="#v">スケーリングと限界</a></li>
+      <li><a href="#vi">失敗モードとリスク緩和</a></li>
+      <li><a href="#vii">既存ツールとの比較</a></li>
+      <li><a href="#viii">利用者固有の最適化 ― OCC_Vault × ChromaDB</a></li>
+      <li><a href="#ix">今夜の実装手順（実機検証・補正済）</a></li>
+    </ol>
+  </div>
+
+  <!-- I -->
+  <h2 class="h" id="i"><span class="n">I</span>結論 ― 使えるが、宣伝は誇張</h2>
+  <p>本パターンの核は地味だが正しい。Claudeエージェントをディレクトリ上で起動し、Markdown群を <span class="key">grep（全文走査）</span>で読ませ、作法を <code>CLAUDE.md</code> に書く、というだけのものである。これは利用者がCFC博士論文の執筆で日々行っている運用と実質的に同一であり、その意味で「使えるか」への答えは利用者に関しては既に実証済みである。</p>
+  <p>他方、流布する「<span class="key">15分でAIセカンドブレイン完成・コーディング不要</span>」は初心者向けの煽りである。15分で到達できるのはエージェントをVaultに接続する初期接続までで、研究・論文執筆に耐える運用には、原資料のimmutable化、<code>CLAUDE.md</code>による規律、git管理、Lint、典拠検証、破壊的編集の防止が要る。とりわけ法学博士論文では、生成要約を「知識」として扱う前に、一次資料・脚注・判例・条文への戻り道を固定する必要がある。</p>
+  <div class="box thesis"><b>中心命題：</b>Karpathy式LLM Wikiは <span class="key">RAGの代替ではなく、RAGの上に置く知識編集レイヤー</span>である。生成Wikiは「論文本文」ではなく「<span class="key">出典付きの編集済み研究台帳</span>」として扱う限りにおいて、長期研究に対して複利的な価値を持つ。Wikiを最終証拠にした瞬間に、それは劣化したRAGに転落する。</p></div>
+
+  <!-- II -->
+  <h2 class="h" id="ii"><span class="n">II</span>アーキテクチャの解剖 ― RAG と LLM Wiki</h2>
+  <p>RAGは基本的に、query時に文書をchunk検索し、関連断片をLLMに渡してその場限りの回答を生成する。強いのは大量文書からの探索・未整理資料への即時アクセス・意味検索・出典付きQAである。弱いのは、同じ統合・比較・矛盾処理を毎回やり直すこと、断片検索が外れると回答品質が崩れること、長期的な理解が蓄積しにくいことである。</p>
+  <p>Karpathy式は、生資料を検索対象にするだけでなく、LLMが中間生成物として <span class="key">Wiki</span> を作る。たとえば「岡村忠生CFC論文」「Avi-Yonah実質主義」「TK匿名組合のD/NI問題」「2025年改正の矛盾」などを概念ページ化し、相互参照し、後続資料で更新する。したがってquery時には、原文断片だけでなく <span class="key">既に編集された研究地図</span> に対して質問できる。</p>
+
+  <div class="diagram"><b>図1　LLM Wiki の三層アーキテクチャと三操作</b><br><br>
+  ┌─────────────────────────────────────────────┐<br>
+  │  ① RAW SOURCES（生資料・不変）                          │<br>
+  │     論文 / 判例PDF / 条文 / 脚注DB / ChromaDB元文書     │<br>
+  │     ← 人間が放り込むだけ。改変厳禁（immutable）         │<br>
+  └───────────────┬─────────────────────────────┘<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│  Ingest（読込→要約→関連頁更新→相互参照）<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+  ┌─────────────────────────────────────────────┐<br>
+  │  ② THE WIKI（LLM生成・永続・複利）                       │<br>
+  │     要約頁 ／ エンティティ頁 ／ 相互参照 [[link]]        │<br>
+  │     ↑ Query（質問→良い回答を新規頁として還元）          │<br>
+  │     ↻ Lint（矛盾・陳腐化・孤立頁・参照切れの健診）       │<br>
+  └───────────────┬─────────────────────────────┘<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│  規律に従う<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+  ┌─────────────────────────────────────────────┐<br>
+  │  ③ THE SCHEMA（設定・人間が定義）                        │<br>
+  │     CLAUDE.md ＝ フォルダ役割・禁止事項・検証手順        │<br>
+  └─────────────────────────────────────────────┘
+  </div>
+
+  <h3 class="sh">優れる場面／劣る場面</h3>
+  <table>
+    <tr><th style="width:50%;">優れる場面</th><th>劣る場面</th></tr>
+    <tr><td>長期研究・博士論文・書籍執筆・判例体系化など、同じ論点を何度も再利用する場合</td><td>最新ニュース・膨大な法令全文・判例全文DBなど、毎回一次ソース全体から検索したい場合</td></tr>
+    <tr><td>「A論文とB判決の緊張関係」「過去の自分の問題意識の変遷」など、単純検索より統合が重要な場合</td><td>典拠完全性が必要で、LLM要約を中間層に置くこと自体がリスクになる場合</td></tr>
+    <tr><td>人間が読むObsidianグラフ・LLMが読むMarkdown・git差分が同一資産になる場合</td><td>数千〜数万文書で、grepや全文走査では候補集合を絞れない場合</td></tr>
+    <tr><td>回答そのものを新規ノートとして還元し、次回以降の素材にできる場合</td><td>生成Wikiが肥大化し、誤要約や古い主張が残留する場合</td></tr>
+  </table>
+
+  <h3 class="sh">grep／全文走査 vs 埋め込み検索</h3>
+  <table>
+    <tr><th>方式</th><th>強い</th><th>弱い</th></tr>
+    <tr><td class="lbl">grep / rg</td><td>法令名・条文番号・事件名・著者名・専門用語。再現性が高く、日本語の固有語・条番号検索に非常に強い</td><td>言い換え・概念類似・暗黙関係を拾いにくい</td></tr>
+    <tr><td class="lbl">埋め込み検索</td><td>「CFCの法人格否認的把握に近い議論」のような意味検索</td><td>条文番号・脚注番号の厳密一致、否定表現、時系列、細かい法的限定に弱い</td></tr>
+  </table>
+  <div class="box note"><b>最適解：</b>法学用途では、<span class="key">まずWikiで概念地図を持ち、候補探索はChromaDB／全文検索、最終確認は一次資料</span>。Wikiだけで結論を出さない。</div>
+
+  <!-- III -->
+  <h2 class="h" id="iii"><span class="n">III</span>接続方式の4選択肢と「15分」の検証</h2>
+  <table>
+    <tr><th>方式</th><th>利点</th><th>落とし穴</th><th>評価</th></tr>
+    <tr><td class="lbl">(a) Claude Code を<br>Vaultで直接起動</td><td>最もKarpathy式に近い。<code>CLAUDE.md</code>が自然に効く。git差分で編集を監査。rg・スクリプト・Lintを組みやすい</td><td>起動場所が重要（Vault外で <code>--add-dir</code> だけだと設定読込挙動が異なる）。会話履歴がローカル平文保存され得る<sup class="r">2,4</sup></td><td><span class="ok">研究Vaultに最有力</span>。当初はread/plan中心、編集は40・50に限定</td></tr>
+    <tr><td class="lbl">(b) Claude Desktop +<br>filesystem MCP</td><td>会話UIで使える。導入記事が多く体感「15分」に近い。Vault以外も許可範囲に</td><td>権限境界を誤るとローカルを広く読む。大量編集の途中介入・差分確認が弱い。schema/git/Lintは別途自前<sup class="r">3</sup></td><td>軽い読み書き・草稿向け。本体運用は(a)が監査しやすい</td></tr>
+    <tr><td class="lbl">(c) Obsidian専用MCP</td><td>リンク・frontmatter・テンプレ・periodic note等のVault構造操作。rename時リンク更新も</td><td>plugin毎に成熟度・API・安全性が違う。Obsidian起動要のものも。ローカルHTTP/token/CORS設定不備はリスク<sup class="r">5,6</sup></td><td>Obsidian内操作を尊重したい場合に有効。本件では二番手</td></tr>
+    <tr><td class="lbl">(d) その他</td><td>Copilot/Smart Connections（RAG寄り）、VS Code/Cursor/Cline+MCP、Codex等。gist自体はClaude Code限定でなくLLMエージェント一般に貼る思想ファイル<sup class="r">1</sup></td><td>Vault編集規律は自前</td><td>用途次第</td></tr>
+  </table>
+  <div class="box caveat"><b>「15分」の検証：</b>接続だけなら<span class="ok">可能</span>。安全な研究運用は<span class="ng">不可能</span>。CFC博士論文Vaultに載せるなら、初期schemaとgit整備だけで30〜90分、安定運用は数日単位。</div>
+
+  <!-- IV -->
+  <h2 class="h" id="iv"><span class="n">IV</span>CLAUDE.md（schema）の設計とテンプレ</h2>
+  <p>良い <code>CLAUDE.md</code> は知識を詰め込むファイルではなく、<span class="key">編集規律・フォルダ役割・ワークフロー・禁止事項・検証手順</span>を書くファイルである。なお <code>CLAUDE.md</code> はセッション開始時に文脈として読み込まれるが、それ自体は権限制御ではない点に注意を要する<sup class="r">7</sup>。以下は <code>/home/user/OCC_Vault/CLAUDE.md</code> にそのまま貼れる骨子である。</p>
+  <pre class="code"><span class="c"># OCC Vault LLM Wiki Schema</span>
+
+<span class="k">## Mission</span>
+法学・税務の博士論文（日本CFC税制）のための知識基盤。
+不変の生資料と利用者の間に、永続Markdown Wikiを維持する。
+生成ノートを一次的権威として扱わない。
+
+<span class="k">## Directory Roles</span>
+00_Inbox/      : 未処理の調査依頼・ノート
+10_Processing/ : 進行中分析の作業領域
+20_Projects/   : 完成済プロジェクト出力・長文レポート
+30_Templates/  : 再利用テンプレ（指示なき限り変更しない）
+40_Knowledge/  : 安定した統合知識エントリ（canonical）
+50_Connections/: 横断マップ・矛盾マップ・論証依存グラフ
+60_System/     : システム指示・索引・ログ・lint報告
+70_Analytics/  : 指標・利用分析
+
+<span class="k">## Source Authority Rules</span>
+1. 一次資料・条文・判例・PDF・引用脚注は immutable。
+2. 原文テキストを書き換えない。
+3. 引用・脚注番号・事件名・条番号・年月日・頁を、
+   利用者の明示指示かつ原典再確認なしに改変しない。
+4. 生成主張は次のいずれかで status 明示：
+   source-confirmed / inference / hypothesis / needs-verification
+5. 法的結論には、生資料・プロジェクト報告・RAG/判例DB結果への
+   source trail（戻り道）を必ず付す。
+
+<span class="k">## Note Frontmatter (YAML)</span>
+type: knowledge|connection|case|statute|literature|question|lint
+status: draft|reviewed|source-confirmed|deprecated
+topic / jurisdiction / source_refs / related / created / updated
+
+<span class="k">## Ingest Workflow</span>
+資料種別と権威レベルを判定 → 読込 → 安定価値がある時のみ
+40_Knowledge に短い要約を作成/更新 → 概念頁を更新 →
+関係が変わる時 50_Connections を更新 → 不一致・不確実は
+潰さず保持 → [[backlink]] 付与 → 未検証統合は needs-verification。
+
+<span class="k">## Query Workflow</span>
+40_Knowledge と 50_Connections を先に検索 → 20_Projects を検索 →
+不足時のみ外部RAG/判例/条文DBで一次確認 → 再利用可能な洞察は
+canonical note を更新（重複ノートを作らない）。
+
+<span class="k">## Lint Workflow（修正せず報告のみ）</span>
+リンク切れ / 孤立ノート / 30日超の needs-verification /
+同一条文・判例・学説・改正に関する矛盾 / source_refs 欠落 /
+過長ノート / 一次source trail なき生成主張
+→ 60_System/lint/ に報告。
+
+<span class="k">## Editing Safety</span>
+広範編集前に git status 確認 → 小さく差分可読に →
+安定ノートの一括編集は5本まで（超は要確認）→
+明示承認なき削除禁止 → 全書換でなく append/section 更新。</pre>
+  <div class="box note"><b>設計思想：</b>このschemaの肝は「Source Authority Rules」第3〜5項。<span class="key">脚注・条番号・年月日を生成補完させない・source_refsを必須にする</span>——この一点が、利用者がメモに何度も残してきた「ハルシネ典拠」事故を構造的に防ぐ。</div>
+
+  <!-- V -->
+  <h2 class="h" id="v"><span class="n">V</span>スケーリングと限界</h2>
+  <p>実機確認した利用者のVaultは84 Markdown。現時点ではKarpathy式に非常に向いており、rgで十分走査でき、40・50を整備すればLLMが全体像を把握しやすい。</p>
+  <table>
+    <tr><th>規模</th><th>挙動と必要対応</th></tr>
+    <tr><td class="lbl">数百ノート</td><td>まだgrep中心で運用可。<code>CLAUDE.md</code>を短くし詳細規則は <code>60_System/rules/</code> に分割。<code>50_Connections</code> に論点別マップを作ると探索コストが下がる</td></tr>
+    <tr><td class="lbl">数千ノート</td><td>毎回Vault全体を読むのは不可能。rg検索語が悪いと重要ノートを落とす。同名概念・古い・重複・deprecatedが増える。<span class="key">Lintが必須・RAG併用が現実的</span></td></tr>
+  </table>
+  <p>ベクトルRAG併用が必要になる兆候は、(1)「この概念に似た議論を全部探して」が増える、(2) raw sourceが数千〜数万単位、(3) 同義語・翻訳語・英日対応が多い、(4) Wikiが答えを持たないがraw corpusにはありそう、(5) 反対説・少数説・脚注レベルの拾い漏れが問題になる、の各場合である。法学用途では <span class="key">Wiki＝研究判断の作業机、ChromaDB＝探索エンジン、判例DB/法令DB/PDF＝証拠保管庫</span> と分けるのがよい。</p>
+
+  <!-- VI -->
+  <h2 class="h" id="vi"><span class="n">VI</span>失敗モードとリスク緩和</h2>
+  <table>
+    <tr><th>失敗モード</th><th>リスク</th><th>緩和策</th></tr>
+    <tr><td class="lbl">原文改変</td><td>LLMが原資料・引用文を「読みやすく」直す</td><td>raw sourcesは <code>raw/</code> またはVault外でread-only。引用ノート編集禁止。git差分監査</td></tr>
+    <tr><td class="lbl">ハルシネ混入</td><td>存在しない判例・論文・条文趣旨をWikiに混ぜる</td><td>frontmatterに <code>status: needs-verification</code> 強制。<code>source_refs</code> なき法的結論をLintで検出</td></tr>
+    <tr><td class="lbl">相互参照の<br>誤接続</td><td>似た概念を誤リンク（例：CFCの経済活動基準とPillar 2 substance carve-out を過度に接続）</td><td><code>50_Connections</code> に関係タイプを記す：<code>supports / contradicts / analogous / not_same_as</code> を区別</td></tr>
+    <tr><td class="lbl">無限肥大</td><td>query回答を全部note化し低品質ノートが増殖</td><td>note作成基準（再利用可能な洞察のみ・canonical更新優先・月次でdeprecated）</td></tr>
+    <tr><td class="lbl">プライバシー</td><td>Vault外の機微ファイルを読む。会話履歴のローカル平文保存<sup class="r">4</sup></td><td>Vault専用起動・許可ディレクトリ限定・<code>.env</code>等deny・履歴削除方針</td></tr>
+    <tr><td class="lbl">破壊的編集</td><td>一括rename・delete・全ファイル整形</td><td>git・pre-commit・削除禁止・安定ノート5本超は確認制・hooks</td></tr>
+  </table>
+
+  <!-- VII -->
+  <h2 class="h" id="vii"><span class="n">VII</span>既存ツールとの比較</h2>
+  <table>
+    <tr><th>ツール</th><th>性格</th><th>Karpathy式との差</th></tr>
+    <tr><td class="lbl">Obsidian Copilot</td><td>RAGでノートに質問（Vault QA）<sup class="r">8</sup></td><td>Copilotは「検索して答える」、Karpathyは「読んでWikiを保守する」</td></tr>
+    <tr><td class="lbl">Smart Connections</td><td>ローカル埋め込みで関連ノート提示<sup class="r">9</sup></td><td>Smart Connectionsは探索補助、Karpathyは編集・統合ワークフロー</td></tr>
+    <tr><td class="lbl">Notion AI</td><td>チーム文書・DB・UI・共有に強い</td><td>Markdown/git/ローカル一次資料・監査可能性は弱い。典拠監査ではObsidian+gitが有利</td></tr>
+    <tr><td class="lbl">Mem</td><td>自動整理・記憶志向</td><td>ローカルraw source・git差分・法的引用の厳密性は不透明。Karpathyは自分のフォルダ構造とschemaを持てる</td></tr>
+    <tr><td class="lbl">Reor</td><td>ローカルAIノート/RAG寄り</td><td>Reorはアプリ、Karpathyはアーキテクチャパターン</td></tr>
+    <tr><td class="lbl">専用RAG</td><td>大規模コーパス・検索精度・評価・引用</td><td>専用RAGは証拠探索、Karpathyは知識編集。思考経過・統合知は残りにくい</td></tr>
+  </table>
+
+  <!-- VIII -->
+  <h2 class="h" id="viii"><span class="n">VIII</span>利用者固有の最適化 ― OCC_Vault × ChromaDB</h2>
+  <p>実機確認したVaultは84mdで <code>00_Inbox / 10_Processing / 20_Projects / 30_Templates / 40_Knowledge / 50_Connections / 60_System / 70_Analytics</code> の10桁分類を既に備える。これはKarpathy式を新設するより、<span class="key">既存OCC_VaultをKarpathy式として解釈し直す</span>のが最適である。</p>
+  <table>
+    <tr><th>役割</th><th>実体（利用者の資産）</th></tr>
+    <tr><td class="lbl">Raw sources</td><td>Vault外または <code>20_Projects</code> 配下の原成果物・判例DB・PDF・法令DB・ChromaDB元文書。原則immutable</td></tr>
+    <tr><td class="lbl">Wiki</td><td><code>40_Knowledge</code>（概念・学説・判例・制度・比較法のcanonical note）＋ <code>50_Connections</code>（論証関係を書く相互参照層）</td></tr>
+    <tr><td class="lbl">Schema</td><td><code>CLAUDE.md</code> ＋ <code>60_System/rules/</code> ＋ lint reports</td></tr>
+  </table>
+  <h3 class="sh">ChromaDB RAGとの役割分担</h3>
+  <p><span class="key">ChromaDB</span>＝raw corpus探索・類似論点発見・判例/論文候補抽出。<span class="key">Wiki</span>＝抽出後の研究判断・統合・矛盾管理・章立て接続。<span class="key">判例DB</span>＝事案・判旨・裁判年月日・出典の一次確認。LLM Wikiは「この論文で使える形」に加工された、ただし出典付きの中間知識に徹する。</p>
+  <h3 class="sh"><code>50_Connections</code> を論証グラフに育てる（最重要）</h3>
+  <p>単なるリンク集でなく論証関係を書く。実機確認では <code>50_Connections</code> は現在2サブフォルダのみで中身が薄く、<span class="key">育てる余地が最も大きい層</span>である。例：</p>
+  <div class="diagram"><b>図2　50_Connections に作るべき接続マップ例</b><br><br>
+  50_Connections/CFC_Thesis/<br>
+  &nbsp;&nbsp;├─ CFC博士論文_中核論点マップ.md<br>
+  &nbsp;&nbsp;├─ CFC_法人格理論__岡村_渕_岡直樹_接続マップ.md<br>
+  &nbsp;&nbsp;├─ TK匿名組合_DNI_CFC_比較法接続.md<br>
+  &nbsp;&nbsp;├─ Pillar2_CFC_BEPS_Action3_緊張関係.md<br>
+  &nbsp;&nbsp;└─ 博士論文章立て_主張依存グラフ.md<br><br>
+  各リンクに関係タイプを明示：[supports] [contradicts] [analogous] [not_same_as]
+  </div>
+  <div class="box caveat"><b>日本語法律文献の特有考慮：</b>脚注番号・頁・判例年月日・裁判所・事件番号は<span class="key">絶対に生成補完しない</span>。「示唆する／整合する／反する／同一ではない」を明示区別。法令は改正時点を持たせる。通達・裁判例・学説・私見を同じ権威レベルで並べない。<code>source-confirmed</code> と <code>inference</code> の区別が博士論文品質を左右する。</div>
+
+  <!-- IX -->
+  <h2 class="h" id="ix"><span class="n">IX</span>今夜の実装手順（実機検証・補正済）</h2>
+  <div class="box danger"><b>実機検証で判明したCodex手順の誤り：</b>Codexは別ディレクトリで実行されVaultの実状態を見ずに「<code>git init</code> で新規git化」と書いた。実際に確認すると <span class="key">gitルートは <code>/home/user</code> 全体</span>（branch=master・<span class="key">コミット0件・未追跡1981ファイル</span>の"事故repo"）が既に存在する。もし <code>/home/user</code> 階層で素朴に <code>git add</code> するとホーム全体の機微情報を巻き込む。<span class="key">対策＝OCC_Vault内に専用repoを切って分離する（下記で <code>git init</code> はVault内に <code>.git</code> を作るため安全かつ正しい）。</span></div>
+  <pre class="code"><span class="c"># 1. /home/user階層ではなくVault内に「専用repo」を切る</span>
+cd /home/user/OCC_Vault
+git init                       <span class="c"># Vault内に.gitを作り独立repo化（親repoと分離）</span>
+printf '.obsidian/workspace*\n.trash/\n.DS_Store\n60_System/tmp/\n' &gt; .gitignore
+git add -A &amp;&amp; git commit -m "Baseline: OCC vault 84 notes"
+
+<span class="c"># 2. CLAUDE.md（§IVのschema）をroot配置 → immutable/脚注改変禁止/source_refs必須を明文化</span>
+
+<span class="c"># 3. Lint用ディレクトリ</span>
+mkdir -p 60_System/lint 60_System/rules
+
+<span class="c"># 4. Claude Code を Vault root で起動（最初は調査のみ・編集禁止）</span>
+cd /home/user/OCC_Vault &amp;&amp; claude
+
+<span class="c"># 5. 50_Connections/CFC_Thesis/ に中核論点マップを1本だけ作る（一括再構成は禁止）</span>
+mkdir -p 50_Connections/CFC_Thesis</pre>
+  <h3 class="sh">起動後に投げる初手プロンプト</h3>
+  <pre class="code">CLAUDE.mdに従い、このVaultをKarpathy型LLM Wikiとして運用する準備をしたい。
+まず編集せず、README.md・40_Knowledge・50_Connections の構造を調査し、
+CFC博士論文向けに作るべき canonical note と connection map の候補を提案して。
+原資料・引用・脚注は絶対に改変しない。</pre>
+  <div class="box thesis"><b>運用の要点：</b>最初の1週間は「生成量」でなく「<span class="key">編集規律</span>」を作る。84mdなら今すぐ数百ノートを生成する必要はない。<code>50_Connections</code> を研究判断の中枢に据え、既存 <code>40_Knowledge</code> をcanonical化する方が効く。<span class="key">やるな：</span>Vault全体一括要約／長大レポートの全複製／脚注・条文・判例出典のLLM補完／MCPへの広いホーム権限付与／gitなし自動編集。</div>
+
+  <!-- 検証注記 -->
+  <h2 class="h" id="note"><span class="n">※</span>検証注記（本レポートの確度）</h2>
+  <div class="box caveat"><b>一次確認したもの：</b>(1) Karpathy gist本体（三層／三操作／Memex系譜）は調査時に直接取得・確認済<sup class="r">1</sup>。(2) 利用者Vaultの実状態（84md・10桁分類・<code>50_Connections</code>が薄い・gitルートが <code>/home/user</code>・コミット0件・<code>CLAUDE.md</code>未配置・例パス <code>CFC税制根本問題_…064201</code> の実在）は実機 <code>ls</code>/<code>git</code> で確認済。</div>
+  <div class="box danger"><b>未独立検証のもの（要注意）：</b>本文の脚注2〜9（Claude Code docs／filesystem MCP／Obsidian専用MCP／Copilot／Smart Connections／フォーラム体験談）は<span class="key">Codex提示のままで、本レポート作成者は各URLを独立検証していない</span>。導入判断前に各自で原典を確認されたい。製品仕様・権限挙動はバージョンで変わり得る。</div>
+
+  <!-- 出典 -->
+  <div class="fn-list">
+    <h3>主要参照（出典）</h3>
+    <ol>
+      <li id="f1">Andrej Karpathy, "LLM Wiki: Personal Knowledge Base Pattern" (GitHub Gist <code>442a6bf555914893e9891c11519de94f</code>). ―<span class="ok">本レポート作成時に直接取得・確認済</span>。三層（raw/wiki/schema）・三操作（Ingest/Query/Lint）・Memex系譜の典拠。</li>
+      <li id="f2">Claude Code permissions（公式docs, code.claude.com）― read-only操作は承認不要・bash/ファイル変更は承認対象・追加ディレクトリと設定読込の扱いの別。<span class="ng">未独立検証（Codex提示）</span>。</li>
+      <li id="f3">modelcontextprotocol/servers, filesystem server（GitHub）― read/write/list/move/search/metadata・Rootsアクセス制御。<span class="ng">未独立検証（Codex提示）</span>。</li>
+      <li id="f4">Claude Code <code>.claude</code> directory（公式docs）― 会話・ツール結果のローカル平文保存リスク。<span class="ng">未独立検証（Codex提示）</span>。</li>
+      <li id="f5">ebullient/obsidian-vault-mcp（GitHub）― Obsidian内HTTP MCP server。<code>read_note/search_notes/get_linked_notes/create_note/append_to_note/update_note/rename_note</code>。<span class="ng">未独立検証（Codex提示）</span>。</li>
+      <li id="f6">Obsidian forum「MCP servers: experiences and recommendations」― Claude Desktopが遅い・Vault全体が見える・メインVaultでは常用しない等の体験談。<span class="ng">未独立検証（Codex提示）</span>。</li>
+      <li id="f7">Claude Code memory（公式docs）― <code>CLAUDE.md</code>はセッション開始時に文脈読込されるが権限制御ではない。<span class="ng">未独立検証（Codex提示）</span>。</li>
+      <li id="f8">Obsidian Copilot, Vault QA（obsidiancopilot.com/docs）― RAGでノートに質問。<span class="ng">未独立検証（Codex提示）</span>。</li>
+      <li id="f9">Smart Connections（smartconnections.app）― ローカル埋め込みで関連ノート提示。<span class="ng">未独立検証（Codex提示）</span>。</li>
+    </ol>
+  </div>
+
+  <footer>
+    AIナレッジマネジメント・ディープリサーチ ／ 2026年6月27日作成。<br>
+    調査体制：一次ディープリサーチ＝Codex 馬車馬モード（76,704 tokens）＋ 設計・実機検証・統合・出典検証。<br>
+    本稿は技術検証ノートであり、製品仕様・権限挙動はバージョンにより変動する。導入前に各原典を確認のこと。
+  </footer>
+
+</div>
+<div class="idx-nav" style="max-width:840px;margin:0 auto 24px;padding:0 12px;font-family:sans-serif;font-size:12.5px;text-align:center;"><a href="../index.html" style="color:#5a2d82;text-decoration:none;border-bottom:1px dotted #5a2d82;">&#8592; 成果物インデックスへ戻る</a></div>
+</body>
+</html>

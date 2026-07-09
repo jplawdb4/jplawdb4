@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日米間配当の源泉徴収【詳細版】― 特典条項付表が欠落している場合の課否・税率・是正・理論 ―</title>
+<style>
+  :root{
+    --ink:#1a1f29; --sub:#5a6473; --line:#e2e6ec; --bg:#f4f6f9; --card:#fff;
+    --blue:#1f4e79; --blue2:#2d6aa3; --blue-soft:#eef3fa; --red:#b3261e; --red-soft:#fdeceb;
+    --amber:#9a6700; --amber-soft:#fff7e6; --green:#1d6b3f; --green-soft:#eaf5ee;
+    --purple:#5b3a8e; --purple-soft:#f1ecf9;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    line-height:1.85;font-size:15.5px;}
+  .wrap{max-width:980px;margin:0 auto;padding:32px 20px 90px;}
+  header.hero{background:linear-gradient(135deg,#1f4e79,#2d6aa3);color:#fff;
+    border-radius:16px;padding:36px 36px 30px;box-shadow:0 8px 24px rgba(31,78,121,.18);}
+  header.hero .tag{display:inline-block;font-size:12px;letter-spacing:.08em;
+    background:rgba(255,255,255,.18);padding:4px 12px;border-radius:999px;margin-bottom:14px;}
+  header.hero h1{margin:0 0 12px;font-size:25px;line-height:1.5;font-weight:700;}
+  header.hero p{margin:0;font-size:14px;opacity:.93;}
+  .toc{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 22px;margin:20px 0;font-size:14px;}
+  .toc b{color:var(--blue);} .toc ol{margin:8px 0 0;padding-left:20px;columns:2;} .toc li{margin:3px 0;}
+  .toc a{color:var(--ink);text-decoration:none;} .toc a:hover{color:var(--blue);}
+  .verdict{margin:22px 0;background:var(--red-soft);border:1px solid #f3c9c6;
+    border-left:6px solid var(--red);border-radius:12px;padding:22px 26px;}
+  .verdict h2{margin:0 0 8px;font-size:18px;color:var(--red);}
+  .verdict .rate{font-size:32px;font-weight:800;color:var(--red);letter-spacing:.01em;}
+  .verdict .rate small{font-size:14px;font-weight:600;color:var(--sub);margin-left:8px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:24px 26px;margin:18px 0;box-shadow:0 2px 8px rgba(20,30,50,.04);}
+  h2.sec{font-size:20px;margin:38px 0 6px;padding:8px 0 8px 14px;border-left:5px solid var(--blue);scroll-margin-top:14px;}
+  h2.sec .num{color:var(--blue2);font-weight:800;margin-right:8px;}
+  h3{font-size:16px;margin:22px 0 8px;color:var(--blue);}
+  h4{font-size:14.5px;margin:16px 0 6px;color:var(--purple);}
+  p{margin:10px 0;}
+  .facts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0;}
+  .facts div{background:var(--blue-soft);border-radius:8px;padding:10px 14px;font-size:14px;}
+  .facts div b{color:var(--blue);}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.8px;}
+  th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top;}
+  th{background:var(--blue-soft);color:var(--blue);font-weight:700;}
+  tr:nth-child(even) td{background:#fafbfc;}
+  .flow{counter-reset:step;margin:16px 0;}
+  .flow .step{position:relative;padding:14px 16px 14px 56px;background:#fff;
+    border:1px solid var(--line);border-radius:10px;margin:10px 0;}
+  .flow .step::before{counter-increment:step;content:counter(step);
+    position:absolute;left:14px;top:14px;width:28px;height:28px;border-radius:50%;
+    background:var(--blue);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px;}
+  .box{border-radius:10px;padding:14px 18px;margin:14px 0;font-size:14.5px;}
+  .box.amber{background:var(--amber-soft);border:1px solid #f0dca8;}
+  .box.green{background:var(--green-soft);border:1px solid #bfe2cc;}
+  .box.red{background:var(--red-soft);border:1px solid #f3c9c6;}
+  .box.purple{background:var(--purple-soft);border:1px solid #d9ccef;}
+  .box b{color:inherit;} .box.amber b{color:var(--amber);} .box.green b{color:var(--green);}
+  .box.red b{color:var(--red);} .box.purple b{color:var(--purple);}
+  ul{margin:8px 0;padding-left:22px;} li{margin:6px 0;}
+  .calc{background:#0f2238;color:#dde7f2;border-radius:10px;padding:16px 20px;
+    font-family:"SF Mono",Consolas,monospace;font-size:13.5px;line-height:1.9;margin:14px 0;}
+  .calc .hl{color:#ffd166;font-weight:700;} .calc .rd{color:#ff8a80;}
+  .ref{font-size:12.5px;color:var(--sub);margin-top:6px;}
+  .ref code{background:#eef1f5;padding:1px 5px;border-radius:4px;font-size:12px;color:#334;}
+  .pillrow{margin:6px 0;}
+  .pill{display:inline-block;font-size:12px;padding:3px 10px;border-radius:999px;
+    background:var(--blue-soft);color:var(--blue);margin:3px 4px 3px 0;font-weight:600;}
+  .pill.g{background:var(--green-soft);color:var(--green);}
+  .pill.r{background:var(--red-soft);color:var(--red);}
+  footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);
+    font-size:12.5px;color:var(--sub);}
+  @media (max-width:680px){.facts,.toc ol{grid-template-columns:1fr;columns:1;}}
+  @media print{body{background:#fff;}.card,header.hero{box-shadow:none;}h2.sec{page-break-after:avoid;}}
+</style>
+</head>
+<body>
+<div class="idx-nav" style="max-width:840px;margin:12px auto 0;padding:0 12px;font-family:sans-serif;font-size:12.5px;"><a href="../index.html" style="color:#5a2d82;text-decoration:none;border-bottom:1px dotted #5a2d82;">&#8592; 成果物インデックスへ</a></div>
+<div class="wrap">
+
+<header class="hero">
+  <span class="tag">国際税務 ／ 源泉所得税 ／ 詳細版</span>
+  <h1>日米間配当の源泉徴収【詳細版】<br>― 特典条項に関する付表（様式17）が欠落している場合 ―</h1>
+  <p>米国親会社（議決権100%保有）への毎期配当を免税前提で源泉徴収せず。租税条約届出書は提出済みだが、特典条項（LOB）の証明書類が未提出。源泉はかかるか、何％か。課否・税率・追徴・是正・理論・米国側影響まで、一次資料に当てて深掘りする。</p>
+</header>
+
+<div class="toc">
+  <b>目次</b>
+  <ol>
+    <li><a href="#s0">結論と前提事実</a></li>
+    <li><a href="#s1">なぜ「実体0%」でも源泉がかかるのか（権利と手続の分離）</a></li>
+    <li><a href="#s2">条約10条3項の0%要件と「100%でも5%に落ちる罠」</a></li>
+    <li><a href="#s3">22条 LOB と様式17の区分（A〜D）</a></li>
+    <li><a href="#s4">国内法税率 ― 20.42%か15.315%か</a></li>
+    <li><a href="#s5">不納付の法的構造・求償・遡及年数</a></li>
+    <li><a href="#s6">不納付加算税・延滞税の精密分析</a></li>
+    <li><a href="#s7">グロスアップと求償放棄の落とし穴</a></li>
+    <li><a href="#s8">是正の二段階フロー（納付→還付・様式11）</a></li>
+    <li><a href="#s9">米国側の税効果（FTC・905(c)）</a></li>
+    <li><a href="#s10">理論 ― 届出は権利を創設しない</a></li>
+    <li><a href="#s11">実務タイムライン・チェックリスト・再発防止</a></li>
+  </ol>
+</div>
+
+<h2 class="sec" id="s0"><span class="num">0</span>結論と前提事実</h2>
+<div class="verdict">
+  <h2>結論</h2>
+  <p><b>源泉徴収はかかります。</b>特典条項に関する付表（様式17-米）と居住者証明書が支払日前日までに整っていない以上、源泉徴収の段階で条約の免税（0%）は適用できず、<b>国内法の税率で源泉徴収すべき</b>だった、と扱われます。本件は別表二で議決権100%を保有する非上場の親子間配当ですから、源泉段階の正しい税率は――</p>
+  <div class="rate">20.42%<small>（非上場株式の配当：所得税20%＋復興特別所得税0.42%）</small></div>
+  <p style="margin-top:12px;">ただし実体要件（条約10条3項の50%・6か月＋22条LOB）を満たすことを証明できれば、<b>本税は事後の還付請求（様式11）で取り戻せる</b>余地があります。一方、<b>不納付加算税・延滞税という附帯税は還付されないコスト</b>として残ります。さらに後述のとおり、<b>100%保有でも22条LOBの通り方しだいで0%でなく5%に落ちる場合がある</b>点に注意が必要です。</p>
+</div>
+
+<div class="card">
+  <h3 style="margin-top:0;">前提事実の整理</h3>
+  <div class="facts">
+    <div><b>支払者</b>　日本子会社（源泉徴収義務者・第一次的納税義務者）</div>
+    <div><b>受領者</b>　米国親会社（外国法人）</div>
+    <div><b>持株</b>　別表二で議決権100%を直接保有</div>
+    <div><b>株式</b>　非上場（親子間）</div>
+    <div><b>取扱い</b>　免税前提で源泉徴収せず</div>
+    <div><b>提出書類</b>　租税条約届出書（様式1）○ ／ 様式17-米・居住者証明書 ✕</div>
+  </div>
+</div>
+
+<h2 class="sec" id="s1"><span class="num">1</span>なぜ「実体0%」でも源泉がかかるのか</h2>
+<div class="card">
+  <p>本件の核心は、<b>「条約上の免税を受ける実体的地位」</b>と<b>「源泉徴収の段階でそれを適用できるか」</b>を分けて考えることにあります。両者は別レイヤーです。</p>
+  <div class="box purple">
+    <b>二段階構造（この一行が全体を貫く）：</b><br>
+    実体0%（受益者性・50%/6か月保有・LOB充足） &nbsp;→&nbsp; 届出未了なら<b>源泉時は国内法税率（20.42%）</b> &nbsp;→&nbsp; 後日、届出書＋還付請求書（様式11）で<b>本税を0%相当まで回復</b> &nbsp;→&nbsp; ただし当初の期限後納付に伴う<b>附帯税は還付対象外</b>。
+  </div>
+  <p>租税条約は憲法98条2項の下で国内法に優先しますが、源泉徴収段階での軽減・免除の「適用」は、租税条約等実施特例法および同省令が<b>「届出」を手続要件</b>として組み立てています。支払者は、支払時に確実な書類がなければ条約要件の実体判断リスクを負えないため、国内法税率で機械的に源泉徴収する建付けになっています（支払者保護）。</p>
+  <p class="ref">出典：憲法98条2項／租税条約等実施特例法1条・2条5号・3条の2／同省令2条1項／国税庁タックスアンサー No.2888・No.2889</p>
+</div>
+
+<h2 class="sec" id="s2"><span class="num">2</span>条約10条3項の0%要件と「100%でも5%に落ちる罠」</h2>
+<div class="card">
+  <h3 style="margin-top:0;">(1) 親子間配当0%の要件（改正前後）</h3>
+  <table>
+    <tr><th>区分</th><th>保有割合</th><th>保有期間</th><th>備考</th></tr>
+    <tr><td>改正前（2003年条約）</td><td>議決権の<b>50%超</b></td><td><b>12か月</b></td><td>配当の権利確定日を末日とする期間</td></tr>
+    <tr><td>改正後（2013年議定書・2019年11月1日以後の配当）</td><td>議決権の<b>50%以上</b></td><td><b>6か月</b></td><td>保有期間・割合とも緩和</td></tr>
+  </table>
+  <p>本件の<b>議決権100%</b>は、改正前後いずれの保有割合要件も満たします。もっとも、0%は持株割合だけでは確定しません。<b>①真の受益者であること、②米国居住者であること、③恒久的施設に実質関連しないこと、④22条LOBの適格性</b>が併せて必要です。</p>
+  <p class="ref">出典：日米租税条約10条3項(a)（<a href="https://www.mof.go.jp/tax_policy/summary/international/tax_convention/USA_ST_jp.pdf">財務省・条約本文</a>）／2013年改正議定書／施行日は原則2019年11月1日以後支払・貸記の配当</p>
+
+  <h3>(2) ★ 100%保有でも 0% でなく 5% に落ちうる ★</h3>
+  <div class="box amber">
+    10条3項(a)の0%は、22条LOBの所定ルートを通り抜けて初めて使えます。<b>米国親会社が非上場の純粋持株会社</b>で、22条の所有・ベース侵食基準（B）や能動的事業活動基準（C）を満たせず、かつ国税庁長官の認定（D）も得られない場合、<b>0%は使えず、10条2項(a)の「親子間5%」に落ちる</b>可能性があります。「100%＝当然0%」と即断するのは危険です。
+  </div>
+  <p class="ref">出典：日米条約10条2項(a)（親会社=議決権10%以上で5%）・同10条3項(a)（0%）・22条／IRS掲載の条約技術説明（韓国上場親会社の子会社が子会社基準を満たさない例）</p>
+</div>
+
+<h2 class="sec" id="s3"><span class="num">3</span>22条 LOB と様式17の区分（A〜D）</h2>
+<div class="card">
+  <p>様式17-米は日米条約22条（特典の制限）の適格性を示す付表で、米国親会社が自社の類型に応じてA〜Dのいずれかにチェックします。0%の入口（10条3項）との対応は次のとおりです。</p>
+  <table>
+    <tr><th>様式17の区分</th><th>典型的な該当者</th><th>0%（10条3項）への通り方</th></tr>
+    <tr><td><b>A(3)</b> 公開会社</td><td>米国親会社自身がNYSE/NASDAQ等で通常取引される上場会社</td><td>最も素直に通る</td></tr>
+    <tr><td><b>A(4)</b> 公開会社子会社</td><td>上場米国会社に50%以上保有される子会社</td><td>素直に通る</td></tr>
+    <tr><td><b>B</b> 所有・ベース侵食基準</td><td>非上場だが日米適格者に50%以上保有され、第三国への損金算入支払が一定割合未満</td><td>B＋C（能動的事業）で検討</td></tr>
+    <tr><td><b>C</b> 能動的事業活動基準</td><td>米国で能動的事業を営み、配当がその事業と関連</td><td>B＋Cの組合せ</td></tr>
+    <tr><td><b>D</b> 国税庁長官の認定</td><td>A〜Cで通らない者（主要目的が特典取得でないと認定）</td><td>認定がなければ5%に落ちうる</td></tr>
+  </table>
+  <div class="box">
+    <b>注意：</b>日米22条には、第三国の同等受益者を数える独立の <b>derivative benefits</b> 基準はなく、様式17-米にもその欄はありません（A/B/C/Dのみ）。様式17の注意書も、10条3項の0%適用ではA〜Cに該当しても別途<b>長官認定が必要となる場合がある</b>旨を明記しています。
+  </div>
+  <p class="ref">出典：日米条約22条1項(c)・(f)・2項・4項／国税庁 <a href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/joyaku/annai/pdf2/266.pdf">様式17-米 記載要領</a>／<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2888.htm">No.2888</a></p>
+</div>
+
+<h2 class="sec" id="s4"><span class="num">4</span>国内法税率 ― 20.42%か15.315%か</h2>
+<div class="card">
+  <table>
+    <tr><th>区分</th><th>根拠</th><th>税率</th></tr>
+    <tr><td><b>非上場株式の配当</b>（本件）</td><td>所法212条①・213条①一（20%）＋復興財確法（2.1%）</td><td><b>20.42%</b></td></tr>
+    <tr><td>上場株式等の配当（外国法人）</td><td>措法9条の3の2（15%）＋復興税</td><td>15.315%</td></tr>
+    <tr><td>条約適用後（手続充足の場合）</td><td>日米条約10条3項</td><td>0%</td></tr>
+  </table>
+  <div class="box amber">
+    <b>「大口株主だから上場でも20.42%」は不正確。</b>措置法9条の3の「大口株主等」（発行済3%以上）は<b>個人</b>を対象とする規定です。本件の受領者は<b>外国法人</b>なので、この個人ルールは直接効きません。外国法人向け配当の国内法原則は、非上場20.42%／上場15.315%。本件は別表二で100%保有する<b>非上場</b>株式なので、争いなく<b>20.42%</b>です。
+  </div>
+  <h4>復興特別所得税の扱い</h4>
+  <p>復興財確法8条は外国法人も納税義務者とし、源泉徴収義務者に2.1%の併課を求めます（2013年〜2037年）。<b>ただし条約限度税率が国内法税率以下となる場合は、復興特別所得税を併せて源泉徴収する必要はありません</b>。つまり条約0%が適用できれば復興税も0です。</p>
+  <p class="ref">出典：所法161条①九・212条・213条／復興財確法8条・9条・27条・28条／<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2884.htm">国税庁 No.2884</a></p>
+  <h4>配当の範囲（参考）</h4>
+  <p>利益剰余金を原資とする通常配当は全額が源泉対象。<b>資本剰余金の減少に伴う配当</b>は所法25条の「資本の払戻し」として扱われ、交付額のうち資本金等対応額を超える<b>みなし配当部分のみ</b>が源泉対象です（残りは資本払戻し・譲渡対価側）。<br>
+  <span class="ref">出典：所法24条・25条／所令61条（※法人税法側は法令23条。混同注意）。なお外国法人への配当に<b>地方税（配当割）はかからず</b>、国税の所得税＋復興税のみ（地方税法24条・71条の31は「個人」が対象）。</span></p>
+</div>
+
+<h2 class="sec" id="s5"><span class="num">5</span>不納付の法的構造・求償・遡及年数</h2>
+<div class="card">
+  <h3 style="margin-top:0;">(1) 誰が責任を負うか</h3>
+  <ul>
+    <li>日本子会社は単なる納付代行者ではなく、<b>源泉徴収して国に納付する第一次的な納税義務者</b>。源泉所得税は配当支払時に源泉徴収義務が成立し、税額も自動確定します（通則法15条、所法212条）。</li>
+    <li>税務署長の<b>納税告知</b>は、未納の源泉税につき日本子会社に納付を求める徴収処分（<b>通則法36条1項2号</b>）。</li>
+    <li>日本子会社が納付した源泉税は、<b>所法221条・222条</b>により米国親会社へ求償可能（将来支払額から控除し、または支払請求）。ただし契約上のグロスアップ・補償条項の有無で実務摩擦が生じます。</li>
+  </ul>
+  <h3>(2) 何年分まで遡るか</h3>
+  <div class="box red">
+    国の徴収権は<b>法定納期限から5年で時効消滅</b>（通則法72条1項）。各配当の法定納期限ごとに個別判定します。<b>2026年6月24日時点では、通常の納期限が2021年7月10日以後に到来した配当が射程内</b>、2021年6月10日納期限のものは通常時効完成。<br>
+    「偽りその他不正の行為」があれば<b>7年・重加算税</b>の射程ですが、様式17・居住者証明の失念だけで直ちに不正行為とは限りません（徴収権側は通則法73条、課税・加算税側は70条で別に検討）。
+  </div>
+  <p class="ref">出典：通則法15条・36条①二・72条①・73条・70条／所法212条・221条・222条</p>
+</div>
+
+<h2 class="sec" id="s6"><span class="num">6</span>不納付加算税・延滞税の精密分析</h2>
+<div class="card">
+  <table>
+    <tr><th>項目</th><th>内容</th><th>根拠</th></tr>
+    <tr><td><b>本税</b></td><td>配当支払額 × 20.42%。納付期限は原則 徴収月の翌月10日（国外払い扱いは翌月末日）</td><td>所法212条・213条</td></tr>
+    <tr><td><b>不納付加算税</b></td><td>原則<b>10%</b>。調査による告知を予知しない自主納付は<b>5%</b>。法定納期限から1月以内納付＋期限内納付の意思が認められる政令要件を満たせば<b>不適用</b></td><td>通則法67条①②③、令27条の2②</td></tr>
+    <tr><td><b>延滞税</b></td><td>法定納期限の翌日から納付日まで日割。2026年は当初2か月年2.8%、以後年9.1%。<b>本税のみに課され加算税には課されない</b></td><td>通則法60条・67条</td></tr>
+  </table>
+  <div class="box amber">
+    <b>「正当な理由」（通則法67条1項但書）は狭い。</b>国税庁指針は、後発的取扱い公表・金融機関の処理誤り・災害等を例示し、<b>税法の不知・誤解・事実誤認は原則除外</b>。本件の「実体は条約免税だが様式17・居住者証明書が未了」という事情は、<b>必要書類が国税庁手続で明示され支払前に確認可能</b>であった以上、正当な理由としては通常<b>弱い</b>と評価されます。審判所裁決も、真に納税者の責めに帰せない客観的事情のみ正当理由を認める傾向です。
+  </div>
+  <div class="box red">
+    <b>重要：</b>後日の還付請求で本税が戻っても、<b>期限後納付に伴う不納付加算税・延滞税は還付されません</b>（国税庁 No.2889 明示）。これが本件の確定的な経済損失です。
+  </div>
+</div>
+
+<h2 class="sec" id="s7"><span class="num">7</span>グロスアップと求償放棄の落とし穴</h2>
+<div class="card">
+  <h3 style="margin-top:0;">グロスアップ要否</h3>
+  <p>会社法上決議された配当額が通常「税込総額」です。単なる徴収漏れなら総額×20.42%。ただし親会社との合意で「手取り保証／源泉税は子会社負担」と読める場合はグロスアップが必要です。</p>
+  <div class="calc">
+税込総額100を源泉せず100払った　→ 源泉漏れ本税 = 100 × <span class="hl">20.42%</span> = 20.42<br>
+手取り100を保証していた場合　　→ 税込総額 = 100 ÷ 0.7958 = <span class="hl">125.66</span><br>
+　　　　　　　　　　　　　　　　　源泉税 = 100 × 20.42 ÷ 79.58 = <span class="hl">25.66</span>
+  </div>
+  <h3>求償権を放棄するな</h3>
+  <div class="box red">
+    日本子会社が立替えた源泉税を米国親会社へ求償（所法222条）せず<b>放棄</b>すると、<b>国外関連者への経済的利益の無償供与＝寄附金</b>と認定され、<b>措法66条の4第3項により全額損金不算入</b>（移転価格上も独立企業間では親会社の税を無償負担しない）。<b>求償権は帳簿上も実体上も維持する</b>のが鉄則です。<br>
+    <span style="font-size:13px;">（※単なる求償放棄は所法25条の法定みなし配当そのものではなく、追加配当・利益供与・寄附金として争われる類型。）</span>
+  </div>
+  <p class="ref">出典：所法221条・222条・25条／法法37条⑦⑧／措法66条の4第3項</p>
+</div>
+
+<h2 class="sec" id="s8"><span class="num">8</span>是正の二段階フロー（納付 → 還付・様式11）</h2>
+<div class="card">
+  <div class="box amber">
+    <b>本件の核心的注意：</b>そもそも源泉徴収も納付もしていないため、いきなり様式11で還付請求しても<b>「還付すべき源泉税」が存在しません</b>。様式11の還付額は「源泉徴収した税額 − 条約適用後税額」で、源泉徴収義務者が「徴収し、納付したこと」を証明する様式だからです。<b>まず納付、その後に還付</b>という順番になります。
+  </div>
+  <div class="flow">
+    <div class="step"><b>実体要件の証拠化</b>：米国親会社が真の受益者・米国居住者、議決権50%以上・6か月以上保有、日本PEに実質関連なし、22条LOBの適格区分（A〜D）を資料で固める。</div>
+    <div class="step"><b>本税の納付（第1段階）</b>：時効内の各配当について国内法20.42%で源泉税を納付（調査前の自主納付なら加算税が5%に軽減）。</div>
+    <div class="step"><b>還付請求（第2段階）</b>：米国親会社が<b>様式11</b>＋様式1＋様式17-米＋居住者証明書（Form 6166）＋支払内容確認資料を、<b>日本子会社経由</b>（子会社が源泉徴収義務者として証明欄を記載）で子会社の所轄税務署へ提出。</div>
+    <div class="step"><b>差額還付</b>：国内法税額（20.42%）と条約税額（0%）との差額が<b>米国親会社へ還付</b>。請求期限は<b>納付があった日から5年</b>。</div>
+  </div>
+  <div class="box green">
+    <b>到達点：</b>実体的に0%要件を満たせば本税は0へ戻せる。ただし「最終的に0%だから問題なし」ではなく、<b>不納付加算税・延滞税は還付されない</b>前提で損失を見込む。還付加算金は付き得るが、条約届出未提出による様式11還付は実特省令15条1項3号により起算が限定的。</p>
+  </div>
+  <p class="ref">出典：国税庁 <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2889.htm">No.2889</a>／<a href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/joyaku/annai/1648_49.htm">様式11 案内（A3-14：納付日から5年）</a>／実特省令15条①三</p>
+</div>
+
+<h2 class="sec" id="s9"><span class="num">9</span>米国側の税効果（FTC・905(c)）</h2>
+<div class="card">
+  <ul>
+    <li>日本源泉が最終的に<b>0%</b>なら、米国親会社に<b>外国税額控除（FTC）対象の日本税はありません</b>。</li>
+    <li>逆に20.42%が源泉徴収されたまま残るならIRC901のFTC候補ですが、<b>条約で減免・還付可能な税をあえて残した場合は「compulsory payment」性</b>（強制的に課された税か）が問題になり、FTCが否認されうる。</li>
+    <li>いったんFTCを取り、後日日本で還付された場合は、<b>IRC905(c)の foreign tax redetermination</b>として米国側の税額を修正（修正申告）する必要があり、二重手間になります。</li>
+    <li>米国の受取配当課税（GILTI／subpart F／§245A DRD）との関係も併せて確認。経済的二重課税排除の観点からは、日本源泉0%を正面から取りに行くのが望ましい。</li>
+  </ul>
+  <div class="box purple">
+    <b>米国側の実務指針：</b>日本源泉税が還付可能なら<b>安易にFTCを取らず</b>、既に取っている場合は還付時に<b>905(c)修正を走らせる</b>。
+  </div>
+  <p class="ref">出典：IRC901・903・905(c)・245A／日本側は条約適用で0%が原則ゴール（概観レベル・米国側は要 US tax advisor 確認）</p>
+</div>
+
+<h2 class="sec" id="s10"><span class="num">10</span>理論 ― 届出は条約上の権利を創設しない</h2>
+<div class="card">
+  <p>条約上の0%という地位は、<b>受益者性・50%/6か月保有・LOB・PE不存在などの実体要件</b>から生じるもので、<b>届出書そのものから発生するわけではありません</b>。届出は、源泉徴収段階で支払者が特典を安全に適用するための<b>確認・手続装置</b>と整理するのが筋です（届出は効力要件でも制度選択でもない、という学説の方向）。</p>
+  <div class="box">
+    <b>整理式</b><br>
+    届出あり → 条約要件確認済み → 源泉時から0%／限度税率<br>
+    届出なし → 支払者保護・徴収確保 → 源泉時は国内法税率（20.42%）<br>
+    後日還付 → 受給者が条約要件を立証 → 本税部分は条約税率まで回復<br>
+    附帯税　 → 期限後納付等で生じた分は還付対象外
+  </div>
+  <p>学説では、支払後の届出でも軽減を受け得る以上、届出書提出は条約減免の効力要件ではないと整理する見解が示されています（野一色直人「源泉徴収をめぐる法的問題の一考察」が増井良啓・水野忠恒・谷口勢津夫らの見解を引用しつつ整理）。</p>
+  <div class="box amber">
+    <b>参考裁判例（※一次未確認・確認のうえ援用）：</b>下級審には、実施特例省令上の届出書を提出しなかったことのみを理由に日米条約7条1項の適用を否定することはできない、とした判断があるとされます（東京地判平成27年5月28日・東京高判平成28年1月28日と紹介されるもの。ただし当該事件は最終的にPE該当性等で納税者主張が退けられており、この論点のみを切り出して用いるべき）。<b>判決の年月日・事件番号は一次資料（裁判所HP）で確認のうえ引用してください。</b>
+  </div>
+  <p class="ref">出典：憲法98条2項／租税条約等実施特例法1条・2条5号・3条の2／同省令2条①／野一色直人・前掲論文／（裁判例は要一次確認）</p>
+</div>
+
+<h2 class="sec" id="s11"><span class="num">11</span>実務タイムライン・チェックリスト・再発防止</h2>
+<div class="card">
+  <h3 style="margin-top:0;">発覚後のタイムライン</h3>
+  <ul>
+    <li><b>〜48時間：</b>今後の配当は「条約届出完了前は支払わない」運用に切替。過年度の全配当を台帳化（決議日・基準日・支払日・金額・通貨・源泉処理・届出/様式17/Form6166の有無）。各配当の法定納期限と時効（5年）内かを判定。</li>
+    <li><b>〜5営業日：</b>税務調査・納税告知前の<b>自主納付方針</b>を決定（加算税10%→5%）。顧問税理士へ①時効判定②本税・附帯税見込③求償/立替金処理④還付代理を依頼。所轄税務署へ事前相談。</li>
+    <li><b>〜10営業日：</b>時効内の各配当を年分・支払月ごとに「非居住者・外国法人の所得についての所得税徴収高計算書」で本税納付。立替本税の親会社求償を文書化。</li>
+    <li><b>各年分：</b>本税納付 →（納付日から5年内に）様式11で還付請求の二段階を回す。LOBを満たせない年は0%でなく5%/10%で別管理。</li>
+  </ul>
+  <h3>必要書類チェックリスト</h3>
+  <div class="pillrow">
+    <span class="pill">様式1（配当の軽減・免除届出）</span>
+    <span class="pill">様式17-米（22条LOB付表）</span>
+    <span class="pill">Form 6166（米国居住者証明・Form 8802で取得）</span>
+    <span class="pill">様式11（還付請求書）</span>
+    <span class="pill">株主名簿・資本関係・保有期間資料</span>
+    <span class="pill">配当決議・計算書・基準日資料</span>
+    <span class="pill">送金明細・会計仕訳・外貨換算</span>
+    <span class="pill">配当支払調書</span>
+    <span class="pill">委任状・翻訳文</span>
+  </div>
+  <h3>再発防止の年次ルーティン</h3>
+  <ul>
+    <li><b>決議90日前：</b>Form 6166（Form 8802申請）を開始。親会社の上場/非上場・株主構成・第三国支払・事業実体を確認しLOB区分を判定。</li>
+    <li><b>決議30日前：</b>様式1・様式17-米・Form 6166・株主名簿・保有期間証明を完成。</li>
+    <li><b>支払日前日まで：</b>様式1＋様式17-米を支払者経由で所轄税務署へ提出（証跡化）。間に合わなければ20.42%源泉し後日還付に回す。</li>
+    <li><b>有効期限管理：</b>様式17-米の提出省略期間は<b>区分Aは3年・B/C/Dは1年</b>（記載事項に異動があれば再提出）。居住者証明書は提示確認方式なら「提示日前1年以内作成」＋写し5年保存。</li>
+  </ul>
+  <div class="box green">
+    <b>正攻法のまとめ：</b>時効内配当を特定 → 国内法20.42%で本税を自主納付 → 各年分で様式11還付請求 → 年次ルーティン化。<b>最も避けるべきは、過年度を未納のまま将来配当だけ整えること</b>。自主納付で5%軽減を取りつつ、還付請求で本税の経済負担を取り戻す設計に。
+  </div>
+</div>
+
+<div class="card" style="border-left:5px solid var(--blue);">
+  <h3 style="margin-top:0;">ワンライン要約</h3>
+  <p style="margin-bottom:0;">議決権100%でも、<b>様式17-米・居住者証明書が支払日前日までに揃っていなければ源泉段階で0%は使えず、非上場配当として20.42%の源泉徴収義務が生じる</b>。実体要件（10条3項＋22条LOB）を満たせば本税は様式11の還付で回復できるが、<b>不納付加算税・延滞税は残る</b>。求償権の放棄は国外関連者寄附金リスク。さらに<b>LOBの通り方次第では0%でなく5%に落ちる</b>点に要注意。早急に時効内配当を洗い出し、自主納付（加算税5%）→還付請求→年次ルーティン化を進めるべき。</p>
+</div>
+
+<footer>
+  <p>作成日：2026-06-24 ／ 国際税務メモ【詳細版】。一次資料は財務省（日米租税条約本文・2013年議定書）、国税庁タックスアンサー（No.2884/2885/2888/2889）、租税条約等実施特例法・同省令、所得税法（161/212/213/221/222/24/25条）、復興財源確保法（8/9/27/28条）、国税通則法（15/36/60/67/70/72/73条）、租税特別措置法（9条の3の2・66条の4）、地方税法等に基づく。<b>判例・学説の個別表示および LOB 区分の最終判定・米国側の税務処理は、引用前に一次資料および顧問税理士／US tax advisor で確認すること。</b>具体的数値・適否は個別事実により異なる。</p>
+</footer>
+
+</div>
+<div class="idx-nav" style="max-width:840px;margin:0 auto 24px;padding:0 12px;font-family:sans-serif;font-size:12.5px;text-align:center;"><a href="../index.html" style="color:#5a2d82;text-decoration:none;border-bottom:1px dotted #5a2d82;">&#8592; 成果物インデックスへ戻る</a></div>
+</body>
+</html>

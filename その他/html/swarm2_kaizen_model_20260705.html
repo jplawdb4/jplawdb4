@@ -1,0 +1,142 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>swarm2.1 改良モデル構想（20260705）</title>
+<style>
+:root{--ink:#1a1a24;--sub:#555;--acc:#5b3fa8;--acc2:#8468c8;--bg:#f7f6fa;--card:#fff;--ok:#1a7a4a;--ng:#b03030;--warn:#a06a00;--line:#ddd6ee}
+*{box-sizing:border-box}
+body{font-family:"Hiragino Mincho ProN","Yu Mincho",serif;color:var(--ink);background:var(--bg);margin:0;line-height:1.85;font-size:15.5px}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 20px 80px}
+h1{font-size:1.65em;border-bottom:3px double var(--acc);padding-bottom:.4em;letter-spacing:.02em}
+h1 small{display:block;font-size:.5em;color:var(--sub);font-weight:normal;margin-top:.4em}
+h2{font-size:1.25em;color:var(--acc);border-left:6px solid var(--acc);padding-left:.6em;margin-top:2.2em}
+h3{font-size:1.05em;margin-top:1.6em;color:#333}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 22px;margin:14px 0;box-shadow:0 1px 4px rgba(80,60,140,.06)}
+table{border-collapse:collapse;width:100%;font-size:.92em;background:#fff}
+th,td{border:1px solid var(--line);padding:7px 10px;vertical-align:top;text-align:left}
+th{background:#efeaf8;font-weight:600;white-space:nowrap}
+.tbl{overflow-x:auto}
+code,.mono{font-family:"Consolas","Menlo",monospace;font-size:.9em;background:#f1eef8;padding:1px 5px;border-radius:4px}
+.p0{color:var(--ok);font-weight:700}.p1{color:var(--warn);font-weight:700}.p2{color:var(--sub);font-weight:700}.kill{color:var(--ng);font-weight:700}
+.box{border:1.5px solid var(--acc);border-radius:8px;padding:14px 18px;margin:16px 0;background:#faf8ff}
+.box b:first-child{color:var(--acc)}
+.note{font-size:.85em;color:var(--sub)}
+.num{font-family:Consolas,monospace;font-weight:700;color:var(--acc)}
+ul{padding-left:1.5em}li{margin:.3em 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+.tag{display:inline-block;background:var(--acc);color:#fff;border-radius:4px;padding:0 8px;font-size:.78em;margin-right:6px;font-family:sans-serif}
+</style>
+<div class="wrap">
+<h1>swarm2.1 改良モデル構想<small>実測駆動・44レーン調査（偵察10＋本隊21＋敵対4＋再投1＋スモーク2＋法医学対象59ログ）／2026年7月5日</small></h1>
+
+<div class="box"><b>中心命題。</b>swarm2の品質はすでに「発見→独立検証→敵対批評」の反復構造で成立している（本日実証: 原告主張混入2件の検証層捕捉・骨子レッドチームによる執筆前設計変更）。改良の余地は<b>推論の質ではなく配管にある</b>——実測で、レーン出力の<span class="num">95〜99.9%</span>は主宰が読む必要のない探索ログであり、完了検知の誤りが本日3回、起動固着の誤診がバースト全数で発生した。したがってswarm2.1は「新しい知能」ではなく、<b>単一のrunner・単一の正典・5行の意図契約・執筆前レッドチームの正式段化</b>という4点の構造化である。</div>
+
+<h2>Ⅰ 実測基盤（この構想が立っている数字）</h2>
+<div class="card"><div class="tbl"><table>
+<tr><th>実測</th><th>数値</th><th>含意</th></tr>
+<tr><td>最終回答/ログ比（59レーン法医学）</td><td>ローカルxhigh中央値 <span class="num">1.1%</span>・検証 <span class="num">0.5%</span>・批評 <span class="num">1.6%</span>（最悪0.09%）</td><td>final-only収穫だけで主宰入力99%削減</td></tr>
+<tr><td>トークン中央値/レーン</td><td>ローカルxhigh <span class="num">179k</span>・ウェブmedium <span class="num">76k</span>・検証 <span class="num">112k</span>・批評 <span class="num">136k</span></td><td>予算警戒線=型別中央値×2</td></tr>
+<tr><td>39バイト初期出力</td><td>出現率 <span class="num">100%</span>（stdinヘッダ・stderr由来）</td><td>固着シグナルではない→5分保留規則</td></tr>
+<tr><td>失敗署名</td><td>429/timeout <span class="num">0件</span>・不要MCP認証 <span class="num">7件</span>・広域find/欠損パス <span class="num">19件</span></td><td>敵はレート制限でなく文脈と仕様</td></tr>
+<tr><td>波間の真の依存</td><td>H第二波17レーン中 <span class="num">0/17</span>（soft参照1のみ）</td><td>投機的全幅投入は安全（実証済み）</td></tr>
+<tr><td>WSL実働CODEX_HOME</td><td>スキル<span class="num">84本</span>・memories有効・sessions 3,499本</td><td>寄り道事故（300KB探索）の構造要因</td></tr>
+<tr><td>スモークテスト（本日実施）</td><td><code>--output-last-message</code>✓ <code>--experimental-json</code>✓（usage構造化）・ミニHOME認証✓・起動文脈税<span class="num">20,238→18,391</span></td><td>収穫器の全面置換が可能。衛生の便益は起動トークンでなく行動抑止</td></tr>
+<tr><td>完了検知の誤り（本日）</td><td><span class="num">3回</span>（プロンプト残響・実行中収穫・watch誤DONE）</td><td>P0の最優先根拠</td></tr>
+</table></div></div>
+
+<h2>Ⅱ ユーザー4要求への回答</h2>
+<div class="card"><div class="tbl"><table>
+<tr><th>要求</th><th>採用した形</th><th>敵対検証後の縮退</th></tr>
+<tr><td><b>R1 プロンプト再解釈の精度</b></td><td>フェーズ0意図契約: 複数解釈の並列生成→台帳・記憶を証拠に裁定→採用解釈と反証条件を宣言してから分解</td><td><b>5行に圧縮</b>（採用読み／捨てる読み／反証条件／質問しない理由／分解根拠）。15分hard cap。専用jsonl・intent_id伝播は却下。U2根本疑念事件が常設ケーススタディ</td></tr>
+<tr><td><b>R2 オーケストレーター自律性</b></td><td>自律憲章の三層（単独決定/記録して進む/人間ゲート）をGOAL契約標準節に</td><td>人間ゲートは<b>3つだけ</b>: ①中心方針変更 ②予算超過 ③未照合素材の本文採用。仮定ログは進路を変えた判断のみ上限5件</td></tr>
+<tr><td><b>R3 レッドチーム標準化</b></td><td>品質ラダーに<b>L0.5「執筆前レッドチーム」</b>を正式段化（骨子・仕様を書く前に攻撃）。L4（成果物攻撃）と役割分離</td><td>標準<b>2レンズ</b>・中心命題未確定時のみ4。RT側にranked listを作らせ主宰の統合負荷を削減。討論形式は禁止（独立攻撃→裁定のみ）。<b>→4体Fable合議でv2へ改訂（下記Ⅲ-3）</b></td></tr>
+<tr><td><b>R4 初手大量投入</b></td><td>投機的分解: 結果依存なし=即投入(A)／素材先読み(B)／真の依存のみ予約(C)。実測0/17が根拠</td><td>バースト規則: 初回4体→健全確認後6体刻み・batch間30秒。誤解釈時の損失上限は反証条件ヒットで全幅停止</td></tr>
+</table></div>
+<p class="note">R1とR4の緊張は「フェーズ0を5行・15分に形式化して直後に全幅投入」で解く。誤解釈のままの100体が最大の浪費であり、逆に契約の肥大はR4を殺す——双方向の縮退が敵対検証の結論。</p></div>
+
+<h2>Ⅲ P0 — 即時実装（半日〜1日・全レンズ生存）</h2>
+<div class="card">
+<h3>1. runner一本化（最重要）</h3>
+<ul>
+<li><b>単一Python runner</b>が spawn（Popen・pid/pgid/start_ts記録）→watch→harvest→journal を一体で持つ。coordctlとの二重帳簿はしない。<b>正典はjournal.d/&lt;lane&gt;.jsonlのみ</b>、lanes.tsvは入力（手書き列はid/spec/effort/type/depsだけ）</li>
+<li><b>完了判定</b>: final末尾行 <code>LANE=&lt;id&gt; DONE-&lt;nonce&gt;</code> ＋ exit 0 ＋ プロセス消滅後3サンプル安定。DONEが見えてもプロセス生存中は収穫禁止。nonceは完了マーカーであって信頼証明ではない（検収はrunner外側）</li>
+<li><b>収穫</b>: 第一候補 <code>--output-last-message</code>＋<code>--experimental-json</code>（usageトークン構造化・スモーク実証済み）、旧ログは「最後のtokens used行の次行からEOF」フォールバック</li>
+<li><b>再投</b>: attempt&lt;2 かつ 起動失敗・nonce不一致・プロセス異常のみ。schema/内容の失敗は人間ゲート。kill はpgid+start_ts+cmd_hash一致時のみ（PID単独kill禁止）</li>
+<li><b>バースト</b>: 39B=BOOT_STUCK_WAIT（5分保留）・fatal markerのみ即DEAD・初回4体→6体刻みjitter</li>
+</ul>
+<h3>2. 文脈衛生（縮退版）</h3>
+<ul>
+<li>P0は<b>clean cwd＋sandbox明示（read-only既定）＋<code>-c features.memories=false</code></b>のみ（すべてスモーク実証済み）。現行configの<code>danger-full-access</code>をレーンに継承しない</li>
+<li>worker prompt固定文「codexコマンド起動禁止」（教訓12）。PATH shim等の多重ガードは作らない</li>
+</ul>
+<h3>3. 品質機構</h3>
+<ul>
+<li><b>L0.5執筆前レッドチーム v2</b>（4体Fable独立合議・20260705改訂）:
+<ul>
+<li><b>発散遮蔽＋対抗骨子</b>: RT投入前に対抗骨子2〜3案を生成し批判から遮蔽。RTは「選ばれた骨子の追認」ではなく<b>複数の生きた選択肢からの選別</b>として機能させる。RT前候補は定期的にユーザーへ棚卸し提示（早期淘汰された分岐を人間が見られる構造）</li>
+<li><b>評決の機械分離</b>: 骨子段階で拘束力を持つのは「反証」（事実誤り・論理断絶・自己矛盾）のみ。「脱リスク」（言い過ぎ・露出・断定の強さ）は別枠に隔離し骨子に触れさせない——攻撃者には「最も突きやすい面＝露出」へ向かう勾配があり、混在させると全命題が守りやすい平均へ回帰するため。主宰の裁量による防波堤（手動棄却）に頼らずスキーマで分離する</li>
+<li><b>遮断の非対称基準</b>: ブロックできるのは実証可能な構造的虚偽のみ。野心・リスク・守りにくさはブロック理由にしない。高分散の主柱を最低一本、反証以外では抜けない保護指定にできる</li>
+<li><b>再誘導の義務</b>: 各攻撃には最強の修復案を必ず付す。「支えが未構築なだけ」の大胆な骨子への攻撃は、削除でなく「本文が生産すべき証拠の仕様書」へ変換する</li>
+<li><b>裁定の説明責任</b>: 主宰の却下判断は理由を言語化してjournalに残す（命題の所有者が被告と裁判官を兼ねる利益相反への担保）</li>
+<li><b>指標の差し替え</b>: 「書き直しゼロ」は成功指標にしない（後期の急旋回＝跳躍を罰する）。「救った跳躍／殺した跳躍」をjournalに記録。時々RT順序を逆転する対照試行（構造/較正の非重複が順序効果でないことの検証）</li>
+<li><b>帰納型執筆への適応</b>: 観察から帰納する型の執筆では「骨子確定」は離散状態ではない——骨子RTは法廷でなく<b>探針</b>として扱い、執筆中に構造が動いたら短い再RTを許す</li>
+<li><b>発散段階</b>: 拘束的RTは禁止のまま。ただし採否権のない刺激としての批評は許容（「批判は発想を殺す」自体が無検証の通俗観であるため）。blind検証にはRTログを渡さない（従前どおり）</li>
+</ul></li>
+<li><b>否定制約プリセット</b>: <code>constraint=legal_holding_v1</code>（判示欄のみ・主張/判断の峻別・source_role列必須）等を名前で参照。全文貼付しない。本日の原告主張混入2件が直接根拠</li>
+<li><b>5行INTENT＋人間ゲート3つ</b>をGOAL契約冒頭の標準節に</li>
+</ul>
+<h3>4. 素材契約v2（縮退版）</h3>
+<ul>
+<li>正典は<b>claims.tsv一本</b>（状態はunverified/verified/rejected/holdの4値）。新規ラウンド分から適用、過去198候補のバックフィルはしない</li>
+<li><code>verify_quotes.py</code>（取得済みPDF/HTML内の逐語一括grep照合）を機械検証の先行段に。AI再検証は高リスク候補だけ小窓で</li>
+<li><b>verify-or-dropは削除既定を維持</b>（「反証条件つき降格」への緩和は却下——捏造リスク領域では未照合＝不使用。例外は照合期限＋期限切れ自動削除つきのみ）</li>
+<li>fetchは主宰側バッチ限定・allowlist・サイズ上限（SSRF/悪性PDF対策）</li>
+</ul>
+</div>
+
+<h2>Ⅳ P1 — 構造改善（1〜2週・実証ゲート付き）</h2>
+<div class="card"><ul>
+<li><b>per-profile worker home 1個</b>（ext4・auth単一保護領域・空skills・memories無効）——per-laneは却下済み。導入条件: A/B実測（N=1/4/8）で起動挙動の改善が出ること</li>
+<li>coordctl資産の限定接続: verify（書き手≠検証者のDB強制）とrepair ticketをrunnerの入力に接続。message系・常設モードはP2のまま</li>
+<li>materials_review.tsv一枚方式（候補→取得→照合→昇格を1行のstatus遷移で追う）</li>
+<li>LESSONSドラフト自動生成は「同一署名2回以上 or 採用成果を汚染」の時だけ。回顧はjournalから3行機械出力（失敗lane／人間裁定待ち／次回変更1点）——回顧作文レーンは作らない</li>
+</ul></div>
+
+<h2>Ⅴ P2 — 探索（実証が出るまで標準に入れない）</h2>
+<div class="card"><ul>
+<li>Gemini第三極: <b>標準から削除</b>。10秒ヘルスチェック3回連続成功＋固有hit率の実証後に「手動scoutチケット」として再検討（現状: preview版・--helpが返らない実測・データ移転ゲートなし）</li>
+<li>FRESH評価N=3: <b>提出前最終ゲート限定</b>（1セット3〜6時間の実測）。通常はN=1 fresh＋致命欠陥チェック。CDP自動化はしない（送信・添付・モデル選択は手動、捕捉・採点抽出のみ既存JS流用）</li>
+<li>journalのSQLite化・常設管理者モードの再評価</li>
+</ul></div>
+
+<h2>Ⅵ 作らないもの（敵対検証による却下リスト）</h2>
+<div class="card"><div class="tbl"><table>
+<tr><th>却下</th><th>理由（レンズ）</th></tr>
+<tr><td class="kill">per-lane CODEX_HOME＋auth複製</td><td>秘密の管理点を1→Nに増殖（単一障害点レンズ・致命）</td></tr>
+<tr><td class="kill">lanes.tsv⇔journal⇔coordctlの三重帳簿</td><td>障害時に正典を失う（過剰設計・認知負荷レンズ一致）</td></tr>
+<tr><td class="kill">素材のjsonl/tsv/md三重正典・過去分バックフィル6-10h</td><td>台帳のイベントソーシング化・便益不明</td></tr>
+<tr><td class="kill">回顧作文レーン・毒捕捉率KPI</td><td>1回9〜13万tokensの自己満足・分母が観測不能</td></tr>
+<tr><td class="kill">全レーンschema検査＋SCHEMA_FAIL自動再投</td><td>形式が内容の上位に来る・spec誤りの機械的反復</td></tr>
+<tr><td class="kill">プリウォームdummy・N=21×2の大規模A/B・PATH shim・意図契約jsonl</td><td>費用対効果赤字（コストモデルレンズ）</td></tr>
+</table></div></div>
+
+<h2>Ⅶ 実装順序と検収条件</h2>
+<div class="card"><div class="tbl"><table>
+<tr><th>#</th><th>作業</th><th>規模</th><th>検収</th></tr>
+<tr><td>1</td><td>runner v2（spawn/watch/harvest/journal一体）＋harvest_v2組込み</td><td>Python 1本 150-250行</td><td>既存59ログのoffline判定で誤収穫3事例を全て正しく弾く／新規3レーンでCOMPLETE判定一致</td></tr>
+<tr><td>2</td><td>SKILL.md改訂: L0.5段・教訓12-14（反映済み）・完了検知v2・バースト規則・5行INTENT・ゲート3つ</td><td>文書差分</td><td>次ラウンド1回の実運用で手順逸脱ゼロ</td></tr>
+<tr><td>3</td><td>否定制約プリセット3本（legal_holding/web_evidence/statistics）</td><td>テンプレ1ファイル</td><td>次の法学発見レーンでsource_role列が出力される</td></tr>
+<tr><td>4</td><td>claims.tsv＋verify_quotes.py</td><td>各100行前後</td><td>次ラウンドの新素材が4状態で管理され、rejectedが本文に入らない</td></tr>
+<tr><td>5</td><td>（P1ゲート）worker home A/B実測</td><td>実験1回</td><td>起動挙動・寄り道有無の差が数値で出る</td></tr>
+</table></div>
+<p class="note">本ラウンド消費: 約380万トークン・44レーン。「100体」に対し50体前後で打ち切った判断の理由: 偵察が濃く命中し、追加レーンは水増しになるため（QAを増やす前に素材を、の自己適用）。</p></div>
+
+<h2>Ⅷ 本日のメタラウンド自体が示した実例</h2>
+<div class="card"><ul>
+<li><b>R3の自己適用</b>: 本構想自体を4レンズ敵対検証にかけ、提案の約3分の1を却下・縮退した（上表Ⅵ）。構想は攻撃を生き延びた部分だけでできている</li>
+<li><b>R4の自己適用</b>: 本隊21レーン中、偵察の結果を真に待つ必要があったのは6本だけ——11本を偵察完走前に投機投入し、待ち時間を圧縮した</li>
+<li><b>L0.5設計自体の4体Fable合議（追補）</b>: ユーザーの「設計段階RTは発想を限定しないか」という問いに対し、白紙独立・創造性擁護・悪魔の代弁・盲点発見の4視点で独立意見を徴集。全会一致で骨子RT維持、ただし「限定の真因はタイミングでなく評決混在（反証と脱リスク）と裁定の利益相反」と特定され、上記v2へ改訂。白紙枠はRT1/P1の実物を独自照合して構造/較正の非重複を追認した</li>
+<li><b>実測の連鎖</b>: 偵察S2の発見（最後のtokens used行ルール）を収穫器harvest_v2に即実装→そのままS1R他の収穫に使用→スモークで<code>--output-last-message</code>への置換可能性まで実証。調査と実装検証が同一ラウンド内で閉じた</li>
+</ul></div>
+
+</div>

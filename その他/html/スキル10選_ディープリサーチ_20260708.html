@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>フィットするスキル10選 — ウェブ・ディープリサーチ報告書</title>
+<style>
+  :root{
+    --ink:#1c2530; --sub:#56606e; --line:#dfe4ea; --bg:#eef1f4; --paper:#fff;
+    --accent:#5a2d82; --accent2:#7a4fa3; --accent-soft:#f2ecf8;
+    --blue:#1f4e79; --blue-soft:#eef3fa; --red:#9e2820; --red-soft:#fbeae8;
+    --green:#1d6b3f; --green-soft:#eaf5ee; --amber:#8a5a00; --amber-soft:#fdf6e6;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Hiragino Mincho ProN","Yu Mincho",YuMincho,"Noto Serif JP",serif;
+    line-height:2.0;font-size:15px;}
+  .paper{max-width:840px;margin:28px auto;background:var(--paper);
+    padding:56px 64px 72px;box-shadow:0 4px 28px rgba(20,30,50,.10);border-radius:4px;}
+  .doctype{font-family:sans-serif;font-size:11.5px;letter-spacing:.16em;color:var(--accent);
+    text-align:center;margin-bottom:8px;}
+  h1.title{font-size:23px;text-align:center;line-height:1.6;margin:6px 0 6px;font-weight:700;}
+  .subtitle{font-size:15px;text-align:center;color:var(--sub);margin:0 0 6px;}
+  .meta-line{font-family:sans-serif;font-size:11.5px;text-align:center;color:var(--sub);
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    padding:8px 0;margin:18px 0 28px;}
+  .abstract{background:var(--accent-soft);border:1px solid #ddd0ec;border-radius:6px;
+    padding:18px 22px;margin:0 0 28px;font-size:14px;}
+  .abstract h3{margin:0 0 8px;font-size:13px;font-family:sans-serif;color:var(--accent);letter-spacing:.08em;}
+  .toc{font-family:sans-serif;font-size:13px;background:#fafbfc;border:1px solid var(--line);
+    border-radius:6px;padding:16px 22px;margin:0 0 30px;}
+  .toc b{color:var(--accent);} .toc ol{margin:8px 0 0;padding-left:22px;} .toc li{margin:4px 0;}
+  .toc a{color:var(--ink);text-decoration:none;} .toc a:hover{color:var(--accent);}
+  h2.h{font-family:sans-serif;font-size:18px;margin:40px 0 14px;padding-bottom:8px;
+    border-bottom:2px solid var(--accent);color:var(--accent);scroll-margin-top:12px;}
+  h2.h .n{color:var(--accent2);margin-right:10px;}
+  h3.sh{font-family:sans-serif;font-size:15px;margin:26px 0 8px;color:var(--blue);font-weight:700;}
+  p{margin:13px 0;text-align:justify;}
+  .key{background:linear-gradient(transparent 62%,#efe3fb 62%);font-weight:700;}
+  .box{border-radius:6px;padding:15px 20px;margin:18px 0;font-size:14px;font-family:sans-serif;line-height:1.85;}
+  .box.thesis{background:var(--accent-soft);border-left:4px solid var(--accent);}
+  .box.note{background:var(--blue-soft);border-left:4px solid var(--blue);}
+  .box.caveat{background:var(--amber-soft);border-left:4px solid var(--amber);}
+  .box.thesis b{color:var(--accent);} .box.note b{color:var(--blue);} .box.caveat b{color:var(--amber);}
+  table{width:100%;border-collapse:collapse;margin:18px 0;font-size:12.8px;font-family:sans-serif;}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top;line-height:1.7;}
+  th{background:var(--accent);color:#fff;font-weight:600;}
+  td.lbl{background:#f6f3fa;font-weight:700;white-space:nowrap;}
+  tr:nth-child(even) td:not(.lbl){background:#fafbfc;}
+  .src{font-size:11px;color:var(--sub);font-family:sans-serif;}
+  .fn-list{border-top:1px solid var(--line);margin-top:36px;padding-top:16px;}
+  .fn-list h3{font-family:sans-serif;font-size:13px;color:var(--accent);letter-spacing:.08em;}
+  .fn-list ol{padding-left:22px;} .fn-list li{margin:6px 0;font-size:12px;color:var(--sub);font-family:sans-serif;}
+  a.ext{color:var(--blue);text-decoration:none;border-bottom:1px dotted var(--blue);}
+  .rank{display:inline-block;background:var(--accent);color:#fff;font-family:sans-serif;
+    font-size:12px;font-weight:700;border-radius:4px;padding:1px 8px;margin-right:8px;}
+  .skillcard{border:1px solid var(--line);border-left:4px solid var(--accent2);border-radius:6px;
+    padding:14px 18px;margin:16px 0;}
+  .skillcard h4{margin:0 0 6px;font-family:sans-serif;font-size:15px;}
+  .skillcard .meta{font-family:sans-serif;font-size:11.5px;color:var(--sub);margin-bottom:8px;}
+  .skillcard p{margin:8px 0;font-size:13.8px;}
+  footer{font-family:sans-serif;font-size:11.5px;color:var(--sub);margin-top:34px;
+    border-top:1px solid var(--line);padding-top:14px;line-height:1.8;}
+  .tblwrap{overflow-x:auto;}
+  .skillcard .meta,a.ext,.box,footer,.fn-list li{overflow-wrap:anywhere;}
+  @media (max-width:680px){.paper{padding:30px 22px;}table{font-size:11.5px;}}
+  @media print{body{background:#fff;}.paper{box-shadow:none;margin:0;max-width:100%;}
+    .tblwrap{overflow:visible;}td.lbl{white-space:normal;}table{font-size:10.5px;}
+    .skillcard,.box,tr{break-inside:avoid;page-break-inside:avoid;}}
+</style>
+</head>
+<body>
+<div class="idx-nav" style="max-width:840px;margin:12px auto 0;padding:0 12px;font-family:sans-serif;font-size:12.5px;"><a href="../index.html" style="color:#5a2d82;text-decoration:none;border-bottom:1px dotted #5a2d82;">&#8592; 成果物インデックスへ</a></div>
+<div class="paper">
+
+  <div class="doctype">SKILL DEEP RESEARCH ／ swarm4 LΩ-2・84レーン・現物台帳化済み</div>
+  <h1 class="title">フィットするスキル10選<br>― プロファイル駆動ウェブ・ディープリサーチ報告書 ―</h1>
+  <p class="subtitle">新規発見364件から、現物照合42件を経て確定した10本と、その選定原理</p>
+  <div class="meta-line">2026-07-08 ／ 探索・照合=独立84レーン（finder 36＋動的追随3＋トリアージ2＋現物台帳化42＋台帳読み1）／ 照合対象42件は一次URL到達・現物確認済み</div>
+
+  <div class="abstract">
+    <h3>要旨（ABSTRACT）</h3>
+    <p style="margin:0;">前報告書で検証したプロファイル（一次照合文化・無音失敗嫌悪・AI群の憲法化・情報密度優先）を物差しに、ウェブを深掘りして適合スキルを再探索した。既知683件を除外した上で<span class="key">新規364件</span>を発見し、独立トリアージ2レーンの合議で32件に絞り、前回10選を含む42件を現物台帳化（実体・保守状態・失敗時挙動・導入摩擦・ライセンス）で照合した。結論として、<span class="key">前回10選のうち最終枠に残ったのはPDF読取基盤1本のみで、9枠が交代した</span>。深掘りが明らかにした選定原理は「生成を助ける道具より、<span class="key">検収し・観測し・一次資料に触れる道具</span>がこのプロファイルに刺さる」である。10選は、ループ契約・実行可観測性・docx検収・日本語AI臭lint・法令XML基盤・リンク検収・機密検収・ChatGPT管制・PDF読取・研究監査で構成する。</p>
+  </div>
+
+  <div class="toc">
+    <b>目次</b>
+    <ol>
+      <li><a href="#s1">方法 — LΩ第2周の設計</a></li>
+      <li><a href="#s2">選定原理 — なぜ9枠が交代したか</a></li>
+      <li><a href="#s3">10選（現物台帳つき）</a></li>
+      <li><a href="#s4">次点と特定用途（前回10選の扱いを含む）</a></li>
+      <li><a href="#s5">落とした理由の開示</a></li>
+      <li><a href="#s6">導入の推奨順序</a></li>
+    </ol>
+    <span style="color:var(--sub);"><a href="#a1">付A 数字</a> ／ <a href="#a2">付B 回さなかったもの</a> ／ 主要参照</span>
+  </div>
+
+  <!-- ============================ I ============================ -->
+  <h2 class="h" id="s1"><span class="n">I</span>方法 — LΩ第2周の設計</h2>
+
+  <p>本報告書は前周（プロファイリング報告書・2026-07-08納品）の続きの第2周である。依頼は「このプロファイリングに基づき、フィットするスキルをウェブ情報をディープリサーチして10個提案」。実行は全て独立レーンが担い、オーケストレータは設計・検証・統合のみを行った。</p>
+
+  <div class="tblwrap"><table>
+    <tr><th>相</th><th>内容</th><th>レーン</th><th>産出</th></tr>
+    <tr><td class="lbl">台帳読み</td><td>前周journalの差分読み→設計への差分提案</td><td>1</td><td>照合の深化（実在確認→現物台帳化）・前回10選の再審査追加・重複/保守列の必須化を採択</td></tr>
+    <tr><td class="lbl">深掘りfinder</td><td>情報源別12（skills.sh・公式市場・GitHub検索・MCPディレクトリ・Reddit・日本語圏等）＋ニーズ軸別18＋核心共鳴4＋時事・自由巡回2。一次URL到達主義・既知683件はseen除外</td><td>36</td><td>新規364件（うち2レーン収束10件）</td></tr>
+    <tr><td class="lbl">動的追随</td><td>半数完了時点のfollowup昇格（日本公的一次資料MCP・名称止まり回収・可観測性競合）</td><td>3</td><td>NDL・裁判所系の薄さ確認ほか</td></tr>
+    <tr><td class="lbl">トリアージ</td><td>364件→上位30の独立選抜×2→主宰合議（コンセンサス24＋単独卓越8）</td><td>2</td><td>照合対象32件</td></tr>
+    <tr><td class="lbl">現物台帳化</td><td>新規32＋<b>前回10選の再審査10</b>。各件: 実体・保守状態・失敗時挙動・導入摩擦・ライセンス・重複/補完・JUDGE</td><td>42</td><td>全42件COMPLETE・全件一次到達</td></tr>
+    <tr><td class="lbl">終相</td><td>選定→本報告書→批評→修正→納品</td><td>—</td><td>10選＋次点＋開示</td></tr>
+  </table></div>
+
+  <div class="box caveat"><b>検証注記：</b>①「フィット」の物差しは前周で敵対検証済みのプロファイル（ルーブリック10軸・失格条件・未充足ニーズ）である。プロファイル自体の限界（素材は主にAI協働記録）は前報告書の検証注記を引き継ぐ。②人気・更新日はGitHub/skills.sh等の表示値であり、時点（2026-07-07〜08確認）のスナップショットである。③照合は現物読解が中心で、実機での動作検証はW06（ローカル実行でexit code確認）を除き未実施。導入時は各カードの「条件」を先に消化することを前提とする。</div>
+
+  <!-- ============================ II ============================ -->
+  <h2 class="h" id="s2"><span class="n">II</span>選定原理 — なぜ9枠が交代したか</h2>
+
+  <p>前回10選は全件が再審査で「残留」の評決を得た。実在せず・価値なしと判定されたものは一つもない。それでも最終枠でPDF読取基盤（pdf-mcp）以外の9枠が交代したのは、深掘りが<span class="key">より正確な適合</span>を見つけたからである。</p>
+
+  <p>前回の選定は「学術研究を助けるスキル」のカタログから始まった。今回、プロファイルの物差しを先に固定して探索すると、重心が移動した。この人物に刺さる道具の型は、生成の助力ではなく、<span class="key">①検収する道具</span>（書いたものを機械的にゲートする：lint・リンク検査・機密検査・docx検収）、<span class="key">②観測する道具</span>（走っているものを見えるようにする：session replay・ループ契約・実行監査）、<span class="key">③一次資料に触れる道具</span>（法令XML・PDF原文・出典照合）である。生成支援型（論文を書いてくれる系）は、既存の自作スキル群・swarm運用と重複し、かつ「勝手に書く」失格条件に近づくため、深掘りするほど順位が下がった。</p>
+
+  <div class="box thesis"><b>選定原理：</b>このプロファイルに対するスキルの価値は「何を作ってくれるか」ではなく「<b>何を見えるようにし、何を通さないか</b>」で測る。10選は、執筆工程の各段（走らせる・見張る・直す・検収する・出す）に検問所を置く構成とした。</div>
+
+  <h3 class="sh">採点表 — 重み上位軸への適合（主宰裁定・根拠は各照合レーンの台帳）</h3>
+  <div class="tblwrap"><table>
+    <tr><th>候補</th><th>一次照合耐性</th><th>失敗可視化</th><th>文体制御</th><th>情報密度維持</th><th>差分接続*</th><th>対応ニーズ</th><th>JUDGE</th></tr>
+    <tr><td class="lbl">Looper</td><td>○</td><td>●</td><td>—</td><td>○</td><td>●</td><td>②自律契約</td><td>採用推奨</td></tr>
+    <tr><td class="lbl">Agents Observe</td><td>—</td><td>●</td><td>—</td><td>—</td><td>●</td><td>②無音失敗</td><td>条件付き</td></tr>
+    <tr><td class="lbl">docx-cli</td><td>○</td><td>●</td><td>—</td><td>●</td><td>●</td><td>④docx検収</td><td>採用推奨</td></tr>
+    <tr><td class="lbl">textlint＋preset</td><td>—</td><td>●</td><td>●</td><td>○</td><td>●</td><td>⑤AI臭lint</td><td>条件付き</td></tr>
+    <tr><td class="lbl">Lawtext</td><td>●</td><td>—</td><td>—</td><td>●</td><td>●</td><td>条文資産化</td><td>採用推奨</td></tr>
+    <tr><td class="lbl">lychee</td><td>○</td><td>●</td><td>—</td><td>—</td><td>●</td><td>⑥公開検収</td><td>採用推奨</td></tr>
+    <tr><td class="lbl">secretlint</td><td>—</td><td>●</td><td>—</td><td>—</td><td>●</td><td>⑥機密検収</td><td>採用推奨</td></tr>
+    <tr><td class="lbl">oracle</td><td>—</td><td>●</td><td>—</td><td>○</td><td>○</td><td>送信管制</td><td>条件付き</td></tr>
+    <tr><td class="lbl">pdf-mcp</td><td>●</td><td>○</td><td>—</td><td>●</td><td>●</td><td>PDF一次資料</td><td>採用推奨</td></tr>
+    <tr><td class="lbl">Anti-Autoresearch</td><td>●</td><td>●</td><td>—</td><td>●</td><td>○</td><td>①証拠監査</td><td>条件付き（部品移植）</td></tr>
+  </table></div>
+  <p class="src" style="margin-top:-8px;">●=中核機能として適合／○=副次的に適合／—=対象外。*差分接続=既存52スキル・前回10選と重複せず補完する度合い。本表は各照合レーンの「中身の実体」「適合再評価」からの主宰の総合裁定であり、機械採点ではない。軸別の根拠は各カードと/runs/d2/の該当finalに遡れる。</p>
+
+  <!-- ============================ III ============================ -->
+  <h2 class="h" id="s3"><span class="n">III</span>10選（現物台帳つき）</h2>
+
+  <div class="skillcard">
+    <h4><span class="rank">1</span>Looper — レビューゲート付き自律ループの契約化</h4>
+    <div class="meta"><a class="ext" href="https://github.com/ksimback/looper">github.com/ksimback/looper</a>｜skill+command｜v0.4.0 2026-07-07（確認前日更新）｜MIT｜626★</div>
+    <p><b>現物</b>: 対話でgoal・検証基準・reviewer/judge・停止条件・privacy/egressを詰め、loop.yaml＋外部実行runner（stdlib Python）を生成。plan gate/delivery gateとprogrammatic/human/judgeの三種検収を回す。v0.4.0でrunner契約（RUNNER-CONTRACT.md）と適合試験が明文化。</p>
+    <p><b>刺さる理由</b>: 「自律完走してよいが勝手に進むな」という二重要求（検証済みプロファイルの中核）を、<span class="key">契約と門番で機械化</span>した実装。swarm運用の設計思想と同型で、ループ設計・検収ゲート生成の部品として接続できる。<b>条件</b>: 実行基盤ごと乗り換えるのではなく部品として採る。judge基準の日本語化は自前。</p>
+  </div>
+
+  <div class="skillcard">
+    <h4><span class="rank">2</span>Agents Observe — セッション再生とローカル監査</h4>
+    <div class="meta"><a class="ext" href="https://github.com/simple10/agents-observe">github.com/simple10/agents-observe</a>｜plugin+mcp｜v0.9.11 2026-06-04｜MIT｜615★</div>
+    <p><b>現物</b>: Claude Code/Codexのhookイベントを<span class="key">ローカルHTTP API→SQLite</span>に保存し、WebSocketダッシュボードでsession replay・token統計を表示。payloadは丸ごとローカル保存（外部送信なし＝機密運用に適合）。Codex側は意味イベントが未成熟。</p>
+    <p><b>刺さる理由</b>: 「待っていればいいの？」の進捗不安と無音失敗嫌悪に対する監視層。dr_activity.log自作フックの正統進化。<b>条件</b>: Codex監視は実機検収前提。競合のdisler版（1.5k★）は無ライセンス＋未修正バグのため見送り（第V章）。</p>
+  </div>
+
+  <div class="skillcard">
+    <h4><span class="rank">3</span>docx-cli — locatorで効くdocx外科手術</h4>
+    <div class="meta"><a class="ext" href="https://github.com/kklimuk/docx-cli">github.com/kklimuk/docx-cli</a>｜command+skill｜v0.20.0 2026-07-06｜MIT｜61★・npm 2,390/月</div>
+    <p><b>現物</b>: OOXMLを直接読み書きするCLI。段落・表・脚注・コメントに locator（pN/fnN等）を付けて<span class="key">局所編集し、全文再生成を避ける</span>。Word互換のtracked changes・コメント返信・脚注編集・dry-runを実装。renderのみ外部レンダラ。</p>
+    <p><b>刺さる理由</b>: docx脚注ID両側振替事故・Word COMハングの歴史（未充足ニーズ④）への現世代の答え。照合レーンの評決は「採用推奨」。<b>条件</b>: 重要原稿はコピーに対して実行・dry-run→render確認の三段を運用規約化。日本語長文＋脚注密度での破壊試験を先に。</p>
+  </div>
+
+  <div class="skillcard">
+    <h4><span class="rank">4</span>textlint ＋ preset-ai-writing — 日本語AI臭の機械lint化</h4>
+    <div class="meta"><a class="ext" href="https://github.com/textlint/textlint">github.com/textlint/textlint</a>（3.1k★・v15.7.1 2026-05-18・MCP内蔵）＋<a class="ext" href="https://github.com/textlint-ja/textlint-rule-preset-ai-writing">textlint-ja/textlint-rule-preset-ai-writing</a>（1.1k★・v1.7.0 2026-05-13）｜command+mcp｜MIT</div>
+    <p><b>現物</b>: textlint本体はMCPサーバを内蔵（lintText/lintFile等4ツール・`claude mcp add textlint -- npx textlint --mcp`）。preset-ai-writingは太字コロン構文・誇張語・絵文字リスト・コロン接続など<span class="key">AIっぽい日本語構造を形態素解析込みで検出</span>する5ルール。</p>
+    <p><b>刺さる理由</b>: AI臭排除を「チェックリストを読む」から<span class="key">機械gateに通す</span>へ変える（humanizer-jaは手順書型・こちらは検収型）。自作の文体憲章・警戒語リストをtextlintルールとして資産化する土台になる。<b>条件</b>: 論文本文にはallow設定とseverity調整が前提。学術文体固有のルールは自作追加（CFC論文用prh.ymlの資産化はD1レーンのfollowup提案どおり）。</p>
+  </div>
+
+  <div class="skillcard">
+    <h4><span class="rank">5</span>Lawtext — 法令標準XMLと条文テキストの相互変換基盤</h4>
+    <div class="meta"><a class="ext" href="https://github.com/yamachig/lawtext">github.com/yamachig/lawtext</a>｜command+tool｜HEAD 2026-06-07｜MIT｜98★・npm 731/月</div>
+    <p><b>現物</b>: 法令をLawtext（プレーンテキスト）⇄法令標準XML⇄JSON⇄HTML⇄DOCXで相互変換。e-Gov API取得・括弧対応・定義語・条項参照の解析をcontrol elementとして構造保持。CLI＋React SPA。</p>
+    <p><b>刺さる理由</b>: 条文の構造への粘着（一字差・項号・読替え）を<span class="key">Git管理可能なテキスト</span>で扱える。自作の条文ブラウザ・e-gov-law-fetcherの下層基盤として接続でき、「例に準じて」型の条文差分の資産化に直結。<b>条件</b>: npm版が古い（GitHub HEADを使う）。措置法施行令のような深い階層での変換忠実性を最初に検証。</p>
+  </div>
+
+  <div class="skillcard">
+    <h4><span class="rank">6</span>lychee — 公開物のリンク・404検収</h4>
+    <div class="meta"><a class="ext" href="https://github.com/lycheeverse/lychee">github.com/lycheeverse/lychee</a>｜command｜v0.24.2 2026-05（nightly活発）｜Apache-2.0/MIT｜3.7k★</div>
+    <p><b>現物</b>: Rust製の非同期リンクチェッカー。MD/HTML/サイト対応、JSON/JUnit出力、リトライ・タイムアウト・private IP除外。失敗リンク=exit 2で機械判定可能。</p>
+    <p><b>刺さる理由</b>: gh-pages公開後の404・stale参照は実害として記録済み（未充足ニーズ⑥）。jplawdb4全体の定期検収をcronフック化できる。評決「採用推奨」。<b>条件</b>: 相対パスリンク主体の自己完結HTML群にはローカルモードの設定を固める。</p>
+  </div>
+
+  <div class="skillcard">
+    <h4><span class="rank">7</span>secretlint — 機密混入の公開前検収</h4>
+    <div class="meta"><a class="ext" href="https://github.com/secretlint/secretlint">github.com/secretlint/secretlint</a>｜command｜v13.0.2 2026-05｜MIT｜1.4k★</div>
+    <p><b>現物</b>: 資格情報（AWS/GitHub/OpenAI/Anthropic等のキー）をルールpreset＋allowMessageIdsで検出・例外管理。SARIF/GitHub annotation出力・pre-commit統合。</p>
+    <p><b>刺さる理由</b>: 公開基盤（gh-pages・note）と機密（案件名・APIキー・非公開判定）の近接は前周で「公開弁」として検証済みのリスク。<span class="key">公開前検収の機械化</span>そのもの。評決「採用推奨」。<b>条件</b>: v13は.gitignore既定尊重——全量検査には`--no-gitignore`を運用規約で固定。企業名等のドメイン固有パターンは自作ルール追加。</p>
+  </div>
+
+  <div class="skillcard">
+    <h4><span class="rank">8</span>oracle — ChatGPT送信・添付・再接続の管制塔</h4>
+    <div class="meta"><a class="ext" href="https://github.com/steipete/oracle">github.com/steipete/oracle</a>｜command+mcp+skill｜v0.15.2 2026-07-06｜MIT｜3.2k★</div>
+    <p><b>現物</b>: ChatGPT/GeminiをCDPで操作するTypeScript CLI。添付・モデル選択・Deep Research・reattach・session runner・dry-run・provider doctorを実装。手動貼付フォールバックとMCPサーバ同梱。</p>
+    <p><b>刺さる理由</b>: ChatGPT 5.5 Pro査読ワークフローの事故史（無音遮断・添付残存・モーダル）に対し、自作chatgpt_cdp.jsの<span class="key">恒久対策を専業実装で置換・補強</span>できる。steipete作・保守活発。<b>条件</b>: 外部送信を伴うため送信ホワイトリスト・dry-run・version固定を規約化。UI drift時は自作フォールバックを残す。</p>
+  </div>
+
+  <div class="skillcard">
+    <h4><span class="rank">9</span>pdf-mcp — PDF一次資料の読取基盤（前回から唯一の再選）</h4>
+    <div class="meta"><a class="ext" href="https://github.com/jztan/pdf-mcp">github.com/jztan/pdf-mcp</a>｜mcp｜v1.19.1 2026-07-03（コミット07-07）｜MIT｜74★・PyPI配布</div>
+    <p><b>現物</b>: PDFの局所読解・検索・レンダ・隠しテキスト検知。CJK・縦書き・OCR対応、ハング対策の改善が再審査で確認された。</p>
+    <p><b>刺さる理由</b>: 和文税務PDF・古い官報型資料・判例PDFの一次照合の物理層。再審査評決も「採用推奨」で、42件の土俵で唯一前回の席を守った。<b>条件</b>: 注釈の作成・編集は非対応（読取専用）。機密PDFはローカル実行・依存監査を先に。</p>
+  </div>
+
+  <div class="skillcard">
+    <h4><span class="rank">10</span>Anti-Autoresearch — 研究成果物の完全性監査</h4>
+    <div class="meta"><a class="ext" href="https://github.com/wanshuiyin/anti-autoresearch">github.com/wanshuiyin/anti-autoresearch</a>｜skill+workflow｜2026-07-06更新｜MIT｜88★</div>
+    <p><b>現物</b>: 論文からartifact_manifest.jsonとclaims.jsonを生成し、以後の監査を<span class="key">claim_idと原文spanに縛る</span>。数値矛盾・引用・baseline・証明・presentation signalsの11監査スキル。裁定はPython stdlibの決定的裁定器で、LLMはfinding案を出すだけ。観測レベルL0-L2で「見えていない層の断定を落とす」設計。</p>
+    <p><b>刺さる理由</b>: claims.tsv文化・「未確認は未確認」・書き手≠検証者の三点を一つの実装が備える稀有な設計一致。<span class="key">span-anchored台帳と決定的裁定器は自作証拠台帳（evidence-status-ledger構想）の設計母材</span>になる。<b>条件</b>: ML論文向けの監査軸が中心のため、法学論文用の軸（条文引用・頁ピン・判例番号）への翻案が必要。直導入より部品移植。</p>
+  </div>
+
+  <!-- ============================ IV ============================ -->
+  <h2 class="h" id="s4"><span class="n">IV</span>次点と特定用途（前回10選の扱いを含む）</h2>
+
+  <div class="box note"><b>次点（現物照合済み・条件が一段重いもの）：</b>
+  <b>PaperJury</b>（622★・多人数査読評決台帳——査読ハーネスとして有力・v1.2.1）／<b>LangExtract</b>（Google製37k★・原文位置grounding——cloudプロバイダ利用時は原稿が外部送信されるためOllama等のローカル運用限定で）／<b>NeuronCite</b>（ローカル引用検証MCP——若年9★・AGPL＋商用デュアル・PoC前提）／<b>doi-mcp</b>（文献実在9DB照合・41テスト——洋文献中心）／<b>OfficeCLI</b>(9.8k★・Office三種のDOM検収——大型・Windows実機fixture要)／<b>planning-with-files</b>（25k★・永続計画と完了ゲート——中断企画レーダー適合・hook導入リスクに注意）／<b>no-fabricate-gate</b>（未出典数値でexit 1——照合レーンがローカル実行で動作確認済み・ただし対象は数値主張のみ）／<b>book-to-skill</b>（8k★・文脈カプセル化）／<b>Adeu</b>（docx⇄MD投影・赤入れ戻し）／<b>writing-style-skill</b>（人間修正diffから文体規則を自己更新——ローカル限定運用で）／<b>cdpilot</b>（軽量CDP・oracleの代替）／<b>Browsertrix Crawler</b>（Web証拠のWARC保存・AGPL）／<b>cc-safe-setup</b>（破壊操作の表面化——`--audit`診断のみ先行導入可）。</div>
+
+  <div class="box note"><b>前回10選の残り9本の扱い（全件再審査で「残留」・実在と価値は再確認済み）：</b>
+  テーマが重なる新規上位に最終枠を譲ったが、次の特定用途では引き続き有効——<b>academic-research-skills</b>（claim audit部品の移植元・36.7k★に成長）／<b>academic-writing-skills</b>（英文投稿時の検収）／<b>daymade fact-checker</b>（検証プロトコルの参照実装）／<b>claim-quorum</b>（多モデル票決・AGPL）／<b>humanizer-ja</b>（公開前の表層チェックリスト）／<b>tax-law-mcp</b>（通達・裁決導線——open-zeimu-mcp(alpha)より現状は成熟）／<b>safe-docx</b>（redline専用補助・license表記不整合に注意）／<b>japan-business-data</b>（判定案件の事実取得）／<b>legal-translation</b>（法務翻訳の安全柵）。</div>
+
+  <!-- ============================ V ============================ -->
+  <h2 class="h" id="s5"><span class="n">V</span>落とした理由の開示</h2>
+
+  <div class="tblwrap"><table>
+    <tr><th>候補</th><th>見送り理由（現物照合の結果）</th></tr>
+    <tr><td class="lbl">disler/claude-code-hooks-multi-agent-observability</td><td>1.5k★で機能は確認できたが<b>ライセンスファイル無し</b>＋未修正バグ。権利状態不明のまま研究基盤に組み込めない</td></tr>
+    <tr><td class="lbl">Paperclip</td><td>指定リポジトリ（0★）とnpm・別リポジトリ（73k★表示）の指標が不整合。skills.shのinstall数主張も一次確認できず、信頼を割引</td></tr>
+    <tr><td class="lbl">claude-code-monitor</td><td>実装は良いがmacOS前提。WSL2/Windows環境に不適合</td></tr>
+    <tr><td class="lbl">BackstopJS</td><td>レンダ崩れ検収には合うが最終コミット2024年・open issues 516で保守停滞。採るならDocker固定の条件付き</td></tr>
+    <tr><td class="lbl">open-zeimu-mcp</td><td>NTA/裁決/e-Gov横断の思想は良いがalpha・1★。tax-law-mcp（既往）の方が現状成熟</td></tr>
+    <tr><td class="lbl">NDL検索MCP・LegalMCP等</td><td>日本の判例本文・官報・NDLのMCPは全体に薄い（動的追随レーンでも確認）。この領域は既製品待ちより自作が近道</td></tr>
+    <tr><td class="lbl">Zotero系全般</td><td>ユーザーがZotero未使用のため導入前提が一段重い（文献管理を始めるならまずワークフロー設計から）</td></tr>
+    <tr><td class="lbl">生成支援型（論文ライター系）多数</td><td>既存の自作スキル・swarm運用と重複し、「勝手に書く」失格条件に近い。トリアージ両レーンが独立に同じ分類で落とした</td></tr>
+  </table></div>
+
+  <!-- ============================ VI ============================ -->
+  <h2 class="h" id="s6"><span class="n">VI</span>導入の推奨順序</h2>
+
+  <div class="tblwrap"><table>
+    <tr><th>段</th><th>導入</th><th>理由</th></tr>
+    <tr><td class="lbl">第1段（即効・低摩擦）</td><td>lychee／secretlint／textlint＋preset-ai-writing</td><td>いずれも成熟CLI・失敗がexit codeで機械判定でき、既存フック・cronに直結。公開前検収と文体検収が当日から動く</td></tr>
+    <tr><td class="lbl">第2段（運用の目）</td><td>Agents Observe／Looper</td><td>スワーム・長時間運転の可観測性と契約化。無音失敗ニーズの中核。実機検収（特にCodexイベント）を挟む</td></tr>
+    <tr><td class="lbl">第3段（文書工程）</td><td>docx-cli／pdf-mcp</td><td>破壊試験（日本語長文・脚注密度・縦書きPDF）を通してから提出工程に接続</td></tr>
+    <tr><td class="lbl">第4段（基盤・外部接続）</td><td>Lawtext／oracle</td><td>条文資産のGit管理化は設計を伴う。oracleは送信規約（ホワイトリスト・dry-run）を固めてから自作CDPと入替え</td></tr>
+    <tr><td class="lbl">第5段（研究監査）</td><td>Anti-Autoresearch（部品移植）</td><td>span-anchored台帳＋決定的裁定器を法学向けに翻案し、自作evidence-status-ledger構想の母材にする</td></tr>
+  </table></div>
+
+  <h3 class="sh">最小PoCと撤退条件</h3>
+  <div class="tblwrap"><table>
+    <tr><th>候補</th><th>初回検証（最小PoC）</th><th>合格基準</th><th>撤退条件</th></tr>
+    <tr><td class="lbl">lychee</td><td>jplawdb4のhtml配下を`lychee --format json`で1回走査</td><td>既知の生きたリンクで偽陽性が僅少・実行数分以内</td><td>相対パス・file運用で偽陽性が多発し設定で収まらない</td></tr>
+    <tr><td class="lbl">secretlint</td><td>公開予定ディレクトリに`--no-gitignore`で走査＋自作ルール1本（案件名パターン）追加</td><td>混入試験（ダミーキー・実案件名）を全検出</td><td>日本語文書でルール追加の手間が検出価値を上回る</td></tr>
+    <tr><td class="lbl">textlint＋preset</td><td>`claude mcp add textlint`→過去のAI臭指摘済み原稿1本をlint</td><td>過去に人力で直した指摘の過半を機械検出・偽陽性がallow設定で制御可能</td><td>学術文体での偽陽性が調整後も本文を汚す水準</td></tr>
+    <tr><td class="lbl">Agents Observe</td><td>swarmの小規模波（5レーン）でhook接続しダッシュボード確認</td><td>レーンの開始・完了・異常がリアルタイムで見える・データがローカルに留まる</td><td>Codexイベントが実用にならず、Claude側だけでは既存ログと差がない</td></tr>
+    <tr><td class="lbl">Looper</td><td>research-synthesisテンプレでloop.yamlを1本生成し既存タスクを1周</td><td>生成された契約・検収ゲートが自作swarm specに移植可能な粒度</td><td>契約生成が浅く、swarm3のspec card以下の粒度しか出ない</td></tr>
+    <tr><td class="lbl">docx-cli</td><td>論文の旧版コピーで脚注読取→1箇所編集→Word実機で開く破壊試験</td><td>脚注ID・目次・表示番号が無傷・tracked changesがWordで正しく見える</td><td>日本語長文・高脚注密度で構造破損が1件でも出る</td></tr>
+    <tr><td class="lbl">pdf-mcp</td><td>縦書き系・スキャン系の税務PDF各1で検索・局所読解</td><td>頁指定読解とCJK検索が実用精度</td><td>主要な和文PDF型でOCR/抽出が実用にならない</td></tr>
+    <tr><td class="lbl">Lawtext</td><td>措置法施行令39の14〜15をXML→Lawtext→XML往復変換</td><td>往復で構造・読替え・項号が無損失</td><td>深い階層の条文で欠落・改変が出る</td></tr>
+    <tr><td class="lbl">oracle</td><td>dry-run＋使い捨てテキストでChatGPT送信→添付→応答取得を1往復</td><td>添付残存なし・失敗が明示的に報告される・自作CDPより手数が減る</td><td>UI driftへの追従が自作スクリプトより遅い・送信制御が規約化できない</td></tr>
+    <tr><td class="lbl">Anti-Autoresearch</td><td>公開済み論文MD1本でmanifest＋claims.json生成→数値整合監査1軸</td><td>span-anchored台帳が法学引用（頁・条番号）へ翻案可能と判断できる</td><td>ML特化が深く、翻案コストが自作台帳の新規実装を上回る</td></tr>
+  </table></div>
+
+  <!-- ============================ 付録 ============================ -->
+  <h2 class="h" id="a1"><span class="n">付A</span>数字</h2>
+  <div class="tblwrap"><table>
+    <tr><th>項目</th><th>値</th></tr>
+    <tr><td class="lbl">LΩ-2レーン</td><td>84（台帳読み1・finder36・動的追随3・トリアージ2・現物台帳化42）。全COMPLETE</td></tr>
+    <tr><td class="lbl">LΩ-2トークン</td><td>約5,163万</td></tr>
+    <tr><td class="lbl">発見</td><td>新規364件（既知683件をdedup後）。2レーン収束10件。トリアージ通過32件</td></tr>
+    <tr><td class="lbl">照合</td><td>42件全件一次URL到達・現物読解。うち1件（no-fabricate-gate）はローカル実行で動作確認</td></tr>
+    <tr><td class="lbl">評決</td><td>JUDGE分類: 採用推奨6（Looper・docx-cli・Lawtext・lychee・secretlint・pdf-mcp再審査）・条件付き36。最終選定ではPaperclipを指標不整合により見送り（第V章）。前回10選は10/10残留・最終枠再選1</td></tr>
+    <tr><td class="lbl">両周合計</td><td>373レーン・約1.91億トークン（LΩ-1: 289レーン1.39億＋LΩ-2: 84レーン0.52億）</td></tr>
+  </table></div>
+
+  <h2 class="h" id="a2"><span class="n">付B</span>回さなかったもの（no silent caps）</h2>
+  <p>①新規364件のうち現物台帳化したのは32件で、残り332件はトリアージ落選のまま（一覧はout/d1_discoveries.tsvに保存・落選分類は第V章と両トリアージfinalに記録）。②skills.shのOIDC付きAPIによる全件掃引は未実施（公開HTML面のみ）。③採用10件の実機動作検証は未実施（W06のみ照合レーンが実行）。④動的追随の繰延べ12本中9本は未投入（D2の現物照合で実質吸収、ただし「X投稿本文からの一次URL追跡」「arXiv上のMCP論文の配布リポジトリ探索」は未了）。⑤日本の判例本文・官報MCPの自作可能性検討は本報告書の射程外として残した。</p>
+
+  <div class="fn-list">
+    <h3>主要参照（素材と検証の所在）</h3>
+    <ol>
+      <li>10選・次点の一次URL：本文各カード（全て2026-07-07〜08確認）</li>
+      <li>プロファイル物差し：前報告書「無音を信号に変える人」（同ディレクトリ・2026-07-08）＋/home/user/profile_swarm4/inputs/profile_capsule.md</li>
+      <li>レーン成果物：/home/user/profile_swarm4/runs/{t1,d1,f2,tri,d2}/（*.final.md・journal.d）</li>
+      <li>発見台帳：/home/user/profile_swarm4/out/d1_discoveries.tsv（364件・落選含む全件）</li>
+      <li>裁定記録：/home/user/profile_swarm4/journal.d/orchestrator.jsonl（INTENT-2・トリアージ裁定・RT-004）</li>
+    </ol>
+  </div>
+
+  <footer>本報告書の全カードは一次URLの現物読解に基づき、評決・裁定・落選理由を含む全過程はjournalにappend-onlyで保存されている。人気・日付は確認時点の表示値。導入は各カードの条件を先に消化すること。</footer>
+
+</div>
+<div class="idx-nav" style="max-width:840px;margin:0 auto 24px;padding:0 12px;font-family:sans-serif;font-size:12.5px;text-align:center;"><a href="../index.html" style="color:#5a2d82;text-decoration:none;border-bottom:1px dotted #5a2d82;">&#8592; 成果物インデックスへ戻る</a></div>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日米間配当の源泉徴収 ― 特典条項付表が欠落している場合の課否と税率</title>
+<style>
+  :root{
+    --ink:#1a1f29; --sub:#5a6473; --line:#e2e6ec; --bg:#f5f6f8; --card:#fff;
+    --blue:#1f4e79; --blue-soft:#eef3fa; --red:#b3261e; --red-soft:#fdeceb;
+    --amber:#9a6700; --amber-soft:#fff7e6; --green:#1d6b3f; --green-soft:#eaf5ee;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    line-height:1.85;font-size:15.5px;}
+  .wrap{max-width:920px;margin:0 auto;padding:32px 20px 80px;}
+  header.hero{background:linear-gradient(135deg,#1f4e79,#2d6aa3);color:#fff;
+    border-radius:16px;padding:34px 34px 28px;box-shadow:0 8px 24px rgba(31,78,121,.18);}
+  header.hero .tag{display:inline-block;font-size:12px;letter-spacing:.08em;
+    background:rgba(255,255,255,.18);padding:4px 12px;border-radius:999px;margin-bottom:14px;}
+  header.hero h1{margin:0 0 10px;font-size:25px;line-height:1.5;font-weight:700;}
+  header.hero p{margin:0;font-size:14px;opacity:.92;}
+  .verdict{margin:22px 0;background:var(--red-soft);border:1px solid #f3c9c6;
+    border-left:6px solid var(--red);border-radius:12px;padding:20px 24px;}
+  .verdict h2{margin:0 0 8px;font-size:18px;color:var(--red);}
+  .verdict .rate{font-size:30px;font-weight:800;color:var(--red);letter-spacing:.01em;}
+  .verdict .rate small{font-size:14px;font-weight:600;color:var(--sub);margin-left:8px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:24px 26px;margin:18px 0;box-shadow:0 2px 8px rgba(20,30,50,.04);}
+  h2.sec{font-size:19px;margin:34px 0 6px;padding-left:12px;border-left:5px solid var(--blue);}
+  h3{font-size:16px;margin:20px 0 8px;color:var(--blue);}
+  p{margin:10px 0;}
+  .facts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0;}
+  .facts div{background:var(--blue-soft);border-radius:8px;padding:10px 14px;font-size:14px;}
+  .facts div b{color:var(--blue);}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px;}
+  th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top;}
+  th{background:var(--blue-soft);color:var(--blue);font-weight:700;}
+  tr:nth-child(even) td{background:#fafbfc;}
+  .flow{counter-reset:step;margin:16px 0;}
+  .flow .step{position:relative;padding:14px 16px 14px 56px;background:#fff;
+    border:1px solid var(--line);border-radius:10px;margin:10px 0;}
+  .flow .step::before{counter-increment:step;content:counter(step);
+    position:absolute;left:14px;top:14px;width:28px;height:28px;border-radius:50%;
+    background:var(--blue);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px;}
+  .box{border-radius:10px;padding:14px 18px;margin:14px 0;font-size:14.5px;}
+  .box.amber{background:var(--amber-soft);border:1px solid #f0dca8;}
+  .box.green{background:var(--green-soft);border:1px solid #bfe2cc;}
+  .box.amber b{color:var(--amber);} .box.green b{color:var(--green);}
+  .pill{display:inline-block;font-size:12px;padding:2px 9px;border-radius:999px;
+    background:var(--blue-soft);color:var(--blue);margin-right:6px;font-weight:600;}
+  ul{margin:8px 0;padding-left:22px;} li{margin:5px 0;}
+  .calc{background:#0f2238;color:#dde7f2;border-radius:10px;padding:16px 20px;
+    font-family:"SF Mono",Consolas,monospace;font-size:13.5px;line-height:1.9;margin:14px 0;}
+  .calc .hl{color:#ffd166;font-weight:700;}
+  .ref{font-size:13px;color:var(--sub);}
+  .ref a{color:var(--blue);text-decoration:none;border-bottom:1px dotted var(--blue);}
+  footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);
+    font-size:12.5px;color:var(--sub);}
+  @media (max-width:640px){.facts{grid-template-columns:1fr;}}
+  @media print{body{background:#fff;}.card,header.hero{box-shadow:none;}}
+</style>
+</head>
+<body>
+<div class="idx-nav" style="max-width:840px;margin:12px auto 0;padding:0 12px;font-family:sans-serif;font-size:12.5px;"><a href="../index.html" style="color:#5a2d82;text-decoration:none;border-bottom:1px dotted #5a2d82;">&#8592; 成果物インデックスへ</a></div>
+<div class="wrap">
+
+<header class="hero">
+  <span class="tag">国際税務 ／ 源泉所得税</span>
+  <h1>日米間配当の源泉徴収<br>― 特典条項に関する付表（様式17）が欠落している場合 ―</h1>
+  <p>米国親会社（議決権100%保有）への毎期配当を、免税前提で源泉徴収せず。租税条約届出書は提出済みだが、特典条項（LOB）の証明書類が未提出。この場合に源泉徴収はかかるか、何％か。</p>
+</header>
+
+<div class="verdict">
+  <h2>結論</h2>
+  <p><b>源泉徴収はかかります。</b>特典条項に関する付表（様式17-米）と居住者証明書が支払日前日までに整っていない以上、源泉徴収の段階で条約の免税（0%）は適用できず、<b>国内法の税率で源泉徴収すべき</b>だった、と扱われます。</p>
+  <div class="rate">20.42%<small>（非上場株式の配当：所得税20%＋復興特別所得税0.42%）</small></div>
+  <p style="margin-top:10px;">ただし実体要件（100%保有＝条約10条の50%・6か月要件を充足）を満たすため、<b>本税は事後の還付請求で取り戻せる余地</b>があります。一方、<b>不納付加算税・延滞税は戻らないコスト</b>として残ります。</p>
+</div>
+
+<div class="card">
+  <h3 style="margin-top:0;">前提事実の整理</h3>
+  <div class="facts">
+    <div><b>支払者</b>　日本子会社（源泉徴収義務者）</div>
+    <div><b>受領者</b>　米国親会社（外国法人）</div>
+    <div><b>持株</b>　別表二で議決権100%を直接保有</div>
+    <div><b>株式</b>　非上場（親子間）</div>
+    <div><b>取扱い</b>　免税前提で源泉徴収せず</div>
+    <div><b>提出書類</b>　租税条約届出書 ○ ／ 特典条項付表・居住者証明書 ✕</div>
+  </div>
+</div>
+
+<h2 class="sec">1. なぜ「実体は0%」でも源泉はかかるのか</h2>
+<div class="card">
+  <p>論点は<b>「条約の免税を受ける権利」と「源泉徴収段階でそれを適用できるか」を分けて考える</b>ことにあります。</p>
+
+  <h3>(1) 実体要件 ― 0%自体は満たし得る</h3>
+  <p>日米租税条約10条3項は、配当の受益者が、配当確定日を末日とする6か月の期間を通じて支払法人の<b>議決権の50%以上を直接・間接に保有</b>する法人である場合、源泉地国（日本）では課税できない（=0%）と定めます。本件は<b>議決権100%保有</b>のため、保有割合・保有期間の要件は充足します。<br>
+  <span class="ref">出典：日米租税条約10条3項（<a href="https://www.mof.go.jp/tax_policy/summary/international/tax_convention/USA_ST_jp.pdf">財務省・条約本文 PDF</a>）／2019年発効の改正議定書により保有期間が12か月→6か月に緩和。</span></p>
+  <p class="box amber"><b>注意：</b>100%保有だけでは足りません。0%の適用には ① 受益者が真の受益者であること、② 米国居住者であること、③ <b>条約22条（特典の制限・LOB）の適格者要件</b>を満たすこと、が併せて必要です。</p>
+
+  <h3>(2) 手続要件 ― ここが本件の急所</h3>
+  <p>米国・英国など<b>特典制限条項（LOB）を持つ条約</b>で配当の軽減・免除を受けるには、配当用の「租税条約に関する届出書」に加えて、<b>「特典条項に関する付表（様式17-米）」と「居住者証明書（IRS Form 6166 等）」の添付</b>が必要です。</p>
+  <p>国税庁は、<b>届出書「およびその添付書類」を支払日の前日までに提出していない場合は、国内法の税率で源泉徴収する</b>と明示しています。つまり、付表・証明書が欠ければ、源泉徴収の場面では条約0%は使えず、国内法の20.42%が出発点になります。</p>
+  <p class="ref">出典：国税庁タックスアンサー <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2888.htm">No.2888（租税条約に関する届出）</a>／<a href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/joyaku/annai/1648_39.htm">特典条項に関する付表の添付</a>／<a href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/joyaku/annai/pdf2/266.pdf">様式17-米 記載要領</a></p>
+</div>
+
+<h2 class="sec">2. 適用される税率と源泉徴収義務</h2>
+<div class="card">
+  <table>
+    <tr><th>区分</th><th>根拠</th><th>税率</th></tr>
+    <tr><td>原則（非上場株式の配当・外国法人向け）</td><td>所得税法212条①・213条①＋復興財確法</td><td><b>20.42%</b></td></tr>
+    <tr><td>上場株式等の配当</td><td>措置法（特例）</td><td>15.315%</td></tr>
+    <tr><td>条約適用後（手続充足の場合）</td><td>日米条約10条3項</td><td>0%</td></tr>
+  </table>
+  <p>本件は<b>親子間の非上場株式</b>のため、源泉徴収段階の正しい税率は<b>20.42%</b>です。支払者である日本子会社は非居住者等への国内源泉所得の支払につき源泉徴収義務を負います。</p>
+  <p class="ref">出典：国税庁 <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2884.htm">No.2884</a>／<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2885.htm">No.2885</a></p>
+</div>
+
+<h2 class="sec">3. 税務調査で源泉漏れを指摘された場合の追徴</h2>
+<div class="card">
+  <table>
+    <tr><th>項目</th><th>内容</th></tr>
+    <tr><td><b>本税</b></td><td>配当支払額 × 20.42%。納付期限は原則として徴収月の翌月10日。</td></tr>
+    <tr><td><b>不納付加算税</b></td><td>原則10%。調査による指摘を予知せず自主納付した場合は5%。</td></tr>
+    <tr><td><b>延滞税</b></td><td>法定納期限の翌日から納付日まで日割。2026年は当初2か月年2.8%、以後年9.1%（年ごとに率が変動）。※本税のみに課され、加算税には課されない。</td></tr>
+  </table>
+  <div class="box amber">
+    <b>グロスアップに注意。</b>会社法上決議された配当額は通常「税込総額」なので、単なる徴収漏れなら総額×20.42%です。ただし親会社との合意で「手取り保証／源泉税は子会社負担」と読める場合は、<br>
+    <span style="font-family:monospace;">税額 = 手取り額 × 20.42% ÷ 79.58%</span> でグロスアップ計算が必要になります。
+  </div>
+  <p class="ref">出典：国税庁 <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/osirase/9205.htm">延滞税の割合 No.9205</a>／不納付加算税（通則法）</p>
+</div>
+
+<h2 class="sec">4. 数値イメージ（配当1億円のケース）</h2>
+<div class="card">
+  <div class="calc">
+本税（源泉漏れ）　 1億円 × <span class="hl">20.42%</span> ＝ <span class="hl">20,420,000円</span><br>
+不納付加算税　　 20,420,000円 × 10%（自主納付なら5%）＝ 2,042,000円（〜1,021,000円）<br>
+延滞税　　　　　 本税 × 期間別利率を日割（年2.8%／9.1%）<br>
+─────────────────────────<br>
+→ 本税2,042万円は <span class="hl">還付請求で回収余地</span>あり<br>
+→ 加算税＋延滞税は <span style="color:#ff8a80;">回収不能なコストとして残存</span>
+  </div>
+</div>
+
+<h2 class="sec">5. 是正の手順（リカバリー）</h2>
+<div class="card">
+  <div class="flow">
+    <div class="step"><b>実体要件の証拠化</b>：米国親会社が真の受益者・米国居住者であること、議決権50%以上・6か月以上保有、条約22条LOBの適格区分を資料で固める。</div>
+    <div class="step"><b>書類整備</b>：特典条項に関する付表（様式17-米）、居住者証明書（IRS Form 6166 等）、株主関係・保有期間資料、配当決議・支払資料を揃える。</div>
+    <div class="step"><b>本税の納付（指摘時）</b>：まず国内法20.42%で源泉税を納付（自主納付なら加算税が5%に軽減）。</div>
+    <div class="step"><b>還付請求</b>：「租税条約に関する源泉徴収税額の還付請求書（様式11）」を支払者経由で提出し、国内法税率と条約0%との差額の還付を受ける。</div>
+  </div>
+  <div class="box green">
+    <b>到達点：</b>実体的に0%要件を満たすため、<b>本税は最終的に0へ戻せる</b>可能性が高い。ただし「最終的に0%だから問題なし」ではなく、<b>不納付加算税・延滞税という附帯税は還付されない</b>点を前提に損失を見込むべきです。
+  </div>
+  <p class="ref">出典：国税庁 <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2889.htm">No.2889（租税条約に関する源泉徴収税額の還付請求）</a></p>
+</div>
+
+<h2 class="sec">6. 再発防止 ― 毎期の「条約届出パック」運用</h2>
+<div class="card">
+  <ul>
+    <li><b>配当支払日の前日まで</b>に、配当用の租税条約届出書＋様式17-米＋居住者証明書＋LOB判定資料を提出完了させ、提出日を証跡化する。</li>
+    <li><b>様式17-米の提出省略ルール</b>：LOB区分Aは原則3年、区分B・C・Dは1年。ただし記載事項に異動があれば再提出。</li>
+    <li><b>居住者証明書</b>：添付省略（提示確認）で運用する場合も「提示日前1年以内に作成」されたものが必要で、支払者は確認事項を届出書に記載し写しを5年間保存する。</li>
+    <li>各期の<b>配当決議前にチェックリストで更新確認</b>するルーティンを定着させる。</li>
+  </ul>
+</div>
+
+<div class="card" style="border-left:5px solid var(--blue);">
+  <h3 style="margin-top:0;">ワンライン要約</h3>
+  <p style="margin-bottom:0;">100%保有でも、<b>特典条項付表・居住者証明書が無ければ源泉段階で0%は使えず、20.42%で源泉徴収義務が生じる</b>。実体要件は満たすので本税は還付で取り戻せるが、<b>加算税・延滞税は残る</b>。早急に様式17-米と居住者証明書を整え、過年度分は還付請求、今後は支払日前日までの提出を徹底すべき。</p>
+</div>
+
+<footer>
+  <p>作成日：2026-06-24 ／ 国際税務メモ。一次資料は財務省（日米租税条約本文）・国税庁タックスアンサー（No.2884/2885/2888/2889）および租税条約等実施特例法・同省令に基づく。具体的な数値・区分判定・LOB適格性は個別事実により異なるため、実行前に顧問税理士・所轄税務署で確認のこと。</p>
+</footer>
+
+</div>
+<div class="idx-nav" style="max-width:840px;margin:0 auto 24px;padding:0 12px;font-family:sans-serif;font-size:12.5px;text-align:center;"><a href="../index.html" style="color:#5a2d82;text-decoration:none;border-bottom:1px dotted #5a2d82;">&#8592; 成果物インデックスへ戻る</a></div>
+</body>
+</html>

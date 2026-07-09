@@ -1,0 +1,259 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 2280" font-family="-apple-system,'Hiragino Sans','Noto Sans JP',sans-serif">
+<defs>
+<marker id="a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#6b7682"/></marker>
+<marker id="ab" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1f5fb0"/></marker>
+<marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#c0392b"/></marker>
+<marker id="am" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#c0691b"/></marker>
+<filter id="s" x="-4%" y="-4%" width="108%" height="112%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#2a3340" flood-opacity="0.10"/></filter>
+<style>
+.mono{font-family:ui-monospace,'SF Mono',Menlo,monospace}
+.zh{font-size:13px;font-weight:800;fill:#fff;letter-spacing:.04em}
+.t{fill:#2a3340}.sub{fill:#5b6573}
+</style>
+</defs>
+<rect width="1440" height="2280" fill="#f3f4f6"/>
+
+<!-- ===================== HEADER ===================== -->
+<text x="44" y="56" font-size="30" font-weight="800" class="t">swarm v6 — 精緻スキマティック</text>
+<text x="46" y="84" font-size="14.5" class="sub">状態駆動・自己終了・再帰自己改善のマルチエージェント・オーケストレーション ／ 値は実装(coordctl.py/agcoord.py/agmeta.py)に準拠</text>
+<rect x="46" y="98" width="220" height="4" rx="2" fill="#1f5fb0"/>
+<text x="1396" y="84" font-size="12" class="sub" text-anchor="end">単位=秒(interactive/unattended)・exit=プロセス終了コード</text>
+
+<!-- ===================== VERSION LADDER ===================== -->
+<text x="44" y="138" class="zh" fill="#9aa3b0" font-size="13">バージョン系譜（累積・additive・各段スナップショットで可逆）</text>
+<g font-size="11.5">
+<rect x="44" y="150" width="212" height="74" rx="10" fill="#26303c"/><text x="58" y="172" class="zh">v1 不変の土台</text><text x="58" y="192" fill="#cdd6e2">agcoord / agmeta</text><text x="58" y="208" fill="#9fb0c4">適応トポロジ・固定レール</text>
+<rect x="266" y="150" width="212" height="74" rx="10" fill="#1f5fb0"/><text x="280" y="172" class="zh">v2 coordctl</text><text x="280" y="192" fill="#dfeaf7">標準動詞＋trace/span</text><text x="280" y="208" fill="#bcd2ec">correct＝人間訂正→agmeta</text>
+<rect x="488" y="150" width="212" height="74" rx="10" fill="#1f7a3d"/><text x="502" y="172" class="zh">v3 検証独立性</text><text x="502" y="192" fill="#d8eede">writer≠verifier</text><text x="502" y="208" fill="#b6dcc3">自己検証=exit4拒否</text>
+<rect x="710" y="150" width="212" height="74" rx="10" fill="#c0691b"/><text x="724" y="172" class="zh">v4 有界repair</text><text x="724" y="192" fill="#f6e2cd">fail→チケット→再委譲</text><text x="724" y="208" fill="#eecdaa">max超過=exit5 escalate</text>
+<rect x="932" y="150" width="212" height="74" rx="10" fill="#6b46c1"/><text x="946" y="172" class="zh">v5 messaging</text><text x="946" y="192" fill="#e7ddf7">typed message</text><text x="946" y="208" fill="#d3c3ee">message≠authority</text>
+<rect x="1154" y="150" width="242" height="74" rx="10" fill="#7a1d1a"/><text x="1168" y="172" class="zh">v6 動的ループ ★</text><text x="1168" y="192" fill="#f3d3cf">tick＝状態→action/cadence</text><text x="1168" y="208" fill="#e6b8b3">固定スケジュール廃止・自己終了</text>
+</g>
+<g stroke="#9aa3b0" stroke-width="1.5"><line x1="256" y1="187" x2="266" y2="187"/><line x1="478" y1="187" x2="488" y2="187"/><line x1="700" y1="187" x2="710" y2="187"/><line x1="922" y1="187" x2="932" y2="187"/><line x1="1144" y1="187" x2="1154" y2="187"/></g>
+
+<!-- ===================== ROLE SPLIT + TOPOLOGY ===================== -->
+<text x="44" y="262" font-size="13" font-weight="800" fill="#9aa3b0">① 役割の二分（鉄則・自己改変不可）</text>
+<rect x="44" y="274" width="430" height="150" rx="13" fill="#fff" stroke="#cfe0f5" filter="url(#s)"/>
+<rect x="44" y="274" width="6" height="150" rx="3" fill="#1f5fb0"/>
+<text x="68" y="302" font-size="17" font-weight="800" fill="#1f5fb0">Opus 4.8 ＝ 管理層（ネスト可）</text>
+<text x="68" y="326" font-size="12.5" class="t">見積／構造選択／分解／<tspan font-weight="800">検証</tspan>／統合／調整／自己改善</text>
+<text x="68" y="346" font-size="12.5" class="t">判断と設計のみ。ネスト ≤5階層（既定≤3）。</text>
+<text x="68" y="370" font-size="12.5" fill="#c0392b" font-weight="800">★ いかなる深さでも leaf 実行者にならない</text>
+<text x="68" y="394" font-size="11.5" class="sub mono">幅 ≤6 並列・wide&gt;deep・最安構造が既定</text>
+<text x="68" y="413" font-size="11.5" class="sub">高stakes＝検証をOpus並列パネル（verdictはOpus）</text>
+
+<rect x="486" y="274" width="430" height="150" rx="13" fill="#fff" stroke="#ddd1f3" filter="url(#s)"/>
+<rect x="486" y="274" width="6" height="150" rx="3" fill="#6b46c1"/>
+<text x="510" y="302" font-size="17" font-weight="800" fill="#6b46c1">Codex (GPT-5.5 xhigh) ＝ 実行層</text>
+<text x="510" y="326" font-size="12.5" class="t">唯一の worker。調査／起草／圧縮／一括変換。</text>
+<text x="510" y="348" font-size="11" class="mono" fill="#3a4453">codex exec --skip-git-repo-check -m gpt-5.5 \</text>
+<text x="510" y="364" font-size="11" class="mono" fill="#3a4453">  -c model_reasoning_effort=xhigh "&lt;task&gt;" </text>
+<text x="510" y="384" font-size="11.5" class="mono" fill="#c0392b" font-weight="700">  ⚠ 背景/並列は &lt;/dev/null 必須（stdin EOF待ちハング）</text>
+<text x="510" y="408" font-size="11.5" class="sub">per-task 起動・並列ファンアウト=codex-flow</text>
+
+<!-- topology table -->
+<rect x="928" y="274" width="468" height="150" rx="13" fill="#fff" stroke="#e4e8ee" filter="url(#s)"/>
+<text x="948" y="298" font-size="13" font-weight="800" class="t">適応トポロジ（速いヒューリスティック・熟考しない）</text>
+<g font-size="11.5" class="t">
+<line x1="948" y1="308" x2="1376" y2="308" stroke="#e4e8ee"/>
+<text x="948" y="328">統合フェーズ</text><text x="1376" y="328" text-anchor="end" class="sub">1管理者 単一書き手（lock）・fan-out禁止</text>
+<text x="948" y="350">小（N≤1∧light）</text><text x="1376" y="350" text-anchor="end" class="sub">inline：1 codex exec</text>
+<text x="948" y="372">中（heavy∧judg≤mod）</text><text x="1376" y="372" text-anchor="end" class="sub">1 Opus管理者＋Codex数体（codex-flow）</text>
+<text x="948" y="394">大（N多∧judg=deep）</text><text x="1376" y="394" text-anchor="end" class="sub">top Opus→Opus管理者×min(N,6)→各Codex</text>
+<text x="948" y="416">stakes高</text><text x="1376" y="416" text-anchor="end" class="sub">検証をOpus並列パネル（verdict=Opus）</text>
+</g>
+
+<!-- ===================== TICK ENGINE ===================== -->
+<text x="44" y="460" font-size="13" font-weight="800" fill="#9aa3b0">② tick エンジン ＝ v6 の中核。各 wake で live state を読み directive(action / next_wake_s / stop / human_gate) を計算（読取専用・control表に書かない）</text>
+<rect x="44" y="472" width="1352" height="356" rx="14" fill="#fff" stroke="#e4e8ee" filter="url(#s)"/>
+
+<!-- state inputs -->
+<text x="66" y="498" font-size="12.5" font-weight="800" class="t">読む live state</text>
+<g font-size="11" class="mono" fill="#3a4453">
+<rect x="66" y="508" width="250" height="26" rx="6" fill="#eef1f5"/><text x="78" y="525">escalated = COUNT(repairs status=escalated)</text>
+<rect x="66" y="538" width="250" height="26" rx="6" fill="#eef1f5"/><text x="78" y="555">in_flight = held ∧ expires_at &gt; now</text>
+<rect x="66" y="568" width="250" height="26" rx="6" fill="#eef1f5"/><text x="78" y="585">open_repairs = COUNT(status=open)</text>
+<rect x="66" y="598" width="250" height="26" rx="6" fill="#eef1f5"/><text x="78" y="615">needs_review = COUNT(claims=needs_review)</text>
+<rect x="66" y="628" width="250" height="26" rx="6" fill="#eef1f5"/><text x="78" y="645">remaining_work（呼び手が渡す）</text>
+<rect x="66" y="658" width="250" height="26" rx="6" fill="#eef1f5"/><text x="78" y="675">dod_met / interactive（フラグ）</text>
+</g>
+<text x="66" y="710" font-size="11" class="sub">↓ 上から順に最初に真になった分岐を採用</text>
+<line x1="322" y1="600" x2="356" y2="600" stroke="#6b7682" stroke-width="2" marker-end="url(#a)"/>
+
+<!-- priority ladder precise table -->
+<text x="372" y="498" font-size="12.5" font-weight="800" class="t">優先ラダー（高→低）</text>
+<g font-size="11">
+<!-- header -->
+<text x="384" y="524" class="sub" font-weight="700">#</text>
+<text x="408" y="524" class="sub" font-weight="700">条件</text>
+<text x="690" y="524" class="sub" font-weight="700">action</text>
+<text x="830" y="524" class="sub" font-weight="700">cadence</text>
+<text x="980" y="524" class="sub" font-weight="700">interactive</text>
+<text x="1090" y="524" class="sub" font-weight="700">unattended</text>
+<text x="1210" y="524" class="sub" font-weight="700">stop</text>
+<text x="1290" y="524" class="sub" font-weight="700">human</text>
+<line x1="372" y1="530" x2="1380" y2="530" stroke="#d8dee6"/>
+</g>
+<g font-size="11.5">
+<!-- rows -->
+<rect x="372" y="536" width="1008" height="30" rx="6" fill="#fdecdc"/>
+<text x="384" y="556" font-weight="800" fill="#c0392b">1</text><text x="408" y="556" class="t">escalated &gt; 0</text><text x="690" y="556" font-weight="800" fill="#c0392b" class="mono">escalate</text><text x="830" y="556" class="t">halt</text><text x="980" y="556" class="mono">0</text><text x="1090" y="556" class="mono">0</text><text x="1210" y="556">—</text><text x="1290" y="556" font-weight="800" fill="#7a1d1a">✔</text>
+
+<rect x="372" y="569" width="1008" height="30" rx="6" fill="#eef3fa"/>
+<text x="384" y="589" font-weight="800" fill="#1f5fb0">2</text><text x="408" y="589" class="t">in_flight &gt; 0（Codex実行中）</text><text x="690" y="589" font-weight="800" fill="#1f5fb0" class="mono">await_work</text><text x="830" y="589" class="t">poll</text><text x="980" y="589" class="mono">90</text><text x="1090" y="589" class="mono">270</text><text x="1210" y="589">—</text><text x="1290" y="589">—</text>
+
+<rect x="372" y="602" width="1008" height="30" rx="6" fill="#fff6ec"/>
+<text x="384" y="622" font-weight="800" fill="#c0691b">3</text><text x="408" y="622" class="t">open_repairs &gt; 0</text><text x="690" y="622" font-weight="800" fill="#c0691b" class="mono">repair</text><text x="830" y="622" class="t">active</text><text x="980" y="622" class="mono">60</text><text x="1090" y="622" class="mono">120</text><text x="1210" y="622">—</text><text x="1290" y="622">—</text>
+
+<rect x="372" y="635" width="1008" height="30" rx="6" fill="#fff6ec"/>
+<text x="384" y="655" font-weight="800" fill="#c0691b">4</text><text x="408" y="655" class="t">needs_review &gt; 0（書き手≠検証者）</text><text x="690" y="655" font-weight="800" fill="#c0691b" class="mono">review</text><text x="830" y="655" class="t">active</text><text x="980" y="655" class="mono">60</text><text x="1090" y="655" class="mono">120</text><text x="1210" y="655">—</text><text x="1290" y="655">—</text>
+
+<rect x="372" y="668" width="1008" height="30" rx="6" fill="#eef3fa"/>
+<text x="384" y="688" font-weight="800" fill="#1f5fb0">5</text><text x="408" y="688" class="t">remaining_work &gt; 0</text><text x="690" y="688" font-weight="800" fill="#1f5fb0" class="mono">work</text><text x="830" y="688" class="t">active</text><text x="980" y="688" class="mono">60</text><text x="1090" y="688" class="mono">120</text><text x="1210" y="688">—</text><text x="1290" y="688">—</text>
+
+<rect x="372" y="701" width="1008" height="30" rx="6" fill="#fdeceb"/>
+<text x="384" y="721" font-weight="800" fill="#c0392b">6</text><text x="408" y="721" class="t">dod_met ∧ 上記すべて0</text><text x="690" y="721" font-weight="800" fill="#c0392b" class="mono">stop</text><text x="830" y="721" class="t">halt</text><text x="980" y="721" class="mono">0</text><text x="1090" y="721" class="mono">0</text><text x="1210" y="721" font-weight="800" fill="#c0392b">✔</text><text x="1290" y="721">—</text>
+
+<rect x="372" y="734" width="1008" height="30" rx="6" fill="#eef1f5"/>
+<text x="384" y="754" font-weight="800" class="sub">7</text><text x="408" y="754" class="t">それ以外（DoD未達・保留なし）</text><text x="690" y="754" font-weight="800" class="sub mono">diagnose</text><text x="830" y="754" class="t">idle</text><text x="980" y="754" class="mono">120</text><text x="1090" y="754" class="mono">1200</text><text x="1210" y="754">—</text><text x="1290" y="754">—</text>
+</g>
+<text x="372" y="788" font-size="11.5" class="sub">directive を span に記録 → 末尾の <tspan class="mono" fill="#1f5fb0">ScheduleWakeup(next_wake_s)</tspan> がそのまま使用（cadence を決め打ちしない）。<tspan font-weight="800" fill="#c0392b">stop なら ScheduleWakeup を呼ばず終了。</tspan></text>
+<text x="372" y="810" font-size="11.5" class="sub">cadence 設計＝<tspan font-weight="700">仕事が動いていれば短／空けば長</tspan>。poll が長め＝harness の完了通知が主、これは保険の fallback（連打しない）。</text>
+
+<!-- ===================== WAKE SEQUENCE (verbs) ===================== -->
+<text x="44" y="858" font-size="13" font-weight="800" fill="#9aa3b0">③ 各 wake の手順（coordctl/agcoord/agmeta 動詞を注記）</text>
+<rect x="44" y="870" width="1352" height="226" rx="14" fill="#fff" stroke="#e4e8ee" filter="url(#s)"/>
+<g font-size="11.5">
+<rect x="64" y="888" width="200" height="92" rx="9" fill="#eef3fa" stroke="#cfe0f5"/><text x="74" y="908" font-weight="800" fill="#1f5fb0">0 生存＋レール再ロード</text><text x="74" y="928" class="mono" fill="#3a4453">agcoord register --token</text><text x="74" y="945" class="mono" fill="#3a4453">agmeta learnings --active</text><text x="74" y="966" class="sub">毎wake従う＝重みを規律に乗せる</text>
+<rect x="280" y="888" width="200" height="92" rx="9" fill="#fdeceb" stroke="#eebcb7"/><text x="290" y="908" font-weight="800" fill="#c0392b">0.5 動的判定</text><text x="290" y="928" class="mono" fill="#3a4453">coordctl tick --team</text><text x="290" y="945" class="mono" fill="#3a4453"> --remaining-work N</text><text x="290" y="966" class="sub">→ directive で以降を分岐</text>
+<rect x="496" y="888" width="200" height="92" rx="9" fill="#eef3fa" stroke="#cfe0f5"/><text x="506" y="908" font-weight="800" fill="#1f5fb0">2 claim（相互排他）</text><text x="506" y="928" class="mono" fill="#3a4453">agcoord claim-next</text><text x="506" y="945" class="mono" fill="#3a4453">BEGIN IMMEDIATE / lease</text><text x="506" y="966" class="sub">取れた item だけ扱う</text>
+<rect x="712" y="888" width="200" height="92" rx="9" fill="#f3eefb" stroke="#ddd1f3"/><text x="722" y="908" font-weight="800" fill="#6b46c1">3 委譲＝Codex</text><text x="722" y="928" class="mono" fill="#3a4453">coordctl dispatch</text><text x="722" y="945" class="mono" fill="#3a4453">renew（実行中リース更新）</text><text x="722" y="966" class="sub">診断/分解はOpus・実行はCodex</text>
+<rect x="928" y="888" width="200" height="92" rx="9" fill="#eef7f0" stroke="#bfe3cd"/><text x="938" y="908" font-weight="800" fill="#1f7a3d">3d 検証（委譲不可）</text><text x="938" y="928" class="mono" fill="#3a4453">coordctl verify --verifier</text><text x="938" y="945" class="mono" fill="#3a4453"> --stakes med|high</text><text x="938" y="966" class="sub">一次資料照合＋gate</text>
+<rect x="1144" y="888" width="232" height="92" rx="9" fill="#eef3fa" stroke="#cfe0f5"/><text x="1154" y="908" font-weight="800" fill="#1f5fb0">4-5 commit / release</text><text x="1154" y="928" class="mono" fill="#3a4453">git add -- &lt;自分のitem&gt;（add -A禁止）</text><text x="1154" y="947" class="mono" fill="#3a4453">agcoord release --status</text><text x="1154" y="966" class="sub">done | needs_review | weak</text>
+</g>
+<g font-size="11.5">
+<rect x="64" y="1000" width="640" height="80" rx="9" fill="#eef1f5" stroke="#d8dee6"/><text x="74" y="1020" font-weight="800" class="t">6 メタ自己改善（K wake に1回・lock __meta__）</text><text x="74" y="1040" class="mono" fill="#3a4453">agmeta propose --layer → 別管理者 validate → method自動 / gate・invariant人間署名 → git可逆適用 → 効果測定</text><text x="74" y="1062" class="sub">観測（人間訂正・過程の繰返し失敗）を learning に変換。correct が人間訂正を捨てず自動接続。</text>
+<rect x="720" y="1000" width="656" height="80" rx="9" fill="#fff6ec" stroke="#f2d8b6"/><text x="730" y="1020" font-weight="800" fill="#c0691b">7 tripwire / 再起動</text><text x="730" y="1040" class="t">中心方針・gate変更・高重要未確認・完了直前 ＝ 人間ゲート（ScheduleWakeup 呼ばず PushNotification）</text><text x="730" y="1062" class="sub">それ以外 ＝ ScheduleWakeup(directive.next_wake_s) で次 wake、または stop。</text>
+</g>
+
+<!-- ===================== VERIFY/REPAIR STATE MACHINE ===================== -->
+<text x="44" y="1126" font-size="13" font-weight="800" fill="#9aa3b0">④ 検証→有界 repair の状態機械（exit code で構造強制）</text>
+<rect x="44" y="1138" width="690" height="320" rx="14" fill="#fff" stroke="#e4e8ee" filter="url(#s)"/>
+<!-- nodes -->
+<rect x="70" y="1166" width="150" height="56" rx="10" fill="#eef7f0" stroke="#bfe3cd"/><text x="145" y="1190" font-size="12.5" font-weight="800" fill="#1f7a3d" text-anchor="middle">verify</text><text x="145" y="1208" font-size="10.5" class="sub" text-anchor="middle">verifier≠author?</text>
+<rect x="70" y="1262" width="150" height="50" rx="10" fill="#fdeceb" stroke="#eebcb7"/><text x="145" y="1284" font-size="11.5" font-weight="800" fill="#c0392b" text-anchor="middle">blocked_self_verify</text><text x="145" y="1300" font-size="10.5" class="mono" fill="#c0392b" text-anchor="middle">exit 4</text>
+<rect x="300" y="1166" width="150" height="56" rx="10" fill="#eef7f0" stroke="#bfe3cd"/><text x="375" y="1190" font-size="12.5" font-weight="800" fill="#1f7a3d" text-anchor="middle">pass</text><text x="375" y="1208" font-size="10.5" class="sub" text-anchor="middle">resolve_open_repairs</text>
+<rect x="300" y="1262" width="150" height="56" rx="10" fill="#fff6ec" stroke="#f2d8b6"/><text x="375" y="1284" font-size="12.5" font-weight="800" fill="#c0691b" text-anchor="middle">fail → repair票</text><text x="375" y="1302" font-size="10.5" class="sub" text-anchor="middle">attempt += 1</text>
+<rect x="300" y="1362" width="150" height="56" rx="10" fill="#f3eefb" stroke="#ddd1f3"/><text x="375" y="1384" font-size="12" font-weight="800" fill="#6b46c1" text-anchor="middle">repair-next→再委譲</text><text x="375" y="1402" font-size="10.5" class="sub" text-anchor="middle">repair_prompt で Codex</text>
+<rect x="530" y="1362" width="170" height="56" rx="10" fill="#fdeceb" stroke="#eebcb7"/><text x="615" y="1384" font-size="12" font-weight="800" fill="#7a1d1a" text-anchor="middle">escalate（人間）</text><text x="615" y="1402" font-size="10.5" class="mono" fill="#c0392b" text-anchor="middle">attempt&gt;max → exit 5</text>
+<!-- edges -->
+<path d="M145,1222 L145,1260" stroke="#c0392b" stroke-width="2" marker-end="url(#ar)"/><text x="158" y="1246" font-size="10" fill="#c0392b">同一なら</text>
+<path d="M220,1194 L298,1194" stroke="#1f7a3d" stroke-width="2" marker-end="url(#a)"/><text x="246" y="1186" font-size="10" fill="#1f7a3d">独立OK</text>
+<path d="M375,1222 L375,1260" stroke="#c0691b" stroke-width="2" marker-end="url(#am)"/><text x="388" y="1246" font-size="10" fill="#c0691b">fail</text>
+<path d="M375,1318 L375,1360" stroke="#c0691b" stroke-width="2" marker-end="url(#am)"/>
+<path d="M450,1390 L528,1390" stroke="#7a1d1a" stroke-width="2" marker-end="url(#ar)"/>
+<path d="M375,1418 C375,1450 230,1450 220,1300 L220,1290" fill="none" stroke="#6b46c1" stroke-width="1.6" stroke-dasharray="5 3" marker-end="url(#a)"/><text x="250" y="1444" font-size="10" fill="#6b46c1">再検証（独立・有界）</text>
+<text x="375" y="1340" font-size="10.5" class="sub" text-anchor="middle">pass なら open repair を resolved</text>
+<!-- repairs table fields -->
+<text x="466" y="1190" font-size="11" font-weight="800" class="t">repairs 表</text>
+<text x="466" y="1208" font-size="10" class="mono" fill="#5b6573">id, ts, team, item, trace_id,</text>
+<text x="466" y="1224" font-size="10" class="mono" fill="#5b6573">failure_class, failure_detail,</text>
+<text x="466" y="1240" font-size="10" class="mono" fill="#5b6573">repair_prompt, attempt,</text>
+<text x="466" y="1256" font-size="10" class="mono" fill="#5b6573">max_attempts, status, span_id</text>
+<text x="70" y="1438" font-size="10.5" class="sub">item_author = 最新 dispatch span の agent（無ければ claim span の agent）。stakes 中以上で verifier==author を拒否。</text>
+
+<!-- ===================== MESSAGING ===================== -->
+<text x="752" y="1126" font-size="13" font-weight="800" fill="#9aa3b0">⑤ messaging（v5）＝ message ≠ authority</text>
+<rect x="752" y="1138" width="644" height="320" rx="14" fill="#fff" stroke="#e4e8ee" filter="url(#s)"/>
+<text x="772" y="1164" font-size="12" font-weight="800" class="t">構造保証：msg 動詞は <tspan fill="#1f5fb0" class="mono">messages + spans</tspan> のみに書く</text>
+<text x="772" y="1182" font-size="11.5" class="sub">control 表（claims / repairs / learnings）には一切触れない。</text>
+
+<text x="772" y="1212" font-size="11.5" font-weight="800" fill="#1f7a3d">許可 kind（情報を運ぶ）</text>
+<g font-size="10.5" class="mono">
+<rect x="772" y="1220" width="604" height="58" rx="8" fill="#eef7f0"/>
+<text x="784" y="1238" fill="#1f7a3d">ask_help · finding · warning · replan · repair_brief · verify_question</text>
+<text x="784" y="1256" fill="#1f7a3d">verify_answer · critique_request · cfp · bid · inform · propose · note</text>
+<text x="784" y="1272" fill="#5b6573">authority ∈ {info, question, proposal, request, display_only}</text>
+</g>
+
+<text x="772" y="1304" font-size="11.5" font-weight="800" fill="#c0392b">禁止 kind（権限を運ぼうとする）→ exit 4 拒否</text>
+<g font-size="10.5" class="mono">
+<rect x="772" y="1312" width="604" height="42" rx="8" fill="#fdeceb"/>
+<text x="784" y="1330" fill="#c0392b">verify_pass · gate_change · integration_write</text>
+<text x="784" y="1346" fill="#c0392b">award_authority · claim · release</text>
+</g>
+<text x="772" y="1380" font-size="11.5" font-weight="800" fill="#c0691b">broadcast = deny-default</text>
+<text x="772" y="1398" font-size="11" class="sub">人間署名が無ければ audience を viewer へ格下げ（agent prompt を汚染しない）。</text>
+<text x="772" y="1424" font-size="11.5" font-weight="800" class="t">Phase2 theatre（swarm_theatre.py）</text>
+<text x="772" y="1442" font-size="11" class="sub">読取専用ライブ劇場：do_POST=0・mode=ro・/feed のみ＝<tspan font-weight="700">見世物であって制御でない</tspan>。</text>
+
+<!-- ===================== AGCOORD ===================== -->
+<text x="44" y="1490" font-size="13" font-weight="800" fill="#9aa3b0">⑥ agcoord ＝ identity ＋ claims ＋ integration lock</text>
+<rect x="44" y="1502" width="440" height="250" rx="14" fill="#fff" stroke="#e4e8ee" filter="url(#s)"/>
+<text x="64" y="1528" font-size="12" font-weight="800" fill="#1f5fb0">identity（自己採番）</text>
+<text x="64" y="1548" font-size="11" class="sub">register＝mgr-1,2… を自動採番／per-process token で wake 跨ぎ sticky／lease で死番再利用。</text>
+<text x="64" y="1582" font-size="12" font-weight="800" fill="#1f5fb0">claims（atomic 相互排他）</text>
+<g font-size="10.5" class="mono" fill="#3a4453">
+<text x="64" y="1602">claim / claim-next / renew / release</text>
+<text x="64" y="1620">BEGIN IMMEDIATE で勝者1人・expires_at で lease</text>
+<text x="64" y="1638">status: held | released | expired</text>
+</g>
+<text x="64" y="1668" font-size="12" font-weight="800" fill="#1f5fb0">integration lock（単一書き手）</text>
+<text x="64" y="1688" font-size="11" class="sub">lock/unlock __integration__ ＝ 統合フェーズは1管理者のみ書込。</text>
+<text x="64" y="1718" font-size="10.5" class="sub">item 検証 regex = ^[\w.:-]{1,80}$（re.UNICODE＝日本語章名可）。work-item は任意文字列＝プロジェクト非依存。</text>
+
+<!-- ===================== AGMETA ===================== -->
+<text x="504" y="1490" font-size="13" font-weight="800" fill="#9aa3b0">⑦ agmeta ＝ 再帰自己改善のルーティング</text>
+<rect x="504" y="1502" width="440" height="250" rx="14" fill="#fff" stroke="#e4e8ee" filter="url(#s)"/>
+<text x="524" y="1528" font-size="11.5" class="t">観測（人間訂正・過程の繰返し失敗）→ propose → 別Opus validate → 分類で行き先決定：</text>
+<g font-size="11.5">
+<rect x="524" y="1544" width="400" height="40" rx="8" fill="#eef7f0"/><text x="536" y="1562" font-weight="800" fill="#1f7a3d">layer=method</text><text x="536" y="1578" class="sub" font-size="10.5">helps 同意 → proposed → 自動適用（git 可逆）</text>
+<rect x="524" y="1590" width="400" height="40" rx="8" fill="#fdeceb"/><text x="536" y="1608" font-weight="800" fill="#c0392b">layer=gate / invariant</text><text x="536" y="1624" class="sub" font-size="10.5">→ pending_human（人間サインオフ必須）</text>
+<rect x="524" y="1636" width="400" height="36" rx="8" fill="#eef1f5"/><text x="536" y="1658" font-weight="800" class="sub">layer=unknown / 分類割れ → pending_human（安全側）</text>
+</g>
+<text x="524" y="1700" font-size="12" font-weight="800" fill="#c0392b">★ システムは自分の物差し（gate）を自分で緩められない</text>
+<text x="524" y="1720" font-size="11" class="sub">＝Goodhart 腐敗の構造的防止。tables: events, learnings, human_corrections。</text>
+
+<!-- ===================== OBSERVABILITY ===================== -->
+<text x="964" y="1490" font-size="13" font-weight="800" fill="#9aa3b0">⑧ 観測（trace / span）</text>
+<rect x="964" y="1502" width="432" height="250" rx="14" fill="#fff" stroke="#e4e8ee" filter="url(#s)"/>
+<text x="984" y="1528" font-size="11.5" class="t">全動詞が span を自動記録＝因果が追える。</text>
+<text x="984" y="1556" font-size="11" font-weight="800" class="t">spans 列</text>
+<g font-size="10.5" class="mono" fill="#3a4453">
+<text x="984" y="1576">id, trace_id, span_id, ts, team,</text>
+<text x="984" y="1594">agent, role, verb, work_item,</text>
+<text x="984" y="1612">status, guardrail_result, detail</text>
+</g>
+<text x="984" y="1644" font-size="11" class="sub">start-trace で trace を開き、claim/dispatch/verify/release/</text>
+<text x="984" y="1662" font-size="11" class="sub">tick/repair/msg が同一 trace にぶら下がる。</text>
+<text x="984" y="1694" font-size="11" font-weight="800" class="t">実走例（本図の生成系）</text>
+<text x="984" y="1714" font-size="10.5" class="mono" fill="#5b6573">work→await_work→repair→再verify→stop</text>
+<text x="984" y="1732" font-size="10.5" class="sub">9章並列→独立verify→1件repair→自己終了。</text>
+
+<!-- ===================== DB SCHEMA ===================== -->
+<text x="44" y="1790" font-size="13" font-weight="800" fill="#9aa3b0">⑨ 単一 SQLite（WAL・busy_timeout=8000）＝ 8 表で全状態を外部化（agmsg の messages.db と同居・非破壊）</text>
+<g font-size="10.5" class="mono">
+<rect x="44" y="1804" width="320" height="92" rx="10" fill="#26303c"/><text x="58" y="1826" fill="#9fd8b4" font-weight="700">claims</text><text x="58" y="1846" fill="#cdd6e2">team,item,agent,status,</text><text x="58" y="1862" fill="#cdd6e2">acquired_at,renewed_at,</text><text x="58" y="1878" fill="#cdd6e2">expires_at,note</text>
+<rect x="376" y="1804" width="320" height="92" rx="10" fill="#26303c"/><text x="390" y="1826" fill="#9fd8b4" font-weight="700">agents</text><text x="390" y="1846" fill="#cdd6e2">team,agent,token,type,</text><text x="390" y="1862" fill="#cdd6e2">expires_at（生存リース・</text><text x="390" y="1878" fill="#cdd6e2">死番 reap）</text>
+<rect x="708" y="1804" width="320" height="92" rx="10" fill="#1f3a5c"/><text x="722" y="1826" fill="#bcd2ec" font-weight="700">spans</text><text x="722" y="1846" fill="#cdd6e2">trace_id,span_id,verb,</text><text x="722" y="1862" fill="#cdd6e2">agent,role,work_item,</text><text x="722" y="1878" fill="#cdd6e2">status,guardrail_result</text>
+<rect x="1040" y="1804" width="356" height="92" rx="10" fill="#3a2a5c"/><text x="1054" y="1826" fill="#d3c3ee" font-weight="700">messages</text><text x="1054" y="1846" fill="#cdd6e2">from_agent,to_agent,kind,</text><text x="1054" y="1862" fill="#cdd6e2">body,authority,audience,</text><text x="1054" y="1878" fill="#cdd6e2">trace_id,work_item,read_at</text>
+
+<rect x="44" y="1906" width="320" height="92" rx="10" fill="#5c3a1a"/><text x="58" y="1928" fill="#f0cfa6" font-weight="700">repairs</text><text x="58" y="1948" fill="#e8d8c4">item,trace_id,failure_class,</text><text x="58" y="1964" fill="#e8d8c4">repair_prompt,attempt,</text><text x="58" y="1980" fill="#e8d8c4">max_attempts,status,span_id</text>
+<rect x="376" y="1906" width="320" height="92" rx="10" fill="#1f4d36"/><text x="390" y="1928" fill="#b6e3c8" font-weight="700">learnings</text><text x="390" y="1948" fill="#cde8d8">layer,text,status,</text><text x="390" y="1964" fill="#cde8d8">proposed_by,validated_by,</text><text x="390" y="1980" fill="#cde8d8">status∈{proposed,pending_human,active}</text>
+<rect x="708" y="1906" width="320" height="92" rx="10" fill="#1f4d36"/><text x="722" y="1928" fill="#b6e3c8" font-weight="700">events</text><text x="722" y="1948" fill="#cde8d8">team,agent,kind,outcome,</text><text x="722" y="1964" fill="#cde8d8">ts（メトリクス源）</text>
+<rect x="1040" y="1906" width="356" height="92" rx="10" fill="#5c1f1f"/><text x="1054" y="1928" fill="#f0c0bc" font-weight="700">human_corrections</text><text x="1054" y="1948" fill="#e8cccc">by_who,text,item,layer,</text><text x="1054" y="1964" fill="#e8cccc">trace_id,span_id（correct で</text><text x="1054" y="1980" fill="#e8cccc">learning に自動変換）</text>
+</g>
+
+<!-- ===================== INVARIANTS FOOTER ===================== -->
+<text x="44" y="2042" font-size="13" font-weight="800" fill="#9aa3b0">⑩ 固定レール（invariant・自己改変不可・構造で強制）</text>
+<g font-size="12">
+<rect x="44" y="2056" width="262" height="58" rx="11" fill="#26303c"/><text x="175" y="2080" fill="#fff" font-weight="700" text-anchor="middle">実行＝Codex のみ</text><text x="175" y="2099" fill="#9fb0c4" font-size="10.5" text-anchor="middle">Opus は leaf 実行者にならない</text>
+<rect x="318" y="2056" width="262" height="58" rx="11" fill="#26303c"/><text x="449" y="2080" fill="#fff" font-weight="700" text-anchor="middle">検証は委譲不可</text><text x="449" y="2099" fill="#9fb0c4" font-size="10.5" text-anchor="middle">書き手≠検証者 / 自己検証 exit4</text>
+<rect x="592" y="2056" width="262" height="58" rx="11" fill="#26303c"/><text x="723" y="2080" fill="#fff" font-weight="700" text-anchor="middle">統合＝単一書き手</text><text x="723" y="2099" fill="#9fb0c4" font-size="10.5" text-anchor="middle">integration lock</text>
+<rect x="866" y="2056" width="262" height="58" rx="11" fill="#26303c"/><text x="997" y="2080" fill="#fff" font-weight="700" text-anchor="middle">message ≠ authority</text><text x="997" y="2099" fill="#9fb0c4" font-size="10.5" text-anchor="middle">禁止kind exit4 / control非更新</text>
+<rect x="1140" y="2056" width="256" height="58" rx="11" fill="#7a1d1a"/><text x="1268" y="2080" fill="#fff" font-weight="700" text-anchor="middle">物差し変更＝人間署名</text><text x="1268" y="2099" fill="#f0c9c5" font-size="10.5" text-anchor="middle">gate / invariant</text>
+</g>
+<line x1="44" y1="2146" x2="1396" y2="2146" stroke="#e4e8ee"/>
+<text x="44" y="2172" font-size="12.5" class="sub">深さ ≤5（既定≤3）・幅 ≤6・最安構造が既定・wide&gt;deep ／ プロジェクト差し替えは4つだけ：work-item・内核(Codexタスク仕様)・完了条件(DoD)・gate。シェルは不変。</text>
+<text x="44" y="2196" font-size="12.5" font-weight="800" class="t">ループの“プロンプトの重み”は方向の増幅器 ─ 自己終了＋毎wakeのレール再ロード＋人間署名ゲートと結合して初めて、複利で品質を上げる機構になる。</text>
+</svg>

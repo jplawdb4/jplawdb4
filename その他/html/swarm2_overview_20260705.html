@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>swarm2 全体像 — 品質最優先・汎用スワーム</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif; background:#f5f5f5; color:#1a2332; line-height:1.75; font-size:15px; }
+  .wrap { max-width:960px; margin:0 auto; padding:32px 16px 64px; }
+  header { background:linear-gradient(135deg,#0f2540 0%,#1d4e6b 100%); color:#fff; border-radius:14px; padding:36px 32px; box-shadow:0 4px 16px rgba(15,37,64,.25); margin-bottom:28px; }
+  header h1 { font-size:26px; letter-spacing:.04em; }
+  header p.sub { margin-top:10px; font-size:14px; opacity:.92; }
+  header .thesis { margin-top:18px; background:rgba(255,255,255,.12); border-left:4px solid #7fd1c8; padding:12px 16px; border-radius:6px; font-size:14.5px; }
+  .card { background:#fff; border-radius:12px; box-shadow:0 2px 10px rgba(20,40,70,.08); padding:28px 28px; margin-bottom:26px; }
+  h2 { font-size:19px; color:#0f2540; border-bottom:3px solid #1d4e6b; padding-bottom:8px; margin-bottom:18px; letter-spacing:.03em; }
+  h2 .no { display:inline-block; background:#1d4e6b; color:#fff; border-radius:6px; font-size:13px; padding:2px 10px; margin-right:10px; vertical-align:2px; }
+  h3 { font-size:15.5px; color:#1d4e6b; margin:18px 0 8px; }
+  p { margin-bottom:10px; }
+  .lead { font-size:15px; color:#33475e; margin-bottom:16px; }
+  /* 役割トポロジ */
+  .topo { display:flex; flex-direction:column; gap:0; align-items:center; margin:18px 0; }
+  .tbox { width:100%; max-width:640px; border-radius:10px; padding:14px 18px; text-align:center; }
+  .tbox b { display:block; font-size:15px; }
+  .tbox span { font-size:13px; color:#44586e; }
+  .t-human { background:#fdf3e3; border:2px solid #d9a441; }
+  .t-opus  { background:#e8f1f8; border:2px solid #1d4e6b; }
+  .t-codex { background:#eaf6f0; border:2px solid #2e8b6e; }
+  .t-arrow { font-size:20px; color:#7a8ba0; padding:2px 0; text-align:center; }
+  .t-note { font-size:12.5px; color:#7a6a45; background:#fbf7ee; border-radius:8px; padding:8px 14px; margin-top:10px; max-width:640px; }
+  .lane-row { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; max-width:640px; }
+  .lane { background:#eaf6f0; border:1.5px solid #2e8b6e; border-radius:8px; padding:6px 10px; font-size:12.5px; color:#1d5b46; }
+  /* ラダー */
+  .ladder { display:flex; flex-direction:column-reverse; gap:6px; margin:16px 0; }
+  .rung { display:flex; align-items:stretch; gap:0; border-radius:8px; overflow:hidden; box-shadow:0 1px 4px rgba(20,40,70,.08); }
+  .rung .lv { flex:0 0 64px; display:flex; align-items:center; justify-content:center; font-weight:bold; color:#fff; font-size:14px; }
+  .rung .desc { flex:1; background:#fff; border:1px solid #dde6ee; border-left:none; padding:8px 14px; font-size:13.5px; }
+  .rung .desc b { color:#0f2540; }
+  .lv0{background:#8fa6ba}.lv1{background:#5f86a3}.lv2{background:#41708f}.lv3{background:#2e5f80}.lv4{background:#c2703e}.lv5{background:#a85a32}.lv6{background:#1d4e6b}.lv7{background:#0f2540}
+  .stakes { display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
+  .stake { flex:1 1 220px; background:#f3f7fb; border-radius:8px; padding:10px 14px; font-size:13px; border-top:3px solid #1d4e6b; }
+  /* フロー */
+  .flow { display:flex; flex-direction:column; gap:0; margin:14px 0; }
+  .fstep { display:flex; gap:14px; align-items:flex-start; }
+  .fnum { flex:0 0 34px; height:34px; border-radius:50%; background:#1d4e6b; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:14px; margin-top:2px; }
+  .fbody { flex:1; background:#f8fafc; border:1px solid #e2e9f0; border-radius:8px; padding:10px 16px; margin-bottom:6px; }
+  .fbody b { color:#0f2540; }
+  .fbody .det { font-size:13px; color:#44586e; margin-top:2px; }
+  .fline { flex:0 0 34px; text-align:center; color:#9db0c2; font-size:16px; line-height:1; padding:0 0 6px; }
+  .warnbox { background:#fdf0ee; border-left:4px solid #c0533e; border-radius:6px; padding:10px 16px; font-size:13.5px; margin:10px 0; }
+  .okbox { background:#eefaf3; border-left:4px solid #2e8b6e; border-radius:6px; padding:10px 16px; font-size:13.5px; margin:10px 0; }
+  /* レール表 */
+  table { width:100%; border-collapse:collapse; font-size:13.5px; margin:12px 0; }
+  th { background:#0f2540; color:#fff; padding:8px 12px; text-align:left; font-weight:600; }
+  td { border:1px solid #dde6ee; padding:8px 12px; background:#fff; vertical-align:top; }
+  tr:nth-child(even) td { background:#f7fafc; }
+  .tablewrap { overflow-x:auto; }
+  /* 上限下限図 */
+  .bounds { display:flex; flex-direction:column; gap:10px; margin:16px 0; }
+  .bband { border-radius:10px; padding:14px 18px; }
+  .b-up   { background:#fdf3e3; border:2px dashed #d9a441; }
+  .b-mid  { background:#e8f1f8; border:2px solid #1d4e6b; }
+  .b-low  { background:#f0f2f5; border:2px solid #8fa6ba; }
+  .bband b { display:block; font-size:14.5px; color:#0f2540; }
+  .bband span { font-size:13px; color:#44586e; }
+  .btag { display:inline-block; font-size:11.5px; border-radius:5px; padding:1px 8px; color:#fff; margin-left:8px; vertical-align:1px; }
+  .tag-open{background:#c2703e}.tag-done{background:#2e8b6e}
+  /* 教訓 */
+  .lesson { display:flex; gap:12px; margin-bottom:10px; }
+  .lesson .ic { flex:0 0 26px; font-size:17px; text-align:center; }
+  .lesson .tx { flex:1; font-size:13.5px; background:#f8fafc; border:1px solid #e2e9f0; border-radius:8px; padding:8px 14px; }
+  .lesson .tx b { color:#0f2540; }
+  code { background:#eef2f6; border-radius:4px; padding:1px 6px; font-size:12.5px; font-family:Consolas,Menlo,monospace; color:#204a68; }
+  .foot { text-align:center; font-size:12px; color:#8b99a8; margin-top:24px; }
+  @media print {
+    body { background:#fff; font-size:12px; }
+    .card { box-shadow:none; border:1px solid #ccc; page-break-inside:avoid; }
+    header { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  }
+  @media (max-width:600px){
+    .card{padding:18px 14px} header{padding:24px 18px}
+    .rung .lv{flex-basis:48px}
+  }
+</style>
+</head>
+<body>
+<div class="idx-nav" style="max-width:840px;margin:12px auto 0;padding:0 12px;font-family:sans-serif;font-size:12.5px;"><a href="../index.html" style="color:#5a2d82;text-decoration:none;border-bottom:1px dotted #5a2d82;">&#8592; 成果物インデックスへ</a></div>
+<div class="wrap">
+
+<header>
+  <h1>swarm2 — 品質最優先・汎用スワーム 全体像</h1>
+  <p class="sub">複数のAI実行体を「狂気的粒度の仕様 × 独立検証 × 敵対的批評 × 有界修理」の反復構造で束ね、単発生成では届かない品質を作る運用フレームワーク（2026年7月版）</p>
+  <div class="thesis">設計思想：品質は「才能ある1回の生成」からは生まれない。<b>仕様の粒度が出力品質の上限を決め、独立検証が下限を保証する。</b>速度ではなく品質を最適化する。</div>
+</header>
+
+<div class="card">
+  <h2><span class="no">1</span>役割トポロジ — 誰が何をするか</h2>
+  <p class="lead">三層構造。設計と実行を完全に分離し、「書いた者が自分を検証しない」ことを構造で強制する。</p>
+  <div class="topo">
+    <div class="tbox t-human"><b>人間（操舵・裁定）</b><span>ゴール設定／違和感の指摘／採用・棄却の最終裁定／gate・invariant変更のサインオフ／ラダー省略の唯一の許可者</span></div>
+    <div class="t-arrow">▼ 指示・違和感　▲ 台帳・納品</div>
+    <div class="tbox t-opus"><b>主宰Claude（設計・検証・統合層）</b><span>GOAL契約／分解／spec card執筆／委譲／稼働監視／逐語の一次照合／裁定案／単一書き手としての統合／QA</span></div>
+    <div class="t-arrow">▼ spec card一式　▲ 逐語＋出典つき候補</div>
+    <div class="lane-row">
+      <div class="lane">Codex #1<br>調査</div>
+      <div class="lane">Codex #2<br>起草</div>
+      <div class="lane">Codex #3<br>根拠紐付け</div>
+      <div class="lane">Codex #4<br>棚卸し</div>
+      <div class="lane">Codex #5<br>敵対的批評</div>
+      <div class="lane">… #N<br>並列</div>
+    </div>
+    <div class="tbox t-codex" style="margin-top:8px"><b>Codex exec（唯一の実行者・使い捨て並列）</b><span>1タスク=1プロセス。ローカルDB精読／ウェブDR／逐語抽出。<b>すべての主張に「逐語＋出典（パス・行番号）」を義務付け</b>、付けられない主張はその場で死ぬ</span></div>
+    <div class="t-note">⚠ 本プロジェクト例外：論文本文の「声」は主宰が手書きする（文体は人間と主宰の共同作品であり、実行体に書かせた瞬間に死ぬため）。swarm2が最強なのは<b>成果物が「証拠」であるとき</b>。成果物が「声」であるときは、収穫と検証だけを艦隊に任せる。</div>
+  </div>
+</div>
+
+<div class="card">
+  <h2><span class="no">2</span>品質ラダー L0–L7 — 成果物が昇る階段</h2>
+  <p class="lead">未検証の成果物は存在しないのと同じ。下から順に昇り、途中の段の省略は人間だけが許可できる。</p>
+  <div class="ladder">
+    <div class="rung"><div class="lv lv0">L0</div><div class="desc"><b>spec</b> — 主宰がspec cardを書く（目的／入力／出力スキーマ／根拠要求／禁止／gate／反証質問）。曖昧な指示は実行体の平均品質しか引き出さない</div></div>
+    <div class="rung"><div class="lv lv1">L1</div><div class="desc"><b>draft</b> — Codexが起草（spec card全文をプロンプトに）</div></div>
+    <div class="rung"><div class="lv lv2">L2</div><div class="desc"><b>evidence</b> — 全主張に一次資料の所在＋逐語を紐付け。根拠なき主張はここで死ぬ</div></div>
+    <div class="rung"><div class="lv lv3">L3</div><div class="desc"><b>verify</b> — 独立検証（書き手≠検証者）。逐語を原典で再グレップ（count==1照合）、事実照合＋機械チェック</div></div>
+    <div class="rung"><div class="lv lv4">L4</div><div class="desc"><b>critique</b> — 敵対的批評。stakes高はレンズ違いN≥2並列（正確性／完全性／論理／様式）。反駁されなければ昇格</div></div>
+    <div class="rung"><div class="lv lv5">L5</div><div class="desc"><b>repair</b> — fail→有界の修理チケット→再委譲→独立再検証。上限超過は人間へエスカレーション</div></div>
+    <div class="rung"><div class="lv lv6">L6</div><div class="desc"><b>integrate</b> — 単一書き手（ロック）が統合。横断一貫性チェック（用語／参照／重複）</div></div>
+    <div class="rung"><div class="lv lv7">L7</div><div class="desc"><b>audit</b> — 完成主張の前の全体監査。completeness critic「何が欠けているか」＋DoDルーブリック採点</div></div>
+  </div>
+  <div class="stakes">
+    <div class="stake"><b>stakes低</b>：L3まで（照合のみ）</div>
+    <div class="stake"><b>stakes中</b>：L4を1レンズ</div>
+    <div class="stake"><b>stakes高</b>：L4をN≥2レンズ＋L7必須</div>
+  </div>
+</div>
+
+<div class="card">
+  <h2><span class="no">3</span>1ラウンドのライフサイクル — 実戦の型</h2>
+  <div class="flow">
+    <div class="fstep"><div class="fnum">1</div><div class="fbody"><b>GOAL契約</b><div class="det">完了を「分布」で定義（例：留保ゼロ・各セルに検証済み注）。AIで閉じられない要素は非目標へ切出し。緊急停止条項（架空引用が本文に入りそうなら停止）</div></div></div>
+    <div class="fline">▼</div>
+    <div class="fstep"><div class="fnum">2</div><div class="fbody"><b>分解 → spec card群</b><div class="det">視角の設計がここで決まる（例：4法域×3視角＝12レーン、五原理×三感覚）。同一プロンプト×N体より、レンズを変えたN体</div></div></div>
+    <div class="fline">▼</div>
+    <div class="fstep"><div class="fnum">3</div><div class="fbody"><b>一斉投入</b><div class="det"><code>codex exec --skip-git-repo-check -c model_reasoning_effort=xhigh "…" &lt;/dev/null &gt; L1.out 2&gt;&amp;1 &amp;</code>＋末尾<code>wait</code>。読み順固定：①PROJECT_CONTEXT.md ②SPEC該当節 ③チャンク。ウェブDRはmedium＋完了優先指示＋timeout 720s</div></div></div>
+    <div class="fline">▼</div>
+    <div class="fstep"><div class="fnum">4</div><div class="fbody"><b>60秒稼働確認（省略不可のinvariant）</b><div class="det"><code>codex_watch.sh</code>：プロセス生存数＋バイト成長（15秒2サンプル）＋致命マーカー。<b>HANG?はプロセス数が合っていれば90秒後に再判定</b>（生きているレーンへの再投は二重書き事故）。10分超は10分毎に再確認</div></div></div>
+    <div class="fline">▼</div>
+    <div class="fstep"><div class="fnum">5</div><div class="fbody"><b>収穫</b><div class="det">.outの最後の応答マーカー以降を切出し、<code>LANE=Xn DONE</code>と致命マーカー不在を確認。候補は「主張／逐語／出典／使い所／注文案／信頼度」の定型ブロック</div></div></div>
+    <div class="fline">▼</div>
+    <div class="fstep"><div class="fnum">6</div><div class="fbody"><b>主宰による一次照合（ここが品質の心臓）</b><div class="det">効かせる引用は全数、原典を開いて文脈ごと確認。艦隊の報告は「ほぼ正しいが決定的に逆」があり得る（実例：判示の帰属反転を照合で検出→修正の結果むしろ強い論拠に転化）</div></div></div>
+    <div class="fline">▼</div>
+    <div class="fstep"><div class="fnum">7</div><div class="fbody"><b>裁定 → 台帳</b><div class="det">採用／棄却を理由つきで台帳化（棄却率6割は正常）。人間の違和感指摘も同じ台帳に合流させ、波（第一波・第二波…）として一括適用</div></div></div>
+    <div class="fline">▼</div>
+    <div class="fstep"><div class="fnum">8</div><div class="fbody"><b>統合（単一書き手）→ QAゲート → 凍結</b><div class="det">注の定義=参照の完全一致／保護句（鋳造文・環構造）不変／禁止語ゼロ／字数。一版一ファイル、旧版はchmod 444＋_history保存。ビルド→ベイク→匿名化→TOC照合→納品</div></div></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2><span class="no">4</span>固定レール — 自己改変できない不変条件</h2>
+  <div class="tablewrap"><table>
+    <tr><th style="width:36%">レール</th><th>理由</th></tr>
+    <tr><td>実行はCodexのみ／仕様なき委譲禁止</td><td>仕様の粒度が品質上限を決める。丸投げは平均品質しか返さない</td></tr>
+    <tr><td>書き手≠検証者（stakes中以上）</td><td>自己検証は構造的に甘くなる。検証は委譲不可・本人性照合つき</td></tr>
+    <tr><td>統合は単一書き手（ロック）</td><td>多人数統合は用語と声の一貫性を壊す</td></tr>
+    <tr><td>ネスト深さ≤3・幅≤6・wide&gt;deep</td><td>深い階層は責任と文脈を薄める</td></tr>
+    <tr><td>dispatch後60秒の稼働確認は省略不可</td><td>失敗は全て無音で起きる。「投げたら信じる」は過去に1時間の空費を生んだ</td></tr>
+    <tr><td>gate・invariant・DoD変更とラダー省略は人間サインオフのみ</td><td>品質基準を作業者が自分で緩められる構造にしない</td></tr>
+  </table></div>
+</div>
+
+<div class="card">
+  <h2><span class="no">5</span>実戦教訓 — 血で書かれたLESSONS（抜粋）</h2>
+  <div class="lesson"><div class="ic">🔇</div><div class="tx"><b>失敗は全部無音。</b>stdinハング（背景並列は<code>&lt;/dev/null</code>必須）、認証切れ、レート制限の起動ブロック——いずれもエラー表示なしで全滅する。だから稼働確認がinvariant</div></div>
+  <div class="lesson"><div class="ic">🌊</div><div class="tx"><b>レート制限バースト。</b>重負荷（xhigh十数本）稼働中に新規セッションを一斉投入すると、起動段階で無音ブロックされ得る。対策＝スタガ起動＋起動プローブ（30秒×6回で200バイト超を確認）＋空き枠監視のキュー投入</div></div>
+  <div class="lesson"><div class="ic">⏳</div><div class="tx"><b>HANG?は90秒待て。</b>xhighは初期化が遅い。プロセス数が期待どおりなら再判定してから再投する。生きているレーンへの再投は.outを二重書きで壊す（実例：796バイト→90秒後に1.1MBへ急伸）</div></div>
+  <div class="lesson"><div class="ic">🧪</div><div class="tx"><b>艦隊は再現率、主宰は精度。</b>実行体は事件番号・書誌・判示の帰属を誤り得る（実例：存在しない構成変更の提案×3、判示の文脈反転）。逐語＋出典義務→一次照合、の二段でのみ両立する</div></div>
+  <div class="lesson"><div class="ic">✂️</div><div class="tx"><b>診断と執筆を分ける。</b>「文案は書くな、位置と診断だけ出せ」と指定したレーンが最高の費用対効果を出した（「新規に足すべきは2命題だけ」という診断が最小・最強の加筆を導いた）</div></div>
+  <div class="lesson"><div class="ic">💥</div><div class="tx"><b>pkillの自己マッチ。</b>検索パターンが自分のコマンドライン文字列に一致して自分のシェルを殺す。<code>pkill -f "パターン[最後の1字]"</code>のブラケット法で回避</div></div>
+</div>
+
+<div class="card">
+  <h2><span class="no">6</span>品質の上限と下限 — このシェルの守備範囲</h2>
+  <p class="lead">検証・QAは誤りを<b>除く</b>装置であって、良さを<b>足す</b>装置ではない。品質の上限はシェルの前段で決まる。</p>
+  <div class="bounds">
+    <div class="bband b-up"><b>前段（品質の上限を決める層）<span class="btag tag-open">次の開発フロンティア</span></b>
+      <span>① 問いの精錬（L-1）：レーン投入前に、問いを「名前のつく反証可能な作業仮説」まで磨く　② 素材契約：何に対して逐語照合できるかの在庫表を先に作る（在庫外は非目標か取得フェーズ先行）　③ 裁定コーパス再注入：棄却理由を蒸留して次specの禁止欄に継承　④ 反証設計：調査レーンに仮説を攻撃させる　⑤ 人間の違和感ループ：波→台帳→一括適用の型</span></div>
+    <div class="bband b-mid"><b>シェル＝実行・検証層<span class="btag tag-done">一つの完成版に近い</span></b>
+      <span>spec card規律／並列投入と稼働監視／逐語＋出典義務／独立検証／単一書き手統合／QAゲート。残る問題は設計ではなく配管（無音障害）。ただしこの完成度は「現在のモデル品質・制約への適応」であり、実行体の信頼性が上がれば検証層の何割かは不要になる</span></div>
+    <div class="bband b-low"><b>成果物</b>
+      <span>下限＝検証構造が保証（ハルシネーションを通さない）。上限＝前段の問い・素材・裁定の質が決める</span></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2><span class="no">7</span>プロジェクト適用 — 差し替えは5点だけ</h2>
+  <p class="lead">シェル（協調・ラダー・トポロジ・レール）は不変。対象が変わっても、次の5点だけ差し替えれば動く。</p>
+  <div class="tablewrap"><table>
+    <tr><th>差し替え点</th><th>本プロジェクト（博士論文）での実例</th></tr>
+    <tr><td>work-item</td><td>章別精読／判例束収集／重複検出／比較法4法域×3視角 等</td></tr>
+    <tr><td>spec cardの内核</td><td>「逐語＋パス＋行番号必須／裏取り不能は未確認と明記して降格」等の verify-or-drop 規律</td></tr>
+    <tr><td>DoDルーブリック</td><td>「別稿に譲る」型の留保ゼロ／各セルに検証済み注 等、採点可能な完了条件</td></tr>
+    <tr><td>gate（機械チェック）</td><td>注の定義=参照 完全一致／本文ダッシュゼロ／保護句不変／禁止語ゼロ／匿名グレップ全0</td></tr>
+    <tr><td>L4批評レンズ</td><td>文体憲章の五原理／比喩禁止／判例正確性／様式（学術日本語）</td></tr>
+  </table></div>
+  <p style="font-size:13px;color:#44586e">この5点のうち最大の品質装置は、実は<b>gateとレンズに書かれた「趣味の明文化」</b>（文体憲章・保護層・禁止語）だった。趣味を機械チェック可能な形に書き下ろせた分だけ、艦隊の平均が上がる。</p>
+</div>
+
+<div class="foot">swarm2 全体像 v1.0（2026-07-05現在の運用実態に基づく）</div>
+</div>
+<div class="idx-nav" style="max-width:840px;margin:0 auto 24px;padding:0 12px;font-family:sans-serif;font-size:12.5px;text-align:center;"><a href="../index.html" style="color:#5a2d82;text-decoration:none;border-bottom:1px dotted #5a2d82;">&#8592; 成果物インデックスへ戻る</a></div>
+</body>
+</html>

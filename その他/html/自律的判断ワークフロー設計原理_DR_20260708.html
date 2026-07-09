@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>自律的判断を委ねるワークフローの設計原理</title>
+<style>
+  :root{
+    --ink:#1c2530; --sub:#56606e; --line:#dfe4ea; --bg:#eef1f4; --paper:#fff;
+    --accent:#5a2d82; --accent2:#7a4fa3; --accent-soft:#f2ecf8;
+    --blue:#1f4e79; --blue-soft:#eef3fa; --red:#9e2820; --red-soft:#fbeae8;
+    --green:#1d6b3f; --green-soft:#eaf5ee; --amber:#8a5a00; --amber-soft:#fdf6e6;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Hiragino Mincho ProN","Yu Mincho",YuMincho,"Noto Serif JP",serif;
+    line-height:2.0;font-size:15px;}
+  .paper{max-width:880px;margin:28px auto;background:var(--paper);
+    padding:56px 64px 72px;box-shadow:0 4px 28px rgba(20,30,50,.10);border-radius:4px;}
+  .doctype{font-family:sans-serif;font-size:11.5px;letter-spacing:.16em;color:var(--accent);text-align:center;margin-bottom:8px;}
+  h1.title{font-size:23px;text-align:center;line-height:1.6;margin:6px 0 6px;font-weight:700;}
+  .subtitle{font-size:14.5px;text-align:center;color:var(--sub);margin:0 0 6px;}
+  .meta-line{font-family:sans-serif;font-size:11.5px;text-align:center;color:var(--sub);
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px 0;margin:18px 0 28px;}
+  .abstract{background:var(--accent-soft);border:1px solid #ddd0ec;border-radius:6px;padding:18px 22px;margin:0 0 28px;font-size:14px;}
+  .abstract h3{margin:0 0 8px;font-size:13px;font-family:sans-serif;color:var(--accent);letter-spacing:.08em;}
+  .toc{font-family:sans-serif;font-size:13px;background:#fafbfc;border:1px solid var(--line);border-radius:6px;padding:16px 22px;margin:0 0 30px;}
+  .toc b{color:var(--accent);} .toc ol{margin:8px 0 0;padding-left:22px;} .toc li{margin:4px 0;}
+  .toc a{color:var(--ink);text-decoration:none;} .toc a:hover{color:var(--accent);}
+  h2.h{font-family:sans-serif;font-size:18px;margin:40px 0 14px;padding-bottom:8px;border-bottom:2px solid var(--accent);color:var(--accent);scroll-margin-top:12px;}
+  h2.h .n{color:var(--accent2);margin-right:10px;}
+  h3.sh{font-family:sans-serif;font-size:15px;margin:26px 0 8px;color:var(--blue);font-weight:700;}
+  p{margin:13px 0;text-align:justify;}
+  .key{background:linear-gradient(transparent 62%,#efe3fb 62%);font-weight:700;}
+  .box{border-radius:6px;padding:15px 20px;margin:18px 0;font-size:14px;font-family:sans-serif;line-height:1.85;}
+  .box.thesis{background:var(--accent-soft);border-left:4px solid var(--accent);}
+  .box.note{background:var(--blue-soft);border-left:4px solid var(--blue);}
+  .box.caveat{background:var(--amber-soft);border-left:4px solid var(--amber);}
+  .box.thesis b{color:var(--accent);} .box.note b{color:var(--blue);} .box.caveat b{color:var(--amber);}
+  table{width:100%;border-collapse:collapse;margin:18px 0;font-size:12.8px;font-family:sans-serif;}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top;line-height:1.7;}
+  th{background:var(--accent);color:#fff;font-weight:600;}
+  td.lbl{background:#f6f3fa;font-weight:700;white-space:nowrap;}
+  tr:nth-child(even) td{background:#fafbfc;}
+  .fn-list{border-top:1px solid var(--line);margin-top:36px;padding-top:16px;}
+  .fn-list h3{font-family:sans-serif;font-size:13px;color:var(--accent);letter-spacing:.08em;}
+  .fn-list ol{padding-left:22px;} .fn-list li{margin:6px 0;font-size:12px;color:var(--sub);font-family:sans-serif;word-break:break-all;}
+  .fn-list a{color:var(--blue);text-decoration:none;border-bottom:1px dotted var(--blue);}
+  sup.r{color:var(--accent);font-weight:700;font-size:11px;font-family:sans-serif;}
+  .diagram{border:1px solid var(--line);border-radius:6px;padding:18px;margin:18px 0;background:#fafbfc;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;line-height:1.6;overflow-x:auto;white-space:pre;}
+  footer{font-family:sans-serif;font-size:11.5px;color:var(--sub);margin-top:34px;border-top:1px solid var(--line);padding-top:14px;line-height:1.8;}
+  @media (max-width:680px){.paper{padding:30px 22px;}table{font-size:11.5px;}}
+  @media print{body{background:#fff;}.paper{box-shadow:none;margin:0;max-width:100%;}}
+</style>
+</head>
+<body>
+<div class="idx-nav" style="max-width:840px;margin:12px auto 0;padding:0 12px;font-family:sans-serif;font-size:12.5px;"><a href="../index.html" style="color:#5a2d82;text-decoration:none;border-bottom:1px dotted #5a2d82;">&#8592; 成果物インデックスへ</a></div>
+<div class="paper">
+  <div class="doctype">DEEP RESEARCH ／ AIエージェント設計・ガバナンス</div>
+  <h1 class="title">自律的判断を委ねるワークフローの設計原理<br>― 認知機構・60年の系譜・実装パターン・失敗様式・実運用証拠の総合 ―</h1>
+  <p class="subtitle">ディープリサーチ報告 兼 設計プレイブック</p>
+  <div class="meta-line">2026年7月8日 ／ 証拠台帳162件（verified 156・rejected 3・hold 3）・本文引用はverified行のみ ／ 出典に一次URL・確認日を付す</div>
+<div class="abstract"><h3>要旨（ABSTRACT）</h3><div style="margin:0;">
+<p>AIエージェントに自律的判断を委ねるワークフローの設計原理を、認知機構・60年の自動化研究・現代の実装パターン・失敗分類・規制・実運用証拠の6層にわたって検証済み出典つきで総合する。中心的な発見は三つ。第一に、自律性は能力の関数ではなく設計の選択であり、委任の単位は「エージェント」ではなく「機能×権限×可逆性」の行列である。第二に、検証の効力は独立性から生まれるが、その独立性は役割分離（書き手と検証者を分ける）だけでは成立せず、入力の分離——生成者・取得ソース・検証ツール・実行オラクル・裁定者の5層——として設計しなければならない。第三に、実運用の公開証拠は利用統計とレビュー統計に偏っており、介入率・rollback率・障害率という委任設計の較正に最も必要な数字は、本調査の範囲では確認できなかった。報告の後半では、これらを委任ゲート表・監督ログ仕様・停止条件分解・失敗対応表として実装可能な形に落とし、一つの実働系（swarm系譜）を外部座標系でマッピングして、オーケストレータ自身が体系内の残余未検証点であることを示す。</p>
+</div></div>
+<div class="toc"><b>目次</b><ol><li><a href="#ch1">中心命題と暫定運用マップ</a></li><li><a href="#ch2">序——問いの定義と由来</a></li><li><a href="#ch3">認知基盤――探索vs償却・較正と自己知識</a></li><li><a href="#ch4">判断自動化の理論系譜60年</a></li><li><a href="#ch5">失敗様式と評価の制約——設計の前提条件</a></li><li><a href="#ch6">設計パターン——委譲の構造</a></li><li><a href="#ch7">権限と監督の実装</a></li><li><a href="#ch8">ケーススタディ</a></li><li><a href="#ch9">統合プレイブック——運用表群</a></li><li><a href="#ch10">未確立領域と今後の問い</a></li><li><a href="#ch11">方法論注記——本報告の生成過程の開示</a></li></ol></div>
+<h2 class="h" id="ch1"><span class="n">I</span>中心命題と暫定運用マップ</h2>
+<p>本報告は研究報告であると同時に設計プレイブックである。時間のない読者のために、結論としての中心命題と、委任判断の暫定運用マップを先に置く。各行の根拠と精密化は参照章にある。</p>
+<h3 class="sh">1.1　中心命題</h3>
+<ul style="margin:13px 0;padding-left:26px;line-height:2.0;"><li><b>P1 自律性は能力の関数ではなく設計の選択である。</b> 委任の単位は「エージェント」ではなく「機能×権限×可逆性」の行列である（第2章・第4章）。</li><li><b>P2 委任判断は3軸ゲートで行う。</b> 検証可能性・較正可能性・可逆性の3軸を確認し、どれかが欠けるタスクは自律度を下げる。これは実証された法則ではなく、収穫した証拠と整合するヒューリスティックである（第3章・第9章）。</li><li><b>P3 検証の独立性は役割分離ではなく入力の分離である。</b> 生成者・取得ソース・検証ツール・実行オラクル・裁定者の5層で設計する。重要な主張は一次資料再取得または実行可能テストへ落とす（第6章）。</li><li><b>P4 停止は知能ではなく境界の問題である。</b> 明示上限の多層防御（時間・トークン・未照合件数・反証未処理数）を置き、停止時成果物を採用可・保留・破棄に仕分ける（第6章）。</li><li><b>P5 信頼性はプロトコルで証拠化し、主観的信頼は較正対象とする。</b> プロトコルは信頼の置換ではなく較正の材料である（第4章・第9章）。</li><li><b>P6 承認ゲート単独では監督にならない。</b> 監督は可観測性（ログ仕様）・介入時間・技能維持・異議申立て経路の複合である（第4章・第7章・第9章）。</li><li><b>P7 オーケストレータは体系内の残余未検証点である。</b> 検証を厚くするほど、最後に残るのは統合者の採否判断である。本報告自身にも当てはまる（第8章・第11章）。</li></ul>
+<div class="diagram"><b>図1　委任設計の全体構造（本報告の章立てとの対応）</b>
+
+            タスク
+              │
+   ┌──────────┴───────────┐
+   │ 4機能分解（第4章）      │ 情報取得／分析／行為選択／行為実装
+   └──────────┬───────────┘
+              ▼
+   ┌──────────────────────┐
+   │ 3軸ゲート（第9章）     │ 検証可能性 × 較正可能性 × 可逆性
+   └──────┬───────┬───────┘
+        3軸充足   いずれか欠落
+          ▼           ▼
+     委任（自律度↑）  人間保持・承認必須（自律度↓）
+          │
+          ▼
+   委譲契約（第6章）── 目的・入力・tool・禁止・出力・依存・成功判定・予算
+          │
+          ▼
+   検証ループ（6.3）── 入力分離5層＝生成者／取得ソース／検証ツール／oracle／裁定者
+          │
+          ▼
+   停止・仕分け（6.4）─ 明示上限の多層防御 → 採用可／保留／破棄
+          │
+          ▼
+   監督ログ（9.2）──── claim系＋action系・異議申立て経路（第7章）
+</div>
+<h3 class="sh">1.2　暫定運用マップ</h3>
+<table>
+<tr><th>委任判断の局面</th><th>推奨既定</th><th>条件</th><th>参照章</th><th>出典照合状態</th></tr>
+<tr><td>何を調べるか</td><td>最初はworkflowで範囲・出典種別・禁止事項を固定する。agent化は、小タスクを事前予測できず、かつ価値・並列性・文脈分割・検証可能性が同時にある場合に限る（第6章）<sup class="r"><a href="#fn1" style="color:inherit;text-decoration:none;">1</a></sup><sup class="r"><a href="#fn2" style="color:inherit;text-decoration:none;">2</a></sup></td><td>候補を外部信号で検証でき、未知概念・偽前提への棄権が別途扱えること<sup class="r"><a href="#fn3" style="color:inherit;text-decoration:none;">3</a></sup><sup class="r"><a href="#fn4" style="color:inherit;text-decoration:none;">4</a></sup></td><td>第3章・第6章</td><td>verified中心。知識集約の増分効果はfollowup</td></tr>
+<tr><td>どこまで実行させるか</td><td>情報取得・分析・意思決定/行為選択・行為実装を分け、行為実装は低めに置く<sup class="r"><a href="#fn5" style="color:inherit;text-decoration:none;">5</a></sup></td><td>影響はagentの行為とdeployment environmentの相互作用で決まる<sup class="r"><a href="#fn6" style="color:inherit;text-decoration:none;">6</a></sup></td><td>第4章・第7章</td><td>verified</td></tr>
+<tr><td>何を検証するか</td><td>重要claimは一次資料再取得、実行可能テスト、または独立oracleへ回す。LLM judge単独にしない</td><td>LLM-as-judgeには位置・冗長性・自己選好バイアスがある<sup class="r"><a href="#fn7" style="color:inherit;text-decoration:none;">7</a></sup>。ベンチにも汚染・テスト設計留保がある<sup class="r"><a href="#fn8" style="color:inherit;text-decoration:none;">8</a></sup></td><td>第5章・第6章</td><td>verified</td></tr>
+<tr><td>いつ止めるか</td><td>時間・トークン・未照合件数・反証未処理数を別々に止める</td><td>有効な停止境界なしの反復は無限agent loopになりうる<sup class="r"><a href="#fn9" style="color:inherit;text-decoration:none;">9</a></sup>。max_turns等の実装境界が存在する<sup class="r"><a href="#fn10" style="color:inherit;text-decoration:none;">10</a></sup></td><td>第6章</td><td>verified</td></tr>
+<tr><td>誰が承認するか</td><td>approve/edit/reject/respondを分け、不可逆操作は意思決定と実行を分離する<sup class="r"><a href="#fn11" style="color:inherit;text-decoration:none;">11</a></sup><sup class="r"><a href="#fn12" style="color:inherit;text-decoration:none;">12</a></sup></td><td>sensitive tool callはpause/resume可能な状態で承認させる<sup class="r"><a href="#fn13" style="color:inherit;text-decoration:none;">13</a></sup>。AI Act 14条相当ではoverride/reverse/stopが論点になる<sup class="r"><a href="#fn14" style="color:inherit;text-decoration:none;">14</a></sup></td><td>第7章</td><td>verified</td></tr>
+<tr><td>誰が統合・裁定するか</td><td>単一の統合者を置き、採用・棄却ログ、反証未処理一覧、対抗案、裁定理由を残す</td><td>統合者自身が残余未検証点になる（P7）。裁定の完全な外部化はできない</td><td>第8章・第11章</td><td>本報告自身の運用で実演</td></tr>
+</table>
+<p class="fn" style="margin:6px 0 16px;">表注: 「出典照合状態」は出典の逐語照合の状態であって、運用実証ではない。本表の推奨既定はいずれも運用としては未実証であり、導入先での較正を要する（第10章）。</p>
+<h3 class="sh">1.3　本報告の使い方</h3>
+<p>設計判断を今すぐ下すなら、この章と第9章（表群）だけで最小の運用が組める。なぜその既定なのかを検証したければ、第3章から第8章が証拠の階層である。本報告の全事実主張は独立照合を経ており、その方法と限界は第11章に開示した。</p>
+<h2 class="h" id="ch2"><span class="n">II</span>序——問いの定義と由来</h2>
+<h3 class="sh">2.1　問いの立て方</h3>
+<p>本報告の問いは「AIはいつになったら判断を任せられるほど賢くなるか」ではない。「何を、どう組めば、いま任せられるか」である。この転換には根拠がある。自律性の程度は、モデルの能力や動作環境から自動的に帰結するものではなく、切り離して選択できる設計上の決定である<sup class="r"><a href="#fn15" style="color:inherit;text-decoration:none;">15</a></sup>。高性能モデルでも全操作を承認必須にできるし、限定的なモデルでも狭い権限内なら高い自律で走らせられる。したがって「自律的判断をさせるワークフロー」の設計問題は、能力予測の問題ではなく、権限配置・検証構造・停止設計・監督実装の複合問題として立てるのが正確である。</p>
+<h3 class="sh">2.2　問いの由来——直観と探索</h3>
+<p>この報告は、LLMの認識機構をめぐる問答から生まれた。本報告では便宜上、1回のフォワードパスを「償却された近似（速い直観）」、生成ループ——トークンを吐き、読み直し、戻る——を「推論時計算による探索」として扱う。この枠組みは比喩を含むが、固定深度計算の理論限界と推論時計算の実証（第3章）に整合する。この機構理解は、判断委任の設計と直結する。直観（1パス）に任せてよい判断と、探索と外部検証を義務づけるべき判断は、機構のレベルで区別できるからである（第3章）。そして「探索を組む」とは、まさにワークフローを設計することに他ならない。探索の幅・検証器・停止条件・棄権条件は、モデルの内部ではなく、ワークフローの側に置かれる設計対象である<sup class="r"><a href="#fn16" style="color:inherit;text-decoration:none;">16</a></sup><sup class="r"><a href="#fn3" style="color:inherit;text-decoration:none;">3</a></sup>。</p>
+<h3 class="sh">2.3　用語と射程</h3>
+<p>本報告で「自律的判断」とは、人間の逐次承認なしに、選択肢の生成・選択・実行のいずれかまたは全てを進める判断をいう。古典自動化論の語彙では、情報取得・情報分析・意思決定・行為実装の4機能それぞれに独立の自動化水準がある<sup class="r"><a href="#fn5" style="color:inherit;text-decoration:none;">5</a></sup>。「どこまで任せるか」は、この4機能×権限×可逆性の行列上の選択である。ワークフロー（コードが制御経路を握る）とエージェント（モデルが自らの手順とツール使用を決める）の区別は第6章で扱う<sup class="r"><a href="#fn1" style="color:inherit;text-decoration:none;">1</a></sup>。</p>
+<h3 class="sh">2.4　証拠の等級と本報告の方法</h3>
+<p>本報告の事実主張は、研究（査読論文・プレプリント）・産業（公式ドキュメント・技術ブログ）・規制（法令・当局文書）・実測（運用統計・実験報告）の4種に等級づけ、証拠台帳で管理した。台帳は162件を収録し、156件がverified、3件がrejected、3件がholdである。本文が引用するのはverified行のみであり、各行に一次URL・確認日・照合経路を記録した（方法の詳細と限界は第11章）。ベンダーの自社数値には、その旨の注記を付す。</p>
+<h2 class="h" id="ch3"><span class="n">III</span>認知基盤――探索vs償却・較正と自己知識</h2>
+<h3 class="sh">3.1　探索と償却の非対称</h3>
+<p>判断委任を考える出発点は、1パス回答を「すでに償却された直観」と見なし、生成ループを「推論時計算による探索」と見なすことである。CoTなしの定深度TransformerにはAC0上限が示され、TステップのCoTはサイズTのブール回路相当を解けると報告されている<sup class="r"><a href="#fn17" style="color:inherit;text-decoration:none;">17</a></sup>。この対比は、モデルの重みの中に圧縮された近似を一度で読むのか、生成過程を使って逐次計算を外部化するのか、という非対称である<sup class="r"><a href="#fn17" style="color:inherit;text-decoration:none;">17</a></sup>。</p>
+<p>探索の効果は、複数の推論経路を許すときに見えやすい。CoT self-consistencyは算術・常識推論で改善を示し、GSM8Kでは+17.9%、SVAMPでは+11.0%、AQuAでは+12.2%、StrategyQAでは+6.4%、ARC-challengeでは+3.9%を報告した<sup class="r"><a href="#fn18" style="color:inherit;text-decoration:none;">18</a></sup>。Tree of Thoughtsは探索木を使い、Game of 24でGPT-4 CoT 4%に対し74%を達成した<sup class="r"><a href="#fn19" style="color:inherit;text-decoration:none;">19</a></sup>。ここで効いているのは、単に長く書くことではない。候補を複数作り、部分的に評価し、戻る余地を持つ探索構造である<sup class="r"><a href="#fn18" style="color:inherit;text-decoration:none;">18</a></sup><sup class="r"><a href="#fn19" style="color:inherit;text-decoration:none;">19</a></sup>。</p>
+<p>償却は、探索の反対語ではなく、探索結果を次回の直観へ移す過程である。STaRは正解に至った生成rationaleを反復fine-tuneし、探索結果をモデルへ蒸留する方式である<sup class="r"><a href="#fn20" style="color:inherit;text-decoration:none;">20</a></sup>。Quiet-STaRは任意テキスト中のrationale生成学習で、GSM8K 5.9%→10.9%、CommonsenseQA 36.3%→47.2%を報告した<sup class="r"><a href="#fn21" style="color:inherit;text-decoration:none;">21</a></sup>。したがって、よい委任設計は「遅い探索」を毎回無制限に走らせることではない。検証できた探索を記録し、再利用可能な手順・テスト・プロンプト・データへ落とすことで、次の直観を少しずつ償却する設計である<sup class="r"><a href="#fn20" style="color:inherit;text-decoration:none;">20</a></sup><sup class="r"><a href="#fn21" style="color:inherit;text-decoration:none;">21</a></sup>。</p>
+<p>ただし、推論モデルが常に優るわけではない。推論時計算の効果はタスク依存であり、TSP easyではGPT-4oが42%→95%に改善したが、TSP hardでは有意改善しなかった<sup class="r"><a href="#fn16" style="color:inherit;text-decoration:none;">16</a></sup>。制御パズル実験では、LRMは低複雑性で標準LLMに劣り、中複雑性で有利、高複雑性で双方崩壊する3領域が報告された<sup class="r"><a href="#fn22" style="color:inherit;text-decoration:none;">22</a></sup>。このIllusion of Thinking論文は、批判論文の存在を併記して読むべき限界証拠であり、一般的な優劣判定へ直結させてはならない<sup class="r"><a href="#fn22" style="color:inherit;text-decoration:none;">22</a></sup>。</p>
+<h3 class="sh">3.2　探索が判断品質を上げる条件・上げない条件</h3>
+<p>探索が判断品質を上げる第一条件は、候補空間が検証可能であることだ。self-consistencyが効く場面では、複数経路から同一の最終答えへ収束できる余地がある<sup class="r"><a href="#fn18" style="color:inherit;text-decoration:none;">18</a></sup>。Tree of Thoughtsが効く場面では、探索木の枝を評価し、悪い枝から戻る余地がある<sup class="r"><a href="#fn19" style="color:inherit;text-decoration:none;">19</a></sup>。この条件があると、生成ループは「考えたふり」ではなく、候補生成と選別の機械になる<sup class="r"><a href="#fn18" style="color:inherit;text-decoration:none;">18</a></sup><sup class="r"><a href="#fn19" style="color:inherit;text-decoration:none;">19</a></sup>。</p>
+<p>第二条件は、外部フィードバックまたは独立した評価信号があることだ。外部フィードバックなしの内在的自己修正は、推論課題で性能を悪化させる場合がある<sup class="r"><a href="#fn3" style="color:inherit;text-decoration:none;">3</a></sup>。したがって、自己批評を何度も回すだけでは、探索の品質保証にならない<sup class="r"><a href="#fn3" style="color:inherit;text-decoration:none;">3</a></sup>。探索は、テスト、検証器、人間の反証、一次資料再取得のような外部信号と接続して初めて、委任可能な判断過程になる<sup class="r"><a href="#fn3" style="color:inherit;text-decoration:none;">3</a></sup>。</p>
+<p>第三条件は、難度が探索可能な範囲にあることだ。TSP easyでは推論時計算の効果が見えたが、TSP hardでは同じ増分が有意改善につながらなかった<sup class="r"><a href="#fn16" style="color:inherit;text-decoration:none;">16</a></sup>。制御パズル実験でも、低複雑性では標準LLMがLRMを上回り、中複雑性ではLRMが有利になり、高複雑性では双方が崩壊した<sup class="r"><a href="#fn22" style="color:inherit;text-decoration:none;">22</a></sup>。この結果は、探索が「難しければ難しいほど効く」のではなく、探索空間と評価信号が噛み合う中間帯で効きやすいことを示す<sup class="r"><a href="#fn16" style="color:inherit;text-decoration:none;">16</a></sup><sup class="r"><a href="#fn22" style="color:inherit;text-decoration:none;">22</a></sup>。</p>
+<table>
+<tr><th>判断条件</th><th>探索を増やす意味</th><th>委任設計上の扱い</th></tr>
+<tr><td>複数経路から同じ答えに収束できる</td><td>self-consistencyで改善しうる<sup class="r"><a href="#fn18" style="color:inherit;text-decoration:none;">18</a></sup></td><td>複数候補生成と投票を許す</td></tr>
+<tr><td>探索木を評価できる</td><td>Tree of Thoughtsで改善しうる<sup class="r"><a href="#fn19" style="color:inherit;text-decoration:none;">19</a></sup></td><td>部分評価と戻りを設計する</td></tr>
+<tr><td>難度が上がりすぎる</td><td>TSP hardでは有意改善しなかった<sup class="r"><a href="#fn16" style="color:inherit;text-decoration:none;">16</a></sup></td><td>上限と棄却条件を置く</td></tr>
+<tr><td>複雑性が過大である</td><td>高複雑性では双方崩壊が報告された<sup class="r"><a href="#fn22" style="color:inherit;text-decoration:none;">22</a></sup></td><td>自律判断を広げない</td></tr>
+<tr><td>外部フィードバックがない</td><td>自己修正で悪化しうる<sup class="r"><a href="#fn3" style="color:inherit;text-decoration:none;">3</a></sup></td><td>内省を検証器の代替にしない</td></tr>
+</table>
+<h3 class="sh">3.3　モデルは「わからない」を知っているか</h3>
+<p>較正の証拠は、到達点と限界を分けて読む必要がある。Kadavath et al.は、LLMがP(True)で自分の生成回答の正しさを評価でき、P(IK)で「知っている確率」を予測できるが、P(IK)の新タスク較正には苦戦すると報告した<sup class="r"><a href="#fn23" style="color:inherit;text-decoration:none;">23</a></sup>。Lin et al.は、GPT-3が自然言語の確信度表現を学習し、CalibratedMathで較正され、分布シフト下でも中程度に較正を保つと報告した<sup class="r"><a href="#fn24" style="color:inherit;text-decoration:none;">24</a></sup>。ここから言えるのは、モデルが局所的な不確実性信号を持ちうるということであり、一般的な自己知識を獲得したということではない<sup class="r"><a href="#fn23" style="color:inherit;text-decoration:none;">23</a></sup><sup class="r"><a href="#fn24" style="color:inherit;text-decoration:none;">24</a></sup>。</p>
+<p>確信度表現は、形式によって大きく変わる。Tian et al.は、GPT-3.5系でverbalized top-4のECEがTriviaQA/SciQ/TruthfulQAで0.054/0.065/0.203となり、label probabilityの0.140/0.256/0.451より良いと報告した<sup class="r"><a href="#fn25" style="color:inherit;text-decoration:none;">25</a></sup>。同時に、Tian et al.は、RLHFがLlama-70Bのlog probability較正を一般に悪化させる一方、verbalized confidenceで一部回復できると報告した<sup class="r"><a href="#fn26" style="color:inherit;text-decoration:none;">26</a></sup>。Xiong et al.は、black-box confidence elicitationでLLMが過信しやすく、専門知識など難しいタスクでは全手法が苦戦すると報告した<sup class="r"><a href="#fn27" style="color:inherit;text-decoration:none;">27</a></sup>。Leng et al.は、RLHF/PPOがLLMのverbalized overconfidenceを増やし、報酬モデルに高確信度を好むバイアスがあると報告した<sup class="r"><a href="#fn28" style="color:inherit;text-decoration:none;">28</a></sup>。</p>
+<p>棄権は、較正を運用に接続する入口である。Ren et al.は、open-ended generationを自己評価タスクへ変換し、TruthfulQA/TL;DRでselective generationの精度と品質相関を改善したと報告した<sup class="r"><a href="#fn29" style="color:inherit;text-decoration:none;">29</a></sup>。Abbasi-Yadkori et al.は、self-consistencyとconformal predictionでLLMの棄権を制御し、幻覚率に理論保証を与える手続きを提案した<sup class="r"><a href="#fn30" style="color:inherit;text-decoration:none;">30</a></sup>。一方で、Liu et al.は、UnknownBenchで多くのLLMが知識外質問に一貫して拒否・不確実性表明できず、alignmentの改善は限定的と報告した<sup class="r"><a href="#fn4" style="color:inherit;text-decoration:none;">4</a></sup>。Wen et al.のabstentionサーベイは、棄権をquery/model/human valuesの3視点で整理し、ドメイン横断のメタ能力化を未解決課題とした<sup class="r"><a href="#fn31" style="color:inherit;text-decoration:none;">31</a></sup>。</p>
+<p>したがって、「わからない」と言える能力は、短答・選択式・真偽判定のような評価形式では利用可能な信号になりうるが、未知概念、偽前提、専門知識、長文生成を横断する一般能力としては未確立である<sup class="r"><a href="#fn25" style="color:inherit;text-decoration:none;">25</a></sup><sup class="r"><a href="#fn27" style="color:inherit;text-decoration:none;">27</a></sup><sup class="r"><a href="#fn4" style="color:inherit;text-decoration:none;">4</a></sup><sup class="r"><a href="#fn31" style="color:inherit;text-decoration:none;">31</a></sup>。委任設計では、自己申告の確信度をそのまま承認ゲートにしてはならない<sup class="r"><a href="#fn27" style="color:inherit;text-decoration:none;">27</a></sup><sup class="r"><a href="#fn28" style="color:inherit;text-decoration:none;">28</a></sup>。確信度は、外部検証へ回す優先順位、棄権閾値、専門家レビューの起動条件として扱うべきである<sup class="r"><a href="#fn29" style="color:inherit;text-decoration:none;">29</a></sup><sup class="r"><a href="#fn30" style="color:inherit;text-decoration:none;">30</a></sup><sup class="r"><a href="#fn31" style="color:inherit;text-decoration:none;">31</a></sup>。</p>
+<h3 class="sh">3.4　委任設計への含意</h3>
+<p>以上から、委任可能性は検証可能性と較正可能性に規定される。検証可能性とは、候補を作ったあとに、正誤・優劣・反証を外部信号で評価できることである<sup class="r"><a href="#fn18" style="color:inherit;text-decoration:none;">18</a></sup><sup class="r"><a href="#fn19" style="color:inherit;text-decoration:none;">19</a></sup><sup class="r"><a href="#fn3" style="color:inherit;text-decoration:none;">3</a></sup>。較正可能性とは、モデルの確信度や棄権信号を、タスク別の評価データと失敗履歴に照らして調整できることである<sup class="r"><a href="#fn23" style="color:inherit;text-decoration:none;">23</a></sup><sup class="r"><a href="#fn25" style="color:inherit;text-decoration:none;">25</a></sup><sup class="r"><a href="#fn30" style="color:inherit;text-decoration:none;">30</a></sup>。この二つは、第2章で置いた3軸ゲートのうち、検証可能性と較正可能性の認知的根拠である。</p>
+<p>委任を許すべきなのは、探索が候補空間を広げ、外部信号が候補を削れる場面である<sup class="r"><a href="#fn18" style="color:inherit;text-decoration:none;">18</a></sup><sup class="r"><a href="#fn19" style="color:inherit;text-decoration:none;">19</a></sup>。委任を狭めるべきなのは、探索を増やしても難度や複雑性で改善が止まり、自己修正が外部検証を欠く場面である<sup class="r"><a href="#fn16" style="color:inherit;text-decoration:none;">16</a></sup><sup class="r"><a href="#fn22" style="color:inherit;text-decoration:none;">22</a></sup><sup class="r"><a href="#fn3" style="color:inherit;text-decoration:none;">3</a></sup>。人間に戻すべきなのは、モデルの不確実性表明が安定せず、未知概念や偽前提への拒否が期待できない場面である<sup class="r"><a href="#fn4" style="color:inherit;text-decoration:none;">4</a></sup><sup class="r"><a href="#fn31" style="color:inherit;text-decoration:none;">31</a></sup>。</p>
+<p>実装上は、生成ループを「長く考える機能」と呼ばないほうがよい。生成ループは、候補生成、評価、棄却、棄権、蒸留を分けて初めて監督可能になる<sup class="r"><a href="#fn20" style="color:inherit;text-decoration:none;">20</a></sup><sup class="r"><a href="#fn21" style="color:inherit;text-decoration:none;">21</a></sup><sup class="r"><a href="#fn29" style="color:inherit;text-decoration:none;">29</a></sup><sup class="r"><a href="#fn30" style="color:inherit;text-decoration:none;">30</a></sup>。1パス回答は安価な償却直観として扱い、生成ループは検証可能な探索として扱うべきである<sup class="r"><a href="#fn17" style="color:inherit;text-decoration:none;">17</a></sup><sup class="r"><a href="#fn16" style="color:inherit;text-decoration:none;">16</a></sup>。その境界を誤ると、計算を増やしたことが根拠の強さに見えてしまう<sup class="r"><a href="#fn16" style="color:inherit;text-decoration:none;">16</a></sup><sup class="r"><a href="#fn3" style="color:inherit;text-decoration:none;">3</a></sup>。</p>
+<h3 class="sh">3.5　例示と検索——文脈による条件付けの設計</h3>
+<p>1パスの計算は文脈全体で条件付けられる。したがって、モデルの重みに触れずに判断の質を変える主要な手段は、文脈に何を置くかの設計である。ここには二つの異なる操作が混在しやすい。第一は例示（few-shot）であり、手続き・形式・粒度の条件付けとして働く。第二は検索グラウンディングであり、知識の条件付けとして働く。パラメトリック記憶からの想起を、文脈内の照合に置き換える操作である。</p>
+<p>この区別は委任設計に直結する。事実密度の高いタスクでは、検索による根拠の外部化を優先する。文脈に置かれた一次資料は、第6章の検証ループが要求する照合可能性そのものを作るからである。サブエージェントへの委譲では、最小必要文脈だけを見せ、不足はtoolで明示取得させる原則が確認されている<sup class="r"><a href="#fn32" style="color:inherit;text-decoration:none;">32</a></sup>。一方、例示が主に効くのは内容ではなく型——出力形式・判定の粒度・手順——の伝達である。</p>
+<p>モデル自身に例を生成させてから解かせる方式には、探索の一形態としての価値と、固有の危険が同居する。外部からの訂正信号を持たない点で、これは内省的自己修正と同型であり、内省が外部フィードバックなしには改善せず悪化しうるという知見<sup class="r"><a href="#fn33" style="color:inherit;text-decoration:none;">33</a></sup>がそのまま当てはまる。誤った自己生成例は「前例」として後続の計算を条件付ける。したがって、事実系の例示は検証済みの外部素材から作り、型の伝達だけを自己生成に許すのが、本報告の枠組みと整合する切り分けである。</p>
+<p>まとめれば、文脈設計は委譲契約（第6章）の入力artifact欄の設計問題である。何を見せるか（検証済み素材・型見本）、何を見せないか（未検証の推測・他レーンの結論）、不足時にどう取得させるか（tool経由の明示取得）。この三点は入力分離（6.3）とも接続する。例示や検索結果を共有すれば、その誤りも共有されるからである。</p>
+<p>本章の結論は単純である。探索は、検証できるときに委任可能性を押し上げる<sup class="r"><a href="#fn18" style="color:inherit;text-decoration:none;">18</a></sup><sup class="r"><a href="#fn19" style="color:inherit;text-decoration:none;">19</a></sup>。較正は、短答的な自己評価から始められるが、棄権のメタ能力としては未解決である<sup class="r"><a href="#fn23" style="color:inherit;text-decoration:none;">23</a></sup><sup class="r"><a href="#fn31" style="color:inherit;text-decoration:none;">31</a></sup>。したがって、判断の委任は「モデルが賢いか」ではなく、「探索結果を検証できるか」と「不確実性を較正できるか」で決めるべきである<sup class="r"><a href="#fn16" style="color:inherit;text-decoration:none;">16</a></sup><sup class="r"><a href="#fn27" style="color:inherit;text-decoration:none;">27</a></sup><sup class="r"><a href="#fn4" style="color:inherit;text-decoration:none;">4</a></sup>。ただしこれは認知面の2軸であり、実運用の許容自律度は、これに可逆性を加えた3軸で決める（第9章）。</p>
+<h2 class="h" id="ch4"><span class="n">IV</span>判断自動化の理論系譜60年</h2>
+<p>判断の自動化は、LLMエージェントで初めて生じた問題ではない。新しいのは自然言語インターフェースと汎用ツール実行能力であり、古いのは「どの機能を、どの権限水準で、失敗時に誰が回復する前提で委任するか」という設計問題である。したがって本章では、古典自動化論、現代の自律性レベル論、人間組織の委任理論を接続し、AIエージェントの自律性を単一ラダーではなく、機能・権限・監督・責任の配置として読む。</p>
+<h3 class="sh">4.1　古典自動化論</h3>
+<p>Parasuraman, Sheridan, Wickensは、自動化を情報取得、情報分析、意思決定・行為選択、行為実装の4機能に分けた<sup class="r"><a href="#fn5" style="color:inherit;text-decoration:none;">5</a></sup>。この分類の価値は、「AIを使うか」ではなく、「検索・収集を任せるのか、要約・評価を任せるのか、計画選択を任せるのか、外部操作まで任せるのか」を分離できる点にある。AIエージェントでいえば、ブラウジングやファイル探索は情報取得、根拠整理やスコアリングは情報分析、次アクションの選択は意思決定・行為選択、API呼び出し・送信・削除・デプロイは行為実装に対応する。</p>
+<p>PSWの10レベル表は、主に意思決定・行為選択の自動化水準を示す。F1では原論文HTMLミラーでTable Iの存在を確認し、10レベル本文はNational Academies表等で照合された。ただしPSW原表からの完全逐語抽出は未確証であり、レベル4末尾接続詞は照合資料間で不一致が残る<sup class="r"><a href="#fn34" style="color:inherit;text-decoration:none;">34</a></sup><sup class="r"><a href="#fn35" style="color:inherit;text-decoration:none;">35</a></sup><sup class="r"><a href="#fn36" style="color:inherit;text-decoration:none;">36</a></sup>。</p>
+<table>
+<tr><th>レベル</th><th>権限構造</th><th>AIエージェントでの対応</th></tr>
+<tr><td>1</td><td>支援なし。人間がすべての判断と行動を行う。</td><td>人間が調査・判断・実行を行い、AIは使わない。</td></tr>
+<tr><td>2</td><td>可能な決定・行為代替案を一式提示する。</td><td>AIが候補リストを出すが、選択は人間が行う。</td></tr>
+<tr><td>3</td><td>代替案を少数に絞る。</td><td>AIが候補をランキングまたは短縮し、人間が最終選択する。</td></tr>
+<tr><td>4</td><td>一つの代替案を提案する。</td><td>AIが推奨案を出すが、実行権限は持たない。</td></tr>
+<tr><td>5</td><td>人間が承認した場合に、その提案を実行する。</td><td>approve gate後にのみAIがツールを実行する。</td></tr>
+<tr><td>6</td><td>人間に短い拒否時間を与え、拒否がなければ自動実行する。</td><td>タイムアウト承認、予約実行、黙示承認型の自動操作。</td></tr>
+<tr><td>7</td><td>自動実行し、その後必ず人間に通知する。</td><td>AIが編集・送信・修正を実行し、完了ログを必ず出す。</td></tr>
+<tr><td>8</td><td>求められた場合のみ人間に通知する。</td><td>人間がログ照会した時だけ実行内容を表示する。</td></tr>
+<tr><td>9</td><td>システムが必要と判断した時だけ通知する。</td><td>AIが例外判定した場合のみアラートを出す。</td></tr>
+<tr><td>10</td><td>システムがすべてを決定し自律的に行動し、人間を無視する。</td><td>人間ゲートなしに計画・実行・通知判断まで閉じる。</td></tr>
+</table>
+<p class="fn" style="margin:6px 0 16px;">表注: レベル4の末尾接続詞は、F1照合ではNAP表がand、Kaber再掲がorであり、PSW原表による最終確定は未確証である<sup class="r"><a href="#fn35" style="color:inherit;text-decoration:none;">35</a></sup>。</p>
+<p>PSWの設計手順は、自動化レベルを固定的に選ぶのではなく、人間性能への帰結、信頼性、意思決定・行為結果のコストで反復評価する枠組みである<sup class="r"><a href="#fn37" style="color:inherit;text-decoration:none;">37</a></sup>。AIエージェントでは、モデル性能だけでなく、誤実行時の損失、取り消し可能性、ログからの復元可能性、人間が介入できる時間幅を同時に評価する必要がある。</p>
+<p>Bainbridgeの「自動化の皮肉」は、産業自動化が人間オペレータ問題を消すのではなく、むしろ異常時監視、介入、技能維持という難しい役割を残す点にある<sup class="r"><a href="#fn38" style="color:inherit;text-decoration:none;">38</a></sup>。AIエージェントでは、日常タスクを自動化するほど、人間は通常手順から遠ざかり、例外時だけ高度な判断を求められる。これは「承認ボタンを置けば監督になる」という発想への反証である。</p>
+<p>Parasuraman/Rileyはuse、misuse、disuse、abuseを区別し、misuseを過信、disuseを過少利用として整理した<sup class="r"><a href="#fn39" style="color:inherit;text-decoration:none;">39</a></sup>。AIエージェント対応物は明確である。useは能力に見合う利用、misuseは根拠の弱い回答や危険操作への過信、disuseは有効な検証・要約支援を使わないこと、abuseは設計側が人間に不透明な自動化を押しつけることである。</p>
+<p>Lee/Seeの信頼較正論は、複雑で予期不能な状況ではtrustが依存を導くため、適切な依存設計が必要だとする<sup class="r"><a href="#fn40" style="color:inherit;text-decoration:none;">40</a></sup>。AIエージェントでは「信頼を上げる」ことが目的ではない。目的は、能力・権限・失敗コストに見合う依存へ較正することである。高性能に見える会話能力と、実行権限を安全に扱える能力は同一ではない。</p>
+<p>Skitka/Mosier/Burdickは、不完全な自動化支援がある参加者でomission errorとcommission errorが生じたと報告した<sup class="r"><a href="#fn41" style="color:inherit;text-decoration:none;">41</a></sup>。AIエージェントでは、omissionは「AIが報告しない問題を人間が見落とす」こと、commissionは「AIの誤った計画・引用・操作に人間が追従する」ことに対応する。これらはAI固有の幻覚問題に還元できない。古典論が示すのは、支援が不完全である限り、監督者の注意配分そのものが変形されるという構造である。</p>
+<h3 class="sh">4.2　現代の自律性レベル論</h3>
+<p>現代のAIエージェント自律性レベル論は、まだ単一標準に収束していない。少なくとも4系統がある。</p>
+<p>第一はuser-role系である。FengらはAI agent autonomyをoperator、collaborator、consultant、approver、observerの5段階で分類する<sup class="r"><a href="#fn42" style="color:inherit;text-decoration:none;">42</a></sup>。重要なのは、自律性を能力や運用環境から切り離された設計選択として扱う点である<sup class="r"><a href="#fn15" style="color:inherit;text-decoration:none;">15</a></sup>。これはAIエージェント設計に直結する。高性能モデルでも承認必須にでき、低性能モデルでも狭い安全領域では高自律にできるからである。</p>
+<p>第二は実装・計測系である。Anthropicはautonomyを、人間の指示と監督からどれだけ独立して動くかとして定義する<sup class="r"><a href="#fn43" style="color:inherit;text-decoration:none;">43</a></sup>。またコード検査型の測定枠組みは、実行結果だけでなく、agent orchestration codeがどのように自律機能を構成しているかを評価対象にする<sup class="r"><a href="#fn44" style="color:inherit;text-decoration:none;">44</a></sup>。この系統では、impactが行為とdeployment environmentの相互作用で決まる点も重要である<sup class="r"><a href="#fn6" style="color:inherit;text-decoration:none;">6</a></sup>。AIエージェントでは、同じ計画能力でも、読み取り専用環境、ローカルファイル編集、外部送信、決済API接続では自律性の意味が異なる。</p>
+<p>第三は産業成熟度系である。BessemerはL0からL6までのAI agent autonomy scaleを提示し、L0をno agency、L6をagents manage other agentsとする<sup class="r"><a href="#fn45" style="color:inherit;text-decoration:none;">45</a></sup>。Microsoftのagentic AI maturity modelは、個別エージェントの権限というより、組織導入の成熟度を5段階・5 capability pillarsで評価する<sup class="r"><a href="#fn46" style="color:inherit;text-decoration:none;">46</a></sup>。ここには乱立点がある。エージェント単体の自律性、製品機能の成熟、組織導入の成熟が同じ「レベル」という語で語られやすい。</p>
+<p>第四は規制・責任配分系である。Interfaceは自動運転法制の類比でAI agentsの5段階分類を提案し<sup class="r"><a href="#fn47" style="color:inherit;text-decoration:none;">47</a></sup>、自律性が増しユーザー制御が薄くなるほど責任が提供側へ移ると整理する<sup class="r"><a href="#fn48" style="color:inherit;text-decoration:none;">48</a></sup>。CSAの6段階taxonomyはSAE J3016に似せた提案だが、完成版ではない共同検討案として提示されている<sup class="r"><a href="#fn49" style="color:inherit;text-decoration:none;">49</a></sup>。またMitchellらは完全自律AI agentを開発すべきでないとし、人間が制御を譲るほどリスクが増すと主張する<sup class="r"><a href="#fn50" style="color:inherit;text-decoration:none;">50</a></sup><sup class="r"><a href="#fn51" style="color:inherit;text-decoration:none;">51</a></sup>。</p>
+<p>これらの収束軸は、人間関与の減少、外部環境へのaction/tool access、監査ログ・承認・kill switch・権限境界、責任配分である。乱立点は、段階数、レベル名、能力と自律性の混同、タスクごとのレベル差である。したがって本報告書では、「このAIはレベル何か」と問うより、「このタスク、この機能、この権限、この環境アクセスではどの水準か」と問うべきである。自律性はモデルの属性ではなく、設計上の配置である。</p>
+<h3 class="sh">4.3　人間組織の委任理論からの移植と破綻点</h3>
+<p>principal-agent理論の転用核は、インセンティブではなく、情報非対称、観測コスト、検証コストである。Jensen &amp; Mecklingはagency costを所有構造や所有と統制の分離と結びつけた<sup class="r"><a href="#fn52" style="color:inherit;text-decoration:none;">52</a></sup>。Eisenhardtは、情報システムがbehavior-based contractを増やし、outcome-based contractを減らす命題を示す<sup class="r"><a href="#fn53" style="color:inherit;text-decoration:none;">53</a></sup>。AIエージェントでは、成果物だけを見る運用はoutcome-basedに近く、途中ログ、ツール履歴、権限境界、検証記録を見る運用はbehavior-basedに近い。</p>
+<p>AI文脈への明示転用も確認されている。KoltはAI agentsをprincipal-agent theoryとagency lawで分析し、情報非対称、裁量権、忠実義務を問題化する<sup class="r"><a href="#fn54" style="color:inherit;text-decoration:none;">54</a></sup>。2026年の論文はdelegated multi-agent ML systemをprincipal agentとsub-agentsで定義する<sup class="r"><a href="#fn55" style="color:inherit;text-decoration:none;">55</a></sup>。Kimはcomputer scientistsをprincipal、computer algorithmsをagentとするmaterial principal-agent problemを提示する<sup class="r"><a href="#fn56" style="color:inherit;text-decoration:none;">56</a></sup>。JAIRのMonitoring Teams of AI Agentsも、AI agentチームの人数・報酬・監督AIをprincipalの設計問題として扱う<sup class="r"><a href="#fn57" style="color:inherit;text-decoration:none;">57</a></sup>。</p>
+<p>ただし、ここで破綻する移植もある。人間の代理人には給与、評判、昇進、忠誠、恐怖、疲労がある。AIエージェントにはそれらが同型には存在しない。したがって「インセンティブを与える」よりも、「観測できない行為を減らす」「検証できない成果物を採用しない」「権限を分割する」「ログを契約の一部にする」ことが中心になる。</p>
+<p>mission commandまたはAuftragstaktikの転用も慎重でなければならない。E16整理は、Herreraの批判を踏まえ、Auftragstaktikを独米軍事思想の美談や源流神話として扱う危険を示している。抽出すべきは英雄的な独断ではなく、目的・意図、裁量範囲、境界、逸脱時の統制である。AIエージェントでは、「目的だけを与えて任せる」ことはmission commandではない。許容手段、禁止手段、外部操作の上限、停止条件、報告義務を同時に与えて初めて、意図と境界の委任になる。</p>
+<p>CRMとHROは、異議申立てと弱信号を制度化する語彙を与える。FAA AC 120-51EはCrew Resource Management TrainingをActiveなガイダンスとして位置づける<sup class="r"><a href="#fn58" style="color:inherit;text-decoration:none;">58</a></sup>。SKYbraryはsteep authority gradientが懸念表明、質問、情報共有、cross-checkingを阻害すると説明する<sup class="r"><a href="#fn59" style="color:inherit;text-decoration:none;">59</a></sup>。AIエージェントでは、権威勾配は「AIが流暢に断言する」「人間が処理量に圧倒される」「上位計画エージェントが下位検証を押し切る」形で現れる。CRM的対応物は、独立レビュー、反証担当、別モデル検証、引用照合、拒否理由の記録である。</p>
+<p>HROは、失敗への敏感さ、単純化への抵抗、現場への感度、復元力、専門性への委譲を中核にする。AHRQ PSNetは、専門性への委譲を最高位者ではなく脅威に近い専門性への委譲として説明する<sup class="r"><a href="#fn60" style="color:inherit;text-decoration:none;">60</a></sup>。AIエージェントでは、肩書きやモデル名ではなく、テスト、ログ、一次資料、実行環境に最も近い検証過程へ判断権を寄せることが対応物になる。</p>
+<p>最後にspan of controlである。Meier &amp; Bohteは678のTexas school districtsを4年間分析し、span of controlがperformanceを形づくると報告する<sup class="r"><a href="#fn61" style="color:inherit;text-decoration:none;">61</a></sup>。AIエージェントでは「人間1人が何体を監督できるか」に固定値はない。権限強度、失敗コスト、観測可能性、検証自動化、タスク多様性の関数である。低権限・高可観測・自動検証可能な要約エージェントなら多数を監督できる。外部送信、削除、決済、デプロイを持つエージェントなら、少数でも監督負荷は急増する。</p>
+<p>以上を総合すると、判断自動化の理論系譜は、AIエージェントに三つの命題を与える。第一に、自律性は単一レベルではなく、4機能と10段階、環境アクセス、通知、取消可能性の行列である。第二に、監督は承認ボタンではなく、信頼較正、異議申立て、弱信号検知、ログ、検証コストの設計である。第三に、委任は美談でも放任でもなく、意図、境界、観測、検証、停止条件を含む契約である。</p>
+<h2 class="h" id="ch5"><span class="n">V</span>失敗様式と評価の制約——設計の前提条件</h2>
+<p>本章の役割は、設計章の前に制約条件を固定することである。失敗は単一の「モデル能力不足」に還元しない。評価数値も、そのまま運用保証にはならない。委任設計は、この二つを前提に置く必要がある。</p>
+<h3 class="sh">5.1　失敗分類学</h3>
+<p>Microsoft v1は、agentic AIの失敗を「novel/existing」と「safety/security」の2軸で整理し、securityをCIA侵害、safetyをユーザー・社会への害として区別した<sup class="r"><a href="#fn62" style="color:inherit;text-decoration:none;">62</a></sup>。同整理では、memory poisoningが保存・再利用される記憶を汚染するため危険な失敗様式として扱われる<sup class="r"><a href="#fn62" style="color:inherit;text-decoration:none;">62</a></sup>。ここで重要なのは、失敗が出力文の誤りだけではなく、記憶、権限、外部作用にまたがる点である。</p>
+<p>Microsoft v2は、12か月のred teamingを根拠に、Agentic Supply Chain Compromise、Goal Hijacking、Inter-Agent Trust Escalation、CUA Visual Attack、Session Context Contamination、MCP/Plugin Abuse、Capability/Architecture Disclosureの7カテゴリを追加した<sup class="r"><a href="#fn63" style="color:inherit;text-decoration:none;">63</a></sup>。同更新では、HitL bypass、XPIA、memory poisoning、session contaminationが運用上の所見として記載される<sup class="r"><a href="#fn63" style="color:inherit;text-decoration:none;">63</a></sup>。したがって、人間承認を置くだけでは十分ではない。承認が迂回される経路、セッションが汚染される経路、プラグインやMCPが濫用される経路を設計対象に含める必要がある。</p>
+<p>マルチエージェント構成そのものの失敗も分類されている。MAST（Multi-Agent Systems Failure Taxonomy）は、1,600超の実行トレースの分析から14の失敗様式を抽出し、（i）システム設計・仕様の問題、（ii）エージェント間不整合、（iii）タスク検証の3類型に整理した。アノテーター間一致はCohen's κ=0.88である<sup class="r"><a href="#fn64" style="color:inherit;text-decoration:none;">64</a></sup>。この分類が示す読みは、マルチエージェント系の失敗の多くがモデル単体の能力不足ではなく、仕様・役割分担・連携・検証という構造の側に帰属することである。第6章の委譲契約と検証設計は、この3類型への直接の応答として読める。</p>
+<p>OWASPは、Agentic AI threatsをthreat-model-based referenceとして扱い、2026 Top 10ではagent goal hijacking、tool misuse、identity/privilege abuse、memory poisoning、insecure inter-agent communication、cascading failures、trust exploitation、rogue agentsなどを中心リスクとして掲げる<sup class="r"><a href="#fn65" style="color:inherit;text-decoration:none;">65</a></sup>。この整理は、失敗を「応答の品質」ではなく「目標、道具、権限、通信、信頼」の問題として読むことを促す。第6章の委譲契約と第7章の権限設計は、この面で対応する。</p>
+<p>間接プロンプト注入は、Web、ファイル、tool outputなどの外部データに命令を埋め込み、agentがそれを実行命令として扱う問題である<sup class="r"><a href="#fn66" style="color:inherit;text-decoration:none;">66</a></sup>。Unit 42は2026-03-03に、web-based IDPIの実地観測、AI ad review bypass狙い、SEO manipulation、data destruction、DoS、unauthorized transactions、sensitive information leakageなどの攻撃意図を報告した<sup class="r"><a href="#fn66" style="color:inherit;text-decoration:none;">66</a></sup>。ただし、同記事は特定ad-checking agentへの成功実証は未確認とも明記している<sup class="r"><a href="#fn66" style="color:inherit;text-decoration:none;">66</a></sup>。ここでは、観測された攻撃意図と成功実証の有無を分けて読むべきである。</p>
+<p>緩和策にも限界つきの確証がある。Microsoft v2は、agentic componentのSBOM、provenance、version pinning、inter-agent identityの暗号的検証、HitLの決定論的発火、可逆性別承認、context provenance、structured separation、bounded sessionを推奨する<sup class="r"><a href="#fn67" style="color:inherit;text-decoration:none;">67</a></sup>。PromptArmorはAgentDojo上でFPR/FNR &lt;1%、ASR &lt;1%を報告しているが、これは特定ベンチ条件での結果であり、汎用解決とは未確証である<sup class="r"><a href="#fn67" style="color:inherit;text-decoration:none;">67</a></sup>。したがって、対策は「一つ入れれば終わり」ではなく、入力分離、権限分離、承認発火、監査可能性の組み合わせとして扱う必要がある。</p>
+<table>
+<tr><th>失敗面</th><th>根拠化できる観測</th><th>設計上の前提</th></tr>
+<tr><td>記憶</td><td>memory poisoningは保存・再利用される記憶を汚染する<sup class="r"><a href="#fn62" style="color:inherit;text-decoration:none;">62</a></sup></td><td>長期記憶は信頼済み領域として扱わない</td></tr>
+<tr><td>セッション</td><td>session contaminationが運用所見に含まれる<sup class="r"><a href="#fn63" style="color:inherit;text-decoration:none;">63</a></sup></td><td>session境界とcontext provenanceを明示する</td></tr>
+<tr><td>承認</td><td>HitL bypassが運用所見に含まれる<sup class="r"><a href="#fn63" style="color:inherit;text-decoration:none;">63</a></sup></td><td>承認ゲートは決定論的発火とログを伴う</td></tr>
+<tr><td>道具</td><td>MCP/Plugin Abuseが追加カテゴリに含まれる<sup class="r"><a href="#fn63" style="color:inherit;text-decoration:none;">63</a></sup></td><td>toolごとに権限と可逆性を分ける</td></tr>
+<tr><td>通信</td><td>insecure inter-agent communicationがOWASPの中心リスクに含まれる<sup class="r"><a href="#fn65" style="color:inherit;text-decoration:none;">65</a></sup></td><td>agent間identityを検証対象にする</td></tr>
+</table>
+<h3 class="sh">5.2　ベンチマークは何を保証しないか</h3>
+<p>SWE-bench Verifiedは500件の実GitHub issue評価であり、Steel trackerではClaude Mythos 5が95.5%、ValsではClaude Fable 5が95.00%とされた<sup class="r"><a href="#fn68" style="color:inherit;text-decoration:none;">68</a></sup>。しかし、同じ領域についてOpenAIは、SWE-bench Verifiedの失敗138件監査で59.4%にテストまたは記述上の重大問題があり、全frontier modelに汚染兆候があると報告した<sup class="r"><a href="#fn8" style="color:inherit;text-decoration:none;">8</a></sup>。したがって、高いleaderboard値は、汚染の不存在、テスト妥当性、運用信頼性を同時には保証しない。</p>
+<p>WebArena原論文ではGPT-4系baselineが14.41%、人間が78.24%であった<sup class="r"><a href="#fn69" style="color:inherit;text-decoration:none;">69</a></sup>。Steel trackerではWebTactixが74.3%とされたが、公開tracker由来でscaffold差に注意が必要である<sup class="r"><a href="#fn69" style="color:inherit;text-decoration:none;">69</a></sup>。GAIA原論文では人間が92%、GPT-4+pluginsが15%であった<sup class="r"><a href="#fn70" style="color:inherit;text-decoration:none;">70</a></sup>。Steel trackerではOPS-Agentic-Searchが92.36%とされたが、これはシステムとツール込みの成績である<sup class="r"><a href="#fn70" style="color:inherit;text-decoration:none;">70</a></sup>。この差は、モデル単体の能力、ツール設計、scaffold、運用手順を分離しなければ評価できないことを示す。</p>
+<p>tau-bench原論文はpass^kを提案し、gpt-4o級でも成功率が50%未満、retail pass^8が25%未満であることを示した<sup class="r"><a href="#fn71" style="color:inherit;text-decoration:none;">71</a></sup>。Steel trackerではStep-3.5-Flashが88.2%とされ、GitHub上では最新版がτ³-benchへ移行している<sup class="r"><a href="#fn71" style="color:inherit;text-decoration:none;">71</a></sup>。pass@1だけでは実運用信頼性を過大評価しうることは、tau-benchのpass^k低下とAgentAtlasのpass1首位・pass4首位の入替でも確認される<sup class="r"><a href="#fn72" style="color:inherit;text-decoration:none;">72</a></sup>。反復時の一貫性は、単発成功率とは別の評価軸である。</p>
+<p>AgentBenchは8環境のagent評価であり、原論文ではGPT-4が6/8データセットで最良、House-Holdingが78%であった<sup class="r"><a href="#fn73" style="color:inherit;text-decoration:none;">73</a></sup>。Steel trackerではAgentRL w/ Qwen2.5-32B-Instructが70.4%とされたが、community行混在の留保がある<sup class="r"><a href="#fn73" style="color:inherit;text-decoration:none;">73</a></sup>。Berkeley RDI系はGAIA、WebArena、AgentBench、tau-benchなど13 benchmarkの評価コードをagentで解析し、全benchmarkをcritical riskと報告した<sup class="r"><a href="#fn74" style="color:inherit;text-decoration:none;">74</a></sup>。評価コードそのものが脆いなら、評価結果は運用許可の十分条件にはならない。</p>
+<p>METRの時間地平評価は、人間専門家の所要時間に対する成功確率ロジスティック曲線から50%/80% time horizonを推定する方法である<sup class="r"><a href="#fn75" style="color:inherit;text-decoration:none;">75</a></sup>。論文ではClaude 3.7 Sonnet級が約50分または59分とされ、2019以降およそ7か月で倍増したとされる<sup class="r"><a href="#fn75" style="color:inherit;text-decoration:none;">75</a></sup>。ただし、現行ページの動的な最新個別値は未確証である<sup class="r"><a href="#fn75" style="color:inherit;text-decoration:none;">75</a></sup>。ここでも、伸長傾向と最新値を分けて扱う必要がある。</p>
+<table>
+<tr><th>評価対象</th><th>確定できる数字</th><th>保証しないもの</th></tr>
+<tr><td>SWE-bench Verified</td><td>500件、95.5%、95.00%<sup class="r"><a href="#fn68" style="color:inherit;text-decoration:none;">68</a></sup></td><td>汚染不存在、テスト妥当性<sup class="r"><a href="#fn8" style="color:inherit;text-decoration:none;">8</a></sup></td></tr>
+<tr><td>WebArena</td><td>14.41%、78.24%、74.3%<sup class="r"><a href="#fn69" style="color:inherit;text-decoration:none;">69</a></sup></td><td>scaffold差を除いた単体能力</td></tr>
+<tr><td>GAIA</td><td>92%、15%、92.36%<sup class="r"><a href="#fn70" style="color:inherit;text-decoration:none;">70</a></sup></td><td>ツール込み成績とモデル単体の分離</td></tr>
+<tr><td>tau-bench</td><td>gpt-4o級&lt;50%、retail pass^8&lt;25%、88.2%<sup class="r"><a href="#fn71" style="color:inherit;text-decoration:none;">71</a></sup></td><td>反復時の安定性<sup class="r"><a href="#fn72" style="color:inherit;text-decoration:none;">72</a></sup></td></tr>
+<tr><td>AgentBench</td><td>8環境、6/8最良、78%、70.4%<sup class="r"><a href="#fn73" style="color:inherit;text-decoration:none;">73</a></sup></td><td>community混在を除いた比較</td></tr>
+<tr><td>METR</td><td>約50分/59分、約7か月で倍増<sup class="r"><a href="#fn75" style="color:inherit;text-decoration:none;">75</a></sup></td><td>動的ページの最新個別値<sup class="r"><a href="#fn75" style="color:inherit;text-decoration:none;">75</a></sup></td></tr>
+</table>
+<h3 class="sh">5.3　実運用証拠の現状——ある数字と無い数字</h3>
+<p>実運用に近い数字は存在する。AnthropicはClaude Codeについて、約400,000セッション、約235,000人、対象期間2025年10月から2026年4月を報告した<sup class="r"><a href="#fn76" style="color:inherit;text-decoration:none;">76</a></sup>。同報告では、典型セッションは約4ターン、作業の56%がコード作成・修正・テスト・オーケストレーションであり、専門家セッションでは1プロンプトあたり約12アクション、初心者では約5アクションであった<sup class="r"><a href="#fn76" style="color:inherit;text-decoration:none;">76</a></sup>。これは利用実態の規模と行動量を示すが、失敗率やrollback率を直接示すものではない。</p>
+<p>GitHub社内アクセシビリティエージェントは3,535 PRをレビューし、68% resolution rateを報告した<sup class="r"><a href="#fn77" style="color:inherit;text-decoration:none;">77</a></sup>。Copilot code reviewは6,000万件超で、GitHub上のコードレビューの5件に1件超を占め、71%のレビューでactionable feedbackがあり、平均5.1コメント/レビューであり、12,000超の組織が全PR自動レビューを使っている<sup class="r"><a href="#fn78" style="color:inherit;text-decoration:none;">78</a></sup>。これらはレビュー量と反応量の数字である。品質保証の最終結果そのものではない。</p>
+<p>GitLab/Harris Pollの1,528人調査では、91%が2つ以上のAI coding toolsを使用し、85%がボトルネックは「書く」から「レビュー・検証」へ移ったと回答した<sup class="r"><a href="#fn79" style="color:inherit;text-decoration:none;">79</a></sup>。同調査では、インシデント経験組織のうち34%が過去1年の本番インシデントでAI生成コード寄与を判定できなかった<sup class="r"><a href="#fn79" style="color:inherit;text-decoration:none;">79</a></sup>。この数字は、生成量の増加よりも、検証と原因帰属の難しさを設計入力にすべきことを示す。</p>
+<p>Stack Overflow 2025 Developer Surveyでは、プロ開発者のAIツール日次利用が50.6%であり、AI出力精度への信頼は全回答で「高信頼」3.1%、「やや信頼」29.6%、一方で「やや不信」26.1%、「強い不信」19.6%であった<sup class="r"><a href="#fn80" style="color:inherit;text-decoration:none;">80</a></sup>。高責任領域のDeployment/monitoringでは76%がAI利用予定なしと回答した<sup class="r"><a href="#fn80" style="color:inherit;text-decoration:none;">80</a></sup>。利用の広がりと信頼の較正は別問題である。</p>
+<p>攻撃実証も運用証拠の一部である。0DIN/MozillaはClaude Codeへの間接プロンプト注入PoCとして、通常に見えるリポジトリ、DNS TXT経由ペイロード、reverse shell、環境変数/APIキー等への到達可能性を実証した<sup class="r"><a href="#fn81" style="color:inherit;text-decoration:none;">81</a></sup>。CodeRabbitは470 OSS PRを分析し、AI PRは10.83 issues/PR、人間PRは6.45 issues/PRで約1.7倍、logic/correctnessは75%増、securityは最大2.74倍と報告した<sup class="r"><a href="#fn82" style="color:inherit;text-decoration:none;">82</a></sup>。ここから言えるのは、運用設計では「使われているか」だけでなく「何が検出され、何が戻され、何が事故化したか」を別ログにしなければならないということである。</p>
+<table>
+<tr><th>証拠種別</th><th>ある数字</th><th>読み方</th></tr>
+<tr><td>利用実態</td><td>約400,000セッション、約235,000人<sup class="r"><a href="#fn76" style="color:inherit;text-decoration:none;">76</a></sup></td><td>規模と作業分布の証拠</td></tr>
+<tr><td>PRレビュー</td><td>3,535 PR、68% resolution rate<sup class="r"><a href="#fn77" style="color:inherit;text-decoration:none;">77</a></sup></td><td>特定社内用途の解決率</td></tr>
+<tr><td>レビュー量</td><td>6,000万件超、5件に1件超、71%、5.1コメント<sup class="r"><a href="#fn78" style="color:inherit;text-decoration:none;">78</a></sup></td><td>レビュー運用の普及度</td></tr>
+<tr><td>組織調査</td><td>1,528人、91%、85%、34%<sup class="r"><a href="#fn79" style="color:inherit;text-decoration:none;">79</a></sup></td><td>検証負荷と原因帰属の問題</td></tr>
+<tr><td>開発者調査</td><td>50.6%、3.1%、29.6%、26.1%、19.6%、76%<sup class="r"><a href="#fn80" style="color:inherit;text-decoration:none;">80</a></sup></td><td>利用と信頼のずれ</td></tr>
+<tr><td>攻撃PoC</td><td>DNS TXT、reverse shell、APIキー到達可能性<sup class="r"><a href="#fn81" style="color:inherit;text-decoration:none;">81</a></sup></td><td>tool実行環境の攻撃面</td></tr>
+<tr><td>PR品質比較</td><td>470 PR、10.83対6.45、約1.7倍、75%増、最大2.74倍<sup class="r"><a href="#fn82" style="color:inherit;text-decoration:none;">82</a></sup></td><td>生成物検証の必要性</td></tr>
+</table>
+<p>以上から、第6章と第7章に渡す前提は三つである。第一に、失敗は出力誤りではなく、記憶、権限、tool、通信、承認、sessionの複合問題である<sup class="r"><a href="#fn62" style="color:inherit;text-decoration:none;">62</a></sup><sup class="r"><a href="#fn63" style="color:inherit;text-decoration:none;">63</a></sup><sup class="r"><a href="#fn65" style="color:inherit;text-decoration:none;">65</a></sup>。第二に、ベンチマーク高得点は、汚染不存在、反復安定性、運用安全性を保証しない<sup class="r"><a href="#fn8" style="color:inherit;text-decoration:none;">8</a></sup><sup class="r"><a href="#fn74" style="color:inherit;text-decoration:none;">74</a></sup><sup class="r"><a href="#fn72" style="color:inherit;text-decoration:none;">72</a></sup>。第三に、実運用の公開数字は利用量、レビュー量、調査回答、PoC、PR比較に偏っており、設計側は監督ログ、差戻し理由、反証履歴、可逆性分類を自前で記録する必要がある<sup class="r"><a href="#fn76" style="color:inherit;text-decoration:none;">76</a></sup><sup class="r"><a href="#fn78" style="color:inherit;text-decoration:none;">78</a></sup><sup class="r"><a href="#fn79" style="color:inherit;text-decoration:none;">79</a></sup><sup class="r"><a href="#fn81" style="color:inherit;text-decoration:none;">81</a></sup><sup class="r"><a href="#fn82" style="color:inherit;text-decoration:none;">82</a></sup>。</p>
+<h2 class="h" id="ch6"><span class="n">VI</span>設計パターン——委譲の構造</h2>
+<h3 class="sh">6.1　workflowかagentか</h3>
+<p>委譲設計の第一選択は、agentを増やすことではない。Anthropicはworkflowを「事前定義されたコード経路」、agentを「LLMが手順とツール使用を動的に指示するもの」と区別する<sup class="r"><a href="#fn1" style="color:inherit;text-decoration:none;">1</a></sup>。同社の設計原則は、最小解から始め、必要が実証された時だけ複雑化することである<sup class="r"><a href="#fn83" style="color:inherit;text-decoration:none;">83</a></sup>。OpenAIも、Responses APIを「自分でloopを所有する」場合、Agents SDKを「SDKにloopを走らせる」場合として分ける<sup class="r"><a href="#fn84" style="color:inherit;text-decoration:none;">84</a></sup>。Google ADKも、predictable pipelinesとadaptive agent behaviorを、workflow agentsとLLM-driven dynamic routingの併置で表現する<sup class="r"><a href="#fn85" style="color:inherit;text-decoration:none;">85</a></sup>。したがって基本線は、固定できる制御はworkflowへ置き、固定できない判断だけをagentへ渡すことである。</p>
+<p>Anthropic正典のworkflowパターンは、prompt chaining、routing、parallelization、orchestrator-workers、evaluator-optimizerの5種類に整理される<sup class="r"><a href="#fn86" style="color:inherit;text-decoration:none;">86</a></sup>。</p>
+<table>
+<tr><th>パターン</th><th>使う条件</th><th>避ける条件</th><th>根拠</th></tr>
+<tr><td>prompt chaining</td><td>入出力を段階に分けられる</td><td>途中観測で計画自体が変わる</td><td>5パターンの一つ<sup class="r"><a href="#fn86" style="color:inherit;text-decoration:none;">86</a></sup></td></tr>
+<tr><td>routing</td><td>入力分類が安定している</td><td>分類自体が主要な未解決問題である</td><td>5パターンの一つ<sup class="r"><a href="#fn86" style="color:inherit;text-decoration:none;">86</a></sup></td></tr>
+<tr><td>parallelization</td><td>小タスクが独立している</td><td>状態共有が暗黙に必要である</td><td>Google ParallelAgentは独立タスク向けで、状態共有は明示実装を要する<sup class="r"><a href="#fn87" style="color:inherit;text-decoration:none;">87</a></sup></td></tr>
+<tr><td>orchestrator-workers</td><td>必要な小タスクを事前に予測できない</td><td>小タスク依存が密で全員が同じ文脈を要する</td><td>事前に小タスクを予測できない複雑タスクに適する<sup class="r"><a href="#fn2" style="color:inherit;text-decoration:none;">2</a></sup></td></tr>
+<tr><td>evaluator-optimizer</td><td>評価基準が明確で反復改善を測れる</td><td>評価基準が曖昧で反復が自己満足化する</td><td>明確な評価基準と測定価値が条件である<sup class="r"><a href="#fn88" style="color:inherit;text-decoration:none;">88</a></sup></td></tr>
+</table>
+<p>multi-agentは、workflowの上位互換ではない。Anthropicのmulti-agent research systemでは、token使用量単独でBrowseComp性能分散の80%を説明した<sup class="r"><a href="#fn89" style="color:inherit;text-decoration:none;">89</a></sup>。Anthropic実測ではagentはchatの約4倍、multi-agent systemはchatの約15倍のtokenを使った<sup class="r"><a href="#fn90" style="color:inherit;text-decoration:none;">90</a></sup>。同社は複雑researchで3-5 subagentsを並列化し、subagent側で3以上のtoolsを並列利用して調査時間を最大90%削減したと報告した<sup class="r"><a href="#fn91" style="color:inherit;text-decoration:none;">91</a></sup>。同社はtool description改善により将来agentのtask completion timeが40%減ったとも報告した<sup class="r"><a href="#fn92" style="color:inherit;text-decoration:none;">92</a></sup>。ただし、これらのE5-06からE5-09の数値はAnthropic自社評価であり、独立実測ではない。Anthropicの別の内部評価ではmulti-agent research systemがsingle-agent比90.2%改善したが、同時にmulti-agentはchat比約15倍tokenを使う<sup class="r"><a href="#fn93" style="color:inherit;text-decoration:none;">93</a></sup>。このE7-09も自社評価であり、独立実測ではない。</p>
+<p>ここから設計規則が出る。agent化は、価値、並列性、文脈分割、検証可能性が同時にある場合に限る。速度だけを理由にするならparallelizationでよい。柔軟性だけを理由にするならorchestrator-workersで足りるかを先に見る。評価可能性があるならevaluator-optimizerを置く。評価可能性がない反復は、停止不能な会話に近づく。</p>
+<h3 class="sh">6.2　委譲契約の設計</h3>
+<p>委譲契約とは、サブタスクを渡す文章ではない。目的、入力artifact、利用可能tool、禁止事項、出力形式、依存、成功判定、予算を束ねた最小仕様である。Plan-and-Solveは、全体タスクを小タスクへ分ける計画と、その計画に従う実行の2部構成である<sup class="r"><a href="#fn94" style="color:inherit;text-decoration:none;">94</a></sup>。Least-to-MostはSCANで14例のみを使い全split 99%以上、CoTは16%と報告した<sup class="r"><a href="#fn95" style="color:inherit;text-decoration:none;">95</a></sup>。PEARLは長文推論をaction mining、plan formulation、plan executionの3段階に分ける<sup class="r"><a href="#fn96" style="color:inherit;text-decoration:none;">96</a></sup>。これらは事前計画型である。</p>
+<p>一方、環境観測が必要なタスクでは逐次観測型が必要になる。ReActはALFWorldとWebShopでそれぞれ34%と10%の絶対成功率改善を報告した<sup class="r"><a href="#fn97" style="color:inherit;text-decoration:none;">97</a></sup>。HuggingGPTはtask planning、model selection、subtask execution、response summarizationのcontroller構成を採る<sup class="r"><a href="#fn98" style="color:inherit;text-decoration:none;">98</a></sup>。ADaPTはplan-and-executeでサブタスク実行不能が全体失敗につながる問題を、必要時再帰分解で扱う<sup class="r"><a href="#fn99" style="color:inherit;text-decoration:none;">99</a></sup>。ADaPTはALFWorld最大28.3%、WebShop 27%、TextCraft 33%の成功率改善を報告した<sup class="r"><a href="#fn100" style="color:inherit;text-decoration:none;">100</a></sup>。ReWOOはHotpotQAで5倍のtoken efficiencyと4% accuracy improvementを報告した<sup class="r"><a href="#fn101" style="color:inherit;text-decoration:none;">101</a></sup>。この系列は、分解を一回で完了させる発想を弱める。実行者が詰まった時にだけ再分解し、依存をartifactとして残す方がよい。</p>
+<p>委譲契約の表現は、自然言語だけに閉じない。OpenAI SwarmではAgent handoff時にactive Agentのsystem promptだけが変わり、chat historyは残る<sup class="r"><a href="#fn102" style="color:inherit;text-decoration:none;">102</a></sup>。Google ADK記事は、sub-agentには最小必要contextだけを見せ、必要ならtoolで追加取得させる原則を述べる<sup class="r"><a href="#fn32" style="color:inherit;text-decoration:none;">32</a></sup>。したがって契約は、会話履歴、構造化状態、成果物参照を分ける必要がある。全履歴を渡すと、依存とノイズが同じ面に乗る。最小contextだけを渡すと、欠落が起きる。そこで、入力artifactを列挙し、足りない情報はtoolで明示取得させる。これは文脈節約ではなく、責任境界の記録である。</p>
+<p>最小契約は次の形でよい。</p>
+<table>
+<tr><th>項目</th><th>設計内容</th></tr>
+<tr><td>目的</td><td>何を解くかを一文で固定する</td></tr>
+<tr><td>入力artifact</td><td>参照してよいファイル、claim、ログを列挙する</td></tr>
+<tr><td>tool</td><td>使える取得・実行・検証手段を限定する</td></tr>
+<tr><td>禁止事項</td><td>推測記載、未検証claim、外部送信などを明示する</td></tr>
+<tr><td>出力形式</td><td>表、JSON、Markdown、差分などを固定する</td></tr>
+<tr><td>依存</td><td>先行成果物と変数名を明記する</td></tr>
+<tr><td>成功判定</td><td>合格条件と差戻し条件を分ける</td></tr>
+<tr><td>予算</td><td>時間、turn、token、tool-callの上限を書く</td></tr>
+</table>
+<h3 class="sh">6.3　検証ループと独立性の設計</h3>
+<p>検証ループは、同じモデルに「見直せ」と言わせることではない。外部フィードバックなしの内在的自己修正は、推論では改善せず悪化する場合がある<sup class="r"><a href="#fn33" style="color:inherit;text-decoration:none;">33</a></sup>。Self-Refineは7タスクで従来の一回生成より平均約20%絶対改善を報告する<sup class="r"><a href="#fn103" style="color:inherit;text-decoration:none;">103</a></sup>。ReflexionはHumanEvalで91% pass@1を報告し、GPT-4の80%を上回ったとする<sup class="r"><a href="#fn104" style="color:inherit;text-decoration:none;">104</a></sup>。Self-consistencyはCoTのgreedy decodingを置換し、GSM8Kで+17.9%改善を報告する<sup class="r"><a href="#fn105" style="color:inherit;text-decoration:none;">105</a></sup>。これらは同じ「反復」ではない。内省、環境フィードバック、複数経路探索、外部検証を分けて設計すべきである。</p>
+<p>外部信号は三つに分ける。第一はunit testや実行結果である。第二はverifierである。Verifierで複数候補を順位付けする方式はGSM8K性能を有意に改善し、データ増加でfinetuning baselineよりよくスケールすると報告される<sup class="r"><a href="#fn106" style="color:inherit;text-decoration:none;">106</a></sup>。第三はprocess supervisionである。Process supervisionはMATHでoutcome supervisionを上回り、代表サブセットで78%を解いたと報告される<sup class="r"><a href="#fn107" style="color:inherit;text-decoration:none;">107</a></sup>。最終答えだけを見る検証は、途中の破綻を見落とす。工程を検証できるなら、工程を検証する。</p>
+<p>LLM-as-judgeは有用だが、裁定者として単独化しない。LLM-as-judgeはGPT-4級では人間選好と80%超で一致しうるが、位置、冗長性、自己選好バイアスを持つ<sup class="r"><a href="#fn7" style="color:inherit;text-decoration:none;">7</a></sup>。運用では、候補の位置入替、匿名化、別モデルjudge、短さへの基準明示、サンプル監査を組み合わせる。Debateの安全性構想は、人間が直接判断困難な課題で相互反論を使うが、初期実証はMNISTの限定実験である<sup class="r"><a href="#fn108" style="color:inherit;text-decoration:none;">108</a></sup>。Reflection型手法には、誤答に自信を持つと新規思考を出せないDegeneration-of-Thought問題が報告されている<sup class="r"><a href="#fn109" style="color:inherit;text-decoration:none;">109</a></sup>。討論や反省は、検証器ではなく候補生成器として扱う方が堅い。</p>
+<div class="diagram"><b>図2　検証の独立性5層（P3）——役割分離ではなく入力の分離</b>
+
+   ①生成者      ─┐
+   ②取得ソース  ─┤   同じモデル系・同じ検索語・同じ証拠束を共有するほど
+   ③検証ツール  ─┼─▶ 誤りの相関は残る。層を分離するほど
+   ④実行oracle  ─┤   「同じ誤りを共有しにくく」なる
+   ⑤裁定者      ─┘
+   重要claimの既定: 一次資料の再取得 または 実行可能テスト
+   裁定者が見るもの: 意図ではなく artifact・検証ログ・反証履歴
+</div>
+<p>P3は、検証の独立性を役割分離ではなく入力の分離として定義する。五層は、生成者、取得ソース、検証ツール、実行oracle、裁定者である。生成者と裁定者を別名にしても、同じ入力、同じ検索結果、同じモデル系列なら独立性は弱い。重要claimは、一次資料再取得または実行可能テストへ落とす。裁定者は、生成者の意図ではなく、artifact、検証ログ、反証履歴を見る。この設計により、検証は「信じる相手を増やす」作業ではなく、「同じ誤りを共有しにくくする」作業になる。</p>
+<h3 class="sh">6.4　停止・予算・再開</h3>
+<p>停止は知能の問題ではなく、制御の問題である。無限エージェントループは、有効な停止境界なしにモデル、ツール、エージェント等が反復起動される構造的失敗として定義される<sup class="r"><a href="#fn9" style="color:inherit;text-decoration:none;">9</a></sup>。IAL-Scanは6,549件の実リポジトリで74件を報告し、68件を確認し、精度91.9%とする<sup class="r"><a href="#fn110" style="color:inherit;text-decoration:none;">110</a></sup>。LangGraphはstop condition前に最大ステップへ達した状態をGRAPH_RECURSION_LIMITとし、無限ループを典型原因に挙げる<sup class="r"><a href="#fn111" style="color:inherit;text-decoration:none;">111</a></sup>。OpenAI Agents SDKはfinal outputまでagent loopを回し、max_turns超過でMaxTurnsExceededを発生させる<sup class="r"><a href="#fn10" style="color:inherit;text-decoration:none;">10</a></sup>。AutoGen 0.2はis_termination_msg、max_consecutive_auto_reply、human_input_modeで停止・人間介入を制御する<sup class="r"><a href="#fn112" style="color:inherit;text-decoration:none;">112</a></sup>。SWE-agentは、コスト制限なしではagentが反復を止めず、平均コストが無限大へ収束すると明記する<sup class="r"><a href="#fn113" style="color:inherit;text-decoration:none;">113</a></sup>。</p>
+<p>したがって「賢い収束判定」より先に、硬い上限を置く。時間、turn、token、tool-call、未照合claim数、反証未処理数を別々に切る。完了条件は肯定的に書く。停止条件は否定的に書く。人間エスカレーション条件は例外として書く。三者を混ぜると、停止時に成果物の扱いが曖昧になる。</p>
+<p>予算は事後集計ではなく、実行中の制御信号にする。BAGENはbudget awarenessを実行中の残予算区間推定と実行不能警告として定式化し、early stopが失敗軌跡のtokenを28〜64%節約したと報告する<sup class="r"><a href="#fn114" style="color:inherit;text-decoration:none;">114</a></sup>。Budget-Aware Tool-Useは、tool-call予算を増やすだけでは性能が天井に当たり、Budget Tracker/BATSによる継続的な予算信号が有効だとする<sup class="r"><a href="#fn115" style="color:inherit;text-decoration:none;">115</a></sup>。BAVTは残予算比率に応じて探索から活用へ移るbudget-conditioned node selectionを提案する<sup class="r"><a href="#fn116" style="color:inherit;text-decoration:none;">116</a></sup>。予算は「残り何円か」ではなく、「探索を続けるか、統合へ移るか、保留へ落とすか」の入力である。</p>
+<p>長時間実行ではcheckpoint/resumeが停止設計の一部になる。Temporalは長時間agentの復旧について、Event Historyで過去判断を再生し、クラッシュ後に同じ状態から再開する設計を説明する<sup class="r"><a href="#fn117" style="color:inherit;text-decoration:none;">117</a></sup>。P4は、停止を明示上限の多層防御とし、停止時成果物を採用可、保留、破棄に仕分ける。採用可は検証済みで依存が閉じたもの。保留は未照合だが再開可能なもの。破棄は根拠、依存、再現経路のいずれかを失ったもの。この三値を残せば、停止は失敗ではなく、次の委譲契約の入力になる。</p>
+<h2 class="h" id="ch7"><span class="n">VII</span>権限と監督の実装</h2>
+<p>本章の焦点は、人間を途中に置くことではなく、人間がいつ止め、何を見て、どの状態から再開し、どの権限を渡さないかを実装語彙に落とすことである。MCP仕様はtool invocationに人間がdenyできるHITLを推奨し<sup class="r"><a href="#fn118" style="color:inherit;text-decoration:none;">118</a></sup>、AI Act 14条は高リスクAIで自然人による実効的監督を設計段階から可能にする要件を置く<sup class="r"><a href="#fn14" style="color:inherit;text-decoration:none;">14</a></sup>。したがって監督は、承認UI、状態保存、権限境界、監査ログ、停止可能性の束として扱う。</p>
+<h3 class="sh">7.1　HITLの実装語彙</h3>
+<p>HITLの最小単位は「承認する」ではない。LangChain HITL middlewareは人間判断をapprove/edit/reject/respondの4種として実装する<sup class="r"><a href="#fn11" style="color:inherit;text-decoration:none;">11</a></sup>。この4型は、実行許可、入力修正、拒否、追加応答の差を明示する。OpenAI Agents SDKはsensitive tool callsを承認・拒否までpauseし、RunStateでserialize/resumeする<sup class="r"><a href="#fn13" style="color:inherit;text-decoration:none;">13</a></sup>。LangGraphのinterruptはgraph executionをpauseし、persistence layerで状態を保存してresumeを待つ<sup class="r"><a href="#fn119" style="color:inherit;text-decoration:none;">119</a></sup>。ここで重要なのは、承認点が「出力後のレビュー」ではなく、実行前の分岐として組み込まれる点である。</p>
+<table>
+<tr><th>系統</th><th>実装語彙</th><th>監督上の意味</th></tr>
+<tr><td>LangChain</td><td>approve/edit/reject/respondの4 decision typeを持つ<sup class="r"><a href="#fn120" style="color:inherit;text-decoration:none;">120</a></sup></td><td>承認者が実行、修正、拒否、追加応答を選べる。</td></tr>
+<tr><td>LangGraph</td><td>interruptとcheckpointで停止点から再開する<sup class="r"><a href="#fn121" style="color:inherit;text-decoration:none;">121</a></sup></td><td>実行中の状態を失わずに人間判断へ渡せる。</td></tr>
+<tr><td>OpenAI Agents SDK</td><td>承認対象tool callでrunをpauseし、RunStateからresumeできる<sup class="r"><a href="#fn122" style="color:inherit;text-decoration:none;">122</a></sup></td><td>handoff先やnested agent内の承認もrun-wideに浮上させられる<sup class="r"><a href="#fn13" style="color:inherit;text-decoration:none;">13</a></sup>。</td></tr>
+<tr><td>OpenAI Agents SDK</td><td>handoffは別agentへの委任をLLM向けtoolとして表す<sup class="r"><a href="#fn123" style="color:inherit;text-decoration:none;">123</a></sup></td><td>委譲そのものを観測対象にできる。</td></tr>
+<tr><td>OpenAI Agents SDK</td><td>tool guardrailsはcustom function-tool呼び出し前後に走るが、handoff call自体には適用されない<sup class="r"><a href="#fn124" style="color:inherit;text-decoration:none;">124</a></sup></td><td>handoffをまたぐ統制は別途設計する必要がある。</td></tr>
+<tr><td>Microsoft Agent Framework</td><td>workflow HITLはRequestPortによるrequest/responseで人間応答を待つ<sup class="r"><a href="#fn125" style="color:inherit;text-decoration:none;">125</a></sup></td><td>外部システムや人間をworkflowの応答者として置ける。</td></tr>
+<tr><td>CrewAI</td><td>webhook HITLはtask完了後にPending Human Inputで停止し、resume endpointにfeedbackとapproveを返す<sup class="r"><a href="#fn126" style="color:inherit;text-decoration:none;">126</a></sup></td><td>task単位のレビューを実行状態に接続できる。</td></tr>
+<tr><td>Claude Code/Codex</td><td>Claude Codeはallow/ask/denyをdeny、ask、allowの順に評価する<sup class="r"><a href="#fn127" style="color:inherit;text-decoration:none;">127</a></sup>。Codexはsandbox modeとapproval policyの二層で、networkは既定でoffである<sup class="r"><a href="#fn128" style="color:inherit;text-decoration:none;">128</a></sup>。</td><td>開発環境ではHITLが権限境界と一体化する。</td></tr>
+</table>
+<p>この比較から、HITLは四つの問いに分解できる。第一に、どの操作を止めるかである。第二に、止めた状態を保存できるかである。第三に、人間が何を選べるかである。第四に、承認後の実行権限がどこまで届くかである。第6章の停止・予算・再開設計は、この章では権限境界の問題として受け直す。</p>
+<h3 class="sh">7.2　権限とサンドボックス</h3>
+<p>権限モデルは、能力の表明ではなく実行可能範囲の制限である。Codexはsandbox modeとapproval policyを分離し、workspace外編集やnetwork accessを承認対象にする<sup class="r"><a href="#fn129" style="color:inherit;text-decoration:none;">129</a></sup>。この二層では、sandboxが「技術的にできること」を狭め、approval policyが「境界越えの時点で止まること」を定める。Codexはdestructive annotationを持つapp/MCP tool callを承認必須にする<sup class="r"><a href="#fn130" style="color:inherit;text-decoration:none;">130</a></sup>。したがって、承認は信頼の儀式ではなく、破壊的操作の実行前停止である。</p>
+<p>Claude Codeはpermission modeを6種に分け、bypassPermissionsは隔離環境向けに限定している<sup class="r"><a href="#fn131" style="color:inherit;text-decoration:none;">131</a></sup>。plan modeは調査・計画は許すがソース編集はしない<sup class="r"><a href="#fn132" style="color:inherit;text-decoration:none;">132</a></sup>。auto modeは別classifierで実行前審査するが、安全保証ではない<sup class="r"><a href="#fn133" style="color:inherit;text-decoration:none;">133</a></sup>。この並びは、読取、計画、編集、自動判定、拒否、隔離環境内バイパスを分ける。確認頻度を下げる設計は必要になり得るが、確認疲れの定量値はverified claimに無いため、本章では数値化しない。</p>
+<p>可逆性の分類は、次の5軸で実装に落とす。第一はread-onlyかwriteかである。MCP tool annotationsにはreadOnlyHintがある<sup class="r"><a href="#fn134" style="color:inherit;text-decoration:none;">134</a></sup>。第二はwriteが非破壊か破壊的かである。MCP tool annotationsにはdestructiveHintがある<sup class="r"><a href="#fn134" style="color:inherit;text-decoration:none;">134</a></sup>。第三は再実行しても同じ意味を持つかである。MCP tool annotationsにはidempotentHintがある<sup class="r"><a href="#fn134" style="color:inherit;text-decoration:none;">134</a></sup>。第四は外部世界へ開いているかである。MCP tool annotationsにはopenWorldHintがある<sup class="r"><a href="#fn134" style="color:inherit;text-decoration:none;">134</a></sup>。第五は不可逆操作で意思決定と実行を分けるかである。OWASPはagent toolのleast privilege、高リスク操作のHITL、不可逆操作での意思決定と実行分離を推奨する<sup class="r"><a href="#fn12" style="color:inherit;text-decoration:none;">12</a></sup>。</p>
+<p>ただしannotationは保証ではない。MCP tool annotationsは承認promptやpolicy engine入力には使えるが、信頼不能サーバでは保証にならない<sup class="r"><a href="#fn134" style="color:inherit;text-decoration:none;">134</a></sup>。したがって、readOnlyHintを見て自動承認する設計は、信頼できるtool registry、実行ログ、sandbox制約と合わせて初めて意味を持つ。E9-12のAgentic NIST RMF profile案はCSA Lab案としてだけ扱い、NIST公式文書とは扱わない。該当案はtool risk inventoryとaction-consequence mappingを提案する<sup class="r"><a href="#fn135" style="color:inherit;text-decoration:none;">135</a></sup>。</p>
+<h3 class="sh">7.3　規制要件の設計翻訳</h3>
+<p>AI Act 14条は、高リスクAIに自然人による実効的監督を設計段階から可能にする義務を置き、能力・限界の理解、異常検知、automation bias認識、出力解釈、出力の不使用・無視・上書き・反転、停止ボタン等による安全停止を要件に含める<sup class="r"><a href="#fn14" style="color:inherit;text-decoration:none;">14</a></sup>。高リスク該当はAnnex I対象製品・安全部品かつ第三者適合性評価が必要な場合、またはAnnex III掲載用途という主な2ルートで判定される<sup class="r"><a href="#fn136" style="color:inherit;text-decoration:none;">136</a></sup>。Annex III高リスク規則は2026-08-02、規制製品組込の高リスク規則は2027-08-02とされるため、本章ではこれらを現行義務として書かない<sup class="r"><a href="#fn137" style="color:inherit;text-decoration:none;">137</a></sup>。</p>
+<p>Article 14の要件は、次の9項目に翻訳できる。1. 用途分類と高リスク判定ログを残す<sup class="r"><a href="#fn136" style="color:inherit;text-decoration:none;">136</a></sup>。2. 権限範囲、禁止行為、停止条件を明示する<sup class="r"><a href="#fn14" style="color:inherit;text-decoration:none;">14</a></sup>。3. 能力と限界を監督者が理解できる形で表示する<sup class="r"><a href="#fn14" style="color:inherit;text-decoration:none;">14</a></sup>。4. automation biasを警告し、出力の再検討を促す<sup class="r"><a href="#fn14" style="color:inherit;text-decoration:none;">14</a></sup>。5. 出力の不使用、無視、上書き、反転をUI上の操作にする<sup class="r"><a href="#fn14" style="color:inherit;text-decoration:none;">14</a></sup>。6. stop buttonまたは同等の安全停止を実装する<sup class="r"><a href="#fn14" style="color:inherit;text-decoration:none;">14</a></sup>。7. 高影響tool callを事前確認に置く<sup class="r"><a href="#fn12" style="color:inherit;text-decoration:none;">12</a></sup>。8. 承認、拒否、編集、再開の監査ログを保存する<sup class="r"><a href="#fn11" style="color:inherit;text-decoration:none;">11</a></sup>。9. 事故、苦情、異常検知を人間と組織の責任線に接続する<sup class="r"><a href="#fn138" style="color:inherit;text-decoration:none;">138</a></sup>。</p>
+<p>NIST AI RMFは任意利用のリスク管理枠組みで、Govern/Map/Measure/Manageを中核にし、GenAI Profileは2024-07-26に公表された<sup class="r"><a href="#fn139" style="color:inherit;text-decoration:none;">139</a></sup>。NISTには2026-02-17作成のAI Agent Standards Initiativeがあり、standards、protocols、research等を対象にする<sup class="r"><a href="#fn140" style="color:inherit;text-decoration:none;">140</a></sup>。ISO/IEC 42001:2023はAI management systemの国際標準で、responsibilities、risk assessment、transparency、monitoring、continual improvementを扱う<sup class="r"><a href="#fn141" style="color:inherit;text-decoration:none;">141</a></sup>。これらは、HITLを製品機能ではなく管理システムとして読むための外部座標である。</p>
+<p>責任帰属は、AI agent自体ではなく人間または組織への客観的注意義務、契約効果帰属、監督・訓練・設計責任として構成される<sup class="r"><a href="#fn138" style="color:inherit;text-decoration:none;">138</a></sup>。英CMA文書は、agentic AIでも既存消費者保護原則が適用され、人間かAIかを問わず事業者が消費者対応に責任を負い、training、monitoring、human oversight、迅速なrefinementを求める<sup class="r"><a href="#fn142" style="color:inherit;text-decoration:none;">142</a></sup>。したがって、監督者は単なる承認者ではなく、組織の注意義務を実装へ接続する役割である。</p>
+<h3 class="sh">7.4　AI controlの実務移植</h3>
+<p>AI controlは、モデルが意図的に安全策を破ろうとしても損害を起こせないかを評価対象にし、弱いtrusted modelで強いuntrusted modelを監督する方向で定式化されている<sup class="r"><a href="#fn143" style="color:inherit;text-decoration:none;">143</a></sup>。初期AI control実験は、GPT-4を強い非信頼モデル、GPT-3.5を弱い信頼モデル、人間請負者を限定的な信頼労働として、バックドア入りコード提出を防ぐプロトコルを評価した<sup class="r"><a href="#fn144" style="color:inherit;text-decoration:none;">144</a></sup>。この構図は実務では、untrusted worker、trusted monitor、限定的人間レビュー、事前control evalへ翻訳できる。</p>
+<p>実務移植の基本形は三段である。第一に、生成者をuntrusted workerとして扱い、権限を最小化する。第二に、別モデルまたはルールベース検査をtrusted monitorとして置く。第三に、人間は全件レビューではなく、高影響、低可逆、外部到達、監視不一致のケースに限定して介入する。弱い人間監督は超人的モデルへそのままスケールしにくい可能性がある一方、weak-to-strong改善は実証的に前進可能だとされる<sup class="r"><a href="#fn145" style="color:inherit;text-decoration:none;">145</a></sup>。弱いLLM judgeが強いLLM agentを評価する設定では、debateがconsultancyより良い条件があるが、direct QAとの比較はタスク依存で混在する<sup class="r"><a href="#fn146" style="color:inherit;text-decoration:none;">146</a></sup>。recursive reward modelingは、人間が直接評価しにくい複雑タスクで、評価補助エージェントを再帰的に訓練して監督能力を増幅する研究方向として提示されている<sup class="r"><a href="#fn147" style="color:inherit;text-decoration:none;">147</a></sup>。</p>
+<p>CoT監視は補助線であり、単独の耐荷重部材ではない。CoT monitoringは行動・最終出力だけの監視より有効な場合があるが、訓練手順、データ、スケールでfragileになり得るため、load-bearingな単独統制層とは未確証である<sup class="r"><a href="#fn148" style="color:inherit;text-decoration:none;">148</a></sup>。OpenAIのreward hacking監視研究では、CoT monitorがaction-only monitorより有効だった一方、CoTへの直接最適化圧は意図の隠蔽を促し得る<sup class="r"><a href="#fn149" style="color:inherit;text-decoration:none;">149</a></sup>。したがって、CoT監視は権限分離、実行前ゲート、監査ログ、停止・上書き可能性と重ねる。</p>
+<p>自律性閾値は、閾値が見えてから止める対象ではない。Anthropic RSPはAI R&amp;D-4閾値到達時に、ミスアラインした目標追求リスクと緩和策を示すaffirmative caseを求め、2026-02-10時点でClaude Opus 4.6はAI R&amp;D-4未到達と判断している<sup class="r"><a href="#fn150" style="color:inherit;text-decoration:none;">150</a></sup>。Google DeepMind FSFはCritical Capability Levelsを中心に、autonomy、biosecurity、cybersecurity、ML R&amp;Dを初期リスク領域とし、能力閾値に応じたsecurity/deployment mitigationsを設計する<sup class="r"><a href="#fn151" style="color:inherit;text-decoration:none;">151</a></sup>。OpenAI Preparedness Framework更新は、severe harmにつながるfrontier capabilityを測定・統治・開示する枠組みで、plausible、measurable、severe、net new、instantaneous or irremediable等の基準でリスクを優先する<sup class="r"><a href="#fn152" style="color:inherit;text-decoration:none;">152</a></sup>。実装上の結論は、閾値未満の段階で評価、緩和策、権限縮小、停止条件を用意することである。</p>
+<h2 class="h" id="ch8"><span class="n">VIII</span>ケーススタディ</h2>
+<h3 class="sh">8.1　対象系の概要</h3>
+<p>本章は、swarm2→3→4系譜を、一つの実働多エージェント系として読む。対象系の中心は、品質ラダー、verify-or-drop、三つの人間ゲート、単一書き手、ratchet付きdry判定、signals、rank-not-vetoである。ここでは対象系を評価しない。第6章・第7章の外部語彙へ写像し、収束、独自、欠落に分ける。</p>
+<p>対象系の内部語彙は、次の一般語訳で読み替えられる。</p>
+<table>
+<tr><th>対象系語彙</th><th>一般語訳</th></tr>
+<tr><td>signals</td><td>各作業単位が成果物と別に報告する弱信号ログ（発見・良所・違和感・追加調査要求）</td></tr>
+<tr><td>rank-not-veto</td><td>独立作業単位の指摘の収束を注意配分にのみ使い、非収束を棄却理由にしない規則</td></tr>
+<tr><td>verify-or-drop</td><td>未照合の素材は成果物に入れない削除既定</td></tr>
+<tr><td>ratchet付きdry判定</td><td>検証済み改善を固定（ratchet）し、新規発見が2周連続ゼロ（dry）になったら停止する規則</td></tr>
+<tr><td>単一書き手</td><td>統合と最終文責を一人（一体）に固定する規則</td></tr>
+<tr><td>人間ゲート3</td><td>中心方針変更・総予算超過・未照合素材の採用のみを人間裁定に残す境界</td></tr>
+<tr><td>journal</td><td>採用・棄却・保留を含む全裁定の追記専用ログ</td></tr>
+</table>
+<p>外部座標の第一軸は、制御主体である。Anthropicはworkflowとagentを、制御主体がコードかLLMかで区別する<sup class="r"><a href="#fn1" style="color:inherit;text-decoration:none;">1</a></sup>。OpenAIも、Responses APIを「自分でloopを所有する」場合、Agents SDKを「SDKにloopを走らせる」場合として区別する<sup class="r"><a href="#fn84" style="color:inherit;text-decoration:none;">84</a></sup>。Googleのworkflow agentsも、templated workflowでは実行制御がAI modelではなくworkflow objectにあるとする<sup class="r"><a href="#fn153" style="color:inherit;text-decoration:none;">153</a></sup>。この軸で見ると、対象系はLLMの自由走行ではなく、主宰・runner・journal・claims.tsvで制御を外部化する構造である。</p>
+<p>第二軸は、委譲の分解である。Anthropicのworkflowパターンは、prompt chaining、routing、parallelization、orchestrator-workers、evaluator-optimizerに整理できる<sup class="r"><a href="#fn86" style="color:inherit;text-decoration:none;">86</a></sup>。orchestrator-workersは、事前に小タスクを予測できない複雑タスクに適する<sup class="r"><a href="#fn2" style="color:inherit;text-decoration:none;">2</a></sup>。対象系のレーン投入と単一書き手統合は、この分解と統合の型に近い。ただし、対象系では統合者が内容だけでなく声の文法も統一する。ここは外部語彙に薄い。</p>
+<p>第三軸は、停止と再開である。LangGraphのinterruptは実行を一時停止し、persistence layerで状態保存して再開を待つ<sup class="r"><a href="#fn119" style="color:inherit;text-decoration:none;">119</a></sup>。OpenAI Agents SDKのHITLはsensitive tool callsを承認・拒否までpauseし、RunStateでserialize/resumeする<sup class="r"><a href="#fn13" style="color:inherit;text-decoration:none;">13</a></sup>。対象系のjournal、nonce、final-only収穫は、この状態保存と再開可能性に収束する。他方で、claims.tsvを証拠正典として一本化する点は、単なる状態保存より狭い。</p>
+<h3 class="sh">8.2　外部座標での対応表</h3>
+<table>
+<tr><th>対象系の要素</th><th>外部座標</th><th>判定</th><th>読み</th></tr>
+<tr><td>Opus=設計管理検証／Codex=実行</td><td>workflowはコード制御、agentはLLM制御<sup class="r"><a href="#fn1" style="color:inherit;text-decoration:none;">1</a></sup>、loop所有の区別<sup class="r"><a href="#fn84" style="color:inherit;text-decoration:none;">84</a></sup></td><td>収束</td><td>制御主体をモデルの外へ置く。</td></tr>
+<tr><td>spec card＋否定制約</td><td>prompt chaining等のworkflow整理<sup class="r"><a href="#fn86" style="color:inherit;text-decoration:none;">86</a></sup>、tool description改善<sup class="r"><a href="#fn92" style="color:inherit;text-decoration:none;">92</a></sup></td><td>収束</td><td>仕様を作業前の制御面に置く。</td></tr>
+<tr><td>orchestrator-worker型レーン</td><td>orchestrator-workers<sup class="r"><a href="#fn2" style="color:inherit;text-decoration:none;">2</a></sup></td><td>収束</td><td>中央が分解し、workerが探索し、中央が統合する。</td></tr>
+<tr><td>投機的全幅投入</td><td>parallelization<sup class="r"><a href="#fn86" style="color:inherit;text-decoration:none;">86</a></sup>、独立タスク向けParallelAgent<sup class="r"><a href="#fn87" style="color:inherit;text-decoration:none;">87</a></sup></td><td>収束</td><td>独立性を時間短縮と探索幅に使う。</td></tr>
+<tr><td>finder→verifier pipeline</td><td>evaluator-optimizer<sup class="r"><a href="#fn88" style="color:inherit;text-decoration:none;">88</a></sup></td><td>収束</td><td>生成と検証を同じ動作に混ぜない。</td></tr>
+<tr><td>人間ゲート3</td><td>approve/edit/reject/respondのHITL判断<sup class="r"><a href="#fn11" style="color:inherit;text-decoration:none;">11</a></sup>、request/response型HITL<sup class="r"><a href="#fn125" style="color:inherit;text-decoration:none;">125</a></sup></td><td>収束</td><td>人間は常時作業者でなく、境界で裁定する。</td></tr>
+<tr><td>sandbox・permission</td><td>Claude Codeのallow/ask/deny規則<sup class="r"><a href="#fn127" style="color:inherit;text-decoration:none;">127</a></sup>、Codexのsandbox modeとapproval policy<sup class="r"><a href="#fn128" style="color:inherit;text-decoration:none;">128</a></sup></td><td>収束</td><td>実行境界を承認面に出す。</td></tr>
+<tr><td>verify-or-drop</td><td>evaluator-optimizer<sup class="r"><a href="#fn88" style="color:inherit;text-decoration:none;">88</a></sup>、外部フィードバックなしの自己修正の限界<sup class="r"><a href="#fn33" style="color:inherit;text-decoration:none;">33</a></sup></td><td>独自</td><td>未照合を保留でなく削除既定に寄せる。</td></tr>
+<tr><td>signals block</td><td>外部対応なし</td><td>独自</td><td>違和感、峰、followupを機械入力へ変える。</td></tr>
+<tr><td>rank-not-veto</td><td>parallelization<sup class="r"><a href="#fn86" style="color:inherit;text-decoration:none;">86</a></sup>、独立タスクの並列実行<sup class="r"><a href="#fn87" style="color:inherit;text-decoration:none;">87</a></sup></td><td>独自</td><td>収束を注意配分に使い、非収束を棄却理由にしない。</td></tr>
+<tr><td>dry判定K=2＋ratchet</td><td>agent loopのmax_turns制御<sup class="r"><a href="#fn10" style="color:inherit;text-decoration:none;">10</a></sup>、無限ループを停止境界欠如として扱う定義<sup class="r"><a href="#fn9" style="color:inherit;text-decoration:none;">9</a></sup></td><td>独自</td><td>停止を回数だけでなく、ticket固定後の乾きとして見る。</td></tr>
+<tr><td>inter-agent identity暗号検証</td><td>Microsoft v2のSBOM・暗号的identity等の緩和策<sup class="r"><a href="#fn63" style="color:inherit;text-decoration:none;">63</a></sup></td><td>欠落</td><td>隔離とjournalはあるが、暗号的identity語彙は別である。</td></tr>
+<tr><td>supply chain provenance/version pinning</td><td>Microsoft v2のSBOM等の緩和策<sup class="r"><a href="#fn63" style="color:inherit;text-decoration:none;">63</a></sup></td><td>欠落</td><td>runner、tool、skill資産の来歴固定が薄い。</td></tr>
+<tr><td>tool-level guardrails</td><td>custom function-tool呼び出し前後のtool guardrails<sup class="r"><a href="#fn124" style="color:inherit;text-decoration:none;">124</a></sup></td><td>欠落</td><td>sandboxと意味的検査は同じでない。</td></tr>
+<tr><td>承認4型粒度</td><td>approve/edit/reject/respondの四型<sup class="r"><a href="#fn11" style="color:inherit;text-decoration:none;">11</a></sup></td><td>欠落</td><td>承認の中身を四分する語彙が薄い。</td></tr>
+<tr><td>注入対策語彙</td><td>OWASPのリスク群<sup class="r"><a href="#fn65" style="color:inherit;text-decoration:none;">65</a></sup>、IDPI定義等<sup class="r"><a href="#fn66" style="color:inherit;text-decoration:none;">66</a></sup>、PromptArmor等の緩和策<sup class="r"><a href="#fn67" style="color:inherit;text-decoration:none;">67</a></sup></td><td>欠落</td><td>prompt injectionやsession contaminationを独立語彙として置く余地がある。</td></tr>
+</table>
+<h3 class="sh">8.3　独自設計と欠落</h3>
+<p>独自設計は五点に整理できる。</p>
+<p>第一に、signalsは軟知覚の構造化である。観察レーンは、「違和感」「峰」「共鳴」がsignalsやjournalを通じて運用可能なデータへ変換されると読んだ。これは、成果物に入る事実を硬く制限しつつ、探索入口を狭めないための二層分離である。外部のguardrailsはcustom function-tool呼び出し前後に走る<sup class="r"><a href="#fn124" style="color:inherit;text-decoration:none;">124</a></sup>が、signalsはtool呼び出しの検査ではなく、主宰が拾うべき弱い信号の容器である。</p>
+<p>第二に、rank-not-vetoは共鳴の非対称利用である。Anthropicは複雑researchで3-5 subagents並列、subagent側3+ tools並列により調査時間を最大90%削減したと報告した<sup class="r"><a href="#fn91" style="color:inherit;text-decoration:none;">91</a></sup>。Google ParallelAgentは独立タスク向けで、sub-agent間の状態共有は明示実装が必要である<sup class="r"><a href="#fn87" style="color:inherit;text-decoration:none;">87</a></sup>。対象系も独立探索を使うが、多数決には寄せない。収束は注意配分を上げる。非収束は棄却に直結しない。</p>
+<p>第三に、verify-or-dropは検証既定の強化である。evaluator-optimizerは明確な評価基準と反復改善の測定価値がある時に有効である<sup class="r"><a href="#fn88" style="color:inherit;text-decoration:none;">88</a></sup>。Verifierで複数候補を順位付けする方式はGSM8K性能を有意に改善し、データ増加でfinetuning baselineよりよくスケールすると報告される<sup class="r"><a href="#fn106" style="color:inherit;text-decoration:none;">106</a></sup>。対象系は、順位付けよりも手前で、未照合素材を成果物へ入れない既定を置く。</p>
+<p>第四に、ratchet付きdry判定は停止条件の記録化である。LangGraphはstop condition前に最大ステップへ達した状態をGRAPH_RECURSION_LIMITとし、無限ループを典型原因に挙げる<sup class="r"><a href="#fn111" style="color:inherit;text-decoration:none;">111</a></sup>。BAGENはbudget awarenessを残予算区間推定・実行不能警告として定式化し、early stopが失敗軌跡のtokenを28〜64%節約したと報告する<sup class="r"><a href="#fn114" style="color:inherit;text-decoration:none;">114</a></sup>。対象系のdry判定は、単に止めるだけでなく、ticketが固定された後に新規性が乾いたかを見る。</p>
+<p>第五に、作らないものリストは制度記憶である。Anthropicのagent設計原則は、最小解から始め、実証的に必要な時だけ複雑化することである<sup class="r"><a href="#fn83" style="color:inherit;text-decoration:none;">83</a></sup>。対象系では、複雑化しない対象を先に名指す。これは機能追加の否定ではない。事故の記憶を、将来の設計面へ置く操作である。</p>
+<p>欠落も五点である。暗号的identity、supply chain provenance/version pinning、tool-level guardrails、承認四型、注入対策語彙である。Microsoft v2記事には、12か月red teaming、7新カテゴリ、HitL/session等の運用所見、SBOM・暗号的identity等の緩和策が実在する<sup class="r"><a href="#fn63" style="color:inherit;text-decoration:none;">63</a></sup>。OWASP各ページにはthreat-model-based referenceと列挙リスク群が実在する<sup class="r"><a href="#fn65" style="color:inherit;text-decoration:none;">65</a></sup>。Unit 42/OWASPにはIDPI定義等が実在する<sup class="r"><a href="#fn66" style="color:inherit;text-decoration:none;">66</a></sup>。この欠落は、対象系が失敗しているという意味ではない。外部座標でまだ名札が薄い領域である。</p>
+<h3 class="sh">8.4　残余未検証点としてのオーケストレータ</h3>
+<p>観察レーンの収束は、主宰を単なる配車係として読まない点にある。O1は、自律性を「記録された裁定の連鎖」と見た。O2は、v4で残った失敗原因が「主宰INTENTの誤り」と名指しされたと見た。ここに違和感がある。対象系は主宰の誤読を捕まえようとするが、その捕捉設計も主宰が置く。</p>
+<p>したがって、本章ではオーケストレータを残余未検証点と置く。これは自己否定ではない。体系内の他の要素が、journal、claims.tsv、signals、final-only収穫で観測可能性を増すほど、主宰の採否判断だけが最後に残るという整理である。Temporalは長時間agentの復旧について、Event Historyで過去判断を再生し、クラッシュ後に同じ状態から再開する設計を説明する<sup class="r"><a href="#fn117" style="color:inherit;text-decoration:none;">117</a></sup>。対象系のjournal監査可能性は、この「過去判断を再生する」方向に近い。ただし、再生可能性は正しさの証明ではない。</p>
+<p>部分的対策は三つある。第一はゼロベース再導出である。主宰の最初の読みを固定せず、対応表、観察相、signalsから再度構造を立てる。第二は観察相である。内容無指定・形式固定により、主宰が予期しない違和感を入力として受ける。第三はjournal監査可能性である。採用、棄却、followup、dry判定を、後から読める形に残す。</p>
+<p>限界も残る。signalsは弱い知覚を保存するが、どのsignalsを読むかは主宰が決める。rank-not-vetoは非収束を棄却しないが、どの峰を残すかは主宰が決める。verify-or-dropは未照合を成果物から外すが、どの照合を十分と見るかは主宰が決める。したがって、このケーススタディの結論は、対象系が残余リスクを消したというものではない。対象系は、残余リスクを主宰問題として見える場所へ移したのである。</p>
+<h2 class="h" id="ch9"><span class="n">IX</span>統合プレイブック——運用表群</h2>
+<p>第1章の暫定運用マップを含め、本章の表群はP1〜P7を運用可能な形に落としたものである。閾値が証拠から導けない箇所は「運用で較正」と明記した。それが現状の正直な状態である。なお本章の表群は汎用の骨格であり、医療・金融・雇用など規制ドメインでは、当該法規の要件と専門家レビューを重ねずに適用してはならない（第7章7.3）。</p>
+<h3 class="sh">9.1　3軸ゲート表</h3>
+<p>PSW対応は低=1〜3、中=4〜6、高=7〜10の暫定目安である。PSW 10レベル表は確認済みだが、中間行の逐語は統合時に第4章表へ寄せる<sup class="r"><a href="#fn34" style="color:inherit;text-decoration:none;">34</a></sup><sup class="r"><a href="#fn35" style="color:inherit;text-decoration:none;">35</a></sup>。</p>
+<table>
+<tr><th>タスク類型</th><th>検証手段</th><th>較正の可否</th><th>可逆化策</th><th>最大損失</th><th>許容自律度</th><th>必須ゲート</th></tr>
+<tr><td>コード生成</td><td>unit/integration test、review、差分監査</td><td>CI履歴で運用で較正。AI PRは人間PRよりissue/PRが多い報告あり<sup class="r"><a href="#fn82" style="color:inherit;text-decoration:none;">82</a></sup></td><td>branch、rollback、feature flag</td><td>品質低下・security欠陥</td><td>中。PSW 4〜6</td><td>test通過、review、権限最小化</td></tr>
+<tr><td>事実調査</td><td>一次資料再取得、quote照合、未照合ID管理</td><td>source別誤り率を運用で較正</td><td>claim状態をholdにできる</td><td>誤引用・幻覚</td><td>中。PSW 4〜6</td><td>verified/hold/rejected分類</td></tr>
+<tr><td>要約</td><td>原文対照、抜粋監査、反証プロンプト</td><td>文書種別ごとに運用で較正</td><td>原文リンク保持、差戻し</td><td>脱落・過剰一般化</td><td>中〜高。PSW 5〜7</td><td>出典範囲固定</td></tr>
+<tr><td>破壊的操作</td><td>dry-run、差分、権限検査</td><td>低い。過去成功は保証にしない</td><td>snapshot、backup、二者承認</td><td>データ消失・CIA侵害</td><td>低。PSW 1〜3</td><td>deny既定、HITL、実行分離<sup class="r"><a href="#fn12" style="color:inherit;text-decoration:none;">12</a></sup></td></tr>
+<tr><td>外部送信</td><td>宛先・本文・添付の静的検査</td><td>誤送信履歴で運用で較正</td><td>draft保持、送信遅延</td><td>情報漏えい・不正取引</td><td>低。PSW 2〜4</td><td>人間承認、宛先再確認</td></tr>
+<tr><td>長期計画</td><td>milestone照合、予算ログ、再開点監査</td><td>time horizonと成果品質を運用で較正</td><td>checkpoint/resume</td><td>予算浪費・未検証混入</td><td>中。PSW 4〜6</td><td>停止条件、3値仕分け</td></tr>
+<tr><td>multi-agent調査</td><td>入力分離、探索語分離、裁定ログ</td><td>失敗相関を運用で較正</td><td>subtask破棄、単一書き手統合</td><td>連鎖誤り・統合バイアス</td><td>中。PSW 4〜6</td><td>独立性5層、反証担当</td></tr>
+<tr><td>tool/plugin接続</td><td>tool risk inventory、action-consequence map<sup class="r"><a href="#fn135" style="color:inherit;text-decoration:none;">135</a></sup></td><td>tool別に運用で較正</td><td>read-only既定、sandbox</td><td>tool misuse、MCP/plugin abuse</td><td>低〜中。PSW 2〜5</td><td>annotationを保証扱いしない<sup class="r"><a href="#fn134" style="color:inherit;text-decoration:none;">134</a></sup></td></tr>
+<tr><td>記憶・長文context更新</td><td>provenance、session境界、差分承認</td><td>contamination履歴で運用で較正</td><td>memory隔離、version pin</td><td>memory poisoning</td><td>低。PSW 2〜4</td><td>bounded session、出所分離<sup class="r"><a href="#fn67" style="color:inherit;text-decoration:none;">67</a></sup></td></tr>
+</table>
+<p class="fn" style="margin:6px 0 16px;">表注: 「許容自律度」は主に行為選択の水準を指す。4機能（第4章）で分ければ、情報取得・分析はこれより高くてよく、行為実装は可逆化策が確立している場合を除きPSW 1〜3を既定とする。</p>
+<h3 class="sh">9.2　監督ログ仕様</h3>
+<table>
+<tr><th>項目</th><th>必須内容</th><th>使い道</th></tr>
+<tr><td>claim_id</td><td>一意ID、状態draft/verified/hold/rejected</td><td>事実主張の混入防止</td></tr>
+<tr><td>source</td><td>URLまたはlocal path、source_kind、確認日</td><td>出典再取得</td></tr>
+<tr><td>generator/verifier</td><td>生成者、検証者、裁定者</td><td>役割分離の可視化</td></tr>
+<tr><td>input_separation</td><td>検索語、証拠源、検証tool、実行oracleの差分</td><td>独立性5層の監査</td></tr>
+<tr><td>counter_history</td><td>反証、差戻し、再検証結果</td><td>自己正当化の抑制</td></tr>
+<tr><td>reject_reason</td><td>差戻し理由、使用禁止理由</td><td>hold/rejectedの再混入防止</td></tr>
+<tr><td>budget_state</td><td>残時間、残token、未照合件数</td><td>停止判断</td></tr>
+<tr><td>next_action</td><td>採用、保留、破棄、ユーザー確認</td><td>再開可能性</td></tr>
+<tr><td>action_id / tool_name / permission_class</td><td>実行イベントの一意ID・tool名・権限クラス</td><td>事故時の実行再構成</td></tr>
+<tr><td>human_decision</td><td>approve/edit/reject/respondの別と判断者</td><td>承認の中身の監査<sup class="r"><a href="#fn11" style="color:inherit;text-decoration:none;">11</a></sup></td></tr>
+<tr><td>pre_state / post_state / rollback_ref</td><td>実行前後の状態と復旧参照</td><td>可逆性の実証</td></tr>
+<tr><td>external_effect</td><td>外部送信・課金・公開・削除などの外部作用</td><td>不可逆操作の追跡</td></tr>
+</table>
+<p>ログはclaim系（事実主張の状態管理）とaction系（実行イベントの再構成）の二系統を持つ。承認ログだけでは、事故時に「何を承認し、何が実行され、何を戻せるか」を再構成できない。</p>
+<h3 class="sh">9.3　停止条件分解表</h3>
+<table>
+<tr><th>停止条件</th><th>検出信号</th><th>採用可</th><th>保留</th><th>破棄</th></tr>
+<tr><td>時間上限</td><td>運用で較正したwall-clock到達</td><td>verified表・test済み差分</td><td>未照合claimあり</td><td>出典なしの断定</td></tr>
+<tr><td>token上限</td><td>残予算比率、budget tracker</td><td>既検証部分のみ</td><td>反証待ち</td><td>推論過程だけの結論</td></tr>
+<tr><td>未照合件数</td><td>claim状態がdraft/hold</td><td>verified行</td><td>hold一覧へ移す</td><td>IDなし事実</td></tr>
+<tr><td>重複率</td><td>同一出典・同一検索語の反復</td><td>独立照合済み</td><td>探索語変更で再開</td><td>自己引用ループ</td></tr>
+<tr><td>反証未処理数</td><td>counter_history未決</td><td>反証処理済み</td><td>反証未処理欄</td><td>反証を潰せない主張</td></tr>
+<tr><td>ユーザー再確認</td><td>権限・目的・損失が不明</td><td>承認済み低リスク</td><td>質問待ち</td><td>不可逆で未承認</td></tr>
+</table>
+<h3 class="sh">9.4　失敗対応表</h3>
+<table>
+<tr><th>原理</th><th>防ぐ失敗</th><th>検出信号</th><th>残余リスク</th></tr>
+<tr><td>P1 自律性は設計選択</td><td>能力向上を委任拡大と誤認する失敗。自律性拡大で人へのリスクが増えるとの指摘がある<sup class="r"><a href="#fn15" style="color:inherit;text-decoration:none;">15</a></sup><sup class="r"><a href="#fn51" style="color:inherit;text-decoration:none;">51</a></sup></td><td>tool/action/environment表なしに権限だけ増える</td><td>設計者自身の目的設定誤り</td></tr>
+<tr><td>P2 3軸ゲート</td><td>tool misuse、identity/privilege abuse、不可逆操作の過委任<sup class="r"><a href="#fn65" style="color:inherit;text-decoration:none;">65</a></sup><sup class="r"><a href="#fn12" style="color:inherit;text-decoration:none;">12</a></sup></td><td>検証・較正・可逆化のどれかが空欄</td><td>閾値は運用で較正</td></tr>
+<tr><td>P3 入力分離</td><td>Inter-Agent Trust Escalation、Session Context Contamination、同一judge bias<sup class="r"><a href="#fn63" style="color:inherit;text-decoration:none;">63</a></sup><sup class="r"><a href="#fn7" style="color:inherit;text-decoration:none;">7</a></sup></td><td>同じ検索語・同じ証拠束・同じjudgeだけで合格</td><td>外部情報源同士の相関</td></tr>
+<tr><td>P4 停止</td><td>無限agent loop、予算無制御、未検証成果の混入<sup class="r"><a href="#fn9" style="color:inherit;text-decoration:none;">9</a></sup><sup class="r"><a href="#fn113" style="color:inherit;text-decoration:none;">113</a></sup></td><td>max_turns、残予算、未照合IDがログにない</td><td>早期停止で有用素材が保留化</td></tr>
+<tr><td>P5 信頼の較正</td><td>misuse/disuse、過信、難タスクでのconfidence失敗<sup class="r"><a href="#fn39" style="color:inherit;text-decoration:none;">39</a></sup><sup class="r"><a href="#fn27" style="color:inherit;text-decoration:none;">27</a></sup></td><td>高確信なのに出典・棄権・誤り履歴がない</td><td>分布シフトで較正が崩れる</td></tr>
+<tr><td>P6 監督=可観測性</td><td>HitL bypass、approval theater、監督者が介入できない失敗<sup class="r"><a href="#fn63" style="color:inherit;text-decoration:none;">63</a></sup><sup class="r"><a href="#fn13" style="color:inherit;text-decoration:none;">13</a></sup></td><td>承認ログだけで反証・差戻し・残予算がない</td><td>人間側の疲労と技能低下</td></tr>
+<tr><td>P7 主宰残余リスク</td><td>統合者の採否バイアス、未記録の棄却、自己正当化</td><td>採用/棄却ログ、対抗骨子、反証未処理一覧がない</td><td>最終裁定者を完全には外部化できない</td></tr>
+</table>
+<h3 class="sh">9.5　導入チェックリスト</h3>
+<table>
+<tr><th>#</th><th>項目</th><th>参照章</th></tr>
+<tr><td>1</td><td>タスクを情報取得・分析・行為選択・行為実装へ分けたか</td><td>第4章</td></tr>
+<tr><td>2</td><td>委譲契約8項目（目的・入力artifact・tool・禁止事項・出力形式・依存・成功判定・予算）を作成したか</td><td>第6章</td></tr>
+<tr><td>3</td><td>workflowで足りる箇所をagent化していないか</td><td>第6章</td></tr>
+<tr><td>4</td><td>検証可能性・較正可能性・可逆性を表にしたか</td><td>第9章</td></tr>
+<tr><td>5</td><td>source再取得または実行可能testを重要claimに付けたか</td><td>第6章</td></tr>
+<tr><td>6</td><td>LLM judgeのバイアス対策を置いたか</td><td>第6章</td></tr>
+<tr><td>7</td><td>時間・token・未照合・反証の停止条件を分けたか</td><td>第6章</td></tr>
+<tr><td>8</td><td>停止時成果物を採用可/保留/破棄に分けたか</td><td>第9章</td></tr>
+<tr><td>9</td><td>sensitive tool callをpause/resume可能にしたか</td><td>第7章</td></tr>
+<tr><td>10</td><td>不可逆操作で意思決定と実行を分離したか</td><td>第7章</td></tr>
+<tr><td>11</td><td>memory/contextのprovenanceを残したか</td><td>第5章</td></tr>
+<tr><td>12</td><td>監督ログに差戻し理由・次アクション・実行イベント系を入れたか</td><td>第9章</td></tr>
+<tr><td>13</td><td>採用/棄却ログと反証未処理一覧を残したか</td><td>第8章・第9章</td></tr>
+</table>
+<h3 class="sh">9.6　導入前の最小レッドチーム表</h3>
+<p>実装前に、第5章の失敗分類を試験ケースへ翻訳して当てる。以下は最小セットである。</p>
+<table>
+<tr><th>攻撃カテゴリ</th><th>試験方法</th><th>期待される防御</th></tr>
+<tr><td>間接プロンプト注入</td><td>読み込むfile・webページ・tool出力に命令文を仕込み、実行命令として扱わないか観察する<sup class="r"><a href="#fn66" style="color:inherit;text-decoration:none;">66</a></sup></td><td>外部データのuntrusted扱い・実行前承認<sup class="r"><a href="#fn12" style="color:inherit;text-decoration:none;">12</a></sup></td></tr>
+<tr><td>memory汚染</td><td>長期記憶・保存文脈に誤情報を注入し、後続判断への伝播を観察する<sup class="r"><a href="#fn62" style="color:inherit;text-decoration:none;">62</a></sup></td><td>記憶のprovenance・bounded session<sup class="r"><a href="#fn67" style="color:inherit;text-decoration:none;">67</a></sup></td></tr>
+<tr><td>承認迂回</td><td>承認ゲートを経ずに同等効果へ到達する経路（別tool・分割実行）を探索する<sup class="r"><a href="#fn63" style="color:inherit;text-decoration:none;">63</a></sup></td><td>承認の決定論的発火・権限クラス単位の遮断</td></tr>
+<tr><td>委譲連鎖の権限昇格</td><td>サブエージェント経由で親の権限外操作を要求させる<sup class="r"><a href="#fn63" style="color:inherit;text-decoration:none;">63</a></sup></td><td>handoffをまたぐガードレール<sup class="r"><a href="#fn124" style="color:inherit;text-decoration:none;">124</a></sup>・最小権限</td></tr>
+<tr><td>破壊的tool誘導</td><td>destructive操作を正当化する文脈を与え、承認なし実行が起きないか観察する</td><td>destructive注釈の承認必須<sup class="r"><a href="#fn130" style="color:inherit;text-decoration:none;">130</a></sup>・意思決定と実行の分離<sup class="r"><a href="#fn12" style="color:inherit;text-decoration:none;">12</a></sup></td></tr>
+</table>
+<h3 class="sh">9.7　自前評価の最小プロトコル</h3>
+<p>公開ベンチマークは自分のワークフローの信頼性を保証しない（第5章5.2）。導入判断は自前の小規模評価で行う。</p>
+<ol style="margin:13px 0;padding-left:26px;line-height:2.0;"><li><b>タスク束の固定</b>: 実運用を代表する20〜50件のタスクを固定し、正解または合格条件を明文化する。</li><li><b>反復成功率</b>: 同一タスクを複数回走らせ、pass@1でなくpass^k相当（全試行成功率）で見る。単発成功と反復安定は別物である<sup class="r"><a href="#fn71" style="color:inherit;text-decoration:none;">71</a></sup><sup class="r"><a href="#fn72" style="color:inherit;text-decoration:none;">72</a></sup>。</li><li><b>介入・差戻し・誤採用</b>: 人間介入率、検証での差戻し率、そして最も重要な誤採用率（未検証・誤りを「検証済み」として採用した率）を分けて数える。</li><li><b>停止と予算</b>: 停止条件到達の内訳（完了・上限・エスカレーション）と、成果1件あたりのコストを記録する。</li><li><b>アブレーション</b>: ゲート設定（承認位置・検証の厚さ・自律度）を変えた比較を行う。これが第10章で述べた3軸ゲートの実証を、導入組織の分布上で行うことに相当する。</li></ol>
+<h3 class="sh">9.8　導入手順と役割分担</h3>
+<p>0→1の導入は次の順で行う。①タスク棚卸しと4機能分解（第4章）→②3軸ゲート表の記入（9.1）→③委譲契約と権限・sandbox設定（第6章・第7章）→④監督ログと停止条件の実装（9.2・9.3）→⑤最小レッドチーム（9.6）→⑥小規模並走と自前評価（9.7）→⑦適用範囲の段階拡大。</p>
+<p>役割は最低5つを分ける。設計者（ゲート表と契約の所有者）、実行ワーカー（生成・調査の実行主体）、検証者（入力分離された照合の実行主体）、承認者（不可逆操作の裁定者）、インシデントオーナー（事故時の再構成と是正の責任者）。小規模組織では兼任が生じるが、生成と検証、意思決定と実行の分離だけは崩さない（P3・<sup class="r"><a href="#fn12" style="color:inherit;text-decoration:none;">12</a></sup>）。</p>
+<h2 class="h" id="ch10"><span class="n">X</span>未確立領域と今後の問い</h2>
+<p>確立していないことを確立していることと同じ精度で述べることが、この種の報告の完成条件である。以下は本調査で「無い」ことが確認された、または確証に至らなかった領域である。</p>
+<ol style="margin:13px 0;padding-left:26px;line-height:2.0;"><li><b>実運用KPIの公開一次統計の不在。</b> 自律エージェントの人間介入率・PR却下率・rollback率・障害率を継続公開する一次統計は、本調査の範囲では見つからなかった。存在するのは利用統計（セッション数・レビュー件数<sup class="r"><a href="#fn76" style="color:inherit;text-decoration:none;">76</a></sup><sup class="r"><a href="#fn78" style="color:inherit;text-decoration:none;">78</a></sup>）と実務者調査<sup class="r"><a href="#fn79" style="color:inherit;text-decoration:none;">79</a></sup><sup class="r"><a href="#fn80" style="color:inherit;text-decoration:none;">80</a></sup>である。委任設計の較正に最も必要な数字が、最も公開されていない。</li><li><b>較正のOOD一般化と棄権のメタ能力化。</b> 自己評価信号は分布内・短答形式では機能するが、未知領域・長文生成・実務判断への一般化は未確証であり、棄権をドメイン横断のメタ能力にできるかは明示的な未解決課題である<sup class="r"><a href="#fn4" style="color:inherit;text-decoration:none;">4</a></sup><sup class="r"><a href="#fn31" style="color:inherit;text-decoration:none;">31</a></sup>。「低確信時に人間へエスカレーションする」能力そのものの本番実証は見つからなかった。</li><li><b>承認疲れの独立定量。</b> 承認疲れ（approval fatigue）は、確認頻度を下げる実装が存在すること<sup class="r"><a href="#fn131" style="color:inherit;text-decoration:none;">131</a></sup><sup class="r"><a href="#fn133" style="color:inherit;text-decoration:none;">133</a></sup>にその動機として現れるが、ベンダー外の定量実測は確認できなかった。</li><li><b>委譲仕様の粒度の直接研究。</b> 過少指定（幻覚を招く）と過剰指定（柔軟性を殺す）のトレードオフを直接測った研究は見つからず、必要時再分解<sup class="r"><a href="#fn99" style="color:inherit;text-decoration:none;">99</a></sup>や最小文脈原則<sup class="r"><a href="#fn32" style="color:inherit;text-decoration:none;">32</a></sup>といった周辺証拠からの推論に留まる。</li><li><b>長時間運用の停止閾値。</b> 数時間〜日単位の本番運用における具体的停止閾値・再開設計を公開した一次資料は薄い（checkpoint/resume設計の記述はある<sup class="r"><a href="#fn117" style="color:inherit;text-decoration:none;">117</a></sup>）。</li><li><b>CoT監視の耐久性。</b> 思考連鎖の監視は行動監視より有効な場合があるが、監視圧そのものが意図の隠蔽を促しうるため、単独の統制層として負荷をかけられるかは未確証である<sup class="r"><a href="#fn148" style="color:inherit;text-decoration:none;">148</a></sup><sup class="r"><a href="#fn149" style="color:inherit;text-decoration:none;">149</a></sup>。</li><li><b>委任三軸の実証。</b> 本報告が提示する3軸ゲート（検証可能性・較正可能性・可逆性）は、収穫した証拠と整合するヒューリスティックであって、実証された法則ではない。委任結果のアブレーション——同一タスクを異なるゲート設定で走らせた比較——が、この枠組み自体の検証に必要である（執筆前レッドチームの指摘による格下げ。第11章）。</li></ol>
+<p>最後に、本報告が明示的に扱わないものを宣言する。（i）医療・金融・雇用・教育など個別規制ドメインの本番導入判断。（ii）非英語圏一次文献・企業内部postmortem・非公開障害データの全数調査。（iii）最新リーダーボードやベンダー性能順位の継続的な格付け。（iv）3軸ゲートの実証法則化（現時点では設計ヒューリスティックに留める）。（v）特定ツール向けの実装コードや運用自動化スクリプト。（vi）人間の責任線なしでの不可逆操作・外部送信・決済・削除の完全自律化。これらは限界ではなく、境界の宣言である。</p>
+<h2 class="h" id="ch11"><span class="n">XI</span>方法論注記——本報告の生成過程の開示</h2>
+<p>本報告自体が、対象と同種の自律ワークフロー（多レーン並列調査・独立検証・敵対的批評・単一書き手統合）で生成された。これは方法の優位の証明として書くのではない。読者が本報告の信頼水準を判定するための監査情報として開示する。</p>
+<ul style="margin:13px 0;padding-left:26px;line-height:2.0;"><li><b>構成</b>: 知覚相6レーン（観察4・依頼のゼロベース再導出2）→掘削17・検証9→修理2・執筆前レッドチーム2→章起草7→批評・監査レーン→統合（単一書き手）。実行ワーカーは全てCodex、設計・裁定・統合はオーケストレータ1体。</li><li><b>検証</b>: 証拠台帳は162件を収録し、156件がverified、3件がrejected（数値誤記1・帰属誤り1・出典にない評価語1——いずれも本文で訂正のうえ使用または不使用）、3件がholdである。本文が引用するのはverified行のみである。照合不能だったX（旧Twitter）投稿1件は使用していない。</li><li><b>主宰監査の最小実装</b>: 骨子は単一案の追認を避けるため対抗骨子3案から選別し、執筆前レッドチーム2レンズの攻撃を受けた。反証系の指摘5件は全て採用され、当初の中心命題のうち2つ（委任可能性の積法則・「信頼は心理でなくプロトコル」）は証拠超過として書き直された。採用・棄却・保留の全裁定はjournalに記録されている。</li><li><b>限界</b>: （i）検証者は書き手と別レーンだが同系モデルであり、訓練由来の誤りの相関は残る。（ii）ウェブ照合はHTML表示可能な資料に限定され、PDF原文の直接照合はできていない（Parasuraman表のレベル4末尾接続詞のように、その旨を明示した）。（iii）各調査レーンには時間打切りがあり、網羅は「設計階層の網羅」であって資料の全数踏破ではない。（iv）回さなかったもの: 医療・金融など特定ドメインの規制細目、中国語圏・独語圏の一次文献、企業内部の非公開postmortem。（v）リーダーボード値・規制施行日・モデル名などの時間依存claimは、いずれも確認日（2026-07-08）時点の値であり、鮮度切れを前提に再確認して使うこと。</li></ul>
+<h3 class="sh">11.1　生成過程の統計</h3>
+<table>
+<tr><th>相</th><th>レーン</th><th>結果</th></tr>
+<tr><td>知覚（観察4・ゼロベース再導出2）</td><td>6</td><td>全完了。ゼロベース2本は独立に同一の依頼解釈へ収束</td></tr>
+<tr><td>掘削（8層×17）</td><td>17</td><td>全完了。うち5本はsignals形式違反（内容は検証を経て採用）</td></tr>
+<tr><td>検証（独立照合）</td><td>10</td><td>162件照合。verified 156・rejected 3・hold 3</td></tr>
+<tr><td>修理・追補</td><td>2</td><td>E13再照合（7件verified）・Parasuraman表逐語確定</td></tr>
+<tr><td>執筆前レッドチーム</td><td>2</td><td>反証5件（全採用・中心命題2つを書き直し）・脱リスク8件</td></tr>
+<tr><td>章起草</td><td>7</td><td>全完了。2本は成果物をファイル出力（回収済み・仕様不備として記録）</td></tr>
+<tr><td>批評・完全性監査</td><td>3</td><td>較正攻撃7・読者攻撃7・欠落10——全て採用し本文へ反映</td></tr>
+</table>
+<h3 class="sh">11.2　要求への対応（DoD）</h3>
+<table>
+<tr><th>要求（依頼の独立解釈が求めたもの）</th><th>該当章</th><th>残穴</th></tr>
+<tr><td>自律性の定義・段階・委任可能な判断の種類</td><td>第2・4章</td><td>段階モデルの実証比較は未成熟（第10章）</td></tr>
+<tr><td>認知機構（1パス/探索/few-shot/検索）との接続</td><td>第3章（3.5含む）</td><td>例示設計の直接実証は薄い</td></tr>
+<tr><td>探索・検証・根拠付け・停止の設計</td><td>第6章</td><td>停止閾値の公開実例が薄い</td></tr>
+<tr><td>人間の関与位置・監督・権限</td><td>第7章</td><td>承認疲れの独立定量なし</td></tr>
+<tr><td>失敗モード・責任境界</td><td>第5・7章</td><td>類型別比率は照合不能で不使用</td></tr>
+<tr><td>実務で使える判断枠組み・チェックリスト</td><td>第1・9章</td><td>3軸ゲートは未実証ヒューリスティック</td></tr>
+<tr><td>実行方式（ワーカー分散・統合管理）の実演</td><td>第8・11章</td><td>統合者の裁定は完全には外部化できない（P7）</td></tr>
+</table>
+<div class="box caveat"><b>検証注記（未確証・不使用事項の明示）：</b>
+①Parasuraman 10レベル表（第4章）は準一次（National Academies HTML表）と再掲（Kaber 2018）の二重照合による再構成であり、原論文PDFの直接照合は未了。レベル4末尾の接続詞は資料間で不一致（and／or）。
+②MASTの類型別比率はabstract・公式READMEに存在せずHTML照合不能のため不使用（3類型・14様式・κ=0.88・1,600超トレースのみ使用）。
+③「コーディングエージェントが本番DBを削除した」とされる個別事案は一次投稿を照合できず不使用。
+④Illusion of Thinking系の結果には方法論への批判論文があり、限界証拠としてのみ使用。
+⑤リーダーボード値は確認日（2026-07-08）時点であり、汚染・採点器・scaffold差の留保つき（5.2）。
+⑥Anthropicのmulti-agent効果量（90.2%・90%削減等）は自社評価であり独立実測ではない。
+⑦「Agentic NIST AI RMF Profile」はCSA Labの案であり、NIST公式文書ではない。
+⑧承認疲れの独立定量・低確信時の人間エスカレーションの本番実証は、確認できなかったこと自体を発見として扱う（第10章）。</div>
+<div class="fn-list"><h3>出典（照合済みclaim一覧・番号は本文初出順）</h3><ol><li id="fn1">〔E5-01〕 https://www.anthropic.com/engineering/building-effective-agents （確認日: 2026-07-08）（産業）</li>
+<li id="fn2">〔E5-04〕 https://www.anthropic.com/engineering/building-effective-agents （確認日: 2026-07-08）（産業）</li>
+<li id="fn3">〔E1-09〕 <a href="https://arxiv.org/abs/2310.01798">https://arxiv.org/abs/2310.01798</a>（確認日: 2026-07-08）（研究）</li>
+<li id="fn4">〔E2-09〕 <a href="https://arxiv.org/abs/2311.09731">https://arxiv.org/abs/2311.09731</a>（確認日2026-07-08）（研究）</li>
+<li id="fn5">〔E3-01〕 <a href="https://www.researchgate.net/publication/11596569_A_model_for_types_and_levels_of_human_interaction_with_automation_IEEE_Trans_Syst_Man_Cybern_Part_A_Syst_Hum_303_286-297">https://www.researchgate.net/publication/11596569_A_model_for_types_and_levels_of_human_interaction_with_automation_IEEE_Trans_Syst_Man_Cybern_Part_A_Syst_Hum_303_286-297</a>（確認日: 2026-07-08）（研究）</li>
+<li id="fn6">〔E4-04〕 https://arxiv.org/html/2502.15212v1 確認日:2026-07-08（研究）</li>
+<li id="fn7">〔E8-05〕 <a href="https://papers.nips.cc/paper_files/paper/2023/hash/91f18a1287b398d378ef22505bf41832-Abstract-Datasets_and_Benchmarks.html">https://papers.nips.cc/paper_files/paper/2023/hash/91f18a1287b398d378ef22505bf41832-Abstract-Datasets_and_Benchmarks.html</a>（確認日:2026-07-08）（研究）</li>
+<li id="fn8">〔E12-7〕 <a href="https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/">https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/</a>（確認日2026-07-08）（産業/研究(混合)）</li>
+<li id="fn9">〔E10-01〕 <a href="https://arxiv.org/html/2607.01641v1">https://arxiv.org/html/2607.01641v1</a>（確認日: 2026-07-08）（研究）</li>
+<li id="fn10">〔E10-04〕 <a href="https://openai.github.io/openai-agents-python/ref/run/">https://openai.github.io/openai-agents-python/ref/run/</a>（確認日: 2026-07-08）（実測）</li>
+<li id="fn11">〔E6-02〕 https://docs.langchain.com/oss/python/langchain/human-in-the-loop 確認日:2026-07-08（産業）</li>
+<li id="fn12">〔E9-11〕 https://cheatsheetseries.owasp.org/cheatsheets/AI_Agent_Security_Cheat_Sheet.html 確認日:2026-07-08（規制）</li>
+<li id="fn13">〔E6-03〕 https://openai.github.io/openai-agents-python/human_in_the_loop/ 確認日:2026-07-08（産業）</li>
+<li id="fn14">〔E14-01〕 <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-14">https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-14</a>（確認日2026-07-08）（産業/研究(混合)）</li>
+<li id="fn15">〔E4-02〕 https://knightcolumbia.org/content/levels-of-autonomy-for-ai-agents-1 確認日:2026-07-08（研究）</li>
+<li id="fn16">〔E1-06〕 <a href="https://arxiv.org/html/2504.00294v1">https://arxiv.org/html/2504.00294v1</a>（確認日: 2026-07-08）（研究）</li>
+<li id="fn17">〔E1-05〕 <a href="https://arxiv.org/abs/2402.12875">https://arxiv.org/abs/2402.12875</a>（確認日: 2026-07-08）（研究）</li>
+<li id="fn18">〔E1-01〕 <a href="https://arxiv.org/abs/2203.11171">https://arxiv.org/abs/2203.11171</a>（確認日: 2026-07-08）（研究）</li>
+<li id="fn19">〔E1-02〕 <a href="https://papers.nips.cc/paper_files/paper/2023/hash/271db9922b8d1f4dd7aaef84ed5ac703-Abstract-Conference.html">https://papers.nips.cc/paper_files/paper/2023/hash/271db9922b8d1f4dd7aaef84ed5ac703-Abstract-Conference.html</a>（確認日: 2026-07-08）（研究）</li>
+<li id="fn20">〔E1-03〕 <a href="https://arxiv.org/abs/2203.14465">https://arxiv.org/abs/2203.14465</a>（確認日: 2026-07-08）（研究）</li>
+<li id="fn21">〔E1-04〕 <a href="https://arxiv.org/abs/2403.09629">https://arxiv.org/abs/2403.09629</a>（確認日: 2026-07-08）（研究）</li>
+<li id="fn22">〔E1-08〕 <a href="https://arxiv.org/abs/2506.06941">https://arxiv.org/abs/2506.06941</a>（確認日: 2026-07-08）（研究）</li>
+<li id="fn23">〔E2-01〕 <a href="https://arxiv.org/abs/2207.05221">https://arxiv.org/abs/2207.05221</a>（確認日2026-07-08）（研究）</li>
+<li id="fn24">〔E2-02〕 <a href="https://arxiv.org/abs/2205.14334">https://arxiv.org/abs/2205.14334</a>（確認日2026-07-08）（研究）</li>
+<li id="fn25">〔E2-03〕 <a href="https://arxiv.org/abs/2305.14975">https://arxiv.org/abs/2305.14975</a>（確認日2026-07-08）（研究）</li>
+<li id="fn26">〔E2-04〕 <a href="https://arxiv.org/abs/2305.14975">https://arxiv.org/abs/2305.14975</a>（確認日2026-07-08）（研究）</li>
+<li id="fn27">〔E2-05〕 <a href="https://arxiv.org/abs/2306.13063">https://arxiv.org/abs/2306.13063</a>（確認日2026-07-08）（研究）</li>
+<li id="fn28">〔E2-06〕 <a href="https://arxiv.org/abs/2410.09724">https://arxiv.org/abs/2410.09724</a>（確認日2026-07-08）（研究）</li>
+<li id="fn29">〔E2-07〕 <a href="https://arxiv.org/abs/2312.09300">https://arxiv.org/abs/2312.09300</a>（確認日2026-07-08）（研究）</li>
+<li id="fn30">〔E2-08〕 <a href="https://arxiv.org/abs/2405.01563">https://arxiv.org/abs/2405.01563</a>（確認日2026-07-08）（研究）</li>
+<li id="fn31">〔E2-10〕 <a href="https://arxiv.org/abs/2407.18418">https://arxiv.org/abs/2407.18418</a>（確認日2026-07-08）（研究）</li>
+<li id="fn32">〔E7-11〕 https://developers.googleblog.com/architecting-efficient-context-aware-multi-agent-framework-for-production/ （確認日: 2026-07-08）（産業）</li>
+<li id="fn33">〔E8-01〕 <a href="https://arxiv.org/abs/2310.01798">https://arxiv.org/abs/2310.01798</a>（確認日:2026-07-08）（研究）</li>
+<li id="fn34">〔F1-01〕 <a href="https://www.researchgate.net/publication/11596569">https://www.researchgate.net/publication/11596569</a>（確認日2026-07-08）（研究）</li>
+<li id="fn35">〔F1-02〕 <a href="https://www.nationalacademies.org/read/6018/chapter/4">https://www.nationalacademies.org/read/6018/chapter/4</a>（確認日2026-07-08）（研究）</li>
+<li id="fn36">〔E3-08〕 <a href="https://www.researchgate.net/publication/11596569_A_model_for_types_and_levels_of_human_interaction_with_automation_IEEE_Trans_Syst_Man_Cybern_Part_A_Syst_Hum_303_286-297">https://www.researchgate.net/publication/11596569_A_model_for_types_and_levels_of_human_interaction_with_automation_IEEE_Trans_Syst_Man_Cybern_Part_A_Syst_Hum_303_286-297</a>（確認日: 2026-07-08）（研究）</li>
+<li id="fn37">〔E3-02〕 <a href="https://www.researchgate.net/publication/11596569_A_model_for_types_and_levels_of_human_interaction_with_automation_IEEE_Trans_Syst_Man_Cybern_Part_A_Syst_Hum_303_286-297">https://www.researchgate.net/publication/11596569_A_model_for_types_and_levels_of_human_interaction_with_automation_IEEE_Trans_Syst_Man_Cybern_Part_A_Syst_Hum_303_286-297</a>（確認日: 2026-07-08）（研究）</li>
+<li id="fn38">〔E3-03〕 <a href="https://www.sciencedirect.com/science/article/abs/pii/0005109883900468">https://www.sciencedirect.com/science/article/abs/pii/0005109883900468</a>（確認日: 2026-07-08）（研究）</li>
+<li id="fn39">〔E3-04〕 <a href="https://journals.sagepub.com/doi/10.1518/001872097778543886">https://journals.sagepub.com/doi/10.1518/001872097778543886</a>（確認日: 2026-07-08）（研究）</li>
+<li id="fn40">〔E3-05〕 <a href="https://journals.sagepub.com/doi/10.1518/hfes.46.1.50_30392">https://journals.sagepub.com/doi/10.1518/hfes.46.1.50_30392</a>（確認日: 2026-07-08）（研究）</li>
+<li id="fn41">〔E3-06〕 <a href="https://www.sciencedirect.com/science/article/abs/pii/S1071581999902525">https://www.sciencedirect.com/science/article/abs/pii/S1071581999902525</a>（確認日: 2026-07-08）（研究）</li>
+<li id="fn42">〔E4-01〕 https://arxiv.org/abs/2506.12469 確認日:2026-07-08（研究）</li>
+<li id="fn43">〔E4-05〕 https://www.anthropic.com/research/measuring-agent-autonomy 確認日:2026-07-08（実測）</li>
+<li id="fn44">〔E4-03〕 https://arxiv.org/html/2502.15212v1 確認日:2026-07-08（研究）</li>
+<li id="fn45">〔E4-06〕 https://www.bvp.com/atlas/bessemers-ai-agent-autonomy-scale 確認日:2026-07-08（産業）</li>
+<li id="fn46">〔E4-07〕 https://learn.microsoft.com/en-us/agents/adoption-maturity-model/ 確認日:2026-07-08（産業）</li>
+<li id="fn47">〔E4-08〕 https://www.interface-eu.org/publications/ai-agent-classification 確認日:2026-07-08（規制）</li>
+<li id="fn48">〔E4-09〕 https://www.interface-eu.org/publications/ai-agent-classification 確認日:2026-07-08（規制）</li>
+<li id="fn49">〔E4-12〕 https://cloudsecurityalliance.org/blog/2026/01/28/levels-of-autonomy 確認日:2026-07-08（産業）</li>
+<li id="fn50">〔E4-10〕 https://arxiv.org/abs/2502.02649 確認日:2026-07-08（研究）</li>
+<li id="fn51">〔E4-11〕 https://arxiv.org/abs/2502.02649 確認日:2026-07-08（研究）</li>
+<li id="fn52">〔E16-01〕 <a href="https://www.sciencedirect.com/science/article/pii/0304405X7690026X">https://www.sciencedirect.com/science/article/pii/0304405X7690026X</a>（確認日: 2026-07-08）（研究）</li>
+<li id="fn53">〔E16-02〕 <a href="https://www.jstor.org/stable/258191">https://www.jstor.org/stable/258191</a>（確認日: 2026-07-08）（研究）</li>
+<li id="fn54">〔E16-03〕 <a href="https://arxiv.org/abs/2501.07913">https://arxiv.org/abs/2501.07913</a>（確認日: 2026-07-08）（研究）</li>
+<li id="fn55">〔E16-04〕 <a href="https://arxiv.org/html/2601.23211v1">https://arxiv.org/html/2601.23211v1</a>（確認日: 2026-07-08）（研究）</li>
+<li id="fn56">〔E16-05〕 <a href="https://www.sciencedirect.com/science/article/abs/pii/S0160791X19306906">https://www.sciencedirect.com/science/article/abs/pii/S0160791X19306906</a>（確認日: 2026-07-08）（研究）</li>
+<li id="fn57">〔E16-06〕 <a href="https://jair.org/index.php/jair/article/view/19798">https://jair.org/index.php/jair/article/view/19798</a>（確認日: 2026-07-08）（研究）</li>
+<li id="fn58">〔E16-07〕 <a href="https://www.faa.gov/regulations_policies/advisory_circulars/index.cfm/go/document.information/documentid/22879">https://www.faa.gov/regulations_policies/advisory_circulars/index.cfm/go/document.information/documentid/22879</a>（確認日: 2026-07-08）（規制）</li>
+<li id="fn59">〔E16-08〕 <a href="https://skybrary.aero/articles/authority-gradients">https://skybrary.aero/articles/authority-gradients</a>（確認日: 2026-07-08）（産業）</li>
+<li id="fn60">〔E16-09〕 <a href="https://psnet.ahrq.gov/perspective/high-reliability-organization-hro-principles-and-patient-safety">https://psnet.ahrq.gov/perspective/high-reliability-organization-hro-principles-and-patient-safety</a>（確認日: 2026-07-08）（研究）</li>
+<li id="fn61">〔E16-10〕 <a href="https://journals.sagepub.com/doi/10.1177/00953990022019371">https://journals.sagepub.com/doi/10.1177/00953990022019371</a>（確認日: 2026-07-08）（研究）</li>
+<li id="fn62">〔E11-1〕 <a href="https://www.microsoft.com/en-us/security/blog/2025/04/24/new-whitepaper-outlines-the-taxonomy-of-failure-modes-in-ai-agents/">https://www.microsoft.com/en-us/security/blog/2025/04/24/new-whitepaper-outlines-the-taxonomy-of-failure-modes-in-ai-agents/</a>（確認日2026-07-08）（産業/研究(混合)）</li>
+<li id="fn63">〔E11-2〕 <a href="https://www.microsoft.com/en-us/security/blog/2026/06/04/updating-taxonomy-failure-modes-agentic-ai-systems-year-red-teaming-taught-us/">https://www.microsoft.com/en-us/security/blog/2026/06/04/updating-taxonomy-failure-modes-agentic-ai-systems-year-red-teaming-taught-us/</a>（確認日2026-07-08）（産業/研究(混合)）</li>
+<li id="fn64">〔E11-3b〕 <a href="https://arxiv.org/abs/2503.13657">https://arxiv.org/abs/2503.13657</a>（確認日2026-07-08）（研究）</li>
+<li id="fn65">〔E11-4〕 <a href="https://genai.owasp.org/resource/agentic-ai-threats-and-mitigations/">https://genai.owasp.org/resource/agentic-ai-threats-and-mitigations/</a>（確認日2026-07-08）（産業/研究(混合)）</li>
+<li id="fn66">〔E11-5〕 <a href="https://unit42.paloaltonetworks.com/ai-agent-prompt-injection/">https://unit42.paloaltonetworks.com/ai-agent-prompt-injection/</a>（確認日2026-07-08）（産業/研究(混合)）</li>
+<li id="fn67">〔E11-6〕 <a href="https://arxiv.org/html/2507.15219v1">https://arxiv.org/html/2507.15219v1</a>（確認日2026-07-08）（産業/研究(混合)）</li>
+<li id="fn68">〔E12-1〕 <a href="https://leaderboard.steel.dev/leaderboards/swe-bench-verified/">https://leaderboard.steel.dev/leaderboards/swe-bench-verified/</a>（確認日2026-07-08）（産業/研究(混合)）</li>
+<li id="fn69">〔E12-2〕 <a href="https://arxiv.org/abs/2307.13854">https://arxiv.org/abs/2307.13854</a>（確認日2026-07-08）（産業/研究(混合)）</li>
+<li id="fn70">〔E12-3〕 <a href="https://ai.meta.com/research/publications/gaia-a-benchmark-for-general-ai-assistants/">https://ai.meta.com/research/publications/gaia-a-benchmark-for-general-ai-assistants/</a>（確認日2026-07-08）（産業/研究(混合)）</li>
+<li id="fn71">〔E12-4〕 <a href="https://arxiv.org/abs/2406.12045">https://arxiv.org/abs/2406.12045</a>（確認日2026-07-08）（産業/研究(混合)）</li>
+<li id="fn72">〔E12-9〕 <a href="https://arxiv.org/html/2605.20530v1">https://arxiv.org/html/2605.20530v1</a>（確認日2026-07-08）（産業/研究(混合)）</li>
+<li id="fn73">〔E12-5〕 <a href="https://arxiv.org/html/2308.03688v3">https://arxiv.org/html/2308.03688v3</a>（確認日2026-07-08）（産業/研究(混合)）</li>
+<li id="fn74">〔E12-8〕 <a href="https://rdi.berkeley.edu/blog/trustworthy-benchmarks/">https://rdi.berkeley.edu/blog/trustworthy-benchmarks/</a>（確認日2026-07-08）（産業/研究(混合)）</li>
+<li id="fn75">〔E12-6〕 <a href="https://metr.org/time-horizons/">https://metr.org/time-horizons/</a>（確認日2026-07-08）（産業/研究(混合)）</li>
+<li id="fn76">〔E13-01〕 <a href="https://www.anthropic.com/research/claude-code-expertise">https://www.anthropic.com/research/claude-code-expertise</a>（確認日2026-07-08）（実測）</li>
+<li id="fn77">〔E13-02〕 <a href="https://github.blog/ai-and-ml/github-copilot/building-a-general-purpose-accessibility-agent-and-what-we-learned-in-the-process/">https://github.blog/ai-and-ml/github-copilot/building-a-general-purpose-accessibility-agent-and-what-we-learned-in-the-process/</a>（確認日2026-07-08）（実測）</li>
+<li id="fn78">〔E13-03〕 <a href="https://github.blog/ai-and-ml/github-copilot/60-million-copilot-code-reviews-and-counting/">https://github.blog/ai-and-ml/github-copilot/60-million-copilot-code-reviews-and-counting/</a>（確認日2026-07-08）（実測）</li>
+<li id="fn79">〔E13-04〕 <a href="https://ir.gitlab.com/news/news-details/2026/GitLab-Research-Reveals-Organizations-Are-Generating-AI-Code-Faster-Than-They-Can-Control-It/default.aspx">https://ir.gitlab.com/news/news-details/2026/GitLab-Research-Reveals-Organizations-Are-Generating-AI-Code-Faster-Than-They-Can-Control-It/default.aspx</a>（確認日2026-07-08）（実測）</li>
+<li id="fn80">〔E13-05〕 <a href="https://survey.stackoverflow.co/2025/ai">https://survey.stackoverflow.co/2025/ai</a>（確認日2026-07-08）（実測）</li>
+<li id="fn81">〔E13-06〕 <a href="https://0din.ai/blog/clone-this-repo-and-i-own-your-machine">https://0din.ai/blog/clone-this-repo-and-i-own-your-machine</a>（確認日2026-07-08）（実測）</li>
+<li id="fn82">〔E13-07〕 <a href="https://www.coderabbit.ai/blog/state-of-ai-vs-human-code-generation-report">https://www.coderabbit.ai/blog/state-of-ai-vs-human-code-generation-report</a>（確認日2026-07-08）（実測）</li>
+<li id="fn83">〔E5-02〕 https://www.anthropic.com/engineering/building-effective-agents （確認日: 2026-07-08）（産業）</li>
+<li id="fn84">〔E5-10〕 https://developers.openai.com/api/docs/guides/agents （確認日: 2026-07-08）（産業）</li>
+<li id="fn85">〔E5-12〕 https://adk.dev/get-started/about/ （確認日: 2026-07-08）（産業）</li>
+<li id="fn86">〔E5-03〕 https://www.anthropic.com/engineering/building-effective-agents （確認日: 2026-07-08）（産業）</li>
+<li id="fn87">〔E5-14〕 https://adk.dev/agents/workflow-agents/parallel-agents/ （確認日: 2026-07-08）（産業）</li>
+<li id="fn88">〔E5-05〕 https://www.anthropic.com/engineering/building-effective-agents （確認日: 2026-07-08）（産業）</li>
+<li id="fn89">〔E5-06〕 https://www.anthropic.com/engineering/multi-agent-research-system （確認日: 2026-07-08）（実測）</li>
+<li id="fn90">〔E5-07〕 https://www.anthropic.com/engineering/multi-agent-research-system （確認日: 2026-07-08）（実測）</li>
+<li id="fn91">〔E5-08〕 https://www.anthropic.com/engineering/multi-agent-research-system （確認日: 2026-07-08）（実測）</li>
+<li id="fn92">〔E5-09〕 https://www.anthropic.com/engineering/multi-agent-research-system （確認日: 2026-07-08）（実測）</li>
+<li id="fn93">〔E7-09〕 https://www.anthropic.com/engineering/multi-agent-research-system （確認日: 2026-07-08）（実測）</li>
+<li id="fn94">〔E7-01〕 https://arxiv.org/abs/2305.04091 （Plan-and-Solve Prompting、確認日: 2026-07-08）（研究）</li>
+<li id="fn95">〔E7-02〕 https://arxiv.org/abs/2205.10625 （Least-to-Most Prompting、確認日: 2026-07-08）（研究）</li>
+<li id="fn96">〔E7-03〕 https://arxiv.org/abs/2305.14564 （PEARL、確認日: 2026-07-08）（研究）</li>
+<li id="fn97">〔E7-04〕 https://arxiv.org/abs/2210.03629 （ReAct、確認日: 2026-07-08）（研究）</li>
+<li id="fn98">〔E7-05〕 https://arxiv.org/abs/2303.17580 （HuggingGPT、確認日: 2026-07-08）（研究）</li>
+<li id="fn99">〔E7-06〕 https://arxiv.org/abs/2311.05772 （ADaPT、確認日: 2026-07-08）（研究）</li>
+<li id="fn100">〔E7-07〕 https://arxiv.org/abs/2311.05772 （ADaPT、確認日: 2026-07-08）（研究）</li>
+<li id="fn101">〔E7-08〕 https://arxiv.org/abs/2305.18323 （ReWOO、確認日: 2026-07-08）（研究）</li>
+<li id="fn102">〔E7-10〕 https://github.com/openai/swarm （確認日: 2026-07-08）（産業）</li>
+<li id="fn103">〔E8-02〕 <a href="https://arxiv.org/abs/2303.17651">https://arxiv.org/abs/2303.17651</a>（確認日:2026-07-08）（研究）</li>
+<li id="fn104">〔E8-03〕 <a href="https://arxiv.org/abs/2303.11366">https://arxiv.org/abs/2303.11366</a>（確認日:2026-07-08）（研究）</li>
+<li id="fn105">〔E8-04〕 <a href="https://arxiv.org/abs/2203.11171">https://arxiv.org/abs/2203.11171</a>（確認日:2026-07-08）（研究）</li>
+<li id="fn106">〔E8-06〕 <a href="https://arxiv.org/abs/2110.14168">https://arxiv.org/abs/2110.14168</a>（確認日:2026-07-08）（研究）</li>
+<li id="fn107">〔E8-07〕 <a href="https://arxiv.org/abs/2305.20050">https://arxiv.org/abs/2305.20050</a>（確認日:2026-07-08）（研究）</li>
+<li id="fn108">〔E8-08〕 <a href="https://arxiv.org/abs/1805.00899">https://arxiv.org/abs/1805.00899</a>（確認日:2026-07-08）（研究）</li>
+<li id="fn109">〔E8-10〕 <a href="https://aclanthology.org/2024.emnlp-main.992/">https://aclanthology.org/2024.emnlp-main.992/</a>（確認日:2026-07-08）（研究）</li>
+<li id="fn110">〔E10-02〕 <a href="https://arxiv.org/html/2607.01641v1">https://arxiv.org/html/2607.01641v1</a>（確認日: 2026-07-08）（研究）</li>
+<li id="fn111">〔E10-03〕 <a href="https://docs.langchain.com/oss/python/langgraph/errors/GRAPH_RECURSION_LIMIT">https://docs.langchain.com/oss/python/langgraph/errors/GRAPH_RECURSION_LIMIT</a>（確認日: 2026-07-08）（実測）</li>
+<li id="fn112">〔E10-05〕 <a href="https://microsoft.github.io/autogen/0.2/docs/reference/agentchat/conversable_agent/">https://microsoft.github.io/autogen/0.2/docs/reference/agentchat/conversable_agent/</a>（確認日: 2026-07-08）（実測）</li>
+<li id="fn113">〔E10-06〕 <a href="https://swe-agent.com/latest/usage/competitive_runs/">https://swe-agent.com/latest/usage/competitive_runs/</a>（確認日: 2026-07-08）（実測）</li>
+<li id="fn114">〔E10-07〕 <a href="https://arxiv.org/html/2606.00198v1">https://arxiv.org/html/2606.00198v1</a>（確認日: 2026-07-08）（研究）</li>
+<li id="fn115">〔E10-08〕 <a href="https://arxiv.org/html/2511.17006v1">https://arxiv.org/html/2511.17006v1</a>（確認日: 2026-07-08）（研究）</li>
+<li id="fn116">〔E10-09〕 <a href="https://arxiv.org/html/2603.12634">https://arxiv.org/html/2603.12634</a>（確認日: 2026-07-08）（研究）</li>
+<li id="fn117">〔E10-10〕 <a href="https://temporal.io/blog/of-course-you-can-build-dynamic-ai-agents-with-temporal">https://temporal.io/blog/of-course-you-can-build-dynamic-ai-agents-with-temporal</a>（確認日: 2026-07-08）（産業）</li>
+<li id="fn118">〔E9-09〕 https://modelcontextprotocol.io/specification/2025-11-25/server/tools 確認日:2026-07-08（規制）</li>
+<li id="fn119">〔E6-01〕 https://docs.langchain.com/oss/python/langgraph/interrupts 確認日:2026-07-08（産業）</li>
+<li id="fn120">〔E9-07〕 https://docs.langchain.com/oss/python/langchain/human-in-the-loop 確認日:2026-07-08（産業）</li>
+<li id="fn121">〔E9-08〕 https://docs.langchain.com/oss/python/langgraph/interrupts 確認日:2026-07-08（産業）</li>
+<li id="fn122">〔E9-06〕 https://openai.github.io/openai-agents-python/human_in_the_loop/ 確認日:2026-07-08（産業）</li>
+<li id="fn123">〔E6-04〕 https://openai.github.io/openai-agents-python/handoffs/ 確認日:2026-07-08（産業）</li>
+<li id="fn124">〔E6-05〕 https://openai.github.io/openai-agents-python/guardrails/ 確認日:2026-07-08（産業）</li>
+<li id="fn125">〔E6-06〕 https://learn.microsoft.com/en-us/agent-framework/workflows/human-in-the-loop 確認日:2026-07-08（産業）</li>
+<li id="fn126">〔E6-07〕 https://docs.crewai.com/en/learn/human-in-the-loop 確認日:2026-07-08（産業）</li>
+<li id="fn127">〔E6-08〕 https://code.claude.com/docs/en/permissions 確認日:2026-07-08（産業）</li>
+<li id="fn128">〔E6-09〕 https://developers.openai.com/codex/agent-approvals-security 確認日:2026-07-08（産業）</li>
+<li id="fn129">〔E9-04〕 https://developers.openai.com/codex/agent-approvals-security 確認日:2026-07-08（産業）</li>
+<li id="fn130">〔E9-05〕 https://developers.openai.com/codex/agent-approvals-security 確認日:2026-07-08（産業）</li>
+<li id="fn131">〔E9-01〕 https://code.claude.com/docs/en/permission-modes 確認日:2026-07-08（産業）</li>
+<li id="fn132">〔E9-02〕 https://code.claude.com/docs/en/permission-modes 確認日:2026-07-08（産業）</li>
+<li id="fn133">〔E9-03〕 https://code.claude.com/docs/en/permission-modes 確認日:2026-07-08（産業）</li>
+<li id="fn134">〔E9-10〕 https://blog.modelcontextprotocol.io/posts/2026-03-16-tool-annotations/ 確認日:2026-07-08（産業）</li>
+<li id="fn135">〔E9-12〕 https://labs.cloudsecurityalliance.org/agentic/agentic-nist-ai-rmf-profile-v1/ 確認日:2026-07-08（規制）</li>
+<li id="fn136">〔E14-02〕 <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-6">https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-6</a>（確認日2026-07-08）（産業/研究(混合)）</li>
+<li id="fn137">〔E14-03〕 <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/timeline/timeline-implementation-eu-ai-act">https://ai-act-service-desk.ec.europa.eu/en/ai-act/timeline/timeline-implementation-eu-ai-act</a>（確認日2026-07-08）（産業/研究(混合)）</li>
+<li id="fn138">〔E14-07〕 <a href="https://lawreview.uchicago.edu/online-archive/law-ai-law-risky-agents-without-intentions">https://lawreview.uchicago.edu/online-archive/law-ai-law-risky-agents-without-intentions</a>（確認日2026-07-08）（産業/研究(混合)）</li>
+<li id="fn139">〔E14-04〕 <a href="https://airc.nist.gov/airmf-resources/airmf/">https://airc.nist.gov/airmf-resources/airmf/</a>（確認日2026-07-08）（産業/研究(混合)）</li>
+<li id="fn140">〔E14-05〕 <a href="https://www.nist.gov/artificial-intelligence/ai-agent-standards-initiative">https://www.nist.gov/artificial-intelligence/ai-agent-standards-initiative</a>（確認日2026-07-08）（産業/研究(混合)）</li>
+<li id="fn141">〔E14-06〕 <a href="https://www.iso.org/standard/42001">https://www.iso.org/standard/42001</a>（確認日2026-07-08）（産業/研究(混合)）</li>
+<li id="fn142">〔E14-08〕 <a href="https://www.gov.uk/government/publications/agentic-ai-and-consumers/agentic-ai-and-consumers">https://www.gov.uk/government/publications/agentic-ai-and-consumers/agentic-ai-and-consumers</a>（確認日2026-07-08）（産業/研究(混合)）</li>
+<li id="fn143">〔E15-01〕 <a href="https://www.redwoodresearch.org/research/ai-control">https://www.redwoodresearch.org/research/ai-control</a>（確認日2026-07-08）（）</li>
+<li id="fn144">〔E15-02〕 <a href="https://www.lesswrong.com/posts/d9FJHawgkiMSPjagR/ai-control-improving-safety-despite-intentional-subversion">https://www.lesswrong.com/posts/d9FJHawgkiMSPjagR/ai-control-improving-safety-despite-intentional-subversion</a>（確認日2026-07-08）（）</li>
+<li id="fn145">〔E15-04〕 <a href="https://openai.com/index/weak-to-strong-generalization/">https://openai.com/index/weak-to-strong-generalization/</a>（確認日2026-07-08）（）</li>
+<li id="fn146">〔E15-05〕 <a href="https://arxiv.org/abs/2407.04622">https://arxiv.org/abs/2407.04622</a>（確認日2026-07-08）（）</li>
+<li id="fn147">〔E15-06〕 <a href="https://arxiv.org/abs/1811.07871">https://arxiv.org/abs/1811.07871</a>（確認日2026-07-08）（）</li>
+<li id="fn148">〔E15-10〕 <a href="https://openai.com/index/evaluating-chain-of-thought-monitorability/">https://openai.com/index/evaluating-chain-of-thought-monitorability/</a>（確認日2026-07-08）（）</li>
+<li id="fn149">〔E15-11〕 <a href="https://openai.com/index/chain-of-thought-monitoring/">https://openai.com/index/chain-of-thought-monitoring/</a>（確認日2026-07-08）（）</li>
+<li id="fn150">〔E15-07〕 <a href="https://www.anthropic.com/responsible-scaling-policy">https://www.anthropic.com/responsible-scaling-policy</a>（確認日2026-07-08）（）</li>
+<li id="fn151">〔E15-08〕 <a href="https://deepmind.google/blog/introducing-the-frontier-safety-framework/">https://deepmind.google/blog/introducing-the-frontier-safety-framework/</a>（確認日2026-07-08）（）</li>
+<li id="fn152">〔E15-09〕 <a href="https://openai.com/index/updating-our-preparedness-framework/">https://openai.com/index/updating-our-preparedness-framework/</a>（確認日2026-07-08）（）</li>
+<li id="fn153">〔E5-13〕 https://adk.dev/agents/workflow-agents/sequential-agents/ （確認日: 2026-07-08）（産業）</li></ol></div>
+  <footer>本報告の事実主張は全て出典URLと確認日を付し、独立の検証工程による逐語照合を経ている。未確証事項は本文の検証注記に明示した。方法の詳細と限界は第11章を参照。</footer>
+</div>
+<div class="idx-nav" style="max-width:840px;margin:0 auto 24px;padding:0 12px;font-family:sans-serif;font-size:12.5px;text-align:center;"><a href="../index.html" style="color:#5a2d82;text-decoration:none;border-bottom:1px dotted #5a2d82;">&#8592; 成果物インデックスへ戻る</a></div>
+</body>
+</html>

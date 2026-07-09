@@ -1,0 +1,640 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>源泉徴収と租税条約のあいだ ― 形式はどこで効くのか</title>
+<style>
+:root{
+  --ink:#22172c; --muted:#6d6077; --paper:#fffdfb; --soft:#f7f1fb;
+  --line:#d8c7e8; --accent:#6f2da8; --accent-dark:#4f187d;
+  --warn:#8a5b00; --warn-bg:#fff6dd; --ok:#1f7a4d; --ok-bg:#eafaf1;
+  --puzzle:#b3552a; --puzzle-bg:#fff4ec; --deep:#0f5e8c; --deep-bg:#eef6fb;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Yu Mincho","Hiragino Mincho ProN","Noto Serif CJK JP","Noto Serif JP","Times New Roman",serif;
+  line-height:1.95;letter-spacing:.01em;}
+main{width:min(880px,calc(100% - 34px));margin:0 auto;padding:40px 0 90px;}
+header.hero{border-top:9px solid var(--accent);padding:34px 0 14px;}
+.kicker{color:var(--accent-dark);font-weight:700;letter-spacing:.07em;font-size:.9rem;}
+h1{margin:.3em 0 .35em;font-size:clamp(1.8rem,3.6vw,2.9rem);line-height:1.3;font-weight:800;}
+.subtitle{margin:0;color:var(--muted);font-size:1.06rem;line-height:1.8;}
+.readingnote{margin:1rem 0 0;font-size:.94rem;color:var(--muted);}
+h2{margin:3.2rem 0 1rem;padding:.15rem 0 .15rem .85rem;border-left:7px solid var(--accent);
+  font-size:clamp(1.4rem,2.4vw,1.95rem);line-height:1.36;font-weight:800;scroll-margin-top:14px;}
+h2 .num{color:var(--accent);font-weight:800;margin-right:.45rem;font-feature-settings:"tnum";}
+h3{margin:1.9rem 0 .5rem;color:var(--accent-dark);font-size:1.16rem;font-weight:800;}
+h4{margin:1.2rem 0 .35rem;font-size:1.02rem;font-weight:800;}
+p{margin:.75rem 0;} a{color:var(--accent-dark);} strong{font-weight:800;}
+.lead{font-size:1.13rem;color:#2b2135;line-height:1.95;}
+.small{font-size:.9rem;color:var(--muted);}
+.box{border:1px solid var(--line);background:#fff;border-radius:11px;padding:1.15rem 1.35rem;margin:1.15rem 0;}
+.puzzle{background:var(--puzzle-bg);border:1px solid #e6c3ac;border-left:6px solid var(--puzzle);border-radius:11px;padding:1.1rem 1.35rem;margin:1.2rem 0;}
+.puzzle .label{display:block;color:var(--puzzle);font-weight:800;letter-spacing:.04em;margin-bottom:.35rem;font-size:.95rem;}
+.thesis{background:var(--soft);border:2px solid var(--accent);border-radius:11px;padding:1.2rem 1.4rem;margin:1.2rem 0;}
+.thesis .big{color:var(--accent-dark);font-size:1.28rem;font-weight:800;display:block;line-height:1.6;margin-bottom:.5rem;}
+.formula{font-family:"Yu Gothic","Noto Sans CJK JP",sans-serif;background:#fff;border:1px dashed var(--accent);
+  border-radius:9px;padding:.85rem 1.05rem;margin:.85rem 0;font-size:.97rem;line-height:1.85;}
+.keypoint{background:var(--ok-bg);border-left:5px solid var(--ok);border-radius:7px;padding:.65rem .95rem;margin:.9rem 0;}
+.keypoint b{color:var(--ok);}
+.qbox{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin:1.1rem 0;}
+.qbox .q{border:1px solid var(--line);border-radius:10px;padding:.95rem 1.05rem;background:#fff;}
+.qbox .q .tag{display:inline-block;font-weight:800;color:#fff;background:var(--accent);border-radius:999px;padding:.05rem .7rem;font-size:.82rem;margin-bottom:.45rem;}
+.qbox .q.b .tag{background:var(--puzzle);}
+.warn{background:var(--warn-bg);border:1px solid #e7c66b;color:#3d2a00;border-radius:11px;padding:1.1rem 1.35rem;margin:1.15rem 0;}
+.warn .label{display:block;color:var(--warn);font-weight:800;margin-bottom:.4rem;}
+.note-list li{margin:.5rem 0;}
+.toc{columns:2 240px;padding-left:1.2rem;} .toc li{break-inside:avoid;margin:.3rem 0;}
+.ascii{overflow:auto;white-space:pre;background:#211529;color:#f7ecff;border-radius:11px;padding:1.05rem;
+  line-height:1.45;font-family:"Yu Gothic","Noto Sans Mono CJK JP",Consolas,monospace;font-size:.88rem;}
+details.deep{background:var(--deep-bg);border:1px solid #bcdcec;border-left:5px solid var(--deep);border-radius:9px;padding:.2rem 1rem;margin:.9rem 0;}
+details.deep>summary{cursor:pointer;font-weight:800;color:var(--deep);padding:.6rem 0;list-style:none;}
+details.deep>summary::before{content:"▸ ";color:var(--deep);}
+details.deep[open]>summary::before{content:"▾ ";}
+details.deep[open]>summary{border-bottom:1px solid #bcdcec;margin-bottom:.5rem;}
+.steps{counter-reset:step;margin:1rem 0;padding:0;list-style:none;}
+.steps>li{position:relative;border:1px solid var(--line);background:#fff;border-radius:10px;padding:.95rem 1.1rem .95rem 3.3rem;margin:.7rem 0;break-inside:avoid;}
+.steps>li::before{counter-increment:step;content:counter(step);position:absolute;left:.95rem;top:.95rem;width:1.75rem;height:1.75rem;border-radius:50%;background:var(--accent);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-family:sans-serif;}
+.res{font-weight:800;} .res.bad{color:#b3261e;} .res.good{color:var(--ok);} .res.stay{color:var(--warn);}
+.ledger{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:.9rem 0;}
+.ledger>div{border-radius:10px;padding:.8rem 1rem;}
+.ledger .back{background:var(--ok-bg);border:1px solid #bfe6cf;} .ledger .stayb{background:var(--warn-bg);border:1px solid #e7c66b;}
+.ledger h4{margin:.1rem 0 .4rem;}
+.table-wrap{width:100%;overflow-x:auto;margin:1rem 0 1.3rem;border:1px solid var(--line);border-radius:11px;background:#fff;}
+table{width:100%;border-collapse:collapse;min-width:680px;}
+th,td{border-bottom:1px solid #eadff1;border-right:1px solid #eadff1;padding:.7rem .8rem;vertical-align:top;font-size:.96rem;}
+th{background:#efe2f8;color:var(--accent-dark);text-align:left;font-weight:800;}
+tr:last-child td{border-bottom:0;} td:last-child,th:last-child{border-right:0;}
+.badge{display:inline-block;border:1px solid var(--line);background:#fbf8fd;color:var(--accent-dark);border-radius:999px;padding:.05rem .55rem;font-size:.83rem;white-space:nowrap;}
+.badge.v{background:var(--ok-bg);color:var(--ok);border-color:#bfe6cf;} .badge.w{background:var(--warn-bg);color:var(--warn);border-color:#e7c66b;}
+.spectrum{display:flex;flex-wrap:wrap;gap:0;margin:1.1rem 0 .2rem;border-radius:11px;overflow:hidden;border:1px solid var(--line);}
+.spectrum .seg{flex:1 1 150px;min-width:150px;padding:.85rem .75rem;color:#fff;font-size:.88rem;line-height:1.5;}
+.spectrum .seg b{display:block;font-size:.96rem;margin-bottom:.25rem;}
+.spectrum .seg:nth-child(1){background:#3f9b6d;} .spectrum .seg:nth-child(2){background:#5a8f3e;}
+.spectrum .seg:nth-child(3){background:#6f2da8;} .spectrum .seg:nth-child(4){background:#9a3b86;}
+.spectrum .seg:nth-child(5){background:#b3552a;} .spectrum .seg:nth-child(6){background:#a3322a;}
+.spectrum-axis{display:flex;justify-content:space-between;font-size:.85rem;color:var(--muted);margin:.25rem .15rem 0;}
+.case-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;}
+.case{border:1px solid var(--line);border-radius:10px;padding:1.05rem;background:#fff;break-inside:avoid;}
+.case h3{margin-top:0;} .case .meta{font-size:.88rem;color:var(--muted);margin:.1rem 0 .5rem;}
+.case .quote{border-left:3px solid var(--accent);padding-left:.7rem;color:#3a2e46;font-size:.95rem;margin:.5rem 0;}
+.india{background:linear-gradient(180deg,#fff,#fff6ef);border:2px solid var(--puzzle);border-radius:11px;padding:1.05rem 1.25rem;margin:1.1rem 0;}
+.india h3{color:#a3322a;margin-top:0;}
+.faq details{border:1px solid var(--line);border-radius:9px;background:#fff;padding:.15rem .95rem;margin:.55rem 0;}
+.faq summary{cursor:pointer;font-weight:800;color:var(--accent-dark);padding:.65rem 0;}
+.faq details[open] summary{border-bottom:1px solid var(--line);margin-bottom:.45rem;}
+.gloss dt{font-weight:800;color:var(--accent-dark);margin-top:.75rem;}
+.gloss dd{margin:.1rem 0 0;} .gloss .en{color:var(--muted);font-weight:400;font-size:.9rem;}
+.bridge{color:var(--muted);font-style:normal;font-size:1rem;border-top:1px dotted var(--line);border-bottom:1px dotted var(--line);padding:.6rem 0;margin:1.6rem 0 .4rem;}
+.footnotes{font-size:.93rem;color:#3b3044;} .footnotes li{margin:.32rem 0;}
+
+figure.fig{margin:1.4rem 0;text-align:center;}
+figure.fig svg{width:100%;height:auto;max-width:760px;display:inline-block;}
+figure.fig figcaption{font-size:.9rem;color:var(--muted);margin-top:.5rem;text-align:left;}
+.fo{height:100%;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;
+  padding:9px 16px;font-family:"Yu Gothic","Noto Sans CJK JP",sans-serif;}
+.fo .t{font-weight:800;font-size:15.5px;margin-bottom:3px;}
+.fo .s{font-size:13px;color:#2b2135;line-height:1.5;}
+.fo .tag{font-size:11.5px;color:#574a63;margin-top:4px;}
+.fo.c{align-items:flex-start;text-align:left;}
+.conclusion{background:linear-gradient(180deg,#faf5ff,#fff);border:2px solid var(--accent);border-radius:13px;padding:1.3rem 1.5rem;margin:1.3rem 0;}
+.conclusion h2{margin:.05rem 0 .55rem;border:0;padding:0;color:var(--accent-dark);font-size:clamp(1.4rem,2.4vw,1.85rem);}
+.conclusion .lead{margin-top:.2rem;}
+.conclusion .take{margin:.7rem 0 .2rem;padding-left:1.15rem;}
+.conclusion .take li{margin:.4rem 0;}
+hr.sep{border:0;border-top:1px solid var(--line);margin:2.4rem 0;}
+@media (max-width:760px){
+  main{width:min(100% - 20px,880px);padding-top:24px;}
+  .qbox,.ledger{grid-template-columns:1fr;} .case-grid{grid-template-columns:1fr;} .toc{columns:1;}
+  th,td{padding:.6rem .62rem;} .spectrum .seg{flex-basis:50%;} .steps>li{padding-left:3rem;}
+}
+@media print{
+  @page{size:A4;margin:14mm;} body{background:#fff;color:#000;line-height:1.6;}
+  main{width:100%;padding:0;} header.hero{border-top:4pt solid #555;}
+  .box,.case,.table-wrap,.steps>li,details.deep{box-shadow:none;border-color:#999;}
+  .puzzle,.thesis,.warn,.keypoint,.india,.qbox .q,details.deep{background:#fff;}
+  details.deep[open] *{display:revert;} details.deep>summary::before{content:"";}
+  h2{break-after:avoid;border-left-color:#555;} table{font-size:8.4pt;min-width:0;}
+  th{background:#eee;color:#000;} .ascii{white-space:pre-wrap;background:#fff;color:#000;border:1px solid #999;}
+  .spectrum .seg{color:#000 !important;background:#fff !important;border:1px solid #999;}
+  a{text-decoration:none;color:#000;} .case,.box,tr,.steps>li{break-inside:avoid;}
+}
+</style>
+</head>
+<body>
+<div class="idx-nav" style="max-width:840px;margin:12px auto 0;padding:0 12px;font-family:sans-serif;font-size:12.5px;"><a href="../index.html" style="color:#5a2d82;text-decoration:none;border-bottom:1px dotted #5a2d82;">&#8592; 成果物インデックスへ</a></div>
+<main>
+
+<header class="hero">
+  <p class="kicker">公開HTML知識ベース ／ 国際租税法</p>
+  <h1>源泉徴収と租税条約のあいだ<br>― 形式はどこで効くのか</h1>
+  <p class="subtitle">租税条約の特典（配当ゼロ税率など）を実際に受け取るまでには、「資格があるか」と「その場で使えるか」という二つの関門がある。この二つを取り違えると、条文どおりのはずの取引で思わぬ税金が残る。本稿は、その境目を初学者にも追えるように解きほぐしながら、専門的な厳密さは落とさずに整理する。</p>
+  <p class="readingnote">読み方：まず「謎」と「二つの問い」を読めば全体の見取り図がつかめる。各節の<b>水色の「もう一段深く」</b>は条文・判例・学説の踏み込んだ根拠で、初学者は飛ばしても本筋は追える。緑の「要するに」は各節の要点。⚠️は一次資料での最終確認が要る箇所を正直に示す。</p>
+</header>
+
+<section id="conclusion" class="conclusion">
+<h2>結論 ― 先に要点</h2>
+<p class="lead">租税条約の特典（配当のゼロ％など）を実際に受け取れるかは、二つの別々の問いに分かれる。受け取る側に条約上の<b>資格</b>があるか（中身で決まる）。そして、支払う側が支払のその場でそれを<b>使えるか</b>（書類で決まる）。届出書や様式17といった形式は、権利そのものを作らないが、その場で使えるかを握っている。</p>
+<figure class="fig">
+<svg viewBox="0 0 720 300" role="img" aria-label="結論の要約図">
+  <defs><marker id="arC" markerWidth="11" markerHeight="11" refX="8" refY="5.5" orient="auto"><path d="M0,1 L9,5.5 L0,10 Z" fill="#6f2da8"/></marker></defs>
+  <text x="360" y="28" text-anchor="middle" font-family="sans-serif" font-size="14.5" font-weight="800" fill="#4f187d">形式は権利を創設しないが、権利の即時実現可能性を支配する</text>
+  <rect x="16" y="60" width="196" height="156" rx="11" fill="#eafaf1" stroke="#1f7a4d" stroke-width="2"/>
+  <foreignObject x="16" y="60" width="196" height="156"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><div class="t" style="color:#1f7a4d">① 資格（実体）</div><div class="s">居住者性・受益者性・LOB／PPT・保有・PE非帰属</div><div class="tag">条約から生まれる</div></div></foreignObject>
+  <text x="224" y="146" text-anchor="middle" font-family="sans-serif" font-size="26" fill="#6f2da8">＋</text>
+  <rect x="238" y="60" width="212" height="156" rx="11" fill="#f3ecfb" stroke="#6f2da8" stroke-width="2"/>
+  <foreignObject x="238" y="60" width="212" height="156"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><div class="t" style="color:#6f2da8">② 形式（書類）</div><div class="s">届出書・様式17・居住者証明（支払日の前日まで）</div><div class="tag">権利は作らない／使えるタイミングを握る</div></div></foreignObject>
+  <line x1="452" y1="104" x2="498" y2="98" stroke="#6f2da8" stroke-width="2.5" marker-end="url(#arC)"/>
+  <rect x="502" y="62" width="202" height="66" rx="10" fill="#eafaf1" stroke="#1f7a4d" stroke-width="2"/>
+  <foreignObject x="502" y="62" width="202" height="66"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><div class="t" style="color:#1f7a4d;font-size:13px">両方そろう → 源泉時に0％・軽減</div></div></foreignObject>
+  <line x1="452" y1="150" x2="498" y2="174" stroke="#6f2da8" stroke-width="2.5" marker-end="url(#arC)"/>
+  <rect x="502" y="140" width="202" height="86" rx="10" fill="#fff6dd" stroke="#b3552a" stroke-width="2"/>
+  <foreignObject x="502" y="140" width="202" height="86"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><div class="t" style="color:#b3552a;font-size:13px">形式なし → 20.42％で源泉</div><div class="s">本税は様式11で還付（権利は生きる）／附帯税は残る</div></div></foreignObject>
+</svg>
+<figcaption>結論図：資格（実体）と形式（書類）は別々の関門。両方そろえば支払時に条約税率、形式が欠ければ20.42％でいったん源泉し、本税は還付で戻るが附帯税は残る。</figcaption>
+</figure>
+<ul class="take">
+<li><b>資格（実体）と、その場で使えるか（手続）は別問題。</b>両方そろって初めて、支払時に条約税率を使える。</li>
+<li>形式が欠けても<b>権利は消えない</b>。実現が「即時」から「還付」へ降りるだけ。ただし、いったん20.42％で取られ、本税は様式11で戻るが<b>不納付加算税・延滞税は残る</b>。</li>
+<li>各国の違いは<b>「形式をどこに置くか」</b>の差にすぎず、弱まるのは権利ではなく「いま使える可能性」である（→ 配置スペクトラム）。</li>
+</ul>
+<p class="small">以下では、この結論を謎ときの形で順に確かめる。急ぐ場合は、この結論図と「二つの問い」だけで全体像がつかめる。</p>
+</section>
+
+<nav class="box" aria-label="目次">
+  <h2>この知識ベースの歩き方</h2>
+  <ol class="toc">
+    <li><a href="#puzzle">はじめに：ひとつの謎から</a></li>
+    <li><a href="#two-questions">二つの問い ― 全体の鍵</a></li>
+    <li><a href="#thesis">中心命題と三層の地図</a></li>
+    <li><a href="#how">源泉徴収のしくみ</a></li>
+    <li><a href="#layer1">第一層・実体</a></li>
+    <li><a href="#layer2">第二層・支払時手続</a></li>
+    <li><a href="#walkthrough">ワークスルー</a></li>
+    <li><a href="#layer3">第三層・後始末</a></li>
+    <li><a href="#positions">学説の論争と調停</a></li>
+    <li><a href="#spectrum">世界はどう解くか</a></li>
+    <li><a href="#cases">判例で確かめる</a></li>
+    <li><a href="#statutes">条文の地図</a></li>
+    <li><a href="#policy">なぜ重要か</a></li>
+    <li><a href="#glossary">用語集</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#verification">誠実な留保</a></li>
+    <li><a href="#sources">出典</a></li>
+  </ol>
+  <p class="small">急ぐ人は「はじめに」と「二つの問い」だけで全体像がつかめます。水色「もう一段深く」は条文・判例の踏み込み、緑「要するに」は要点。図は各節に置きました。</p>
+</nav>
+
+<section id="puzzle">
+  <h2><span class="num">0</span>はじめに ― ひとつの謎から</h2>
+  <p class="lead">具体的な場面から始めよう。理屈は、謎を解く道具として後から見たほうが頭に入る。</p>
+  <div class="puzzle">
+    <span class="label">こんなことが起きる</span>
+    <p>日本の子会社が、株式を100%持つ米国の親会社へ配当を支払う。日米租税条約のもとでは、一定の要件を満たす親子間配当の源泉税は<b>ゼロ％</b>になり得る。担当者は「条約でゼロなのだから、源泉徴収はいらない」と考え、税額を差し引かずに送金した。</p>
+    <p>ところが後日、税務署はこう言う。支払の前日までに<b>特典条項に関する付表（様式17）と居住者証明書</b>が出ていなかった以上、その配当は条約のゼロ％ではなく、国内法の税率、すなわち<b>20.42％</b>で源泉徴収すべきだった、と。100％の親会社でさえ、条約の特典条項（LOB）の通り方によっては、ゼロ％どころか五％にしか届かないこともある。</p>
+  </div>
+  <p>多くの人がここで戸惑う。条約上の権利は確かにあるのに、なぜ満額の税金が問題になるのか。書類を一枚出していなかっただけで、条約そのものが無効になったのか。いったん取られた税金は、もう戻らないのか。</p>
+  <p>この戸惑いは、源泉徴収と租税条約が交わる場所に固有のものだ。そして、その正体はひとつの混同にある。<b>「条約の特典を受ける資格があること」と、「支払の瞬間にその資格を使えること」とを、同じことだと思ってしまう</b>混同である。次の節で、この二つをはっきり分けるところから始めよう。</p>
+  <div class="keypoint"><b>要するに</b>　条約でゼロ％のはずの配当が、書類の不備だけで20.42％になることがある。鍵は「資格」と「その場で使えるか」が別物だという点にある。</div>
+</section>
+
+<section id="two-questions">
+  <h2><span class="num">1</span>二つの問い ― この分野ぜんぶの鍵</h2>
+  <p class="lead">源泉徴収の場面で租税条約の軽減・免除を受けられるか、という問いは、いつも二つの問いに割れている。この割れ目が見えれば、あとの議論はすべてここに戻ってくる。</p>
+  <div class="qbox">
+    <div class="q a">
+      <span class="tag">問い1 ・ 資格</span>
+      <p>受け取る側（相手国の会社など）は、租税条約のうえで<b>軽減や免除を受ける地位</b>にあるか。これは、その人が条約上の居住者か、所得の受益者か、特典条項（LOB）や主要目的テスト（PPT）を通るか、保有割合や保有期間を満たすか、恒久的施設（PE）に帰属しないか、といった<b>中身（実体）</b>で決まる。</p>
+    </div>
+    <div class="q b">
+      <span class="tag">問い2 ・ その場で使えるか</span>
+      <p>支払う側（源泉徴収義務者）は、その地位を<b>支払の瞬間に確認して</b>、国内法の税率ではなく条約の低い税率を即座に適用してよいか。これは、届出書・居住者証明・様式17といった<b>証憑が支払時までに揃っているか</b>という手続の問題である。</p>
+    </div>
+  </div>
+  <figure class="fig">
+<svg viewBox="0 0 720 430" role="img" aria-label="資格と書類の2×2マトリクス">
+  <text x="360" y="22" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="700" fill="#4f187d">問い2 ・ 支払時に書類（届出・様式17・居住者証明）は？</text>
+  <text x="150" y="58" text-anchor="middle" font-family="sans-serif" font-size="13.5" font-weight="700" fill="#4f187d">揃っている</text>
+  <text x="470" y="58" text-anchor="middle" font-family="sans-serif" font-size="13.5" font-weight="700" fill="#b3552a">揃っていない</text>
+  <text x="20" y="170" font-family="sans-serif" font-size="14" font-weight="700" fill="#4f187d" transform="rotate(-90 20 230)">問い1 ・ 条約上の資格は？</text>
+  <text x="44" y="150" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="700" fill="#1f7a4d" transform="rotate(-90 44 150)">あり</text>
+  <text x="44" y="320" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="700" fill="#6d6077" transform="rotate(-90 44 320)">なし</text>
+  <rect x="64" y="70" width="300" height="160" rx="10" fill="#eafaf1" stroke="#1f7a4d" stroke-width="2"/>
+  <foreignObject x="64" y="70" width="300" height="160"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><div class="t" style="color:#1f7a4d">◎ その場で条約税率</div><div class="s">資格があり、書類も揃う。支払時に0％・軽減を即適用できる。</div></div></foreignObject>
+  <rect x="372" y="70" width="300" height="160" rx="10" fill="#fff4ec" stroke="#b3552a" stroke-width="3"/>
+  <foreignObject x="372" y="70" width="300" height="160"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><div class="t" style="color:#b3552a">△ いったん20.42％ → 還付</div><div class="s">資格はあるのに書類が間に合わない。国内法率で源泉し、本税は様式11で還付。<b>附帯税は残る</b>。</div><div class="tag">＝冒頭の謎はこのマス</div></div></foreignObject>
+  <rect x="64" y="240" width="300" height="150" rx="10" fill="#f4f2f6" stroke="#9a8fa6" stroke-width="2"/>
+  <foreignObject x="64" y="240" width="300" height="150"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><div class="t" style="color:#6d6077">× 特典なし</div><div class="s">書類があっても、条約上の資格（居住者性・受益者性・LOB等）がなければ特典は受けられない。</div></div></foreignObject>
+  <rect x="372" y="240" width="300" height="150" rx="10" fill="#f4f2f6" stroke="#9a8fa6" stroke-width="2"/>
+  <foreignObject x="372" y="240" width="300" height="150"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><div class="t" style="color:#6d6077">× 特典なし</div><div class="s">資格も書類もない。国内法どおり課税される。</div></div></foreignObject>
+</svg>
+<figcaption>図A：二つの問いの組み合わせ。右上＝「資格はあるが書類がない」が冒頭の謎。権利は消えず、実現が還付へ回るだけだが、附帯税という持ち出しが残る。</figcaption>
+</figure>
+  <p>この二つは、しばしば一致する。資格があり、書類も揃っていれば、支払時に条約の税率で源泉徴収できる。だが理屈のうえでは別の問いだ。資格はあるのに書類が間に合わない、ということが起こり得るからである。冒頭の謎は、まさにこの「問い1はイエス、問い2はノー」という食い違いだった。</p>
+  <p>用語を一つだけ先に置いておく。支払う側は「源泉徴収義務者」と呼ばれ、所得を支払うときに税を天引きして国に納める。受け取る側ではなく、<b>支払う側が国と向き合う</b>。なぜそうなるのかは第3節で扱うが、この分業こそが、問い2を「受け取る側の資格」とは別の問題にしている。</p>
+  <div class="keypoint"><b>要するに</b>　問い1（資格・中身で決まる）と問い2（その場で使えるか・書類で決まる）。本稿の全部は、この二つを混ぜないことから出発する。</div>
+</section>
+
+<section id="thesis">
+  <h2><span class="num">2</span>中心命題と三層の地図</h2>
+  <p class="lead">二つの問いを一本の命題にまとめると、こうなる。短いが、これがこの分野の背骨である。</p>
+  <div class="thesis">
+    <span class="big">形式は権利を創設しないが、権利の即時実現可能性を支配する。</span>
+    <p>かみくだけば、こうだ。届出書や様式17といった「形式（書類）」は、条約上の権利そのものを<b>生み出すわけではない</b>。権利は、居住者性や受益者性といった中身から生まれる。しかし形式は、その権利を<b>支払のその場で実現できるかどうか</b>を握っている。書類がなければ、権利は消えないが、「いま使う」ことができない。</p>
+  </div>
+  <p>だから、書類が足りないときの本当の効果は、「条約上の権利が消える」ことではない。「支払時にすぐ使う」状態から、「いったん国内法の税率で取られ、あとで還付して取り戻す」状態への<b>格下げ</b>である。権利は生きているが、実現の時点が後ろにずれる。そして後で見るように、本税は取り戻せても、遅れて納めたことに伴う加算税や延滞税までは戻らない。</p>
+
+  <p>この動きを、もう少しきちんと書くと次のようになる。初学者は雰囲気だけつかめば十分で、各記号の正確な根拠は後の節で一つずつ確かめる。</p>
+  <div class="formula">
+    条約特典の<b>成立</b>　＝　実体要件の充足（居住者性・受益者性・LOB／PPT・保有・PE非帰属 など）<br>
+    源泉段階での<b>即時実現</b>　＝　実体要件の充足　＋　制度が求める形式的接合（届出・様式17・支払日前日まで）<br>
+    形式が欠けたときの<b>効果</b>　＝　権利の消滅ではなく、「即時実現」から「還付による実現」への降格<br>
+    <b>附帯税</b>の位置　＝　最終的な税額の問題ではなく、納める時点を守らなかったことへの負担
+  </div>
+
+  <h3>歩く地図 ― 三つの層</h3>
+  <p>本稿は、この命題を<b>三つの層</b>に分けて歩く。以降の節はすべて、この地図のどこかにいる。最初にこの全体像を見ておくと、各節で迷子にならない。</p>
+  <figure class="fig">
+<svg viewBox="0 0 720 600" role="img" aria-label="三層構造の縦フロー図">
+  <defs><marker id="arP" markerWidth="12" markerHeight="12" refX="8.5" refY="6" orient="auto"><path d="M0,1 L10,6 L0,11 Z" fill="#6f2da8"/></marker></defs>
+  <rect x="40" y="12" width="640" height="150" rx="12" fill="#eafaf1" stroke="#1f7a4d" stroke-width="2"/>
+  <foreignObject x="40" y="12" width="640" height="150"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><div class="t" style="color:#1f7a4d">第一層 ・ 実体 ― 「資格」はどこから来るか</div><div class="s">居住者性 ／ 受益者性 ／ LOB・PPT ／ 保有要件 ／ PE非帰属</div><div class="s">届出書はここでは権利を作らない</div><div class="tag">条文の芯：実施特例法 3条の2 第2項「適用はないものとする」</div></div></foreignObject>
+  <line x1="360" y1="162" x2="360" y2="212" stroke="#6f2da8" stroke-width="2.5" marker-end="url(#arP)"/>
+  <text x="372" y="192" font-family="sans-serif" font-size="13" fill="#4f187d">資格はある。では、その場で使えるか？</text>
+  <rect x="40" y="218" width="640" height="150" rx="12" fill="#f3ecfb" stroke="#6f2da8" stroke-width="2"/>
+  <foreignObject x="40" y="218" width="640" height="150"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><div class="t" style="color:#6f2da8">第二層 ・ 支払時手続 ― 「その場で使えるか」</div><div class="s">届出書 ／ 居住者証明 ／ 様式17 ／ 支払日の前日まで</div><div class="s">揃わなければ、国内法の税率（20.42％）で源泉徴収</div><div class="tag">条文の芯：実施特例法 12条 → 施行省令 9条の5</div></div></foreignObject>
+  <line x1="360" y1="368" x2="360" y2="418" stroke="#6f2da8" stroke-width="2.5" marker-end="url(#arP)"/>
+  <text x="372" y="398" font-family="sans-serif" font-size="13" fill="#4f187d">取られすぎた。取り戻せるか？</text>
+  <rect x="40" y="424" width="640" height="158" rx="12" fill="#fff6dd" stroke="#b3552a" stroke-width="2"/>
+  <foreignObject x="40" y="424" width="640" height="158"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><div class="t" style="color:#b3552a">第三層 ・ 後始末 ― 還付と、残るもの</div><div class="s">本税の差額は様式11で還付請求できる（権利の回復）</div><div class="s">ただし不納付加算税・延滞税は戻らない</div><div class="tag">根拠：国税庁タックスアンサー2888・2889、国税通則法60・67条</div></div></foreignObject>
+</svg>
+<figcaption>図1：三層構造。形式が欠けても第一層の権利は残り、実現が第二層（即時）から第三層（還付）へ「降格」するだけ。ただし附帯税は戻らない。</figcaption>
+</figure>
+
+  <details class="deep">
+    <summary>もう一段深く ― なぜ「効力要件説か確認的手続説か」の二択にしないのか</summary>
+    <p>学説は伝統的に、届出書を「出さなければ権利が生じない要件（効力要件）」とみるか、「権利はすでにあり書類は確認の手段にすぎない（確認的手続）」とみるか、の対立として語られてきた。本稿は、この二択をそのまま採らない。三層に分ければ、対立の多くは<b>層の取り違え</b>から来ていることが見えるからである。すなわち、実体の層では確認的手続説が正しく（権利は中身から生じる）、支払時の層では形式が事実上の適用要件として強く働く。両者は矛盾せず、別の層の話をしている。この調停は第8節で正面から扱う。なお、法律が確認書の提出期限を非課税の<b>適用要件そのもの</b>として組み込む場合には、例外的に形式が効力要件化する。その実例（東京地判令和2年12月1日・判決ID13488）も後で見る。</p>
+  </details>
+  <div class="keypoint"><b>要するに</b>　命題は一行――形式は権利を作らないが、いつ使えるかを握る。地図は三層――資格（実体）／その場で使えるか（手続）／後始末（還付と残る附帯税）。</div>
+</section>
+
+<section id="how">
+  <h2><span class="num">3</span>源泉徴収のしくみ ― なぜ「支払う側」が判断するのか</h2>
+  <p class="lead">問い2が独立した問題になるのは、源泉徴収という制度の形のせいである。ここを押さえると、なぜ書類が支払時に効いてくるのかが腑に落ちる。</p>
+  <p>源泉徴収では、所得を支払う者（たとえば配当を出す日本の子会社）が、支払の際に税を天引きし、国へ納める。受け取る側ではなく、<b>支払う側が国と直接に向き合う</b>。受け取る側の最終的な税額の話と、支払う側が国に対して負う「天引きして納める義務」の話は、別の線として走っている。</p>
+  <p>この義務は、支払の瞬間に自動的に生じ、特別の手続を経ずに税額が確定する（国税通則法15条）。納付がなければ、税務署は支払う側に「納税の告知」をして取り立てる(所得税法221条、国税通則法36条)。天引きしそびれた分は、支払う側が受け取る側に請求したり、その後の支払から差し引いたりして清算する(所得税法222条)。つまり源泉徴収は、<b>国・支払者・受給者の三者</b>のうち、国と支払者の二者を主軸に動く。</p>
+  <figure class="fig">
+<svg viewBox="0 0 720 420" role="img" aria-label="源泉徴収の三角関係図">
+  <defs><marker id="arK" markerWidth="12" markerHeight="12" refX="8.5" refY="6" orient="auto"><path d="M0,1 L10,6 L0,11 Z" fill="#4f187d"/></marker></defs>
+  <rect x="270" y="20" width="180" height="64" rx="10" fill="#efe2f8" stroke="#6f2da8" stroke-width="2"/>
+  <foreignObject x="270" y="20" width="180" height="64"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><div class="t" style="color:#4f187d;text-align:center">国・税務署</div></div></foreignObject>
+  <rect x="40" y="300" width="250" height="84" rx="10" fill="#f3ecfb" stroke="#6f2da8" stroke-width="2"/>
+  <foreignObject x="40" y="300" width="250" height="84"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><div class="t" style="color:#4f187d">支払者</div><div class="s">源泉徴収義務者（配当を出す子会社など）</div></div></foreignObject>
+  <rect x="430" y="300" width="250" height="84" rx="10" fill="#f4f2f6" stroke="#9a8fa6" stroke-width="2"/>
+  <foreignObject x="430" y="300" width="250" height="84"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><div class="t" style="color:#574a63">受給者</div><div class="s">相手国の居住者（米国の親会社など）</div></div></foreignObject>
+  <line x1="230" y1="300" x2="320" y2="86" stroke="#4f187d" stroke-width="2.5" marker-end="url(#arK)"/>
+  <line x1="320" y1="86" x2="245" y2="300" stroke="#4f187d" stroke-width="2.5" marker-end="url(#arK)"/>
+  <text x="170" y="200" font-family="sans-serif" font-size="12.5" fill="#4f187d" transform="rotate(-66 170 200)">天引きして納める／納税の告知</text>
+  <line x1="290" y1="342" x2="430" y2="342" stroke="#6f2da8" stroke-width="2.5" marker-end="url(#arK)"/>
+  <text x="360" y="333" text-anchor="middle" font-family="sans-serif" font-size="12.5" fill="#4f187d">支払・天引き・あとで清算</text>
+  <line x1="490" y1="300" x2="430" y2="92" stroke="#9a8fa6" stroke-width="2" stroke-dasharray="6 5"/>
+  <text x="560" y="200" font-family="sans-serif" font-size="12.5" fill="#8a5b00" transform="rotate(73 560 200)">原則 直接の関係なし</text>
+</svg>
+<figcaption>図2：源泉徴収の三角関係。国と直接向き合うのは支払者で、受給者と国のあいだには原則として直接の関係がない（破線）。だから支払者が支払時に独力で条約税率の可否を判断する。</figcaption>
+</figure>
+  <p>ここに問い2の難しさがある。支払う側は、相手が条約上の居住者か、受益者か、特典条項を通るか、恒久的施設に帰属しないかを、<b>支払の瞬間に、自分の手元の情報だけで</b>見極めなければならない。相手の内部事情まで完全には分からない。だからこそ制度は、「支払時に一定の書類が揃っていれば条約の税率を使ってよい」という形で、判断の拠りどころを用意した。書類は、支払う側が安全に低い税率を使うための<b>足場</b>なのである。</p>
+  <details class="deep">
+    <summary>もう一段深く ― 最高裁が示した三角関係（引用前に本文の確認が要る点）</summary>
+    <p>源泉所得税が支払時に自動的に成立・確定すること、そして国と直接の法律関係に立つのは支払者であって受給者ではないこと（受給者は自分の確定申告で天引きの過不足を当然には精算できないこと）は、最判昭和45年12月24日（民集24巻13号2243頁。<b>愛知交通事件</b>と呼ばれる）および最判平成4年2月18日（民集46巻2号77頁）が示したと整理されている。⚠️ いずれも本稿のローカル資料では本文そのものを確認できておらず、引用にあたっては最高裁判例集・民集の本文で逐語を照合する必要がある（趣旨の引用は多数の下級審で確認できる）。納税告知処分の性質や、支払原因行為の錯誤無効を告知処分の中で争えるかという論点については、最判平成30年9月25日（民集72巻4号317頁。判決ID13191）が関連する。</p>
+  </details>
+  <div class="keypoint"><b>要するに</b>　源泉徴収は国と支払者の関係で完結し、支払者が支払のその場で条約税率の可否を独力で判断する。書類はその判断の足場として要る。だから問い2（その場で使えるか）は問い1（資格）と別の問題になる。</div>
+  <p class="bridge">では、その「資格」（問い1）はそもそもどこから生まれるのか。第一層から見ていこう。</p>
+</section>
+
+<section id="layer1">
+  <h2><span class="num">4</span>第一層・実体 ― 「資格」はどこから来るか</h2>
+  <p class="lead">条約の特典を受ける資格は、書類からではなく、取引と組織の<b>中身</b>から生まれる。ここが三層の出発点である。</p>
+  <p>条約が源泉地国の課税を「免除する」「一定の税率を超えない」と定めるとき、その恩恵を受けられるかは、次のような実体的な要件で決まる。</p>
+  <ul class="note-list">
+    <li><b>居住者性</b>　相手国の租税条約上の居住者か。これを示すのが居住者証明書だが、証明書が居住者を作るのではなく、すでにある事実を示すにすぎない。</li>
+    <li><b>所得の分類</b>　その所得が配当（10条）か、利子（11条）か、使用料（12条）か、その他所得（21条）か。条文の入口が変わる。</li>
+    <li><b>受益者性（beneficial owner）</b>　名義人や代理人、導管会社ではなく、その所得を自分のものとして受ける者か。</li>
+    <li><b>特典条項（LOB）・主要目的テスト（PPT）</b>　条約の濫用を防ぐための資格の関門。日米条約22条のLOBはその代表。</li>
+    <li><b>保有割合・保有期間、PE非帰属</b>　親子間配当のゼロ％・五％などは保有要件で分かれ、所得が恒久的施設に帰属すると扱いが変わる。</li>
+  </ul>
+  <p>日本法の側でこの第一層を支える条文の芯が、租税条約等実施特例法<b>3条の2第2項</b>である。条約が免除を定める相手国居住者等の配当等については、所得税法178条・179条・212条などの<b>「規定の適用はないものとする」</b>と定める。つまり、条約上の免除という実体が、国内の課税・源泉徴収の規定そのものを止める。ここで効いているのは条約と実体要件であって、届出書ではない。</p>
+  <div class="keypoint"><b>要するに</b>　資格は中身（居住者性・受益者性・LOB・保有・PE）から生まれ、実特法3条の2第2項がそれを国内法に接続する。届出書はこの層では権利を作らない。</div>
+  <details class="deep">
+    <summary>もう一段深く ― 「書類は資格を作らない」を判決で確かめる</summary>
+    <p>東京地判平成22年12月3日（判決ID11566）は、届出書・特典条項に関する付表・居住者証明書が提出されていても、新旧いずれの日米条約が適用されるかは、書類ではなく使用料を「支払を受けるべき」時期で決まると判断した。書類は入口であって、適用される条約や課税要件の充足時期そのものを作り替えはしない、という線である。受益者性をめぐっては、Indofood、Prévost Car、Velcro、Alta Energy などの外国判例が参照されることが多いが、本稿では個々の射程は ⚠️ 一次資料で確認する扱いとする。様式17についても、それがLOBの資格を生み出すのではなく、すでにある資格を支払時に示すための書面である点に注意したい。</p>
+  </details>
+  <p class="bridge">資格があるとして、では支払のその場でそれを使うには何が要るのか。第二層へ移る。</p>
+</section>
+
+<section id="layer2">
+  <h2><span class="num">5</span>第二層・支払時手続 ― 「その場で使う」ための書類</h2>
+  <p class="lead">資格を支払時に反映するには、支払の前日までに所定の書類を揃える必要がある。揃わなければ、支払者は国内法の税率で源泉徴収することになる。</p>
+  <p>条約の限度税率や免除を支払の場で動かすしくみは、実施特例法<b>12条</b>が「必要な事項は省令で定める」と委ねた先の、施行省令にある。骨格はこうだ。</p>
+  <ul class="note-list">
+    <li><b>省令2条</b>　配当等について、最初の支払を受ける日の<b>前日まで</b>に、支払者を経由して所轄税務署長へ届出書を出す。免除を受けるには居住者証明書を添える。</li>
+    <li><b>省令9条</b>　その他の国内源泉所得についても、同じく支払日前日までの届出を求める。</li>
+    <li><b>省令9条の5</b>　特典条項のある条約では、通常の届出書に<b>特典条項関係書類等（様式17にあたる付表など）を添えて、支払日前日まで</b>に提出する。還付請求の際にも添付する。</li>
+  </ul>
+  <p>書式の体系も押さえておくと迷わない。所得の種類ごとに<b>様式1（配当）・様式2（利子)・様式3（使用料）</b>などの届出書があり、取られすぎた税を後から取り戻すのが<b>様式11（還付請求書）</b>、特典条項の資格を示す付表が<b>様式17</b>である。なお<b>様式16</b>は「届出書一般」ではなく、外国法人の株主等の名簿である（誤りやすい）。国税庁のタックスアンサーNo.2888も、前日までに届出がなければ支払者は限度税率ではなく国内法の税率で源泉徴収し、後日に届出書と様式11で差額の還付を請求できる、と説明している。</p>
+  <div class="keypoint"><b>要するに</b>　その場で条約税率を使うには、支払日の前日までに届出書・居住者証明・（特典条項条約なら）様式17が要る。根拠は実特法12条が委ねた省令2条・9条・9条の5。揃わなければ国内法税率になる。</div>
+  <details class="deep">
+    <summary>もう一段深く ― 「届出がない＝条約適用なし」ではない、という限界</summary>
+    <p>支払時に書類が要るからといって、届出を出さなかったこと<b>だけ</b>で条約上の権利が消えるわけではない。東京地判平成27年5月28日（判決ID12672）は、省令上の届出書を出さなかったことだけを理由に日米条約7条1項の適用を否定することはできない、とした。実施特例法12条の委任は一般的・包括的なものであり、省令に課税要件のような重い効果を委ねたとは読めない、という租税法律主義の筋である（控訴審・東京高判平成28年1月28日＝判決ID12789も同じ枠組みを維持した。ただしいずれも恒久的施設の認定という<b>実体</b>の判断で納税者が敗れている)。したがって正確には、「届出未提出でも条約適用を主張し得る／しかし支払時に無証憑で安全に軽減できるわけではない」と書き分ける必要がある。両者は別の層の話だからである。</p>
+  </details>
+  <p class="bridge">ここまでで道具は揃った。冒頭の謎を、三層をたどって実際に解いてみよう。</p>
+</section>
+
+<section id="walkthrough">
+  <h2><span class="num">6</span>ワークスルー ― 謎を三層でたどる</h2>
+  <p class="lead">第0節の謎を、いまの三層の地図でたどり直す。一歩ずつ「どの層で何が起きたか」を見れば、20.42％の正体が分かる。</p>
+  <ol class="steps">
+    <li>日本の子会社が、株式を100％持つ米国の親会社へ配当を支払う。<b>第一層</b>では、保有要件や特典条項を満たす限り、条約上の限度税率はゼロ％に届き得る。<span class="res good">資格はある（問い1＝イエス）</span>。</li>
+    <li>ところが支払日の前日までに、特典条項に関する付表（様式17）と居住者証明書が揃わなかった。<b>第二層</b>の入口を通れない。<span class="res bad">その場では条約ゼロ％を使えない（問い2＝ノー）</span>。</li>
+    <li>支払者は国内法に戻る。配当に対する所得税は所得税法213条1項1号で20％、これに復興特別所得税2.1％が乗り、<span class="res bad">合計20.42％で源泉徴収すべきだった</span>ことになる。天引きしそびれていれば、納税の告知で取り立てられる。</li>
+    <li>後日、届出書とともに還付請求書（様式11）を出す。実体の資格は生きているから、<b>第三層</b>で本税の差額（20.42％相当と条約税率との差）は<span class="res good">還付され得る＝権利の回復</span>。</li>
+    <li>ただし、本来の納期限より遅れて納めたことに伴う<span class="res stay">不納付加算税・延滞税は還付されない</span>。資金がいったん拘束され、附帯税のぶん持ち出しも残る。</li>
+  </ol>
+  <figure class="fig">
+<svg viewBox="0 0 720 300" role="img" aria-label="様式17が無いときの流れ図">
+  <defs><marker id="arF" markerWidth="11" markerHeight="11" refX="8" refY="5.5" orient="auto"><path d="M0,1 L9,5.5 L0,10 Z" fill="#6f2da8"/></marker></defs>
+  <rect x="20" y="20" width="200" height="92" rx="9" fill="#eafaf1" stroke="#1f7a4d" stroke-width="2"/><foreignObject x="20" y="20" width="200" height="92"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><div class="t" style="color:#1f7a4d;font-size:14px">① 配当を支払う</div><div class="s">100％子会社へ。条約上は0％が見込まれる（資格あり）</div></div></foreignObject>
+  <rect x="260" y="20" width="200" height="92" rx="9" fill="#fff4ec" stroke="#b3552a" stroke-width="2"/><foreignObject x="260" y="20" width="200" height="92"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><div class="t" style="color:#b3552a;font-size:14px">② 様式17が間に合わない</div><div class="s">支払日の前日までに付表・居住者証明が無い</div></div></foreignObject>
+  <rect x="500" y="20" width="200" height="92" rx="9" fill="#fff4ec" stroke="#b3552a" stroke-width="2"/><foreignObject x="500" y="20" width="200" height="92"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><div class="t" style="color:#b3552a;font-size:14px">③ 20.42％で源泉</div><div class="s">条約0％を使えず国内法率（所法213）＋復興2.1％</div></div></foreignObject>
+  <rect x="260" y="180" width="200" height="92" rx="9" fill="#eafaf1" stroke="#1f7a4d" stroke-width="2"/><foreignObject x="260" y="180" width="200" height="92"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><div class="t" style="color:#1f7a4d;font-size:14px">④ 様式11で還付</div><div class="s">本税の差額は戻る（権利の回復）</div></div></foreignObject>
+  <rect x="500" y="180" width="200" height="92" rx="9" fill="#fff6dd" stroke="#b3552a" stroke-width="2"/><foreignObject x="500" y="180" width="200" height="92"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><div class="t" style="color:#b3552a;font-size:14px">⑤ 附帯税は残る</div><div class="s">不納付加算税・延滞税は戻らない＋資金拘束</div></div></foreignObject>
+  <line x1="220" y1="66" x2="258" y2="66" stroke="#6f2da8" stroke-width="2.5" marker-end="url(#arF)"/>
+  <line x1="460" y1="66" x2="498" y2="66" stroke="#6f2da8" stroke-width="2.5" marker-end="url(#arF)"/>
+  <line x1="600" y1="114" x2="600" y2="176" stroke="#6f2da8" stroke-width="2.5" marker-end="url(#arF)"/>
+  <text x="612" y="152" font-family="sans-serif" font-size="11.5" fill="#4f187d">後日</text>
+  <line x1="500" y1="220" x2="462" y2="220" stroke="#b3552a" stroke-width="2.5" marker-end="url(#arF)"/>
+</svg>
+<figcaption>図3：様式17が間に合わなかったときの流れ。資格はあるのに②で関門を越えられず③で20.42％。④で本税は戻るが、⑤の附帯税と資金拘束は残る。</figcaption>
+</figure>
+  <div class="ledger">
+    <div class="back"><h4>戻るもの</h4><p>本税の差額（条約税率を超えて取られた部分）。実体の資格が認められれば、様式11の還付で取り戻せる。</p></div>
+    <div class="stayb"><h4>残るもの</h4><p>不納付加算税・延滞税といった附帯税。納期限を守らなかったことへの負担で、後から資格が認められても消えない。加えて、還付までの資金拘束。</p></div>
+  </div>
+  <p>取られすぎた本税が戻るのに附帯税が残るのは、両者が別の問題だからである。本税の還付は「最終的にいくら課されるべきか」という<b>税額</b>の是正であり、附帯税は「決められた時点に納めたか」という<b>納付秩序</b>の話だ。資格があっても、支払時に書類を整えて期限を守るという秩序を外せば、その外したこと自体への負担は残る。</p>
+  <div class="keypoint"><b>要するに</b>　資格はあった（第一層）。書類が支払時に無く、その場で使えなかった（第二層）ので20.42％。本税は還付で戻るが、附帯税と資金拘束は残る（第三層）。これが「形式は権利を消さないが、即時実現を握る」の具体形。</div>
+  <details class="deep">
+    <summary>もう一段深く ― この筋を支える二つの判決</summary>
+    <p>第二層の「届出がなければ国内法税率」を正面から示すのが、仙台地判平成28年10月19日（判決ID12919）である。韓国法人への使用料につき、日韓条約12条2項の10％限度税率があり得たが、届出書が出ていなかったため、所得税法213条1項1号の20％で源泉徴収すべきとされた（本税296万4939円、不納付加算税29万6000円）。他方、第三層の「軽減と還付は並んで存在する」を示すのが、東京地判令和4年2月17日（判決ID13671。日ルクセンブルク条約のみなし配当）で、源泉時に軽減を受ける方法と事後に過大分を還付請求する方法は<b>並列</b>であり、一方が原則で他方が例外という関係にはない、と判示した（還付額は合計13億9448万4302円）。⚠️ 数値・判示は判例カードの逐語に基づくが、本文引用前に原本で頁を再照合する。</p>
+  </details>
+</section>
+
+<section id="layer3">
+  <h2><span class="num">7</span>第三層・後始末 ― 還付で戻るもの、戻らないもの</h2>
+  <p class="lead">支払時に取られすぎても、実体の資格があれば本税は取り戻せる。ただし、戻るのは本税までで、附帯税は残る。この線引きが第三層の核心である。</p>
+  <p>届出が間に合わず国内法の税率で源泉徴収された場合、後から届出書と還付請求書（様式11）を出すことで、本税の差額は還付を請求できる。国税庁タックスアンサーNo.2889は、この本税の還付を認める一方で、<b>「加算税等の附帯税については還付されない」</b>と明言している。本税の還付は、条約上の資格が確認された結果としての<b>実体税額の是正</b>であり、附帯税は、納期限までに納めなかったという<b>徴収秩序違反の確定</b>だからである。両者は同じ事件に現れるが、別の効果である。</p>
+  <p>還付は、恩恵として与えられるものではなく、もともとあった実体的な権利を取り戻す道筋だと理解するのが正確だ。だからこそ、前節で見たように、源泉時の軽減と事後の還付は「並列」とされる（判決ID13671）。形式の不備は、権利を消すのではなく、実現の窓口を「支払時」から「還付時」へ動かすにとどまる。</p>
+  <div class="keypoint"><b>要するに</b>　本税は還付で戻る（実体税額の是正）。附帯税は戻らない（納付秩序違反の確定）。還付は恩恵でなく権利の回復であり、源泉時の軽減と並列に置かれる。</div>
+  <details class="deep">
+    <summary>もう一段深く ― 例外：形式が「効力要件」に格上げされるとき</summary>
+    <p>通常、条約の届出は確認・証明の手続にとどまる。しかし、法律が書面の提出期限を非課税の<b>適用要件そのもの</b>として組み込むと、形式が効力要件に変わる。東京地判令和2年12月1日（判決ID13488。特定民間国外債の利子受領者確認書）は、確認書を期限内に提出することを租税特別措置法6条7項の非課税の適用要件と解し、期限を過ぎれば本税・不納付加算税・延滞税の納付に法律上の原因がある（＝適法に課税・徴収できる）とした。これは通常の租税条約届出一般の話ではなく、法令が明示的に形式を要件へ引き上げた<b>例外類型</b>である。三層構造への反証ではなく、「どの効果を、どの法源が、どの形式に結びつけたか」で結論が決まることを示す好例として読む。</p>
+  </details>
+  <p class="bridge">ここまでが日本法の三層である。では、書類を「権利の条件」とみるか「ただの確認」とみるかという、古くからの論争はどう整理できるのか。</p>
+</section>
+
+<section id="positions">
+  <h2><span class="num">8</span>学説の論争と、その調停</h2>
+  <p class="lead">「届出書は権利の条件か、ただの証明か」。この問いは長く対立として語られてきた。三層に分けると、対立の多くは<b>層の取り違え</b>だと分かる。</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>立場</th><th>言っていること</th><th>強く効く場面</th><th>誤用を避ける</th></tr></thead>
+      <tbody>
+        <tr><td><b>効力要件説</b></td><td>届出・確認書・期限を守らなければ、軽減・非課税の効果は生じない。</td><td>法令が形式を適用要件へ組み込んだ場面（13488型）。</td><td>通常の条約届出一般へ機械的に広げない。</td></tr>
+        <tr><td><b>確認的手続説</b></td><td>資格は実体で決まり、届出書はそれを確認・証明する手段にすぎない。</td><td>届出未提出だけで条約適用を失わせてよいかを問う場面。</td><td>「支払時に無証憑で軽減できる」とまでは言えない。</td></tr>
+        <tr><td><b>支払時要件論<br>（中間）</b></td><td>形式は権利を作らないが、支払者が支払時に条約税率を使えるかを支配する。</td><td>支払日前日までに書類が整うかが問われる場面。</td><td>形式欠缺の効果を「権利消滅」と書かず「即時適用の停止」と書く。</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>本稿の調停は単純だ。<b>実体の層</b>では確認的手続説が正しい。資格は中身から生じ、届出書はそれを示すだけである。<b>支払時の層</b>では、形式は事実上の適用要件として強く働く。支払者は相手の資格を完全には確かめられないからだ。そして、法令が形式を要件へ引き上げた特別な場合（13488）には、効力要件説が当てはまる。三説は同じ平面で争っているのではなく、別の層の話をしている。だから「実体では確認的、支払時では要件的」と層で分ければ、矛盾なく両立する。</p>
+  <div class="keypoint"><b>要するに</b>　三説は対立ではなく、効く層が違う。実体＝確認的、支払時＝（事実上）要件的、法令が組み込めば＝効力要件（例外）。二層構造はこの三つを別の棚に置く。</div>
+  <details class="deep">
+    <summary>もう一段深く ― 学者の整理と、正直な留保</summary>
+    <p>日本では、増井良啓、野一色直人、谷口勢津夫、水野忠恒らが届出書の法的性質を論じる主要な参照軸になる。本稿の整理では、増井・野一色を確認的手続説の有力な担い手として位置づけ得るが、⚠️ 支払後届出でも限度税率を否定しない、過大納付は誤納金だ、といった核心の文言と頁は、書籍・誌面の一次資料で確認が要る（増井『国際課税における手続の整備と改革』日税研論集71号〔2017〕、野一色『源泉徴収を巡る法的問題の一考察』税法学570号119頁〔2013〕、谷口『租税条約論』〔1999〕、水野『国際課税の制度と理論』〔2000〕）。⚠️ <b>中里実については、確認的手続説にも効力要件説にも分類しない</b>。確認的手続説に分類する原典が特定できていないためで、非居住者取引における形式・実質・執行可能性の緊張を考える背景の議論として参照するにとどめる。国際法の側では、Klaus Vogel / Reimer が、条約は課税権を配分・制限する規範であって国内の賦課徴収手続そのものを置き換えはしない、という基礎を与える。</p>
+  </details>
+  <p class="bridge">この「形式をどの効果に結びつけるか」という問いは、日本だけのものではない。世界は同じ問題をどう解いているのか。</p>
+</section>
+
+<section id="spectrum">
+  <h2><span class="num">9</span>世界はどう解くか ― 形式の置き場所のスペクトラム</h2>
+  <p class="lead">各国を見比べるとき、問うべきは「どの国が条約の権利を強く認めるか」ではない。どの国も、資格は条約の実体要件から生じると考えている。違うのは、その資格を支払の場で実現するために、<b>形式（書類・証明・登録）をどこに置くか</b>である。</p>
+  <p>形式の置き場所は、左から右へ並べられる。左へ行くほど支払のその場で使いやすく、右へ行くほど、いったん国内法の税率で取って後から還付する方向へ寄る。大事なのは、<b>左から右へ弱まるのは条約上の権利そのものではなく、その権利を「いま使える」可能性だ</b>という点である。</p>
+  <figure class="fig">
+<svg viewBox="0 0 720 250" role="img" aria-label="形式の配置スペクトラム軸">
+  <defs><marker id="arS" markerWidth="11" markerHeight="11" refX="8" refY="5.5" orient="auto"><path d="M0,1 L9,5.5 L0,10 Z" fill="#6f2da8"/></marker></defs>
+  <text x="30" y="40" font-family="sans-serif" font-size="12.5" fill="#1f7a4d">← その場で使いやすい（即時実現が強い）</text>
+  <text x="690" y="40" text-anchor="end" font-family="sans-serif" font-size="12.5" fill="#a3322a">濫用防止・徴収確保が強い →</text>
+  <rect x="30" y="60" width="110" height="86" fill="#3f9b6d" stroke="#fff" stroke-width="1"/><foreignObject x="30" y="60" width="110" height="86"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><div class="t" style="color:#fff;font-size:12.5px;text-align:center">① 自動適用</div><div class="s" style="color:#fff;font-size:10.5px;text-align:center">形式は事後の証拠</div></div></foreignObject><rect x="140" y="60" width="110" height="86" fill="#5a8f3e" stroke="#fff" stroke-width="1"/><foreignObject x="140" y="60" width="110" height="86"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><div class="t" style="color:#fff;font-size:12.5px;text-align:center">② 自己証明</div><div class="s" style="color:#fff;font-size:10.5px;text-align:center">支払者が書類で判断</div></div></foreignObject><rect x="250" y="60" width="110" height="86" fill="#6f2da8" stroke="#fff" stroke-width="1"/><foreignObject x="250" y="60" width="110" height="86"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><div class="t" style="color:#fff;font-size:12.5px;text-align:center">③ 標準フォーム</div><div class="s" style="color:#fff;font-size:10.5px;text-align:center">事前の届出・証明</div></div></foreignObject><rect x="360" y="60" width="110" height="86" fill="#9a3b86" stroke="#fff" stroke-width="1"/><foreignObject x="360" y="60" width="110" height="86"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><div class="t" style="color:#fff;font-size:12.5px;text-align:center">④ 当局認定</div><div class="s" style="color:#fff;font-size:10.5px;text-align:center">免除証明・承認</div></div></foreignObject><rect x="470" y="60" width="110" height="86" fill="#b3552a" stroke="#fff" stroke-width="1"/><foreignObject x="470" y="60" width="110" height="86"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><div class="t" style="color:#fff;font-size:12.5px;text-align:center">⑤ 仲介者・eTRC</div><div class="s" style="color:#fff;font-size:10.5px;text-align:center">電子証明で大量処理</div></div></foreignObject><rect x="580" y="60" width="110" height="86" fill="#a3322a" stroke="#fff" stroke-width="1"/><foreignObject x="580" y="60" width="110" height="86"><div xmlns="http://www.w3.org/1999/xhtml" class="fo"><div class="t" style="color:#fff;font-size:12.5px;text-align:center">⑥ 還付のみ</div><div class="s" style="color:#fff;font-size:10.5px;text-align:center">後日の還付で実現</div></div></foreignObject>
+  <text x="305" y="172" text-anchor="middle" font-family="sans-serif" font-size="12.5" font-weight="700" fill="#4f187d">▲ 日本は通常ここ（③）</text>
+  <line x1="305" y1="178" x2="635" y2="210" stroke="#b3552a" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#arS)"/>
+  <text x="635" y="228" text-anchor="middle" font-family="sans-serif" font-size="12.5" font-weight="700" fill="#a3322a">様式17が無いと⑥へ滑り落ちる</text>
+</svg>
+<figcaption>図4：形式の効力配置スペクトラム。左ほど即時に使え、右ほど還付に回る。日本は標準フォーム型（③）だが、様式17が間に合わないと一時的に「還付のみ」（⑥）へ落ちる。弱まるのは権利ではなく「いま使える可能性」。</figcaption>
+</figure>
+  <p>日本は③に立つ。フランスも標準フォーム型で③。米国とカナダは支払者が書類に依拠する②。ドイツや英国の利子は当局の証明・指令が要る④。EUのFASTERや米国のQIは、登録した金融仲介者と電子証明で大量処理する⑤。そして、書類が間に合わなかったときの日本は、結果として⑥（還付のみ）に落ちる。冒頭の謎は、③の国が一時的に⑥へ滑り落ちた場面だった、と言い換えられる。</p>
+  <div class="keypoint"><b>要するに</b>　国ごとの違いは「権利の強弱」でなく「形式をスペクトラムのどこに置くか」。左→右で弱まるのは即時実現の可能性であって、条約上の権利ではない。これが比較のいちばんの勘どころ。</div>
+
+  <h3>14法域の早見表</h3>
+  <p class="small">国別ノートと比較表を素材とする。<span class="badge v">確認</span>はローカル素材で骨格を確認できたもの、<span class="badge w">要照合</span>は様式番号・期限などを一次資料で要確認のもの。日本は本稿の基軸として別格に置く。</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>法域</th><th>その場で使うしくみ</th><th>主な形式・証憑</th><th>置き場所</th><th>状態</th></tr></thead>
+      <tbody>
+        <tr><td>日本</td><td>支払日前日までの届出で源泉時軽減。なければ国内法率→還付。</td><td>様式1〜10、様式11、様式16、様式17、居住者証明</td><td><span class="badge">③</span></td><td><span class="badge v">確認</span></td></tr>
+        <tr><td>米国</td><td>源泉徴収義務者が有効なW-8等に依拠して条約率を適用。</td><td>W-8BEN／BEN-E／IMY、Form 8233、1042-S、QI</td><td><span class="badge">②</span></td><td><span class="badge v">確認</span></td></tr>
+        <tr><td>英国</td><td>利子はHMRCの指令が中心、使用料は合理的確信での自己適用。</td><td>DT forms、DTTP1／2、direction letter</td><td><span class="badge">④/②</span></td><td><span class="badge w">要照合</span></td></tr>
+        <tr><td>ドイツ</td><td>BZStの免除証明があれば源泉時免除。なければ還付。</td><td>BOP申請、Freistellungsbescheinigung、§50d(3)資料</td><td><span class="badge">④→⑥</span></td><td><span class="badge w">要照合</span></td></tr>
+        <tr><td>フランス</td><td>簡易手続。支払前にフォームが整えば条約率を反映。</td><td>5000-SD、5001、5002、5003</td><td><span class="badge">③</span></td><td><span class="badge v">確認</span></td></tr>
+        <tr><td>オランダ</td><td>配当税の免除・還付を支払者・受領者・当局で分散処理。</td><td>IB 92、Form 6166、受益者資料</td><td><span class="badge">②/③</span></td><td><span class="badge w">要照合</span></td></tr>
+        <tr><td>EU横断</td><td>指令が実体免除、FASTERが源泉時／迅速還付を標準化。</td><td>eTRC、登録金融仲介者、投資家宣言、支払報告</td><td><span class="badge">⑤</span></td><td><span class="badge w">要照合</span></td></tr>
+        <tr><td>カナダ</td><td>支払者が受益者・居住者性・適格性の情報を持てば条約率。</td><td>NR301／302／303、NR4、NR7-R</td><td><span class="badge">②</span></td><td><span class="badge v">確認</span></td></tr>
+        <tr><td>豪州</td><td>支払者が居住国・所得種類を確認して条約率を適用。</td><td>NAT 7187、契約・受益者資料</td><td><span class="badge">②</span></td><td><span class="badge w">要照合</span></td></tr>
+        <tr><td>ニュージーランド</td><td>支払者がDTA税率を判断してNRWTを控除。</td><td>IR291、IR67、IR386</td><td><span class="badge">②</span></td><td><span class="badge w">要照合</span></td></tr>
+        <tr><td>シンガポール</td><td>S45申告でDTA軽減を主張。居住者証明（COR）が要。</td><td>COR、S45 filing、IR586</td><td><span class="badge">③/②</span></td><td><span class="badge w">要照合</span></td></tr>
+        <tr><td>中国</td><td>自己判断・申告享受・資料留保・事後管理。</td><td>協定待遇情報報告表、TRC、契約・受益者資料</td><td><span class="badge">②＋事後</span></td><td><span class="badge v">確認</span></td></tr>
+        <tr><td>インド</td><td>TRC／Form 10F等が源泉段階の強い関門。</td><td>TRC、Form 10F（移行後Form 41）、Sec.197証明</td><td><span class="badge">③強い／④</span></td><td><span class="badge w">要照合</span></td></tr>
+        <tr><td>香港</td><td>領域主義で、包括的な源泉時軽減制度はうすい。</td><td>Certificate of Resident Status</td><td><span class="badge">例外</span></td><td><span class="badge w">要照合</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h4>地域でみると</h4>
+  <p><b>英米法系</b>（米・加・豪・ニュージーランド）は、支払者に判断を委ねる②が基調である。書類は支払者が手元で保管し、誤れば支払者が責任を負う。<b>大陸法系とEU</b>は幅がある。ドイツは当局の免除証明が要る④で最も前置きが重く、フランスは標準フォームの③、EUのFASTERは紙の証明を電子化・標準化して⑤へ動かす最前線だ。<b>アジア</b>は、事前の届出や証明が実質的に関門として効く運用が多い。</p>
+  <div class="india">
+    <h3>日本の「様式17問題」に最も近いのはインド</h3>
+    <p>インドでは、租税条約の特典を受けるのに居住者証明（TRC）とForm 10F（現行制度への移行後はForm 41）が要り、これが無いと源泉段階では条約の特典を使えず、支払者は通常の源泉税率で天引きする。後からの還付や証明取得の道はあるが、源泉時には書類が事実上の関門になる。日本の「様式17が間に合わなければ20.42％」と同じ形である。資格の有無ではなく、支払時に形式が揃うかで即時実現が決まる、という構図が最もくっきり出る対照例だ。⚠️ 2025年の新法・Form 41・Section 197の運用細部は一次資料で要確認。</p>
+  </div>
+  <p class="bridge">理屈と比較が揃った。次は、これらを日本の判例で具体的に確かめる。</p>
+</section>
+
+<section id="cases">
+  <h2><span class="num">10</span>判例で確かめる</h2>
+  <p class="lead">ここまでの筋を、日本の裁判例で具体に落とす。各判決は、三層のどこを支える証拠なのかを意識して読むと位置づけが見える。数値・判示は判例カードの逐語に基づくが、援用前に原本で再照合する前提とする。</p>
+  <div class="case-grid">
+    <article class="case">
+      <h3>13671 ― 軽減と還付は並列</h3>
+      <p class="meta">東京地判令和4年2月17日／日ルクセンブルク条約・みなし配当／税務訴訟資料272号順号13671</p>
+      <p>条約上の限度税率(5％)が問題となったみなし配当について、源泉時に軽減を受ける方法と、事後に過大分を還付請求する方法の関係が争われた。</p>
+      <p class="quote">源泉時の軽減と事後の還付は並列に定められ、いずれか一方が原則で他方が例外という関係にはない。</p>
+      <p><b>意義：</b>第三層の核。形式の不備は権利を消さず、実現の窓口を還付へ移すにとどまる。還付額は合計13億9448万4302円。</p>
+    </article>
+    <article class="case">
+      <h3>13488 ― 形式が要件に格上げされた例外</h3>
+      <p class="meta">東京地判令和2年12月1日／特定民間国外債・利子受領者確認書</p>
+      <p>確認書を期限内に出すことが、非課税の適用要件になるかが争われた。</p>
+      <p class="quote">施行令の定める提出期限は、措置法6条7項の非課税の適用要件である。期限を過ぎれば本税・不納付加算税・延滞税の納付に法律上の原因がある。</p>
+      <p><b>意義：</b>法令が形式を要件へ引き上げた例外類型。通常の条約届出一般へは広げない。</p>
+    </article>
+    <article class="case">
+      <h3>12919 ― 届出が無ければ国内法率</h3>
+      <p class="meta">仙台地判平成28年10月19日／日韓条約・使用料・届出未提出</p>
+      <p>韓国法人への使用料につき、日韓条約12条2項の10％があり得たが、届出書が出ていなかった。</p>
+      <p class="quote">届出書の提出がないため、限度税率10％ではなく、所得税法213条1項1号により100分の20で源泉徴収すべきである。</p>
+      <p><b>意義：</b>第二層の直撃例。本税296万4939円、不納付加算税29万6000円。</p>
+    </article>
+    <article class="case">
+      <h3>11566 ― 書類は適用時期を作らない</h3>
+      <p class="meta">東京地判平成22年12月3日／新旧日米条約・使用料</p>
+      <p>届出書・特典条項付表・居住者証明が提出されたが、新旧どちらの条約が適用されるかが争点となった。</p>
+      <p class="quote">適用される条約は、書類の提出ではなく、使用料を「支払を受けるべき」時期によって決まる。</p>
+      <p><b>意義：</b>第一層の確認。形式は入口であって、実体的な適用時期を創設しない。</p>
+    </article>
+    <article class="case">
+      <h3>12672 ― 届出未提出だけでは否定できない</h3>
+      <p class="meta">東京地判平成27年5月28日／日米条約・PE・所得帰属</p>
+      <p>省令上の届出書を出さなかったことだけで条約適用を否定できるかが争われた。</p>
+      <p class="quote">届出書を提出しなかったことだけをもって、日米条約7条1項の適用を否定することはできない。</p>
+      <p><b>意義：</b>確認的手続説に有利。ただし本件は恒久的施設の認定という実体で納税者が敗訴しており、無証憑の支払時適用を認めた事件ではない。</p>
+    </article>
+    <article class="case">
+      <h3>12789 ― 控訴審が枠組みを維持</h3>
+      <p class="meta">東京高判平成28年1月28日／12672の控訴審</p>
+      <p>原審の「届出未提出だけでは否定できない」という枠組みを前提に、恒久的施設の該当性等が再び判断された。</p>
+      <p class="quote">原審の判断枠組みを維持しつつ、恒久的施設の該当により処分は適法とする。</p>
+      <p><b>意義：</b>形式の不備と実体要件の判断を分ける読みを、控訴審レベルで固める。</p>
+    </article>
+  </div>
+  <div class="keypoint"><b>要するに</b>　13671＝還付は軽減と並列（第三層）。13488＝法令が要件化した例外。12919＝届出なしで20％（第二層）。11566＝書類は適用時期を作らない（第一層）。12672/12789＝届出未提出だけでは否定できないが実体で決まる。</div>
+</section>
+
+<section id="statutes">
+  <h2><span class="num">11</span>条文の地図 ― どこに何が書いてあるか</h2>
+  <p class="lead">三層を支える条文の早見表。どの条文が「資格」「その場で使えるか」「後始末」のどこを支えるかが分かれば、原文に当たるときに迷わない。条文の逐語はW1の条文逐語マップに基づく。</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>条文</th><th>要点</th><th>支える層</th></tr></thead>
+      <tbody>
+        <tr><td>実特法 3条の2 第2項</td><td>条約が免除を定める配当等は、所得税法178・179・212条等の「適用はないものとする」。</td><td><b>第一層</b>の芯（実体）</td></tr>
+        <tr><td>実特法 3条の2 第1項</td><td>条約の限度税率を国内法の源泉税率に代えて適用する。</td><td>第一層</td></tr>
+        <tr><td>実特法 12条</td><td>条約実施に必要な事項を省令に委ねる（包括委任）。</td><td><b>第二層</b>の芯（委任の根拠）</td></tr>
+        <tr><td>施行省令 2条・9条</td><td>配当等・その他所得につき、支払日前日までの届出と居住者証明の添付。</td><td>第二層</td></tr>
+        <tr><td>施行省令 9条の5</td><td>特典条項のある条約で、特典条項関係書類（様式17）を支払日前日までに添付。還付請求にも添付。</td><td><b>第二層</b>の芯（手続）</td></tr>
+        <tr><td>所得税法 161条</td><td>国内源泉所得の範囲（配当・利子・使用料など）。源泉徴収の入口。</td><td>第一層／第二層</td></tr>
+        <tr><td>所得税法 212・213条</td><td>源泉徴収義務と税率。書類がなければこの国内法率（配当は20％）。</td><td>第二層</td></tr>
+        <tr><td>所得税法 221・222条</td><td>不納付時の徴収、支払者から受給者への求償・控除。</td><td>第三層</td></tr>
+        <tr><td>国税通則法 15条</td><td>源泉所得税は支払時に成立し、特別の手続なく確定（自動確定）。</td><td>第一層／第三層</td></tr>
+        <tr><td>国税通則法 36条</td><td>納期限までに納付がない源泉税を、納税告知で取り立てる。</td><td>第三層</td></tr>
+        <tr><td>国税通則法 60・67条</td><td>延滞税・不納付加算税。納期限を守らなかったことへの附帯税。</td><td><b>第三層</b>（残るもの）</td></tr>
+        <tr><td>国税庁 No.2888／2889</td><td>前日までの届出と国内法率での源泉、様式11による本税の還付、附帯税は還付されないこと。</td><td>第二層／第三層</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="keypoint"><b>要するに</b>　第一層＝3条の2第2項。第二層＝12条が委ねた省令9条の5（様式17を支払日前日まで）。第三層＝様式11の還付と、国通法60・67条の附帯税。</div>
+</section>
+
+<section id="policy">
+  <h2><span class="num">12</span>なぜ重要か ― 手続の置き場所がもつ政策の意味</h2>
+  <p class="lead">形式をどこに置くかは、事務の細部ではない。二重課税の排除、条約濫用の防止、金融取引の報告、外国子会社をめぐる課税のつじつまを、すべてつなぐ設計の問題である。</p>
+  <h3>二重課税を重ねない</h3>
+  <p>子会社の利益にはすでに法人税がかかっている。そこから親会社へ配当するときにさらに高い源泉税を重ねると、企業グループ内の資金の還流が妨げられる。条約による配当源泉税の軽減・免除は、この多重の課税をやわらげるためにある。源泉地国に課税権が「ない」からではなく、重ねないために置かれた緩和措置だと理解すると、なぜ手続でその実現を絞るのかが見えてくる。</p>
+  <h3>濫用は防ぐ ― BEPS行動6とMLI</h3>
+  <p>条約の特典だけを狙って導管会社をはさむ動き(トリーティー・ショッピング)を防ぐため、OECDのBEPS行動6は特典制限条項(LOB)や主要目的テスト(PPT)を最低基準とした。多くの国はこれを多数国間条約(MLI)で既存の条約網へ取り込んだ。米国はMLIに加わらず、二国間条約の詳細なLOBを保つ。支払時に様式17で資格を確かめる日本の手続は、この濫用防止の要請とつながっている。</p>
+  <h3>形式を標準化する ― EU FASTER</h3>
+  <p>EUのFASTER指令は、各国ばらばらの紙の証明と還付を、電子居住者証明(eTRC)と登録した金融仲介者の報告で標準化し、源泉時の軽減と迅速な還付を整える。これは形式を軽くするのではなく、形式を電子化し、検証できる形に置き直す改革である。スペクトラムでいえば、紙の事前証明から、データと仲介者責任による⑤へ動かす最前線だ。</p>
+  <h3>入口と出口のつじつま ― CFC・外国子会社配当益金不算入</h3>
+  <p>日本に入ってくる配当の条約減免(インバウンド)と、日本から出ていく所得の扱い(アウトバウンド)は、つじつまが合うように作られている。外国子会社からの配当は法人税法23条の2で多くが益金に算入されず、低税率国の受動的所得は外国子会社合算税制(措置法66条の6以下)で現在課税される。源泉手続の置き場所は、この入口と出口の設計の一部である。</p>
+  <details class="deep">
+    <summary>もう一段深く ― CFC博士論文との関係（姉妹命題）</summary>
+    <p>本稿の命題は、別に進めている外国子会社合算税制(CFC)研究の中心命題と<b>姉妹の関係</b>にある。CFC研究は「課税所得の計算の境目は、目的論や実務慣行ではなく、法源に書かれているべきだ」と論じる。本稿は「源泉減免における形式の効力の置き場所は、法源に書かれているべきだ」と論じる。どちらも、課税の結果を左右する境界条件は法源上の配置として示されるべきだ、という同じ構造を共有する。ただし「CFCで重要だから源泉でも当然そうだ」という安易な類推はとらない。共有しているのは結論ではなく、問いの立て方だけである。</p>
+  </details>
+  <div class="keypoint"><b>要するに</b>　手続の置き場所は、二重課税の緩和・濫用防止・報告の電子化・入口出口のつじつまを結ぶ政策設計。FASTERは「形式を消す」のでなく「形式を検証可能にする」改革。</div>
+</section>
+
+<section id="glossary">
+  <h2><span class="num">13</span>用語集</h2>
+  <p class="lead">本文に出た言葉を、初学者向けに短く。正確な定義は本文と一次資料で確かめてほしい。</p>
+  <dl class="gloss">
+    <dt>源泉徴収　<span class="en">withholding</span></dt><dd>所得を支払う者が、その場で税を天引きして国に納めるしくみ。</dd>
+    <dt>限度税率　<span class="en">reduced／limit rate</span></dt><dd>条約が「これを超えて課税してはならない」と定める上限の税率。</dd>
+    <dt>源泉時の軽減（即時実現）　<span class="en">relief at source</span></dt><dd>支払のその場で条約の低い税率・免除を反映すること。</dd>
+    <dt>事後還付　<span class="en">post-payment refund</span></dt><dd>いったん国内法の税率で取られた後、書類を整えて差額を取り戻すこと。</dd>
+    <dt>受益者　<span class="en">beneficial owner</span></dt><dd>名義人や導管会社ではなく、その所得を自分のものとして受け取る者。</dd>
+    <dt>特典条項　<span class="en">limitation on benefits, LOB</span></dt><dd>条約の特典を、一定の資格を満たす者だけに絞る濫用防止の関門。</dd>
+    <dt>主要目的テスト　<span class="en">principal purpose test, PPT</span></dt><dd>特典を得ることが主要な目的なら特典を否認し得る、という濫用防止の基準。</dd>
+    <dt>恒久的施設　<span class="en">permanent establishment, PE</span></dt><dd>事業を行う一定の場所。ここに所得が帰属すると条約の扱いが変わる。</dd>
+    <dt>様式17（特典条項に関する付表）</dt><dd>LOBの資格を支払時に示すための付表。資格を作るのではなく示す書面。</dd>
+    <dt>居住者証明書　<span class="en">certificate of residence</span></dt><dd>相手国の条約上の居住者であることを示す書類。</dd>
+    <dt>附帯税</dt><dd>不納付加算税・延滞税など。本税とは別に、納付の遅れ等に伴う負担。</dd>
+    <dt>実施特例法</dt><dd>租税条約等の実施に関する法律。条約の税率を国内の徴収のしくみで動かす橋渡し。</dd>
+    <dt>配置スペクトラム　<span class="en">formality placement spectrum</span></dt><dd>形式をどこに置くか（自動／自己証明／事前証明／当局認定／電子標準化／還付のみ）の並び。本稿の比較軸。</dd>
+    <dt>eTRC</dt><dd>電子的な居住者証明。EU FASTERなどで用いられる。</dd>
+  </dl>
+</section>
+
+<section id="faq">
+  <h2><span class="num">14</span>FAQ ― よくある疑問</h2>
+  <div class="faq">
+    <details><summary>届出を出し忘れたら、条約の特典は消えますか。</summary><p>いいえ。実体の資格を満たしていれば権利は残り、後日の還付で取り戻せます。消えるのは「支払のその場で使える」可能性です。ただし、遅れて納めたことに伴う加算税・延滞税は戻りません。</p></details>
+    <details><summary>100％子会社への配当でも、20.42％になることがあるのですか。</summary><p>あります。特典条項の付表（様式17）や居住者証明が支払日の前日までに揃っていないと、支払者は条約のゼロ％や五％を使えず、国内法の税率で源泉徴収することになります。</p></details>
+    <details><summary>取られすぎた税は、全額戻りますか。</summary><p>本税の差額は様式11の還付で戻り得ます。しかし、国税庁の説明（No.2889）のとおり、加算税等の附帯税は還付されません。還付までの資金拘束も負担として残ります。</p></details>
+    <details><summary>届出を出していないだけで、条約の適用は否定されますか。</summary><p>否定されません（判決ID12672・12789）。届出の未提出それ自体で条約上の権利を失うわけではありません。ただし、恒久的施設の有無といった実体の判断で課税が維持されることはあります。</p></details>
+    <details><summary>では「書類はただの確認」と考えてよいのですか。</summary><p>実体の層ではそうです。しかし支払時の層では、支払者は相手の資格を完全には確かめられないため、書類は事実上の関門として強く働きます。層を分けて考えるのが正確です。</p></details>
+    <details><summary>外国ではどこが日本に近いですか。</summary><p>インドです。居住者証明やForm 10F（移行後Form 41）が無いと源泉段階で条約の特典を使えず、通常税率で天引きされる構図が、日本の様式17問題とよく似ています。</p></details>
+    <details><summary>「20.42％」の0.42はどこから来るのですか。</summary><p>国内法の所得税20％に、復興特別所得税2.1％分（20％×1.021）が乗るためです。条約の限度税率を適用する場面では復興特別所得税は課されません。⚠️ 判例の整理では20％として扱われる場面もあり、復興財源確保法28条の本文は一次資料での確認が要ります。</p></details>
+    <details><summary>この知識ベースは、そのまま法的助言に使えますか。</summary><p>いいえ。学術的な整理であり、個別事案への適用や引用の前には、条文・判例・各国制度を一次資料で確認してください。本文中の⚠️は、その確認が特に要る箇所です。</p></details>
+  </div>
+</section>
+
+<section id="verification">
+  <h2><span class="num">15</span>誠実な留保 ― まだ一次照合が要る点</h2>
+  <div class="warn">
+    <span class="label">検証注記（⚠️ 引用前に一次資料で確認）</span>
+    <ul class="note-list">
+      <li>中里実については、確認的手続説にも効力要件説にも分類しない。分類の原典を特定できていないため、背景の議論として参照するにとどめる。</li>
+      <li>名古屋地判平成20年9月29日（税資258号順号11041）は、日米条約・配当源泉税還付の事実を含むが、本筋は納税管理人への送達と不服申立期間であり、条約特典還付の主たる判例としては用いない（補助の素材にとどめる）。</li>
+      <li>最判昭和45年12月24日（愛知交通事件）・最判平成4年2月18日は、趣旨の引用は多数の下級審で確認できるが、本稿のローカル資料では本文を確認していない。逐語引用の前に、最高裁判例集・民集の本文で照合する。</li>
+      <li>増井・野一色・谷口・水野らの学説について、届出書の法的性質に関する核心の文言と頁は、書籍・誌面の一次資料で確認が要る。</li>
+      <li>各国の様式番号・提出期限・還付期限、ドイツの§50c／§50d(3)の現行配置、インドの2025年新法とForm 41、韓国の指定地域手続、シンガポールのCOR期限などは、最終的に各国の一次資料で照合する。</li>
+      <li>「20.42％」は国内法20％に復興特別所得税2.1％を合わせた整理であり、復興財源確保法28条の本文は別途確認する。判例の整理では20％として扱う場面がある。</li>
+    </ul>
+  </div>
+</section>
+
+<section id="sources">
+  <h2><span class="num">16</span>出典</h2>
+  <p class="small">本知識ベースは、租税条約研究コーパス内の設計案・引用束・一次資料固め（条文と判例の逐語）・国別ノート・判例カードに基づいて整理した。主な素材は次のとおり。</p>
+  <ol class="footnotes">
+    <li>設計案（中心命題・三層・配置スペクトラム・検証方針）。</li>
+    <li>引用束08〜13（二層構造の制度的芯／委任限界と租税法律主義／様式17とLOB／支払時要件と後出し還付・附帯税／効力要件説と確認的手続説／配置スペクトラム比較法）。</li>
+    <li>条文逐語マップ（実施特例法・施行省令・所得税法・国税通則法の三層対応）。</li>
+    <li>様式・タックスアンサー2888／2889の逐語（様式1・11・16・17、源泉時の国内法率と様式11による本税還付、附帯税の不還付、20.42％の構造）。</li>
+    <li>判例6件の逐語カード（13671・13488・12919・11566・12672・12789の数値と判示）。</li>
+    <li>比較法資料（14法域の国別ノートと比較表）。</li>
+    <li>判例caveat（最判本文の未取得、名古屋11041の補助素材化）。</li>
+  </ol>
+  <hr class="sep">
+  <p class="small">本資料は学術的な整理であり、法的助言ではない。具体的な事案への適用や引用の前には、必ず一次資料で再照合すること。</p>
+</section>
+
+</main>
+<div class="idx-nav" style="max-width:840px;margin:0 auto 24px;padding:0 12px;font-family:sans-serif;font-size:12.5px;text-align:center;"><a href="../index.html" style="color:#5a2d82;text-decoration:none;border-bottom:1px dotted #5a2d82;">&#8592; 成果物インデックスへ戻る</a></div>
+</body>
+</html>
