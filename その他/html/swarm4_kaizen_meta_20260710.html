@@ -1,0 +1,656 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>swarm4をどう改善するか — 自己適用メタ研究</title><style>
+  :root{
+    --ink:#1c2530; --sub:#56606e; --line:#dfe4ea; --bg:#eef1f4; --paper:#fff;
+    --accent:#5a2d82; --accent2:#7a4fa3; --accent-soft:#f2ecf8;
+    --blue:#1f4e79; --blue-soft:#eef3fa; --red:#9e2820; --red-soft:#fbeae8;
+    --green:#1d6b3f; --green-soft:#eaf5ee; --amber:#8a5a00; --amber-soft:#fdf6e6;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Hiragino Mincho ProN","Yu Mincho",YuMincho,"Noto Serif JP",serif;
+    line-height:2.0;font-size:15px;}
+  .paper{max-width:840px;margin:28px auto;background:var(--paper);
+    padding:56px 64px 72px;box-shadow:0 4px 28px rgba(20,30,50,.10);border-radius:4px;}
+  .doctype{font-family:sans-serif;font-size:11.5px;letter-spacing:.16em;color:var(--accent);
+    text-align:center;margin-bottom:8px;}
+  h1.title{font-size:23px;text-align:center;line-height:1.6;margin:6px 0 6px;font-weight:700;}
+  .subtitle{font-size:15px;text-align:center;color:var(--sub);margin:0 0 6px;}
+  .meta-line{font-family:sans-serif;font-size:11.5px;text-align:center;color:var(--sub);
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    padding:8px 0;margin:18px 0 28px;}
+  .abstract{background:var(--accent-soft);border:1px solid #ddd0ec;border-radius:6px;
+    padding:18px 22px;margin:0 0 28px;font-size:14px;}
+  .abstract h3{margin:0 0 8px;font-size:13px;font-family:sans-serif;color:var(--accent);letter-spacing:.08em;}
+  .toc{font-family:sans-serif;font-size:13px;background:#fafbfc;border:1px solid var(--line);
+    border-radius:6px;padding:16px 22px;margin:0 0 30px;}
+  .toc b{color:var(--accent);} .toc ol{margin:8px 0 0;padding-left:22px;} .toc li{margin:4px 0;}
+  .toc a{color:var(--ink);text-decoration:none;} .toc a:hover{color:var(--accent);}
+  h2.h{font-family:sans-serif;font-size:18px;margin:40px 0 14px;padding-bottom:8px;
+    border-bottom:2px solid var(--accent);color:var(--accent);scroll-margin-top:12px;}
+  h2.h .n{color:var(--accent2);margin-right:10px;}
+  h3.sh{font-family:sans-serif;font-size:15px;margin:26px 0 8px;color:var(--blue);font-weight:700;}
+  p{margin:13px 0;text-align:justify;}
+  .key{background:linear-gradient(transparent 62%,#efe3fb 62%);font-weight:700;}
+  .box{border-radius:6px;padding:15px 20px;margin:18px 0;font-size:14px;font-family:sans-serif;line-height:1.85;}
+  .box.thesis{background:var(--accent-soft);border-left:4px solid var(--accent);}
+  .box.note{background:var(--blue-soft);border-left:4px solid var(--blue);}
+  .box.caveat{background:var(--amber-soft);border-left:4px solid var(--amber);}
+  .box.thesis b{color:var(--accent);} .box.note b{color:var(--blue);} .box.caveat b{color:var(--amber);}
+  table{width:100%;border-collapse:collapse;margin:18px 0;font-size:12.8px;font-family:sans-serif;}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top;line-height:1.7;}
+  th{background:var(--accent);color:#fff;font-weight:600;}
+  td.lbl{background:#f6f3fa;font-weight:700;white-space:nowrap;}
+  tr:nth-child(even) td:not(.lbl){background:#fafbfc;}
+  .fn{font-size:12px;color:var(--sub);font-family:sans-serif;line-height:1.7;}
+  .fn-list{border-top:1px solid var(--line);margin-top:36px;padding-top:16px;}
+  .fn-list h3{font-family:sans-serif;font-size:13px;color:var(--accent);letter-spacing:.08em;}
+  .fn-list ol{padding-left:22px;} .fn-list li{margin:6px 0;font-size:12px;color:var(--sub);font-family:sans-serif;}
+  .fn-list a{color:var(--blue);text-decoration:none;border-bottom:1px dotted var(--blue);}
+  sup.r{color:var(--accent);font-weight:700;font-size:11px;font-family:sans-serif;cursor:pointer;}
+  .diagram{border:1px solid var(--line);border-radius:6px;padding:18px;margin:18px 0;
+    background:#fafbfc;font-family:sans-serif;font-size:12.5px;}
+  footer{font-family:sans-serif;font-size:11.5px;color:var(--sub);margin-top:34px;
+    border-top:1px solid var(--line);padding-top:14px;line-height:1.8;}
+  @media (max-width:680px){.paper{padding:30px 22px;}table{font-size:11.5px;}}
+  @media print{body{background:#fff;}.paper{box-shadow:none;margin:0;max-width:100%;}}
+
+  .figure{margin:26px 0;text-align:center;} .figure svg{max-width:100%;height:auto;} .figure figcaption{font-family:sans-serif;font-size:12px;color:#56606e;margin-top:8px;}
+  pre{background:#f6f7f9;border:1px solid #e3e7ec;border-radius:6px;padding:12px;overflow-x:auto;font-size:12.5px;line-height:1.5;}
+  code{background:#f0eef5;padding:1px 4px;border-radius:3px;font-size:.92em;}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px;} th,td{border:1px solid #dfe4ea;padding:7px 9px;text-align:left;vertical-align:top;} th{background:#f2ecf8;color:#3d2357;}</style></head><body>
+<div class="paper">
+<div class="doctype">ACADEMIC DEEP RESEARCH ／ マルチエージェント・オーケストレーション</div>
+<h1 class="title">swarm4をどう改善するか<br>― swarm4自身で診た、観測不能と非永続の二つの天井 ―</h1>
+<p class="subtitle">機構を足すな、直して残せ：最も再利用される二つのツールを正典化する</p>
+<div class="meta-line">2026年7月10日 ／ Fable 5 ネスト管理者5体 × Codex-Terra(5.6-terra xhigh) 約71ワーカーレーン ／ 一次証拠（skill・script・journal・外部研究）に基づく</div>
+<div class="abstract"><h3>要旨（ABSTRACT）</h3><p style="margin:0;">品質最優先スワーム swarm4 を、swarm4自身の規律で「どう改善するか」徹底調査した。Fable 5 ネスト管理者5体×Codex-Terra ワーカー約71レーンが、skill/script/journal原文と過去15超の実戦run正典・外部研究を一次証拠に紐づけて掘削した。主宰は仮説を封印し独立レーンの反証にかけた結果、<span class="key">スキルが自認する天井（主宰のフレーミング）は証拠上は弱い支持しか得られず</span>——MG誤読はswarm4実runに再発ゼロ、runnerは239レーンで終端失敗ゼロ、AI検証ラダーは機能——真の制約は機構の外の二つ、<span class="key">観測不能</span>（監査・較正・provenanceの正典が仕様済だが空）と<span class="key">非永続</span>（最も再利用されるrun-local修理が上流化されず毎run再導出）にあった。最高レバレッジは新機構の追加ではなく、<span class="key">逐語照合器とHTMLビルダーの正典化、および空の正典イベントの実発火</span>である。</p></div>
+<div class="toc"><b>目次</b><ol><li><a href="#ch0">序章 — swarm4で、swarm4を診る</a></li><li><a href="#ch1">第一部 — 自己診断の反証：天井はどこにあるか</a></li><li><a href="#ch2">第二部 — META-1：観測不能（仕様済みだが空の正典）</a></li><li><a href="#ch3">第三部 — META-2：非永続（runローカル修理が上流化されない）</a></li><li><a href="#ch4">第四部 — META-3：実在する少数の欠陥</a></li><li><a href="#ch5">第五部 — 共鳴層（P2）の誠実な再評価</a></li><li><a href="#ch6">第六部 — 優先度ロードマップ</a></li><li><a href="#ch7">結論</a></li></ol></div>
+<h2 class="h" id="ch0">序章 — swarm4で、swarm4を診る</h2>
+<p>本報告は、品質最優先スワーム swarm4 を「どう改善するか」を、swarm4自身の規律で徹底調査した結果である。設計上の含意は二重である。第一に、対象（swarm4）と方法（swarm4）が一致するため、研究の運びそれ自体が swarm4 の一次実測データになる。第二に、この研究が標的にしている失敗様式——主宰のフレーミング誤読が全レーンに完璧に実行される事故——を避けるため、主宰は調査に先立って自らの仮説を封印し、独立レーンによる反証にかけた。結論を先に言えば、<span class="key">封印した仮説の一部は独立レーンによって覆され、swarm4スキルが自認する「天井」は証拠の上では別の場所にあった。</span></p>
+<h3 class="sh">方法と自己適用</h3>
+<p>構成は、Fable 5 のネスト管理者5体が各1ドメイン（知覚・共鳴・実行配管・検証・統合納品）を owned で管理し、その下で Codex-Terra（5.6-terra xhigh）ワーカーが証拠を掘削する二層である。ワーカーは skill/script/journal の原文と過去15超の実戦runのjournal正典、そして外部の分散システム・検証研究を読み、各主張を一次証拠（file:line／journal行／URL）に紐づけた。全66のワーカー成果物は、提案ごとに impact×effort×confidence と敵対的評決（本物／churn疑い／要実証）を付す固定スキーマに従う。</p>
+<p>主宰の framing（ドメイン境界・不可侵の固定レール・提案スキーマ）は固定し、実行の設計・dispatch・統合は管理者に委ねた。これは意図的な分業である——MG誤読事故は「主宰の framing 錯誤を22レーンが完璧に実行した」ものであり、その再発防止は framing を主宰が握り、実行を委譲することにある。</p>
+<h3 class="sh">運転それ自体が出した最初の知見</h3>
+<p>ネスト管理者の運用から、設計時には見えなかった一次知見が即座に出た。Fable 5 管理者は (a) spec設計とrunner dispatchは確実に実行するが、(b) 長時間のフォアグラウンドdispatchの後に idle 化し、収穫・統合の前に離脱する傾向を示した（1体はAPI接続断で死亡、複数が dispatch 直後に idle）。ここから導かれる運用原則は明確である——<span class="key">ネスト管理に長時間待ちを担わせるな。設計は委譲し、dispatch・収穫・統合は主宰の単一runnerに集約せよ。</span> これは swarm4 の固定レール「統合は単一書き手」と完全に整合する。本報告の5つのdossierは、この原則に従い、管理者が設計したワーカー成果物から主宰が単一書き手として統合した。</p>
+<figure class="figure"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 440" width="100%" role="img" aria-label="この研究の構成——swarm4でswarm4を診る">
+  <!-- background card -->
+  <rect x="0.5" y="0.5" width="759" height="439" rx="10" fill="#ffffff" stroke="#dfe4ea" stroke-width="1"/>
+
+  <!-- title -->
+  <foreignObject x="30" y="6" width="700" height="28">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Hiragino Sans','Yu Gothic Medium','Noto Sans JP',sans-serif;">
+      <div style="font-size:16px;font-weight:700;color:#1c2530;letter-spacing:0.02em;">この研究の構成——swarm4でswarm4を診る</div>
+    </div>
+  </foreignObject>
+
+  <!-- connector: Opus -> 5 managers -->
+  <line x1="380" y1="86" x2="90"  y2="132" stroke="#dfe4ea" stroke-width="1.5"/>
+  <line x1="380" y1="86" x2="235" y2="132" stroke="#dfe4ea" stroke-width="1.5"/>
+  <line x1="380" y1="86" x2="380" y2="132" stroke="#dfe4ea" stroke-width="1.5"/>
+  <line x1="380" y1="86" x2="525" y2="132" stroke="#dfe4ea" stroke-width="1.5"/>
+  <line x1="380" y1="86" x2="670" y2="132" stroke="#dfe4ea" stroke-width="1.5"/>
+
+  <!-- connector: managers -> workers -->
+  <line x1="90"  y1="190" x2="90"  y2="222" stroke="#dfe4ea" stroke-width="1.5"/>
+  <line x1="235" y1="190" x2="235" y2="222" stroke="#dfe4ea" stroke-width="1.5"/>
+  <line x1="380" y1="190" x2="380" y2="222" stroke="#dfe4ea" stroke-width="1.5"/>
+  <line x1="525" y1="190" x2="525" y2="222" stroke="#dfe4ea" stroke-width="1.5"/>
+  <line x1="670" y1="190" x2="670" y2="222" stroke="#dfe4ea" stroke-width="1.5"/>
+
+  <!-- brace: workers -> combined caption -->
+  <line x1="90"  y1="284" x2="90"  y2="298" stroke="#dfe4ea" stroke-width="1.2"/>
+  <line x1="235" y1="284" x2="235" y2="298" stroke="#dfe4ea" stroke-width="1.2"/>
+  <line x1="380" y1="284" x2="380" y2="298" stroke="#dfe4ea" stroke-width="1.2"/>
+  <line x1="525" y1="284" x2="525" y2="298" stroke="#dfe4ea" stroke-width="1.2"/>
+  <line x1="670" y1="284" x2="670" y2="298" stroke="#dfe4ea" stroke-width="1.2"/>
+  <line x1="90"  y1="298" x2="670" y2="298" stroke="#dfe4ea" stroke-width="1.2"/>
+  <line x1="380" y1="298" x2="380" y2="306" stroke="#dfe4ea" stroke-width="1.2"/>
+
+  <!-- section label: managers -->
+  <foreignObject x="26" y="97" width="220" height="18">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;display:flex;align-items:center;justify-content:flex-start;font-family:'Hiragino Sans','Yu Gothic Medium','Noto Sans JP',sans-serif;">
+      <div style="font-size:11px;font-weight:600;color:#1c2530;">Fable 5 ネスト管理者 ×5</div>
+    </div>
+  </foreignObject>
+
+  <!-- section label: workers -->
+  <foreignObject x="26" y="199" width="220" height="18">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;display:flex;align-items:center;justify-content:flex-start;font-family:'Hiragino Sans','Yu Gothic Medium','Noto Sans JP',sans-serif;">
+      <div style="font-size:11px;font-weight:600;color:#1c2530;">Codex-Terra ワーカー群</div>
+    </div>
+  </foreignObject>
+
+  <!-- Opus box -->
+  <rect x="290" y="40" width="180" height="46" rx="8" fill="#f2ecf8" stroke="#5a2d82" stroke-width="1.5"/>
+  <foreignObject x="290" y="40" width="180" height="46">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;box-sizing:border-box;padding:4px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:'Hiragino Sans','Yu Gothic Medium','Noto Sans JP',sans-serif;">
+      <div style="font-size:13px;font-weight:700;color:#5a2d82;line-height:1.3;">主宰（Opus）</div>
+      <div style="font-size:10.5px;color:#1c2530;line-height:1.3;margin-top:2px;overflow-wrap:break-word;">framing固定・単一書き手統合</div>
+    </div>
+  </foreignObject>
+
+  <!-- manager boxes -->
+  <g>
+    <rect x="24"  y="132" width="132" height="58" rx="8" fill="#eef3fa" stroke="#1f4e79" stroke-width="1.5"/>
+    <rect x="169" y="132" width="132" height="58" rx="8" fill="#eef3fa" stroke="#1f4e79" stroke-width="1.5"/>
+    <rect x="314" y="132" width="132" height="58" rx="8" fill="#eef3fa" stroke="#1f4e79" stroke-width="1.5"/>
+    <rect x="459" y="132" width="132" height="58" rx="8" fill="#eef3fa" stroke="#1f4e79" stroke-width="1.5"/>
+    <rect x="604" y="132" width="132" height="58" rx="8" fill="#eef3fa" stroke="#1f4e79" stroke-width="1.5"/>
+  </g>
+
+  <foreignObject x="24" y="132" width="132" height="58">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;box-sizing:border-box;padding:4px;display:flex;align-items:center;justify-content:center;text-align:center;font-family:'Hiragino Sans','Yu Gothic Medium','Noto Sans JP',sans-serif;">
+      <div style="font-size:12.5px;font-weight:700;color:#1f4e79;line-height:1.35;">D1 知覚</div>
+    </div>
+  </foreignObject>
+  <foreignObject x="169" y="132" width="132" height="58">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;box-sizing:border-box;padding:4px;display:flex;align-items:center;justify-content:center;text-align:center;font-family:'Hiragino Sans','Yu Gothic Medium','Noto Sans JP',sans-serif;">
+      <div style="font-size:12.5px;font-weight:700;color:#1f4e79;line-height:1.35;">D2 共鳴</div>
+    </div>
+  </foreignObject>
+  <foreignObject x="314" y="132" width="132" height="58">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;box-sizing:border-box;padding:4px;display:flex;align-items:center;justify-content:center;text-align:center;font-family:'Hiragino Sans','Yu Gothic Medium','Noto Sans JP',sans-serif;">
+      <div style="font-size:12.5px;font-weight:700;color:#1f4e79;line-height:1.35;">D3 実行配管</div>
+    </div>
+  </foreignObject>
+  <foreignObject x="459" y="132" width="132" height="58">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;box-sizing:border-box;padding:4px;display:flex;align-items:center;justify-content:center;text-align:center;font-family:'Hiragino Sans','Yu Gothic Medium','Noto Sans JP',sans-serif;">
+      <div style="font-size:12.5px;font-weight:700;color:#1f4e79;line-height:1.35;">D4 検証</div>
+    </div>
+  </foreignObject>
+  <foreignObject x="604" y="132" width="132" height="58">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;box-sizing:border-box;padding:4px;display:flex;align-items:center;justify-content:center;text-align:center;font-family:'Hiragino Sans','Yu Gothic Medium','Noto Sans JP',sans-serif;">
+      <div style="font-size:12.5px;font-weight:700;color:#1f4e79;line-height:1.35;">D5 統合納品</div>
+    </div>
+  </foreignObject>
+
+  <!-- worker boxes -->
+  <g>
+    <rect x="24"  y="222" width="132" height="62" rx="8" fill="#fdf6e6" stroke="#8a5a00" stroke-width="1.5"/>
+    <rect x="169" y="222" width="132" height="62" rx="8" fill="#fdf6e6" stroke="#8a5a00" stroke-width="1.5"/>
+    <rect x="314" y="222" width="132" height="62" rx="8" fill="#fdf6e6" stroke="#8a5a00" stroke-width="1.5"/>
+    <rect x="459" y="222" width="132" height="62" rx="8" fill="#fdf6e6" stroke="#8a5a00" stroke-width="1.5"/>
+    <rect x="604" y="222" width="132" height="62" rx="8" fill="#fdf6e6" stroke="#8a5a00" stroke-width="1.5"/>
+  </g>
+  <g>
+    <foreignObject x="24" y="222" width="132" height="62">
+      <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;box-sizing:border-box;padding:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:'Hiragino Sans','Yu Gothic Medium','Noto Sans JP',sans-serif;">
+        <div style="font-size:12px;font-weight:700;color:#8a5a00;line-height:1.3;">Codex-Terra</div>
+        <div style="font-size:9.5px;color:#1c2530;line-height:1.3;">(5.6-terra xhigh)</div>
+        <div style="font-size:10px;color:#1c2530;line-height:1.3;">ワーカー</div>
+      </div>
+    </foreignObject>
+    <foreignObject x="169" y="222" width="132" height="62">
+      <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;box-sizing:border-box;padding:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:'Hiragino Sans','Yu Gothic Medium','Noto Sans JP',sans-serif;">
+        <div style="font-size:12px;font-weight:700;color:#8a5a00;line-height:1.3;">Codex-Terra</div>
+        <div style="font-size:9.5px;color:#1c2530;line-height:1.3;">(5.6-terra xhigh)</div>
+        <div style="font-size:10px;color:#1c2530;line-height:1.3;">ワーカー</div>
+      </div>
+    </foreignObject>
+    <foreignObject x="314" y="222" width="132" height="62">
+      <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;box-sizing:border-box;padding:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:'Hiragino Sans','Yu Gothic Medium','Noto Sans JP',sans-serif;">
+        <div style="font-size:12px;font-weight:700;color:#8a5a00;line-height:1.3;">Codex-Terra</div>
+        <div style="font-size:9.5px;color:#1c2530;line-height:1.3;">(5.6-terra xhigh)</div>
+        <div style="font-size:10px;color:#1c2530;line-height:1.3;">ワーカー</div>
+      </div>
+    </foreignObject>
+    <foreignObject x="459" y="222" width="132" height="62">
+      <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;box-sizing:border-box;padding:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:'Hiragino Sans','Yu Gothic Medium','Noto Sans JP',sans-serif;">
+        <div style="font-size:12px;font-weight:700;color:#8a5a00;line-height:1.3;">Codex-Terra</div>
+        <div style="font-size:9.5px;color:#1c2530;line-height:1.3;">(5.6-terra xhigh)</div>
+        <div style="font-size:10px;color:#1c2530;line-height:1.3;">ワーカー</div>
+      </div>
+    </foreignObject>
+    <foreignObject x="604" y="222" width="132" height="62">
+      <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;box-sizing:border-box;padding:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:'Hiragino Sans','Yu Gothic Medium','Noto Sans JP',sans-serif;">
+        <div style="font-size:12px;font-weight:700;color:#8a5a00;line-height:1.3;">Codex-Terra</div>
+        <div style="font-size:9.5px;color:#1c2530;line-height:1.3;">(5.6-terra xhigh)</div>
+        <div style="font-size:10px;color:#1c2530;line-height:1.3;">ワーカー</div>
+      </div>
+    </foreignObject>
+  </g>
+
+  <!-- combined caption: total lanes + what workers dig into -->
+  <foreignObject x="130" y="304" width="500" height="36">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:'Hiragino Sans','Yu Gothic Medium','Noto Sans JP',sans-serif;">
+      <div style="font-size:12px;font-weight:700;color:#1c2530;line-height:1.35;">Codex-Terra ワーカー（計約71レーン）</div>
+      <div style="font-size:10.5px;color:#1c2530;line-height:1.35;margin-top:2px;">skill／script／journal原文＋外部研究を掘削</div>
+    </div>
+  </foreignObject>
+
+  <!-- legend box -->
+  <rect x="24" y="344" width="420" height="58" rx="8" fill="#ffffff" stroke="#dfe4ea" stroke-width="1" stroke-dasharray="4 3"/>
+  <rect x="40"  y="366" width="14" height="14" rx="3" fill="#5a2d82"/>
+  <rect x="176" y="366" width="14" height="14" rx="3" fill="#1f4e79"/>
+  <rect x="312" y="366" width="14" height="14" rx="3" fill="#8a5a00"/>
+  <foreignObject x="60" y="362" width="110" height="22">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;display:flex;align-items:center;justify-content:flex-start;font-family:'Hiragino Sans','Yu Gothic Medium','Noto Sans JP',sans-serif;">
+      <div style="font-size:10.5px;color:#1c2530;">主宰（Opus）</div>
+    </div>
+  </foreignObject>
+  <foreignObject x="196" y="362" width="120" height="22">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;display:flex;align-items:center;justify-content:flex-start;font-family:'Hiragino Sans','Yu Gothic Medium','Noto Sans JP',sans-serif;">
+      <div style="font-size:10.5px;color:#1c2530;">Fable 5 管理者</div>
+    </div>
+  </foreignObject>
+  <foreignObject x="332" y="362" width="110" height="22">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;display:flex;align-items:center;justify-content:flex-start;font-family:'Hiragino Sans','Yu Gothic Medium','Noto Sans JP',sans-serif;">
+      <div style="font-size:10.5px;color:#1c2530;">Codex-Terraワーカー</div>
+    </div>
+  </foreignObject>
+
+  <!-- annotation note box -->
+  <rect x="460" y="344" width="276" height="58" rx="8" fill="#ffffff" stroke="#dfe4ea" stroke-width="1"/>
+  <foreignObject x="470" y="348" width="256" height="50">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;text-align:left;font-family:'Hiragino Sans','Yu Gothic Medium','Noto Sans JP',sans-serif;">
+      <div style="font-size:10px;color:#1c2530;line-height:1.45;">注：管理者＝設計とdispatch、収穫・統合は主宰へ集約（管理者は長時間待ちでidle化しやすい実測）</div>
+    </div>
+  </foreignObject>
+
+  <!-- bottom schema band -->
+  <rect x="24" y="410" width="712" height="26" rx="6" fill="#f2ecf8" stroke="#5a2d82" stroke-width="1.2"/>
+  <foreignObject x="24" y="410" width="712" height="26">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;text-align:center;font-family:'Hiragino Sans','Yu Gothic Medium','Noto Sans JP',sans-serif;">
+      <div style="font-size:11.5px;font-weight:700;color:#5a2d82;">全成果物は impact × effort × confidence ＋ 敵対評決の固定スキーマ</div>
+    </div>
+  </foreignObject>
+</svg><figcaption>図1　この研究の構成</figcaption></figure>
+<h2 class="h" id="ch1">第一部 — 自己診断の反証：天井はどこにあるか</h2>
+<p>swarm4スキルは、その設計思想の冒頭で「250レーン超の実測で残った天井は主宰の知覚とフレーミングである」と自認し、その典拠として MG誤読事故を挙げる。本研究の独立レーンは、この自己診断を三つの一次証拠で反証した。</p>
+<p>第一に、<span class="key">MG誤読と同型の事故は、swarm4の実戦runには再発していない。</span> 知覚ドメインのレーンが、トップレベル10 journal と深層journalを「誤読｜読み違｜取り違｜やり直し｜差し戻｜再投｜手戻り｜方針転換」等で全数検索した結果、同型事故は0件だった（MG事故は博士論文起草の別コーパスに実在するが、swarm4運用には現れない）。</p>
+<p>第二に、<span class="key">実行配管は経験的にほぼ無欠陥である。</span> 実行ドメインのレーンが239件のspawnを集計したところ、FAIL・STALLED・DEAD_ERR・HUMAN_GATE・attempt2以上は各0件、初期バイト閾値未満の BOOT_STUCK_WAIT 183件はすべて同一attemptでCOMPLETEした。runnerの再試行・バックオフ・stall機構は、実運用でほとんど発火していない。</p>
+<p>第三に、<span class="key">AI検証ラダーは機能している。</span> 検証ドメインが確認した実績では、L3独立検証は逐語範囲・条件落ちのFAILを13/13すべて捕捉し、高stakesのN票（3反証者）は3/3でWEAKENED評決に到達、L0.5の refute/derisk 分離も命題単位で機能していた。</p>
+<p>つまり、swarm4の中核機構——runner・検証ラダー・単一書き手統合——は証拠上すでに堅牢である。天井は「機構の弱さ」ではない。独立レーンが全ドメインで収束した真の制約は、次の二つだった。</p>
+<figure class="figure"><svg viewBox="0 0 760 460" width="100%" xmlns="http://www.w3.org/2000/svg" xmlns:xhtml="http://www.w3.org/1999/xhtml" role="img" aria-labelledby="fig2title">
+  <title id="fig2title">自己診断の反証——天井はどこにあるか</title>
+  <defs>
+    <marker id="arrowPurple" markerWidth="9" markerHeight="9" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#5a2d82"></path>
+    </marker>
+    <marker id="arrowInk" markerWidth="8" markerHeight="8" refX="5" refY="3.5" orient="auto">
+      <path d="M0,0 L7,3.5 L0,7 Z" fill="#1c2530" fill-opacity="0.55"></path>
+    </marker>
+  </defs>
+
+  <!-- title -->
+  <foreignObject x="10" y="4" width="740" height="40">
+    <xhtml:div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Hiragino Sans','Yu Gothic','Noto Sans JP',sans-serif;font-size:19px;font-weight:700;color:#1c2530;text-align:center;">
+      自己診断の反証——天井はどこにあるか
+    </xhtml:div>
+  </foreignObject>
+
+  <!-- left panel: self-assessment claim -->
+  <rect x="8" y="54" width="144" height="396" rx="10" fill="#f4f5f7" stroke="#dfe4ea" stroke-width="1"></rect>
+  <foreignObject x="20" y="68" width="120" height="26">
+    <xhtml:div style="width:100%;height:100%;display:flex;align-items:center;justify-content:flex-start;font-family:'Hiragino Sans','Yu Gothic','Noto Sans JP',sans-serif;font-size:13.5px;font-weight:700;color:#1c2530;">
+      スキルの自認
+    </xhtml:div>
+  </foreignObject>
+  <line x1="20" y1="100" x2="140" y2="100" stroke="#dfe4ea" stroke-width="1"></line>
+  <foreignObject x="20" y="110" width="120" height="326">
+    <xhtml:div style="width:100%;height:100%;display:flex;flex-direction:column;justify-content:flex-start;font-family:'Hiragino Sans','Yu Gothic','Noto Sans JP',sans-serif;font-size:13px;line-height:1.55;color:#33404d;overflow-wrap:break-word;">
+      <xhtml:div>天井＝主宰の知覚・フレーミング</xhtml:div>
+      <xhtml:div style="margin-top:10px;font-size:11.5px;color:#6b7684;">（典拠＝MG誤読事故）</xhtml:div>
+    </xhtml:div>
+  </foreignObject>
+
+  <!-- main refutation arrow -->
+  <foreignObject x="138" y="216" width="66" height="20">
+    <xhtml:div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Hiragino Sans','Yu Gothic','Noto Sans JP',sans-serif;font-size:11px;font-weight:700;color:#5a2d82;">
+      反証
+    </xhtml:div>
+  </foreignObject>
+  <line x1="152" y1="252" x2="181" y2="252" stroke="#5a2d82" stroke-width="3" marker-end="url(#arrowPurple)"></line>
+
+  <!-- evidence cards -->
+  <!-- card 1 -->
+  <rect x="185" y="61" width="395" height="118" rx="8" fill="#eef3fa" stroke="#1f4e79" stroke-width="1.4"></rect>
+  <circle cx="212" cy="88" r="15" fill="#1f4e79"></circle>
+  <text x="212" y="88" text-anchor="middle" dominant-baseline="central" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#ffffff">1</text>
+  <foreignObject x="237" y="73" width="327" height="94">
+    <xhtml:div style="width:100%;height:100%;display:flex;align-items:center;justify-content:flex-start;font-family:'Hiragino Sans','Yu Gothic','Noto Sans JP',sans-serif;font-size:13px;line-height:1.55;color:#1c2530;overflow-wrap:break-word;">
+      MG誤読と同型事故はswarm4実runに再発ゼロ（journal全数検索）
+    </xhtml:div>
+  </foreignObject>
+
+  <!-- card 2 -->
+  <rect x="185" y="193" width="395" height="118" rx="8" fill="#eef3fa" stroke="#1f4e79" stroke-width="1.4"></rect>
+  <circle cx="212" cy="220" r="15" fill="#1f4e79"></circle>
+  <text x="212" y="220" text-anchor="middle" dominant-baseline="central" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#ffffff">2</text>
+  <foreignObject x="237" y="205" width="327" height="94">
+    <xhtml:div style="width:100%;height:100%;display:flex;align-items:center;justify-content:flex-start;font-family:'Hiragino Sans','Yu Gothic','Noto Sans JP',sans-serif;font-size:13px;line-height:1.55;color:#1c2530;overflow-wrap:break-word;">
+      実行配管は239レーンで終端失敗0（FAIL/STALLED/DEAD/human-gate/再試行=各0）
+    </xhtml:div>
+  </foreignObject>
+
+  <!-- card 3 -->
+  <rect x="185" y="325" width="395" height="118" rx="8" fill="#eef3fa" stroke="#1f4e79" stroke-width="1.4"></rect>
+  <circle cx="212" cy="352" r="15" fill="#1f4e79"></circle>
+  <text x="212" y="352" text-anchor="middle" dominant-baseline="central" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#ffffff">3</text>
+  <foreignObject x="237" y="337" width="327" height="94">
+    <xhtml:div style="width:100%;height:100%;display:flex;align-items:center;justify-content:flex-start;font-family:'Hiragino Sans','Yu Gothic','Noto Sans JP',sans-serif;font-size:13px;line-height:1.55;color:#1c2530;overflow-wrap:break-word;">
+      AI検証ラダーは機能（L3が13/13捕捉・N票3/3 WEAKENED）
+    </xhtml:div>
+  </foreignObject>
+
+  <!-- connecting arrow to conclusion -->
+  <line x1="580" y1="252" x2="605" y2="252" stroke="#1c2530" stroke-opacity="0.55" stroke-width="2.5" marker-end="url(#arrowInk)"></line>
+
+  <!-- right panel: true ceiling per evidence -->
+  <rect x="608" y="54" width="144" height="396" rx="10" fill="#f2ecf8" stroke="#5a2d82" stroke-width="1.6"></rect>
+  <foreignObject x="620" y="68" width="120" height="44">
+    <xhtml:div style="width:100%;height:100%;display:flex;align-items:center;justify-content:flex-start;font-family:'Hiragino Sans','Yu Gothic','Noto Sans JP',sans-serif;font-size:13.5px;font-weight:700;color:#5a2d82;line-height:1.35;overflow-wrap:break-word;">
+      証拠上の真の天井
+    </xhtml:div>
+  </foreignObject>
+  <line x1="620" y1="120" x2="740" y2="120" stroke="#dfe4ea" stroke-width="1"></line>
+  <foreignObject x="620" y="130" width="120" height="308">
+    <xhtml:div style="width:100%;height:100%;display:flex;flex-direction:column;justify-content:flex-start;font-family:'Hiragino Sans','Yu Gothic','Noto Sans JP',sans-serif;font-size:12.5px;line-height:1.6;color:#1c2530;overflow-wrap:break-word;">
+      <xhtml:div style="margin-bottom:16px;">①観測不能（監査・較正・provenance正典が仕様済だが空）</xhtml:div>
+      <xhtml:div>②非永続（run-local修理が上流化されず毎run再導出）</xhtml:div>
+    </xhtml:div>
+  </foreignObject>
+</svg><figcaption>図2　自己診断の反証</figcaption></figure>
+<h2 class="h" id="ch2">第二部 — META-1：観測不能（仕様済みだが空の正典）</h2>
+<p>swarm4スキルは、多数の監査・較正・provenance イベントをjournalに記録するよう規定している。しかし本研究が過去9runのjournal正典を横断照合した結果、<span class="key">それらの規定イベントの大半は、実際には一度も書かれていない。</span> 規範は存在し、記録は不在である。この乖離は全ドメインで独立に検出された：</p>
+<ul><li><span class="key">知覚（D1）</span>：<code>type=intent</code> は10run中2runのみ、記録形式は分散。<code>observation-shaped-intent</code> の変更記録は4件あるが下流参照の粒度が不統一。<code>unease-calibration</code> イベントは0件（局所メモのみ）。hold 19件は全て <code>revisit_when</code> を持つが、後続で個別に決裁されたのは9件。</li><li><span class="key">共鳴（D2）</span>：<code>resonance-calibration</code> の4件中2件が promoted/confirmed を欠き、較正集計が成立しない。RESONANCE.md が要求する「数字を根拠とした次spec・レンズ配分の変更」は、9runのどこにも記録されていない。較正ループは規定されているが空回りしている。</li><li><span class="key">実行（D3）</span>：解決済みmodel・CLI版・完全argvが manifest にも journal にもない（provenance gap）。token会計は events 欠損・JSON破損時に無音でゼロに落ち、中央値×2の警戒線はコード化されていない。5.6-terra は現configにのみ記録され、移行の前後比較が正典から不能。</li><li><span class="key">統合（D5）</span>：dry判定（K=2）の入力（pending/new/seen/効率）が記録されず、唯一のゼロ状態記録も一回分でK=2連続は証明されない。相別予算配分（知覚10/共鳴5/掘削40/検証30/統合15）は一件も記録がない。終相FINISHチェックリスト（10項目）の完全記録は6件のHTML納品で0/6。</li></ul>
+<p>この帰結は深刻である。<span class="key">測定できないものは改善できない。</span> swarm4が「共鳴は対象由来の信号だ」「dryで停止した」「予算をこう配分した」と主張するとき、その主張はjournalから裏取りできない——不可反証な自己申告になっている。較正ループが空である以上、「違和感→確定率」や「共鳴→確定率」でスキルの中核仮説を経験的に検証する道が、そもそも塞がれている。</p>
+<h3 class="sh">META-1の是正は「記録を増やす」ことではない</h3>
+<p>ここで自己言及的な罠に注意する必要がある。「空の較正を埋めよ」という提案が、それ自体、埋められないまま放置される新たな規定＝メタ劇場になりかねない。したがって是正の正しい形は、新たな必須記録の追加ではなく、<span class="key">(a) すでに規定済みのイベントを安価に発火させる単一の emit ヘルパを runner／主宰の手続に組み込み、(b) 監査ビューを journal から自動生成する</span> ことである。人手の記録義務を増やすのではなく、記録の摩擦をゼロに近づける。これは固定レール「正典は journal.d と claims.tsv の2つのみ」を強化する方向であり、新正典を作らない。</p>
+<h2 class="h" id="ch3">第三部 — META-2：非永続（runローカル修理が上流化されない）</h2>
+<p>本研究で最も鋭利な単一発見は、検証ドメインから出た。<span class="key">同じ修理が、runを跨いで何度も再導出されている。</span></p>
+<p>消費税研究の各runで、機械照合の逐語一致が繰り返し失敗した。原因は、Unicodeの丸引用符（" " „ « »）とCJK引用括弧（「」『』）がNFKC正規化後も一致せず、また「（意訳:…）」注記や省略記号を含むquoteが素朴なsplitで壊れることにある。今日のセッションでも、比較法runで照合率が62/128まで落ち、修正後に105へ回復した。ところが——この修正は毎回、run-localの <code>verify_only.py</code> や <code>fetch_verify.py</code> にその場で書かれ、<span class="key">正典スクリプト <code>swarm3/scripts/verify_quotes.py</code> には一度も反映されていない。</span> 結果、次のrunは同じバグを再発見し、同じ修理を書き直す。keiri のjournalには「空白正規化と省略記号分割が別runでも再発」という較正記録が残っている。これは churn の定義そのものであり、しかもrunを跨いで起きている——swarm4が単一runの内部では禁じている churn が、run間では制度的に放置されている。</p>
+<p>同じ構造が納品層にもある。双方向脚注リンクとFIGS機構を備えた <code>build_html.py</code> は優れた実装だが、共有スクリプトになっておらず、run毎にコピー改変される。20260708の連結HTMLでは隣接する上付き番号が56箇所で区切りなく連結する可読性事故が起き、それは今日の別runで再修正された。保存されたHTML検証器も存在しない。</p>
+<p><span class="key">META-2の是正は明快である。最も再利用される二つのrun-localツール——逐語照合器とHTMLビルダー——を正典スクリプトへ昇格させる。</span> 具体的には、<code>verify_quotes.py</code> に句読点最小同値表（丸引用符・CJK括弧を比較キー上でのみ正規の引用符へ写像し、原文は保存）を組み込み、<code>swarm4/scripts/</code> に共有ビルダーと read-only の <code>check_html</code>（前後リンク解決・連続sup検出・figure/svg均衡・SRC未解決・クレジット混入grep）を置く。これによりrunは「自分の修理を再導出する系」から「改善が累積する系」へ変わる。impact×effort×confidence はいずれも高く（3×1×3／3×2×3）、敵対的評決は「本物」である。</p>
+<figure class="figure"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 480" width="100%" role="img" aria-label="非永続のループ——同じ修理を毎run書き直す">
+  <!-- background card -->
+  <rect x="0.5" y="0.5" width="759" height="479" rx="10" fill="#ffffff" stroke="#dfe4ea" stroke-width="1"/>
+
+  <defs>
+    <marker id="fig4ArrowRed" markerWidth="9" markerHeight="9" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#9e2820"/>
+    </marker>
+    <marker id="fig4ArrowGreen" markerWidth="9" markerHeight="9" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#1d6b3f"/>
+    </marker>
+  </defs>
+
+  <!-- title -->
+  <foreignObject x="20" y="6" width="720" height="30">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Hiragino Sans','Yu Gothic','Noto Sans JP',sans-serif;">
+      <div style="font-size:19px;font-weight:700;color:#1c2530;text-align:center;">非永続のループ——同じ修理を毎run書き直す</div>
+    </div>
+  </foreignObject>
+
+  <!-- tag: 悪循環 -->
+  <rect x="50" y="14" width="90" height="22" rx="11" fill="#fbeae8" stroke="#9e2820" stroke-width="1.5"/>
+  <foreignObject x="50" y="14" width="90" height="22">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Hiragino Sans','Yu Gothic','Noto Sans JP',sans-serif;">
+      <div style="font-size:12px;font-weight:700;color:#9e2820;">悪循環</div>
+    </div>
+  </foreignObject>
+
+  <!-- ===== upper: circulation loop (red) ===== -->
+
+  <!-- node 1: top-left -->
+  <rect x="60" y="40" width="280" height="90" rx="12" fill="#fbeae8" stroke="#9e2820" stroke-width="2"/>
+  <foreignObject x="60" y="40" width="280" height="90">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;box-sizing:border-box;padding:10px 16px;display:flex;align-items:center;justify-content:center;font-family:'Hiragino Sans','Yu Gothic','Noto Sans JP',sans-serif;">
+      <div style="font-size:14.5px;line-height:1.45;color:#1c2530;text-align:center;overflow-wrap:break-word;">run中に照合バグ発生（丸引用符/意訳括弧split）</div>
+    </div>
+  </foreignObject>
+
+  <!-- node 2: top-right -->
+  <rect x="420" y="40" width="280" height="90" rx="12" fill="#fbeae8" stroke="#9e2820" stroke-width="2"/>
+  <foreignObject x="420" y="40" width="280" height="90">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;box-sizing:border-box;padding:10px 16px;display:flex;align-items:center;justify-content:center;font-family:'Hiragino Sans','Yu Gothic','Noto Sans JP',sans-serif;">
+      <div style="font-size:14.5px;line-height:1.45;color:#1c2530;text-align:center;overflow-wrap:break-word;">run-localで修理（verify_only.py / fetch_verify.py）</div>
+    </div>
+  </foreignObject>
+
+  <!-- node 3: bottom-right -->
+  <rect x="420" y="232" width="280" height="90" rx="12" fill="#fbeae8" stroke="#9e2820" stroke-width="2"/>
+  <foreignObject x="420" y="232" width="280" height="90">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;box-sizing:border-box;padding:10px 16px;display:flex;align-items:center;justify-content:center;font-family:'Hiragino Sans','Yu Gothic','Noto Sans JP',sans-serif;">
+      <div style="font-size:14.5px;line-height:1.45;color:#1c2530;text-align:center;overflow-wrap:break-word;">正典 verify_quotes.py へ上流化されない</div>
+    </div>
+  </foreignObject>
+
+  <!-- node 4: bottom-left -->
+  <rect x="60" y="232" width="280" height="90" rx="12" fill="#fbeae8" stroke="#9e2820" stroke-width="2"/>
+  <foreignObject x="60" y="232" width="280" height="90">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;box-sizing:border-box;padding:10px 16px;display:flex;align-items:center;justify-content:center;font-family:'Hiragino Sans','Yu Gothic','Noto Sans JP',sans-serif;">
+      <div style="font-size:14.5px;line-height:1.45;color:#1c2530;text-align:center;overflow-wrap:break-word;">次runが同じバグを再発見</div>
+    </div>
+  </foreignObject>
+
+  <!-- loop arrows: 1→2 (top) → 3 (right) → 4 (bottom) → 1 (left), clockwise -->
+  <line x1="345" y1="85" x2="415" y2="85" stroke="#9e2820" stroke-width="3" marker-end="url(#fig4ArrowRed)"/>
+  <line x1="560" y1="135" x2="560" y2="227" stroke="#9e2820" stroke-width="3" marker-end="url(#fig4ArrowRed)"/>
+  <line x1="415" y1="277" x2="345" y2="277" stroke="#9e2820" stroke-width="3" marker-end="url(#fig4ArrowRed)"/>
+  <line x1="200" y1="227" x2="200" y2="135" stroke="#9e2820" stroke-width="3" marker-end="url(#fig4ArrowRed)"/>
+
+  <!-- center label: run間churn -->
+  <rect x="285" y="159" width="190" height="44" rx="22" fill="#fbeae8" stroke="#9e2820" stroke-width="2"/>
+  <text x="380" y="186" text-anchor="middle" font-family="'Hiragino Sans','Yu Gothic','Noto Sans JP',sans-serif" font-size="16" font-weight="700" fill="#9e2820">run間churn</text>
+
+  <!-- cut symbol: red dashed circle (loop remnant) sliced by green arrow -->
+  <circle cx="380" cy="338" r="15" fill="none" stroke="#9e2820" stroke-width="2" stroke-dasharray="4 3"/>
+  <line x1="380" y1="206" x2="380" y2="352" stroke="#1d6b3f" stroke-width="3.5" marker-end="url(#fig4ArrowGreen)"/>
+
+  <!-- tag: 断ち切り -->
+  <rect x="30" y="328" width="100" height="22" rx="11" fill="#eaf5ee" stroke="#1d6b3f" stroke-width="1.5"/>
+  <foreignObject x="30" y="328" width="100" height="22">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Hiragino Sans','Yu Gothic','Noto Sans JP',sans-serif;">
+      <div style="font-size:12px;font-weight:700;color:#1d6b3f;">断ち切り</div>
+    </div>
+  </foreignObject>
+
+  <!-- ===== lower: cut off the loop (green) ===== -->
+
+  <!-- left box: promotion action -->
+  <rect x="30" y="355" width="330" height="95" rx="12" fill="#eaf5ee" stroke="#1d6b3f" stroke-width="2"/>
+  <foreignObject x="30" y="355" width="330" height="95">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;box-sizing:border-box;padding:10px 18px;display:flex;align-items:center;justify-content:center;font-family:'Hiragino Sans','Yu Gothic','Noto Sans JP',sans-serif;">
+      <div style="font-size:14.5px;line-height:1.5;color:#1c2530;text-align:center;overflow-wrap:break-word;">最も再利用される2ツール（逐語照合器・HTMLビルダー＋check_html）を正典 scripts へ昇格</div>
+    </div>
+  </foreignObject>
+
+  <!-- arrow: left box -> right box -->
+  <line x1="365" y1="402" x2="415" y2="402" stroke="#1d6b3f" stroke-width="3" marker-end="url(#fig4ArrowGreen)"/>
+
+  <!-- right box: outcome -->
+  <rect x="420" y="355" width="300" height="95" rx="12" fill="#eaf5ee" stroke="#1d6b3f" stroke-width="2"/>
+  <foreignObject x="420" y="355" width="300" height="95">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;box-sizing:border-box;padding:10px 18px;display:flex;align-items:center;justify-content:center;font-family:'Hiragino Sans','Yu Gothic','Noto Sans JP',sans-serif;">
+      <div style="font-size:15px;line-height:1.5;color:#1c2530;text-align:center;overflow-wrap:break-word;">改善が累積する系へ</div>
+    </div>
+  </foreignObject>
+</svg><figcaption>図3　非永続のループ</figcaption></figure>
+<h2 class="h" id="ch4">第四部 — META-3：実在する少数の欠陥</h2>
+<p>観測不能・非永続とは別に、一次証拠のある具体的な欠陥が少数、確認された。これらは機構の話ではなくコード／規範のバグである。</p>
+<p><span class="key">実行配管（D3）</span>：(1) kill失敗時のHUMAN_GATE分岐で親プロセスのファイルハンドルを閉じ損ねる（FDリーク・swarm3_run.py:951）。(2) finalのサイズ安定だけでは書込みの原子性を保証しない——読取り側が書きかけfinalを見得る（:744）。是正は attempt専用pendingファイルへ書き、nonce判定後に <code>os.replace</code> で原子公開する。(3) runnerが別セッションで死亡すると孤児レーンが終端journalなしに残る（:590）。(4) journalは flush のみで fsync がない（:456）。</p>
+<p><span class="key">検証（D4）</span>：(5) 再照合で notfound になっても既存の verified を降格しない——false-verified が正典に残留する（verify_quotes.py:285）。(6) 複数箇所に出現する曖昧なquoteが verified へ昇格する（:295）。(7) <code>source_kind=url</code> の行が処理前に例外を送出し、バッチ全体を停止させる（:121）。(8) 目次・ナビ見出しの反復だけでclaim全体が支持される偽陽性の実例（SG-01）。</p>
+<p><span class="key">共鳴（D2）</span>：(9) 干渉マップのクラスタキーが汎用anchorと絶対パス接頭辞により、<span class="key">実質的でない収束を過大表示する</span>——lane-ID anchorに変えると49レーン実測で finding/peak の収束が消えた。「convergent」と分類された群の大半が単一レーン由来だった。これは P2「隔離は共鳴を証拠にする」の運用実装が、共鳴を機械的に水増ししている可能性を示す。</p>
+<p><span class="key">統合（D5）</span>：(10) 本セッションで主宰が今日追加したSVG図版相が、「実行=Codexのみ」の固定レールと「作図はSonnet 5」の明文例外との間に優先順位を欠く自己矛盾を生んだ（LOOP:55 vs SKILL:76）。これは主宰自身が持ち込んだ規範衝突であり、明示的な carve-out（「図版作図は実行例外としてSonnet 5を許容・主宰の視覚QA必須・Codexは関与しない」）で解消すべきである。</p>
+<figure class="figure"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 486" width="100%" font-family="sans-serif">
+  <rect x="0" y="0" width="780" height="486" fill="#ffffff"/>
+  <text x="390" y="30" text-anchor="middle" font-size="17" font-weight="700" fill="#1c2530">三つのメタ主題 ── 全ドメインが独立に収束</text>
+  <!-- Column 1: META-1 -->
+  <g>
+    <rect x="16" y="52" width="244" height="40" rx="7" fill="#1f4e79"/>
+    <foreignObject x="24" y="58" width="228" height="32"><div xmlns="http://www.w3.org/1999/xhtml" style="color:#fff;font-size:12.5px;font-weight:700;line-height:1.25;text-align:center;">META-1　観測不能<br/><span style="font-weight:400;font-size:10.5px;">仕様済だが空の正典</span></div></foreignObject>
+    <rect x="16" y="92" width="244" height="330" rx="8" fill="#eef3fa" stroke="#1f4e79" stroke-width="1.2"/>
+    <foreignObject x="28" y="102" width="220" height="312"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11.5px;line-height:1.55;color:#1c2530;">
+      <div style="font-weight:700;color:#1f4e79;margin-bottom:6px;">測れないものは改善できない</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;">
+        <span style="background:#fff;border:1px solid #b9cbe0;border-radius:4px;padding:2px 6px;">intent 2/10run</span>
+        <span style="background:#fff;border:1px solid #b9cbe0;border-radius:4px;padding:2px 6px;">unease-calibration 0件</span>
+        <span style="background:#fff;border:1px solid #b9cbe0;border-radius:4px;padding:2px 6px;">dry K=2 成立 0/9</span>
+        <span style="background:#fff;border:1px solid #b9cbe0;border-radius:4px;padding:2px 6px;">予算配分 記録0</span>
+        <span style="background:#fff;border:1px solid #b9cbe0;border-radius:4px;padding:2px 6px;">FINISH完全 0/6</span>
+        <span style="background:#fff;border:1px solid #b9cbe0;border-radius:4px;padding:2px 6px;">provenance欠落</span>
+        <span style="background:#fff;border:1px solid #b9cbe0;border-radius:4px;padding:2px 6px;">token会計 無音ゼロ</span>
+      </div>
+      <div style="margin-top:8px;color:#42505e;">監査・較正・provenanceの記録が規範上必須でありながら不在。較正ループは空回りし、中核仮説を経験的に検証できない。</div>
+    </div></foreignObject>
+  </g>
+  <!-- Column 2: META-2 (emphasis) -->
+  <g>
+    <rect x="268" y="48" width="244" height="38" rx="7" fill="#5a2d82"/>
+    <foreignObject x="276" y="52" width="228" height="30"><div xmlns="http://www.w3.org/1999/xhtml" style="color:#fff;font-size:12.5px;font-weight:700;line-height:1.25;text-align:center;">META-2　非永続<br/><span style="font-weight:400;font-size:10.5px;">run-local修理が上流化されない</span></div></foreignObject>
+    <rect x="268" y="92" width="244" height="330" rx="8" fill="#f2ecf8" stroke="#5a2d82" stroke-width="2"/>
+    <foreignObject x="280" y="102" width="220" height="312"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11.5px;line-height:1.55;color:#1c2530;">
+      <div style="font-weight:700;color:#5a2d82;margin-bottom:6px;">同じ修理を毎回書き直す＝run間churn</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;">
+        <span style="background:#fff;border:1px solid #c9b6de;border-radius:4px;padding:2px 6px;">丸引用符盲</span>
+        <span style="background:#fff;border:1px solid #c9b6de;border-radius:4px;padding:2px 6px;">false-verified残留</span>
+        <span style="background:#fff;border:1px solid #c9b6de;border-radius:4px;padding:2px 6px;">照合率 62→105 別runで再発</span>
+        <span style="background:#fff;border:1px solid #c9b6de;border-radius:4px;padding:2px 6px;">毎run verify_only.pyで再修理</span>
+        <span style="background:#fff;border:1px solid #c9b6de;border-radius:4px;padding:2px 6px;">build_html.py コピー改変</span>
+      </div>
+      <div style="margin-top:8px;color:#42505e;">最も再利用される逐語照合器とHTMLビルダーが正典スクリプトへ昇格せず、改善が累積しない。<b>正典化すれば断ち切れる。</b></div>
+    </div></foreignObject>
+  </g>
+  <!-- Column 3: META-3 -->
+  <g>
+    <rect x="520" y="52" width="244" height="40" rx="7" fill="#8a5a00"/>
+    <foreignObject x="528" y="58" width="228" height="32"><div xmlns="http://www.w3.org/1999/xhtml" style="color:#fff;font-size:12.5px;font-weight:700;line-height:1.25;text-align:center;">META-3　実在欠陥<br/><span style="font-weight:400;font-size:10.5px;">少数だが具体</span></div></foreignObject>
+    <rect x="520" y="92" width="244" height="330" rx="8" fill="#fdf6e6" stroke="#8a5a00" stroke-width="1.2"/>
+    <foreignObject x="532" y="102" width="220" height="312"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:11.5px;line-height:1.55;color:#1c2530;">
+      <div style="font-weight:700;color:#8a5a00;margin-bottom:6px;">コード／規範のバグ</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;">
+        <span style="background:#fff;border:1px solid #d8c08a;border-radius:4px;padding:2px 6px;">FDリーク :951</span>
+        <span style="background:#fff;border:1px solid #d8c08a;border-radius:4px;padding:2px 6px;">final非原子 :744</span>
+        <span style="background:#fff;border:1px solid #d8c08a;border-radius:4px;padding:2px 6px;">verified非降格 :285</span>
+        <span style="background:#fff;border:1px solid #d8c08a;border-radius:4px;padding:2px 6px;">曖昧昇格 :295</span>
+        <span style="background:#fff;border:1px solid #d8c08a;border-radius:4px;padding:2px 6px;">url全体abort :121</span>
+        <span style="background:#fff;border:1px solid #d8c08a;border-radius:4px;padding:2px 6px;">干渉マップ収束過大</span>
+        <span style="background:#fff;border:1px solid #d8c08a;border-radius:4px;padding:2px 6px;">SVG相レール衝突</span>
+      </div>
+      <div style="margin-top:8px;color:#42505e;">機構の弱さではなく、局所の欠陥。一件ずつ修正可能。</div>
+    </div></foreignObject>
+  </g>
+  <!-- bottom band -->
+  <rect x="16" y="436" width="748" height="38" rx="8" fill="#eef1f4" stroke="#c9d0d8" stroke-width="1"/>
+  <foreignObject x="28" y="442" width="724" height="28"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:12.5px;line-height:1.35;color:#1c2530;text-align:center;font-weight:600;">機構（runner・検証ラダー・単一書き手統合）は証拠上すでに堅牢 ── 制約は機構の<span style="color:#5a2d82;">外</span>にある。</div></foreignObject>
+</svg><figcaption>図4　三つのメタ主題</figcaption></figure>
+<h2 class="h" id="ch5">第五部 — 共鳴層（P2）の誠実な再評価</h2>
+<p>第四部(9)は、swarm4の中核原理の一つ P2「隔離されたレーンの収束は対象由来の信号である」に触れる。共鳴ドメインの調査は、この原理を否定はしないが、三点で限定を課した。第一に、干渉マップの収束表示はanchor形式の副産物を含み、額面通りには受け取れない。第二に、全レーンが同一のCodexモデルである以上、隔離しても訓練由来の共有誤差は残る——同一モデル由来の収束は独立票ではなく、外部研究はそれをバイアス増幅と呼ぶ。第三に、self-consistency の「離散回答・一意正答・多数決」という前提は、open-endedな長文調査には移植できない。</p>
+<p>したがって P2 の運用は、スキルが既に定める <span class="key">rank-not-veto（共鳴は注意の順位付けにのみ使い、棄却には使わない）</span> を厳守する限りで健全である。改善方向は、共鳴を強い証拠として扱うのではなく、(a) クラスタキーを厳格化して見かけの収束を排し、(b) 同一モデルの収束を「仮較正」に留め、異系統scout または人間アンカーを通した後にのみ配分変更の候補とすることである。共鳴を殺すのではなく、その証拠力を正しく値引きする。</p>
+<h2 class="h" id="ch6">第六部 — 優先度ロードマップ</h2>
+<p>全66ワーカー成果物の提案を、敵対的評決で選別し、impact×effort×confidence で順位付けた。「churn疑い」評決を受けた提案（特に実行配管の retry/backoff/並列適応——runnerが239レーン0失敗ゆえ解くべき実害が未立証）は TIER 3 に降格し、pilot による実証を採用の前提とした。</p>
+<h3 class="sh">TIER 1 — 即実施（本物・高impact・低effort・高confidence）</h3>
+<table><tr><th>提案</th><th>何を直すか</th><th>一次証拠</th><th>i×e×c</th></tr>
+<tr><td>逐語照合器の上流化</td><td>verify_quotes.py に句読点同値表＋notfound時の verified 降格＋逐語のみquote規律＋url行の非全体abort＋近傍差分レポートを組込み、run-local修理を廃す</td><td>META-2／D4: 丸引用符盲・false-verified残留・毎run再導出</td><td>3×1×3</td></tr>
+<tr><td>共有HTMLビルダー＋check_html</td><td>build_html.py と read-only検証器を swarm4/scripts へ昇格（前後リンク・連続sup・figure均衡・SRC未解決・クレジットgrep）</td><td>META-2／D5: コピー改変・56連続sup事故</td><td>3×2×3</td></tr>
+<tr><td>実在欠陥の修正</td><td>FDリーク閉鎖・final原子公開(os.replace)・journal fsync</td><td>META-3／D3: swarm3_run.py:951/744/456</td><td>2〜3×1〜2×3</td></tr>
+<tr><td>SVG相レールの carve-out</td><td>「図版作図はSonnet5可（実行例外・主宰QA必須・Codex非関与）」を明文化し優先順位を付す</td><td>META-3／D5: LOOP:55 vs SKILL:76の規範衝突</td><td>3×1×3</td></tr>
+</table>
+<h3 class="sh">TIER 2 — 観測基盤（本物・低effort・全体の測定を可能にする）</h3>
+<table><tr><th>提案</th><th>何を直すか</th><th>i×e×c</th></tr>
+<tr><td>正典イベントの実発火</td><td>規定済みだが空の intent／zero-base-divergence／calibration／dry-ledger／provenance／token会計完全性／hold終相決裁／FINISH-HTMLカードを、<span class="key">新規義務でなく単一emitヘルパ＋journal派生view</span>で実発火</td><td>3×2×3</td></tr>
+<tr><td>干渉マップのクラスタキー厳格化</td><td>汎用anchor・パス接頭辞による過大収束を排し、真に別レーン2本以上を要件化。同一モデル収束は仮較正扱い</td><td>2〜3×2×2</td></tr>
+</table>
+<h3 class="sh">TIER 3 — pilot前提（要実証・churn疑いを含む）</h3>
+<p>原因別jittered再試行・観測先行の適応並列（開始4→成功で漸増→429で減速、6は暫定上限に降格）・N=3対N=1の対照・気質アブレーション。いずれも外部研究（Temporal heartbeat／K8s backoffLimit／AWS backoff+jitter／Netflix concurrency-limits／各社APIのrate-limit公式docs）に裏付けはあるが、swarm4の実測では解くべき障害が未発生のため、<span class="key">負荷信号をまず記録し、実害が観測された場合にのみ</span>採用する。TIER 3を無条件に足すことは、この研究が批判する churn そのものになる。</p>
+<h3 class="sh">付録：提案する具体diff（抜粋）</h3>
+<p><span class="key">A. verify_quotes.py — 句読点同値表（比較キー上のみ・原文保存）</span></p>
+<pre>_QUOTE_MAP = {ord(c): '"' for c in '“”„«»＂'} | {ord(c): "'" for c in '‘’＇'} | \
+             {ord(c): '"' for c in '「」『』'}
+def _cmpkey(s):
+    return re.sub(r'\s+', '', unicodedata.normalize('NFKC', s).translate(_QUOTE_MAP))
+#逐語欄は _cmpkey で比較。raw/位置/照合根拠は保存。notfound時は既存verifiedを降格。</pre>
+<p><span class="key">B. SKILL.md — SVG相 carve-out（固定レール節へ）</span> &gt; 実行=Codexのみ。ただし図版(SVG)作図に限りSonnet 5を実行例外として許容する。視覚QAと修正は主宰が担い、Codexは図版作図に関与しない。優先順位：本例外はSVG作図にのみ適用され、他の全実行はCodexに限る。</p>
+<p><span class="key">C. swarm4/scripts/check_html.py（新規・read-only検証器）</span> &gt; 入力HTMLに対し、①脚注アンカーの前後解決（sup↔fn双方向・欠番/迷子ゼロ）②連続supの区切り有無③figureとsvgタグの均衡④SRC未解決の残存⑤クレジット/AI言及grep、を検査し PASS/FAIL を返す。build_html.py と対で swarm4/scripts に常置。</p>
+<figure class="figure"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 480" width="100%" role="img" aria-label="優先度ロードマップ図：TIER1即実施・TIER2観測基盤・TIER3 pilot前提の3段階">
+  <title>優先度ロードマップ——足すな、直して残せ</title>
+
+  <!-- タイトル -->
+  <foreignObject x="20" y="2" width="720" height="38">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;box-sizing:border-box;display:flex;align-items:center;justify-content:center;">
+      <div style="font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic Medium','Noto Sans JP',sans-serif;font-size:18px;font-weight:700;color:#1c2530;text-align:center;">優先度ロードマップ——足すな、直して残せ</div>
+    </div>
+  </foreignObject>
+
+  <!-- 3段の階段（左→右で上昇） -->
+  <line x1="20" y1="122" x2="740" y2="122" stroke="#dfe4ea" stroke-width="1"/>
+
+  <rect x="20" y="86" width="233" height="36" rx="6" fill="#f2ecf8" stroke="#5a2d82" stroke-width="1.5"/>
+  <text x="136.5" y="104" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="19" font-weight="700" fill="#5a2d82">1</text>
+
+  <rect x="263" y="66" width="233" height="56" rx="6" fill="#eef3fa" stroke="#1f4e79" stroke-width="1.5"/>
+  <text x="379.5" y="94" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="25" font-weight="700" fill="#1f4e79">2</text>
+
+  <rect x="506" y="46" width="234" height="76" rx="6" fill="#fdf6e6" stroke="#8a5a00" stroke-width="1.5"/>
+  <text x="623" y="84" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="30" font-weight="700" fill="#8a5a00">3</text>
+
+  <!-- TIER1 カード -->
+  <rect x="20" y="130" width="720" height="138" rx="8" fill="#f2ecf8" stroke="#5a2d82" stroke-width="1.3"/>
+  <foreignObject x="20" y="130" width="720" height="138">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;box-sizing:border-box;padding:6px 14px;display:flex;flex-direction:column;gap:6px;font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic Medium','Noto Sans JP',sans-serif;color:#1c2530;">
+      <div style="font-size:13.5px;font-weight:700;color:#5a2d82;">TIER 1 即実施（本物・高impact/低effort）</div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:12.5px;line-height:1.4;">
+        <div style="flex:1;"><span style="color:#5a2d82;">・</span>逐語照合器の上流化</div>
+        <div style="flex-shrink:0;background:#5a2d82;color:#ffffff;font-size:10.5px;font-weight:700;padding:1px 8px;border-radius:9px;">3×1×3</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:12.5px;line-height:1.4;">
+        <div style="flex:1;"><span style="color:#5a2d82;">・</span>共有HTMLビルダー+check_html</div>
+        <div style="flex-shrink:0;background:#5a2d82;color:#ffffff;font-size:10.5px;font-weight:700;padding:1px 8px;border-radius:9px;">3×2×3</div>
+      </div>
+      <div style="font-size:12.5px;line-height:1.4;"><span style="color:#5a2d82;">・</span>実在欠陥修正:FDリーク・final原子公開・fsync</div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:12.5px;line-height:1.4;">
+        <div style="flex:1;"><span style="color:#5a2d82;">・</span>SVG相レールcarve-out</div>
+        <div style="flex-shrink:0;background:#5a2d82;color:#ffffff;font-size:10.5px;font-weight:700;padding:1px 8px;border-radius:9px;">3×1×3</div>
+      </div>
+    </div>
+  </foreignObject>
+
+  <!-- TIER2 カード -->
+  <rect x="20" y="276" width="720" height="90" rx="8" fill="#eef3fa" stroke="#1f4e79" stroke-width="1.3"/>
+  <foreignObject x="20" y="276" width="720" height="90">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;box-sizing:border-box;padding:6px 14px;display:flex;flex-direction:column;gap:6px;font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic Medium','Noto Sans JP',sans-serif;color:#1c2530;">
+      <div style="font-size:13.5px;font-weight:700;color:#1f4e79;">TIER 2 観測基盤（本物・全体を測定可能に）</div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:12.5px;line-height:1.4;">
+        <div style="flex:1;"><span style="color:#1f4e79;">・</span>空の正典イベントを『新規義務でなく単一emitヘルパ+journal派生view』で実発火</div>
+        <div style="flex-shrink:0;background:#1f4e79;color:#ffffff;font-size:10.5px;font-weight:700;padding:1px 8px;border-radius:9px;">3×2×3</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:12.5px;line-height:1.4;">
+        <div style="flex:1;"><span style="color:#1f4e79;">・</span>干渉マップのクラスタキー厳格化</div>
+        <div style="flex-shrink:0;background:#1f4e79;color:#ffffff;font-size:10.5px;font-weight:700;padding:1px 8px;border-radius:9px;">2〜3×2×2</div>
+      </div>
+    </div>
+  </foreignObject>
+
+  <!-- TIER3 カード -->
+  <rect x="20" y="374" width="720" height="76" rx="8" fill="#fdf6e6" stroke="#8a5a00" stroke-width="1.3"/>
+  <foreignObject x="20" y="374" width="720" height="76">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;box-sizing:border-box;padding:6px 14px;display:flex;flex-direction:column;gap:6px;font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic Medium','Noto Sans JP',sans-serif;color:#1c2530;">
+      <div style="font-size:13.5px;font-weight:700;color:#8a5a00;">TIER 3 pilot前提（要実証・churn疑い）</div>
+      <div style="font-size:12.5px;line-height:1.4;">原因別jittered再試行・観測先行の適応並列・N=3対N=1対照。</div>
+      <div style="font-size:12.5px;line-height:1.4;font-style:italic;color:#8a5a00;">「runnerは239レーン0失敗ゆえ実害未立証。無条件追加はchurn。負荷信号を先に記録」</div>
+    </div>
+  </foreignObject>
+
+  <!-- 決め文 -->
+  <rect x="20" y="452" width="720" height="28" rx="6" fill="#f2ecf8" stroke="#5a2d82" stroke-width="1.2"/>
+  <foreignObject x="20" y="452" width="720" height="28">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;box-sizing:border-box;display:flex;align-items:center;justify-content:center;">
+      <div style="font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic Medium','Noto Sans JP',sans-serif;font-size:13px;font-weight:700;color:#5a2d82;text-align:center;">機構を足すのではなく、最も再利用される2ツールを正典化し、空の正典イベントを実発火させる</div>
+    </div>
+  </foreignObject>
+</svg><figcaption>図5　優先度ロードマップ</figcaption></figure>
+<h2 class="h" id="ch7">結論</h2>
+<p>swarm4の機構は、証拠の上ですでに堅牢だった——runnerは239レーンで終端失敗ゼロ、検証ラダーは実エラーを捕捉し、統合は機能する。スキルが自認する「天井＝主宰のフレーミング」は、少なくともswarm4の実運用については弱い支持しか得られない（MG誤読は再発していない）。真の制約は二つ、いずれも機構の外にある。<span class="key">観測不能</span>——監査・較正・provenanceの正典が仕様上必須でありながら空で、システムは自らを測れない。<span class="key">非永続</span>——最も再利用されるrun-localの修理が正典スクリプトへ上流化されず、同じ改善が毎run再導出される。</p>
+<p>したがって最高レバレッジの一手は、新しい機構を足すことではない。<span class="key">最も再利用される二つのツール（逐語照合器・HTMLビルダー）を正典化し、規定済みで空のjournalイベントを安価に実発火させること</span>である。これによりswarm4は、自らの修理を毎回書き直し自らを測れない系から、改善が累積し自らの有効性を証明できる系へと変わる。</p>
+<p>そして本研究の運びそれ自体が、swarm4の最も価値ある部品を実証した——主宰が仮説を封印し独立レーンの反証にかけたことで、スキルの自己診断の誤りが可視化された。<span class="key">知覚は演繹に先行する（P1）</span>は、飾りではなく、システムが自分自身についてさえ間違い得ることへの、唯一の防波堤である。</p>
+<h3 class="sh">回さなかったもの（no silent caps）</h3>
+<ul><li>共鳴ドメイン（D2）は16レーン中13で統合した。残り3レーンは走行末尾で未収穫だが、較正・クラスタキー・model-priorの中核所見は独立に収束済みで結論は不変。</li><li>TIER 3提案は本研究では pilot 実行していない（採用前提の対照試行は将来run）。</li><li>外部研究は各ドメイン数本の一次資料に限定した（分散システム・検証研究の網羅ではない）。</li><li>授権は5×100=500レーンだが、コーパスは有限のため各ドメイン12〜18で dry収束させ、計約71ワーカーレーン＋5管理者で終えた。使い切りは同一skillファイルの再読＝churnであり、意図的に回避した。</li><li>提案する具体diffは設計であり、skillへの実適用（正典スクリプトの更新）は本報告では行っていない——それは主宰の裁定を要する変更であり、承認後に別工程で実施する。</li></ul>
+<h3 class="sh">運用付記（本研究の運転から得た二次知見）</h3>
+<p>第一に、統合ドメインは「単一書き手統合がボトルネックである」という直感を<span class="key">明確に否定した（null結果）</span>——過去runの手戻り原因は全て機構側（ビルダーの置換範囲・XML欠落）にあり、統合そのものの所要時間は正典に記録がなく、スループット系の構造変更提案は敵対レーンが全て却下した。統合は律速ではない。ゆえに改善資源は統合の高速化ではなく、観測基盤と機構資産化へ向けるべきである。</p>
+<p>第二に、ネスト管理者の運転から運用上の一次知見が出た：<span class="key">sandbox内で起動した監視（Monitor）は /proc やファイルシステムの視界が別世界になり誤発報する</span>。長時間波の監視は sandbox 外の Bash で行う必要がある。これはネスト運用ランブックへ焼き込むべき具体的修正である（本研究の管理者はこの罠を実際に踏み、報告した）。</p>
+<p>第三に、Fable 5 管理者は長時間フォアグラウンド dispatch の完走中／完走後に接続断・idle 化しやすい（5体中2体がAPI接続断、複数がidle離脱）。<span class="key">ネスト運用の正しい分担は「管理者=設計と dispatch、主宰=収穫と単一統合」であり、管理者に収穫・統合まで担わせない</span>——これは本研究が偶然にも自身の運転で実証した、swarm4のネスト運用に関する最も確度の高い教訓である。</p>
+<div class="box caveat"><b>方法と限界（no silent caps）：</b>本報告は swarm4 を swarm4 で調べた自己言及研究であり、対象と方法が一致する。証拠は skill/script/journal の原文（file:line）・過去runのjournal正典・外部一次資料（URL＋確認日）に限り、各提案は敵対的評決（本物／churn疑い／要実証）を経ている。限界：共鳴ドメインは16レーン中13で統合（中核所見は独立収束済・結論不変）／TIER 3提案はpilot未実施／外部研究は各ドメイン数本に限定／Fable管理者5体中2体がAPI接続断で離脱（設計成果は回収済・dispatch前後の死亡で実害なし）／提案する具体diffは設計であり、skillへの実適用（正典スクリプト更新）は主宰の裁定を要するため本報告では未実施。</div>
+<footer>本報告は自己言及的な方法研究であり、提案の skill 実適用は主宰の承認を要する。一次証拠の file:line は調査時点のものであり、スクリプト改訂で移動し得る。</footer>
+</div></body></html>
