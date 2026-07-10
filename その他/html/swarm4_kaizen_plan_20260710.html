@@ -1,0 +1,226 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>swarm4改善 実装プラン — 依存順・観測先行の4フェーズ</title><style>
+  :root{
+    --ink:#1c2530; --sub:#56606e; --line:#dfe4ea; --bg:#eef1f4; --paper:#fff;
+    --accent:#5a2d82; --accent2:#7a4fa3; --accent-soft:#f2ecf8;
+    --blue:#1f4e79; --blue-soft:#eef3fa; --red:#9e2820; --red-soft:#fbeae8;
+    --green:#1d6b3f; --green-soft:#eaf5ee; --amber:#8a5a00; --amber-soft:#fdf6e6;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Hiragino Mincho ProN","Yu Mincho",YuMincho,"Noto Serif JP",serif;
+    line-height:2.0;font-size:15px;}
+  .paper{max-width:840px;margin:28px auto;background:var(--paper);
+    padding:56px 64px 72px;box-shadow:0 4px 28px rgba(20,30,50,.10);border-radius:4px;}
+  .doctype{font-family:sans-serif;font-size:11.5px;letter-spacing:.16em;color:var(--accent);
+    text-align:center;margin-bottom:8px;}
+  h1.title{font-size:23px;text-align:center;line-height:1.6;margin:6px 0 6px;font-weight:700;}
+  .subtitle{font-size:15px;text-align:center;color:var(--sub);margin:0 0 6px;}
+  .meta-line{font-family:sans-serif;font-size:11.5px;text-align:center;color:var(--sub);
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    padding:8px 0;margin:18px 0 28px;}
+  .abstract{background:var(--accent-soft);border:1px solid #ddd0ec;border-radius:6px;
+    padding:18px 22px;margin:0 0 28px;font-size:14px;}
+  .abstract h3{margin:0 0 8px;font-size:13px;font-family:sans-serif;color:var(--accent);letter-spacing:.08em;}
+  .toc{font-family:sans-serif;font-size:13px;background:#fafbfc;border:1px solid var(--line);
+    border-radius:6px;padding:16px 22px;margin:0 0 30px;}
+  .toc b{color:var(--accent);} .toc ol{margin:8px 0 0;padding-left:22px;} .toc li{margin:4px 0;}
+  .toc a{color:var(--ink);text-decoration:none;} .toc a:hover{color:var(--accent);}
+  h2.h{font-family:sans-serif;font-size:18px;margin:40px 0 14px;padding-bottom:8px;
+    border-bottom:2px solid var(--accent);color:var(--accent);scroll-margin-top:12px;}
+  h2.h .n{color:var(--accent2);margin-right:10px;}
+  h3.sh{font-family:sans-serif;font-size:15px;margin:26px 0 8px;color:var(--blue);font-weight:700;}
+  p{margin:13px 0;text-align:justify;}
+  .key{background:linear-gradient(transparent 62%,#efe3fb 62%);font-weight:700;}
+  .box{border-radius:6px;padding:15px 20px;margin:18px 0;font-size:14px;font-family:sans-serif;line-height:1.85;}
+  .box.thesis{background:var(--accent-soft);border-left:4px solid var(--accent);}
+  .box.note{background:var(--blue-soft);border-left:4px solid var(--blue);}
+  .box.caveat{background:var(--amber-soft);border-left:4px solid var(--amber);}
+  .box.thesis b{color:var(--accent);} .box.note b{color:var(--blue);} .box.caveat b{color:var(--amber);}
+  table{width:100%;border-collapse:collapse;margin:18px 0;font-size:12.8px;font-family:sans-serif;}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top;line-height:1.7;}
+  th{background:var(--accent);color:#fff;font-weight:600;}
+  td.lbl{background:#f6f3fa;font-weight:700;white-space:nowrap;}
+  tr:nth-child(even) td:not(.lbl){background:#fafbfc;}
+  .fn{font-size:12px;color:var(--sub);font-family:sans-serif;line-height:1.7;}
+  .fn-list{border-top:1px solid var(--line);margin-top:36px;padding-top:16px;}
+  .fn-list h3{font-family:sans-serif;font-size:13px;color:var(--accent);letter-spacing:.08em;}
+  .fn-list ol{padding-left:22px;} .fn-list li{margin:6px 0;font-size:12px;color:var(--sub);font-family:sans-serif;}
+  .fn-list a{color:var(--blue);text-decoration:none;border-bottom:1px dotted var(--blue);}
+  sup.r{color:var(--accent);font-weight:700;font-size:11px;font-family:sans-serif;cursor:pointer;}
+  .diagram{border:1px solid var(--line);border-radius:6px;padding:18px;margin:18px 0;
+    background:#fafbfc;font-family:sans-serif;font-size:12.5px;}
+  footer{font-family:sans-serif;font-size:11.5px;color:var(--sub);margin-top:34px;
+    border-top:1px solid var(--line);padding-top:14px;line-height:1.8;}
+  @media (max-width:680px){.paper{padding:30px 22px;}table{font-size:11.5px;}}
+  @media print{body{background:#fff;}.paper{box-shadow:none;margin:0;max-width:100%;}}
+
+  .figure{margin:26px 0;text-align:center;} .figure svg{max-width:100%;height:auto;} .figure figcaption{font-family:sans-serif;font-size:12px;color:#56606e;margin-top:8px;}
+  pre{background:#f6f7f9;border:1px solid #e3e7ec;border-radius:6px;padding:12px;overflow-x:auto;font-size:12px;line-height:1.5;}
+  code{background:#f0eef5;padding:1px 4px;border-radius:3px;font-size:.92em;}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:12.5px;} th,td{border:1px solid #dfe4ea;padding:7px 9px;text-align:left;vertical-align:top;} th{background:#f2ecf8;color:#3d2357;}</style></head><body>
+<div class="idx-nav" style="max-width:840px;margin:12px auto 0;padding:0 12px;font-family:sans-serif;font-size:12.5px;"><a href="../index.html" style="color:#5a2d82;text-decoration:none;border-bottom:1px dotted #5a2d82;">&#8592; 成果物インデックスへ</a></div>
+<div class="paper">
+<div class="doctype">IMPLEMENTATION PLAN ／ swarm4スキル改善</div>
+<h1 class="title">swarm4改善 実装プラン<br>― 依存順・観測先行の4フェーズ ―</h1>
+<p class="subtitle">各改善を現行コードに接地して設計→敵対検証→依存順にフェーズ化した実行計画</p>
+<div class="meta-line">2026年7月10日 ／ 設計8項目×敵対検証（Workflow・20エージェント）＋完全性批評 ／ 全項目を現行コードに接地・実適用は主宰承認待ち</div>
+<div class="abstract"><h3>要旨（ABSTRACT）</h3><p style="margin:0;">メタ研究の改善候補を、そのまま実装可能な計画へ落とした。各項目を現行コードに接地して設計し、fresh-contextの敵対的検証者が実コードを再読してpatchの正しさ・不変条件・churn判別を検査、完全性批評が構造的欠落を洗った。結果、素朴な「TIER1→TIER2」順は<span class="key">成り立たない</span>ことが判明——検証は<span class="key">4項目をneeds-pilotへ降格</span>し(逐語照合器の素朴正典化は実データで検証済み559行の21%を誤降格)、完全性批評は<span class="key">4つの無主の土台</span>(status→成果物ゲート/url解決上流化/ID連鎖スキーマ/観測先行)を発見した。ゆえに正しい順序は依存グラフに従う<span class="key">4フェーズ</span>で、観測基盤とスキーマを最初に置く。研究の中心結論「天井＝観測不能と非永続」を実装順序に翻訳したものである。</p></div>
+<div class="toc"><b>目次</b><ol><li><a href="#ch0">エグゼクティブサマリ</a></li><li><a href="#ch1">敵対検証が変えたこと（項目一覧）</a></li><li><a href="#ch2">完全性批評が明かした欠落（新規4項目）</a></li><li><a href="#ch3">依存グラフ</a></li><li><a href="#ch4">フェーズ別ロードマップ</a></li><li><a href="#ch5">各項目 詳細カード</a></li><li><a href="#ch6">移行・後方互換（swarm3_run.py は swarm2/3/4 共有）</a></li><li><a href="#ch7">却下・保留（churn/needs-pilot とその理由）</a></li><li><a href="#ch8">実施順の推奨とDoD</a></li></ol></div>
+<h2 class="h" id="ch0">エグゼクティブサマリ</h2>
+<p>メタ研究は改善候補を洗い出したが、本プランはそれを<span class="key">そのまま実装可能な形にした</span>——各項目を現行コードに接地して設計し、fresh-contextの敵対的検証者が実コードを再読して patch の正しさ・不変条件・churn判別を検査し、完全性批評が構造的欠落を洗った。その結果、素朴な「TIER1→TIER2」順は<span class="key">成り立たない</span>ことが判明した。</p>
+<ul><li><span class="key">敵対検証が4項目を needs-pilot へ降格</span>した——いずれも「機構を足すが実害が未観測」または「上流化が検証済みコーパスを壊す」ため。特に逐語照合器の素朴な正典化は、実データで既存559 verifiedのうち<span class="key">430しか再現せず、118行(21%)を誤って未確証へ落とす</span>ことが実測された。</li><li><span class="key">完全性批評が4つの無主の土台を発見</span>した——status→成果物の provenance ゲート／url解決の上流化／ID連鎖スキーマ（issue・from_signal・claim_id）／「未観測の欠陥を直す前に、その欠陥を観測する計器を置く」原則。</li></ul>
+<p>ゆえに正しい順序は依存グラフに従う4フェーズであり、<span class="key">観測基盤とスキーマを最初に置く</span>。これは研究の中心結論「天井は観測不能と非永続」を実装順序に翻訳したものである。</p>
+<h2 class="h" id="ch1">敵対検証が変えたこと（項目一覧）</h2>
+<table><tr><th>項目</th><th>当初tier</th><th>検証priority</th><th>分類</th><th>検証者が捕えた要点</th></tr>
+<tr><td>shared-builder（HTMLビルダー+check_html正典化）</td><td>TIER1</td><td>P1</td><td>real</td><td>credit-grepをfatalにするとクレジット語を含む正当な学術文書(AI企業名の言及等)を過遮断→既定warn・--strict任意。SRCは83件(93は誤)</td></tr>
+<tr><td>svg-carveout（SVG相レール明文化）</td><td>TIER1</td><td>P2</td><td>real</td><td>「開発者の仕様明確化であり主宰のランタイム自己授権でない」句を追加。限定句を先頭に</td></tr>
+<tr><td>nest-runbook（ネスト運用ランブック）</td><td>運用</td><td>P2</td><td>real</td><td>repoはコミット0・未追跡→git rollback不可、cp退避で。N1は既存レール再述・N2/N3が新規教訓</td></tr>
+<tr><td>journal-emit（空の正典イベントの実発火）</td><td>TIER2</td><td>P1</td><td>real</td><td>provenance発火が<code>codex --version</code>をdispatch前に呼びcodex不在のdry-runをcrashさせる→ガード要。相別予算はverdictにlane_type無く要join</td></tr>
+<tr><td>runner-defects（FDリーク/原子公開/fsync）</td><td>TIER1</td><td><span class="key">P2</span></td><td>needs-pilot</td><td>FDリークは<span class="key">実在確認</span>。ただし分割せよ: mark_human_gate close=即採用P1／fsync=P3／原子公開=最高リスク+orphan窓新設</td></tr>
+<tr><td>quote-matcher（逐語照合器の正典化）</td><td>TIER1</td><td><span class="key">P1</span></td><td>needs-pilot</td><td>素朴canonicalは559中430しか再現せず<span class="key">21%誤降格</span>。3是正(segment語彙一致/全空白除去/gloss書換OFF)前提</td></tr>
+<tr><td>adaptive-concurrency（適応並列）</td><td>TIER3</td><td>P2</td><td>needs-pilot</td><td>層分割: cause_class観測=P1 real／適応並列・backoff=239レーン0失敗ゆえchurn疑い・pilot</td></tr>
+<tr><td>calibration-ablation（較正実験）</td><td>TIER3</td><td>P2</td><td>needs-pilot</td><td>ID連鎖スキーマ確立が前提。ARM(c)view生成器のみ先行P2、対照試験は前向きrun要</td></tr>
+</table>
+<figure class="figure"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 470" width="100%" font-family="sans-serif">
+  <rect width="800" height="470" fill="#ffffff"/>
+  <text x="400" y="28" text-anchor="middle" font-size="17" font-weight="700" fill="#1c2530">敵対検証と完全性批評がプランを再構成した</text>
+  <!-- left: downgrades -->
+  <rect x="20" y="48" width="375" height="200" rx="9" fill="#fbeae8" stroke="#9e2820" stroke-width="1.3"/>
+  <foreignObject x="32" y="56" width="351" height="184"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:12px;line-height:1.5;color:#1c2530">
+    <div style="font-weight:700;color:#9e2820;font-size:13px;">検証が4項目をneeds-pilotへ降格</div>
+    <div style="margin-top:5px;">・quote-matcher素朴上流化=実データで<b>559中430しか再現・21%誤降格</b>→3是正前提</div>
+    <div>・runner-defects=FDリークは実在確認だが<b>発火実績0/239</b>→分割・原子公開はpilot</div>
+    <div>・adaptive並列=239レーン0失敗ゆえ機構追加はchurn疑い</div>
+    <div>・calibration対照試験=前向きrun要(legacyはunease非在)</div>
+    <div style="margin-top:6px;color:#7a2018;font-weight:600;">「機構を足すが実害未観測」を検証者が機械的に選別</div>
+  </div></foreignObject>
+  <!-- right: new items -->
+  <rect x="405" y="48" width="375" height="200" rx="9" fill="#eef3fa" stroke="#1f4e79" stroke-width="1.3"/>
+  <foreignObject x="417" y="56" width="351" height="184"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:12px;line-height:1.5;color:#1c2530">
+    <div style="font-weight:700;color:#1f4e79;font-size:13px;">完全性批評が4つの無主の土台を発見</div>
+    <div style="margin-top:5px;">・<b>G1</b> status→成果物provenanceゲート無主(降格しても本文に残れば無意味)</div>
+    <div>・<b>G2</b> url→hold解決(curl再照合)の上流化が欠落</div>
+    <div>・<b>G3</b> ID連鎖スキーマ(issue/from_signal/claim_id)が全項の土台なのに未定義</div>
+    <div>・<b>G4</b> 未観測の欠陥を直すのにプローブが無い＝real/churn判別不能</div>
+  </div></foreignObject>
+  <!-- arrow down -->
+  <text x="400" y="272" text-anchor="middle" font-size="16" fill="#5a2d82">▼</text>
+  <!-- bottom: restructure -->
+  <rect x="20" y="284" width="760" height="164" rx="9" fill="#f2ecf8" stroke="#5a2d82" stroke-width="2"/>
+  <foreignObject x="34" y="294" width="732" height="148"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:12.5px;line-height:1.55;color:#1c2530">
+    <div style="font-weight:700;color:#5a2d82;font-size:14px;">結論: フラットな「TIER1→TIER2」順は成り立たない</div>
+    <div style="margin-top:6px;">素朴なtier順では、(1)土台スキーマ(G3)が無いまま journal-emit と calibration が宙に浮き、(2)観測(G4)が無いまま「実在するか未知の欠陥」を直してchurnか判別できず、(3)成果物ゲート(G1)が無いまま降格が無意味になる。</div>
+    <div style="margin-top:8px;font-weight:600;color:#3d2357;">→ 正しい順序は依存グラフに従う<b>4フェーズ</b>: ①基盤・観測(スキーマ+emit+計器) → ②真の低リスクreal → ③上流化・成果物ゲート(559無損失) → ④pilot(観測が条件実在を示した後にのみ)。研究の中心結論「天井＝観測不能と非永続」を実装順序に翻訳したもの。</div>
+  </div></foreignObject>
+</svg><figcaption>図1　敵対検証と完全性批評がプランを再構成</figcaption></figure>
+<h2 class="h" id="ch2">完全性批評が明かした欠落（新規4項目）</h2>
+<ul><li><span class="key">G1 status→成果物の provenance ゲートが無主</span>: quote-matcher は claim を hold/unverified へ降格するが、その status を<span class="key">成果物（HTML本文・脚注）から締め出す項が誰にもない</span>。check_html は構造健全性(隣接sup・リンク)だけを見て、hold/unverified の claim が引用されていないかを検査しない。降格しても本文に残るなら降格は無意味。← <span class="key">新規P1項目として追加</span>。</li><li><span class="key">G2 url→hold の解決者が集合内に不在</span>: quote-matcher は run-local の curl取得+再照合能力を捨てurl を恒久holdにするが、取得を上流化する項がない。「run-local修理の上流化」という目的に反し、片割れを宙吊りにする。← <span class="key">quote-matcher項に url-fetch+再照合を内包</span>。</li><li><span class="key">G3 ID連鎖スキーマ（issue・from_signal・claim_id）が土台なのに未定義</span>: journal-emit も calibration も signals→issue→ratchet の機械リンクを前提するが、issue イベント型も claim_id も正典に未定義。← <span class="key">Phase 0の最初に確立</span>。</li><li><span class="key">G4 未観測の条件を直す項が、その条件のプローブを足さない</span>: runner-defects の FDリーク・torn read も、adaptive の rate_limit も239レーンで発現ゼロ。しかし kill失敗カウンタも torn検出器も設計にない。real か churn かを分ける観測手段が欠落。← <span class="key">観測先行を Phase 0 に固定</span>。</li><li><span class="key">追加note</span>: check_html の credit-grep を fatal にすると正当な学術文書を過遮断（本セッションで実際に遭遇）→既定warn。</li></ul>
+<h2 class="h" id="ch3">依存グラフ</h2>
+<pre>Phase 0（基盤・観測）── 全ての後続の前提
+  ├─ G3 ID連鎖スキーマ(issue/from_signal/ratchet.claim_id を LOOP.md に定義)
+  ├─ emit.py + コード発火provenance(codex不在ガード付) + token会計完全性
+  ├─ G4 観測層: cause_class・kill失敗カウンタ・torn検出器(EVENT_VERDICTへ純追加)
+  └─ journal_view(dry率/相別予算[lane_type join]/較正率/hold寿命 の自動生成)
+        │ gate: 実runでviewが埋まること
+        ▼
+Phase 1（真の低リスク・即実施）── 相互独立・Phase0非依存も可
+  ├─ shared-builder + check_html(既定warn)
+  ├─ svg-carveout(純doc)
+  ├─ nest-runbook N2/N3(純doc)
+  ├─ mark_human_gate close 1行(FDリーク真修正)
+  └─ journal fsync(P3・極安価)
+        ▼
+Phase 2（上流化・成果物ゲート）── Phase0のスキーマ+観測に依存
+  ├─ quote-matcher(3是正+url-fetch上流化) ──┐
+  ├─ G1 status→成果物provenanceゲート ◀──────┘(quote-matcherのstatusを消費)
+  └─ calibration ARM(c) view生成器(G3スキーマに依存)
+        │ gate: 検証済みコーパス無損失(559→559)を fixture で確認
+        ▼
+Phase 3（pilot・測ってから採る）── Phase0観測が「条件は実在」を示した場合のみ
+  ├─ 原子公開 + orphan回収(G4のtorn検出が実発火を示したら)
+  ├─ adaptive並列2-3層(観測がrate_limit実在を示したら)
+  └─ calibration 対照試験 ARM(a)(b)(前向きrun 3-6本)</pre>
+<h2 class="h" id="ch4">フェーズ別ロードマップ</h2>
+<h3 class="sh">Phase 0 — 基盤・観測（最優先・これ無しに他は測れない）</h3>
+<p><span class="key">含む</span>: G3スキーマ定義、emit.py+journal_view.py新設、runnerのコード発火(provenance/token完全性/cause_class/kill-counter)。 <span class="key">所要</span>: 約10-14時間。 <span class="key">ゲート（次へ進む条件）</span>: 実runを1本流し、journal_view が dry率・相別予算・較正率・hold寿命・cause_class集計を実データで出力すること。ここで初めて「FDリーク・torn・rate_limitは実際に起きるか」が測れる。 <span class="key">要点</span>: provenance発火は<code>codex --version</code>をdispatch前に1回だけ（codex不在時null許容・dry-runをcrashさせない）。相別予算は verdict に lane_type が無いため EVENT_LANE_PLANNED/manifest と join。emit.py は1行CLIに保ち摩擦ゼロ（メタ劇場化＝主宰がemitを使わない罠の緩和）。</p>
+<h3 class="sh">Phase 1 — 真の低リスク・即実施（Phase 0と並行可）</h3>
+<p><span class="key">含む</span>: shared-builder+check_html、svg-carveout、nest-runbook、mark_human_gate close、fsync。 <span class="key">所要</span>: 約5-7時間。 <span class="key">ゲート</span>: shared-builder は 20260708連結HTMLをFAIL・20260709の2件をPASSにする受入fixtureを通すこと。薄いラッパ化(フォーク削除)は keiri/hikakuho 双方で byte-identical diff を確認してから。 <span class="key">要点</span>: check_html は既定warn(--strictでfatal)。mark_human_gate close は冪等・実質無リスクだが発火実績は未観測(集中版:1066推奨・限定版:952/1000直書きは避ける)。</p>
+<h3 class="sh">Phase 2 — 上流化・成果物ゲート（Phase 0のスキーマ・観測に依存）</h3>
+<p><span class="key">含む</span>: quote-matcher(3是正+url-fetch)、G1 status→成果物ゲート、calibration ARM(c) view生成器。 <span class="key">所要</span>: 約8-12時間。 <span class="key">ゲート</span>: quote-matcher は<span class="key">検証済み559行を無損失で再現</span>する fixture を通すこと（素朴版は430=21%損失。segment語彙一致・全空白除去既定・gloss書換OFFの3是正必須）。G1ゲートは build_html/check_html が hold/unverified の claim を本文引用していないか検査し、あれば公開失敗。 <span class="key">要点</span>: url解決は run-local の curl取得+再照合を verify_quotes.py へ内包（宙吊りにしない）。gloss→claim の quote列書換は既定OFF(--gloss-splitで任意)＝逐語列は非可逆改変しない。</p>
+<h3 class="sh">Phase 3 — pilot・測ってから採る（Phase 0観測が条件実在を示した場合のみ）</h3>
+<p><span class="key">含む</span>: 原子公開+orphan回収、adaptive並列2-3層、calibration対照試験ARM(a)(b)。 <span class="key">所要</span>: 各pilotで可変（測定期間依存）。 <span class="key">ゲート</span>: 採用の前提は Phase 0観測の集計が「その条件が実際に起きる」ことを示すこと。runnerは239レーンで終端失敗0なので、<span class="key">証拠が出るまで採用しない</span>（無条件採用＝churn）。原子公開は orphan .pending 回収経路(起動時に孤児pendingをnonce判定して公開)を同伴させること。</p>
+<figure class="figure"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 540" width="100%" font-family="sans-serif">
+  <rect width="800" height="540" fill="#ffffff"/>
+  <text x="400" y="28" text-anchor="middle" font-size="17" font-weight="700" fill="#1c2530">実装ロードマップ ── 依存順・観測先行の4フェーズ</text>
+  <text x="400" y="48" text-anchor="middle" font-size="12" fill="#56606e">「未観測の欠陥を直す前に、それを測る計器を置く」</text>
+  <!-- Phase 0 -->
+  <rect x="20" y="66" width="760" height="150" rx="9" fill="#f2ecf8" stroke="#5a2d82" stroke-width="2"/>
+  <foreignObject x="32" y="74" width="736" height="134"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:12.5px;line-height:1.5;color:#1c2530">
+    <div style="font-weight:700;color:#5a2d82;font-size:13.5px;">Phase 0 ── 基盤・観測（最優先・これ無しに他は測れない）</div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;">
+      <span style="background:#fff;border:1px solid #c9b6de;border-radius:4px;padding:2px 7px;">G3 ID連鎖スキーマ (issue/from_signal/claim_id)</span>
+      <span style="background:#fff;border:1px solid #c9b6de;border-radius:4px;padding:2px 7px;">emit.py + コード発火provenance(codex不在ガード)</span>
+      <span style="background:#fff;border:1px solid #c9b6de;border-radius:4px;padding:2px 7px;">G4 観測層: cause_class・kill失敗counter・torn検出</span>
+      <span style="background:#fff;border:1px solid #c9b6de;border-radius:4px;padding:2px 7px;">journal_view (dry率/相別予算/較正率/hold寿命)</span>
+    </div>
+    <div style="margin-top:7px;color:#42505e;"><b>ゲート:</b> 実runでviewが全指標を出力 → ここで初めて「FDリーク・torn・rate_limitは実際に起きるか」が測れる。約10-14h。</div>
+  </div></foreignObject>
+  <text x="400" y="230" text-anchor="middle" font-size="15" fill="#5a2d82">▼</text>
+  <!-- Phase 1 -->
+  <rect x="20" y="238" width="374" height="120" rx="9" fill="#eef3fa" stroke="#1f4e79" stroke-width="1.3"/>
+  <foreignObject x="32" y="246" width="350" height="104"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:12px;line-height:1.45;color:#1c2530">
+    <div style="font-weight:700;color:#1f4e79;font-size:13px;">Phase 1 ── 真の低リスク・即実施（並行可）</div>
+    <div style="margin-top:5px;">shared-builder + check_html(既定warn) ／ svg-carveout ／ nest-runbook N2·N3 ／ <b>mark_human_gate close(FDリーク真修正)</b> ／ fsync(P3)</div>
+    <div style="margin-top:6px;color:#42505e;"><b>ゲート:</b> check_html受入fixture(20260708連結HTMLをFAIL)。約5-7h。</div>
+  </div></foreignObject>
+  <!-- Phase 2 -->
+  <rect x="406" y="238" width="374" height="120" rx="9" fill="#eef3fa" stroke="#1f4e79" stroke-width="1.3"/>
+  <foreignObject x="418" y="246" width="350" height="104"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:12px;line-height:1.45;color:#1c2530">
+    <div style="font-weight:700;color:#1f4e79;font-size:13px;">Phase 2 ── 上流化・成果物ゲート（Phase 0依存）</div>
+    <div style="margin-top:5px;">quote-matcher(3是正+url上流化) ／ <b>G1 status→成果物provenanceゲート</b> ／ calibration ARM(c) view生成器</div>
+    <div style="margin-top:6px;color:#42505e;"><b>ゲート:</b> 検証済み559行を<b>無損失</b>再現(素朴版は430=21%損失)。約8-12h。</div>
+  </div></foreignObject>
+  <text x="400" y="378" text-anchor="middle" font-size="15" fill="#8a5a00">▼</text>
+  <!-- Phase 3 -->
+  <rect x="20" y="388" width="760" height="112" rx="9" fill="#fdf6e6" stroke="#8a5a00" stroke-width="1.5"/>
+  <foreignObject x="32" y="396" width="736" height="96"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:12px;line-height:1.45;color:#1c2530">
+    <div style="font-weight:700;color:#8a5a00;font-size:13px;">Phase 3 ── pilot・測ってから採る（Phase 0観測が「条件は実在」を示した場合のみ）</div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:5px;">
+      <span style="background:#fff;border:1px solid #d8c08a;border-radius:4px;padding:2px 7px;">原子公開 + orphan回収</span>
+      <span style="background:#fff;border:1px solid #d8c08a;border-radius:4px;padding:2px 7px;">adaptive並列2-3層</span>
+      <span style="background:#fff;border:1px solid #d8c08a;border-radius:4px;padding:2px 7px;">calibration対照試験 ARM(a)(b)</span>
+    </div>
+    <div style="margin-top:6px;color:#42505e;">runnerは239レーンで終端失敗0 ── <b>証拠が出るまで採用しない（無条件採用＝churn）</b>。</div>
+  </div></foreignObject>
+  <rect x="20" y="510" width="760" height="24" rx="6" fill="#eef1f4" stroke="#c9d0d8"/>
+  <foreignObject x="30" y="513" width="740" height="20"><div xmlns="http://www.w3.org/1999/xhtml" style="font-size:12px;text-align:center;color:#1c2530;font-weight:600;">研究の結論「天井＝観測不能と非永続」を、そのまま実装順序に翻訳したロードマップ。</div></foreignObject>
+</svg><figcaption>図2　実装ロードマップ（依存順・観測先行の4フェーズ）</figcaption></figure>
+<h2 class="h" id="ch5">各項目 詳細カード</h2>
+<h3 class="sh">[Phase 0] G3 ID連鎖スキーマ</h3>
+<ul><li><span class="key">対象</span>: reference/LOOP.md:49-51（正典=journal.d+claims.tsv・ID連鎖）。</li><li><span class="key">変更</span>: <code>issue</code>イベント型を明記し <code>from_signal:{anchor,tag,lane,round}</code> を必須化。<code>ratchet</code>に<code>claim_id</code>追加。signals→issue→ratchet の機械リンクを正典に確立。</li><li><span class="key">なぜ土台か</span>: journal-emit(from_signal)も calibration(claim_id)も、現状<span class="key">未定義</span>のこの連鎖を前提にしている。ここを先に固めないと両者が宙に浮く。</li><li><span class="key">テスト</span>: 合成journalで signals行→issue(from_signal付)→ratchet(claim_id,reverify=PASS)の鎖をfunnel集計し手計算と一致。</li><li><span class="key">リスク</span>: 低（仕様定義＋既存イベントへのfield追加）。</li></ul>
+<h3 class="sh">[Phase 0] emit.py + コード発火provenance + 観測層（journal-emit項）</h3>
+<ul><li><span class="key">対象</span>: swarm3_run.py:477-507(manifest provenance欠落)/:612-629(lane_spawnedにmodel/CLI/argv無し)/:844-861(token会計が破損時無音ゼロ)。新設 swarm4/scripts/{emit.py,journal_view.py}。</li><li><span class="key">変更</span>: (a)コード発火=runner自動: run-level provenance(cli_version・config_overrides)、lane_spawnedにargv_redacted(promptはsha256差替=秘匿)・model_effort、token会計に完全性meta(events_present/invalid_json_lines)。(b)主宰発火=emit.py(intent5行/dry-ledger/hold終相決裁/FINISH-HTMLカードを固定スキーマ・必須キー欠落で非ゼロ終了)。(c)派生生成=journal_view.py(dry率/相別予算/較正率/hold寿命)。</li><li><span class="key">検証者の是正</span>: provenanceの<code>codex --version</code>はcodex不在のdry-runをcrashさせる→try/null許容ガード。相別予算はverdictにlane_type無し→EVENT_LANE_PLANNED/manifestとjoin。cause_classはjudge後のEVENT_VERDICTのみ(record_lane_exitはverdict未確定)。</li><li><span class="key">テスト</span>: emit各typeで封筒(ts/run_id/lane/attempt)完備をassert・必須キー欠落でreject・intent.lines≠5でreject。合成journalでview指標が手計算一致。</li><li><span class="key">ロールバック</span>: 新規2ファイルは<code>rm</code>で完全撤去(import されないため副作用0)。runner追加fieldは既存イベントへの加算のみ。</li><li><span class="key">リスク</span>: 低〜中。最大残リスクは<span class="key">行動的</span>＝主宰がemit.pyを使わずメタ劇場化。緩和=1行CLI化。<span class="key">G8</span>: emit迂回(素手でjournal追記)の検知計器が無い＝この項の観測の穴として明記し、view側で「emit経由率」を出す。</li></ul>
+<h3 class="sh">[Phase 1] shared-builder + check_html</h3>
+<ul><li><span class="key">対象</span>: 昇格元 keiri_hoshiki_swarm4/tools/build_html.py(:6 B固定/:9-93 SRC 83件/:114-152 双方向リンク+レンジ圧縮/:211-231 逆リンク)。新設 swarm4/scripts/{build_html.py,check_html.py}。</li><li><span class="key">変更</span>: manifest.json駆動(draft/claims/output/sources/figures/meta)へ一般化。双方向リンク・レンジ圧縮ロジックは無改変で正典化(=隣接sup事故を構造的に防ぐ核)。check_html.py新設: 連続sup検出/前後リンク解決/双方向性/figure・svg・sup均衡/SRC未解決率/クレジットgrep(既定warn)。</li><li><span class="key">検証者の是正</span>: SRCは83件(93は誤)。credit-grep fatalは正当な学術文書を過遮断→既定warn・--strict任意。薄いラッパ化はthesis box含む完全パラメトリック化とkeiri/hikakuho双方のbyte-identical diff確認後。build_htmlはrunner非配線(手動起動)＝「runner共有」前提は本項に不適用(回帰リスクは無いが共有価値は限定的)。</li><li><span class="key">テスト(必達fixture)</span>: check_html 20260708連結HTML→exit1「連続sup 56箇所」。keiri/hikakuho 20260709→exit0。</li><li><span class="key">リスク</span>: 低。</li></ul>
+<h3 class="sh">[Phase 1] svg-carveout</h3>
+<ul><li><span class="key">対象</span>: SKILL.md:76(固定レール宣言直後に挿入・宣言自体はverbatim保持)。</li><li><span class="key">変更</span>: 「実行=Codexのみ」の唯一の明文carve-out(SVG作図に限定・入力=検証済み事実のみ・視覚QAは主宰・他実行相へ非波及・SVG以外で実行主体の例外新設禁止)を1箇条挿入。</li><li><span class="key">検証者の是正</span>: 「本項は開発者の仕様明確化であり主宰のランタイム自己授権でない」を明記。限定句を先頭に。demand未立証(衝突は実runで未発火)ゆえP2。</li><li><span class="key">テスト</span>: 回帰grep5点(レール正典文字列の非破壊・carve-out3トークン存在・他実行例外への非漏れ)。</li><li><span class="key">リスク</span>: 低。</li></ul>
+<h3 class="sh">[Phase 1] nest-runbook / mark_human_gate close / fsync</h3>
+<ul><li><span class="key">nest-runbook</span>: reference/ORCHESTRATOR.md §7新設。N1(管理者は設計+dispatchのみ・収穫と統合は主宰)/N2(長時間待ちを管理者に担わせない・fire-and-return)/N3(監視はsandbox外Bash・sandbox内Monitorは/proc別NSで誤発報)。検証者: repo未追跡→rollbackはcp退避、N1は既存レール再述ゆえN2/N3を主に。</li><li><span class="key">mark_human_gate close(FDリーク)</span>: swarm3_run.py:1066冒頭に<code>close_process_files(state)</code>1行(集中版・全4呼出元被覆)。検証者: FDリーク<span class="key">実在確認</span>(:952/:1000がclose回避)・冪等・実質無リスク→即採用。ただし発火実績は未観測(239レーン0終端failure)。</li><li><span class="key">fsync</span>: write_journal(:456)に<code>os.fsync</code>。検証者: 極安全・極安価だが電源断ロス未立証→P3。真の耐久化は初回のみ親dir fsyncも(設計に無い)。</li></ul>
+<h3 class="sh">[Phase 2] quote-matcher（3是正+url上流化）+ G1成果物ゲート</h3>
+<ul><li><span class="key">対象</span>: verify_quotes.py:30(SOURCE_KINDSにurl)/:60(PUNCT_EQUIV/GLOSS_RE)/:121-130(url非abort)/:285(notfound時verified降格)/:295(曖昧昇格)。</li><li><span class="key">変更</span>: 句読点最小同値表(丸引用符・CJK括弧→比較キー上でASCII・原文保存)、逐語のみ規律、notfound時difflib近傍差分、url行はskip/hold+<span class="key">curl取得再照合を内包(G2)</span>。</li><li><span class="key">検証者の是正(採用前必須)</span>: 実データで素朴版は559中430=<span class="key">21%誤降格</span>。(1)segment分割をrun-localと語彙一致(内部引用符をdelimiterに) (2)全空白除去を既定化(run-local互換) (3)gloss→claim quote列書換は既定OFF(逐語列を非可逆改変しない)。</li><li><span class="key">G1成果物ゲート(新規)</span>: build_html/check_html が hold/unverified の claim ID を本文・脚注が引用していないか検査。あれば公開失敗(verify-or-dropの環を成果物で閉じる)。</li><li><span class="key">テスト</span>: <span class="key">検証済み559行を無損失再現</span>するfixture(これが受入ゲート)。gloss移送の冪等性。</li><li><span class="key">ロールバック</span>: 編集前に手動cp退避(.bak)。gloss書換OFF既定なら逐語列不変。</li><li><span class="key">リスク</span>: 中(quote/claim列書換が下流の読取前提を変えうる→冪等ガード・.bak)。</li></ul>
+<h3 class="sh">[Phase 2] calibration ARM(c) view生成器</h3>
+<ul><li><span class="key">対象</span>: 新設 swarm4/scripts/calibration.py(resonance_mapのparse_signals_block/cluster/norm を再利用)。</li><li><span class="key">変更</span>: 既存journal.dを事後読みし unease-calibration/resonance-calibration を派生view として実発火(funnel: tag別 emitted/promoted/confirmed)。</li><li><span class="key">検証者の是正</span>: G3スキーマ(issue/from_signal/ratchet.claim_id)が前提。legacy(signals無し)run は unease非在ゆえ対象外と明記。対照試験ARM(a)(b)はPhaseへ。</li><li><span class="key">リスク</span>: 低(観測専用・加算的)。</li></ul>
+<h3 class="sh">[Phase 3] pilot群（測定後採用）</h3>
+<ul><li><span class="key">原子公開+orphan回収</span>: build_codex_cmd出力を<code>.final.md.pending</code>へ→nonce判定後os.replace。<span class="key">必須同伴</span>=起動時に孤児.pending(runner死亡でreplace前)をnonce判定して公開/破棄する回収経路(検証者G6: これ無しだとtorn read修正が完了レーン喪失を新設)。Phase0のtorn検出器が実発火を示したら着手。</li><li><span class="key">adaptive並列2-3層</span>: 6を暫定上限に降格・開始4→成功で漸増→429で減速、原因別jittered retry。全pilotフラグoff既定。Phase0のcause_class集計がrate_limit/quota実在を示したら着手(現状観測ゼロ＝churn疑い)。429はFATAL_MARKERS未収載で現状retryableに到達しない点も要修正。</li><li><span class="key">calibration対照試験ARM(a)(b)</span>: N=3反証者vsN=1影票のMcNemar・気質群vs同一spec反復のcluster-δ。前向きhigh-stakes run 3-6本+lanes.tsvにtreatment列(PERCEPTION.md改訂)。</li></ul>
+<h2 class="h" id="ch6">移行・後方互換（swarm3_run.py は swarm2/3/4 共有）</h2>
+<ul><li>全runnerパッチは<span class="key">加算的またはフラグガード</span>で制御フローをバイト等価に保つ(adaptive層はoff既定でバイト等価回帰テスト)。既存完了検知(nonce/DONE末尾)・claims.tsv 8列・journal形式は不変。</li><li><span class="key">repoはコミット0・skillファイルは未追跡</span>: git rollbackは効かない。全編集は編集前cp退避を必須とし、rollbackはcp戻し/Edit逆適用。</li><li><span class="key">G9 claims.tsv 8列スキーマのrun横断安定性</span>をquote-matcher/shared-builder/journal-emit の3項が前提するが検証する項が無い→Phase0でスキーマ検証を1つ足す(EXPECTED_FIELDS不一致で警告)。</li><li>harvest消費側(resonance_map:71・followup_watch:46)は<code>*.final.md</code> glob依存＝原子公開の<code>.pending</code>は非マッチ設計で後方互換維持。</li></ul>
+<h2 class="h" id="ch7">却下・保留（churn/needs-pilot とその理由）</h2>
+<ul><li><span class="key">無条件のretry/backoff/MAX_ATTEMPTS増</span>: runnerは239レーンで終端失敗0。解くべき実害が未立証＝churn。Phase0観測が条件実在を示すまで保留。</li><li><span class="key">原子公開の即時採用</span>: finalize hotパス改変＋orphan窓新設のため最高リスク。orphan回収同伴+torn実発火の証拠を前提にpilot。</li><li><span class="key">calibration対照試験の即時</span>: 前向きrunが要る(legacyはunease非在でバックフィル不可)。ARM(c) view生成器のみ先行。</li></ul>
+<h2 class="h" id="ch8">実施順の推奨とDoD</h2>
+<ol><li><span class="key">Phase 0</span>(基盤)→ DoD: journal_view が実runで全指標を出力。以後の real/churn 判定が測定可能になる。</li><li><span class="key">Phase 1</span>(低リスクreal)→ DoD: check_html受入fixture通過・carve-out回帰grep・FDリーク単体テスト。Phase 0と並行可。</li><li><span class="key">Phase 2</span>(上流化)→ DoD: quote-matcher が<span class="key">559無損失</span>・G1ゲートがhold引用を検出。</li><li><span class="key">Phase 3</span>(pilot)→ DoD: 各機構はPhase0観測が条件実在を示した後にのみ、off→on。</li></ol>
+<p><span class="key">総所要目安</span>: Phase0-2で約23-33時間（1-2営業日相当の設計込み実装）、Phase3は測定期間依存。全項目、実適用は主宰(あなた)の承認を要する。</p>
+<div class="box caveat"><b>本プランの性質と限界：</b>本計画は swarm4 の実コード(skill/script)に接地した実装設計であり、各patchは行番号・関数名・現状挙動まで確定。敵対的検証者が実コードを再読して検査済み(patch正しさ・不変条件・後方互換・real/churn分類)。限界：Workflow20エージェント中3体がAPI接続断(synthesis/migration/resonance設計)で欠→統合は主宰が単一書き手で実施(migration分析も主宰)。resonance-clusterkey項は設計未完(別途)。全項目の<b>実適用(正典スクリプト更新)は主宰＝あなたの承認を要し、本計画では未適用</b>。repoはコミット0・skillファイル未追跡ゆえrollbackはcp退避で(git不可)。</div>
+<footer>本プランの実適用は主宰の承認を要する。行番号・関数名は調査時点のものでスクリプト改訂により移動し得る。</footer>
+</div><div class="idx-nav" style="max-width:840px;margin:0 auto 24px;padding:0 12px;font-family:sans-serif;font-size:12.5px;text-align:center;"><a href="../index.html" style="color:#5a2d82;text-decoration:none;border-bottom:1px dotted #5a2d82;">&#8592; 成果物インデックスへ戻る</a></div>
+</body></html>
