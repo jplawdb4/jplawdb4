@@ -1,7 +1,7 @@
 {
-  "schema": "jplawdb4/retained-earnings-tax-web/v1",
+  "schema": "jplawdb4/retained-earnings-tax-web/v2",
   "release": "2026-07-16",
-  "title": "特定同族会社の留保金課税計算 — Web完全再現版",
+  "title": "特定同族会社の留保金課税計算・Web完全再現版",
   "notice": "申告検討を補助する計算資料です。実際の申告では対象年度の法令・通達・国税庁様式を税務専門家が再確認してください。",
   "editions": [
     {
@@ -12,6 +12,8 @@
       "default_end": "2020-03-31",
       "applicable_label": "令和1年4月1日から令和2年3月31日までに終了する事業年度の年次版",
       "applicable_formula": "=AND(inp_end>=DATE(2019,4,1),inp_end<DATE(2020,4,1))",
+      "f2_period_formula": "=TRUE",
+      "class_source": "措置法42条の4第4項",
       "resident_rate_formula": "=IF(inp_start<DATE(2019,10,1),16.3%,10.4%)",
       "donation_rate_formula": "=20%",
       "has_f2": false,
@@ -31,7 +33,7 @@
               "label": "法人名",
               "source": "申告法人の名称",
               "desc": "原票右上へ転記",
-              "note": "ブラウザ内だけに保存されます",
+              "note": "ブラウザ内だけに保存されます。",
               "default": ""
             },
             {
@@ -57,7 +59,7 @@
               "kind": "computed",
               "label": "事業年度月数",
               "source": "法人税法67条7項・国税通則法10条",
-              "desc": "暦に従い1月未満を切上げ",
+              "desc": "暦に従い1月未満を切り上げ",
               "note": "開始日・終了日から自動計算",
               "default": 12
             },
@@ -65,37 +67,26 @@
               "name": "inp_class",
               "kind": "select",
               "label": "中小企業者等該当性",
-              "source": "措法42条の12の5第2項",
+              "source": "措置法42条の4第4項",
               "desc": "住民税額計算で使用",
-              "note": "対象年度の要件を別途確認",
-              "default": "該当",
+              "note": "対象年度の要件を別途確認して明示選択",
+              "default": "未選択",
               "options": [
+                "未選択",
                 "該当",
                 "非該当"
               ]
             },
             {
-              "name": "inp_group",
-              "kind": "select",
-              "label": "通算法人",
-              "source": "グループ通算制度",
-              "desc": "付表二の適用判定",
-              "note": "「いいえ」の場合は付表二関係を0として計算",
-              "default": "いいえ",
-              "options": [
-                "いいえ",
-                "はい"
-              ]
-            },
-            {
               "name": "inp_special",
               "kind": "select",
-              "label": "特定同族会社",
-              "source": "別表二の判定結果",
-              "desc": "留保金課税の対象判定",
-              "note": "「いいえ」の場合は対象外警告を表示",
-              "default": "はい",
+              "label": "別表二「判定結果18」：特定同族会社",
+              "source": "別表二「同族会社等の判定に関する明細書」",
+              "desc": "法人税法67条の入口判定",
+              "note": "未確認・いいえの間は結果表示・印刷・保存を停止",
+              "default": "未確認",
               "options": [
+                "未確認",
                 "はい",
                 "いいえ"
               ]
@@ -114,18 +105,6 @@
               "note": "別表四の留保所得金額又は欠損金額を符号付きで転記（欠損は負数可）",
               "default": 0,
               "allow_negative": true,
-              "integer": true,
-              "max": 999999999999999
-            },
-            {
-              "name": "inp_m9_extra",
-              "kind": "amount",
-              "label": "留保所得金額（主表9）に含める記載要領上の追加額",
-              "source": "該当なし（通常0）",
-              "desc": "留保所得金額（主表9）に含める記載要領上の追加額",
-              "note": "該当がなければ0",
-              "default": 0,
-              "allow_negative": false,
               "integer": true,
               "max": 999999999999999
             },
@@ -642,7 +621,7 @@
               "name": "inp_f1_26",
               "kind": "amount",
               "label": "付表の26欄：課税対象金額等の益金算入額",
-              "source": "別表十七(三)・(三の二)・(三の三)・(三の九)・(三の十)の様式列挙額",
+              "source": "別表十七(三)「35」＋別表十七(三の二)「22」＋別表十七(三の八)「28」＋別表十七(三の九)「9」＋別表十七(三の十)「11」",
               "desc": "付表の26欄：課税対象金額等の益金算入額",
               "note": "",
               "default": 0,
@@ -721,8 +700,8 @@
         {
           "no": 9,
           "item": "留保所得金額",
-          "rule": "別表四47②＋連結法人間支払－受取",
-          "formula": "=inp_m9_base+inp_m9_extra+inp_r1_group_paid-inp_r1_group_received",
+          "rule": "別表四「47の②」＋連結法人間配当等の当期支払額－当期受取額",
+          "formula": "=inp_m9_base+inp_r1_group_paid-inp_r1_group_received",
           "note": "内書額は別入力",
           "name": "m_09"
         },
@@ -907,9 +886,9 @@
         {
           "no": 7,
           "item": "積立金基準額",
-          "rule": "MAX((2)-(6),0)",
+          "rule": "(2)-(6)",
           "formula": "=MAX(f1_02-f1_06,0)",
-          "note": "負数は0。期末利益積立金額が負ならその正数分だけ増加",
+          "note": "記載要領により差額がマイナスの場合は0。期末利益積立金額が負ならその正数分だけ増加",
           "name": "f1_07"
         },
         {
@@ -1059,7 +1038,7 @@
         {
           "no": 26,
           "item": "課税対象金額等の益金算入額",
-          "rule": "別表十七(三)・(三の二)・(三の三)・(三の九)・(三の十)の様式列挙額",
+          "rule": "別表十七(三)「35」＋別表十七(三の二)「22」＋別表十七(三の八)「28」＋別表十七(三の九)「9」＋別表十七(三の十)「11」",
           "formula": "=inp_f1_26",
           "note": "",
           "name": "f1_26"
@@ -1526,8 +1505,9 @@
       "reference_workbook": {
         "file": "tokutei_dozoku_ryuhokin_r1_20260716.xlsx",
         "href": "../../files/tokutei_dozoku_ryuhokin_r1_20260716.xlsx",
-        "size": 738318,
-        "sha256": "2E446408FE81130B5F43D778ABA9E1C3F1EDFCCF58EEF9A8D03C92537EBC596C"
+        "size": 767149,
+        "sha256": "989F8FA562A442A6B599BF7A2859007EE56BD8B7539AD298AE0AC999B53B8DC1",
+        "source_file": "特定同族会社_留保金課税計算シート_令和1年版_QA済.xlsx"
       }
     },
     {
@@ -1538,6 +1518,8 @@
       "default_end": "2021-03-31",
       "applicable_label": "令和2年4月1日から令和3年3月31日までに終了する事業年度の年次版",
       "applicable_formula": "=AND(inp_end>=DATE(2020,4,1),inp_end<DATE(2021,4,1))",
+      "f2_period_formula": "=TRUE",
+      "class_source": "措置法42条の4第4項",
       "resident_rate_formula": "=IF(inp_start<DATE(2019,10,1),16.3%,10.4%)",
       "donation_rate_formula": "=IF(inp_start<DATE(2020,4,1),20%,40%)",
       "has_f2": false,
@@ -1557,7 +1539,7 @@
               "label": "法人名",
               "source": "申告法人の名称",
               "desc": "原票右上へ転記",
-              "note": "ブラウザ内だけに保存されます",
+              "note": "ブラウザ内だけに保存されます。",
               "default": ""
             },
             {
@@ -1583,7 +1565,7 @@
               "kind": "computed",
               "label": "事業年度月数",
               "source": "法人税法67条7項・国税通則法10条",
-              "desc": "暦に従い1月未満を切上げ",
+              "desc": "暦に従い1月未満を切り上げ",
               "note": "開始日・終了日から自動計算",
               "default": 12
             },
@@ -1591,37 +1573,26 @@
               "name": "inp_class",
               "kind": "select",
               "label": "中小企業者等該当性",
-              "source": "措法42条の12の5第2項",
+              "source": "措置法42条の4第4項",
               "desc": "住民税額計算で使用",
-              "note": "対象年度の要件を別途確認",
-              "default": "該当",
+              "note": "対象年度の要件を別途確認して明示選択",
+              "default": "未選択",
               "options": [
+                "未選択",
                 "該当",
                 "非該当"
               ]
             },
             {
-              "name": "inp_group",
-              "kind": "select",
-              "label": "通算法人",
-              "source": "グループ通算制度",
-              "desc": "付表二の適用判定",
-              "note": "「いいえ」の場合は付表二関係を0として計算",
-              "default": "いいえ",
-              "options": [
-                "いいえ",
-                "はい"
-              ]
-            },
-            {
               "name": "inp_special",
               "kind": "select",
-              "label": "特定同族会社",
-              "source": "別表二の判定結果",
-              "desc": "留保金課税の対象判定",
-              "note": "「いいえ」の場合は対象外警告を表示",
-              "default": "はい",
+              "label": "別表二「判定結果18」：特定同族会社",
+              "source": "別表二「同族会社等の判定に関する明細書」",
+              "desc": "法人税法67条の入口判定",
+              "note": "未確認・いいえの間は結果表示・印刷・保存を停止",
+              "default": "未確認",
               "options": [
+                "未確認",
                 "はい",
                 "いいえ"
               ]
@@ -2012,7 +1983,7 @@
               "name": "inp_f1_12",
               "kind": "amount",
               "label": "付表の12欄：外国子会社等から受ける剰余金の配当等の益金不算入額",
-              "source": "別表八(二)「26」＋別表十七(三の七)「27の計」",
+              "source": "別表八(二)「26」＋別表十七(三の四)「27の計」",
               "desc": "付表の12欄：外国子会社等から受ける剰余金の配当等の益金不算入額",
               "note": "",
               "default": 0,
@@ -2505,9 +2476,9 @@
         {
           "no": 7,
           "item": "積立金基準額",
-          "rule": "MAX((2)-(6),0)",
+          "rule": "(2)-(6)",
           "formula": "=MAX(f1_02-f1_06,0)",
-          "note": "負数は0。期末利益積立金額が負ならその正数分だけ増加",
+          "note": "記載要領により差額がマイナスの場合は0。期末利益積立金額が負ならその正数分だけ増加",
           "name": "f1_07"
         },
         {
@@ -2545,7 +2516,7 @@
         {
           "no": 12,
           "item": "外国子会社等から受ける剰余金の配当等の益金不算入額",
-          "rule": "別表八(二)「26」＋別表十七(三の七)「27の計」",
+          "rule": "別表八(二)「26」＋別表十七(三の四)「27の計」",
           "formula": "=inp_f1_12",
           "note": "",
           "name": "f1_12"
@@ -3177,8 +3148,9 @@
       "reference_workbook": {
         "file": "tokutei_dozoku_ryuhokin_r2_20260716.xlsx",
         "href": "../../files/tokutei_dozoku_ryuhokin_r2_20260716.xlsx",
-        "size": 657590,
-        "sha256": "7DC7812ADFC6DA5C3E31B48F277E9F7E7E0EB7F1C3FDEAF982CA7A553A15F85C"
+        "size": 687632,
+        "sha256": "AE5D41EA31B149FE5798AA30D040DDC860FC1A7F191D7454A6705BA94982F5F1",
+        "source_file": "特定同族会社_留保金課税計算シート_令和2年版_QA済.xlsx"
       }
     },
     {
@@ -3189,6 +3161,8 @@
       "default_end": "2022-03-31",
       "applicable_label": "令和3年4月1日から令和4年3月31日までに終了する事業年度の年次版",
       "applicable_formula": "=AND(inp_end>=DATE(2021,4,1),inp_end<DATE(2022,4,1))",
+      "f2_period_formula": "=TRUE",
+      "class_source": "措置法42条の4第4項",
       "resident_rate_formula": "=10.4%",
       "donation_rate_formula": "=40%",
       "has_f2": false,
@@ -3208,7 +3182,7 @@
               "label": "法人名",
               "source": "申告法人の名称",
               "desc": "原票右上へ転記",
-              "note": "ブラウザ内だけに保存されます",
+              "note": "ブラウザ内だけに保存されます。",
               "default": ""
             },
             {
@@ -3234,7 +3208,7 @@
               "kind": "computed",
               "label": "事業年度月数",
               "source": "法人税法67条7項・国税通則法10条",
-              "desc": "暦に従い1月未満を切上げ",
+              "desc": "暦に従い1月未満を切り上げ",
               "note": "開始日・終了日から自動計算",
               "default": 12
             },
@@ -3242,37 +3216,26 @@
               "name": "inp_class",
               "kind": "select",
               "label": "中小企業者等該当性",
-              "source": "措法42条の12の5第2項",
+              "source": "措置法42条の4第4項",
               "desc": "住民税額計算で使用",
-              "note": "対象年度の要件を別途確認",
-              "default": "該当",
+              "note": "対象年度の要件を別途確認して明示選択",
+              "default": "未選択",
               "options": [
+                "未選択",
                 "該当",
                 "非該当"
               ]
             },
             {
-              "name": "inp_group",
-              "kind": "select",
-              "label": "通算法人",
-              "source": "グループ通算制度",
-              "desc": "付表二の適用判定",
-              "note": "「いいえ」の場合は付表二関係を0として計算",
-              "default": "いいえ",
-              "options": [
-                "いいえ",
-                "はい"
-              ]
-            },
-            {
               "name": "inp_special",
               "kind": "select",
-              "label": "特定同族会社",
-              "source": "別表二の判定結果",
-              "desc": "留保金課税の対象判定",
-              "note": "「いいえ」の場合は対象外警告を表示",
-              "default": "はい",
+              "label": "別表二「判定結果18」：特定同族会社",
+              "source": "別表二「同族会社等の判定に関する明細書」",
+              "desc": "法人税法67条の入口判定",
+              "note": "未確認・いいえの間は結果表示・印刷・保存を停止",
+              "default": "未確認",
               "options": [
+                "未確認",
                 "はい",
                 "いいえ"
               ]
@@ -4156,9 +4119,9 @@
         {
           "no": 7,
           "item": "積立金基準額",
-          "rule": "MAX((2)-(6),0)",
+          "rule": "(2)-(6)",
           "formula": "=MAX(f1_02-f1_06,0)",
-          "note": "負数は0。期末利益積立金額が負ならその正数分だけ増加",
+          "note": "記載要領により差額がマイナスの場合は0。期末利益積立金額が負ならその正数分だけ増加",
           "name": "f1_07"
         },
         {
@@ -4828,8 +4791,9 @@
       "reference_workbook": {
         "file": "tokutei_dozoku_ryuhokin_r3_20260716.xlsx",
         "href": "../../files/tokutei_dozoku_ryuhokin_r3_20260716.xlsx",
-        "size": 652369,
-        "sha256": "895620215F9C1ECEA930A63F63495DA6D0C8F7985D15B4DCE4BBC064FDF004CB"
+        "size": 682283,
+        "sha256": "4B41975E3F66EEC3C411C4A1A664D63716AB5A8369292AC3DAE99B4160FFF8C2",
+        "source_file": "特定同族会社_留保金課税計算シート_令和3年版_QA済.xlsx"
       }
     },
     {
@@ -4838,8 +4802,10 @@
       "display": "令和4年版",
       "default_start": "2022-04-01",
       "default_end": "2023-03-31",
-      "applicable_label": "令和4年4月1日以後開始し、令和4年4月1日から令和5年3月31日までに終了する事業年度（グループ通算制度用）",
-      "applicable_formula": "=AND(inp_start>=DATE(2022,4,1),inp_end>=DATE(2022,4,1),inp_end<DATE(2023,4,1))",
+      "applicable_label": "令和4年4月1日以後終了事業年度分（令和5年3月31日までに終了する事業年度）",
+      "applicable_formula": "=AND(inp_end>=DATE(2022,4,1),inp_end<DATE(2023,4,1))",
+      "f2_period_formula": "=OR(inp_group<>\"はい\",inp_start>=DATE(2022,4,1))",
+      "class_source": "措置法42条の12の5第2項",
       "resident_rate_formula": "=10.4%",
       "donation_rate_formula": "=40%",
       "has_f2": true,
@@ -4859,7 +4825,7 @@
               "label": "法人名",
               "source": "申告法人の名称",
               "desc": "原票右上へ転記",
-              "note": "ブラウザ内だけに保存されます",
+              "note": "ブラウザ内だけに保存されます。",
               "default": ""
             },
             {
@@ -4885,7 +4851,7 @@
               "kind": "computed",
               "label": "事業年度月数",
               "source": "法人税法67条7項・国税通則法10条",
-              "desc": "暦に従い1月未満を切上げ",
+              "desc": "暦に従い1月未満を切り上げ",
               "note": "開始日・終了日から自動計算",
               "default": 12
             },
@@ -4893,11 +4859,12 @@
               "name": "inp_class",
               "kind": "select",
               "label": "中小企業者等該当性",
-              "source": "措法42条の12の5第2項",
+              "source": "措置法42条の12の5第2項",
               "desc": "住民税額計算で使用",
-              "note": "対象年度の要件を別途確認",
-              "default": "該当",
+              "note": "対象年度の要件を別途確認して明示選択",
+              "default": "未選択",
               "options": [
+                "未選択",
                 "該当",
                 "非該当"
               ]
@@ -4908,22 +4875,24 @@
               "label": "通算法人",
               "source": "グループ通算制度",
               "desc": "付表二の適用判定",
-              "note": "「いいえ」の場合は付表二関係を0として計算",
-              "default": "いいえ",
+              "note": "通算・非通算を明示選択",
+              "default": "未選択",
               "options": [
-                "いいえ",
-                "はい"
+                "未選択",
+                "はい",
+                "いいえ"
               ]
             },
             {
               "name": "inp_special",
               "kind": "select",
-              "label": "特定同族会社",
-              "source": "別表二の判定結果",
-              "desc": "留保金課税の対象判定",
-              "note": "「いいえ」の場合は対象外警告を表示",
-              "default": "はい",
+              "label": "別表二「判定結果18」：特定同族会社",
+              "source": "別表二「同族会社等の判定に関する明細書」",
+              "desc": "法人税法67条の入口判定",
+              "note": "未確認・いいえの間は結果表示・印刷・保存を停止",
+              "default": "未確認",
               "options": [
+                "未確認",
                 "はい",
                 "いいえ"
               ]
@@ -5167,30 +5136,6 @@
               "label": "主表23で差し引く税額控除等の合計",
               "source": "別表六(六)3＋9②～⑧＋9⑪～⑭＋9⑯～㉘",
               "desc": "主表23で差し引く税額控除等の合計",
-              "note": "",
-              "default": 0,
-              "allow_negative": false,
-              "integer": true,
-              "max": 999999999999999
-            },
-            {
-              "name": "inp_m22_b1_4_adjust",
-              "kind": "amount",
-              "label": "主表22の別表一4調整額",
-              "source": "R4記載要領上の該当額（通常0）",
-              "desc": "主表22の別表一4調整額",
-              "note": "",
-              "default": 0,
-              "allow_negative": false,
-              "integer": true,
-              "max": 999999999999999
-            },
-            {
-              "name": "inp_m23_b1_4_adjust",
-              "kind": "amount",
-              "label": "主表23の別表一4調整額",
-              "source": "R4記載要領上の該当額（通常0）",
-              "desc": "主表23の別表一4調整額",
               "note": "",
               "default": 0,
               "allow_negative": false,
@@ -5851,7 +5796,7 @@
           "no": 22,
           "item": "住民税計算の基礎となる法人税額（中小企業者等以外）",
           "rule": "R4様式列挙額",
-          "formula": "=inp_b1_2+(inp_b1_4-inp_m22_b1_4_adjust)+inp_b1_6+inp_b1_9out-inp_b1_11-inp_b1_17-inp_m22_credits",
+          "formula": "=inp_b1_2+(inp_b1_4-0)+inp_b1_6+inp_b1_9out-inp_b1_11-inp_b1_17-inp_m22_credits",
           "note": "",
           "name": "m_22"
         },
@@ -5859,7 +5804,7 @@
           "no": 23,
           "item": "住民税計算の基礎となる法人税額（中小企業者等）",
           "rule": "R4様式列挙額",
-          "formula": "=inp_b1_2+(inp_b1_4-inp_m23_b1_4_adjust)+inp_b1_6+inp_b1_9out-inp_b1_11-inp_b1_17-inp_m23_credits",
+          "formula": "=inp_b1_2+(inp_b1_4-0)+inp_b1_6+inp_b1_9out-inp_b1_11-inp_b1_17-inp_m23_credits",
           "note": "",
           "name": "m_23"
         },
@@ -5956,9 +5901,9 @@
         {
           "no": 7,
           "item": "積立金基準額",
-          "rule": "MAX((2)-(6),0)",
+          "rule": "(2)-(6)",
           "formula": "=MAX(f1_02-f1_06,0)",
-          "note": "負数は0。期末利益積立金額が負ならその正数分だけ増加",
+          "note": "記載要領により差額がマイナスの場合は0。期末利益積立金額が負ならその正数分だけ増加",
           "name": "f1_07"
         },
         {
@@ -7042,8 +6987,9 @@
       "reference_workbook": {
         "file": "tokutei_dozoku_ryuhokin_r4_20260716.xlsx",
         "href": "../../files/tokutei_dozoku_ryuhokin_r4_20260716.xlsx",
-        "size": 883992,
-        "sha256": "9D204753D8BD7E399CBCF4371A3CB544C7B634EA22FCEEC3E3E034019317A783"
+        "size": 919703,
+        "sha256": "0EB0B8541D33E412AE4A21738DB731B60120BE7EE7645074DA486D9A356FF711",
+        "source_file": "特定同族会社_留保金課税計算シート_令和4年版_QA済.xlsx"
       }
     },
     {
@@ -7054,6 +7000,8 @@
       "default_end": "2024-03-31",
       "applicable_label": "令和5年4月1日から令和6年3月31日までに終了する事業年度の年次版",
       "applicable_formula": "=AND(inp_end>=DATE(2023,4,1),inp_end<DATE(2024,4,1))",
+      "f2_period_formula": "=TRUE",
+      "class_source": "措置法42条の12の5第2項",
       "resident_rate_formula": "=10.4%",
       "donation_rate_formula": "=40%",
       "has_f2": true,
@@ -7073,7 +7021,7 @@
               "label": "法人名",
               "source": "申告法人の名称",
               "desc": "原票右上へ転記",
-              "note": "ブラウザ内だけに保存されます",
+              "note": "ブラウザ内だけに保存されます。",
               "default": ""
             },
             {
@@ -7099,7 +7047,7 @@
               "kind": "computed",
               "label": "事業年度月数",
               "source": "法人税法67条7項・国税通則法10条",
-              "desc": "暦に従い1月未満を切上げ",
+              "desc": "暦に従い1月未満を切り上げ",
               "note": "開始日・終了日から自動計算",
               "default": 12
             },
@@ -7107,11 +7055,12 @@
               "name": "inp_class",
               "kind": "select",
               "label": "中小企業者等該当性",
-              "source": "措法42条の12の5第2項",
+              "source": "措置法42条の12の5第2項",
               "desc": "住民税額計算で使用",
-              "note": "対象年度の要件を別途確認",
-              "default": "該当",
+              "note": "対象年度の要件を別途確認して明示選択",
+              "default": "未選択",
               "options": [
+                "未選択",
                 "該当",
                 "非該当"
               ]
@@ -7122,22 +7071,24 @@
               "label": "通算法人",
               "source": "グループ通算制度",
               "desc": "付表二の適用判定",
-              "note": "「いいえ」の場合は付表二関係を0として計算",
-              "default": "いいえ",
+              "note": "通算・非通算を明示選択",
+              "default": "未選択",
               "options": [
-                "いいえ",
-                "はい"
+                "未選択",
+                "はい",
+                "いいえ"
               ]
             },
             {
               "name": "inp_special",
               "kind": "select",
-              "label": "特定同族会社",
-              "source": "別表二の判定結果",
-              "desc": "留保金課税の対象判定",
-              "note": "「いいえ」の場合は対象外警告を表示",
-              "default": "はい",
+              "label": "別表二「判定結果18」：特定同族会社",
+              "source": "別表二「同族会社等の判定に関する明細書」",
+              "desc": "法人税法67条の入口判定",
+              "note": "未確認・いいえの間は結果表示・印刷・保存を停止",
+              "default": "未確認",
               "options": [
+                "未確認",
                 "はい",
                 "いいえ"
               ]
@@ -8170,9 +8121,9 @@
         {
           "no": 7,
           "item": "積立金基準額",
-          "rule": "MAX((2)-(6),0)",
+          "rule": "(2)-(6)",
           "formula": "=MAX(f1_02-f1_06,0)",
-          "note": "負数は0。期末利益積立金額が負ならその正数分だけ増加",
+          "note": "記載要領により差額がマイナスの場合は0。期末利益積立金額が負ならその正数分だけ増加",
           "name": "f1_07"
         },
         {
@@ -9256,8 +9207,9 @@
       "reference_workbook": {
         "file": "tokutei_dozoku_ryuhokin_r5_20260716.xlsx",
         "href": "../../files/tokutei_dozoku_ryuhokin_r5_20260716.xlsx",
-        "size": 879038,
-        "sha256": "9DDBB5F854D0480222D7EC1B970AF3E2AEBCDA0B9BDA3993DE324050A67C466D"
+        "size": 915030,
+        "sha256": "04A83C0194961FF134F1A72FFF43C8776CCA81AEBCA03C2EA260CABE34C3008C",
+        "source_file": "特定同族会社_留保金課税計算シート_令和5年版_QA済.xlsx"
       }
     },
     {
@@ -9268,6 +9220,8 @@
       "default_end": "2025-03-31",
       "applicable_label": "令和6年4月1日から令和7年3月31日までに終了する事業年度の年次版",
       "applicable_formula": "=AND(inp_end>=DATE(2024,4,1),inp_end<DATE(2025,4,1))",
+      "f2_period_formula": "=TRUE",
+      "class_source": "措置法42条の12の5第3項",
       "resident_rate_formula": "=10.4%",
       "donation_rate_formula": "=40%",
       "has_f2": true,
@@ -9287,7 +9241,7 @@
               "label": "法人名",
               "source": "申告法人の名称",
               "desc": "原票右上へ転記",
-              "note": "ブラウザ内だけに保存されます",
+              "note": "ブラウザ内だけに保存されます。",
               "default": ""
             },
             {
@@ -9313,7 +9267,7 @@
               "kind": "computed",
               "label": "事業年度月数",
               "source": "法人税法67条7項・国税通則法10条",
-              "desc": "暦に従い1月未満を切上げ",
+              "desc": "暦に従い1月未満を切り上げ",
               "note": "開始日・終了日から自動計算",
               "default": 12
             },
@@ -9321,11 +9275,12 @@
               "name": "inp_class",
               "kind": "select",
               "label": "中小企業者等該当性",
-              "source": "措法42条の12の5第2項",
+              "source": "措置法42条の12の5第3項",
               "desc": "住民税額計算で使用",
-              "note": "対象年度の要件を別途確認",
-              "default": "該当",
+              "note": "対象年度の要件を別途確認して明示選択",
+              "default": "未選択",
               "options": [
+                "未選択",
                 "該当",
                 "非該当"
               ]
@@ -9336,22 +9291,24 @@
               "label": "通算法人",
               "source": "グループ通算制度",
               "desc": "付表二の適用判定",
-              "note": "「いいえ」の場合は付表二関係を0として計算",
-              "default": "いいえ",
+              "note": "通算・非通算を明示選択",
+              "default": "未選択",
               "options": [
-                "いいえ",
-                "はい"
+                "未選択",
+                "はい",
+                "いいえ"
               ]
             },
             {
               "name": "inp_special",
               "kind": "select",
-              "label": "特定同族会社",
-              "source": "別表二の判定結果",
-              "desc": "留保金課税の対象判定",
-              "note": "「いいえ」の場合は対象外警告を表示",
-              "default": "はい",
+              "label": "別表二「判定結果18」：特定同族会社",
+              "source": "別表二「同族会社等の判定に関する明細書」",
+              "desc": "法人税法67条の入口判定",
+              "note": "未確認・いいえの間は結果表示・印刷・保存を停止",
+              "default": "未確認",
               "options": [
+                "未確認",
                 "はい",
                 "いいえ"
               ]
@@ -10384,9 +10341,9 @@
         {
           "no": 7,
           "item": "積立金基準額",
-          "rule": "MAX((2)-(6),0)",
+          "rule": "(2)-(6)",
           "formula": "=MAX(f1_02-f1_06,0)",
-          "note": "負数は0。期末利益積立金額が負ならその正数分だけ増加",
+          "note": "記載要領により差額がマイナスの場合は0。期末利益積立金額が負ならその正数分だけ増加",
           "name": "f1_07"
         },
         {
@@ -11470,8 +11427,9 @@
       "reference_workbook": {
         "file": "tokutei_dozoku_ryuhokin_r6_20260716.xlsx",
         "href": "../../files/tokutei_dozoku_ryuhokin_r6_20260716.xlsx",
-        "size": 917135,
-        "sha256": "8988A051538DD8279B01178246E30CB47F6C6BA968D494921FAFF2A9BA8F4816"
+        "size": 953413,
+        "sha256": "26DBC28BA8CCDE8D3C3801AE1C1FF31E6DF7D5C34E7CFA61CEBC4484693B2B91",
+        "source_file": "特定同族会社_留保金課税計算シート_令和6年版_QA済.xlsx"
       }
     },
     {
@@ -11482,6 +11440,8 @@
       "default_end": "2026-03-31",
       "applicable_label": "令和7年4月1日から令和8年3月31日までに終了する事業年度の年次版",
       "applicable_formula": "=AND(inp_end>=DATE(2025,4,1),inp_end<DATE(2026,4,1))",
+      "f2_period_formula": "=TRUE",
+      "class_source": "措置法42条の12の5第3項",
       "resident_rate_formula": "=10.4%",
       "donation_rate_formula": "=40%",
       "has_f2": true,
@@ -11501,7 +11461,7 @@
               "label": "法人名",
               "source": "申告法人の名称",
               "desc": "原票右上へ転記",
-              "note": "ブラウザ内だけに保存されます",
+              "note": "ブラウザ内だけに保存されます。",
               "default": ""
             },
             {
@@ -11527,7 +11487,7 @@
               "kind": "computed",
               "label": "事業年度月数",
               "source": "法人税法67条7項・国税通則法10条",
-              "desc": "暦に従い1月未満を切上げ",
+              "desc": "暦に従い1月未満を切り上げ",
               "note": "開始日・終了日から自動計算",
               "default": 12
             },
@@ -11535,11 +11495,12 @@
               "name": "inp_class",
               "kind": "select",
               "label": "中小企業者等該当性",
-              "source": "措法42条の12の5第2項",
+              "source": "措置法42条の12の5第3項",
               "desc": "住民税額計算で使用",
-              "note": "対象年度の要件を別途確認",
-              "default": "該当",
+              "note": "対象年度の要件を別途確認して明示選択",
+              "default": "未選択",
               "options": [
+                "未選択",
                 "該当",
                 "非該当"
               ]
@@ -11550,22 +11511,24 @@
               "label": "通算法人",
               "source": "グループ通算制度",
               "desc": "付表二の適用判定",
-              "note": "「いいえ」の場合は付表二関係を0として計算",
-              "default": "いいえ",
+              "note": "通算・非通算を明示選択",
+              "default": "未選択",
               "options": [
-                "いいえ",
-                "はい"
+                "未選択",
+                "はい",
+                "いいえ"
               ]
             },
             {
               "name": "inp_special",
               "kind": "select",
-              "label": "特定同族会社",
-              "source": "別表二の判定結果",
-              "desc": "留保金課税の対象判定",
-              "note": "「いいえ」の場合は対象外警告を表示",
-              "default": "はい",
+              "label": "別表二「判定結果18」：特定同族会社",
+              "source": "別表二「同族会社等の判定に関する明細書」",
+              "desc": "法人税法67条の入口判定",
+              "note": "未確認・いいえの間は結果表示・印刷・保存を停止",
+              "default": "未確認",
               "options": [
+                "未確認",
                 "はい",
                 "いいえ"
               ]
@@ -12610,9 +12573,9 @@
         {
           "no": 7,
           "item": "積立金基準額",
-          "rule": "MAX((2)-(6),0)",
+          "rule": "(2)-(6)",
           "formula": "=MAX(f1_02-f1_06,0)",
-          "note": "負数は0。期末利益積立金額が負ならその正数分だけ増加",
+          "note": "記載要領により差額がマイナスの場合は0。期末利益積立金額が負ならその正数分だけ増加",
           "name": "f1_07"
         },
         {
@@ -13710,18 +13673,21 @@
       "reference_workbook": {
         "file": "tokutei_dozoku_ryuhokin_r7_20260716.xlsx",
         "href": "../../files/tokutei_dozoku_ryuhokin_r7_20260716.xlsx",
-        "size": 978395,
-        "sha256": "188DE8A95CCCE6EB047077D77A25ACF94265A7B3C425357E3B528467379BD54D"
+        "size": 1014628,
+        "sha256": "72EE96A228EA30CDDD22077515458C91D148D34C94029835CA89B8B77912F5E7",
+        "source_file": "特定同族会社_留保金課税計算シート_令和7年版_QA済.xlsx"
       }
     },
     {
       "id": "R8",
       "year": 8,
-      "display": "令和8年版",
+      "display": "令和8年",
       "default_start": "2026-04-01",
       "default_end": "2027-03-31",
       "applicable_label": "令和8年4月1日以後終了事業年度分",
       "applicable_formula": "=inp_end>=DATE(2026,4,1)",
+      "f2_period_formula": "=TRUE",
+      "class_source": "措置法42条の12の5第2項",
       "resident_rate_formula": "=10.4%",
       "donation_rate_formula": "=40%",
       "has_f2": true,
@@ -13741,7 +13707,7 @@
               "label": "法人名",
               "source": "申告法人の名称",
               "desc": "原票右上へ転記",
-              "note": "ブラウザ内だけに保存されます",
+              "note": "ブラウザ内だけに保存されます。",
               "default": ""
             },
             {
@@ -13767,7 +13733,7 @@
               "kind": "computed",
               "label": "事業年度月数",
               "source": "法人税法67条7項・国税通則法10条",
-              "desc": "暦に従い1月未満を切上げ",
+              "desc": "暦に従い1月未満を切り上げ",
               "note": "開始日・終了日から自動計算",
               "default": 12
             },
@@ -13775,11 +13741,12 @@
               "name": "inp_class",
               "kind": "select",
               "label": "中小企業者等該当性",
-              "source": "措法42条の12の5第2項",
+              "source": "措置法42条の12の5第2項",
               "desc": "住民税額計算で使用",
-              "note": "対象年度の要件を別途確認",
-              "default": "該当",
+              "note": "対象年度の要件を別途確認して明示選択",
+              "default": "未選択",
               "options": [
+                "未選択",
                 "該当",
                 "非該当"
               ]
@@ -13790,22 +13757,24 @@
               "label": "通算法人",
               "source": "グループ通算制度",
               "desc": "付表二の適用判定",
-              "note": "「いいえ」の場合は付表二関係を0として計算",
-              "default": "いいえ",
+              "note": "通算・非通算を明示選択",
+              "default": "未選択",
               "options": [
-                "いいえ",
-                "はい"
+                "未選択",
+                "はい",
+                "いいえ"
               ]
             },
             {
               "name": "inp_special",
               "kind": "select",
-              "label": "特定同族会社",
-              "source": "別表二の判定結果",
-              "desc": "留保金課税の対象判定",
-              "note": "「いいえ」の場合は対象外警告を表示",
-              "default": "はい",
+              "label": "別表二「判定結果18」：特定同族会社",
+              "source": "別表二「同族会社等の判定に関する明細書」",
+              "desc": "法人税法67条の入口判定",
+              "note": "未確認・いいえの間は結果表示・印刷・保存を停止",
+              "default": "未確認",
               "options": [
+                "未確認",
                 "はい",
                 "いいえ"
               ]
@@ -13823,7 +13792,7 @@
               "desc": "留保所得金額（9）の基礎額",
               "note": "別表四「17」がある場合は後記の内書欄にも入力",
               "default": 0,
-              "allow_negative": true,
+              "allow_negative": false,
               "integer": true,
               "max": 999999999999999
             },
@@ -14308,7 +14277,7 @@
               "desc": "期首利益積立金額の基礎",
               "note": "（3）で前期末配当等を控除",
               "default": 0,
-              "allow_negative": true,
+              "allow_negative": false,
               "integer": true,
               "max": 999999999999999
             },
@@ -14344,7 +14313,7 @@
               "desc": "所得金額（9）",
               "note": "",
               "default": 0,
-              "allow_negative": true,
+              "allow_negative": false,
               "integer": true,
               "max": 999999999999999
             },
@@ -15090,8 +15059,8 @@
           "name": "f1_07",
           "item": "積立金基準額",
           "rule": "(2)-(6)",
-          "formula": "=f1_02-f1_06",
-          "note": "利益積立金額がマイナスなら差額は増加",
+          "formula": "=MAX(f1_02-f1_06,0)",
+          "note": "負数となる場合は0",
           "format": "#,##0;-#,##0;0"
         },
         {
@@ -16247,14 +16216,15 @@
       "reference_workbook": {
         "file": "tokutei_dozoku_ryuhokin_r8_20260716.xlsx",
         "href": "../../files/tokutei_dozoku_ryuhokin_r8_20260716.xlsx",
-        "size": 776222,
-        "sha256": "92DA9A51F1B2CB5EE95A535CFF5E2DF6D5F1213DA9959DB9FF8576E9F3178335"
+        "size": 811878,
+        "sha256": "1EBFB40330C6CA787F670394923D8BF08E48EFE7962596F47752F83DBDBA8F54",
+        "source_file": "特定同族会社_留保金課税計算シート_令和8年版_QA済.xlsx"
       }
     }
   ],
   "counts": {
     "editions": 8,
-    "input_fields": 523,
+    "input_fields": 517,
     "formula_contracts": 611,
     "form_surfaces": 21,
     "source_documents": 75
