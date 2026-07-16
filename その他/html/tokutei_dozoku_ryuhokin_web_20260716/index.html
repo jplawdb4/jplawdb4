@@ -6,14 +6,14 @@
   <meta name="color-scheme" content="light">
   <meta name="theme-color" content="#18231f">
   <title>特定同族会社の留保金課税計算 — Web完全再現版</title>
-  <meta name="description" content="令和1年版から令和8年版までの国税庁別表三(一)・付表を原票上で再現する留保金課税計算アプリ。">
+  <meta name="description" content="令和1年版から令和8年版までの国税庁別表三(一)・付表を原票上で再現する留保金課税計算アプリ">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body data-mobile-panel="document">
   <div class="boot-screen" id="bootScreen" role="status" aria-live="polite">
     <div class="boot-seal" aria-hidden="true">留</div>
-    <p>年度別計算契約と国税庁原票を照合しています</p>
+    <p>年度別計算モデルと国税庁原票を照合しています。</p>
   </div>
 
   <header class="masthead">
@@ -28,9 +28,12 @@
       </div>
     </div>
     <nav class="year-switcher" id="yearSwitcher" aria-label="年度版を選択"></nav>
-    <div class="mast-actions" aria-label="ファイル操作">
+    <div class="mast-actions" role="group" aria-label="ファイル操作">
       <button class="tool-button" id="saveButton" type="button" title="現在の入力をJSONで保存">
         <span aria-hidden="true">↓</span><span>保存</span>
+      </button>
+      <button class="tool-button" id="csvButton" type="button" title="現在の入力と厳密計算結果をCSVで保存">
+        <span aria-hidden="true">≡</span><span>CSV</span>
       </button>
       <button class="tool-button" id="loadButton" type="button" title="保存したJSONを読み込む">
         <span aria-hidden="true">↑</span><span>読込</span>
@@ -47,7 +50,7 @@
 
   <div class="edition-band">
     <div>
-      <span class="edition-stamp" id="editionStamp">令和8年版</span>
+      <span class="edition-stamp" id="editionStamp">令和8年</span>
       <strong id="applicableLabel">適用期間を読み込み中</strong>
     </div>
     <div class="edition-meta">
@@ -60,24 +63,19 @@
   <main class="workbench" id="workbench">
     <aside class="input-dossier" id="inputDossier" aria-label="入力台帳">
       <div class="panel-heading">
-        <div>
-          <span class="panel-number">01</span>
-          <h2>入力台帳</h2>
-        </div>
+        <div><span class="panel-number">01</span><h2>入力台帳</h2></div>
         <span class="save-state" id="saveState">端末内に自動保存</span>
       </div>
 
       <section class="result-ribbon" aria-labelledby="resultHeading">
-        <div class="result-title">
-          <span>最終結果</span>
-          <small id="resultHeading">単位：円</small>
-        </div>
+        <div class="result-title"><span>最終結果</span><small id="resultHeading">単位：円</small></div>
         <div class="result-grid" id="resultGrid"></div>
       </section>
 
       <div class="input-tools">
-        <label class="search-field">
+        <label class="search-field" for="inputSearch">
           <span aria-hidden="true">⌕</span>
+          <span class="sr-only">入力項目を検索</span>
           <input id="inputSearch" type="search" placeholder="入力項目・転記元を検索" autocomplete="off">
         </label>
         <button class="compact-button" id="expandInputsButton" type="button">全展開</button>
@@ -85,12 +83,12 @@
       <div class="input-groups" id="inputGroups"></div>
     </aside>
 
-    <section class="document-desk" aria-label="原票と計算表">
+    <section class="document-desk" id="documentDesk" aria-label="原票と計算表">
       <div class="desk-heading">
         <div class="view-tabs" role="tablist" aria-label="表示を切替">
-          <button class="view-tab is-active" type="button" role="tab" aria-selected="true" data-view="form">国税庁原票</button>
-          <button class="view-tab" type="button" role="tab" aria-selected="false" data-view="ledger">計算台帳</button>
-          <button class="view-tab" type="button" role="tab" aria-selected="false" data-view="sources">根拠・出典</button>
+          <button class="view-tab is-active" id="viewTabForm" type="button" role="tab" aria-selected="true" aria-controls="formView" tabindex="0" data-view="form">国税庁原票</button>
+          <button class="view-tab" id="viewTabLedger" type="button" role="tab" aria-selected="false" aria-controls="ledgerView" tabindex="-1" data-view="ledger">計算台帳</button>
+          <button class="view-tab" id="viewTabSources" type="button" role="tab" aria-selected="false" aria-controls="sourcesView" tabindex="-1" data-view="sources">根拠・出典</button>
         </div>
         <div class="desk-controls">
           <button class="icon-button" id="zoomOutButton" type="button" aria-label="縮小">−</button>
@@ -104,35 +102,28 @@
       <div class="surface-tabs" id="surfaceTabs" role="tablist" aria-label="帳票を選択"></div>
 
       <div class="desk-canvas" id="deskCanvas">
-        <section class="view-panel is-active" id="formView" data-panel="form" role="tabpanel">
+        <section class="view-panel is-active" id="formView" data-panel="form" role="tabpanel" aria-labelledby="viewTabForm">
+          <p class="mobile-form-notice" role="note">モバイル表示では原票上の小さな操作欄を無効化しています。入力・修正は画面下部の「入力」から行い、計算根拠は「台帳」で確認してください。</p>
           <div class="paper-stage" id="paperStage">
-            <div class="form-paper" id="formPaper" aria-label="国税庁原票再現"></div>
+            <div class="form-paper" id="formPaper" role="tabpanel" tabindex="0" aria-label="国税庁原票再現"></div>
           </div>
           <p class="form-caption" id="formCaption"></p>
         </section>
 
-        <section class="view-panel" id="ledgerView" data-panel="ledger" role="tabpanel">
+        <section class="view-panel" id="ledgerView" data-panel="ledger" role="tabpanel" aria-labelledby="viewTabLedger" hidden inert>
           <div class="ledger-toolbar">
-            <div>
-              <span class="ledger-kicker">FORMULA LEDGER</span>
-              <h2 id="ledgerTitle">計算台帳</h2>
-            </div>
-            <label class="toggle-control">
-              <input id="formulaToggle" type="checkbox">
-              <span>数式を常時表示</span>
-            </label>
+            <div><span class="ledger-kicker">FORMULA LEDGER</span><h2 id="ledgerTitle">計算台帳</h2></div>
+            <label class="toggle-control"><input id="formulaToggle" type="checkbox"><span>数式を常時表示</span></label>
           </div>
           <div class="ledger-table-wrap">
             <table class="ledger-table">
-              <thead>
-                <tr><th>欄</th><th>項目</th><th>計算式・転記元</th><th>計算結果</th><th>検証</th></tr>
-              </thead>
+              <thead><tr><th>欄</th><th>項目</th><th>計算式・転記元</th><th>計算結果</th><th>検証</th></tr></thead>
               <tbody id="ledgerBody"></tbody>
             </table>
           </div>
         </section>
 
-        <section class="view-panel" id="sourcesView" data-panel="sources" role="tabpanel">
+        <section class="view-panel" id="sourcesView" data-panel="sources" role="tabpanel" aria-labelledby="viewTabSources" hidden inert>
           <div class="sources-header">
             <span class="ledger-kicker">PRIMARY SOURCES</span>
             <h2>年度版の根拠・原票</h2>
@@ -145,49 +136,32 @@
 
     <aside class="audit-rail" id="auditRail" aria-label="検算・監査">
       <div class="panel-heading audit-heading">
-        <div>
-          <span class="panel-number">03</span>
-          <h2>検算・監査</h2>
-        </div>
+        <div><span class="panel-number">03</span><h2>検算・監査</h2></div>
         <span class="audit-light" id="auditLight" aria-hidden="true"></span>
       </div>
-
       <section class="audit-verdict" id="auditVerdict" aria-live="polite"></section>
-
       <section class="audit-section">
-        <div class="audit-section-title">
-          <h3>動的チェック</h3>
-          <span id="checkCounter">—</span>
-        </div>
-        <div class="check-list" id="checkList"></div>
+        <div class="audit-section-title"><h3 id="checkListHeading">動的チェック</h3><span id="checkCounter">—</span></div>
+        <div class="check-list" id="checkList" role="region" aria-labelledby="checkListHeading" tabindex="0"></div>
       </section>
-
       <section class="audit-section trace-section">
-        <div class="audit-section-title">
-          <h3>計算トレース</h3>
-          <span id="traceName">欄を選択</span>
-        </div>
-        <div class="trace-card" id="traceCard">
-          <p>原票または計算台帳の金額を選ぶと、数式と参照値をここに表示します。</p>
-        </div>
+        <div class="audit-section-title"><h3>計算トレース</h3><span id="traceName">欄を選択</span></div>
+        <div class="trace-card" id="traceCard"><p>原票または計算台帳の金額を選ぶと、数式と参照値を表示します。</p></div>
       </section>
-
       <section class="audit-section release-section">
-        <div class="audit-section-title">
-          <h3>再現版情報</h3>
-        </div>
+        <div class="audit-section-title"><h3>再現版情報</h3></div>
         <dl class="release-facts" id="releaseFacts"></dl>
       </section>
     </aside>
   </main>
 
   <nav class="mobile-dock" aria-label="モバイル表示切替">
-    <button type="button" data-mobile-panel="inputs">入力</button>
-    <button class="is-active" type="button" data-mobile-panel="document">原票</button>
-    <button type="button" data-mobile-panel="audit">検算</button>
+    <button type="button" data-mobile-panel="inputs" aria-controls="inputDossier" aria-pressed="false">入力</button>
+    <button class="is-active" type="button" data-mobile-panel="document" aria-controls="documentDesk" aria-pressed="true">原票</button>
+    <button type="button" data-mobile-panel="audit" aria-controls="auditRail" aria-pressed="false">検算</button>
   </nav>
 
-  <dialog class="app-dialog" id="confirmDialog">
+  <dialog class="app-dialog" id="confirmDialog" aria-labelledby="confirmTitle" aria-describedby="confirmMessage">
     <form method="dialog">
       <span class="dialog-seal" aria-hidden="true">確認</span>
       <h2 id="confirmTitle">入力を初期化しますか</h2>
@@ -201,7 +175,6 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <div class="print-stack" id="printStack" aria-hidden="true"></div>
-
   <noscript>この計算アプリを利用するにはJavaScriptを有効にしてください。</noscript>
   <script type="module" src="app.mjs"></script>
 </body>
