@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>日米間配当源泉・LOB未確認時の支払法人対応メモ</title>
+  <style>
+    :root {
+      --ink:#17202a; --muted:#5b6572; --line:#d8e0e8; --panel:#fff;
+      --blue:#075985; --green:#166534; --red:#991b1b; --amber:#92400e;
+      --bg:#f6f8fb; --soft-blue:#edf6fb; --soft-green:#eef8f3; --soft-red:#fff1f2; --soft-amber:#fff8e6;
+    }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:var(--bg); font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",Meiryo,system-ui,sans-serif; line-height:1.85; letter-spacing:0; }
+    header { background:#f8fafc; border-bottom:1px solid var(--line); }
+    .wrap { width:min(1120px, calc(100% - 40px)); margin:0 auto; }
+    .hero { padding:42px 0 32px; }
+    .eyebrow { color:var(--blue); font-weight:700; font-size:13px; margin-bottom:8px; }
+    h1 { margin:0; font-size:clamp(27px,4vw,42px); line-height:1.25; letter-spacing:0; }
+    .subtitle { max-width:920px; color:var(--muted); margin:14px 0 0; }
+    .meta { display:flex; gap:8px; flex-wrap:wrap; margin-top:18px; font-size:13px; }
+    .pill { border:1px solid var(--line); background:#fff; border-radius:999px; padding:5px 10px; }
+    main { padding:26px 0 68px; }
+    section, nav { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:24px 28px; margin:20px 0; }
+    nav a { color:var(--blue); text-decoration:none; margin-right:15px; white-space:nowrap; font-size:14px; }
+    h2 { font-size:24px; margin:0 0 14px; line-height:1.4; }
+    h3 { font-size:18px; margin:26px 0 8px; }
+    p { margin:0 0 14px; }
+    ul, ol { padding-left:1.4em; }
+    li { margin:6px 0; }
+    table { width:100%; border-collapse:collapse; margin:16px 0 20px; font-size:14px; background:#fff; }
+    th, td { border:1px solid var(--line); padding:10px 12px; vertical-align:top; }
+    th { background:#f1f5f9; text-align:left; }
+    .box { border-radius:8px; padding:15px 17px; margin:16px 0; border:1px solid var(--line); }
+    .bluebox { background:var(--soft-blue); border-color:#b8dce9; }
+    .greenbox { background:var(--soft-green); border-color:#b9dfcf; }
+    .redbox { background:var(--soft-red); border-color:#fecdd3; }
+    .amberbox { background:var(--soft-amber); border-color:#f1d189; }
+    .source { color:var(--blue); text-decoration:none; border-bottom:1px dotted var(--blue); font-size:.94em; margin-left:2px; }
+    .local { font-family:Consolas,"Courier New",monospace; font-size:13px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:2px 5px; word-break:break-all; }
+    .verdict { font-weight:800; color:var(--red); }
+    .ok { color:var(--green); font-weight:800; }
+    .warn { color:var(--amber); font-weight:800; }
+    .small { color:var(--muted); font-size:13px; }
+    footer { border-top:1px solid var(--line); padding:24px 0 44px; color:var(--muted); font-size:13px; }
+    @media (max-width:760px){ .wrap{width:min(100% - 24px,1120px)} section,nav{padding:18px 16px} nav a{display:inline-block;margin-bottom:6px} table{font-size:13px} th,td{padding:8px} }
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap hero">
+    <div class="eyebrow">Supplemental Deep Research / Payer Action Plan</div>
+    <h1>日米間配当源泉・LOB未確認時に支払法人はどう動くべきか</h1>
+    <p class="subtitle">米国親会社への毎期配当につき、租税条約届出書はあるが、特典条項に関する付表・居住者証明・LOB実体資料がなく、日米租税条約10条3(a)及び22条1(f)(i)(ii)の充足を確認できない場面を前提に、支払法人の実務対応を整理する。</p>
+    <div class="meta">
+      <span class="pill">作成日: 2026-06-16</span>
+      <span class="pill">対象: 日本法人から米国100%親会社への配当</span>
+      <span class="pill">焦点: 支払法人の源泉徴収・過去分是正・将来統制</span>
+      <span class="pill">結論: 未確認のまま0%継続は不可</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav>
+    <strong>目次</strong>
+    <a href="#answer">1. 端的な回答</a>
+    <a href="#legal">2. 法的出発点</a>
+    <a href="#theory">3. 条文・条約解釈・学説</a>
+    <a href="#past">4. 過去分対応</a>
+    <a href="#future">5. 今後分対応</a>
+    <a href="#docs">6. 親会社への資料請求</a>
+    <a href="#taxoffice">7. 税務署対応</a>
+    <a href="#accounting">8. 会計・ガバナンス</a>
+    <a href="#matrix">9. 判断表</a>
+    <a href="#sources">10. 根拠資料</a>
+  </nav>
+
+  <section id="answer">
+    <h2>1. 端的な回答</h2>
+    <div class="box redbox">
+      <p><strong>支払法人は、LOB要件を確認できないまま、次回以降も0%源泉を継続すべきではない。</strong>租税条約届出書だけがある状態では、日米租税条約10条3(a)の免税を安全に適用する根拠として足りない。次回配当については、支払日前日までに、特典条項に関する付表、居住者証明、22条1(f)(i)(ii)及び22条2の該当性資料、10条3(a)の50%以上・6か月保有資料をそろえられない限り、国内法税率である20.42%を源泉徴収する運用に切り替えるべきである。</p>
+      <p>過去分については、直ちに「すべて20.42%を納付して終わり」と決め打ちする必要はない。ただし、支払法人が源泉徴収義務者である以上、実体要件と証拠の再構築を急ぎ、配当ごとに0%、5%、20.42%のいずれで防御可能かを判定しなければならない。証拠が取れない配当は、20.42%本税、延滞税、不納付加算税のリスクとして扱う。</p>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>局面</th><th>支払法人の基本対応</th><th>理由</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>次回以降の配当</td>
+          <td><span class="verdict">LOB資料未了なら20.42%源泉</span>。資料がそろえば0%又は5%を検討。</td>
+          <td>国税庁実務案内は、条約軽減・免除を受けるには支払日前日までの届出と添付資料提出を前提にしている。LOB条約では付表と居住者証明が必要とされる。</td>
+        </tr>
+        <tr>
+          <td>過去の0%支払</td>
+          <td>配当ごとの証拠ファイルを作成し、0%防御可能、5%止まり、20.42%リスクに分類する。</td>
+          <td>手続書類の欠缺だけで条約適用を必ず失わせるとは限らないが、LOB実体要件の不存在又は立証不能は免税を支えない。</td>
+        </tr>
+        <tr>
+          <td>証拠が取れない過去分</td>
+          <td>自主納付・税務署相談・親会社への求償又は補填整理を検討する。</td>
+          <td>源泉徴収による国税が法定納期限までに納付されない場合、納税告知、延滞税、不納付加算税の対象となる。</td>
+        </tr>
+        <tr>
+          <td>親会社が資料提出に応じない場合</td>
+          <td>支払法人側の0%適用は停止し、親会社には国内法源泉後に還付請求で対応させる。</td>
+          <td>支払法人は親会社の主張をそのまま代理する立場ではなく、源泉徴収義務者として自社のリスクを管理すべきである。</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="box bluebox">
+      <p><strong>実務上の一行結論。</strong>次回配当は「支払日前日までにLOBパックが完成しない限り20.42%」。過去分は「まず全配当を棚卸し、親会社から後日証拠を取って0%又は5%を防御できるか判定。防御できない分は自主納付を含む是正案を作る」。</p>
+    </div>
+  </section>
+
+  <section id="legal">
+    <h2>2. 法的出発点</h2>
+
+    <h3>2.1 日本法人から米国親会社への配当は国内源泉所得である</h3>
+    <p>所得税法161条1項9号は、内国法人から受ける剰余金の配当等を国内源泉所得に含める。したがって、日本法人が米国法人に配当を支払う場合、まず国内源泉所得の支払として源泉徴収の入口に乗る。</p>
+    <p>国税庁No.2884も、非居住者又は外国法人に対して国内源泉所得を支払う者は、原則として支払時に所得税及び復興特別所得税を源泉徴収しなければならないと説明し、上場等の特例を除く配当等の国内法税率を20.42%としている。<a class="source" href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2884.htm">国税庁 No.2884</a></p>
+
+    <h3>2.2 支払法人が源泉徴収義務者である</h3>
+    <p>所得税法212条は、外国法人に対して国内において一定の国内源泉所得を支払う者に、支払時の徴収と翌月10日までの納付を命じる。国外払いであっても、支払者が国内に事務所等を有する場合は国内払いとみなされ、納期限は翌月末日となる。したがって、実務上のリスク主体は第一に支払法人である。</p>
+    <p>この点は、親会社が100%株主であること、別表二で完全支配関係が表示されていることによって消えない。別表二は株主関係の資料ではあるが、日米租税条約10条3(a)の直接・間接所有の形、6か月継続保有、受益者性、22条LOBの所有・基準浸食要件を一括して証明するものではない。</p>
+
+    <h3>2.3 条約免税は、手続だけでなく実体要件を伴う</h3>
+    <p>日米租税条約10条2は、受益者が一定の法人であれば5%限度税率を認め、10条3(a)は、より厳しい要件を満たす場合に源泉地国課税を0%にする。10条3(a)は、単に50%以上の保有だけでなく、6か月保有と、22条1(c)(i)等又は22条1(f)(i)(ii)と22条2条件等を組み込んでいる。<a class="source" href="https://www.mof.go.jp/tax_policy/summary/international/tax_convention/USA_ST_en.pdf">財務省 日米租税条約統合テキスト</a></p>
+    <p>22条は、条約特典を受ける権利を有する者を客観的基準で限定する規定である。22条1(f)(i)は所有基準、22条1(f)(ii)は基準浸食、すなわち一定の控除可能支払が非締約国居住者へ流れていないことを要求する。これは届出書の記載欄ではなく、条約特典の発生を制限する実体要件である。</p>
+
+    <h3>2.4 ただし「手続欠缺」と「実体不存在」は分ける</h3>
+    <p>倉庫PE事件の東京地判平成27年5月28日及び控訴審は、届出書未提出だけを理由に直ちに日米租税条約7条の適用を否定することには慎重な方向を示した。この理屈は、過去分について「様式17が当時出ていないから絶対に条約適用不能」と断定しないための防御材料にはなる。<a class="source" href="https://www.courts.go.jp/assets/hanrei/hanrei-pdf-85442.pdf">東京地判平成27年5月28日</a> <a class="source" href="https://www.courts.go.jp/assets/hanrei/hanrei-pdf-86117.pdf">東京高判平成28年1月28日</a></p>
+    <p>しかし、この裁判例は配当源泉、10条、22条、支払法人の源泉徴収実務そのものの事件ではない。支払法人が次回以降の配当で、証拠未了のまま0%を継続する理由にはならない。実体要件が事後的に立証できるかという問題と、支払時に源泉しない運用を継続してよいかという問題は別である。</p>
+  </section>
+
+  <section id="theory">
+    <h2>3. 条文・条約解釈・学説からみた理論的根拠</h2>
+
+    <div class="box bluebox">
+      <p><strong>この章の結論。</strong>日米租税条約10条3(a)の0%免税は、国内法上の源泉徴収義務を当然に消す一般的免除ではなく、配当の受益者性、米国居住者性、50%以上の議決権保有、6か月保有、さらに22条LOBの該当性がそろって初めて発生する特別な条約効果である。様式17はその効果を創設する書類ではないが、証明対象であるLOBは実体的な条約特典資格である。したがって、届出書だけがあり、様式17・居住者証明・22条1(f)(i)(ii)又は22条2等の資料がない状態では、支払法人は0%を安全に適用できない。</p>
+    </div>
+
+    <h3>3.1 国内法は「20.42%を原則、条約特例を例外」として動く</h3>
+    <p>国内法の出発点は、所得税法161条1項9号、212条、213条である。内国法人から外国法人へ支払われる剰余金の配当等は国内源泉所得であり、その支払者は、支払の際に源泉徴収し、所定期限までに納付する。所得税法上の税率は20%であり、復興特別所得税を合わせた実務上の配当税率は20.42%となる。国税庁No.2884も、上場等の特例を除く配当等について20.42%と整理している。<a class="source" href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2884.htm">国税庁 No.2884</a></p>
+    <p>この国内法の効果を条約に合わせて調整するのが、租税条約等実施特例法3条の2である。同条は、条約に限度税率がある場合には国内法税率に代えて条約上の限度税率を用い、条約に免除規定がある場合には所得税法212条等を適用しないという形で、条約の軽減・免除を国内の源泉徴収制度に接続する。つまり、条約特例は国内法上の源泉義務の「上に乗る」例外であり、条約特例の実体要件が確認できなければ、国内法の原則へ戻る。</p>
+    <p>実施特例省令2条は、配当等について租税条約に関する届出書を支払日前日までに提出する手続を定める。他方で、この手続規定は、条約本文に存在しない免税資格を独自に作るものではない。支払法人実務では、手続は条約効果を源泉段階で扱うためのゲートであり、実体要件は条約本文が定める資格要件である。この二層を分けて理解する必要がある。</p>
+
+    <h3>3.2 LOBは様式の問題ではなく、条約特典資格そのものを限定する</h3>
+    <p>実施特例省令9条の2は、特典条項を「租税の軽減又は免除を定める租税条約の規定の適用に関する条件」として定義し、さらに、条約に基づく特典を受ける権利を有する者を一定類型の基準を満たす相手国居住者等に制限する規定を含めている。この定義自体が、LOBを単なる届出書添付書類ではなく、条約上の軽減・免除を受ける者を限定する条件として位置付けている。</p>
+    <p>したがって、様式17は「実体要件を作る書類」ではない。より正確には、様式17は、条約本文上すでに要求されているLOB該当性を、源泉徴収の現場で確認・記録するための証明書類である。国税庁No.2888も、特典条項を有する租税条約で軽減・免除を受ける場合には、届出書のほか、特典条項に関する付表と居住者証明が必要であり、様式17は租税条約の適用を受けることができる居住者であるかどうかを判定する書類であると説明している。<a class="source" href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2888.htm">国税庁 No.2888</a> <a class="source" href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/joyaku/annai/pdf2/266.pdf">国税庁 様式17（米）</a></p>
+    <p>この点から、「届出書は単に手続要件ではないのか」という問いには、二段階で答えるべきである。租税条約届出書・様式17の提出自体は手続である。しかし、その書類が証明する対象であるLOB該当性は、条約特典の享受資格を限定する実体要件である。手続欠缺だけで常に条約特典が実体的に消えるとまではいえないが、実体要件が未確認又は未充足であれば、そもそも0%免税は発生しない。</p>
+
+    <h3>3.3 日米租税条約10条は、5%と0%を明確に分けている</h3>
+    <p>日米租税条約10条2(a)は、配当の受益者が他方締約国の居住者であり、配当を支払う法人の議決権ある株式の10%以上を直接又は間接に所有する法人である場合に、源泉地国課税を配当額の5%に制限する。これが親子会社配当に関する基本的な軽減税率である。</p>
+    <p>これに対し、10条3(a)は、10条2の「5%まで課税できる」というルールをさらに超えて、一定の場合には源泉地国で課税できない、すなわち0%とする規定である。その要件は、受益者が他方締約国の居住者である法人であること、配当を受ける者が特定される日を末日とする6か月の期間を通じて、配当支払法人の議決権ある株式の50%以上を直接又は一定の居住者を通じて間接に所有すること、さらに本件で問題となる22条1(f)(i)(ii)及び22条2等の条件を満たすことである。<a class="source" href="https://www.mof.go.jp/tax_policy/summary/international/tax_convention/USA_ST_en.pdf">財務省 日米租税条約統合テキスト</a></p>
+    <p>この構造上、別表二に親会社100%保有と記載されているだけでは、10条3(a)の0%免税を満たすことにはならない。別表二は日本法人側の株主関係資料として有用だが、受益者性、米国居住者性、議決権ベースの50%以上保有、6か月継続保有、間接保有経路上の居住者性、22条LOBの所有・基準浸食要件までは証明しない。条約本文は「100%グループなら0%」とは書いていない。</p>
+    <p>また、0%が証明できない場合に当然に5%へ落とせるわけでもない。5%も条約特典である以上、少なくとも受益者性、米国居住者性、10%以上の議決権保有、そして22条による条約特典資格が必要となる。LOB全体が未確認であれば、支払法人段階では5%適用も安全ではない。0%が崩れても、5%を守れるかは別途証拠で判定する必要がある。</p>
+
+    <h3>3.4 日米租税条約22条は、条約特典を受ける「権利」を限定している</h3>
+    <p>日米租税条約22条1項の文言は決定的である。同項は、一方締約国の居住者が他方締約国で所得を取得する場合、条約特典を受けるために別に定める要件を満たし、かつ列挙された類型のいずれかに該当する場合に限り、各課税年度において条約特典を受ける権利を有すると定める。この「権利を有する」という文言から、22条は単なる執行手続ではなく、treaty entitlement、すなわち条約特典資格を定める実体規定である。</p>
+    <p>本件で問題となる22条1(f)は、個人以外の者について、(i)所有基準と(ii)基準浸食基準の二つを要求する。(i)は、各種類の株式その他の受益持分の50%以上が、個人、政府、一定の上場会社、公益団体、年金基金等の適格な居住者により直接又は間接に所有されていることを求める。(ii)は、総所得のうち、その居住地国で課税所得計算上控除できる支出として非締約国居住者に直接又は間接に支払われる額の割合が50%未満であることを求める。ただし、通常の事業方法で行われる役務・有体財産の独立企業間価格での支払や一定の商業銀行への金融債務支払は除外される。</p>
+    <p>22条3項は、源泉徴収場面でこれらの要件をどの期間で見るかも定めている。所有基準については、配当では配当を受ける者が特定される日を基準に、その課税年度中の先行期間及び直前課税年度を通じた充足が問題となる。基準浸食基準についても、日本の源泉徴収に関して米国居住者が22条1(f)(ii)を用いる場合には、直前3課税年度について要件を満たしているかが問題となる。したがって、単年度の口頭説明やグループ図だけでは足りず、過年度の損益・控除可能支払・第三国支払の検証が必要になる。</p>
+    <p>22条2項の能動的事業基準も、単に米国親会社が事業会社であるというだけでは足りない。当該所得が米国で行われる営業又は事業活動に関連又は付随して取得されること、関連者から他方締約国源泉所得を取得する場合には米国側の事業活動が日本側の活動との関係で実質的であることが求められる。22条4項の権限ある当局による裁量的救済も、当局の認定を前提とする救済ルートであり、支払法人が証拠なしに支払時0%を自主判断する根拠にはならない。</p>
+
+    <h3>3.5 ウィーン条約法条約からも、LOBの実体要件性が導かれる</h3>
+    <p>条約解釈の基本枠組みは、ウィーン条約法条約31条の「通常の意味、文脈、趣旨目的」による誠実解釈である。同条32条は、31条による意味を確認するため、又は意味が曖昧・不合理となる場合に、準備作業や締結事情等の補足的手段を用いることを認める。<a class="source" href="https://legal.un.org/ilc/texts/instruments/english/conventions/1_1_1969.pdf">Vienna Convention on the Law of Treaties</a></p>
+    <p>この解釈枠組みに当てはめると、まず通常の意味として、10条3(a)は「22条1(f)(i)(ii)及び22条2の条件を満たすもの」を0%免税の対象にしており、22条1項は「この条約の特典を受ける権利」を列挙類型に限定している。これらの語は、行政様式の提出方法ではなく、条約上の課税権制限が発生するための資格条件を示す。</p>
+    <p>次に文脈として、10条3(a)が22条を直接引用している点が重要である。配当条項の中にLOB条項への参照が組み込まれている以上、22条は10条3(a)の外側にある単なる事後管理規定ではない。0%免税という実体効果の発生要件として、10条の内部構造に取り込まれている。</p>
+    <p>さらに趣旨目的として、LOBはtreaty shoppingを防ぐための客観的・機械的な制限規定である。条約特典を締約国間で想定された者へ限定するために、所有、上場、年金基金、基準浸食、能動的事業、権限ある当局の救済といったルートを置いている。この目的からも、LOBを「様式17を出せば足りる手続」と読むことはできない。</p>
+
+    <h3>3.6 OECD/BEPS及び米国Technical Explanationの位置付け</h3>
+    <p>OECD/G20 BEPS Action 6は、条約濫用、とりわけtreaty shoppingをBEPS上の重要問題として捉え、条約特典が意図されない場面で取得されることを防止するための最低基準を設けた。OECDの説明でも、Action 6は条約濫用防止のため、PPTやLOBを含む条約上の対抗措置を位置付けている。<a class="source" href="https://www.oecd.org/en/topics/sub-issues/preventing-tax-treaty-abuse.html">OECD Preventing tax treaty abuse</a> <a class="source" href="https://www.oecd.org/content/dam/oecd/en/publications/reports/2015/10/preventing-the-granting-of-treaty-benefits-in-inappropriate-circumstances-action-6-2015-final-report_g1g5906e/9789264241695-en.pdf">OECD Action 6 Final Report</a></p>
+    <p>米国の2003年Technical Explanationは、22条1(f)のownership/base erosion testについて、二つの要件をいずれも満たす必要があると説明している。これは、22条1(f)が単一の形式チェックではなく、所有構造と所得流出の双方をみる実体審査であることを裏付ける。<a class="source" href="https://www.irs.gov/pub/irs-trty/japante04.pdf">IRS Technical Explanation to 2003 Convention</a></p>
+    <p>2013年ProtocolのTechnical Explanationは、10条3(a)の配当免税について、所有割合を「50%超」から「50%以上」に変更し、保有期間を12か月から6か月へ短縮したことを説明している。同時に、受益者性やLOBなど他の要件がなお必要であることを前提にしている。したがって、2013年改正は0%免税を緩和したが、LOBを不要にしたものではない。<a class="source" href="https://home.treasury.gov/system/files/131/Treaty-Japan-Pr2-TE-10-29-2015.pdf">U.S. Treasury Technical Explanation to 2013 Protocol</a></p>
+
+    <h3>3.7 日本語学説・実務文献の整理</h3>
+    <p>日本語文献でも、日米租税条約のLOBは、わが国条約に包括的な特典制限条項が導入された重要例として扱われている。中山清「租税条約の特典制限条項（LOB）」は、新日米租税条約において包括的なLOBが導入され、一定の適格居住者のみが条約特典を受ける権利を有するという構造を整理している。<a class="source" href="https://dl.ndl.go.jp/view/prepareDownload?contentNo=1&itemId=info%3Andljp%2Fpid%2F11173039">中山清「租税条約の特典制限条項（LOB）」</a></p>
+    <p>今村隆「租税条約におけるLOB条項の意義と問題点」は、日米租税条約22条1項(f)の支配・課税ベース浸食基準を詳細に検討し、支配基準と課税ベース浸食基準の双方を満たす基準として位置付ける。特に、間接所有や支払先の範囲といった解釈問題が論点となることを示しており、実務上も、100%親会社という表面的な関係だけで判断できないことを示唆する。<a class="source" href="https://www.publication.law.nihon-u.ac.jp/pdf/law/law_79_2/each/11.pdf">今村隆「租税条約におけるLOB条項の意義と問題点」</a></p>
+    <p>公認会計士協会の実務研究でも、日米租税条約22条のLOBが条約上に明記されたことで、課税上の取扱いの明確性や予見可能性が高まったと評価されている。これは、LOBが単なる日本側様式の問題ではなく、条約本文に明示された特典資格制限であることを実務文献が前提としていることを示す。<a class="source" href="https://jicpa.or.jp/specialized_field/publication/files/00233-000470.pdf">JICPA「新日米租税条約のポイントと実務上の課題」</a></p>
+
+    <h3>3.8 倉庫PE事件の射程と、後日立証の限界</h3>
+    <p>倉庫PE事件は、届出書未提出だけを理由に条約適用を否定できるかという点で重要である。同事件では、実施特例法の委任規定と省令の関係、租税法律主義との関係から、届出書未提出だけで直ちに日米租税条約7条1項の適用を否定することには慎重な判断が示された。この判断は、手続欠缺と条約実体要件を分けるうえで重要である。</p>
+    <p>ただし、この射程は限定的である。同事件は事業所得・PE課税に関するものであり、配当源泉、10条3(a)、22条LOB、支払法人の源泉徴収義務を直接判断したものではない。したがって、支払法人が将来配当について、様式17や居住者証明、LOB資料がないまま0%源泉を継続する根拠にはならない。</p>
+    <p>後日立証についても、可能なのは「支払日にすでに存在していた事実」を後から証明することである。例えば、当時の居住者性、当時の議決権保有、当時の所有連鎖、当時の基準浸食計算、当時の能動的事業活動との関連性を、後日発行書類や過年度資料で立証することは理論上あり得る。しかし、支払日に存在しなかった所有関係、支払後に作られた事業実態、後から整えたグループ内説明で、過去のLOB要件を創設することはできない。</p>
+    <p>このため、過去分については、様式17がなかったことだけで機械的に20.42%確定とまではいわず、配当ごとの実体要件を再検証する。他方、将来分については、源泉徴収制度が支払時に徴収税率を決める制度である以上、資料未了のまま0%を継続することは許容しにくい。過去分の防御可能性と、次回以降の無源泉継続可能性は、明確に分けて扱うべきである。</p>
+
+    <h3>3.9 本件へのあてはめ</h3>
+    <p>本件では、租税条約届出書はあるが、特典条項に関する付表、居住者証明、22条1(f)(i)の所有基準、22条1(f)(ii)の基準浸食基準、22条2の能動的事業基準、10条3(a)の6か月保有と受益者性を一体として確認できない。別表二上の100%保有は有力な出発資料ではあるが、条約上の0%免税要件を充足する証拠としては不足する。</p>
+    <p>したがって、理論面からの結論は次のとおりである。将来配当については、支払日前日までに完全なLOBパックがそろわない限り、20.42%源泉へ切り替えるべきである。過去分については、支払時点の実体要件を後日資料で立証できる配当は0%又は5%の防御余地があるが、LOB全体が立証できない配当は20.42%本税、延滞税、不納付加算税のリスクとして扱う。支払法人の意思決定文書では、「届出書の形式不備」ではなく、「条約特典資格及びその証明が未了であるため、源泉徴収義務者として国内法税率を採用する」と表現するのが最も正確である。</p>
+    <div class="box amberbox">
+      <p><strong>反対方向の主張と限界。</strong>親会社側からは、100%親会社であり、実体として米国法人である以上、条約免税は後日証明で足りるとの主張があり得る。しかし、支払法人の源泉徴収判断では、単なるグループ関係では22条1(f)(ii)の基準浸食や22条2の所得関連性を確認できない。後日立証の余地は過去分の防御論であり、将来配当を証拠未了のまま無源泉にする運用ルールではない。</p>
+    </div>
+  </section>
+
+  <section id="past">
+    <h2>4. 過去分対応</h2>
+
+    <h3>4.1 まず「配当別インベントリ」を作る</h3>
+    <p>過去分で最初にすべきことは、税率の議論ではなく事実の固定である。毎期配当をすべて一覧化し、少なくとも次の項目を配当単位で並べる。</p>
+    <ul>
+      <li>株主総会又は取締役会の決議日、基準日、効力発生日、支払日、実際の送金日</li>
+      <li>配当金額、通貨、円換算、送金先、支払場所、会計処理</li>
+      <li>支払時に提出済みだった租税条約届出書の種類、提出日、税務署受付の有無</li>
+      <li>様式17、IRS Form 6166等の居住者証明、添付書類の有無</li>
+      <li>支払日における親会社の株式保有割合、議決権割合、6か月継続保有の証拠</li>
+      <li>受益者性、恒久的施設帰属の有無、名義株主・中間持株会社の有無</li>
+      <li>22条1(f)(i)の所有基準、22条1(f)(ii)の基準浸食、22条2の能動的事業要件の資料</li>
+      <li>当時の社内検討、税理士・会計士・親会社税務部とのメール、取締役会資料</li>
+    </ul>
+
+    <h3>4.2 過去分は三分類で処理する</h3>
+    <table>
+      <thead>
+        <tr><th>分類</th><th>状態</th><th>対応</th><th>税務リスク</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="ok">Green</span></td>
+          <td>当時の実体として10条3(a)及び22条要件が満たされていたことを、後日取得資料で高い確度で証明できる。</td>
+          <td>様式17等の未提出は手続・証拠問題として整理し、後日提出、税務署説明、調査対応用メモを作成する。</td>
+          <td>0%防御を主張し得る。ただし、手続不備の説明と証拠の真正性が重要。</td>
+        </tr>
+        <tr>
+          <td><span class="warn">Amber</span></td>
+          <td>親会社の米国居住性、受益者性、10%以上保有は証明できるが、0%免税の50%・6か月・22条1(f)(i)(ii)又は22条2の全部までは弱い。</td>
+          <td>少なくとも5%限度税率が防御可能かを検討し、0%との差額5%を主要エクスポージャーとして試算する。同時に20.42%最悪ケースも試算する。</td>
+          <td>0%は危険。5%まで下げられるかが争点。</td>
+        </tr>
+        <tr>
+          <td><span class="verdict">Red</span></td>
+          <td>米国親会社が22条要件資料を出さない、基準浸食を確認できない、受益者性や中間保有が不明、又は居住者証明も取れない。</td>
+          <td>20.42%本税、延滞税、不納付加算税を前提に、自主納付又は税務署相談を検討する。親会社への求償・補填も同時に整理する。</td>
+          <td>国内法税率での源泉漏れとして扱われるリスクが高い。</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>4.3 過去分で後日立証を試みる場合の注意</h3>
+    <p>後日立証は、理論上はあり得る。特に、条約の実体要件が支払日に存在していたことを、後日発行又は後日取得した資料で証明すること自体は、事実認定の問題として排除されない。ただし、これは「後から要件を作る」ことではない。支払日に既に存在した事実を、後から証明するだけである。</p>
+    <p>したがって、支払法人がやってはいけないことは、様式17や居住者証明を支払日前に存在したかのように処理すること、親会社から受けた口頭説明を当時確認済みであったかのように議事録化すること、基準浸食計算の前提となる支払を都合よく除外することである。後日提出資料には、作成日、対象期間、証明対象事実、証明者、根拠データを明記する。</p>
+
+    <h3>4.4 自主納付を検討すべきタイミング</h3>
+    <p>国税通則法67条は、源泉徴収等による国税が法定納期限までに完納されなかった場合、原則10%の不納付加算税を定める。ただし、税務署の告知を予知しない自主納付の場合は5%となる。さらに、一定の「納付する意思」が認められ、法定納期限から1か月以内に納付された場合には不適用となる余地がある。現時点で過去分が複数年に及ぶなら、この1か月不適用は通常の主戦場にはなりにくい。</p>
+    <p>延滞税は、国税庁No.9205が説明するように、原則として法定納期限の翌日から納付日まで日数に応じて発生する。2026年中の割合は、納期限翌日から2か月まで年2.8%、2か月経過後は年9.1%とされている。過去の各期間には各年の割合を確認する必要がある。<a class="source" href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/osirase/9205.htm">国税庁 No.9205</a></p>
+    <div class="box amberbox">
+      <p><strong>実務判断。</strong>税務調査の連絡前で、Red又は濃いAmberの過去分があるなら、自主納付の可否を早急に検討する価値がある。自主納付が常に最善とは限らないが、証拠が薄いまま放置すると、10%不納付加算税、延滞税、重加算税論点、監査上の偶発債務が重くなる。</p>
+    </div>
+
+    <h3>4.5 還付請求ルートを誤用しない</h3>
+    <p>国税庁No.2889は、届出書を提出しなかったことにより源泉徴収された税額のうち、条約上軽減又は免除を受けるべき金額について、非居住者等が支払者経由で還付請求する手続を説明している。これは「国内法税率で源泉した後、受領者が還付を受ける」ルートであり、過去にそもそも源泉徴収も納付もしていない支払法人が、自社の源泉漏れを消すための直接の手続ではない。<a class="source" href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2889.htm">国税庁 No.2889</a></p>
+    <p>したがって、過去分については、支払法人が本税を納付する必要があるかを先に判定し、その後に受領者側の還付可能性や親会社への求償を整理する。順番を逆にすると、支払法人の源泉徴収義務と受領者の条約還付請求が混線する。</p>
+  </section>
+
+  <section id="future">
+    <h2>5. 今後分対応</h2>
+
+    <h3>5.1 次回配当前の停止ルール</h3>
+    <p>今後分については、支払法人の内部ルールとして、次の「ノー・ドキュメント、ノー・ゼロ源泉」を採用すべきである。</p>
+    <ol>
+      <li>配当決議前に、税務担当が条約適用判定シートを作成する。</li>
+      <li>支払日前日までに、租税条約届出書、様式17、居住者証明、10条3(a)及び22条資料がそろっていなければ、0%適用は承認しない。</li>
+      <li>0%資料が足りないが5%資料はそろう場合は、5%源泉を検討する。</li>
+      <li>5%資料も足りない場合は、20.42%で源泉し、親会社には還付請求ルートを案内する。</li>
+      <li>配当支払後に資料が出た場合は、支払法人が過去の無源泉を正当化するのではなく、原則として受領者側の還付請求又は次回以降の適用に回す。</li>
+    </ol>
+
+    <h3>5.2 0%、5%、20.42%の使い分け</h3>
+    <table>
+      <thead>
+        <tr><th>税率</th><th>支払法人が確認すべき要件</th><th>実務判断</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>0%</strong></td>
+          <td>受益者が米国居住者であり、支払を受ける者が特定される日を末日とする6か月を通じて、配当支払法人の議決権ある株式50%以上を直接又は所定の居住者経由で間接保有し、かつ10条3(a)に組み込まれた22条1(c)(i)等又は22条1(f)(i)(ii)及び22条2条件等を満たす。</td>
+          <td>完全なLOBパックが必要。100%親会社という事実だけでは足りない。</td>
+        </tr>
+        <tr>
+          <td><strong>5%</strong></td>
+          <td>配当の受益者が米国居住者で、配当支払法人の議決権ある株式10%以上を直接又は間接に保有し、かつ条約特典を受ける資格を有する。</td>
+          <td>0%が弱い場合の現実的な防御ライン。ただしLOBを無視して5%にすることはできない。</td>
+        </tr>
+        <tr>
+          <td><strong>20.42%</strong></td>
+          <td>条約適用資料が期限までにそろわない、受益者性又は米国居住性が不明、LOBを確認できない、又は親会社が資料提出に応じない。</td>
+          <td>支払法人のデフォルト運用。親会社のキャッシュ負担は増えるが、支払法人の源泉漏れリスクを避ける。</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>5.3 支払日前日までの実務フロー</h3>
+    <table>
+      <thead>
+        <tr><th>時期</th><th>支払法人の作業</th><th>完了基準</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>配当決議の30日前</td>
+          <td>親会社へLOB資料請求。税務担当が前年資料の有効期限、異動の有無、米国側組織再編の有無を確認。</td>
+          <td>親会社の税務責任者から、対象配当に関する資料提出予定と責任者署名を取得。</td>
+        </tr>
+        <tr>
+          <td>配当決議の10日前</td>
+          <td>税務担当が0%・5%・20.42%の暫定判定を作成。法務・経理・監査対応者へ共有。</td>
+          <td>不足資料リストと、不足時の源泉税率が明記されている。</td>
+        </tr>
+        <tr>
+          <td>支払日の前日</td>
+          <td>租税条約届出書、様式17、居住者証明、添付資料を最終確認。支払者経由で所轄税務署提出又は提出準備。</td>
+          <td>0%又は5%の承認者が署名。未完了なら20.42%へ自動切替。</td>
+        </tr>
+        <tr>
+          <td>支払日</td>
+          <td>承認税率で源泉・送金。源泉した場合は納付スケジュールを固定。</td>
+          <td>送金明細、納付予定、仕訳、証憑保存が完了。</td>
+        </tr>
+        <tr>
+          <td>支払後5営業日以内</td>
+          <td>証拠ファイルを確定し、次回への不足・改善点を記録。</td>
+          <td>配当別ファイルが監査対応可能な状態で保存されている。</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="docs">
+    <h2>6. 親会社への資料請求</h2>
+
+    <h3>6.1 最低限必要な資料</h3>
+    <p>支払法人は、親会社に対して「条約適用のために必要なので出してください」という抽象的依頼ではなく、10条3(a)と22条の要件ごとに資料を指定すべきである。</p>
+    <table>
+      <thead>
+        <tr><th>要件</th><th>必要資料</th><th>注意点</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>米国居住者性</td>
+          <td>IRS Form 6166又は居住者証明。対象年、法人名、TIN、所在地が一致するもの。</td>
+          <td>国税庁No.2888は、一定の場合に居住者証明の原本提示と写し保存、作成日要件を説明している。<a class="source" href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2888.htm">国税庁 No.2888</a></td>
+        </tr>
+        <tr>
+          <td>LOB付表</td>
+          <td>特典条項に関する付表、米国用様式17及び添付資料。</td>
+          <td>様式17は要件を作る書類ではなく、要件充足を申告・証明するための書類である。</td>
+        </tr>
+        <tr>
+          <td>10条3(a)の保有要件</td>
+          <td>株主名簿、議決権数、持株比率、6か月継続保有を示す台帳、組織再編履歴、中間保有がある場合の中間所有者資料。</td>
+          <td>別表二の100%表示だけでは、条約上の6か月判定や中間所有者の居住性までは証明しない。</td>
+        </tr>
+        <tr>
+          <td>受益者性</td>
+          <td>親会社が配当の受益者であることの確認書、バック・トゥ・バック配当や代理受領でないことの説明、関連契約。</td>
+          <td>10条2、10条3とも受益者性が前提となる。</td>
+        </tr>
+        <tr>
+          <td>22条1(f)(i)所有基準</td>
+          <td>親会社の各種類株式・持分の所有者一覧、所有者の居住者性、適格者性、間接所有の場合の全中間所有者資料。</td>
+          <td>「米国グループ会社である」では不足。各種類株式・持分ごとに50%以上の所有を確認する。</td>
+        </tr>
+        <tr>
+          <td>22条1(f)(ii)基準浸食</td>
+          <td>親会社の対象課税年度の総所得、控除可能支払、支払先の居住地、関連者・第三国支払、通常取引除外の根拠、監査済財務諸表又は税務申告資料。</td>
+          <td>もっとも資料化が難しい部分。親会社の税務部又は外部税務アドバイザーの署名付き計算書を求めるべきである。</td>
+        </tr>
+        <tr>
+          <td>22条2能動的事業</td>
+          <td>米国での営業又は事業活動、当該配当との関連・付随性、事業規模の実質性、投資管理活動にすぎないことへの反証。</td>
+          <td>10条3(a)(ii)で22条1(f)ルートを使う場合、当該配当に関し22条2条件も問題となる。</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>6.2 親会社へ送るべきメッセージ</h3>
+    <div class="box bluebox">
+      <p><strong>推奨文言の骨子。</strong>「日本法人は源泉徴収義務者として、支払日前日までに日米租税条約10条3(a)及び22条の適用資料を確認できない場合、国内法に従い20.42%を源泉徴収します。資料が後日提出された場合は、原則として受領者である貴社において還付請求手続を検討いただきます。過去配当についても、当時の要件充足を示す資料を対象配当別に提出してください。」</p>
+    </div>
+    <p>親会社が100%株主である場合、実務上は「グループ内だから大丈夫」と流れがちである。しかし、支払法人にとっての相手は親会社であると同時に、源泉徴収義務の相手は日本の課税庁である。親会社のキャッシュ効率を優先して支払法人が無証拠で0%を続けると、税務調査時には支払法人が本税、延滞税、不納付加算税を負う構造になる。</p>
+  </section>
+
+  <section id="taxoffice">
+    <h2>7. 税務署対応</h2>
+
+    <h3>7.1 相談前に持参すべき資料</h3>
+    <p>税務署に相談する場合、抽象論として「LOB証明がないがどうしたらよいか」と聞くより、配当別インベントリ、0%・5%・20.42%の試算、取得済資料、不足資料、今後の源泉方針を持参する方がよい。少なくとも次のパッケージを整える。</p>
+    <ul>
+      <li>配当別インベントリと金額集計</li>
+      <li>過去提出済みの租税条約届出書、受付控え、添付資料</li>
+      <li>未提出だった様式17及び居住者証明の取得状況</li>
+      <li>親会社から取得した又は取得予定のLOB資料</li>
+      <li>0%、5%、20.42%の税額差額表</li>
+      <li>延滞税と不納付加算税の概算</li>
+      <li>次回以降は資料未了なら20.42%源泉に切り替える内部方針</li>
+    </ul>
+
+    <h3>7.2 説明の軸</h3>
+    <p>説明の軸は、「届出書が単なる手続だから何も問題ない」ではない。その説明は弱い。より正確には、次の二段構えにする。</p>
+    <ol>
+      <li>日米租税条約10条3(a)及び22条の実体要件が支払日に存在した配当については、後日資料によりその事実を証明する。</li>
+      <li>実体要件を証明できない配当については、支払法人として国内法税率の源泉漏れリスクを認識し、是正方針を提示する。</li>
+    </ol>
+    <p>この方が、租税法律主義に基づく手続欠缺論と、LOBが実体要件であるという構造を両立できる。</p>
+
+    <h3>7.3 重加算税リスクを避けるための実務</h3>
+    <p>国税通則法68条は、隠蔽又は仮装に基づき源泉徴収等による国税を法定納期限までに納付しなかった場合、不納付加算税に代えて35%の重加算税を定める。したがって、支払法人が最も避けるべきなのは、資料がなかった事実を隠すこと、後日資料を当時存在した資料のように扱うこと、親会社の基準浸食資料が未確認であるにもかかわらず確認済みと説明することである。</p>
+    <p>逆に、早期に事実を棚卸しし、不足資料を明示し、配当別にリスク分類を行い、今後は保守運用へ切り替える姿勢を示すことは、少なくとも仮装・隠蔽の疑いを避けるうえで重要である。</p>
+  </section>
+
+  <section id="accounting">
+    <h2>8. 会計・ガバナンス</h2>
+
+    <h3>8.1 偶発債務・引当・注記</h3>
+    <p>過去分について20.42%又は5%相当の源泉漏れが合理的に見積もれる場合、会計上は税務債務、偶発債務、引当金又は注記の要否を監査人と協議すべきである。特に毎期配当で金額が大きい場合、本税だけでなく延滞税、不納付加算税が財務諸表に与える影響を無視できない。</p>
+    <p>親会社から回収できる可能性がある場合でも、それは税務署への納付義務を消すものではない。親会社への求償債権又は補填収益を認識できるかは、配当決議、グループ契約、税務補償条項、会社法・会計処理の観点から別途判断する。</p>
+
+    <h3>8.2 取締役会・監査役等への報告</h3>
+    <p>支払法人の対応としては、税務部門だけで抱え込まず、取締役会又は経営会議、監査役・監査等委員、外部監査人へ、次の形で報告するのが望ましい。</p>
+    <ul>
+      <li>過去配当の総額と源泉未徴収額の最大リスク</li>
+      <li>0%防御可能な配当、5%までなら防御可能な配当、20.42%リスクの配当</li>
+      <li>親会社に資料請求済みであることと、提出期限</li>
+      <li>次回以降の配当は資料未了なら20.42%源泉に切り替えること</li>
+      <li>自主納付又は税務署相談の方針</li>
+      <li>会計上の影響と開示要否</li>
+    </ul>
+
+    <h3>8.3 内部統制として残すべき文書</h3>
+    <p>今回の問題は、単なる過去ミスの処理ではなく、毎期配当に関する継続的内部統制の問題である。今後は、配当前の条約適用チェックリスト、LOB資料保管ルール、親会社からの年次証明、異動時通知義務、税率承認フローを文書化する。</p>
+    <p>特に、親会社が上場会社、非上場持株会社、ファンド傘下、中間持株会社経由など、どの類型に当たるかでLOB判定は大きく変わる。組織再編、持株比率変更、優先株式発行、第三国支払の増加があれば、前年の様式17を漫然と使い回してはならない。</p>
+  </section>
+
+  <section id="matrix">
+    <h2>9. 判断表</h2>
+    <table>
+      <thead>
+        <tr><th>問い</th><th>Yes</th><th>No</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>支払日前日までに租税条約届出書、様式17、居住者証明、LOB資料がそろうか</td>
+          <td>0%又は5%の実体判定へ進む。</td>
+          <td>20.42%で源泉。受領者側還付請求を案内。</td>
+        </tr>
+        <tr>
+          <td>10条3(a)の50%以上・6か月保有を証明できるか</td>
+          <td>22条ルートの判定へ進む。</td>
+          <td>0%不可。5%又は20.42%を検討。</td>
+        </tr>
+        <tr>
+          <td>22条1(f)(i)の所有基準を証明できるか</td>
+          <td>22条1(f)(ii)へ進む。</td>
+          <td>そのルートでの0%不可。他ルート又は5%を検討。</td>
+        </tr>
+        <tr>
+          <td>22条1(f)(ii)の基準浸食を証明できるか</td>
+          <td>22条2条件等も確認し、0%適用可否を最終判定。</td>
+          <td>0%不可。5%又は20.42%を検討。</td>
+        </tr>
+        <tr>
+          <td>最低限、受益者・米国居住者・10%以上保有・LOB資格を証明できるか</td>
+          <td>5%限度税率を検討。</td>
+          <td>20.42%で源泉。</td>
+        </tr>
+        <tr>
+          <td>過去分について支払日時点の実体要件を後日証明できるか</td>
+          <td>後日資料で防御メモを作成し、税務署説明に備える。</td>
+          <td>国内法源泉漏れとして自主納付又は税務署相談を検討。</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="box greenbox">
+      <p><strong>最終的な推奨アクション。</strong>支払法人は、1週間以内に過去配当の全件棚卸しと親会社への資料請求を完了し、2週間以内に0%・5%・20.42%の配当別リスク分類を作る。次回配当については、支払日前日までに完全資料がそろわなければ20.42%源泉とする内部決裁を先に取る。税務署への相談又は自主納付は、Red分類の金額と親会社資料の取得見込みを見て、調査着手前に判断する。</p>
+    </div>
+  </section>
+
+  <section id="sources">
+    <h2>10. 根拠資料</h2>
+    <h3>10.1 公式・公開資料</h3>
+    <ul>
+      <li>国税庁「No.2884 非居住者等に対する源泉徴収・源泉徴収の税率」 <a class="source" href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2884.htm">https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2884.htm</a></li>
+      <li>国税庁「No.2888 租税条約に関する届出書の提出」 <a class="source" href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2888.htm">https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2888.htm</a></li>
+      <li>国税庁「No.2889 租税条約に関する源泉徴収税額の還付請求」 <a class="source" href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2889.htm">https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2889.htm</a></li>
+      <li>国税庁「No.9205 延滞税について」 <a class="source" href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/osirase/9205.htm">https://www.nta.go.jp/taxes/shiraberu/taxanswer/osirase/9205.htm</a></li>
+      <li>国税庁「源泉所得税の不納付加算税の取扱いについて」 <a class="source" href="https://www.nta.go.jp/law/jimu-unei/shotoku/gensen/000703/01.htm">https://www.nta.go.jp/law/jimu-unei/shotoku/gensen/000703/01.htm</a></li>
+      <li>財務省「日米租税条約統合テキスト」 <a class="source" href="https://www.mof.go.jp/tax_policy/summary/international/tax_convention/USA_ST_en.pdf">https://www.mof.go.jp/tax_policy/summary/international/tax_convention/USA_ST_en.pdf</a></li>
+      <li>国税庁「特典条項に関する付表（米）」 <a class="source" href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/joyaku/annai/pdf2/266.pdf">https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/joyaku/annai/pdf2/266.pdf</a></li>
+      <li>国税庁「令和8年版 源泉徴収のあらまし」第4 非居住者又は外国法人に支払う所得の源泉徴収事務 <a class="source" href="https://www.nta.go.jp/publication/pamph/gensen/aramashi2026/pdf/12.pdf">https://www.nta.go.jp/publication/pamph/gensen/aramashi2026/pdf/12.pdf</a></li>
+      <li>IRS Technical Explanation to 2003 Convention <a class="source" href="https://www.irs.gov/pub/irs-trty/japante04.pdf">https://www.irs.gov/pub/irs-trty/japante04.pdf</a></li>
+      <li>U.S. Treasury Technical Explanation to 2013 Protocol <a class="source" href="https://home.treasury.gov/system/files/131/Treaty-Japan-Pr2-TE-10-29-2015.pdf">https://home.treasury.gov/system/files/131/Treaty-Japan-Pr2-TE-10-29-2015.pdf</a></li>
+      <li>United Nations, Vienna Convention on the Law of Treaties <a class="source" href="https://legal.un.org/ilc/texts/instruments/english/conventions/1_1_1969.pdf">https://legal.un.org/ilc/texts/instruments/english/conventions/1_1_1969.pdf</a></li>
+      <li>OECD「Preventing tax treaty abuse」 <a class="source" href="https://www.oecd.org/en/topics/sub-issues/preventing-tax-treaty-abuse.html">https://www.oecd.org/en/topics/sub-issues/preventing-tax-treaty-abuse.html</a></li>
+      <li>OECD/G20 BEPS Action 6 Final Report <a class="source" href="https://www.oecd.org/content/dam/oecd/en/publications/reports/2015/10/preventing-the-granting-of-treaty-benefits-in-inappropriate-circumstances-action-6-2015-final-report_g1g5906e/9789264241695-en.pdf">https://www.oecd.org/content/dam/oecd/en/publications/reports/2015/10/preventing-the-granting-of-treaty-benefits-in-inappropriate-circumstances-action-6-2015-final-report_g1g5906e/9789264241695-en.pdf</a></li>
+      <li>東京地判平成27年5月28日 <a class="source" href="https://www.courts.go.jp/assets/hanrei/hanrei-pdf-85442.pdf">https://www.courts.go.jp/assets/hanrei/hanrei-pdf-85442.pdf</a></li>
+      <li>東京高判平成28年1月28日 <a class="source" href="https://www.courts.go.jp/assets/hanrei/hanrei-pdf-86117.pdf">https://www.courts.go.jp/assets/hanrei/hanrei-pdf-86117.pdf</a></li>
+      <li>中山清「租税条約の特典制限条項（LOB）」フィナンシャル・レビュー <a class="source" href="https://dl.ndl.go.jp/view/prepareDownload?contentNo=1&amp;itemId=info%3Andljp%2Fpid%2F11173039">https://dl.ndl.go.jp/view/prepareDownload?contentNo=1&amp;itemId=info%3Andljp%2Fpid%2F11173039</a></li>
+      <li>今村隆「租税条約におけるLOB条項の意義と問題点」 <a class="source" href="https://www.publication.law.nihon-u.ac.jp/pdf/law/law_79_2/each/11.pdf">https://www.publication.law.nihon-u.ac.jp/pdf/law/law_79_2/each/11.pdf</a></li>
+      <li>日本公認会計士協会「新日米租税条約のポイントと実務上の課題」 <a class="source" href="https://jicpa.or.jp/specialized_field/publication/files/00233-000470.pdf">https://jicpa.or.jp/specialized_field/publication/files/00233-000470.pdf</a></li>
+    </ul>
+
+    <h3>10.2 ローカル確認資料</h3>
+    <ul>
+      <li><span class="local">/home/user/jplawdb4/laws/shotokuzei/ch15.html</span> 所得税法161条1項9号、内国法人から受ける配当等を国内源泉所得とする規定</li>
+      <li><span class="local">/home/user/jplawdb4/laws/shotokuzei/ch23.html</span> 所得税法212条、213条、外国法人への国内源泉所得支払に係る源泉徴収義務及び20%税率</li>
+      <li><span class="local">/home/user/jplawdb4/law/text/jisshi_tokurei/3-2.txt</span> 租税条約等実施特例法3条の2、条約限度税率・免除の国内法上の作用</li>
+      <li><span class="local">/home/user/jplawdb4/law/text/jisshi_tokurei_kisoku/2.txt</span> 実施特例省令2条、配当等に係る租税条約届出書の提出時期及び記載事項</li>
+      <li><span class="local">/home/user/jplawdb4/law/text/jisshi_tokurei_kisoku/9-2.txt</span> 実施特例省令9条の2、特典条項を条約特典の適用条件として定義する規定</li>
+      <li><span class="local">/home/user/jplawdb4/law/text/kokuzei_tsusoku/36.txt</span> 国税通則法36条、源泉徴収等による国税の納税告知</li>
+      <li><span class="local">/home/user/jplawdb4/law/text/kokuzei_tsusoku/60.txt</span> 国税通則法60条、延滞税</li>
+      <li><span class="local">/home/user/jplawdb4/law/text/kokuzei_tsusoku/67.txt</span> 国税通則法67条、不納付加算税</li>
+      <li><span class="local">/home/user/jplawdb4/law/text/kokuzei_tsusoku/68.txt</span> 国税通則法68条、重加算税</li>
+      <li><span class="local">/home/user/jplawdb4/treaty/text/united-states--usa-st-jp-pack-01.txt</span> 日米租税条約10条</li>
+      <li><span class="local">/home/user/jplawdb4/treaty/text/united-states--usa-st-jp-pack-02.txt</span> 日米租税条約22条</li>
+    </ul>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    本メモは、支払法人の実務対応を検討するためのリサーチ成果物であり、個別事案の最終税務意見ではない。実際の納付・不服申立て・税務署照会・会計処理は、対象年度、配当額、親会社資料、税務調査状況、監査上の重要性を踏まえて専門家と確認する必要がある。
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="ja" data-jplaw-item="us_japan_dividend_wht_lob_20260619">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>日米配当源泉・LOB 深掘り補論 — 22条全ルート地図／プロトコル時的分割／受益者・導管・PPT不在／正確性監査</title>
+  <style>
+    :root {
+      --ink: #17202a;
+      --muted: #5a6470;
+      --line: #d9e0e7;
+      --paper: #fbfcfd;
+      --panel: #ffffff;
+      --accent: #075985;
+      --accent-2: #0f766e;
+      --warn: #9a3412;
+      --danger: #991b1b;
+      --ok: #166534;
+      --soft-blue: #edf6fb;
+      --soft-green: #edf8f5;
+      --soft-red: #fff3f0;
+      --soft-yellow: #fff8e6;
+      --shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: linear-gradient(180deg, #f4f7fa 0%, #fbfcfd 280px);
+      font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, system-ui, sans-serif;
+      line-height: 1.85;
+    }
+    header { border-bottom: 1px solid var(--line); background: #f8fafc; }
+    .wrap { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+    .hero { padding: 44px 0 34px; }
+    .eyebrow { color: var(--accent); font-weight: 700; font-size: 13px; margin-bottom: 8px; }
+    h1 { margin: 0; font-size: clamp(24px, 3.4vw, 38px); line-height: 1.28; }
+    .subtitle { max-width: 900px; margin: 16px 0 0; color: var(--muted); font-size: 16px; }
+    .meta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; color: #334155; font-size: 13px; }
+    .pill { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: #fff; border-radius: 999px; padding: 5px 10px; }
+    main { padding: 28px 0 70px; }
+    nav.toc { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 18px 20px; box-shadow: var(--shadow); margin-bottom: 26px; }
+    nav.toc strong { display: block; margin-bottom: 8px; color: #0f172a; }
+    nav.toc a { color: var(--accent); text-decoration: none; margin-right: 16px; white-space: nowrap; font-size: 14px; }
+    section { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 26px 30px; margin: 22px 0; box-shadow: 0 2px 18px rgba(15, 23, 42, 0.04); }
+    h2 { margin: 0 0 16px; font-size: 23px; line-height: 1.4; color: #0f172a; }
+    h3 { margin: 26px 0 10px; font-size: 17px; color: #1e293b; }
+    p { margin: 0 0 14px; }
+    ul, ol { padding-left: 1.4em; }
+    li { margin: 6px 0; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0 20px; font-size: 14px; background: #fff; }
+    th, td { border: 1px solid var(--line); padding: 10px 12px; vertical-align: top; }
+    th { background: #f1f5f9; text-align: left; color: #0f172a; }
+    .lead-box, .warn-box, .note-box, .ok-box { border-radius: 8px; padding: 16px 18px; margin: 18px 0; border: 1px solid; }
+    .lead-box { background: var(--soft-blue); border-color: #b9dbea; }
+    .warn-box { background: var(--soft-yellow); border-color: #f1d189; }
+    .danger-box { background: var(--soft-red); border: 1px solid #fecaca; border-radius: 8px; padding: 16px 18px; margin: 18px 0; }
+    .ok-box { background: var(--soft-green); border-color: #b7e1d8; }
+    .source { display: inline-block; color: var(--accent); text-decoration: none; border-bottom: 1px dotted var(--accent); font-size: 0.94em; margin-left: 2px; }
+    .local { font-family: Consolas, "Courier New", monospace; font-size: 13px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 2px 5px; word-break: break-all; }
+    .rate { font-weight: 800; font-size: 17px; }
+    .red { color: var(--danger); } .green { color: var(--ok); } .blue { color: var(--accent); }
+    .tag { display:inline-block; font-size:11px; font-weight:700; padding:2px 7px; border-radius:5px; vertical-align:middle; margin-left:6px;}
+    .tag-new { background:#dcfce7; color:#166534; border:1px solid #86efac;}
+    .tag-fix { background:#fef3c7; color:#92400e; border:1px solid #fcd34d;}
+    .tag-ok { background:#e0f2fe; color:#075985; border:1px solid #7dd3fc;}
+    .small { font-size: 13px; color: var(--muted); }
+    .crumb { font-size:13px; color:var(--muted); margin: 0 0 4px;}
+    .crumb a { color: var(--accent); text-decoration:none;}
+    footer { color: var(--muted); font-size: 13px; padding: 26px 0 48px; border-top: 1px solid var(--line); }
+    @media (max-width: 760px) {
+      .wrap { width: min(100% - 24px, 1120px); }
+      section { padding: 20px 16px; }
+      nav.toc a { display: inline-block; margin-bottom: 6px; }
+      table { font-size: 13px; } th, td { padding: 8px; }
+    }
+  </style>
+  <link rel="canonical" href="https://jplawdb4.github.io/jplawdb4/%E3%81%9D%E3%81%AE%E4%BB%96/html/us_japan_dividend_wht_lob_20260616/deepdive_20260619/us_japan_dividend_lob_deepdive_20260619.html">
+  <link rel="icon" href="/jplawdb4/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/jplawdb4/%E3%81%9D%E3%81%AE%E4%BB%96/assets/public-shell.css">
+  <meta name="description" content="日米間配当の源泉税率とLOB適格性を、条約22条の全ルート、受益者・導管論、プロトコルの時的適用から精密に検証します。">
+</head>
+<body>
+<header>
+  <div class="wrap hero">
+    <p class="crumb"><a href="../us_japan_dividend_wht_lob_report.html">← 親メモ：日米間配当源泉徴収・LOB未確認時の税率判定メモ</a></p>
+    <div class="eyebrow">Deep-dive Supplement / Japan-US Dividend Withholding &amp; LOB</div>
+    <h1>日米配当源泉・LOB 深掘り補論<br>22条全ルート地図／プロトコル時的分割／受益者・導管・PPT不在／正確性監査</h1>
+    <p class="subtitle">
+      親メモ（2026-06-16）の結論「資料不備のままでは保守的に20.42%、後日立証で0%・5%の余地」は維持したうえで、四つの軸で深掘りする。第一に日米租税条約22条（特典制限＝LOB）の全ルートを逐条で地図化する。第二に2013年改正議定書の署名・発効のずれと過年度配当の時的分割を確定する。第三に受益者要件・反導管・当局裁量救済を主要目的テスト（PPT）から切り分け、日米条約にPPTが存在しないことを示す。第四に親メモの事実主張を一次資料で監査し、訂正点を列挙する。
+    </p>
+    <div class="meta">
+      <span class="pill">作成日: 2026-06-19</span>
+      <span class="pill">親メモ: us_japan_dividend_wht_lob_report.html</span>
+      <span class="pill">一次資料: 日米条約テキスト（pack-01〜05・行番号付）</span>
+      <span class="pill">退行: 親メモ4点は不変更</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="toc">
+    <strong>目次</strong>
+    <a href="#scope">1. 位置づけと結論の更新</a>
+    <a href="#art22map">2. 22条 全ルート逐条地図</a>
+    <a href="#art10-3">3. 0%が組み込む22条の3ルート</a>
+    <a href="#art22-3">4. 22条3 源泉徴収の時的ルール</a>
+    <a href="#protocol">5. プロトコル沿革と時的分割</a>
+    <a href="#bo-conduit">6. 受益者・導管・PPT/MLI不在</a>
+    <a href="#audit">7. 親メモ正確性監査・訂正表</a>
+    <a href="#pending">8. 残る要確認</a>
+    <a href="#sources">9. 参照資料</a>
+  </nav>
+
+  <section id="scope">
+    <h2>1. この補論の位置づけと結論の更新</h2>
+    <div class="lead-box">
+      <p>本補論は親メモを置き換えるものではなく、四つの深掘りを足すものである。親メモの中心引用「22条1(f)(i)(ii)」は、本補論の一次資料照合により<strong>条文構造として正確であることが確認された</strong>。そのうえで、親メモが触れていなかった (1) 22条の全ルート、(2) 22条3の源泉徴収用の保有期間ルール、(3) 改正議定書の発効年と過年度配当の時的分割、(4) 受益者・導管・PPT/MLIの整理、を追加する。</p>
+    </div>
+    <p>結論の実務メッセージは親メモから動かない。資料（様式17・居住者証明書・LOB充足資料）が確認できない現状では、源泉徴収義務者としては <span class="rate red">20.42%</span> を基準とし、後日、各配当時点の実体を立証できれば 0% 又は 5% への再評価余地がある。本補論が足すのは、その判定をより精密に行うための条文地図と時的軸である。</p>
+    <div class="note-box" style="background:#f8fafc;border-color:#e2e8f0;">
+      <p class="small"><strong>本補論で新たに判明した実務上の重要点（先出し）。</strong> ①0%免税の本人適格ルートは三つに限られ、いずれも6か月・議決権50%以上保有が前提（<a href="#art10-3">§3</a>）。②日本側の源泉徴収で22条1(f)(ii)＝基盤浸食テストを使う米国居住者は、<strong>配当支払課税年度の直前3課税年度</strong>で判定する（<a href="#art22-3">§4</a>）。③改正議定書は<strong>2013年署名・2019年8月30日発効</strong>で、源泉徴収への適用は<strong>2019年11月1日</strong>以後の支払。過年度配当は権利確定日で適用条約版が分かれる（<a href="#protocol">§5</a>）。④米国はMLI非署名のため、日米条約に条約全体のPPTは存在しない（<a href="#bo-conduit">§6</a>）。</p>
+    </div>
+  </section>
+
+  <section id="art22map">
+    <h2>2. 日米租税条約22条（特典制限＝LOB）全ルート逐条地図</h2>
+    <p>22条1の柱書は、特典を受けるには「<strong>別に定める要件を満たし、かつ、次の(a)から(f)までに掲げる者のいずれかに該当する</strong>」ことを求める（<span class="local">pack-02:131–135</span>）。適格者該当と、各所得条が定める要件の二重の関門である。以下、各ルートと、本件の米国親会社（100%保有・非公開の持株会社である可能性を含む）での使い方を示す。</p>
+    <table>
+      <thead>
+        <tr><th style="width:54px;">号</th><th>名称</th><th>要件の要旨</th><th>行</th><th>本件での可否</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>(a)</td><td>個人</td><td>個人であること</td><td>136–137</td><td>×（親会社は法人）</td></tr>
+        <tr><td>(b)</td><td>適格政府機関等</td><td>締約国・地方政府・地方公共団体・日本銀行・連邦準備銀行</td><td>138–139</td><td>×（私企業）</td></tr>
+        <tr><td>(c)</td><td>公開会社・その子会社</td><td>(i) 主たる種類の株式と不均一分配株式が公認の有価証券市場に上場・登録され通常取引される法人／(ii) その各種類の株式の50%以上を、5以下の(c)(i)該当居住者が直接・間接に所有する法人</td><td>140–153</td><td>△→×の可能性。<strong>親会社が非公開なら(c)(i)不該当</strong>。(c)(ii)は上位に公開会社がある場合のみ</td></tr>
+        <tr><td>(d)</td><td>第四条1(c)該当の団体</td><td>「第四条1(c)に規定する者」（非営利団体等）</td><td>153–154</td><td>×の可能性大。<span class="tag tag-fix">要確認</span> 第四条1(c)の定義は本パック未収録</td></tr>
+        <tr><td>(e)</td><td>年金基金</td><td>直前課税年度終了日に受益者等の50%超がいずれかの締約国居住者である個人である年金基金</td><td>156–157</td><td>×（年金基金でない）</td></tr>
+        <tr><td>(f)</td><td>所有・基盤浸食テスト充足者</td><td><strong>(i)</strong> 各種類の株式その他受益持分の50%以上を、(a)(b)(c)(i)(d)(e)に掲げる<em>当該一方の締約国（＝米国）の居住者</em>が直接・間接に所有。<strong>(ii)</strong> 総所得のうち、控除可能支出により非締約国居住者へ支払われる額が50%未満（基盤浸食）。独立企業間価格の役務・有体財産支払、商業銀行への金融債務支払は除外</td><td>158–171</td><td><strong>本件の主力候補</strong>。実体ある米国法人グループなら(i)所有は充足しやすい。(ii)は親会社の総所得に占める第三国向け損金算入支払の比率の立証を要する</td></tr>
+      </tbody>
+    </table>
+    <p><strong>(f)は(i)と(ii)の累積要件</strong>であり、片方では足りない。親メモの「1(f)(i)(ii)」表記はこの両要件を指すものとして正確である。</p>
+
+    <h3>2.1 22条2（能動的事業テスト）<span class="local">pack-02:172–181</span></h3>
+    <p>(a) 居住地国内で営業・事業の活動に従事し、所得がその活動に関連又は付随して取得されること。<strong>ただし自己の勘定のために投資を行い又は管理する活動は除外</strong>される（商業銀行・保険会社・登録証券会社の銀行業・保険業・証券業を除く）。(b) 源泉地国内の活動から所得を得る場合等は、居住地国内の活動が源泉地国の活動との関係で<strong>実質的</strong>でなければならず、実質性は「すべての事実及び状況」で判断される。</p>
+    <p class="small">本件への含意：純粋な持株会社の自己勘定投資・グループ資金管理は能動的事業から外れやすい。米国親会社が米国内で実体ある事業を営み、日本子会社の事業との関係で実質的であって初めて22条2を使える。</p>
+
+    <h3>2.2 22条4（権限ある当局の裁量的付与）<span class="local">pack-02:211–214</span></h3>
+    <p>1(a)〜(f)のいずれにも該当せず、22条2でも特典を受けられない場合でも、要求を受ける締約国の<strong>権限ある当局（CA）が</strong>、その者の設立・取得・維持及び業務の遂行が「特典を受けることを<em>主たる目的の一つとするものでない</em>」と<strong>認定するとき</strong>に特典を受けられる。これは納税者が自動適用できる主観テストではなく、CAへの申請とCAの認定を要する救済である（性質は<a href="#bo-conduit">§6.3</a>で後述）。</p>
+
+    <h3>2.3 22条5（定義）<span class="local">pack-02:215–226</span></h3>
+    <ul>
+      <li><strong>不均一分配株式</strong>：その条件等により、所有者が他方締約国で取得する所得の分配をより多く受ける権利を持つ株式。</li>
+      <li><strong>公認の有価証券市場</strong>：(i) 日本の金融商品取引法（昭和23年法律第25号）に基づく市場、(ii) ナスダック市場および合衆国1934年証券取引法に基づきSECに証券取引所として登録された市場、(iii) 両締約国の権限ある当局が合意する市場。</li>
+      <li><strong>総所得</strong>：事業から取得する総収入から、その収入を得るために直接要した費用を控除した残額（＝22条1(f)(ii)の分母）。</li>
+    </ul>
+
+    <div class="ok-box">
+      <p><strong>派生的受益（同等受益者）条項は日米22条に存在しない（断定）。</strong> 22条本体（<span class="local">pack-02:129–226</span>）を通読しても、第三国居住者の地位を借りて特典を得る一般条項はない。条約内の「同等の特典を受ける権利を有しない／いずれの締約国の居住者でもない」という文言は、<em>特典を与える</em>派生的受益ではなく、各所得条の<em>受益者を否認する</em>反導管規定であって性格が逆である（<a href="#bo-conduit">§6.2</a>）。したがって、本件米国親会社が第三国の上位株主の地位を借りて適格性を補うルートは22条上ない。</p>
+    </div>
+  </section>
+
+  <section id="art10-3">
+    <h2>3. 10条3(a)の0%免税が組み込む22条の三ルート</h2>
+    <p>10条3(a)の0%免税は、受益者が「配当の支払を受ける者が特定される日をその末日とする<strong>6か月の期間</strong>を通じ、議決権のある株式の<strong>50%以上</strong>を直接に又はいずれかの締約国の居住者を通じて間接に所有する法人」であって、かつ<strong>次のいずれかに該当する</strong>ことを要する（<span class="local">pack-01:53–76</span>）。</p>
+    <table>
+      <thead><tr><th>0%の本人適格ルート</th><th>内容</th><th>本件での現実味</th></tr></thead>
+      <tbody>
+        <tr><td>① 22条1(c)(i) 又は (ii)</td><td>公開会社、又は公開会社の子会社</td><td>親会社が非公開なら不可</td></tr>
+        <tr><td>② 22条1(f)(i)＋(ii)＋22条2</td><td>所有テストと基盤浸食テストを満たし、<strong>かつ当該配当に関し22条2の能動的事業条件を満たす</strong></td><td>(f)を満たしても22条2まで要求される。持株会社では困難な場合がある</td></tr>
+        <tr><td>③ 22条4の認定</td><td>権限ある当局の裁量的認定</td><td>CAへの事前申請と認定が必要</td></tr>
+      </tbody>
+    </table>
+    <p>10条2(a)の5%軽減は、議決権10%以上を直接・間接に所有する法人であれば足り（<span class="local">pack-01:47–49</span>）、0%より要件が軽い。もっとも、5%でも22条のいずれかの適格ルートを通ること自体は必要である。</p>
+    <div class="warn-box">
+      <p><strong>本件への帰結。</strong> 0%は①〜③のいずれかを通り、かつ様式17・居住者証明書・LOB充足資料で示せて初めて適用される。資料不備の現状では0%は適用できず、22条の適格性が確認できなければ5%にも達せず、国内法の20.42%に戻る。0%を狙うなら②ルートでは22条2（能動的事業）の立証まで射程に入ることを、最初から見込む必要がある。</p>
+    </div>
+  </section>
+
+  <section id="art22-3">
+    <h2>4. 22条3 ── 源泉徴収のための保有期間・時的ルール <span class="tag tag-new">親メモ未収録</span></h2>
+    <p>22条3は、源泉徴収課税に22条1(c)(ii)・1(f)(i)・1(f)(ii)を適用する際の<strong>判定期間</strong>を定める（<span class="local">pack-02:182–210</span>）。LOBの適格性は時点ではなく期間で見るため、源泉徴収実務では決定的に効く。</p>
+    <ul>
+      <li><strong>配当の基準日</strong>：「その所得の支払が行われる日（配当については、<strong>当該配当の支払を受ける者が特定される日</strong>）」を基準とする（<span class="local">pack-02:185–186, 194–195</span>）。</li>
+      <li><strong>1(c)(ii)・1(f)(i)</strong>：基準日が課税年度終了日なら当該年度を通じて、それ以外なら当該年度中の支払日に先立つ期間および直前課税年度を通じて要件を満たせばよい。1(f)(i)はこのほか「課税年度の総日数の半数以上の日」で満たす場合も可（<span class="local">pack-02:199–202</span>）。</li>
+      <li><strong>日本の源泉徴収で1(f)(ii)を使う米国居住者</strong>：「その所得の支払が行われる課税年度の<strong>直前の3課税年度</strong>について」1(f)(ii)の要件を満たしていれば、当該支払年度について満たすものとされる（<span class="local">pack-02:203–210</span>）。</li>
+    </ul>
+    <div class="note-box" style="background:var(--soft-blue);border-color:#b9dbea;">
+      <p><strong>実務上の意味。</strong> 本件で米国親会社が(f)ルート（所有＋基盤浸食）に依拠して0%・5%を主張するなら、配当年度の単年ではなく<strong>直前3課税年度の総所得と控除可能支払の内訳</strong>を揃えて、基盤浸食テストを各年で示す必要がある。これは親メモの「必要資料チェックリスト」を時間軸に拡張する論点である。</p>
+    </div>
+    <p class="small">注：この段落の枝番号ラベルの階層は抽出上やや不明瞭だが、規範内容（日本源泉徴収・1(f)(ii)・直前3課税年度）はテキスト上明確である。ラベル階層のみ <a href="#pending">§8</a> に要確認として残す。</p>
+  </section>
+
+  <section id="protocol">
+    <h2>5. 改正議定書の沿革と過年度配当の時的分割 <span class="tag tag-new">親メモ要訂正</span></h2>
+    <p>親メモは「2013年改正プロトコル」と呼ぶが、署名年と発効年は別である。一次資料（財務省条約一覧、米財務省、米上院 Executive Report 116-3）で次のとおり確定した。</p>
+    <table>
+      <thead><tr><th>文書</th><th>署名</th><th>発効</th><th>適用開始</th></tr></thead>
+      <tbody>
+        <tr><td>現行条約（2003年条約）</td><td>2003-11-06</td><td>2004-03-30</td><td>源泉徴収: 2004-07-01 ／ その他: 2005課税年度〜</td></tr>
+        <tr><td><strong>2013年改正議定書（第二議定書）</strong></td><td><strong>2013-01-24</strong></td><td><strong>2019-08-30</strong></td><td><strong>源泉徴収: 2019-11-01</strong> ／ その他: 2020-01-01以後開始課税年度</td></tr>
+      </tbody>
+    </table>
+    <p>米国側は2013年署名後に上院で長く滞留し、外交委員会可決（2019-06-25）、報告（2019-07-10）を経て2019-08-30に批准書交換・発効した。発効の効力規定は「源泉徴収税については発効日後3番目の月の初日（＝2019-11-01）以後に支払又は貸記される額から、その他の租税については発効日の翌年1月1日（＝2020-01-01）以後開始課税年度から効力を生ずる」。</p>
+    <h3>5.1 0%要件の新旧対比</h3>
+    <table>
+      <thead><tr><th>要件</th><th>旧（2003年条約）</th><th>新（2013年議定書・2019発効）</th></tr></thead>
+      <tbody>
+        <tr><td>議決権株式の保有割合</td><td>50%<strong>超</strong></td><td>50%<strong>以上</strong></td></tr>
+        <tr><td>保有期間</td><td>12か月</td><td>6か月</td></tr>
+      </tbody>
+    </table>
+    <p>このほか、議定書は一定の利子について源泉地国免税（0%）を拡大し、義務的・拘束的仲裁を導入した。</p>
+    <div class="warn-box">
+      <p><strong>過年度配当の時的分割。</strong> 配当の権利確定日が <strong>2019-10-31以前</strong> なら旧条約（議決権50%超・12か月保有）で、<strong>2019-11-01以後</strong> なら改正後（50%以上・6か月保有）で0%該否を判定する。もっとも、本件のように100%を継続保有していれば新旧いずれの保有要件も通常充足するため、<strong>0%該否の結論は新旧で変わりにくい</strong>。版の特定は要件審査の前提として必要だが、毎期100%事案では形式確認に留まることが多い。50%丁度・保有6〜12か月の中間ケースでこそ新旧の差が結論を分ける。</p>
+    </div>
+    <p class="small">ローカル条約テキストの10条3(a)は「6か月」「50%以上」と表示されており、改正後（現行）版を収録している。過年度を遡って論じる際は、権利確定日に応じて旧要件を別途参照する。</p>
+    <div class="note-box" style="background:#f8fafc;border-color:#e2e8f0;">
+      <p class="small"><strong>親メモへの訂正注記案。</strong> 「2013年改正プロトコル」→「2013年1月24日署名・2019年8月30日発効（源泉徴収は2019年11月1日以後の支払に適用）」。過年度判定では権利確定日で版を分ける旨を一文加える。財務省が用いる「新条約」「平成16年大臣談話」は2003年条約（対1971年条約）を指し、2013年議定書とは別である点にも注意。</p>
+    </div>
+  </section>
+
+  <section id="bo-conduit">
+    <h2>6. 受益者・導管・PPT/MLI不在の整理</h2>
+    <h3>6.1 受益者（beneficial owner）要件</h3>
+    <p>10条の軽減・免除は、いずれも「配当の<strong>受益者</strong>が他方の締約国の居住者であること」を入口要件とする（<span class="local">pack-01:46</span>＝軽減、<span class="local">pack-01:53,57</span>＝免除）。名義のみの者や導管は受益者性を否定されうる。さらに配当条自体に、優先株式等を用いた濫用について受益者を否認する規定がある（<span class="local">pack-01:136–144</span>）。</p>
+    <h3>6.2 反導管は条約全体のPPTではなく、所得条ごとの受益者否認</h3>
+    <p>条約内の「同等の又はそれより有利な特典を受ける権利を有しない／いずれの締約国の居住者でもない者」を背後に置く取決めを否認する文言は、配当（<span class="local">pack-01:136–144</span>）・利子（<span class="local">pack-01:169–177</span>）・使用料（<span class="local">pack-01:190–198</span>）・その他所得（<span class="local">pack-02:119–127</span>＝21条4）にそれぞれ置かれた<strong>受益者否認（反導管）</strong>である。一般的な導管条項は議定書（pack-05）にもなく、あるのは匿名組合に関する否認（<span class="local">pack-05:60–63</span>）等の個別規定にとどまる。普通株式100%保有による通常の配当には、これらの優先株式等否認は通常作動しない。</p>
+    <h3>6.3 22条4はPPTではない（救済規範であり、否認規範でない）</h3>
+    <p>22条4（<span class="local">pack-02:211–214</span>）は、LOBの適格類型にも能動的事業にも当てはまらず<strong>特典を失う者</strong>に、CAが「主たる目的の一つが特典享受でない」と認定すれば<strong>特典を回復</strong>させる救済である。これは、既定では特典を与えつつ濫用認定で<strong>剥奪</strong>する主要目的テスト（PPT。BEPS行動6／MLI7条）とは作動方向が逆である。文言が「主たる目的の一つ」で共通するため混同しやすいが、22条4＝LOBからの裁量的救済であって、条約全体に網をかけるPPTではない。</p>
+    <h3>6.4 MLIは日米条約を改正しない（米国はMLI非署名）</h3>
+    <p>BEPS防止措置実施条約（MLI）は、<strong>両締約国がともにMLIを締結し、双方が当該二国間条約を対象協定（CTA）として掲名</strong>して初めて当該条約を改正する。米国はMLIの署名国ではなく、日本はMLI締約国（2017-06-07署名、2018-09-26受諾、日本につき2019-01-01発効）であるが、相手国である米国が非署名である以上、<strong>日米条約はCTAになり得ず、MLIによる改正は生じない</strong>。日本財務省が公表する対象協定リスト（43法域）に米国が含まれないことが、これを裏づける。</p>
+    <div class="ok-box">
+      <p><strong>帰結。</strong> 日米条約の濫用防止は、条約本体の22条LOB、各所得条の受益者否認（反導管）、22条4の当局裁量救済で完結する。<strong>条約全体に作動するPPTは日米条約に存在しない</strong>。したがって本件の主戦場は、PPT的な包括的主観テストではなく、22条のどの適格ルートを通すかと受益者性の立証である。実体のある米国親会社が普通株式を100%保有している通常の配当では、受益者否認も基盤浸食テストも作動しにくい。</p>
+    </div>
+  </section>
+
+  <section id="audit">
+    <h2>7. 親メモの正確性監査・訂正表</h2>
+    <p>親メモ4点（本体＋補論3）の主要な事実主張を、一次資料・ローカル法令・公式サイトで照合した。<strong>総評として親メモの精度は高く、架空判例や架空著者などの捏造は検出されなかった。</strong> 条文番号・項号・税率・判例の日付と事件番号・条約条文・タックスアンサー番号は、ほぼすべて一次資料と一致した。要訂正は主に参考文献1点のタイトルと死リンク1点である。</p>
+    <h3>7.1 確認済（主要項目）<span class="tag tag-ok">一致</span></h3>
+    <ul>
+      <li>内国法人→外国法人配当＝国内源泉所得（所得税法161条1項9号）／212条1項の源泉徴収義務（4号〜11号を対象＝9号を含む）／213条1項の税率体系。<span class="local">jplawdb4/laws/shotokuzei/ch15.html・ch23.html</span></li>
+      <li>非上場・100%親会社向け配当＝20.42%、上場株式等＝15.315%（<a class="source" href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2884.htm">NTA No.2884</a>）。復興特別所得税2.1%・令和19年(2037)まで（<a class="source" href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2260.htm">NTA No.2260</a>）。</li>
+      <li>租税条約等実施特例法3条の2、実施特例省令2条・9条の2の引用。<span class="local">jplawdb4/law/text/jisshi_tokurei/3-2.txt 他</span></li>
+      <li>条約10条2（5%/10%）・10条3(a)（0%）・22条1(f)(i)(ii)・22条2。<span class="local">treaty/text/united-states--usa-st-jp-pack-01/02.txt</span></li>
+      <li>倉庫PE事件：東京地判平成27年5月28日（平成24年(行ウ)第152号）、東京高判平成28年1月28日（平成27年(行コ)第222号）。判旨（実特法省令の届出書不提出のみで日米7条1項の適用を否定できない方向＝憲法84条・実特法12条の委任の議論）も判決原文と一致。</li>
+      <li>NTAタックスアンサー No.2884／2888／2889、様式17（米）PDF、財務省統合英文、米財務省2013議定書技術説明、IRS2003技術説明の各URLは生存。</li>
+    </ul>
+    <h3>7.2 要訂正・要補足</h3>
+    <table>
+      <thead><tr><th>#</th><th>箇所</th><th>現状</th><th>訂正案</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>1 <span class="tag tag-fix">訂正</span></td>
+          <td>本体§14.2 参考文献</td>
+          <td>増井良啓「租税条約の適用に関する手続」</td>
+          <td>実在タイトルは「<strong>租税条約実施特例法上の届出書の法的性質</strong>」（税務事例研究114号、2010年）。URL・著者は正。冒頭事例が「米国親会社への配当源泉漏れ・5%か20%か」で本件直撃のため、引用先としては最適</td>
+        </tr>
+        <tr>
+          <td>2 <span class="tag tag-fix">訂正</span></td>
+          <td>本体§14.2 西村あさひPDF</td>
+          <td>newsletter_201512_btl.pdf 直リンク</td>
+          <td>直リンクはホットリンク遮断でHTTP403。記事は実在。landing へ差替：<a class="source" href="https://www.nishimura.com/ja/knowledge/newsletters/20151222-39956">nishimura.com/.../20151222-39956</a>（「東京地判平成27年5月28日（倉庫PE）についての検討」）</td>
+        </tr>
+        <tr>
+          <td>3 <span class="tag tag-fix">補足</span></td>
+          <td>本体§4 徴収税率</td>
+          <td>「213条1項1号の原則20%」</td>
+          <td>結論は正。ただし配当は同号が「配当」と明示列挙するのではなく、土地等10%・利子等15%に当たらない<strong>残余として20%</strong>。その旨を一文補うと厳密</td>
+        </tr>
+        <tr>
+          <td>4 <span class="tag tag-fix">補足</span></td>
+          <td>本体§5 プロトコル</td>
+          <td>「2013年改正プロトコル」</td>
+          <td>「2013年署名・<strong>2019年8月30日発効</strong>（源泉徴収は2019-11-01以後）」を明示。過年度の時的判定で誤解を防ぐ（<a href="#protocol">§5</a>）</td>
+        </tr>
+        <tr>
+          <td>5 <span class="tag tag-fix">補足</span></td>
+          <td>本体§5 旧要件</td>
+          <td>「持株割合も50%以上に整理」</td>
+          <td>改正前は50%<strong>超</strong>、改正後が50%<strong>以上</strong>。現行記載（50%以上）は正だが、変更内容を明示すると正確</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="small">補論3ファイルは本体と同一の条文・税率・判例を引用しており、本体と矛盾する独自主張・新たな捏造は検出されなかった。上記1・2の訂正が補論にも及んでいれば同様に直すべきである。</p>
+  </section>
+
+  <section id="pending">
+    <h2>8. 残る要確認（未断定で残す項目）</h2>
+    <ol>
+      <li><strong>第四条1(c)の定義</strong>（22条1(d)が参照）が本作業で読んだ3パックに未収録。もっとも(d)は法人親会社には通常無関係のため、本件の結論への影響は小さい。</li>
+      <li><strong>22条3内の枝番号ラベルの階層</strong>。規範内容（日本源泉徴収・1(f)(ii)・直前3課税年度）はテキスト上明確だが、ラベルが (b) の小柱書か独立柱書かは抽出分離のため断定不可。原典PDF（mof.go.jp USA_ST_jp.pdf）で確認するのが望ましい。</li>
+      <li><strong>財務省英文発効プレス／米財務省 SM-763 の現物全文</strong>。発効日・適用開始の事実は米上院 Executive Report 116-3 と財務省条約一覧で確定済だが、プレス原典の逐語取得は未完（取得時に接続不調）。</li>
+      <li><strong>ローカル条約テキストの版</strong>。10条3(a)が「6か月・50%以上」を表示しており改正後（現行）版と判断したが、財務省 USA_ST_jp.pdf の現物で念のため突き合わせると万全。</li>
+      <li><strong>OECD署名国リストPDF</strong>は本環境でテキスト抽出不可。米国のMLI非署名は、OECD公式ページの記載と日本財務省CTAリストに米国が不在であることの2系統で確認済。</li>
+      <li><strong>2013年議定書本体・交換公文での22条／反導管規定の追加の有無</strong>。ローカルpackは2003年議定書までの収録の可能性があり、2013年改正で22条関連が更新された部分は議定書正文での確認が望ましい。</li>
+    </ol>
+  </section>
+
+  <section id="sources">
+    <h2>9. 参照資料</h2>
+    <h3>9.1 公式・一次資料</h3>
+    <ul>
+      <li>財務省「我が国の租税条約等の一覧」<a class="source" href="https://www.mof.go.jp/tax_policy/summary/international/tax_convention/tax_convetion_list_jp.html">tax_convetion_list_jp</a>（米国：原条約 署名2003-11-06／発効2004-03-30、改正議定書 署名2013-01-24／発効2019-08-30）</li>
+      <li>財務省「日米租税条約統合テキスト（英文／和文）」<a class="source" href="https://www.mof.go.jp/tax_policy/summary/international/tax_convention/USA_ST_en.pdf">USA_ST_en.pdf</a> ／ <a class="source" href="https://www.mof.go.jp/tax_policy/summary/international/tax_convention/USA_ST_jp.pdf">USA_ST_jp.pdf</a></li>
+      <li>米財務省「2013年改正議定書 技術説明」<a class="source" href="https://home.treasury.gov/system/files/131/Treaty-Japan-Pr2-TE-10-29-2015.pdf">Treaty-Japan-Pr2-TE-10-29-2015.pdf</a></li>
+      <li>IRS「2003年日米租税条約 技術説明」<a class="source" href="https://www.irs.gov/pub/irs-trty/japante04.pdf">japante04.pdf</a> ／ <a class="source" href="https://www.irs.gov/businesses/international-businesses/japan-tax-treaty-documents">Japan tax treaty documents</a></li>
+      <li>米上院 Executive Report 116-3（議定書承認）<a class="source" href="https://www.govinfo.gov/content/pkg/CRPT-116erpt3/html/CRPT-116erpt3.htm">govinfo CRPT-116erpt3</a></li>
+      <li>OECD「BEPS Multilateral Instrument」<a class="source" href="https://www.oecd.org/en/topics/beps-multilateral-instrument.html">OECD MLI</a> ／ 日本財務省「MLI（対象協定一覧）」<a class="source" href="https://www.mof.go.jp/english/policy/tax_policy/tax_conventions/mli.htm">MOF MLI</a></li>
+      <li>国税庁 <a class="source" href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2884.htm">No.2884</a>／<a class="source" href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2888.htm">No.2888</a>／<a class="source" href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2889.htm">No.2889</a>／<a class="source" href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/joyaku/annai/pdf2/266.pdf">様式17（米）PDF</a></li>
+    </ul>
+    <h3>9.2 判例・学説</h3>
+    <ul>
+      <li>東京地判平成27年5月28日・平成24年(行ウ)152号<a class="source" href="https://www.courts.go.jp/assets/hanrei/hanrei-pdf-85442.pdf">裁判所PDF</a>／東京高判平成28年1月28日・平成27年(行コ)222号<a class="source" href="https://www.courts.go.jp/assets/hanrei/hanrei-pdf-86117.pdf">裁判所PDF</a></li>
+      <li>西村あさひ「東京地判平成27年5月28日（倉庫PE）についての検討」<a class="source" href="https://www.nishimura.com/ja/knowledge/newsletters/20151222-39956">landing</a></li>
+      <li>増井良啓「租税条約実施特例法上の届出書の法的性質」税務事例研究114号（2010年）</li>
+    </ul>
+    <h3>9.3 ローカル照合資料（行番号付）</h3>
+    <ul>
+      <li><span class="local">jplawdb4/treaty/text/united-states--usa-st-jp-pack-01.txt</span> 10条配当（受益者:46/53/57、5%:47–49、0%と22条クロス参照:53–76、受益者否認:136–144）</li>
+      <li><span class="local">jplawdb4/treaty/text/united-states--usa-st-jp-pack-02.txt</span> 22条LOB（柱書:131–135、(a)〜(f):136–171、22条2:172–181、22条3:182–210、22条4:211–214、22条5:215–226、21条4反導管:119–127）</li>
+      <li><span class="local">jplawdb4/treaty/text/united-states--usa-st-jp-pack-03/04/05.txt</span> 23条(3)・25条MAP／経過規定（旧条約）／議定書了解事項（匿名組合否認:60–63 他）</li>
+      <li><span class="local">jplawdb4/laws/shotokuzei/ch15.html・ch23.html</span> 所法161①九・212・213 ／ <span class="local">jplawdb4/law/text/jisshi_tokurei/3-2.txt・jisshi_tokurei_kisoku/2.txt・9-2.txt</span></li>
+    </ul>
+    <p class="small">本補論は、提示事実と2026年6月19日時点で確認した一次資料に基づく。条約条文の参照位置はローカル統合テキスト（現行版）の行番号であり、過年度を遡る場合は権利確定日に応じた版を別途参照する。実際の申告・調査対応では、各配当の権利確定日・支払日・届出書提出日・米国親会社の上位所有と直前3課税年度の損益資料を期別に確認する必要がある。</p>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>日米配当源泉・LOB 深掘り補論 ／ 親メモ：<a href="../us_japan_dividend_wht_lob_report.html" style="color:var(--accent);">us_japan_dividend_wht_lob_report.html</a> ／ File: deepdive_20260619/us_japan_dividend_lob_deepdive_20260619.html</p>
+  </div>
+</footer>
+  <script defer src="/jplawdb4/%E3%81%9D%E3%81%AE%E4%BB%96/assets/public-shell.js"></script>
+</body>
+</html>
