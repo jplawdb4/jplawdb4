@@ -34,6 +34,7 @@ let currentSurface = "main";
 let currentView = "form";
 let calculation;
 let stateByEdition = {};
+const engagedEditions = new Set();
 let zoom = 1;
 let saveTimer;
 let toastTimer;
@@ -59,7 +60,19 @@ function getState() {
 function readStorage() {
   try {
     const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-    if (parsed && parsed.schema === model.schema && typeof parsed.states === "object") stateByEdition = parsed.states;
+    if (parsed && parsed.schema === model.schema && typeof parsed.states === "object") {
+      stateByEdition = parsed.states;
+      Object.entries(stateByEdition).forEach(([editionId, storedState]) => {
+        const edition = editionById(editionId);
+        if (!edition || !storedState || typeof storedState !== "object") return;
+        const defaults = defaultInputState(edition);
+        const keys = new Set([...Object.keys(defaults), ...Object.keys(storedState)]);
+        const differsFromDefault = [...keys].some(
+          (key) => String(storedState[key] ?? "") !== String(defaults[key] ?? "")
+        );
+        if (differsFromDefault) engagedEditions.add(editionId);
+      });
+    }
   } catch {
     stateByEdition = {};
   }
@@ -309,6 +322,7 @@ function refreshInputValidity() {
 }
 
 function updateField(name, kind, rawValue, sourceElement = null) {
+  engagedEditions.add(currentEdition.id);
   getState()[name] = kind === "amount" ? parseAmount(rawValue) : rawValue;
   const direct = sourceElement && sourceElement.classList.contains("form-direct-input");
   recalculate({ skipForm: direct });
@@ -514,6 +528,21 @@ function renderSources() {
 function renderAudit() {
   const failures = calculation.checks.filter((check) => !check.ok);
   const errors = failures.filter((check) => check.level === "error");
+  const pending = !engagedEditions.has(currentEdition.id) && errors.length > 0;
+  if (pending) {
+    dom.auditLight.className = "audit-light";
+    dom.auditVerdict.className = "audit-verdict is-pending";
+    dom.auditVerdict.replaceChildren();
+    const strong = create("strong", "", "入力待ち");
+    strong.append(create("span", "", "READY TO CHECK"));
+    dom.auditVerdict.append(
+      strong,
+      create("p", "", "事業年度、会社区分、判定結果などを入力すると、適用条件と計算欄を自動検算します。")
+    );
+    dom.checkCounter.textContent = "入力後に検算";
+    dom.checkList.replaceChildren(create("div", "check-item", "入力台帳から必須項目の入力を始めてください。"));
+    return;
+  }
   const verdict = errors.length ? "FAIL" : "PASS";
   dom.auditLight.className = "audit-light " + (errors.length ? "is-fail" : "is-pass");
   dom.auditVerdict.className = "audit-verdict " + (errors.length ? "is-fail" : "is-pass");
@@ -762,6 +791,7 @@ async function loadJson(file) {
     if (payload.schema !== model.schema || !edition || typeof payload.inputs !== "object") throw new Error("この再現版の保存データではありません。");
     if (payload.edition_label && payload.edition_label !== edition.display) throw new Error("年度IDと年度表示が一致しません。");
     stateByEdition[payload.edition] = { ...defaultInputState(edition), ...payload.inputs };
+    engagedEditions.add(payload.edition);
     switchEdition(payload.edition, { silent: true });
     writeStorage();
     showToast(edition.display + "の入力を読み込みました。");
@@ -784,6 +814,7 @@ async function confirmAction(title, message) {
 async function resetInputs() {
   if (!(await confirmAction(currentEdition.display + "の入力を初期化しますか", "法人名を含む、この年度のブラウザ内入力データを初期値へ戻します。"))) return;
   stateByEdition[currentEdition.id] = defaultInputState(currentEdition);
+  engagedEditions.delete(currentEdition.id);
   renderInputs();
   recalculate();
   writeStorage();

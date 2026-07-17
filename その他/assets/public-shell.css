@@ -1,0 +1,481 @@
+:root {
+  --jplaw-shell-ink: #152722;
+  --jplaw-shell-paper: #fffdf8;
+  --jplaw-shell-line: #d8d1c3;
+  --jplaw-shell-accent: #a33a2b;
+  --jplaw-shell-focus: #1f6f5d;
+}
+
+html {
+  scroll-behavior: smooth;
+  max-width: 100%;
+}
+
+body {
+  max-width: 100%;
+}
+
+body > * {
+  min-width: 0;
+}
+
+img,
+video,
+canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+pre,
+code {
+  overflow-wrap: anywhere;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--jplaw-shell-focus);
+  outline-offset: 3px;
+}
+
+.jplaw-skip-link {
+  position: fixed;
+  z-index: 2147483647;
+  top: 10px;
+  left: 10px;
+  transform: translateY(-160%);
+  padding: 10px 14px;
+  border-radius: 6px;
+  color: #fff !important;
+  background: var(--jplaw-shell-ink);
+  font: 700 14px/1.4 system-ui, sans-serif;
+  text-decoration: none;
+  transition: transform 150ms ease;
+}
+
+.jplaw-skip-link:focus {
+  transform: translateY(0);
+}
+
+.jplaw-reading-progress {
+  position: fixed;
+  z-index: 2147483000;
+  inset: 0 auto auto 0;
+  width: 0;
+  height: 3px;
+  background: var(--jplaw-shell-accent);
+  box-shadow: 0 0 8px rgba(163, 58, 43, .28);
+  pointer-events: none;
+}
+
+.jplaw-public-tools {
+  position: fixed;
+  z-index: 2147482000;
+  right: max(14px, env(safe-area-inset-right));
+  bottom: max(14px, env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  border: 1px solid rgba(216, 209, 195, .92);
+  border-radius: 12px;
+  background: rgba(255, 253, 248, .96);
+  box-shadow: 0 9px 28px rgba(21, 39, 34, .18);
+  backdrop-filter: blur(14px);
+}
+
+.jplaw-public-tools a,
+.jplaw-public-tools button {
+  box-sizing: border-box;
+  display: inline-grid;
+  min-width: 44px;
+  min-height: 44px;
+  place-items: center;
+  margin: 0;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 8px;
+  color: var(--jplaw-shell-ink) !important;
+  background: transparent;
+  box-shadow: none;
+  font: 700 13px/1 system-ui, sans-serif;
+  letter-spacing: .02em;
+  text-decoration: none !important;
+  cursor: pointer;
+}
+
+.jplaw-public-tools a:hover,
+.jplaw-public-tools button:hover {
+  color: #fff !important;
+  background: var(--jplaw-shell-ink);
+}
+
+.jplaw-public-tools .jplaw-tools-index {
+  gap: 7px;
+  grid-auto-flow: column;
+  padding-inline: 13px;
+}
+
+.jplaw-tools-index::before {
+  content: "覧";
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-family: serif;
+  font-size: 12px;
+}
+
+.jplaw-toc-backdrop {
+  position: fixed;
+  z-index: 2147482490;
+  inset: 0;
+  display: none;
+  background: rgba(8, 20, 16, .36);
+  backdrop-filter: blur(2px);
+}
+
+.jplaw-toc-backdrop.is-open {
+  display: block;
+}
+
+.jplaw-toc-panel {
+  position: fixed;
+  z-index: 2147482500;
+  top: 0;
+  right: 0;
+  display: none;
+  width: min(420px, calc(100vw - 22px));
+  height: 100dvh;
+  box-sizing: border-box;
+  transform: translateX(104%);
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 24px 24px 92px;
+  border-left: 1px solid var(--jplaw-shell-line);
+  color: var(--jplaw-shell-ink);
+  background: var(--jplaw-shell-paper);
+  box-shadow: -18px 0 42px rgba(21, 39, 34, .18);
+  font-family: system-ui, -apple-system, "Yu Gothic UI", sans-serif;
+  transition: transform 180ms ease;
+}
+
+.jplaw-toc-panel.is-open {
+  display: block;
+  transform: translateX(0);
+}
+
+.jplaw-toc-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--jplaw-shell-line);
+}
+
+.jplaw-toc-header p {
+  margin: 0 0 3px;
+  color: #716b61;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+.jplaw-toc-header h2 {
+  margin: 0;
+  color: var(--jplaw-shell-ink);
+  font: 700 22px/1.35 ui-serif, "Yu Mincho", serif;
+}
+
+.jplaw-toc-close {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--jplaw-shell-line);
+  border-radius: 50%;
+  color: var(--jplaw-shell-ink);
+  background: transparent;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.jplaw-toc-list {
+  display: grid;
+  gap: 2px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.jplaw-toc-list a {
+  display: block;
+  padding: 9px 10px;
+  border-radius: 6px;
+  color: var(--jplaw-shell-ink) !important;
+  font-size: 14px;
+  line-height: 1.55;
+  text-decoration: none !important;
+}
+
+.jplaw-toc-list a:hover,
+.jplaw-toc-list a[aria-current="location"] {
+  color: var(--jplaw-shell-accent) !important;
+  background: #f2eee5;
+}
+
+.jplaw-toc-list .level-3 a {
+  padding-left: 26px;
+  color: #5f625e !important;
+  font-size: 13px;
+}
+
+.jplaw-neighbours {
+  display: grid;
+  gap: 10px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--jplaw-shell-line);
+}
+
+.jplaw-neighbours a {
+  display: block;
+  padding: 12px;
+  border: 1px solid var(--jplaw-shell-line);
+  border-radius: 8px;
+  color: var(--jplaw-shell-ink) !important;
+  text-decoration: none !important;
+}
+
+.jplaw-neighbours small {
+  display: block;
+  margin-bottom: 4px;
+  color: #7c756a;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+
+.jplaw-table-scroll,
+.jplaw-wide-scroll {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.jplaw-table-scroll {
+  margin-block: 1rem;
+  border-radius: 5px;
+  scrollbar-color: #8d877b #eee9df;
+}
+
+.jplaw-table-scroll > table {
+  margin-block: 0 !important;
+}
+
+.jplaw-table-scroll:focus-visible,
+.jplaw-wide-scroll:focus-visible {
+  outline: 3px solid var(--jplaw-shell-focus);
+  outline-offset: 2px;
+}
+
+.jplaw-scroll-hint {
+  margin: 0 0 4px !important;
+  color: #6d675e !important;
+  font: 700 11px/1.4 system-ui, sans-serif !important;
+}
+
+.jplaw-shell-main {
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
+.jplaw-shell-main a {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+html[data-jplaw-item] p,
+html[data-jplaw-item] li,
+html[data-jplaw-item] dd,
+html[data-jplaw-item] dt,
+html[data-jplaw-item] blockquote {
+  overflow-wrap: anywhere;
+}
+
+.jplaw-shell-main > *,
+.layout > *,
+.workspace > *,
+.grid > *,
+.content > * {
+  min-width: 0;
+}
+
+sup a,
+.footnote-ref,
+a[href^="#fn"],
+a[href^="#note"] {
+  white-space: normal !important;
+}
+
+html[data-jplaw-item="cfc_complete_guide_20260605"] .cover .kicker,
+html[data-jplaw-item="cfc_complete_guide_20260605"] .cover .lead,
+html[data-jplaw-item="cfc_complete_guide_20260605"] .cover .lead strong {
+  color: #fff !important;
+}
+
+html[data-jplaw-item="kasan_entaizei_calculator_20260526"] .results,
+html[data-jplaw-item="kasan_entaizei_calculator_20260526"] .results > .card,
+html[data-jplaw-item="kasan_entaizei_calculator_20260526"] .matrix {
+  box-sizing: border-box;
+  min-width: 0 !important;
+  width: 100%;
+  max-width: 100%;
+}
+
+html[data-jplaw-item="kasan_entaizei_calculator_20260526"] .table-wrap {
+  box-sizing: border-box;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+html[data-jplaw-item="tokutei_dozoku_ryuho_calculator_20260526"] .stack,
+html[data-jplaw-item="tokutei_dozoku_ryuho_calculator_20260526"] .stack > *,
+html[data-jplaw-item="tokutei_dozoku_ryuho_calculator_20260526"] section,
+html[data-jplaw-item="tokutei_dozoku_ryuho_calculator_20260526"] .table-wrap {
+  box-sizing: border-box;
+  min-width: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.jplaw-legacy-notice {
+  box-sizing: border-box;
+  display: flex;
+  width: min(1180px, calc(100% - 28px));
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin: 12px auto;
+  padding: 13px 15px;
+  border: 1px solid #c58c72;
+  border-left: 5px solid var(--jplaw-shell-accent);
+  border-radius: 6px;
+  color: var(--jplaw-shell-ink);
+  background: #fff6ed;
+  font: 500 13px/1.55 system-ui, sans-serif;
+}
+
+.jplaw-legacy-notice strong,
+.jplaw-legacy-notice span {
+  display: block;
+}
+
+.jplaw-legacy-notice a {
+  flex: 0 0 auto;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 12px;
+  border-radius: 4px;
+  color: #fff !important;
+  background: var(--jplaw-shell-accent);
+  font-weight: 800;
+  text-decoration: none !important;
+}
+
+@media (max-width: 640px) {
+  .jplaw-public-tools {
+    right: 8px;
+    bottom: max(8px, env(safe-area-inset-bottom));
+  }
+
+  .jplaw-public-tools a,
+  .jplaw-public-tools button {
+    min-width: 44px;
+    min-height: 44px;
+    padding-inline: 8px;
+  }
+
+  .jplaw-public-tools .jplaw-tools-index span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .jplaw-toc-panel {
+    padding: 20px 18px 90px;
+  }
+
+  html[data-jplaw-item="transfer_pricing_complete_guide_20260619"] .mini {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 2px !important;
+  }
+
+  html[data-jplaw-item="transfer_pricing_complete_guide_20260619"] .mini dt:not(:first-child) {
+    margin-top: 10px;
+  }
+
+  html[data-jplaw-item="transfer_pricing_complete_guide_20260619"] .mini dd {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  html[data-jplaw-item="kasan_entaizei_calculator_20260526"] input:not([type="checkbox"]):not([type="radio"]),
+  html[data-jplaw-item="kasan_entaizei_calculator_20260526"] select,
+  html[data-jplaw-item="kasan_entaizei_calculator_20260526"] button,
+  html[data-jplaw-item="tokutei_dozoku_ryuho_calculator_20260526"] input:not([type="checkbox"]):not([type="radio"]),
+  html[data-jplaw-item="tokutei_dozoku_ryuho_calculator_20260526"] select,
+  html[data-jplaw-item="tokutei_dozoku_ryuho_calculator_20260526"] button {
+    min-height: 44px;
+  }
+
+  .jplaw-legacy-notice {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .jplaw-legacy-notice a {
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .jplaw-toc-panel,
+  .jplaw-skip-link {
+    transition: none;
+  }
+}
+
+@media print {
+  .jplaw-skip-link,
+  .jplaw-reading-progress,
+  .jplaw-public-tools,
+  .jplaw-toc-panel,
+  .jplaw-toc-backdrop,
+  .jplaw-scroll-hint {
+    display: none !important;
+  }
+
+  .jplaw-table-scroll,
+  .jplaw-wide-scroll {
+    overflow: visible !important;
+  }
+}
